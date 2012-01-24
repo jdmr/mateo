@@ -17,7 +17,7 @@
         </div>
 
         <div class="content" style="padding:10px 25px;">
-            <h1>Hello World!</h1>
+            <h1>Inicio</h1>
         </div>
     </body>
 </html>
