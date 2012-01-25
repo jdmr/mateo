@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans:beans xmlns="http://www.springframework.org/schema/security"
-    xmlns:beans="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-    <global-method-security secured-annotations="enabled" />
+    <global-method-security secured-annotations="enabled"  />
     
-    <http auto-config="true" use-expressions="true">
-        <intercept-url pattern="/secure/**" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')" />
-        <form-login />
-        <logout logout-url="/salir" logout-success-url="/alumno/lista" invalidate-session="true" />
-        <remember-me />
+    <http pattern="/css/**" security="none"/>
+    <http pattern="/images/**" security="none"/>
+    <http pattern="/js/**" security="none"/>
+    <http pattern="/login.jsp*" security="none"/>
+    
+    <http auto-config="true" access-decision-manager-ref="accessDecisionManager">
+        <intercept-url pattern="/**" access="ROLE_USER" />
+        <form-login login-page="/login.jsp" login-processing-url="/entrar" authentication-failure-url="/login.jsp?error=1" />
+        <logout logout-url="/salir" logout-success-url="/" invalidate-session="true" />
+        <remember-me key="M4t30" />
     </http>
 
     
@@ -23,7 +28,7 @@
         scott/wombat
         peter/opal
     -->
-    <authentication-manager>
+    <authentication-manager alias="authenticationManager">
         <authentication-provider>
             <jdbc-user-service data-source-ref="dataSource"/>
             <password-encoder hash="md5"/>
@@ -35,5 +40,27 @@
             </user-service>-->
         </authentication-provider>
     </authentication-manager>
+    
+    <beans:bean id="roleHierarchy" class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+        <beans:property name="hierarchy">
+            <beans:value>
+                ROLE_ADMIN > ROLE_ORG
+                ROLE_ORG   > ROLE_EMP
+                ROLE_EMP   > ROLE_USER
+            </beans:value>
+        </beans:property>
+    </beans:bean>
+	
+    <beans:bean id="roleHierarchyVoter" class="org.springframework.security.access.vote.RoleHierarchyVoter">
+        <beans:constructor-arg ref="roleHierarchy" />
+    </beans:bean>
 
+    <beans:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+        <beans:property name="decisionVoters">
+            <beans:list>
+                <beans:ref bean="roleHierarchyVoter"/>
+            </beans:list>
+        </beans:property>
+    </beans:bean>
+    
 </beans:beans>
