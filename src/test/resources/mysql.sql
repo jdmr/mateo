@@ -22,7 +22,6 @@ create table authorities (
 insert into users(username, password) values('david',md5('david'));
 
 insert into authorities(username, authority) values('david','ROLE_ADMIN');
-insert into authorities(username, authority) values('david','ROLE_USER');
 
 insert into users(username, password, enabled) values('daniel',md5('daniel'),true);
 
