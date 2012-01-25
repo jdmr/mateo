@@ -23,10 +23,8 @@
  */
 package mx.edu.um.mateo.general.dao;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
 import static org.junit.Assert.*;
@@ -93,6 +91,7 @@ public class UsuarioDaoTest {
 
         Usuario result = instance.obtiene(id);
         assertEquals(usuario, result);
+        assertEquals("ROLE_TEST", result.getAuthorities().get(0).getAuthority());
     }
 
     /**

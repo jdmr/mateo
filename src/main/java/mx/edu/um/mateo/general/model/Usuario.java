@@ -24,7 +24,8 @@
 package mx.edu.um.mateo.general.model;
 
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.*;
@@ -66,7 +67,7 @@ public class Usuario implements Serializable {
     @JoinTable(name = "usuarios_roles", joinColumns = {
         @JoinColumn(name = "usuario_id", referencedColumnName = "id")}, inverseJoinColumns = {
         @JoinColumn(name = "rol_id", referencedColumnName = "id")})
-    private Set<Rol> authorities;
+    private List<Rol> authorities;
 
     public Usuario() {
     }
@@ -77,7 +78,7 @@ public class Usuario implements Serializable {
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;
-        authorities = new HashSet<>();
+        authorities = new ArrayList<>();
         authorities.add(rol);
     }
 
@@ -196,14 +197,14 @@ public class Usuario implements Serializable {
     /**
      * @return the authorities
      */
-    public Set<Rol> getAuthorities() {
+    public List<Rol> getAuthorities() {
         return authorities;
     }
 
     /**
      * @param authorities the authorities to set
      */
-    public void setAuthorities(Set<Rol> authorities) {
+    public void setAuthorities(List<Rol> authorities) {
         this.authorities = authorities;
     }
 
