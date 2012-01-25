@@ -48,6 +48,10 @@ public class Rol implements Serializable {
     public Rol() {
     }
 
+    public Rol(String authority) {
+        this.authority = authority;
+    }
+
     /**
      * @return the id
      */

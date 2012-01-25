@@ -24,12 +24,11 @@
 package mx.edu.um.mateo.general.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email;
 
 /**
@@ -72,12 +71,14 @@ public class Usuario implements Serializable {
     public Usuario() {
     }
 
-    public Usuario(String username, String password, String nombre, String apellido, String correo) {
+    public Usuario(String username, String password, String nombre, String apellido, String correo, Rol rol) {
         this.username = username;
         this.password = password;
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;
+        authorities = new HashSet<>();
+        authorities.add(rol);
     }
 
     /**

@@ -23,8 +23,11 @@
  */
 package mx.edu.um.mateo.general.dao;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -48,6 +51,8 @@ public class UsuarioDaoTest {
     private static final Logger log = LoggerFactory.getLogger(UsuarioDaoTest.class);
     @Autowired
     private UsuarioDao instance;
+    @Autowired
+    private RolDao rolDao;
 
     public UsuarioDaoTest() {
     }
@@ -59,8 +64,10 @@ public class UsuarioDaoTest {
     public void debieraObtenerListaDeUsuarios() {
         log.debug("Debiera obtener lista de usuarios");
 
+        Rol rol = new Rol("ROLE_TEST");
+        rol = rolDao.crea(rol);
         for (int i = 0; i < 20; i++) {
-            Usuario usuario = new Usuario("test-" + i, "test-" + i, "TEST " + i, "TEST", "test" + i + "@test.com");
+            Usuario usuario = new Usuario("test-" + i, "test-" + i, "TEST " + i, "TEST", "test" + i + "@test.com", rol);
             instance.crea(usuario);
         }
 
@@ -78,7 +85,9 @@ public class UsuarioDaoTest {
     @Test
     public void debieraObtenerUsuario() {
         log.debug("Debiera obtener usuario");
-        Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com");
+        Rol rol = new Rol("ROLE_TEST");
+        rol = rolDao.crea(rol);
+        Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
         usuario = instance.crea(usuario);
         Long id = usuario.getId();
 
@@ -92,7 +101,9 @@ public class UsuarioDaoTest {
     @Test
     public void debieraCrearUsuario() {
         log.debug("Debiera crear usuario");
-        Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com");
+        Rol rol = new Rol("ROLE_TEST");
+        rol = rolDao.crea(rol);
+        Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
         usuario = instance.crea(usuario);
         Long id = usuario.getId();
         assertNotNull(id);
@@ -104,7 +115,9 @@ public class UsuarioDaoTest {
     @Test
     public void debieraActualizarUsuario() {
         log.debug("Debiera actualizar usuario");
-        Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com");
+        Rol rol = new Rol("ROLE_TEST");
+        rol = rolDao.crea(rol);
+        Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
         usuario = instance.crea(usuario);
         Long id = usuario.getId();
 
@@ -124,7 +137,9 @@ public class UsuarioDaoTest {
     @Test
     public void debieraEliminarUsuario() {
         log.debug("Debiera actualizar usuario");
-        Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com");
+        Rol rol = new Rol("ROLE_TEST");
+        rol = rolDao.crea(rol);
+        Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
         usuario = instance.crea(usuario);
         Long id = usuario.getId();
 
