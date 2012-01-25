@@ -99,12 +99,19 @@
             <div class='inner'>
                 <div class='fheader'><s:message code="login.title" /></div>
 
-
+                <c:if test="${not empty param.error}">
+                <p style="color:red;padding: 0 10px 10px;">
+                    <s:message code="login.invalido" />
+                </p>
+                <p style="color:red;padding: 0 10px 10px;">
+                    <c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/>.
+                </p>
+                </c:if>
 
                 <form action='<c:url value="/entrar" />' method='POST' id='loginForm' class='cssform' autocomplete='off'>
                     <p>
                         <label for='username'><s:message code="login.username" /></label>
-                        <input type='text' class='text_' name='j_username' id='username'/>
+                        <input type='text' class='text_' name='j_username' id='username' value="<c:if test="${not empty param.error}"><c:out value="${SPRING_SECURITY_LAST_USERNAME}"/></c:if>"/>
                     </p>
 
                     <p>
@@ -112,9 +119,9 @@
                         <input type='password' class='text_' name='j_password' id='password'/>
                     </p>
 
-                    <p id="remember_me_holder">
+                    <p>
+                        <label for='remember_me' style="float:none;"><s:message code="login.remember.me" /></label>
                         <input type='checkbox' class='chk' name='_spring_security_remember_me' id='remember_me' />
-                        <label for='remember_me'><s:message code="login.remember.me" /></label>
                     </p>
 
                     <p>

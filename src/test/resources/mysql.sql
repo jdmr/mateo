@@ -19,10 +19,10 @@ create table authorities (
     , constraint authorities_fk_01 foreign key(username) references users(username)
 );
 
-insert into users(username, password) values('david',md5('david'));
+insert into users(username, password) values('admin',md5('admin'));
 
-insert into authorities(username, authority) values('david','ROLE_ADMIN');
+insert into authorities(username, authority) values('admin','ROLE_ADMIN');
 
-insert into users(username, password, enabled) values('daniel',md5('daniel'),true);
+insert into users(username, password, enabled) values('user',md5('user'),true);
 
-insert into authorities(username, authority) values('daniel','ROLE_USER');
+insert into authorities(username, authority) values('user','ROLE_USER');

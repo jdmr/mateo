@@ -4,8 +4,10 @@
     Author     : jdmr
 --%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c"   uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="s"   uri="http://www.springframework.org/tags" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!doctype html>
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
@@ -29,7 +31,12 @@
             <div id="logo">
                 <a href="<c:url value='/' />" style="text-decoration:none;font-size:3em;letter-spacing:2px;">MATEO</a>
             </div>
-            <div class="encabezado"></div>
+            <div class="encabezado">
+                <sec:authorize access="isAuthenticated()">
+                    <p><a href="<c:url value='/perfil'/>"><s:message code="mensaje.bienvenida" arguments="<%= request.getUserPrincipal().getName() %>" /></a></p>
+                    <p><a href="<c:url value='/salir'/>"><s:message code="salir.label" /></a></p>
+                </sec:authorize>
+            </div>
         </div>
         <a href="#page-body" class="skip">Brincar al contenido&hellip;</a>
         <div id="page-body" role="main">
