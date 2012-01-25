@@ -39,7 +39,13 @@
     -->
     <authentication-manager alias="authenticationManager">
         <authentication-provider>
-            <jdbc-user-service data-source-ref="dataSource"/>
+            <jdbc-user-service 
+                data-source-ref="dataSource"
+                users-by-username-query=
+                  "select username, password, enabled from usuarios where username=?"
+                authorities-by-username-query=
+                  "select u.username, r.authority from usuarios u, roles r, usuarios_roles ur where ur.usuario_id = u.id and ur.rol_id = r.id and u.username=?" 
+            />
             <password-encoder hash="md5"/>
 <!--            <user-service>
                 <user name="rod" password="a564de63c2d0da68cf47586ee05984d7" authorities="ROLE_ADMIN, ROLE_USER" />
