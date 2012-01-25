@@ -130,6 +130,31 @@ public class UsuarioDaoTest {
         assertEquals(result.getNombre(), prueba.getNombre());
     }
 
+    @Test
+    public void debieraCambiarRolDeUsuario() {
+        log.debug("Debiera actualizar usuario");
+        Rol rol = new Rol("ROLE_TEST");
+        rol = rolDao.crea(rol);
+        Rol rol2 = new Rol("ROLE_TEST2");
+        rol2 = rolDao.crea(rol2);
+        Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
+        usuario = instance.crea(usuario);
+        Long id = usuario.getId();
+
+        Usuario result = instance.obtiene(id);
+        assertEquals(usuario, result);
+        assertEquals("ROLE_TEST",result.getAuthorities().get(0).getAuthority());
+        
+        result.setNombre("PRUEBA");
+        result.getAuthorities().clear();
+        result.getAuthorities().add(rol2);
+        instance.actualiza(result);
+        
+        Usuario prueba = instance.obtiene(id);
+        assertEquals(result.getNombre(), prueba.getNombre());
+        assertEquals("ROLE_TEST2",prueba.getAuthorities().get(0).getAuthority());
+    }
+
     /**
      * Test of elimina method, of class UsuarioDao.
      */
