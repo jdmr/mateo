@@ -6,14 +6,16 @@
              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-    <global-method-security secured-annotations="enabled"  />
+    <global-method-security pre-post-annotations="enabled" secured-annotations="enabled">
+        <expression-handler ref="methodSecurityExpressionHandler"/>
+    </global-method-security>
     
     <http pattern="/css/**" security="none"/>
     <http pattern="/images/**" security="none"/>
     <http pattern="/js/**" security="none"/>
     <http pattern="/login.jsp*" security="none"/>
     
-    <http auto-config="true" access-decision-manager-ref="accessDecisionManager" use-expressions="true">
+    <http auto-config="true" access-decision-manager-ref="webAccessDecisionManager" use-expressions="true">
         <intercept-url pattern="/admin/organizacion/**" access="hasAnyRole('ROLE_ADMIN')" />
         <intercept-url pattern="/admin/empresa/**" access="hasAnyRole('ROLE_ORG')" />
         <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_EMP')" />
@@ -62,6 +64,8 @@
                 ROLE_ADMIN > ROLE_ORG
                 ROLE_ORG   > ROLE_EMP
                 ROLE_EMP   > ROLE_USER
+                ROLE_USER  > ROLE_AUTHENTICATED
+                ROLE_AUTHENTICATED > ROLE_UNAUTHENTICATED
             </beans:value>
         </beans:property>
     </beans:bean>
@@ -70,13 +74,23 @@
         <beans:constructor-arg ref="roleHierarchy" />
     </beans:bean>
 
-    <beans:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+    <!-- security:authorize tags using the url attribute will delegate to this accessDecisionManager -->
+    <beans:bean id="webAccessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
         <beans:property name="decisionVoters">
             <beans:list>
-                <beans:ref bean="roleHierarchyVoter"/>
-                <beans:bean class="org.springframework.security.web.access.expression.WebExpressionVoter" />
+                <beans:bean class="org.springframework.security.web.access.expression.WebExpressionVoter">
+                    <beans:property name="expressionHandler" ref="webSecurityExpressionHandler" />
+                </beans:bean>
             </beans:list>
         </beans:property>
+    </beans:bean>
+    
+    <beans:bean id="webSecurityExpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler">
+        <beans:property name="roleHierarchy" ref="roleHierarchy" />
+    </beans:bean>
+    
+    <beans:bean id = "methodSecurityExpressionHandler" class = "org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+        <beans:property name = "roleHierarchy" ref ="roleHierarchy"/>
     </beans:bean>
     
 </beans:beans>
