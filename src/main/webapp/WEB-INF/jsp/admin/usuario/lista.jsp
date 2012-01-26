@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="admin.label" /></title>
+        <title><s:message code="usuario.lista.label" /></title>
     </head>
     <body>
         <div class="nav" role="navigation">
@@ -15,7 +15,7 @@
         </div>
 
         <div class="content" style="padding:10px 25px;">
-            <h1><s:message code="admin.label" /></h1>
+            <h1><s:message code="usuario.lista.label" /></h1>
         </div>
     </body>
 </html>
