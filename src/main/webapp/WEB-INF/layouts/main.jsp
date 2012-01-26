@@ -38,7 +38,6 @@
                 </sec:authorize>
             </div>
         </div>
-        <a href="#page-body" class="skip">Brincar al contenido&hellip;</a>
         <div id="page-body" role="main">
             <sitemesh:write property='body'/>
         </div>

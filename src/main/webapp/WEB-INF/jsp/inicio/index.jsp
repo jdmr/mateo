@@ -7,6 +7,7 @@
         <title><s:message code="inicio.label" /></title>
     </head>
     <body>
+        <a href="#page-body" class="skip"><s:message code="brincar.al.contenido" />&hellip;</a>
         <div class="nav" role="navigation">
             <ul>
                 <li><a href="<c:url value='/contabilidad' />" class="list"><s:message code="contabilidad.label" /></a></li>
@@ -16,7 +17,7 @@
             </ul>
         </div>
 
-        <div class="content" style="padding:10px 25px;">
+        <div id="page-body" class="content" style="padding:10px 25px;">
             <h1><s:message code="inicio.label" /></h1>
         </div>
     </body>

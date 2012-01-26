@@ -7,15 +7,30 @@
         <title><s:message code="usuario.lista.label" /></title>
     </head>
     <body>
+        <a href="#list-usuario" class="skip"><s:message code="brincar.al.contenido" />&hellip;</a>
         <div class="nav" role="navigation">
             <ul>
-                <li><a href="<s:url value='/admin'/>" class="home"><s:message code="admin.label" /></a></li>
-                <li><a href="<s:url value='/admin/usuario/nuevo'/>" class="list"><s:message code="usuario.nuevo.label" /></a></li>
+                <li><a href="<s:url value='/admin'/>" class="admin"><s:message code="admin.label" /></a></li>
+                <li><a href="<s:url value='/admin/usuario/nuevo'/>" class="create"><s:message code="usuario.nuevo.label" /></a></li>
             </ul>
         </div>
 
-        <div class="content" style="padding:10px 25px;">
+        <div id="list-usuario" class="content scaffold-list" role="main">
             <h1><s:message code="usuario.lista.label" /></h1>
+
+            <table id="usuarios">
+                <thead>
+                    <tr>
+                        <th><s:message code="usuario.username.label" /></th>
+                        <th><s:message code="usuario.nombre.label" /></th>
+                        <th><s:message code="usuario.apellido.label" /></th>
+                        <th><s:message code="usuario.correo.label" /></th>
+                    </tr>
+                </thead>
+            </table>
+            <div class="pagination">
+                
+            </div>
         </div>
     </body>
 </html>
