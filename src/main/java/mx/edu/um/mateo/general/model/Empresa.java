@@ -46,13 +46,13 @@ public class Empresa implements Serializable {
     @Version
     private Integer version;
     @NotNull
-    @Column(unique = true, nullable = false, length = 6)
+    @Column(nullable = false, length = 6)
     private String codigo;
     @NotNull
-    @Column(unique = true, nullable = false, length = 64)
+    @Column(nullable = false, length = 64)
     private String nombre;
     @NotNull
-    @Column(unique = true, nullable = false, length = 128)
+    @Column(nullable = false, length = 128, name = "nombre_completo")
     private String nombreCompleto;
     @ManyToOne(optional = false)
     private Organizacion organizacion;

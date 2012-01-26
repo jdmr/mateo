@@ -24,12 +24,15 @@
 package mx.edu.um.mateo.general.dao;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.UltimoException;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,11 +97,19 @@ public class UsuarioDao {
         return usuario;
     }
     
-    public String elimina(Long id) {
+    public String elimina(Long id) throws UltimoException {
         Usuario usuario = obtiene(id);
-        String nombre = usuario.getUsername();
-        currentSession().delete(usuario);
-        return nombre;
+        Criteria criteria = currentSession().createCriteria(Usuario.class);
+        criteria.setProjection(Projections.rowCount());
+        List resultados = criteria.createCriteria("empresa").add(Restrictions.eq("id", usuario.getEmpresa().getId())).list();
+        Long cantidad = (Long)resultados.get(0);
+        if (cantidad > 1) {
+            String nombre = usuario.getUsername();
+            currentSession().delete(usuario);
+            return nombre;
+        } else {
+            throw new UltimoException("No se puede eliminar el ultimo Usuario");
+        }
     }
     
     private Session currentSession() {

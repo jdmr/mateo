@@ -25,10 +25,12 @@ package mx.edu.um.mateo.general.dao;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -69,14 +71,14 @@ public class UsuarioDaoTest {
 
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
         organizacion = organizacionDao.crea(organizacion);
-        
+
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
         for (int i = 0; i < 20; i++) {
             Usuario usuario = new Usuario("test-" + i, "test-" + i, "TEST " + i, "TEST", "test" + i + "@test.com", rol);
             actualizaUsuario:
-            for(Empresa empresa : organizacion.getEmpresas()) {
-                for(Almacen almacen : empresa.getAlmacenes()) {
+            for (Empresa empresa : organizacion.getEmpresas()) {
+                for (Almacen almacen : empresa.getAlmacenes()) {
                     usuario.setEmpresa(empresa);
                     usuario.setAlmacen(almacen);
                     break actualizaUsuario;
@@ -105,8 +107,8 @@ public class UsuarioDaoTest {
         rol = rolDao.crea(rol);
         Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
         actualizaUsuario:
-        for(Empresa empresa : organizacion.getEmpresas()) {
-            for(Almacen almacen : empresa.getAlmacenes()) {
+        for (Empresa empresa : organizacion.getEmpresas()) {
+            for (Almacen almacen : empresa.getAlmacenes()) {
                 usuario.setEmpresa(empresa);
                 usuario.setAlmacen(almacen);
                 break actualizaUsuario;
@@ -132,8 +134,8 @@ public class UsuarioDaoTest {
         rol = rolDao.crea(rol);
         Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
         actualizaUsuario:
-        for(Empresa empresa : organizacion.getEmpresas()) {
-            for(Almacen almacen : empresa.getAlmacenes()) {
+        for (Empresa empresa : organizacion.getEmpresas()) {
+            for (Almacen almacen : empresa.getAlmacenes()) {
                 usuario.setEmpresa(empresa);
                 usuario.setAlmacen(almacen);
                 break actualizaUsuario;
@@ -156,8 +158,8 @@ public class UsuarioDaoTest {
         rol = rolDao.crea(rol);
         Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
         actualizaUsuario:
-        for(Empresa empresa : organizacion.getEmpresas()) {
-            for(Almacen almacen : empresa.getAlmacenes()) {
+        for (Empresa empresa : organizacion.getEmpresas()) {
+            for (Almacen almacen : empresa.getAlmacenes()) {
                 usuario.setEmpresa(empresa);
                 usuario.setAlmacen(almacen);
                 break actualizaUsuario;
@@ -168,10 +170,10 @@ public class UsuarioDaoTest {
 
         Usuario result = instance.obtiene(id);
         assertEquals(usuario, result);
-        
+
         result.setNombre("PRUEBA");
         instance.actualiza(result);
-        
+
         Usuario prueba = instance.obtiene(id);
         assertEquals(result.getNombre(), prueba.getNombre());
     }
@@ -187,8 +189,8 @@ public class UsuarioDaoTest {
         rol2 = rolDao.crea(rol2);
         Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
         actualizaUsuario:
-        for(Empresa empresa : organizacion.getEmpresas()) {
-            for(Almacen almacen : empresa.getAlmacenes()) {
+        for (Empresa empresa : organizacion.getEmpresas()) {
+            for (Almacen almacen : empresa.getAlmacenes()) {
                 usuario.setEmpresa(empresa);
                 usuario.setAlmacen(almacen);
                 break actualizaUsuario;
@@ -199,23 +201,23 @@ public class UsuarioDaoTest {
 
         Usuario result = instance.obtiene(id);
         assertEquals(usuario, result);
-        assertEquals("ROLE_TEST",result.getAuthorities().get(0).getAuthority());
-        
+        assertEquals("ROLE_TEST", result.getAuthorities().get(0).getAuthority());
+
         result.setNombre("PRUEBA");
         result.getAuthorities().clear();
         result.getAuthorities().add(rol2);
         instance.actualiza(result);
-        
+
         Usuario prueba = instance.obtiene(id);
         assertEquals(result.getNombre(), prueba.getNombre());
-        assertEquals("ROLE_TEST2",prueba.getAuthorities().get(0).getAuthority());
+        assertEquals("ROLE_TEST2", prueba.getAuthorities().get(0).getAuthority());
     }
 
     /**
      * Test of elimina method, of class UsuarioDao.
      */
-    @Test
-    public void debieraEliminarUsuario() {
+    @Test(expected = UltimoException.class)
+    public void noDebieraEliminarUsuario() throws UltimoException {
         log.debug("Debiera actualizar usuario");
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
         organizacion = organizacionDao.crea(organizacion);
@@ -223,8 +225,8 @@ public class UsuarioDaoTest {
         rol = rolDao.crea(rol);
         Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
         actualizaUsuario:
-        for(Empresa empresa : organizacion.getEmpresas()) {
-            for(Almacen almacen : empresa.getAlmacenes()) {
+        for (Empresa empresa : organizacion.getEmpresas()) {
+            for (Almacen almacen : empresa.getAlmacenes()) {
                 usuario.setEmpresa(empresa);
                 usuario.setAlmacen(almacen);
                 break actualizaUsuario;
@@ -233,9 +235,40 @@ public class UsuarioDaoTest {
         usuario = instance.crea(usuario);
         Long id = usuario.getId();
 
+        instance.elimina(id);
+        fail("Debio lanzar la excepcion de ultimo usuario");
+    }
+
+    /**
+     * Test of elimina method, of class UsuarioDao.
+     */
+    @Test
+    public void debieraEliminarUsuario() throws UltimoException {
+        log.debug("Debiera actualizar usuario");
+        Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
+        organizacion = organizacionDao.crea(organizacion);
+        Rol rol = new Rol("ROLE_TEST");
+        rol = rolDao.crea(rol);
+        Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
+        Usuario usuario2 = new Usuario("test-02", "test-02", "TEST2", "TEST", "test02@test.com", rol);
+        actualizaUsuario:
+        for (Empresa empresa : organizacion.getEmpresas()) {
+            for (Almacen almacen : empresa.getAlmacenes()) {
+                usuario.setEmpresa(empresa);
+                usuario.setAlmacen(almacen);
+
+                usuario2.setEmpresa(empresa);
+                usuario2.setAlmacen(almacen);
+                break actualizaUsuario;
+            }
+        }
+        usuario = instance.crea(usuario);
+        instance.crea(usuario2);
+        Long id = usuario.getId();
+
         String nombre = instance.elimina(id);
         assertEquals(usuario.getUsername(), nombre);
-        
+
         Usuario result = instance.obtiene(id);
         assertNull(result);
     }

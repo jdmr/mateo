@@ -14,3 +14,9 @@ insert into usuarios(id, version, username, password, enabled, nombre, apellido,
 
 insert into usuarios_roles(usuario_id, rol_id) values(1,1);
 insert into usuarios_roles(usuario_id, rol_id) values(2,4);
+
+alter sequence organizaciones_id_seq restart with 2;
+alter sequence empresas_id_seq restart with 2;
+alter sequence almacenes_id_seq restart with 2;
+alter sequence roles_id_seq restart with 5;
+alter sequence usuarios_id_seq restart with 3;

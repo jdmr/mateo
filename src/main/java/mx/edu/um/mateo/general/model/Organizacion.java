@@ -49,9 +49,9 @@ public class Organizacion implements Serializable {
     @Column(unique = true, nullable = false, length = 64)
     private String nombre;
     @NotNull
-    @Column(unique = true, nullable = false, length = 128)
+    @Column(unique = true, nullable = false, length = 128, name = "nombre_completo")
     private String nombreCompleto;
-    @OneToMany(mappedBy="organizacion")
+    @OneToMany(mappedBy = "organizacion")
     private List<Empresa> empresas;
 
     public Organizacion() {
