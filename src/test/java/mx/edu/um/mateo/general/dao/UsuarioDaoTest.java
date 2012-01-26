@@ -25,8 +25,11 @@ package mx.edu.um.mateo.general.dao;
 
 import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.inventario.model.Almacen;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,6 +54,8 @@ public class UsuarioDaoTest {
     private UsuarioDao instance;
     @Autowired
     private RolDao rolDao;
+    @Autowired
+    private OrganizacionDao organizacionDao;
 
     public UsuarioDaoTest() {
     }
@@ -62,10 +67,21 @@ public class UsuarioDaoTest {
     public void debieraObtenerListaDeUsuarios() {
         log.debug("Debiera obtener lista de usuarios");
 
+        Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
+        organizacion = organizacionDao.crea(organizacion);
+        
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
         for (int i = 0; i < 20; i++) {
             Usuario usuario = new Usuario("test-" + i, "test-" + i, "TEST " + i, "TEST", "test" + i + "@test.com", rol);
+            actualizaUsuario:
+            for(Empresa empresa : organizacion.getEmpresas()) {
+                for(Almacen almacen : empresa.getAlmacenes()) {
+                    usuario.setEmpresa(empresa);
+                    usuario.setAlmacen(almacen);
+                    break actualizaUsuario;
+                }
+            }
             instance.crea(usuario);
         }
 
@@ -83,9 +99,19 @@ public class UsuarioDaoTest {
     @Test
     public void debieraObtenerUsuario() {
         log.debug("Debiera obtener usuario");
+        Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
+        organizacion = organizacionDao.crea(organizacion);
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
         Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
+        actualizaUsuario:
+        for(Empresa empresa : organizacion.getEmpresas()) {
+            for(Almacen almacen : empresa.getAlmacenes()) {
+                usuario.setEmpresa(empresa);
+                usuario.setAlmacen(almacen);
+                break actualizaUsuario;
+            }
+        }
         usuario = instance.crea(usuario);
         Long id = usuario.getId();
 
@@ -100,9 +126,19 @@ public class UsuarioDaoTest {
     @Test
     public void debieraCrearUsuario() {
         log.debug("Debiera crear usuario");
+        Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
+        organizacion = organizacionDao.crea(organizacion);
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
         Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
+        actualizaUsuario:
+        for(Empresa empresa : organizacion.getEmpresas()) {
+            for(Almacen almacen : empresa.getAlmacenes()) {
+                usuario.setEmpresa(empresa);
+                usuario.setAlmacen(almacen);
+                break actualizaUsuario;
+            }
+        }
         usuario = instance.crea(usuario);
         Long id = usuario.getId();
         assertNotNull(id);
@@ -114,9 +150,19 @@ public class UsuarioDaoTest {
     @Test
     public void debieraActualizarUsuario() {
         log.debug("Debiera actualizar usuario");
+        Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
+        organizacion = organizacionDao.crea(organizacion);
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
         Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
+        actualizaUsuario:
+        for(Empresa empresa : organizacion.getEmpresas()) {
+            for(Almacen almacen : empresa.getAlmacenes()) {
+                usuario.setEmpresa(empresa);
+                usuario.setAlmacen(almacen);
+                break actualizaUsuario;
+            }
+        }
         usuario = instance.crea(usuario);
         Long id = usuario.getId();
 
@@ -133,11 +179,21 @@ public class UsuarioDaoTest {
     @Test
     public void debieraCambiarRolDeUsuario() {
         log.debug("Debiera actualizar usuario");
+        Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
+        organizacion = organizacionDao.crea(organizacion);
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
         Rol rol2 = new Rol("ROLE_TEST2");
         rol2 = rolDao.crea(rol2);
         Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
+        actualizaUsuario:
+        for(Empresa empresa : organizacion.getEmpresas()) {
+            for(Almacen almacen : empresa.getAlmacenes()) {
+                usuario.setEmpresa(empresa);
+                usuario.setAlmacen(almacen);
+                break actualizaUsuario;
+            }
+        }
         usuario = instance.crea(usuario);
         Long id = usuario.getId();
 
@@ -161,9 +217,19 @@ public class UsuarioDaoTest {
     @Test
     public void debieraEliminarUsuario() {
         log.debug("Debiera actualizar usuario");
+        Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
+        organizacion = organizacionDao.crea(organizacion);
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
         Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
+        actualizaUsuario:
+        for(Empresa empresa : organizacion.getEmpresas()) {
+            for(Almacen almacen : empresa.getAlmacenes()) {
+                usuario.setEmpresa(empresa);
+                usuario.setAlmacen(almacen);
+                break actualizaUsuario;
+            }
+        }
         usuario = instance.crea(usuario);
         Long id = usuario.getId();
 

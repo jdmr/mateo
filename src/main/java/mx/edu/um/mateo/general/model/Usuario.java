@@ -27,9 +27,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.validator.constraints.Email;
 
 /**
@@ -68,6 +68,10 @@ public class Usuario implements Serializable {
         @JoinColumn(name = "usuario_id", referencedColumnName = "id")}, inverseJoinColumns = {
         @JoinColumn(name = "rol_id", referencedColumnName = "id")})
     private List<Rol> authorities;
+    @ManyToOne(optional = false)
+    private Empresa empresa;
+    @ManyToOne(optional = false)
+    private Almacen almacen;
 
     public Usuario() {
     }
@@ -206,6 +210,34 @@ public class Usuario implements Serializable {
      */
     public void setAuthorities(List<Rol> authorities) {
         this.authorities = authorities;
+    }
+
+    /**
+     * @return the empresa
+     */
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    /**
+     * @param empresa the empresa to set
+     */
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
+    }
+
+    /**
+     * @return the almacen
+     */
+    public Almacen getAlmacen() {
+        return almacen;
+    }
+
+    /**
+     * @param almacen the almacen to set
+     */
+    public void setAlmacen(Almacen almacen) {
+        this.almacen = almacen;
     }
 
     @Override
