@@ -27,6 +27,16 @@
                         <th><s:message code="usuario.correo.label" /></th>
                     </tr>
                 </thead>
+                <tbody>
+                    <c:forEach items="${usuarios}" var="usuario">
+                        <tr>
+                            <td>${usuario.username}</td>
+                            <td>${usuario.nombre}</td>
+                            <td>${usuario.apellido}</td>
+                            <td>${usuario.correo}</td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
             </table>
             <div class="pagination">
                 

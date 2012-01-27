@@ -21,12 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package mx.edu.um.mateo.general.web;
 
+import java.util.Map;
+import mx.edu.um.mateo.general.dao.UsuarioDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -38,10 +41,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UsuarioController {
 
     private static final Logger log = LoggerFactory.getLogger(AdminController.class);
-    
+    @Autowired
+    private UsuarioDao usuarioDao;
+
     @RequestMapping
-    public String lista() {
+    public String lista(Model modelo) {
         log.debug("Mostrando lista de usuarios");
+        Map<String, Object> params = usuarioDao.lista(null);
+        modelo.addAttribute("usuarios",params.get("usuarios"));
         return "admin/usuario/lista";
     }
 }
