@@ -23,13 +23,18 @@
  */
 package mx.edu.um.mateo.general.web;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
+import mx.edu.um.mateo.general.model.Rol;
+import mx.edu.um.mateo.general.model.Usuario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -50,5 +55,25 @@ public class UsuarioController {
         Map<String, Object> params = usuarioDao.lista(null);
         modelo.addAttribute("usuarios",params.get("usuarios"));
         return "admin/usuario/lista";
+    }
+    
+    @RequestMapping("/ver/{id}")
+    public String ver(@PathVariable Long id, Model modelo) {
+        log.debug("Mostrando usuario {}",id);
+        Usuario usuario = usuarioDao.obtiene(id);
+        List<Rol> roles = usuarioDao.roles();
+        List<Rol> rolesUsuario = usuario.getAuthorities();
+        List<Rol> seleccionados = new ArrayList<>();
+        for(Rol rol : roles) {
+            if (rolesUsuario.contains(rol)) {
+                seleccionados.add(rol);
+            }
+        }
+        modelo.addAttribute("usuario",usuario);
+        modelo.addAttribute("roles",usuarioDao.roles());
+        for(Rol rol : seleccionados) {
+            modelo.addAttribute(rol.getAuthority(),true);
+        }
+        return "admin/usuario/ver";
     }
 }

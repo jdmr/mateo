@@ -26,9 +26,11 @@ package mx.edu.um.mateo.general.dao;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
@@ -110,6 +112,11 @@ public class UsuarioDao {
         } else {
             throw new UltimoException("No se puede eliminar el ultimo Usuario");
         }
+    }
+    
+    public List<Rol> roles() {
+        Query query = currentSession().createQuery("select r from Rol r");
+        return query.list();
     }
     
     private Session currentSession() {

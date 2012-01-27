@@ -28,9 +28,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${usuarios}" var="usuario">
-                        <tr>
-                            <td>${usuario.username}</td>
+                    <c:forEach items="${usuarios}" var="usuario" varStatus="status">
+                        <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
+                            <td><a href="<c:url value='/admin/usuario/ver/${usuario.id}' />">${usuario.username}</a></td>
                             <td>${usuario.nombre}</td>
                             <td>${usuario.apellido}</td>
                             <td>${usuario.correo}</td>
@@ -39,8 +39,14 @@
                 </tbody>
             </table>
             <div class="pagination">
-                
+
             </div>
         </div>
+        <div id="spinner" class="spinner" style="display:none;"><s:message code="cargando.message" />&hellip;</div>
+
+        <script src="<c:url value='/js/application.js' />" type="text/javascript" ></script>
+        <script type="text/javascript">
+            highlightTableRows('usuarios')
+        </script>                    
     </body>
 </html>
