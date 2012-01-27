@@ -55,9 +55,10 @@ public class LoginHandler extends SavedRequestAwareAuthenticationSuccessHandler 
         String username = ((org.springframework.security.core.userdetails.User)authentication.getPrincipal()).getUsername();
         log.debug("Se ha firmado a {}", username);
         Usuario usuario = usuarioDao.obtiene(username);
-        request.getSession().setAttribute("almacen", usuario.getAlmacen().getNombre());
+        request.getSession().setAttribute("organizacion", usuario.getEmpresa().getOrganizacion().getNombre());
         request.getSession().setAttribute("empresa", usuario.getEmpresa().getNombre());
-        request.getSession().setAttribute("almacenId", usuario.getAlmacen().getId());
+        request.getSession().setAttribute("almacen", usuario.getAlmacen().getNombre());
         request.getSession().setAttribute("empresaId", usuario.getEmpresa().getId());
+        request.getSession().setAttribute("almacenId", usuario.getAlmacen().getId());
     }
 }

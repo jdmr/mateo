@@ -34,6 +34,7 @@
             <div class="encabezado">
                 <sec:authorize access="isAuthenticated()">
                     <p><a href="<c:url value='/perfil'/>"><s:message code="mensaje.bienvenida" arguments="<%= request.getUserPrincipal().getName() %>" /></a></p>
+                    <p><a href="<c:url value='/perfil'/>">${sessionScope.organizacion} | ${sessionScope.empresa} | ${sessionScope.almacen}</a></p>
                     <p><a href="<c:url value='/salir'/>"><s:message code="salir.label" /></a></p>
                 </sec:authorize>
             </div>
@@ -42,7 +43,7 @@
             <sitemesh:write property='body'/>
         </div>
         <div class="footer" role="contentinfo">
-            <p>&copy; 2011 Universidad de Montemorelos A.C.</p>
+            <p>&copy; 2012 Universidad de Montemorelos A.C.</p>
         </div>
         <div id="spinner" class="spinner" style="display:none;"><g:message code="spinner.alt" default="Loading&hellip;"/></div>
     </body>
