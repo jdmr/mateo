@@ -23,9 +23,10 @@
  */
 package mx.edu.um.mateo.general.web;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -36,6 +37,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  *
@@ -53,27 +55,36 @@ public class UsuarioController {
     public String lista(Model modelo) {
         log.debug("Mostrando lista de usuarios");
         Map<String, Object> params = usuarioDao.lista(null);
-        modelo.addAttribute("usuarios",params.get("usuarios"));
+        modelo.addAttribute("usuarios", params.get("usuarios"));
         return "admin/usuario/lista";
     }
-    
+
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
-        log.debug("Mostrando usuario {}",id);
+        log.debug("Mostrando usuario {}", id);
         Usuario usuario = usuarioDao.obtiene(id);
         List<Rol> roles = usuarioDao.roles();
-        List<Rol> rolesUsuario = usuario.getAuthorities();
-        List<Rol> seleccionados = new ArrayList<>();
-        for(Rol rol : roles) {
-            if (rolesUsuario.contains(rol)) {
-                seleccionados.add(rol);
-            }
-        }
-        modelo.addAttribute("usuario",usuario);
-        modelo.addAttribute("roles",usuarioDao.roles());
-        for(Rol rol : seleccionados) {
-            modelo.addAttribute(rol.getAuthority(),true);
-        }
+        modelo.addAttribute("usuario", usuario);
+        modelo.addAttribute("roles", roles);
         return "admin/usuario/ver";
+    }
+
+    @RequestMapping("/nuevo")
+    public String nuevo(Model modelo) {
+        log.debug("Nuevo usuario");
+        List<Rol> roles = usuarioDao.roles();
+        Usuario usuario = new Usuario();
+        modelo.addAttribute("usuario", usuario);
+        modelo.addAttribute("roles", roles);
+        return "admin/usuario/nuevo";
+    }
+
+    @RequestMapping(value = "/crea", method = RequestMethod.POST)
+    public String crea(HttpServletRequest request, @Valid Usuario usuario, Model modelo) {
+        Long almacenId = (Long)request.getSession().getAttribute("almacenId");
+        
+        usuario = usuarioDao.crea(usuario, almacenId);
+
+        return "redirect:/admin/usuario/ver/"+usuario.getId();
     }
 }

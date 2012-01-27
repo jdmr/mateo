@@ -76,15 +76,15 @@ public class UsuarioDaoTest {
         rol = rolDao.crea(rol);
         for (int i = 0; i < 20; i++) {
             Usuario usuario = new Usuario("test-" + i, "test-" + i, "TEST " + i, "TEST", "test" + i + "@test.com", rol);
+            Long almacenId = 0l;
             actualizaUsuario:
             for (Empresa empresa : organizacion.getEmpresas()) {
                 for (Almacen almacen : empresa.getAlmacenes()) {
-                    usuario.setEmpresa(empresa);
-                    usuario.setAlmacen(almacen);
+                    almacenId = almacen.getId();
                     break actualizaUsuario;
                 }
             }
-            instance.crea(usuario);
+            instance.crea(usuario, almacenId);
         }
 
         Map<String, Object> params = null;
@@ -106,15 +106,15 @@ public class UsuarioDaoTest {
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
         Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
+        Long almacenId = 0l;
         actualizaUsuario:
         for (Empresa empresa : organizacion.getEmpresas()) {
             for (Almacen almacen : empresa.getAlmacenes()) {
-                usuario.setEmpresa(empresa);
-                usuario.setAlmacen(almacen);
+                almacenId = almacen.getId();
                 break actualizaUsuario;
             }
         }
-        usuario = instance.crea(usuario);
+        usuario = instance.crea(usuario, almacenId);
         Long id = usuario.getId();
 
         Usuario result = instance.obtiene(id);
@@ -133,15 +133,15 @@ public class UsuarioDaoTest {
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
         Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
+        Long almacenId = 0l;
         actualizaUsuario:
         for (Empresa empresa : organizacion.getEmpresas()) {
             for (Almacen almacen : empresa.getAlmacenes()) {
-                usuario.setEmpresa(empresa);
-                usuario.setAlmacen(almacen);
+                almacenId = almacen.getId();
                 break actualizaUsuario;
             }
         }
-        usuario = instance.crea(usuario);
+        usuario = instance.crea(usuario, almacenId);
         Long id = usuario.getId();
         assertNotNull(id);
     }
@@ -157,15 +157,15 @@ public class UsuarioDaoTest {
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
         Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
+        Long almacenId = 0l;
         actualizaUsuario:
         for (Empresa empresa : organizacion.getEmpresas()) {
             for (Almacen almacen : empresa.getAlmacenes()) {
-                usuario.setEmpresa(empresa);
-                usuario.setAlmacen(almacen);
+                almacenId = almacen.getId();
                 break actualizaUsuario;
             }
         }
-        usuario = instance.crea(usuario);
+        usuario = instance.crea(usuario, almacenId);
         Long id = usuario.getId();
 
         Usuario result = instance.obtiene(id);
@@ -188,15 +188,15 @@ public class UsuarioDaoTest {
         Rol rol2 = new Rol("ROLE_TEST2");
         rol2 = rolDao.crea(rol2);
         Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
+        Long almacenId = 0l;
         actualizaUsuario:
         for (Empresa empresa : organizacion.getEmpresas()) {
             for (Almacen almacen : empresa.getAlmacenes()) {
-                usuario.setEmpresa(empresa);
-                usuario.setAlmacen(almacen);
+                almacenId = almacen.getId();
                 break actualizaUsuario;
             }
         }
-        usuario = instance.crea(usuario);
+        usuario = instance.crea(usuario, almacenId);
         Long id = usuario.getId();
 
         Usuario result = instance.obtiene(id);
@@ -224,15 +224,15 @@ public class UsuarioDaoTest {
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
         Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
+        Long almacenId = 0l;
         actualizaUsuario:
         for (Empresa empresa : organizacion.getEmpresas()) {
             for (Almacen almacen : empresa.getAlmacenes()) {
-                usuario.setEmpresa(empresa);
-                usuario.setAlmacen(almacen);
+                almacenId = almacen.getId();
                 break actualizaUsuario;
             }
         }
-        usuario = instance.crea(usuario);
+        usuario = instance.crea(usuario, almacenId);
         Long id = usuario.getId();
 
         instance.elimina(id);
@@ -251,19 +251,16 @@ public class UsuarioDaoTest {
         rol = rolDao.crea(rol);
         Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com", rol);
         Usuario usuario2 = new Usuario("test-02", "test-02", "TEST2", "TEST", "test02@test.com", rol);
+        Long almacenId = 0l;
         actualizaUsuario:
         for (Empresa empresa : organizacion.getEmpresas()) {
             for (Almacen almacen : empresa.getAlmacenes()) {
-                usuario.setEmpresa(empresa);
-                usuario.setAlmacen(almacen);
-
-                usuario2.setEmpresa(empresa);
-                usuario2.setAlmacen(almacen);
+                almacenId = almacen.getId();
                 break actualizaUsuario;
             }
         }
-        usuario = instance.crea(usuario);
-        instance.crea(usuario2);
+        usuario = instance.crea(usuario, almacenId);
+        instance.crea(usuario2, almacenId);
         Long id = usuario.getId();
 
         String nombre = instance.elimina(id);

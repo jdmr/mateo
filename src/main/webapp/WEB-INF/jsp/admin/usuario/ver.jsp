@@ -14,7 +14,7 @@
         <title><s:message code="usuario.ver.label" /></title>
     </head>
     <body>
-        <a href="#ver-usuario" class="skip"><s:message code="brincar.al.contenido" />&hellip;</a>
+        <a href="#ver-usuario" class="skip" tabindex="-1"><s:message code="brincar.al.contenido" />&hellip;</a>
         <div class="nav" role="navigation">
             <ul>
                 <li><a href="<s:url value='/admin'/>" class="admin"><s:message code="admin.label" /></a></li>
@@ -68,7 +68,7 @@
                         <span class="property-value" aria-labelledby="roles-label">
 
                             <c:forEach items="${roles}" var="rol">
-                                <form:checkbox path="authorities" value="${rol.authority}"  /> <s:message code="${rol.authority}" />&nbsp;
+                                <form:checkbox path="authorities" value="${rol.authority}" disabled="true" /> <s:message code="${rol.authority}" />&nbsp;
                             </c:forEach>
 
                         </span>

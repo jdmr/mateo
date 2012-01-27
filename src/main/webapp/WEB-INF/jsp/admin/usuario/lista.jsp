@@ -7,7 +7,7 @@
         <title><s:message code="usuario.lista.label" /></title>
     </head>
     <body>
-        <a href="#list-usuario" class="skip"><s:message code="brincar.al.contenido" />&hellip;</a>
+        <a href="#list-usuario" class="skip" tabindex="-1"><s:message code="brincar.al.contenido" />&hellip;</a>
         <div class="nav" role="navigation">
             <ul>
                 <li><a href="<s:url value='/admin'/>" class="admin"><s:message code="admin.label" /></a></li>

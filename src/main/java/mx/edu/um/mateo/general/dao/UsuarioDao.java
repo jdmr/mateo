@@ -29,6 +29,7 @@ import java.util.Map;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
+import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -89,7 +90,16 @@ public class UsuarioDao {
         return usuario;
     }
     
-    public Usuario crea(Usuario usuario) {
+    public Usuario obtiene(String username) {
+        Query query = currentSession().createQuery("select u from Usuario u where u.username = :username");
+        query.setString("username", username);
+        return (Usuario) query.uniqueResult();
+    }
+    
+    public Usuario crea(Usuario usuario, Long almacenId) {
+        Almacen almacen = (Almacen) currentSession().get(Almacen.class, almacenId);
+        usuario.setAlmacen(almacen);
+        usuario.setEmpresa(almacen.getEmpresa());
         currentSession().save(usuario);
         return usuario;
     }
@@ -122,4 +132,5 @@ public class UsuarioDao {
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
+
 }
