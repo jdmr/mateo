@@ -94,8 +94,6 @@ public class UsuarioController {
 
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request, @Valid Usuario usuario, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
-        log.debug("Valores: {}", new Object[]{request.getParameterValues("roles")});
-
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
             List<Rol> roles = usuarioDao.roles();
@@ -110,11 +108,14 @@ public class UsuarioController {
         }
 
         try {
+            String[] roles = request.getParameterValues("roles");
+            if (roles == null || roles.length == 0) {
+                roles = new String[] {"ROLE_USER"};
+            }
             Long almacenId = (Long) request.getSession().getAttribute("almacenId");
-            usuario = usuarioDao.crea(usuario, almacenId, request.getParameterValues("roles"));
+            usuario = usuarioDao.crea(usuario, almacenId, roles);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al usuario", e);
-//            bindingResult.addError(new ObjectError("usuario.username", new String[]{"campo.duplicado.message"}, new String[]{"username"}, null));
             errors.rejectValue("username", "campo.duplicado.message", new String[]{"username"}, null);
             List<Rol> roles = usuarioDao.roles();
             modelo.addAttribute("roles", roles);
