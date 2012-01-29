@@ -64,83 +64,83 @@ public class UsuarioDao {
         if (params == null) {
             params = new HashMap<>();
         }
-        
+
         if (!params.containsKey("max")) {
-            params.put("max",10);
+            params.put("max", 10);
         } else {
-            params.put("max",Math.min((Integer)params.get("max"), 100));
+            params.put("max", Math.min((Integer) params.get("max"), 100));
         }
         if (!params.containsKey("offset")) {
-            params.put("offset",0);
+            params.put("offset", 0);
         }
         Criteria criteria = currentSession().createCriteria(Usuario.class);
         Criteria countCriteria = currentSession().createCriteria(Usuario.class);
-        
-        criteria.setFirstResult((Integer)params.get("offset"));
-        criteria.setMaxResults((Integer)params.get("max"));
+
+        criteria.setFirstResult((Integer) params.get("offset"));
+        criteria.setMaxResults((Integer) params.get("max"));
         params.put("usuarios", criteria.list());
-        
+
         countCriteria.setProjection(Projections.rowCount());
-        params.put("cantidad", (Long)countCriteria.list().get(0));
-        
+        params.put("cantidad", (Long) countCriteria.list().get(0));
+
         return params;
     }
-    
+
     public Usuario obtiene(Long id) {
         Usuario usuario = (Usuario) currentSession().get(Usuario.class, id);
         return usuario;
     }
-    
+
     public Usuario obtiene(String username) {
         Query query = currentSession().createQuery("select u from Usuario u where u.username = :username");
         query.setString("username", username);
         return (Usuario) query.uniqueResult();
     }
-    
+
     public Usuario crea(Usuario usuario, Long almacenId, String[] nombreDeRoles) {
         Almacen almacen = (Almacen) currentSession().get(Almacen.class, almacenId);
         usuario.setAlmacen(almacen);
         usuario.setEmpresa(almacen.getEmpresa());
 
         Query query = currentSession().createQuery("select r from Rol r where r.authority = :nombre");
-        for(String nombre : nombreDeRoles) {
+        for (String nombre : nombreDeRoles) {
             query.setString("nombre", nombre);
             Rol rol = (Rol) query.uniqueResult();
             UsuarioRol usuarioRol = new UsuarioRol(usuario, rol);
             log.debug("Guardando la relacion {}", usuarioRol);
             usuario.getAuthorities().add(usuarioRol);
         }
-        log.debug("Roles del usuario {}",usuario.getAuthorities());
-        
+        log.debug("Roles del usuario {}", usuario.getAuthorities());
+
         currentSession().save(usuario);
         currentSession().flush();
         return usuario;
     }
-    
+
     public Usuario actualiza(Usuario usuario, Long almacenId, String[] nombreDeRoles) {
         Almacen almacen = (Almacen) currentSession().get(Almacen.class, almacenId);
         usuario.setAlmacen(almacen);
         usuario.setEmpresa(almacen.getEmpresa());
-        
+
         usuario.getAuthorities().clear();
         Query query = currentSession().createQuery("select r from Rol r where r.authority = :nombre");
-        for(String nombre : nombreDeRoles) {
+        for (String nombre : nombreDeRoles) {
             query.setString("nombre", nombre);
             Rol rol = (Rol) query.uniqueResult();
             usuario.getAuthorities().add(new UsuarioRol(usuario, rol));
         }
-        log.debug("Roles del usuario {}",usuario.getAuthorities());
+        log.debug("Roles del usuario {}", usuario.getAuthorities());
         currentSession().update(usuario);
         currentSession().flush();
         return usuario;
     }
-    
+
     public String elimina(Long id) throws UltimoException {
         Usuario usuario = obtiene(id);
         Criteria criteria = currentSession().createCriteria(Usuario.class);
         criteria.setProjection(Projections.rowCount());
         List resultados = criteria.createCriteria("empresa").add(Restrictions.eq("id", usuario.getEmpresa().getId())).list();
-        Long cantidad = (Long)resultados.get(0);
+        Long cantidad = (Long) resultados.get(0);
         if (cantidad > 1) {
             String nombre = usuario.getUsername();
             currentSession().delete(usuario);
@@ -150,14 +150,13 @@ public class UsuarioDao {
             throw new UltimoException("No se puede eliminar el ultimo Usuario");
         }
     }
-    
+
     public List<Rol> roles() {
         Query query = currentSession().createQuery("select r from Rol r");
         return query.list();
     }
-    
+
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
-
 }
