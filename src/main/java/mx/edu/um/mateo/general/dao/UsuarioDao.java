@@ -117,7 +117,11 @@ public class UsuarioDao {
         return usuario;
     }
     
-    public Usuario actualiza(Usuario usuario, String[] nombreDeRoles) {
+    public Usuario actualiza(Usuario usuario, Long almacenId, String[] nombreDeRoles) {
+        Almacen almacen = (Almacen) currentSession().get(Almacen.class, almacenId);
+        usuario.setAlmacen(almacen);
+        usuario.setEmpresa(almacen.getEmpresa());
+        
         usuario.getAuthorities().clear();
         Query query = currentSession().createQuery("select r from Rol r where r.authority = :nombre");
         for(String nombre : nombreDeRoles) {
@@ -127,6 +131,7 @@ public class UsuarioDao {
         }
         log.debug("Roles del usuario {}",usuario.getAuthorities());
         currentSession().update(usuario);
+        currentSession().flush();
         return usuario;
     }
     
@@ -139,6 +144,7 @@ public class UsuarioDao {
         if (cantidad > 1) {
             String nombre = usuario.getUsername();
             currentSession().delete(usuario);
+            currentSession().flush();
             return nombre;
         } else {
             throw new UltimoException("No se puede eliminar el ultimo Usuario");

@@ -29,8 +29,9 @@
             <c:if test="${not empty message}">
                 <div class="message" role="status"><s:message code="${message}" arguments="${messageAttrs}" /></div>
             </c:if>
-                
-            <form:form commandName="usuario">
+            
+            <c:url var="eliminaUrl" value="/admin/usuario/elimina" />
+            <form:form commandName="usuario" action="${eliminaUrl}">
                 <form:errors path="*" cssClass="errors" element="ul" />
                 <ol class="property-list usuario">
                     <li class="fieldcontain">
@@ -83,9 +84,9 @@
 
                 </ol>
                 <fieldset class="buttons">
-                    <input type="hidden" name="id" value="1" id="id" />
-                    <a href="/mateo/usuario/edita/1" class="edit">Editar</a>
-                    <input type="submit" name="_action_elimina" value="Eliminar" class="delete" onclick="return confirm('<s:message code="confirma.elimina.message" />');" />
+                    <form:hidden path="id" />
+                    <a href="<c:url value='/admin/usuario/edita/${usuario.id}' />" class="edit"><s:message code="editar.button" /></a>
+                    <input type="submit" name="elimina" value="<s:message code='eliminar.button'/>" class="delete" onclick="return confirm('<s:message code="confirma.elimina.message" />');" />
                 </fieldset>
             </form:form>
         </div>

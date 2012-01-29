@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="usuario.nuevo.label" /></title>
+        <title><s:message code="usuario.edita.label" /></title>
     </head>
     <body>
         <a href="#nuevo-usuario" class="skip" tabindex="-1"><s:message code="brincar.al.contenido" />&hellip;</a>
@@ -23,9 +23,12 @@
         </div>
 
         <div id="nuevo-usuario" class="content scaffold-list" role="main">
-            <h1><s:message code="usuario.nuevo.label" /></h1>
-            <form:form commandName="usuario" action="crea" method="post">
+            <h1><s:message code="usuario.edita.label" /></h1>
+            <c:url var="actualizaUrl" value="/admin/usuario/actualiza" />
+            <form:form commandName="usuario" method="post" action="${actualizaUrl}">
                 <form:errors path="*" cssClass="errors" element="ul" />
+                <form:hidden path="id" />
+                <form:hidden path="version" />
                 <fieldset class="form">
 
                     <div class="fieldcontain required">
@@ -89,7 +92,7 @@
 
                 </fieldset>
                 <fieldset class="buttons">
-                    <input type="submit" name="_action_crea" class="save" value="<s:message code='crear.button'/>" id="create" />
+                    <input type="submit" name="actualiza" value="<s:message code='actualizar.button' />" class="save" />
                 </fieldset>
             </form:form>
         </div>

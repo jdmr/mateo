@@ -41,6 +41,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -94,6 +96,9 @@ public class UsuarioController {
 
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request, @Valid Usuario usuario, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
+        }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
             List<Rol> roles = usuarioDao.roles();
@@ -110,7 +115,7 @@ public class UsuarioController {
         try {
             String[] roles = request.getParameterValues("roles");
             if (roles == null || roles.length == 0) {
-                roles = new String[] {"ROLE_USER"};
+                roles = new String[]{"ROLE_USER"};
             }
             Long almacenId = (Long) request.getSession().getAttribute("almacenId");
             usuario = usuarioDao.crea(usuario, almacenId, roles);
@@ -134,13 +139,96 @@ public class UsuarioController {
         return "redirect:/admin/usuario/ver/" + usuario.getId();
     }
 
+    @RequestMapping("/edita/{id}")
+    public String edita(@PathVariable Long id, Model modelo) {
+        log.debug("Edita usuario {}", id);
+        List<Rol> roles = usuarioDao.roles();
+        Usuario usuario = usuarioDao.obtiene(id);
+        modelo.addAttribute("usuario", usuario);
+        modelo.addAttribute("roles", roles);
+        
+        Map<String, Boolean> seleccionados = new HashMap<>();
+        for (UsuarioRol usuarioRol : usuario.getAuthorities()) {
+            seleccionados.put(usuarioRol.getRol().getAuthority(), Boolean.TRUE);
+        }
+        modelo.addAttribute("seleccionados", seleccionados);
+
+        return "admin/usuario/edita";
+    }
+
+    @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
+    public String actualiza(HttpServletRequest request, @Valid Usuario usuario, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            log.error("Hubo algun error en la forma, regresando");
+            List<Rol> roles = usuarioDao.roles();
+            modelo.addAttribute("roles", roles);
+
+            Map<String, Boolean> seleccionados = new HashMap<>();
+            for (UsuarioRol usuarioRol : usuario.getAuthorities()) {
+                seleccionados.put(usuarioRol.getRol().getAuthority(), Boolean.TRUE);
+            }
+            modelo.addAttribute("seleccionados", seleccionados);
+            return "admin/usuario/edita";
+        }
+
+        try {
+            String[] roles = request.getParameterValues("roles");
+            if (roles == null || roles.length == 0) {
+                roles = new String[]{"ROLE_USER"};
+            }
+            Long almacenId = (Long) request.getSession().getAttribute("almacenId");
+            usuario = usuarioDao.actualiza(usuario, almacenId, roles);
+        } catch (ConstraintViolationException e) {
+            log.error("No se pudo crear al usuario", e);
+            errors.rejectValue("username", "campo.duplicado.message", new String[]{"username"}, null);
+            List<Rol> roles = usuarioDao.roles();
+            modelo.addAttribute("roles", roles);
+
+            Map<String, Boolean> seleccionados = new HashMap<>();
+            for (UsuarioRol usuarioRol : usuario.getAuthorities()) {
+                seleccionados.put(usuarioRol.getRol().getAuthority(), Boolean.TRUE);
+            }
+            modelo.addAttribute("seleccionados", seleccionados);
+            return "admin/usuario/nuevo";
+        }
+
+        redirectAttributes.addFlashAttribute("message", "usuario.actualizado.message");
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{usuario.getUsername()});
+
+        return "redirect:/admin/usuario/ver/" + usuario.getId();
+    }
+
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(@RequestParam Long id) {
+    public String elimina(@RequestParam Long id, Model modelo, @ModelAttribute Usuario usuario, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina usuario");
         try {
-            usuarioDao.elimina(id);
+            String nombre = usuarioDao.elimina(id);
+            redirectAttributes.addFlashAttribute("message", "usuario.eliminado.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
         } catch (UltimoException e) {
             log.error("No se pudo eliminar el usuario " + id, e);
+            bindingResult.addError(new ObjectError("usuario", new String[]{"ultimo.usuario.no.eliminado.message"}, null, null));
+            List<Rol> roles = usuarioDao.roles();
+            modelo.addAttribute("roles", roles);
+
+            Map<String, Boolean> seleccionados = new HashMap<>();
+            for (UsuarioRol usuarioRol : usuarioDao.obtiene(id).getAuthorities()) {
+                seleccionados.put(usuarioRol.getRol().getAuthority(), Boolean.TRUE);
+            }
+            modelo.addAttribute("seleccionados", seleccionados);
+            return "admin/usuario/ver";
+        } catch (Exception e) {
+            log.error("No se pudo eliminar el usuario " + id, e);
+            bindingResult.addError(new ObjectError("usuario", new String[]{"usuario.no.eliminado.message"}, null, null));
+            List<Rol> roles = usuarioDao.roles();
+            modelo.addAttribute("roles", roles);
+
+            Map<String, Boolean> seleccionados = new HashMap<>();
+            for (UsuarioRol usuarioRol : usuarioDao.obtiene(id).getAuthorities()) {
+                seleccionados.put(usuarioRol.getRol().getAuthority(), Boolean.TRUE);
+            }
+            modelo.addAttribute("seleccionados", seleccionados);
+            return "admin/usuario/ver";
         }
 
         return "redirect:/admin/usuario";

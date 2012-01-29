@@ -171,7 +171,7 @@ public class UsuarioDaoTest {
         assertEquals(usuario, result);
 
         result.setNombre("PRUEBA");
-        instance.actualiza(result, new String[] {rol.getAuthority()});
+        instance.actualiza(result, almacenId, new String[] {rol.getAuthority()});
 
         Usuario prueba = instance.obtiene(id);
         assertEquals(result.getNombre(), prueba.getNombre());
@@ -203,7 +203,7 @@ public class UsuarioDaoTest {
         assertEquals("ROLE_TEST", result.getAuthorities().get(0).getRol().getAuthority());
 
         result.setNombre("PRUEBA");
-        instance.actualiza(result, new String[]{rol2.getAuthority()});
+        instance.actualiza(result, almacenId, new String[]{rol2.getAuthority()});
 
         Usuario prueba = instance.obtiene(id);
         assertEquals(result.getNombre(), prueba.getNombre());
