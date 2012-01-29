@@ -18,6 +18,10 @@
         <div id="list-usuario" class="content scaffold-list" role="main">
             <h1><s:message code="usuario.lista.label" /></h1>
 
+            <c:if test="${not empty message}">
+                <div class="message" role="status"><s:message code="${message}" arguments="${messageAttrs}" /></div>
+            </c:if>
+                
             <table id="usuarios">
                 <thead>
                     <tr>

@@ -25,15 +25,16 @@
         <div id="nuevo-usuario" class="content scaffold-list" role="main">
             <h1><s:message code="usuario.nuevo.label" /></h1>
             <form:form commandName="usuario" action="crea" method="post">
+                <form:errors path="*" cssClass="errors" element="ul" />
                 <fieldset class="form">
 
-                    <div class="fieldcontain  required">
+                    <div class="fieldcontain required">
                         <label for="username">
                             <s:message code="usuario.username.label" />
                             <span class="required-indicator">*</span>
                         </label>
-                        <form:input path="username" maxlength="128" />
-                        <form:errors path="username" />
+                        <form:input path="username" maxlength="128" required="true" />
+                        <form:errors path="username" cssClass="errors" />
                     </div>
 
                     <div class="fieldcontain  required">
@@ -41,8 +42,8 @@
                             <s:message code="usuario.password.label" />
                             <span class="required-indicator">*</span>
                         </label>
-                        <form:password path="password" />
-                        <form:errors path="password" />
+                        <form:password path="password" required="true" showPassword="true" />
+                        <form:errors path="password" cssClass="errors" />
                     </div>
 
                     <div class="fieldcontain  required">
@@ -50,8 +51,8 @@
                             <s:message code="usuario.nombre.label" />
                             <span class="required-indicator">*</span>
                         </label>
-                        <form:input path="nombre" maxlength="128" />
-                        <form:errors path="nombre" />
+                        <form:input path="nombre" maxlength="128" required="true" />
+                        <form:errors path="nombre" cssClass="errors" />
                     </div>
 
                     <div class="fieldcontain  required">
@@ -59,8 +60,8 @@
                             <s:message code="usuario.apellido.label" />
                             <span class="required-indicator">*</span>
                         </label>
-                        <form:input path="apellido" maxlength="128" />
-                        <form:errors path="apellido" />
+                        <form:input path="apellido" maxlength="128" required="true" />
+                        <form:errors path="apellido" cssClass="errors" />
                     </div>
 
                     <div class="fieldcontain  required">
@@ -68,10 +69,9 @@
                             <s:message code="usuario.correo.label" />
                             <span class="required-indicator">*</span>
                         </label>
-                        <form:input path="correo" maxlength="128" />
-                        <form:errors path="correo" />
+                        <form:input path="correo" maxlength="128" required="true" />
+                        <form:errors path="correo" cssClass="errors" />
                     </div>
-
 
                     <div class="fieldcontain  required">
                         <label for="roles">
@@ -82,6 +82,7 @@
                         <c:forEach items="${roles}" var="rol">
                             <input name="roles" type="checkbox" value="${rol.authority}" <c:if test="${not empty seleccionados[rol.authority]}" >checked="checked"</c:if> /> <s:message code="${rol.authority}" />&nbsp;
                         </c:forEach>
+                        <form:errors path="authorities" cssClass="errors" />
 
                     </div>
 

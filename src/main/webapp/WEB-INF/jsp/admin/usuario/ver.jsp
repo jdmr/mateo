@@ -25,7 +25,13 @@
 
         <div id="ver-usuario" class="content scaffold-list" role="main">
             <h1><s:message code="usuario.ver.label" /></h1>
+            
+            <c:if test="${not empty message}">
+                <div class="message" role="status"><s:message code="${message}" arguments="${messageAttrs}" /></div>
+            </c:if>
+                
             <form:form commandName="usuario">
+                <form:errors path="*" cssClass="errors" element="ul" />
                 <ol class="property-list usuario">
                     <li class="fieldcontain">
                         <span id="username-label" class="property-label"><s:message code="usuario.username.label" /></span>

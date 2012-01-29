@@ -31,6 +31,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *
@@ -45,22 +46,22 @@ public class Usuario implements Serializable {
     private Long id;
     @Version
     private Integer version;
-    @NotNull
+    @NotEmpty
     @Column(unique = true, nullable = false, length = 128)
     private String username;
-    @NotNull
+    @NotEmpty
     @Column(nullable = false)
     private String password;
     @Column(nullable = false)
     private Boolean enabled = true;
-    @NotNull
+    @NotEmpty
     @Column(nullable = false, length = 128)
     private String nombre;
-    @NotNull
+    @NotEmpty
     @Column(nullable = false, length = 128)
     private String apellido;
     @Email
-    @NotNull
+    @NotEmpty
     @Column(nullable = false, length = 128)
     private String correo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy="usuario")

@@ -33,15 +33,19 @@ import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.model.UsuarioRol;
 import mx.edu.um.mateo.general.utils.UltimoException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
@@ -89,11 +93,42 @@ public class UsuarioController {
     }
 
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, @Valid Usuario usuario, Model modelo) {
+    public String crea(HttpServletRequest request, @Valid Usuario usuario, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         log.debug("Valores: {}", new Object[]{request.getParameterValues("roles")});
 
-        Long almacenId = (Long) request.getSession().getAttribute("almacenId");
-        usuario = usuarioDao.crea(usuario, almacenId, request.getParameterValues("roles"));
+        if (bindingResult.hasErrors()) {
+            log.debug("Hubo algun error en la forma, regresando");
+            List<Rol> roles = usuarioDao.roles();
+            modelo.addAttribute("roles", roles);
+
+            Map<String, Boolean> seleccionados = new HashMap<>();
+            for (UsuarioRol usuarioRol : usuario.getAuthorities()) {
+                seleccionados.put(usuarioRol.getRol().getAuthority(), Boolean.TRUE);
+            }
+            modelo.addAttribute("seleccionados", seleccionados);
+            return "admin/usuario/nuevo";
+        }
+
+        try {
+            Long almacenId = (Long) request.getSession().getAttribute("almacenId");
+            usuario = usuarioDao.crea(usuario, almacenId, request.getParameterValues("roles"));
+        } catch (ConstraintViolationException e) {
+            log.error("No se pudo crear al usuario", e);
+//            bindingResult.addError(new ObjectError("usuario.username", new String[]{"campo.duplicado.message"}, new String[]{"username"}, null));
+            errors.rejectValue("username", "campo.duplicado.message", new String[]{"username"}, null);
+            List<Rol> roles = usuarioDao.roles();
+            modelo.addAttribute("roles", roles);
+
+            Map<String, Boolean> seleccionados = new HashMap<>();
+            for (UsuarioRol usuarioRol : usuario.getAuthorities()) {
+                seleccionados.put(usuarioRol.getRol().getAuthority(), Boolean.TRUE);
+            }
+            modelo.addAttribute("seleccionados", seleccionados);
+            return "admin/usuario/nuevo";
+        }
+
+        redirectAttributes.addFlashAttribute("message", "usuario.creado.message");
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{usuario.getUsername()});
 
         return "redirect:/admin/usuario/ver/" + usuario.getId();
     }
