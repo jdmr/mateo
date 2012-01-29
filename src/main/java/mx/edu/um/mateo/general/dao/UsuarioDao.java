@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.model.UsuarioRol;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Criteria;
@@ -96,15 +97,35 @@ public class UsuarioDao {
         return (Usuario) query.uniqueResult();
     }
     
-    public Usuario crea(Usuario usuario, Long almacenId) {
+    public Usuario crea(Usuario usuario, Long almacenId, String[] nombreDeRoles) {
         Almacen almacen = (Almacen) currentSession().get(Almacen.class, almacenId);
         usuario.setAlmacen(almacen);
         usuario.setEmpresa(almacen.getEmpresa());
+
+        Query query = currentSession().createQuery("select r from Rol r where r.authority = :nombre");
+        for(String nombre : nombreDeRoles) {
+            query.setString("nombre", nombre);
+            Rol rol = (Rol) query.uniqueResult();
+            UsuarioRol usuarioRol = new UsuarioRol(usuario, rol);
+            log.debug("Guardando la relacion {}", usuarioRol);
+            usuario.getAuthorities().add(usuarioRol);
+        }
+        log.debug("Roles del usuario {}",usuario.getAuthorities());
+        
         currentSession().save(usuario);
+        currentSession().flush();
         return usuario;
     }
     
-    public Usuario actualiza(Usuario usuario) {
+    public Usuario actualiza(Usuario usuario, String[] nombreDeRoles) {
+        usuario.getAuthorities().clear();
+        Query query = currentSession().createQuery("select r from Rol r where r.authority = :nombre");
+        for(String nombre : nombreDeRoles) {
+            query.setString("nombre", nombre);
+            Rol rol = (Rol) query.uniqueResult();
+            usuario.getAuthorities().add(new UsuarioRol(usuario, rol));
+        }
+        log.debug("Roles del usuario {}",usuario.getAuthorities());
         currentSession().update(usuario);
         return usuario;
     }

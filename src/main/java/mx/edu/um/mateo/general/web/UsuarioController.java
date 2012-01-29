@@ -23,6 +23,7 @@
  */
 package mx.edu.um.mateo.general.web;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +31,8 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.model.UsuarioRol;
+import mx.edu.um.mateo.general.utils.UltimoException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -64,6 +68,11 @@ public class UsuarioController {
         log.debug("Mostrando usuario {}", id);
         Usuario usuario = usuarioDao.obtiene(id);
         List<Rol> roles = usuarioDao.roles();
+        Map<String, Boolean> seleccionados = new HashMap<>();
+        for (UsuarioRol usuarioRol : usuario.getAuthorities()) {
+            seleccionados.put(usuarioRol.getRol().getAuthority(), Boolean.TRUE);
+        }
+        modelo.addAttribute("seleccionados", seleccionados);
         modelo.addAttribute("usuario", usuario);
         modelo.addAttribute("roles", roles);
         return "admin/usuario/ver";
@@ -81,10 +90,23 @@ public class UsuarioController {
 
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request, @Valid Usuario usuario, Model modelo) {
-        Long almacenId = (Long)request.getSession().getAttribute("almacenId");
-        
-        usuario = usuarioDao.crea(usuario, almacenId);
+        log.debug("Valores: {}", new Object[]{request.getParameterValues("roles")});
 
-        return "redirect:/admin/usuario/ver/"+usuario.getId();
+        Long almacenId = (Long) request.getSession().getAttribute("almacenId");
+        usuario = usuarioDao.crea(usuario, almacenId, request.getParameterValues("roles"));
+
+        return "redirect:/admin/usuario/ver/" + usuario.getId();
+    }
+
+    @RequestMapping(value = "/elimina", method = RequestMethod.POST)
+    public String elimina(@RequestParam Long id) {
+        log.debug("Elimina usuario");
+        try {
+            usuarioDao.elimina(id);
+        } catch (UltimoException e) {
+            log.error("No se pudo eliminar el usuario " + id, e);
+        }
+
+        return "redirect:/admin/usuario";
     }
 }

@@ -63,11 +63,8 @@ public class Usuario implements Serializable {
     @NotNull
     @Column(nullable = false, length = 128)
     private String correo;
-    @ManyToMany
-    @JoinTable(name = "usuarios_roles", joinColumns = {
-        @JoinColumn(name = "usuario_id", referencedColumnName = "id")}, inverseJoinColumns = {
-        @JoinColumn(name = "rol_id", referencedColumnName = "id")})
-    private List<Rol> authorities;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy="usuario")
+    private List<UsuarioRol> authorities = new ArrayList<>();
     @ManyToOne(optional = false)
     private Empresa empresa;
     @ManyToOne(optional = false)
@@ -76,14 +73,12 @@ public class Usuario implements Serializable {
     public Usuario() {
     }
 
-    public Usuario(String username, String password, String nombre, String apellido, String correo, Rol rol) {
+    public Usuario(String username, String password, String nombre, String apellido, String correo) {
         this.username = username;
         this.password = password;
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;
-        authorities = new ArrayList<>();
-        authorities.add(rol);
     }
 
     /**
@@ -201,14 +196,14 @@ public class Usuario implements Serializable {
     /**
      * @return the authorities
      */
-    public List<Rol> getAuthorities() {
+    public List<UsuarioRol> getAuthorities() {
         return authorities;
     }
 
     /**
      * @param authorities the authorities to set
      */
-    public void setAuthorities(List<Rol> authorities) {
+    public void setAuthorities(List<UsuarioRol> authorities) {
         this.authorities = authorities;
     }
 
