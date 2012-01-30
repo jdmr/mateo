@@ -30,6 +30,7 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.SpringSecurityUtils;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
@@ -54,6 +55,8 @@ public class UsuarioController {
     private static final Logger log = LoggerFactory.getLogger(AdminController.class);
     @Autowired
     private UsuarioDao usuarioDao;
+    @Autowired
+    private SpringSecurityUtils springSecurityUtils;
 
     @RequestMapping
     public String lista(Model modelo) {
@@ -68,15 +71,17 @@ public class UsuarioController {
         log.debug("Mostrando usuario {}", id);
         Usuario usuario = usuarioDao.obtiene(id);
         List<Rol> roles = usuarioDao.roles();
+
         modelo.addAttribute("usuario", usuario);
         modelo.addAttribute("roles", roles);
+
         return "admin/usuario/ver";
     }
 
     @RequestMapping("/nuevo")
     public String nuevo(Model modelo) {
         log.debug("Nuevo usuario");
-        List<Rol> roles = usuarioDao.roles();
+        List<Rol> roles = obtieneRoles();
         Usuario usuario = new Usuario();
         modelo.addAttribute("usuario", usuario);
         modelo.addAttribute("roles", roles);
@@ -90,7 +95,7 @@ public class UsuarioController {
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
-            List<Rol> roles = usuarioDao.roles();
+            List<Rol> roles = obtieneRoles();
             modelo.addAttribute("roles", roles);
             return "admin/usuario/nuevo";
         }
@@ -105,7 +110,7 @@ public class UsuarioController {
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al usuario", e);
             errors.rejectValue("username", "campo.duplicado.message", new String[]{"username"}, null);
-            List<Rol> roles = usuarioDao.roles();
+            List<Rol> roles = obtieneRoles();
             modelo.addAttribute("roles", roles);
             return "admin/usuario/nuevo";
         }
@@ -119,7 +124,7 @@ public class UsuarioController {
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Edita usuario {}", id);
-        List<Rol> roles = usuarioDao.roles();
+        List<Rol> roles = obtieneRoles();
         Usuario usuario = usuarioDao.obtiene(id);
         modelo.addAttribute("usuario", usuario);
         modelo.addAttribute("roles", roles);
@@ -130,7 +135,7 @@ public class UsuarioController {
     public String actualiza(HttpServletRequest request, @Valid Usuario usuario, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
-            List<Rol> roles = usuarioDao.roles();
+            List<Rol> roles = obtieneRoles();
             modelo.addAttribute("roles", roles);
             return "admin/usuario/edita";
         }
@@ -145,7 +150,7 @@ public class UsuarioController {
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al usuario", e);
             errors.rejectValue("username", "campo.duplicado.message", new String[]{"username"}, null);
-            List<Rol> roles = usuarioDao.roles();
+            List<Rol> roles = obtieneRoles();
             modelo.addAttribute("roles", roles);
             return "admin/usuario/nuevo";
         }
@@ -178,5 +183,21 @@ public class UsuarioController {
         }
 
         return "redirect:/admin/usuario";
+    }
+
+    private List<Rol> obtieneRoles() {
+        List<Rol> roles = usuarioDao.roles();
+        if (springSecurityUtils.ifAnyGranted("ROLE_ADMIN")) {
+            // no se hace nada
+        } else if (springSecurityUtils.ifAnyGranted("ROLE_ORG")) {
+            roles.remove(new Rol("ROLE_ADMIN"));
+            roles.remove(new Rol("ROLE_ORG"));
+        } else {
+            roles.remove(new Rol("ROLE_ADMIN"));
+            roles.remove(new Rol("ROLE_ORG"));
+            roles.remove(new Rol("ROLE_EMP"));
+        }
+
+        return roles;
     }
 }

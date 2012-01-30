@@ -100,7 +100,7 @@ public class UsuarioDao {
         Almacen almacen = (Almacen) currentSession().get(Almacen.class, almacenId);
         usuario.setAlmacen(almacen);
         usuario.setEmpresa(almacen.getEmpresa());
-        passwordEncoder.encodePassword(usuario.getPassword(), usuario.getUsername());
+        usuario.setPassword(passwordEncoder.encodePassword(usuario.getPassword(), usuario.getUsername()));
 
         usuario.getRoles().clear();
         Query query = currentSession().createQuery("select r from Rol r where r.authority = :nombre");

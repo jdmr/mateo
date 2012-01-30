@@ -47,7 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author jdmr
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:mateo.xml"})
+@ContextConfiguration(locations = {"classpath:mateo.xml","classpath:security.xml"})
 @Transactional
 public class UsuarioDaoTest {
 
