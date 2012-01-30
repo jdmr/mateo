@@ -166,15 +166,13 @@ public class UsuarioDaoTest {
         }
         usuario = instance.crea(usuario, almacenId, new String[] {rol.getAuthority()});
         Long id = usuario.getId();
+        assertNotNull(id);
 
-        Usuario result = instance.obtiene(id);
-        assertEquals(usuario, result);
-
-        result.setNombre("PRUEBA");
-        instance.actualiza(result, almacenId, new String[] {rol.getAuthority()});
+        usuario.setNombre("PRUEBA");
+        instance.actualiza(usuario, almacenId, new String[] {rol.getAuthority()});
 
         Usuario prueba = instance.obtiene(id);
-        assertEquals(result.getNombre(), prueba.getNombre());
+        assertEquals(usuario.getNombre(), prueba.getNombre());
     }
 
     @Test

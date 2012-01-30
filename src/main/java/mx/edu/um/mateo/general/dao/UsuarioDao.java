@@ -31,10 +31,7 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.model.UsuarioRol;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
-import org.hibernate.Criteria;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.*;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -121,7 +118,7 @@ public class UsuarioDao {
         Almacen almacen = (Almacen) currentSession().get(Almacen.class, almacenId);
         usuario.setAlmacen(almacen);
         usuario.setEmpresa(almacen.getEmpresa());
-
+        
         usuario.getAuthorities().clear();
         Query query = currentSession().createQuery("select r from Rol r where r.authority = :nombre");
         for (String nombre : nombreDeRoles) {
@@ -130,8 +127,14 @@ public class UsuarioDao {
             usuario.getAuthorities().add(new UsuarioRol(usuario, rol));
         }
         log.debug("Roles del usuario {}", usuario.getAuthorities());
-        currentSession().update(usuario);
-        currentSession().flush();
+        try {
+            currentSession().update(usuario);
+            currentSession().flush();
+        } catch(NonUniqueObjectException e) {
+            log.warn("Ya hay un objeto previamente cargado, intentando hacer merge",e);
+            currentSession().merge(usuario);
+            currentSession().flush();
+        }
         return usuario;
     }
 
@@ -155,7 +158,7 @@ public class UsuarioDao {
         Query query = currentSession().createQuery("select r from Rol r");
         return query.list();
     }
-
+    
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
