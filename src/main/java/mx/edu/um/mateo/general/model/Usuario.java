@@ -24,14 +24,13 @@
 package mx.edu.um.mateo.general.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  *
@@ -39,7 +38,7 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 @Entity
 @Table(name = "usuarios")
-public class Usuario implements Serializable {
+public class Usuario implements Serializable, UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,6 +53,12 @@ public class Usuario implements Serializable {
     private String password;
     @Column(nullable = false)
     private Boolean enabled = true;
+    @Column(nullable = false, name = "account_expired")
+    private Boolean accountExpired = false;
+    @Column(nullable = false, name = "account_locked")
+    private Boolean accountLocked = false;
+    @Column(nullable = false, name = "credentials_expired")
+    private Boolean credentialsExpired = false;
     @NotEmpty
     @Column(nullable = false, length = 128)
     private String nombre;
@@ -64,8 +69,11 @@ public class Usuario implements Serializable {
     @NotEmpty
     @Column(nullable = false, length = 128)
     private String correo;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy="usuario")
-    private List<UsuarioRol> authorities = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "usuarios_roles", joinColumns = {
+        @JoinColumn(name = "usuario_id")}, inverseJoinColumns =
+    @JoinColumn(name = "rol_id"))
+    private Set<Rol> roles = new HashSet<>();
     @ManyToOne(optional = false)
     private Empresa empresa;
     @ManyToOne(optional = false)
@@ -113,6 +121,7 @@ public class Usuario implements Serializable {
     /**
      * @return the username
      */
+    @Override
     public String getUsername() {
         return username;
     }
@@ -127,6 +136,7 @@ public class Usuario implements Serializable {
     /**
      * @return the password
      */
+    @Override
     public String getPassword() {
         return password;
     }
@@ -195,17 +205,26 @@ public class Usuario implements Serializable {
     }
 
     /**
-     * @return the authorities
+     * Agrega un rol a la lista de roles
+     * 
+     * @param rol 
      */
-    public List<UsuarioRol> getAuthorities() {
-        return authorities;
+    public void addRol(Rol rol) {
+        this.getRoles().add(rol);
     }
 
     /**
-     * @param authorities the authorities to set
+     * @return los roles
      */
-    public void setAuthorities(List<UsuarioRol> authorities) {
-        this.authorities = authorities;
+    public Set<Rol> getRoles() {
+        return roles;
+    }
+
+    /**
+     * @param roles Los roles a asignar
+     */
+    public void setRoles(Set<Rol> roles) {
+        this.roles = roles;
     }
 
     /**
@@ -234,6 +253,33 @@ public class Usuario implements Serializable {
      */
     public void setAlmacen(Almacen almacen) {
         this.almacen = almacen;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<GrantedAuthority> authorities = new LinkedHashSet<>();
+        authorities.addAll(roles);
+        return authorities;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return !accountExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !accountLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return !credentialsExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 
     @Override

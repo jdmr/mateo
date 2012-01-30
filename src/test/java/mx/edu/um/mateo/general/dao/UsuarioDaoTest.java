@@ -37,6 +37,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +58,8 @@ public class UsuarioDaoTest {
     private RolDao rolDao;
     @Autowired
     private OrganizacionDao organizacionDao;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UsuarioDaoTest() {
     }
@@ -67,6 +70,9 @@ public class UsuarioDaoTest {
     @Test
     public void debieraObtenerListaDeUsuarios() {
         log.debug("Debiera obtener lista de usuarios");
+        
+        log.debug("Password admin {}", passwordEncoder.encodePassword("admin", "admin"));
+        log.debug("Password user {}", passwordEncoder.encodePassword("user", "user"));
 
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
         organizacion = organizacionDao.crea(organizacion);
@@ -118,7 +124,7 @@ public class UsuarioDaoTest {
 
         Usuario result = instance.obtiene(id);
         assertEquals(usuario, result);
-        assertEquals("ROLE_TEST", result.getAuthorities().get(0).getRol().getAuthority());
+        assertTrue(result.getRoles().contains(rol));
     }
 
     /**
@@ -198,14 +204,14 @@ public class UsuarioDaoTest {
 
         Usuario result = instance.obtiene(id);
         assertEquals(usuario, result);
-        assertEquals("ROLE_TEST", result.getAuthorities().get(0).getRol().getAuthority());
+        assertTrue(result.getRoles().contains(rol));
 
         result.setNombre("PRUEBA");
         instance.actualiza(result, almacenId, new String[]{rol2.getAuthority()});
 
         Usuario prueba = instance.obtiene(id);
         assertEquals(result.getNombre(), prueba.getNombre());
-        assertEquals("ROLE_TEST2", prueba.getAuthorities().get(0).getRol().getAuthority());
+        assertTrue(result.getRoles().contains(rol2));
     }
 
     /**

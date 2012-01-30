@@ -23,7 +23,6 @@
  */
 package mx.edu.um.mateo.general.web;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +30,6 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.model.UsuarioRol;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
@@ -42,11 +40,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -74,11 +68,6 @@ public class UsuarioController {
         log.debug("Mostrando usuario {}", id);
         Usuario usuario = usuarioDao.obtiene(id);
         List<Rol> roles = usuarioDao.roles();
-        Map<String, Boolean> seleccionados = new HashMap<>();
-        for (UsuarioRol usuarioRol : usuario.getAuthorities()) {
-            seleccionados.put(usuarioRol.getRol().getAuthority(), Boolean.TRUE);
-        }
-        modelo.addAttribute("seleccionados", seleccionados);
         modelo.addAttribute("usuario", usuario);
         modelo.addAttribute("roles", roles);
         return "admin/usuario/ver";
@@ -103,12 +92,6 @@ public class UsuarioController {
             log.debug("Hubo algun error en la forma, regresando");
             List<Rol> roles = usuarioDao.roles();
             modelo.addAttribute("roles", roles);
-
-            Map<String, Boolean> seleccionados = new HashMap<>();
-            for (UsuarioRol usuarioRol : usuario.getAuthorities()) {
-                seleccionados.put(usuarioRol.getRol().getAuthority(), Boolean.TRUE);
-            }
-            modelo.addAttribute("seleccionados", seleccionados);
             return "admin/usuario/nuevo";
         }
 
@@ -124,12 +107,6 @@ public class UsuarioController {
             errors.rejectValue("username", "campo.duplicado.message", new String[]{"username"}, null);
             List<Rol> roles = usuarioDao.roles();
             modelo.addAttribute("roles", roles);
-
-            Map<String, Boolean> seleccionados = new HashMap<>();
-            for (UsuarioRol usuarioRol : usuario.getAuthorities()) {
-                seleccionados.put(usuarioRol.getRol().getAuthority(), Boolean.TRUE);
-            }
-            modelo.addAttribute("seleccionados", seleccionados);
             return "admin/usuario/nuevo";
         }
 
@@ -146,13 +123,6 @@ public class UsuarioController {
         Usuario usuario = usuarioDao.obtiene(id);
         modelo.addAttribute("usuario", usuario);
         modelo.addAttribute("roles", roles);
-        
-        Map<String, Boolean> seleccionados = new HashMap<>();
-        for (UsuarioRol usuarioRol : usuario.getAuthorities()) {
-            seleccionados.put(usuarioRol.getRol().getAuthority(), Boolean.TRUE);
-        }
-        modelo.addAttribute("seleccionados", seleccionados);
-
         return "admin/usuario/edita";
     }
 
@@ -162,12 +132,6 @@ public class UsuarioController {
             log.error("Hubo algun error en la forma, regresando");
             List<Rol> roles = usuarioDao.roles();
             modelo.addAttribute("roles", roles);
-
-            Map<String, Boolean> seleccionados = new HashMap<>();
-            for (UsuarioRol usuarioRol : usuario.getAuthorities()) {
-                seleccionados.put(usuarioRol.getRol().getAuthority(), Boolean.TRUE);
-            }
-            modelo.addAttribute("seleccionados", seleccionados);
             return "admin/usuario/edita";
         }
 
@@ -183,12 +147,6 @@ public class UsuarioController {
             errors.rejectValue("username", "campo.duplicado.message", new String[]{"username"}, null);
             List<Rol> roles = usuarioDao.roles();
             modelo.addAttribute("roles", roles);
-
-            Map<String, Boolean> seleccionados = new HashMap<>();
-            for (UsuarioRol usuarioRol : usuario.getAuthorities()) {
-                seleccionados.put(usuarioRol.getRol().getAuthority(), Boolean.TRUE);
-            }
-            modelo.addAttribute("seleccionados", seleccionados);
             return "admin/usuario/nuevo";
         }
 
@@ -210,24 +168,12 @@ public class UsuarioController {
             bindingResult.addError(new ObjectError("usuario", new String[]{"ultimo.usuario.no.eliminado.message"}, null, null));
             List<Rol> roles = usuarioDao.roles();
             modelo.addAttribute("roles", roles);
-
-            Map<String, Boolean> seleccionados = new HashMap<>();
-            for (UsuarioRol usuarioRol : usuarioDao.obtiene(id).getAuthorities()) {
-                seleccionados.put(usuarioRol.getRol().getAuthority(), Boolean.TRUE);
-            }
-            modelo.addAttribute("seleccionados", seleccionados);
             return "admin/usuario/ver";
         } catch (Exception e) {
             log.error("No se pudo eliminar el usuario " + id, e);
             bindingResult.addError(new ObjectError("usuario", new String[]{"usuario.no.eliminado.message"}, null, null));
             List<Rol> roles = usuarioDao.roles();
             modelo.addAttribute("roles", roles);
-
-            Map<String, Boolean> seleccionados = new HashMap<>();
-            for (UsuarioRol usuarioRol : usuarioDao.obtiene(id).getAuthorities()) {
-                seleccionados.put(usuarioRol.getRol().getAuthority(), Boolean.TRUE);
-            }
-            modelo.addAttribute("seleccionados", seleccionados);
             return "admin/usuario/ver";
         }
 

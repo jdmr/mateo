@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.model.UsuarioRol;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.*;
@@ -37,6 +36,7 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,13 +44,15 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author jdmr
  */
-@Repository
+@Repository("userDao")
 @Transactional
 public class UsuarioDao {
 
     private static final Logger log = LoggerFactory.getLogger(UsuarioDao.class);
     @Autowired
     private SessionFactory sessionFactory;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UsuarioDao() {
         log.info("Se ha creado una nueva instancia de UsuarioDao");
@@ -98,14 +100,14 @@ public class UsuarioDao {
         Almacen almacen = (Almacen) currentSession().get(Almacen.class, almacenId);
         usuario.setAlmacen(almacen);
         usuario.setEmpresa(almacen.getEmpresa());
+        passwordEncoder.encodePassword(usuario.getPassword(), usuario.getUsername());
 
+        usuario.getRoles().clear();
         Query query = currentSession().createQuery("select r from Rol r where r.authority = :nombre");
         for (String nombre : nombreDeRoles) {
             query.setString("nombre", nombre);
             Rol rol = (Rol) query.uniqueResult();
-            UsuarioRol usuarioRol = new UsuarioRol(usuario, rol);
-            log.debug("Guardando la relacion {}", usuarioRol);
-            usuario.getAuthorities().add(usuarioRol);
+            usuario.addRol(rol);
         }
         log.debug("Roles del usuario {}", usuario.getAuthorities());
 
@@ -115,27 +117,34 @@ public class UsuarioDao {
     }
 
     public Usuario actualiza(Usuario usuario, Long almacenId, String[] nombreDeRoles) {
-        Almacen almacen = (Almacen) currentSession().get(Almacen.class, almacenId);
-        usuario.setAlmacen(almacen);
-        usuario.setEmpresa(almacen.getEmpresa());
-        
-        usuario.getAuthorities().clear();
-        Query query = currentSession().createQuery("select r from Rol r where r.authority = :nombre");
-        for (String nombre : nombreDeRoles) {
-            query.setString("nombre", nombre);
-            Rol rol = (Rol) query.uniqueResult();
-            usuario.getAuthorities().add(new UsuarioRol(usuario, rol));
+        Usuario viejoUsuario = (Usuario)currentSession().get(Usuario.class, usuario.getId());
+        if (viejoUsuario.getVersion() == usuario.getVersion()) {
+            usuario.setAlmacen(viejoUsuario.getAlmacen());
+            usuario.setEmpresa(viejoUsuario.getEmpresa());
+            if (passwordEncoder.isPasswordValid(viejoUsuario.getPassword(), usuario.getPassword(), usuario.getUsername())) {
+                usuario.setPassword(passwordEncoder.encodePassword(usuario.getPassword(), usuario.getUsername()));
+            }
+
+            usuario.getRoles().clear();
+            Query query = currentSession().createQuery("select r from Rol r where r.authority = :nombre");
+            for (String nombre : nombreDeRoles) {
+                query.setString("nombre", nombre);
+                Rol rol = (Rol) query.uniqueResult();
+                usuario.addRol(rol);
+            }
+            log.debug("Roles del usuario {}", usuario.getAuthorities());
+            try {
+                currentSession().update(usuario);
+                currentSession().flush();
+            } catch(NonUniqueObjectException e) {
+                log.warn("Ya hay un objeto previamente cargado, intentando hacer merge",e);
+                currentSession().merge(usuario);
+                currentSession().flush();
+            }
+            return usuario;
+        } else {
+            throw new RuntimeException("No se pude actualizar porque ya alguien lo actualizo antes");
         }
-        log.debug("Roles del usuario {}", usuario.getAuthorities());
-        try {
-            currentSession().update(usuario);
-            currentSession().flush();
-        } catch(NonUniqueObjectException e) {
-            log.warn("Ya hay un objeto previamente cargado, intentando hacer merge",e);
-            currentSession().merge(usuario);
-            currentSession().flush();
-        }
-        return usuario;
     }
 
     public String elimina(Long id) throws UltimoException {
@@ -162,4 +171,5 @@ public class UsuarioDao {
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
+
 }

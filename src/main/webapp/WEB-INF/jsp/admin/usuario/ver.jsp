@@ -25,11 +25,11 @@
 
         <div id="ver-usuario" class="content scaffold-list" role="main">
             <h1><s:message code="usuario.ver.label" /></h1>
-            
+
             <c:if test="${not empty message}">
                 <div class="message" role="status"><s:message code="${message}" arguments="${messageAttrs}" /></div>
             </c:if>
-            
+
             <c:url var="eliminaUrl" value="/admin/usuario/elimina" />
             <form:form commandName="usuario" action="${eliminaUrl}">
                 <form:errors path="*" cssClass="errors" element="ul" />
@@ -75,9 +75,8 @@
                         <span class="property-value" aria-labelledby="roles-label">
 
                             <c:forEach items="${roles}" var="rol">
-                                <input name="authorities" disabled="disabled" type="checkbox" value="${rol.authority}" <c:if test="${not empty seleccionados[rol.authority]}" >checked="checked"</c:if> /> <s:message code="${rol.authority}" />&nbsp;
+                                <form:checkbox path="roles" value="${rol.authority}" disabled="true" /> <s:message code="${rol.authority}" />&nbsp;
                             </c:forEach>
-
                         </span>
                     </li>
 

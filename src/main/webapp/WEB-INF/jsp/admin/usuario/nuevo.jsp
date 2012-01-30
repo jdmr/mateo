@@ -80,7 +80,7 @@
                         </label>
 
                         <c:forEach items="${roles}" var="rol">
-                            <input name="roles" type="checkbox" value="${rol.authority}" <c:if test="${not empty seleccionados[rol.authority]}" >checked="checked"</c:if> /> <s:message code="${rol.authority}" />&nbsp;
+                            <form:checkbox path="roles" value="${rol.authority}" /> <s:message code="${rol.authority}" />&nbsp;
                         </c:forEach>
                         <form:errors path="authorities" cssClass="errors" />
 

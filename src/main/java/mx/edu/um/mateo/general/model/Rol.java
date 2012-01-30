@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import org.springframework.security.core.GrantedAuthority;
 
 /**
  *
@@ -34,7 +35,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "roles")
-public class Rol implements Serializable {
+public class Rol implements Serializable, GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,6 +84,7 @@ public class Rol implements Serializable {
     /**
      * @return the authority
      */
+    @Override
     public String getAuthority() {
         return authority;
     }
