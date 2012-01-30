@@ -113,6 +113,7 @@ public class UsuarioDao {
 
         currentSession().save(usuario);
         currentSession().flush();
+        
         return usuario;
     }
 
