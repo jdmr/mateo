@@ -45,12 +45,14 @@ public class Usuario implements Serializable, UserDetails {
     private Long id;
     @Version
     private Integer version;
+    @Email
     @NotEmpty
     @Column(unique = true, nullable = false, length = 128)
     private String username;
-    @NotEmpty
-    @Column(nullable = false)
+    @Transient
     private String password;
+    @Column(nullable = true, name = "open_id")
+    private String openId;
     @Column(nullable = false)
     private Boolean enabled = true;
     @Column(nullable = false, name = "account_expired")
@@ -65,10 +67,6 @@ public class Usuario implements Serializable, UserDetails {
     @NotEmpty
     @Column(nullable = false, length = 128)
     private String apellido;
-    @Email
-    @NotEmpty
-    @Column(nullable = false, length = 128)
-    private String correo;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usuarios_roles", joinColumns = {
         @JoinColumn(name = "usuario_id")}, inverseJoinColumns =
@@ -82,12 +80,11 @@ public class Usuario implements Serializable, UserDetails {
     public Usuario() {
     }
 
-    public Usuario(String username, String password, String nombre, String apellido, String correo) {
+    public Usuario(String username, String password, String nombre, String apellido) {
         this.username = username;
         this.password = password;
         this.nombre = nombre;
         this.apellido = apellido;
-        this.correo = correo;
     }
 
     /**
@@ -149,6 +146,20 @@ public class Usuario implements Serializable, UserDetails {
     }
 
     /**
+     * @return the openId
+     */
+    public String getOpenId() {
+        return openId;
+    }
+
+    /**
+     * @param openId the openId to set
+     */
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
+    /**
      * @return the enabled
      */
     public Boolean getEnabled() {
@@ -188,20 +199,6 @@ public class Usuario implements Serializable, UserDetails {
      */
     public void setApellido(String apellido) {
         this.apellido = apellido;
-    }
-
-    /**
-     * @return the correo
-     */
-    public String getCorreo() {
-        return correo;
-    }
-
-    /**
-     * @param correo the correo to set
-     */
-    public void setCorreo(String correo) {
-        this.correo = correo;
     }
 
     /**
@@ -308,6 +305,6 @@ public class Usuario implements Serializable, UserDetails {
 
     @Override
     public String toString() {
-        return "Usuario{" + "username=" + username + ", nombre=" + nombre + ", apellido=" + apellido + ", correo=" + correo + '}';
+        return "Usuario{" + "username=" + username + ", nombre=" + nombre + ", apellido=" + apellido + '}';
     }
 }

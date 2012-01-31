@@ -37,7 +37,6 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,8 +57,6 @@ public class UsuarioDaoTest {
     private RolDao rolDao;
     @Autowired
     private OrganizacionDao organizacionDao;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     public UsuarioDaoTest() {
     }
@@ -71,16 +68,13 @@ public class UsuarioDaoTest {
     public void debieraObtenerListaDeUsuarios() {
         log.debug("Debiera obtener lista de usuarios");
         
-        log.debug("Password admin {}", passwordEncoder.encodePassword("admin", "admin"));
-        log.debug("Password user {}", passwordEncoder.encodePassword("user", "user"));
-
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
         organizacion = organizacionDao.crea(organizacion);
 
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
         for (int i = 0; i < 20; i++) {
-            Usuario usuario = new Usuario("test-" + i, "test-" + i, "TEST " + i, "TEST", "test" + i + "@test.com");
+            Usuario usuario = new Usuario("test-" + i+"@test.com", "test-" + i, "TEST " + i, "TEST");
             Long almacenId = 0l;
             actualizaUsuario:
             for (Empresa empresa : organizacion.getEmpresas()) {
@@ -110,7 +104,7 @@ public class UsuarioDaoTest {
         organizacion = organizacionDao.crea(organizacion);
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
-        Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com");
+        Usuario usuario = new Usuario("test01@test.com", "test-01", "TEST1", "TEST");
         Long almacenId = 0l;
         actualizaUsuario:
         for (Empresa empresa : organizacion.getEmpresas()) {
@@ -137,7 +131,7 @@ public class UsuarioDaoTest {
         organizacion = organizacionDao.crea(organizacion);
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
-        Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com");
+        Usuario usuario = new Usuario("test01@test.com", "test-01", "TEST1", "TEST");
         Long almacenId = 0l;
         actualizaUsuario:
         for (Empresa empresa : organizacion.getEmpresas()) {
@@ -161,7 +155,7 @@ public class UsuarioDaoTest {
         organizacion = organizacionDao.crea(organizacion);
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
-        Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com");
+        Usuario usuario = new Usuario("test01@test.com", "test-01", "TEST1", "TEST");
         Long almacenId = 0l;
         actualizaUsuario:
         for (Empresa empresa : organizacion.getEmpresas()) {
@@ -190,7 +184,7 @@ public class UsuarioDaoTest {
         rol = rolDao.crea(rol);
         Rol rol2 = new Rol("ROLE_TEST2");
         rol2 = rolDao.crea(rol2);
-        Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com");
+        Usuario usuario = new Usuario("test01@test.com", "test-01", "TEST1", "TEST");
         Long almacenId = 0l;
         actualizaUsuario:
         for (Empresa empresa : organizacion.getEmpresas()) {
@@ -224,7 +218,7 @@ public class UsuarioDaoTest {
         organizacion = organizacionDao.crea(organizacion);
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
-        Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com");
+        Usuario usuario = new Usuario("test01@test.com", "test-01", "TEST1", "TEST");
         Long almacenId = 0l;
         actualizaUsuario:
         for (Empresa empresa : organizacion.getEmpresas()) {
@@ -250,8 +244,8 @@ public class UsuarioDaoTest {
         organizacion = organizacionDao.crea(organizacion);
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
-        Usuario usuario = new Usuario("test-01", "test-01", "TEST1", "TEST", "test01@test.com");
-        Usuario usuario2 = new Usuario("test-02", "test-02", "TEST2", "TEST", "test02@test.com");
+        Usuario usuario = new Usuario("test01@test.com", "test-01", "TEST1", "TEST");
+        Usuario usuario2 = new Usuario("test02@test.com", "test-02", "TEST2", "TEST");
         Long almacenId = 0l;
         actualizaUsuario:
         for (Empresa empresa : organizacion.getEmpresas()) {

@@ -23,20 +23,24 @@
  */
 package mx.edu.um.mateo.general.service;
 
+import java.util.List;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.openid.OpenIDAttribute;
+import org.springframework.security.openid.OpenIDAuthenticationToken;
 
 /**
  *
  * @author jdmr
  */
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService, AuthenticationUserDetailsService<OpenIDAuthenticationToken> {
 
     private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
     @Autowired
@@ -44,11 +48,37 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.debug("Buscando al usuario por {}", username);
-        Usuario usuario = usuarioDao.obtiene(username);
+        log.debug("loadUserByUsername: {}", username);
+        Usuario usuario = usuarioDao.obtienePorOpenId(username);
         if (usuario == null) {
             throw new UsernameNotFoundException("No se encontro al usuario " + username);
         }
+        return (UserDetails) usuario;
+    }
+
+    @Override
+    public UserDetails loadUserDetails(OpenIDAuthenticationToken token) throws UsernameNotFoundException {
+        log.debug("loadUserDetails: {}", token);
+        String username = token.getIdentityUrl();
+        String email = "";
+        Usuario usuario = usuarioDao.obtienePorOpenId(username);
+        log.debug("Usuario encontrado : {}", usuario);
+        if (usuario == null) {
+            log.debug("Buscando atributo email");
+            List<OpenIDAttribute> attrs = token.getAttributes();
+            for (OpenIDAttribute attr : attrs) {
+                log.debug("Attr: {}", attr.getName());
+                if (attr.getName().equals("email")) {
+                    email = attr.getValues().get(0);
+                }
+            }
+            log.debug("Buscando por email {}", email);
+            usuario = usuarioDao.obtiene(email);
+            if (usuario == null) {
+                throw new UsernameNotFoundException("No se encontro al usuario " + username);
+            }
+        }
+        log.debug("Regresando usuario: {}", usuario);
         return (UserDetails) usuario;
     }
 }

@@ -28,7 +28,6 @@
                         <th><s:message code="usuario.username.label" /></th>
                         <th><s:message code="usuario.nombre.label" /></th>
                         <th><s:message code="usuario.apellido.label" /></th>
-                        <th><s:message code="usuario.correo.label" /></th>
                         <th><s:message code="empresa.label" /></th>
                     </tr>
                 </thead>
@@ -38,7 +37,6 @@
                             <td><a href="<c:url value='/admin/usuario/ver/${usuario.id}' />">${usuario.username}</a></td>
                             <td>${usuario.nombre}</td>
                             <td>${usuario.apellido}</td>
-                            <td>${usuario.correo}</td>
                             <td>${usuario.empresa.nombre}</td>
                         </tr>
                     </c:forEach>

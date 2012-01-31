@@ -36,7 +36,6 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,8 +50,6 @@ public class UsuarioDao {
     private static final Logger log = LoggerFactory.getLogger(UsuarioDao.class);
     @Autowired
     private SessionFactory sessionFactory;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     public UsuarioDao() {
         log.info("Se ha creado una nueva instancia de UsuarioDao");
@@ -96,11 +93,17 @@ public class UsuarioDao {
         return (Usuario) query.uniqueResult();
     }
 
+    public Usuario obtienePorOpenId(String username) {
+        log.debug("Buscando usuario por openId {}", username);
+        Query query = currentSession().createQuery("select u from Usuario u where u.openId = :username");
+        query.setString("username", username);
+        return (Usuario) query.uniqueResult();
+    }
+
     public Usuario crea(Usuario usuario, Long almacenId, String[] nombreDeRoles) {
         Almacen almacen = (Almacen) currentSession().get(Almacen.class, almacenId);
         usuario.setAlmacen(almacen);
         usuario.setEmpresa(almacen.getEmpresa());
-        usuario.setPassword(passwordEncoder.encodePassword(usuario.getPassword(), usuario.getUsername()));
 
         usuario.getRoles().clear();
         Query query = currentSession().createQuery("select r from Rol r where r.authority = :nombre");
@@ -122,9 +125,6 @@ public class UsuarioDao {
         if (viejoUsuario.getVersion() == usuario.getVersion()) {
             usuario.setAlmacen(viejoUsuario.getAlmacen());
             usuario.setEmpresa(viejoUsuario.getEmpresa());
-            if (passwordEncoder.isPasswordValid(viejoUsuario.getPassword(), usuario.getPassword(), usuario.getUsername())) {
-                usuario.setPassword(passwordEncoder.encodePassword(usuario.getPassword(), usuario.getUsername()));
-            }
 
             usuario.getRoles().clear();
             Query query = currentSession().createQuery("select r from Rol r where r.authority = :nombre");

@@ -20,11 +20,22 @@
         <intercept-url pattern="/admin/empresa/**" access="hasAnyRole('ROLE_ORG')" />
         <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_EMP')" />
         <intercept-url pattern="/**" access="isAuthenticated()" />
+        <!--
         <form-login login-page="/login.jsp" 
                     login-processing-url="/entrar" 
                     authentication-failure-url="/login.jsp?error=1" 
                     authentication-success-handler-ref="loginHandler" 
                     />
+        -->
+        <openid-login
+            login-page="/login.jsp"
+            authentication-failure-url="/login.jsp?error=1"
+            authentication-success-handler-ref="loginHandler" 
+        >
+            <attribute-exchange>
+                <openid-attribute name="email" type="http://axschema.org/contact/email" required="true"/>
+            </attribute-exchange>                        
+        </openid-login>
         <logout logout-url="/salir" logout-success-url="/" invalidate-session="true" />
         <remember-me key="M4t30"
                      authentication-success-handler-ref="loginHandler"
@@ -42,11 +53,7 @@
     -->
     <beans:bean name="userDetailsService" class="mx.edu.um.mateo.general.service.UserDetailsServiceImpl" />
     <authentication-manager alias="authenticationManager">
-        <authentication-provider user-service-ref="userDetailsService">
-            <password-encoder ref="passwordEncoder" >
-                <salt-source user-property="username" />
-            </password-encoder>
-        </authentication-provider>
+        <authentication-provider user-service-ref="userDetailsService" />
     </authentication-manager>
     
     <beans:bean id="roleHierarchy" class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">

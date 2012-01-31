@@ -56,13 +56,6 @@
                     </li>
 
                     <li class="fieldcontain">
-                        <span id="correo-label" class="property-label"><s:message code="usuario.correo.label" /></span>
-
-                        <span class="property-value" aria-labelledby="correo-label">${usuario.correo}</span>
-
-                    </li>
-
-                    <li class="fieldcontain">
                         <span id="empresa-label" class="property-label"><s:message code="empresa.label" /></span>
 
                         <span class="property-value" aria-labelledby="empresa-label"><a href="/mateo/empresa/show/1">${usuario.empresa.nombre}</a></span>

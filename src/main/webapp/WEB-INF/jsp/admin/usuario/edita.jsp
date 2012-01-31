@@ -41,15 +41,6 @@
                     </div>
 
                     <div class="fieldcontain  required">
-                        <label for="password">
-                            <s:message code="usuario.password.label" />
-                            <span class="required-indicator">*</span>
-                        </label>
-                        <form:password path="password" required="true" showPassword="true" />
-                        <form:errors path="password" cssClass="errors" />
-                    </div>
-
-                    <div class="fieldcontain  required">
                         <label for="nombre">
                             <s:message code="usuario.nombre.label" />
                             <span class="required-indicator">*</span>
@@ -65,15 +56,6 @@
                         </label>
                         <form:input path="apellido" maxlength="128" required="true" />
                         <form:errors path="apellido" cssClass="errors" />
-                    </div>
-
-                    <div class="fieldcontain  required">
-                        <label for="correo">
-                            <s:message code="usuario.correo.label" />
-                            <span class="required-indicator">*</span>
-                        </label>
-                        <form:input path="correo" maxlength="128" required="true" />
-                        <form:errors path="correo" cssClass="errors" />
                     </div>
 
                     <div class="fieldcontain  required">

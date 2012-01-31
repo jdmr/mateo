@@ -23,9 +23,9 @@
                 width: 340px;
                 padding-bottom: 6px;
                 margin: 60px auto;
-                text-align: left;
+                text-align: center;
                 border: 1px solid #aab;
-                background-color: #f0f0fa;
+                background-color: #ffffff;
                 -moz-box-shadow: 2px 2px 2px #eee;
                 -webkit-box-shadow: 2px 2px 2px #eee;
                 -khtml-box-shadow: 2px 2px 2px #eee;
@@ -108,34 +108,12 @@
                 </p>
                 </c:if>
 
-                <form action='<c:url value="/entrar" />' method='POST' id='loginForm' class='cssform' autocomplete='off'>
-                    <p>
-                        <label for='username'><s:message code="login.username" /></label>
-                        <input type='text' class='text_' name='j_username' id='username' value="<c:if test="${not empty param.error}"><c:out value="${SPRING_SECURITY_LAST_USERNAME}"/></c:if>"/>
-                    </p>
-
-                    <p>
-                        <label for='password'><s:message code="login.password" /></label>
-                        <input type='password' class='text_' name='j_password' id='password'/>
-                    </p>
-
-                    <p>
-                        <label for='remember_me' style="float:none;"><s:message code="login.remember.me" /></label>
-                        <input type='checkbox' class='chk' name='_spring_security_remember_me' id='remember_me' />
-                    </p>
-
-                    <p>
-                        <input type='submit' id="submit" value='<s:message code="login.entrar" />'/>
-                    </p>
+                <img src="<c:url value='/images/google_logo.jpg'/>" />
+                <form action="j_spring_openid_security_check" id="googleOpenId" method="post" target="_top">
+                    <input id="openid_identifier" name="openid_identifier" type="hidden" value="https://www.google.com/accounts/o8/id"/>
+                    <input type="submit" value="<s:message code='google.sign.in' />"/>
                 </form>
             </div>
         </div>
-        <script type='text/javascript'>
-            <!--
-            (function() {
-                document.forms['loginForm'].elements['j_username'].focus();
-            })();
-            // -->
-        </script>
     </body>
 </html>
