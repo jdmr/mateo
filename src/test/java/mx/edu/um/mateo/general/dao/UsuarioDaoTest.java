@@ -23,6 +23,7 @@
  */
 package mx.edu.um.mateo.general.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Empresa;
@@ -46,7 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author jdmr
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:mateo.xml","classpath:security.xml"})
+@ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
 public class UsuarioDaoTest {
 
@@ -57,6 +58,8 @@ public class UsuarioDaoTest {
     private RolDao rolDao;
     @Autowired
     private OrganizacionDao organizacionDao;
+    @Autowired
+    private EmpresaDao empresaDao;
 
     public UsuarioDaoTest() {
     }
@@ -67,14 +70,14 @@ public class UsuarioDaoTest {
     @Test
     public void debieraObtenerListaDeUsuarios() {
         log.debug("Debiera obtener lista de usuarios");
-        
+
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
         organizacion = organizacionDao.crea(organizacion);
 
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
         for (int i = 0; i < 20; i++) {
-            Usuario usuario = new Usuario("test-" + i+"@test.com", "test-" + i, "TEST " + i, "TEST");
+            Usuario usuario = new Usuario("test-" + i + "@test.com", "test-" + i, "TEST " + i, "TEST");
             Long almacenId = 0l;
             actualizaUsuario:
             for (Empresa empresa : organizacion.getEmpresas()) {
@@ -83,7 +86,7 @@ public class UsuarioDaoTest {
                     break actualizaUsuario;
                 }
             }
-            instance.crea(usuario, almacenId, new String[] {rol.getAuthority()});
+            instance.crea(usuario, almacenId, new String[]{rol.getAuthority()});
         }
 
         Map<String, Object> params = null;
@@ -113,7 +116,7 @@ public class UsuarioDaoTest {
                 break actualizaUsuario;
             }
         }
-        usuario = instance.crea(usuario, almacenId, new String[] {rol.getAuthority()});
+        usuario = instance.crea(usuario, almacenId, new String[]{rol.getAuthority()});
         Long id = usuario.getId();
 
         Usuario result = instance.obtiene(id);
@@ -140,7 +143,7 @@ public class UsuarioDaoTest {
                 break actualizaUsuario;
             }
         }
-        usuario = instance.crea(usuario, almacenId, new String[] {rol.getAuthority()});
+        usuario = instance.crea(usuario, almacenId, new String[]{rol.getAuthority()});
         Long id = usuario.getId();
         assertNotNull(id);
     }
@@ -164,12 +167,12 @@ public class UsuarioDaoTest {
                 break actualizaUsuario;
             }
         }
-        usuario = instance.crea(usuario, almacenId, new String[] {rol.getAuthority()});
+        usuario = instance.crea(usuario, almacenId, new String[]{rol.getAuthority()});
         Long id = usuario.getId();
         assertNotNull(id);
 
         usuario.setNombre("PRUEBA");
-        instance.actualiza(usuario, almacenId, new String[] {rol.getAuthority()});
+        instance.actualiza(usuario, almacenId, new String[]{rol.getAuthority()});
 
         Usuario prueba = instance.obtiene(id);
         assertEquals(usuario.getNombre(), prueba.getNombre());
@@ -193,7 +196,7 @@ public class UsuarioDaoTest {
                 break actualizaUsuario;
             }
         }
-        usuario = instance.crea(usuario, almacenId, new String[] {rol.getAuthority()});
+        usuario = instance.crea(usuario, almacenId, new String[]{rol.getAuthority()});
         Long id = usuario.getId();
 
         Usuario result = instance.obtiene(id);
@@ -227,7 +230,7 @@ public class UsuarioDaoTest {
                 break actualizaUsuario;
             }
         }
-        usuario = instance.crea(usuario, almacenId, new String[] {rol.getAuthority()});
+        usuario = instance.crea(usuario, almacenId, new String[]{rol.getAuthority()});
         Long id = usuario.getId();
 
         instance.elimina(id);
@@ -254,8 +257,8 @@ public class UsuarioDaoTest {
                 break actualizaUsuario;
             }
         }
-        usuario = instance.crea(usuario, almacenId, new String[] {rol.getAuthority()});
-        instance.crea(usuario2, almacenId, new String[] {rol.getAuthority()});
+        usuario = instance.crea(usuario, almacenId, new String[]{rol.getAuthority()});
+        instance.crea(usuario2, almacenId, new String[]{rol.getAuthority()});
         Long id = usuario.getId();
 
         String nombre = instance.elimina(id);
@@ -263,5 +266,57 @@ public class UsuarioDaoTest {
 
         Usuario result = instance.obtiene(id);
         assertNull(result);
+    }
+
+    @Test
+    public void debieraMostrarLosUsuariosFiltradosPorEmpresa() {
+        log.debug("Mostrar los usuarios filtrados por empresa");
+        Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
+        organizacion = organizacionDao.crea(organizacion);
+        Empresa empresa1 = null;
+        for (Empresa empresa : organizacion.getEmpresas()) {
+            empresa1 = empresa;
+        }
+        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST 01", organizacion);
+        empresa = empresaDao.crea(empresa);
+
+        Rol rol = new Rol("ROLE_TEST");
+        rol = rolDao.crea(rol);
+        for (int i = 0; i < 30; i++) {
+            Usuario usuario = new Usuario("test-a" + i + "@test.com", "test-" + i, "TEST " + i, "TEST");
+            Long almacenId = 0l;
+            actualizaUsuario:
+            for (Almacen almacen : empresa1.getAlmacenes()) {
+                almacenId = almacen.getId();
+                break actualizaUsuario;
+            }
+            instance.crea(usuario, almacenId, new String[]{rol.getAuthority()});
+        }
+
+        for (int i = 0; i < 20; i++) {
+            Usuario usuario = new Usuario("test-b" + i + "@test.com", "test-" + i, "TEST " + i, "TEST");
+            Long almacenId = 0l;
+            actualizaUsuario:
+            for (Almacen almacen : empresa.getAlmacenes()) {
+                almacenId = almacen.getId();
+                break actualizaUsuario;
+            }
+            instance.crea(usuario, almacenId, new String[]{rol.getAuthority()});
+        }
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", empresa.getId());
+        Map<String, Object> result = instance.lista(params);
+        List<Usuario> usuarios = (List<Usuario>) result.get("usuarios");
+        Long cantidad = (Long) result.get("cantidad");
+        assertEquals(10, usuarios.size());
+        assertTrue(20 <= cantidad);
+
+        params.put("empresa", empresa1.getId());
+        result = instance.lista(params);
+        usuarios = (List<Usuario>) result.get("usuarios");
+        cantidad = (Long) result.get("cantidad");
+        assertEquals(10, usuarios.size());
+        assertTrue(30 <= cantidad);
     }
 }

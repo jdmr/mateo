@@ -23,6 +23,7 @@
  */
 package mx.edu.um.mateo.general.web;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -59,9 +60,11 @@ public class UsuarioController {
     private SpringSecurityUtils springSecurityUtils;
 
     @RequestMapping
-    public String lista(Model modelo) {
+    public String lista(HttpServletRequest request, Model modelo) {
         log.debug("Mostrando lista de usuarios");
-        Map<String, Object> params = usuarioDao.lista(null);
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", request.getSession().getAttribute("empresaId"));
+        params = usuarioDao.lista(params);
         modelo.addAttribute("usuarios", params.get("usuarios"));
         return "admin/usuario/lista";
     }

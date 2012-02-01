@@ -71,7 +71,12 @@ public class UsuarioDao {
         }
         Criteria criteria = currentSession().createCriteria(Usuario.class);
         Criteria countCriteria = currentSession().createCriteria(Usuario.class);
-
+        
+        if (params.containsKey("empresa")) {
+            criteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
+            countCriteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
+        }
+        
         criteria.setFirstResult((Integer) params.get("offset"));
         criteria.setMaxResults((Integer) params.get("max"));
         params.put("usuarios", criteria.list());
