@@ -23,6 +23,7 @@
  */
 package mx.edu.um.mateo.general.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,14 +62,31 @@ public class UsuarioController {
     private SpringSecurityUtils springSecurityUtils;
 
     @RequestMapping
-    public String lista(HttpServletRequest request, Model modelo) {
+    public String lista(HttpServletRequest request,
+            @RequestParam(required = false) String filtro,
+            @RequestParam(required = false) Long pagina,
+            Model modelo) {
         log.debug("Mostrando lista de usuarios");
         Map<String, Object> params = new HashMap<>();
-        if (StringUtils.isNotBlank(request.getParameter("filtro"))) {
-            params.put("filtro", request.getParameter("filtro"));
+        if (StringUtils.isNotBlank(filtro)) {
+            params.put("filtro", filtro);
+        }
+        if (pagina != null) {
+            params.put("pagina", pagina);
+            modelo.addAttribute("pagina", pagina);
+        } else {
+            modelo.addAttribute("pagina", 1);
         }
         params.put("empresa", request.getSession().getAttribute("empresaId"));
         params = usuarioDao.lista(params);
+        Long cantidad = (Long) params.get("cantidad");
+        Integer max = (Integer) params.get("max");
+        Long cantidadDePaginas = cantidad / max;
+        List<Long> paginas = new ArrayList<>();
+        for (long i = 1; i <= cantidadDePaginas + 1; i++) {
+            paginas.add(i);
+        }
+        modelo.addAttribute("paginas", paginas);
         modelo.addAttribute("usuarios", params.get("usuarios"));
         return "admin/usuario/lista";
     }

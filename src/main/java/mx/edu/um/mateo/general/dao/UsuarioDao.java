@@ -67,18 +67,28 @@ public class UsuarioDao {
         } else {
             params.put("max", Math.min((Integer) params.get("max"), 100));
         }
+
+        if (params.containsKey("pagina")) {
+            Long pagina = (Long) params.get("pagina");
+            Long offset = (pagina - 1) * (Integer) params.get("max");
+            params.put("offset", offset.intValue());
+        }
+
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
+
+
         Criteria criteria = currentSession().createCriteria(Usuario.class);
         Criteria countCriteria = currentSession().createCriteria(Usuario.class);
-        
+
         if (params.containsKey("empresa")) {
             criteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
             countCriteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
         }
+
         if (params.containsKey("filtro")) {
-            String filtro = (String)params.get("filtro");
+            String filtro = (String) params.get("filtro");
             filtro = "%" + filtro + "%";
             Disjunction propiedades = Restrictions.disjunction();
             propiedades.add(Restrictions.ilike("username", filtro));
@@ -87,7 +97,7 @@ public class UsuarioDao {
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
-        
+
         criteria.setFirstResult((Integer) params.get("offset"));
         criteria.setMaxResults((Integer) params.get("max"));
         params.put("usuarios", criteria.list());
@@ -132,12 +142,12 @@ public class UsuarioDao {
 
         currentSession().save(usuario);
         currentSession().flush();
-        
+
         return usuario;
     }
 
     public Usuario actualiza(Usuario usuario, Long almacenId, String[] nombreDeRoles) {
-        Usuario viejoUsuario = (Usuario)currentSession().get(Usuario.class, usuario.getId());
+        Usuario viejoUsuario = (Usuario) currentSession().get(Usuario.class, usuario.getId());
         if (viejoUsuario.getVersion() == usuario.getVersion()) {
             usuario.setAlmacen(viejoUsuario.getAlmacen());
             usuario.setEmpresa(viejoUsuario.getEmpresa());
@@ -153,8 +163,8 @@ public class UsuarioDao {
             try {
                 currentSession().update(usuario);
                 currentSession().flush();
-            } catch(NonUniqueObjectException e) {
-                log.warn("Ya hay un objeto previamente cargado, intentando hacer merge",e);
+            } catch (NonUniqueObjectException e) {
+                log.warn("Ya hay un objeto previamente cargado, intentando hacer merge", e);
                 currentSession().merge(usuario);
                 currentSession().flush();
             }
@@ -184,9 +194,8 @@ public class UsuarioDao {
         Query query = currentSession().createQuery("select r from Rol r");
         return query.list();
     }
-    
+
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
-
 }

@@ -44,40 +44,56 @@
         <h1><s:message code="usuario.lista.label" /></h1>
         <hr/>
 
-        <p>
-            <form class="well form-search" method="post" action="<c:url value='/admin/usuario' />">
+        <form name="filtraUsuarios" class="form-search" method="post" action="<c:url value='/admin/usuario' />">
+            <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
+            <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/admin/usuario/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='usuario.nuevo.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><s:message code="buscar.label" /></button>
-            </form>        
-        </p>
-        <c:if test="${not empty message}">
+            </p>
+            <c:if test="${not empty message}">
                 <div class="message" role="status"><s:message code="${message}" arguments="${messageAttrs}" /></div>
-        </c:if>
+            </c:if>
 
-        <table id="usuarios" class="table">
-            <thead>
-                <tr>
-                    <th><s:message code="usuario.username.label" /></th>
-                    <th><s:message code="usuario.nombre.label" /></th>
-                    <th><s:message code="usuario.apellido.label" /></th>
-                    <th><s:message code="empresa.label" /></th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach items="${usuarios}" var="usuario" varStatus="status">
-                    <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                        <td><a href="<c:url value='/admin/usuario/ver/${usuario.id}' />">${usuario.username}</a></td>
-                        <td>${usuario.nombre}</td>
-                        <td>${usuario.apellido}</td>
-                        <td>${usuario.empresa.nombre}</td>
+            <table id="usuarios" class="table">
+                <thead>
+                    <tr>
+                        <th><s:message code="usuario.username.label" /></th>
+                        <th><s:message code="usuario.nombre.label" /></th>
+                        <th><s:message code="usuario.apellido.label" /></th>
+                        <th><s:message code="empresa.label" /></th>
                     </tr>
-                </c:forEach>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <c:forEach items="${usuarios}" var="usuario" varStatus="status">
+                        <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
+                            <td><a href="<c:url value='/admin/usuario/ver/${usuario.id}' />">${usuario.username}</a></td>
+                            <td>${usuario.nombre}</td>
+                            <td>${usuario.apellido}</td>
+                            <td>${usuario.empresa.nombre}</td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <ul>
+                    <c:forEach items="${paginas}" var="paginaId">
+                        <li <c:if test="${pagina == paginaId}" >class="active"</c:if>
+                            ><a href="javascript:buscaPagina(${paginaId});" >${paginaId}</a></li>
+                    </c:forEach>
+                </ul>
+            </div>
+        </form>        
         <content>
             <script>
-                highlightTableRows("usuarios");
+                $(document).ready(function() {
+                    highlightTableRows("usuarios");
+                });
+                
+                function buscaPagina(paginaId) {
+                    $('input#pagina').val(paginaId);
+                    document.forms["filtraUsuarios"].submit();
+                }
             </script>
         </content>
     </body>
