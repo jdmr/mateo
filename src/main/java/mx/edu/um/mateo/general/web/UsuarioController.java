@@ -75,10 +75,14 @@ public class UsuarioController {
             params.put("pagina", pagina);
             modelo.addAttribute("pagina", pagina);
         } else {
-            modelo.addAttribute("pagina", 1);
+            pagina = 1L;
+            modelo.addAttribute("pagina", pagina);
         }
         params.put("empresa", request.getSession().getAttribute("empresaId"));
         params = usuarioDao.lista(params);
+        modelo.addAttribute("usuarios", params.get("usuarios"));
+        
+        // inicia paginado
         Long cantidad = (Long) params.get("cantidad");
         Integer max = (Integer) params.get("max");
         Long cantidadDePaginas = cantidad / max;
@@ -86,8 +90,14 @@ public class UsuarioController {
         for (long i = 1; i <= cantidadDePaginas + 1; i++) {
             paginas.add(i);
         }
+        List<Usuario> usuarios = (List<Usuario>) params.get("usuarios");
+        Long primero = ((pagina - 1) * max) + 1;
+        Long ultimo = primero + (usuarios.size() - 1);
+        String[] paginacion = new String[] {primero.toString(), ultimo.toString(), cantidad.toString()};
+        modelo.addAttribute("paginacion", paginacion);
         modelo.addAttribute("paginas", paginas);
-        modelo.addAttribute("usuarios", params.get("usuarios"));
+        // termina paginado
+        
         return "admin/usuario/lista";
     }
 
