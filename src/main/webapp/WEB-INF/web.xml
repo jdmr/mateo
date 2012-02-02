@@ -10,8 +10,8 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            classpath:/mateo.xml
-            classpath:/security.xml
+            classpath:mateo.xml
+            classpath:security.xml
         </param-value>
     </context-param>
 

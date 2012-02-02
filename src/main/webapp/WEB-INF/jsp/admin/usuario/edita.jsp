@@ -80,14 +80,6 @@
         </div>
         <div id="spinner" class="spinner" style="display:none;"><s:message code="cargando.message" />&hellip;</div>
 
-        <!-- JavaScript at the bottom for fast page loading -->
-
-        <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="<c:url value='/js/jquery-1.7.1.min.js'/>"><\/script>')</script>
-
-        <!-- end scripts -->        
-        <script defer src="<c:url value='/js/application.js' />"></script>
         <script type="text/javascript">
             $(document).ready(function() {
                 $('input#username').focus();

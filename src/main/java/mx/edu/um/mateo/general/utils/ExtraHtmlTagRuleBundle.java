@@ -22,25 +22,31 @@
  * THE SOFTWARE.
  */
 
-package mx.edu.um.mateo.general.web;
+package mx.edu.um.mateo.general.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.sitemesh.SiteMeshContext;
+import org.sitemesh.content.ContentProperty;
+import org.sitemesh.content.tagrules.TagRuleBundle;
+import org.sitemesh.content.tagrules.html.ExportTagToContentRule;
+import org.sitemesh.tagprocessor.State;
 
 /**
  *
  * @author jdmr
  */
-@Controller
-public class InicioController {
-    
-    private static final Logger log = LoggerFactory.getLogger(InicioController.class);
+public class ExtraHtmlTagRuleBundle implements TagRuleBundle {
 
-    @RequestMapping({"/","/inicio"})
-    public String inicio() {
-        log.debug("Cargando pagina de inicio");
-        return "inicio/index";
+    @Override
+    public void install(State defaultState, ContentProperty contentProperty, SiteMeshContext smc) {
+        // Extra HTML 5 tags
+        defaultState.addRule("header", new ExportTagToContentRule(contentProperty.getChild("header"), false));
+        defaultState.addRule("nav", new ExportTagToContentRule(contentProperty.getChild("nav"), false));
+        defaultState.addRule("content", new ExportTagToContentRule(contentProperty.getChild("content"), false));
     }
+
+    @Override
+    public void cleanUp(State state, ContentProperty cp, SiteMeshContext smc) {
+        // No op.
+    }
+
 }
