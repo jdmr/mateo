@@ -25,6 +25,7 @@ THE SOFTWARE.
 
 
 <sitemesh>
+    <mapping path="/login.jsp" decorator="/WEB-INF/layouts/main2.jsp"/>
     <mapping path="/*" decorator="/WEB-INF/layouts/main.jsp"/>
     <content-processor> 
         <tag-rule-bundle class="mx.edu.um.mateo.general.utils.ExtraHtmlTagRuleBundle"/> 

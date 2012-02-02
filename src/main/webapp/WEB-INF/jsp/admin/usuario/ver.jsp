@@ -30,7 +30,9 @@
                             <li><a href="<c:url value='/inventario' />"><s:message code="inventario.label" /></a></li>
                             <li class="active"><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>
                         </ul>
-                        <p class="navbar-text pull-right"><s:message code="mensaje.bienvenida" /> <a href="<c:url value='/perfil' />"><%= request.getUserPrincipal().getName()%></a></p>
+                        <p class="navbar-text pull-right">
+                            <s:message code="mensaje.bienvenida" /> <a href="<c:url value='/perfil' />"><%= request.getUserPrincipal().getName()%></a> 
+                            <a href="<c:url value='/salir' />"><s:message code="salir.label" /></a></p>
                         <p class="navbar-text pull-right" style="padding-right: 10px;"><a href="<c:url value='/perfil' />">${sessionScope.organizacion} | ${sessionScope.empresa} | ${sessionScope.almacen}</a></p>
                     </div><!--/.nav-collapse -->
                 </div>

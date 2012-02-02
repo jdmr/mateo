@@ -35,25 +35,10 @@
         <nav class="navbar navbar-fixed-top" role="navigation">
             <div class="navbar-inner">
                 <div class="container-fluid">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="i-bar"></span>
-                        <span class="i-bar"></span>
-                        <span class="i-bar"></span>
-                    </a>
                     <a class="brand" href="<c:url value='/inicio' />"><s:message code="proyecto.nombre.label" /></a>
-                    <div class="nav-collapse">
-                        <sitemesh:write property="nav"/>
-                        <p class="navbar-text pull-right">
-                            <s:message code="mensaje.bienvenida" /> <a href="<c:url value='/perfil' />"><%= request.getUserPrincipal().getName()%></a> 
-                            <a href="<c:url value='/salir' />"><i class="icon-off icon-white"></i></a></p>
-                        <p class="navbar-text pull-right" style="padding-right: 10px;"><a href="<c:url value='/perfil' />">${sessionScope.organizacion} | ${sessionScope.empresa} | ${sessionScope.almacen}</a></p>
-                    </div><!--/.nav-collapse -->
                 </div>
             </div>
         </nav>
-        <header class="subnav-fixed" id="admin" role="subnavigation">
-            <sitemesh:write property="header"/>
-        </header>
         <div class="container-fluid">
             <sitemesh:write property='body'/>
         </div>
@@ -74,6 +59,5 @@
         <script src="<c:url value='/js/app.js' />"></script>
         <script src="<c:url value='/js/bootstrap.min.js' />"></script>
         <script src="<c:url value='/js/jquery-ui-1.8.17.custom.min.js' />"></script>
-        <sitemesh:write property="content"/>
     </body>
 </html>

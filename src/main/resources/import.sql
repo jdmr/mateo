@@ -11,9 +11,9 @@ insert into roles(id, version, authority) values(4, 0, 'ROLE_USER');
 
 insert into usuarios(id, version, username, enabled, account_expired, account_locked, credentials_expired, nombre, apellido, empresa_id, almacen_id) values(1, 0, 'jdmendoza@um.edu.mx', true, false, false, false, 'ADMIN','USER', 1, 1);
 insert into usuarios(id, version, username, enabled, account_expired, account_locked, credentials_expired, nombre, apellido, empresa_id, almacen_id) values(2, 0, 'jdmendozar@gmail.com', true, false, false, false, 'NORMAL','USER', 1, 1);
-insert into usuarios(id, version, username, enabled, account_expired, account_locked, credentials_expired, nombre, apellido, empresa_id, almacen_id) values(3, 0, 'test01@test.com', true, false, false, false, 'NORMAL','USER', 1, 1);
-insert into usuarios(id, version, username, enabled, account_expired, account_locked, credentials_expired, nombre, apellido, empresa_id, almacen_id) values(4, 0, 'test02@test.com', true, false, false, false, 'NORMAL','USER', 1, 1);
-insert into usuarios(id, version, username, enabled, account_expired, account_locked, credentials_expired, nombre, apellido, empresa_id, almacen_id) values(5, 0, 'test03@test.com', true, false, false, false, 'NORMAL','USER', 1, 1);
+insert into usuarios(id, version, username, enabled, account_expired, account_locked, credentials_expired, nombre, apellido, empresa_id, almacen_id) values(3, 0, 'osoto@um.edu.mx', true, false, false, false, 'Omar','Soto', 1, 1);
+insert into usuarios(id, version, username, enabled, account_expired, account_locked, credentials_expired, nombre, apellido, empresa_id, almacen_id) values(4, 0, 'awgarcia@um.edu.mx', true, false, false, false, 'Alejandro','Garcia', 1, 1);
+insert into usuarios(id, version, username, enabled, account_expired, account_locked, credentials_expired, nombre, apellido, empresa_id, almacen_id) values(5, 0, 'lafuente@um.edu.mx', true, false, false, false, 'NORMAL','USER', 1, 1);
 insert into usuarios(id, version, username, enabled, account_expired, account_locked, credentials_expired, nombre, apellido, empresa_id, almacen_id) values(6, 0, 'test04@test.com', true, false, false, false, 'NORMAL','USER', 1, 1);
 insert into usuarios(id, version, username, enabled, account_expired, account_locked, credentials_expired, nombre, apellido, empresa_id, almacen_id) values(7, 0, 'test05@test.com', true, false, false, false, 'NORMAL','USER', 1, 1);
 insert into usuarios(id, version, username, enabled, account_expired, account_locked, credentials_expired, nombre, apellido, empresa_id, almacen_id) values(8, 0, 'test06@test.com', true, false, false, false, 'NORMAL','USER', 1, 1);
@@ -34,9 +34,9 @@ insert into usuarios(id, version, username, enabled, account_expired, account_lo
 
 insert into usuarios_roles(usuario_id, rol_id) values(1,1);
 insert into usuarios_roles(usuario_id, rol_id) values(2,4);
-insert into usuarios_roles(usuario_id, rol_id) values(3,4);
-insert into usuarios_roles(usuario_id, rol_id) values(4,4);
-insert into usuarios_roles(usuario_id, rol_id) values(5,4);
+insert into usuarios_roles(usuario_id, rol_id) values(3,1);
+insert into usuarios_roles(usuario_id, rol_id) values(4,1);
+insert into usuarios_roles(usuario_id, rol_id) values(5,1);
 insert into usuarios_roles(usuario_id, rol_id) values(6,4);
 insert into usuarios_roles(usuario_id, rol_id) values(7,4);
 insert into usuarios_roles(usuario_id, rol_id) values(8,4);

@@ -14,33 +14,20 @@
         <title><s:message code="login.title" /></title>
     </head>
     <body>
-        <nav class="navbar navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container-fluid">
-                    <a class="brand" href="<c:url value='/inicio' />"><s:message code="proyecto.nombre.label" /></a>
-                </div>
-            </div>
-        </nav>
-        <div class="container-fluid">
-            <h2><s:message code="login.title" /></h2>
-            <c:if test="${not empty param.error}">
-                <p style="color:red;padding: 0 10px 10px;">
-                    <s:message code="login.invalido" />
-                </p>
-                <p style="color:red;padding: 0 10px 10px;">
-                    <c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/>.
-                </p>
-            </c:if>
-            <img src="<c:url value='/images/google_logo2.jpg'/>" />
-            <form action="j_spring_openid_security_check" id="googleOpenId" method="post" target="_top">
-                <input id="openid_identifier" name="openid_identifier" type="hidden" value="https://www.google.com/accounts/o8/id"/>
-                <input type="submit" value="<s:message code='google.sign.in' />" class="btn btn-large btn-primary" style="width:170px;"/>
-            </form>
-            <hr />
-            <footer>
-                <p>&copy; <s:message code="proyecto.copyright.year.label" /> <s:message code="proyecto.empresa.label" /></p>
-            </footer>
-        </div>
+        <h2><s:message code="login.title" /></h2>
+        <c:if test="${not empty param.error}">
+            <p style="color:red;padding: 0 10px 10px;">
+                <s:message code="login.invalido" />
+            </p>
+            <p style="color:red;padding: 0 10px 10px;">
+                <c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/>.
+            </p>
+        </c:if>
+        <img src="<c:url value='/images/google_logo2.jpg'/>" />
+        <form action="j_spring_openid_security_check" id="googleOpenId" method="post" target="_top">
+            <input id="openid_identifier" name="openid_identifier" type="hidden" value="https://www.google.com/accounts/o8/id"/>
+            <input type="submit" value="<s:message code='google.sign.in' />" class="btn btn-large btn-primary" style="width:170px;"/>
+        </form>
 
     </body>
 </html>
