@@ -33,6 +33,7 @@ import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.SpringSecurityUtils;
 import mx.edu.um.mateo.general.utils.UltimoException;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,9 @@ public class UsuarioController {
     public String lista(HttpServletRequest request, Model modelo) {
         log.debug("Mostrando lista de usuarios");
         Map<String, Object> params = new HashMap<>();
+        if (StringUtils.isNotBlank(request.getParameter("filtro"))) {
+            params.put("filtro", request.getParameter("filtro"));
+        }
         params.put("empresa", request.getSession().getAttribute("empresaId"));
         params = usuarioDao.lista(params);
         modelo.addAttribute("usuarios", params.get("usuarios"));

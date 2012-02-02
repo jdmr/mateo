@@ -45,11 +45,14 @@
         <hr/>
 
         <p>
-            <a class="btn btn-primary" href="<s:url value='/admin/usuario/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='usuario.nuevo.label' /></a>
-
+            <form class="well form-search" method="post" action="<c:url value='/admin/usuario' />">
+                <a class="btn btn-primary" href="<s:url value='/admin/usuario/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='usuario.nuevo.label' /></a>
+                <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
+                <button type="submit" class="btn"><s:message code="buscar.label" /></button>
+            </form>        
         </p>
         <c:if test="${not empty message}">
-            <div class="message" role="status"><s:message code="${message}" arguments="${messageAttrs}" /></div>
+                <div class="message" role="status"><s:message code="${message}" arguments="${messageAttrs}" /></div>
         </c:if>
 
         <table id="usuarios" class="table">

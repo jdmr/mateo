@@ -31,6 +31,7 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.*;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -75,6 +76,16 @@ public class UsuarioDao {
         if (params.containsKey("empresa")) {
             criteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
             countCriteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
+        }
+        if (params.containsKey("filtro")) {
+            String filtro = (String)params.get("filtro");
+            filtro = "%" + filtro + "%";
+            Disjunction propiedades = Restrictions.disjunction();
+            propiedades.add(Restrictions.ilike("username", filtro));
+            propiedades.add(Restrictions.ilike("nombre", filtro));
+            propiedades.add(Restrictions.ilike("apellido", filtro));
+            criteria.add(propiedades);
+            countCriteria.add(propiedades);
         }
         
         criteria.setFirstResult((Integer) params.get("offset"));
