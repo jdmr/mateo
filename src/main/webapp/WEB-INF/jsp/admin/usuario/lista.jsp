@@ -33,6 +33,7 @@
         <form name="filtraUsuarios" class="form-search" method="post" action="<c:url value='/admin/usuario' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
+            <input type="hidden" name="correo" id="correo" value="" />
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/admin/usuario/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='usuario.nuevo.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
@@ -76,6 +77,15 @@
                     </div>
                 </div>
                 <div class="span4">
+                    <div class="btn-group pull-right" style="margin-top: 22px;margin-left: 10px;">
+                        <a class="btn" href="javascript:enviaCorreo('PDF');"><s:message code="envia.correo.label" /></a>
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="javascript:enviaCorreo('PDF');"><img src="<c:url value='/images/pdf.gif' />" /></a></li>
+                            <li><a href="javascript:enviaCorreo('CSV');"><img src="<c:url value='/images/csv.gif' />" /></a></li>
+                            <li><a href="javascript:enviaCorreo('XLS');"><img src="<c:url value='/images/xls.gif' />" /></a></li>
+                        </ul>
+                    </div>
                     <p class="pull-right" style="margin-top: 20px;">
                         <a href="javascript:imprime('PDF');"><img src="<c:url value='/images/pdf.gif' />" /></a>
                         <a href="javascript:imprime('CSV');"><img src="<c:url value='/images/csv.gif' />" /></a>
@@ -98,6 +108,11 @@
                 
                 function imprime(tipo) {
                     $('input#tipo').val(tipo);
+                    document.forms["filtraUsuarios"].submit();
+                }
+                
+                function enviaCorreo(tipo) {
+                    $('input#correo').val(tipo);
                     document.forms["filtraUsuarios"].submit();
                 }
             </script>

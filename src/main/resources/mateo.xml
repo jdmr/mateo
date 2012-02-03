@@ -50,4 +50,19 @@
         <property name="basename" value="messages"/>
     </bean>
     
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl" >
+        <property name="host" value="${mail.smtp.host}" />
+        <property name="port" value="${mail.smtp.port}" />
+        <property name="username" value="${mail.smtp.user}" />
+        <property name="password" value="${mail.smtp.password}" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.debug">true</prop>
+                <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+                <prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>
+                <prop key="mail.smtp.socketFactory.class">${mail.smtp.socketFactory.class}</prop>
+            </props>
+        </property>
+    </bean>
+    
 </beans>

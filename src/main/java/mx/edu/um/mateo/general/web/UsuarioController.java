@@ -30,6 +30,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -50,6 +53,8 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -71,12 +76,15 @@ public class UsuarioController {
     private UsuarioDao usuarioDao;
     @Autowired
     private SpringSecurityUtils springSecurityUtils;
+    @Autowired
+    private JavaMailSender mailSender;
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
             @RequestParam(required = false) Long pagina,
             @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String correo,
             Model modelo) {
         log.debug("Mostrando lista de usuarios");
         Map<String, Object> params = new HashMap<>();
@@ -92,7 +100,7 @@ public class UsuarioController {
         }
 
         params.put("empresa", request.getSession().getAttribute("empresaId"));
-        
+
         if (StringUtils.isNotBlank(tipo)) {
             params.put("reporte", true);
             params = usuarioDao.lista(params);
@@ -101,6 +109,18 @@ public class UsuarioController {
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
+            }
+        }
+
+        if (StringUtils.isNotBlank(correo)) {
+            params.put("reporte", true);
+            params = usuarioDao.lista(params);
+            
+            params.remove("reporte");
+            try {
+                enviaCorreo(correo, (List<Usuario>) params.get("usuarios"), request, response);
+            } catch (JRException | MessagingException e) {
+                log.error("No se pudo enviar el reporte por correo", e);
             }
         }
         params = usuarioDao.lista(params);
@@ -287,6 +307,37 @@ public class UsuarioController {
             }
         }
 
+    }
+
+    private void enviaCorreo(String tipo, List<Usuario> usuarios, HttpServletRequest request, HttpServletResponse response) throws JRException, MessagingException {
+        log.debug("Enviando correo {}", tipo);
+        byte[] archivo = null;
+        String tipoContenido = null;
+        switch (tipo) {
+            case "PDF":
+                archivo = generaPdf(usuarios);
+                tipoContenido = "application/pdf";
+                break;
+            case "CSV":
+                archivo = generaCsv(usuarios);
+                tipoContenido = "text/csv";
+                break;
+            case "XLS":
+                archivo = generaXls(usuarios);
+                tipoContenido = "application/vnd.ms-excel";
+        }
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(request.getUserPrincipal().getName());
+//        String titulo = messageSource.getMessage("usuario.list.label", null, request.getLocale());
+//        helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
+//        helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()));
+        String titulo = "Usuarios";
+        helper.setSubject("Lista de Usuarios");
+        helper.setText("<html><head><title>Lista de Usuarios</title></head><body><p>Anexo encontrará la lista de usuarios que pidió.</p><p>Equipo MATEO</p></body></html>", true);
+        helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
+        mailSender.send(message);
     }
 
     private byte[] generaPdf(List usuarios) throws JRException {

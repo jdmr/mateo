@@ -159,6 +159,11 @@
             <artifactId>jasperreports</artifactId>
             <version>4.5.0</version>
         </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.4</version>
+        </dependency>
     </dependencies>
 
     <build>
