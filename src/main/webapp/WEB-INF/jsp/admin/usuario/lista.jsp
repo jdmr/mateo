@@ -32,6 +32,7 @@
 
         <form name="filtraUsuarios" class="form-search" method="post" action="<c:url value='/admin/usuario' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
+            <input type="hidden" name="tipo" id="tipo" value="" />
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/admin/usuario/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='usuario.nuevo.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
@@ -61,26 +62,42 @@
                     </c:forEach>
                 </tbody>
             </table>
-            <div class="pagination">
-                <ul>
-                    <li class="disabled"><a href="#"><s:message code="mensaje.paginacion" arguments="${paginacion}" /></a></li>
-                    <c:forEach items="${paginas}" var="paginaId">
-                        <li <c:if test="${pagina == paginaId}" >class="active"</c:if>>
-                            <a href="javascript:buscaPagina(${paginaId});" >${paginaId}</a>
-                        </li>
-                    </c:forEach>
-                </ul>
+            <div class="row-fluid">
+                <div class="span8">
+                    <div class="pagination">
+                        <ul>
+                            <li class="disabled"><a href="#"><s:message code="mensaje.paginacion" arguments="${paginacion}" /></a></li>
+                            <c:forEach items="${paginas}" var="paginaId">
+                                <li <c:if test="${pagina == paginaId}" >class="active"</c:if>>
+                                    <a href="javascript:buscaPagina(${paginaId});" >${paginaId}</a>
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </div>
+                </div>
+                <div class="span4">
+                    <p class="pull-right" style="margin-top: 20px;">
+                        <a href="javascript:imprime('PDF');"><img src="<c:url value='/images/pdf.gif' />" /></a>
+                        <a href="javascript:imprime('CSV');"><img src="<c:url value='/images/csv.gif' />" /></a>
+                        <a href="javascript:imprime('XLS');"><img src="<c:url value='/images/xls.gif' />" /></a>
+                    </p>
+                </div>
             </div>
         </form>        
         <content>
             <script>
                 $(document).ready(function() {
                     highlightTableRows("usuarios");
-                    
+
                 });
-                
+
                 function buscaPagina(paginaId) {
                     $('input#pagina').val(paginaId);
+                    document.forms["filtraUsuarios"].submit();
+                }
+                
+                function imprime(tipo) {
+                    $('input#tipo').val(tipo);
                     document.forms["filtraUsuarios"].submit();
                 }
             </script>

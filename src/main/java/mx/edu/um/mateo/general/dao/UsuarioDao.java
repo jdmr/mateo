@@ -98,8 +98,10 @@ public class UsuarioDao {
             countCriteria.add(propiedades);
         }
 
-        criteria.setFirstResult((Integer) params.get("offset"));
-        criteria.setMaxResults((Integer) params.get("max"));
+        if (!params.containsKey("reporte")) {
+            criteria.setFirstResult((Integer) params.get("offset"));
+            criteria.setMaxResults((Integer) params.get("max"));
+        }
         params.put("usuarios", criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());

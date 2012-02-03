@@ -37,7 +37,7 @@ insert into usuarios_roles(usuario_id, rol_id) values(2,4);
 insert into usuarios_roles(usuario_id, rol_id) values(3,1);
 insert into usuarios_roles(usuario_id, rol_id) values(4,1);
 insert into usuarios_roles(usuario_id, rol_id) values(5,1);
-insert into usuarios_roles(usuario_id, rol_id) values(6,4);
+insert into usuarios_roles(usuario_id, rol_id) values(6,1);
 insert into usuarios_roles(usuario_id, rol_id) values(7,4);
 insert into usuarios_roles(usuario_id, rol_id) values(8,4);
 insert into usuarios_roles(usuario_id, rol_id) values(9,4);
