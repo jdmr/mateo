@@ -88,6 +88,8 @@ public class UsuarioController {
             @RequestParam(required = false) Long pagina,
             @RequestParam(required = false) String tipo,
             @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) String sort,
             Model modelo) {
         log.debug("Mostrando lista de usuarios");
         Map<String, Object> params = new HashMap<>();
@@ -100,6 +102,10 @@ public class UsuarioController {
         } else {
             pagina = 1L;
             modelo.addAttribute("pagina", pagina);
+        }
+        if (StringUtils.isNotBlank(order)) {
+            params.put("order", order);
+            params.put("sort", sort);
         }
 
         params.put("empresa", request.getSession().getAttribute("empresaId"));

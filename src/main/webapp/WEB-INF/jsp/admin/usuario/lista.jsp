@@ -34,6 +34,8 @@
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
+            <input type="hidden" name="order" id="order" value="${param.order}" />
+            <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/admin/usuario/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='usuario.nuevo.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
@@ -46,9 +48,45 @@
             <table id="usuarios" class="table">
                 <thead>
                     <tr>
-                        <th><s:message code="usuario.username.label" /></th>
-                        <th><s:message code="usuario.nombre.label" /></th>
-                        <th><s:message code="usuario.apellido.label" /></th>
+                        <th>
+                            <a href="javascript:ordena('username');">
+                                <s:message code="usuario.username.label" />
+                                <c:choose>
+                                    <c:when test="${param.order == 'username' && param.sort == 'asc'}">
+                                        <i class="icon-chevron-up"></i>
+                                    </c:when>
+                                    <c:when test="${param.order == 'username' && param.sort == 'desc'}">
+                                        <i class="icon-chevron-down"></i>
+                                    </c:when>
+                                </c:choose>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="javascript:ordena('nombre');">
+                                <s:message code="usuario.nombre.label" />
+                                <c:choose>
+                                    <c:when test="${param.order == 'nombre' && param.sort == 'asc'}">
+                                        <i class="icon-chevron-up"></i>
+                                    </c:when>
+                                    <c:when test="${param.order == 'nombre' && param.sort == 'desc'}">
+                                        <i class="icon-chevron-down"></i>
+                                    </c:when>
+                                </c:choose>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="javascript:ordena('apellido');">
+                                <s:message code="usuario.apellido.label" />
+                                <c:choose>
+                                    <c:when test="${param.order == 'apellido' && param.sort == 'asc'}">
+                                        <i class="icon-chevron-up"></i>
+                                    </c:when>
+                                    <c:when test="${param.order == 'apellido' && param.sort == 'desc'}">
+                                        <i class="icon-chevron-down"></i>
+                                    </c:when>
+                                </c:choose>
+                            </a>
+                        </th>
                         <th><s:message code="empresa.label" /></th>
                     </tr>
                 </thead>
@@ -113,6 +151,16 @@
                 
                 function enviaCorreo(tipo) {
                     $('input#correo').val(tipo);
+                    document.forms["filtraUsuarios"].submit();
+                }
+                
+                function ordena(campo) {
+                    if ($('input#order').val() == campo && $('input#sort').val() == 'asc') {
+                        $('input#sort').val('desc');
+                    } else {
+                        $('input#sort').val('asc');
+                    }
+                    $('input#order').val(campo);
                     document.forms["filtraUsuarios"].submit();
                 }
             </script>
