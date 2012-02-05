@@ -14,73 +14,97 @@
         <title><s:message code="usuario.nuevo.label" /></title>
     </head>
     <body>
-        <a href="#nuevo-usuario" class="skip" tabindex="-1"><s:message code="brincar.al.contenido" />&hellip;</a>
-        <div class="nav" role="navigation">
-            <ul>
-                <li><a href="<s:url value='/admin'/>" class="admin"><s:message code="admin.label" /></a></li>
-                <li><a href="<s:url value='/admin/usuario'/>" class="list"><s:message code="usuario.lista.label" /></a></li>
+        <nav class="navbar navbar-fixed-top" role="navigation">
+            <ul class="nav">
+                <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
+                <li><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
+                <li><a href="<c:url value='/inventario' />"><s:message code="inventario.label" /></a></li>
+                <li class="active"><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>
             </ul>
-        </div>
+        </nav>
+
+        <header class="subhead" id="admin">
+            <ul class="nav nav-pills">
+                <li><a href="<s:url value='/admin/cliente'/>" ><s:message code="cliente.label" /></a></li>
+                <li><a href="<s:url value='/admin/tipoCliente'/>" ><s:message code="tipoCliente.label" /></a></li>
+                <li><a href="<s:url value='/admin/proveedor'/>" ><s:message code="proveedor.label" /></a></li>
+                <li><a href="<s:url value='/admin/empresa'/>" ><s:message code="empresa.label" /></a></li>
+                <li><a href="<s:url value='/admin/organizacion'/>" ><s:message code="organizacion.label" /></a></li>
+                <li class="active"><a href="<s:url value='/admin/usuario'/>" ><s:message code="usuario.label" /></a></li>
+            </ul>
+        </header>
 
         <div id="nuevo-usuario" class="content scaffold-list" role="main">
             <h1><s:message code="usuario.nuevo.label" /></h1>
+            <p class="well">
+                <a class="btn btn-primary" href="<s:url value='/admin/usuario'/>"><i class="icon-list icon-white"></i> <s:message code='usuario.lista.label' /></a>
+            </p>
             <form:form commandName="usuario" action="crea" method="post">
-                <form:errors path="*" cssClass="errors" element="ul" />
-                <fieldset class="form">
-
-                    <div class="fieldcontain required">
-                        <label for="username">
-                            <s:message code="usuario.username.label" />
-                            <span class="required-indicator">*</span>
-                        </label>
-                        <form:input path="username" maxlength="128" required="true" />
-                        <form:errors path="username" cssClass="errors" />
-                    </div>
-
-                    <div class="fieldcontain  required">
-                        <label for="nombre">
-                            <s:message code="usuario.nombre.label" />
-                            <span class="required-indicator">*</span>
-                        </label>
-                        <form:input path="nombre" maxlength="128" required="true" />
-                        <form:errors path="nombre" cssClass="errors" />
-                    </div>
-
-                    <div class="fieldcontain  required">
-                        <label for="apellido">
-                            <s:message code="usuario.apellido.label" />
-                            <span class="required-indicator">*</span>
-                        </label>
-                        <form:input path="apellido" maxlength="128" required="true" />
-                        <form:errors path="apellido" cssClass="errors" />
-                    </div>
-
-                    <div class="fieldcontain  required">
-                        <label for="roles">
-                            <s:message code="usuario.authorities.label" />
-                            <span class="required-indicator">*</span>
-                        </label>
-
-                        <c:forEach items="${roles}" var="rol">
-                            <form:checkbox path="roles" value="${rol.authority}" /> <s:message code="${rol.authority}" />&nbsp;
+                <form:errors path="*">
+                    <div class="alert alert-block alert-error fade in" role="status">
+                        <a class="close" data-dismiss="alert">×</a>
+                        <c:forEach items="${messages}" var="message">
+                            <p>${message}</p>
                         </c:forEach>
-                        <form:errors path="authorities" cssClass="errors" />
-
                     </div>
+                </form:errors>
 
+                <fieldset>
+                    <s:bind path="usuario.username">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="username">
+                                <s:message code="usuario.username.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="username" maxlength="128" required="true" />
+                            <form:errors path="username" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="usuario.nombre">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="nombre">
+                                <s:message code="usuario.nombre.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="nombre" maxlength="128" required="true" />
+                            <form:errors path="nombre" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="usuario.apellido">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="apellido">
+                                <s:message code="usuario.apellido.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="apellido" maxlength="128" required="true" />
+                            <form:errors path="apellido" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="usuario.roles">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="roles">
+                                <s:message code="usuario.authorities.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <c:forEach items="${roles}" var="rol">
+                                <form:checkbox path="roles" value="${rol.authority}" /> <s:message code="${rol.authority}" />&nbsp;
+                            </c:forEach>
+                            <form:errors path="authorities" cssClass="errors" />
+                        </div>
+                    </s:bind>
+                </fieldset>
 
-                </fieldset>
-                <fieldset class="buttons">
-                    <input type="submit" name="_action_crea" class="save" value="<s:message code='crear.button'/>" id="create" />
-                </fieldset>
+                <p class="well" style="margin-top: 10px;">
+                    <input type="submit" name="_action_crea" class="btn btn-primary btn-large" value="<s:message code='crear.button'/>" id="crea" />
+                </p>
             </form:form>
         </div>
-        <div id="spinner" class="spinner" style="display:none;"><s:message code="cargando.message" />&hellip;</div>
-
-        <script type="text/javascript">
-            $(document).ready(function() {
-                $('input#username').focus();
-            });
-        </script>                    
+        <content>
+            <script>
+                $(document).ready(function() {
+                    $('input#username').focus();
+                });
+            </script>                    
+        </content>
     </body>
 </html>

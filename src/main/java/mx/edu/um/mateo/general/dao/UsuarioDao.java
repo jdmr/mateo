@@ -24,6 +24,7 @@
 package mx.edu.um.mateo.general.dao;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Rol;
@@ -142,7 +143,11 @@ public class UsuarioDao {
         usuario.setAlmacen(almacen);
         usuario.setEmpresa(almacen.getEmpresa());
 
-        usuario.getRoles().clear();
+        if (usuario.getRoles() != null) {
+            usuario.getRoles().clear();
+        } else {
+            usuario.setRoles(new HashSet<Rol>());
+        }
         Query query = currentSession().createQuery("select r from Rol r where r.authority = :nombre");
         for (String nombre : nombreDeRoles) {
             query.setString("nombre", nombre);

@@ -124,7 +124,7 @@ public class UsuarioController {
         if (StringUtils.isNotBlank(correo)) {
             params.put("reporte", true);
             params = usuarioDao.lista(params);
-            
+
             params.remove("reporte");
             try {
                 enviaCorreo(correo, (List<Usuario>) params.get("usuarios"), request);
@@ -177,7 +177,7 @@ public class UsuarioController {
     }
 
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, @Valid Usuario usuario, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Usuario usuario, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
@@ -189,8 +189,10 @@ public class UsuarioController {
         }
 
         try {
+            log.debug("Evaluando roles {}", request.getParameterValues("roles"));
             String[] roles = request.getParameterValues("roles");
             if (roles == null || roles.length == 0) {
+                log.debug("Asignando ROLE_USER por defecto");
                 roles = new String[]{"ROLE_USER"};
             }
             Long almacenId = (Long) request.getSession().getAttribute("almacenId");

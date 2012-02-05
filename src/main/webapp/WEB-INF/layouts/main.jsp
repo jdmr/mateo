@@ -9,7 +9,7 @@
 <%@taglib prefix="s"   uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!doctype html>
-<html lang="en" class="no-js">
+<html>
     <head>
         <meta charset="utf-8">
         <title><s:message code="proyecto.nombre.label" /> - <sitemesh:write property='title'/></title>

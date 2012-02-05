@@ -15,28 +15,12 @@
     </head>
     <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
-            <div class="navbar-inner">
-                <div class="container-fluid">
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="i-bar"></span>
-                        <span class="i-bar"></span>
-                        <span class="i-bar"></span>
-                    </a>
-                    <a class="brand" href="<c:url value='/inicio' />"><s:message code="proyecto.nombre.label" /></a>
-                    <div class="nav-collapse">
-                        <ul class="nav">
-                            <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                            <li><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
-                            <li><a href="<c:url value='/inventario' />"><s:message code="inventario.label" /></a></li>
-                            <li class="active"><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>
-                        </ul>
-                        <p class="navbar-text pull-right">
-                            <s:message code="mensaje.bienvenida" /> <a href="<c:url value='/perfil' />"><%= request.getUserPrincipal().getName()%></a> 
-                            <a href="<c:url value='/salir' />"><s:message code="salir.label" /></a></p>
-                        <p class="navbar-text pull-right" style="padding-right: 10px;"><a href="<c:url value='/perfil' />">${sessionScope.organizacion} | ${sessionScope.empresa} | ${sessionScope.almacen}</a></p>
-                    </div><!--/.nav-collapse -->
-                </div>
-            </div>
+            <ul class="nav">
+                <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
+                <li><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
+                <li><a href="<c:url value='/inventario' />"><s:message code="inventario.label" /></a></li>
+                <li class="active"><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>
+            </ul>
         </nav>
 
         <header class="subhead" id="admin">
@@ -58,12 +42,15 @@
                 <a class="btn btn-primary" href="<s:url value='/admin/usuario/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='usuario.nuevo.label' /></a>
             </p>
             <c:if test="${not empty message}">
-                <div class="message" role="status"><s:message code="${message}" arguments="${messageAttrs}" /></div>
+                <div class="alert alert-block alert-success fade in" role="status">
+                    <a class="close" data-dismiss="alert">×</a>
+                    <s:message code="${message}" arguments="${messageAttrs}" />
+                </div>
             </c:if>
 
             <c:url var="eliminaUrl" value="/admin/usuario/elimina" />
             <form:form commandName="usuario" action="${eliminaUrl}" >
-                <form:errors path="*" cssClass="errors" element="ul" />
+                <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="usuario.username.label" /></div>
                     <div class="span11">${usuario.username}</div>

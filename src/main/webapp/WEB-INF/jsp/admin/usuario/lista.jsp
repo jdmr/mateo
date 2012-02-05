@@ -42,9 +42,24 @@
                 <button type="submit" class="btn"><s:message code="buscar.label" /></button>
             </p>
             <c:if test="${not empty message}">
-                <div class="message" role="status"><s:message code="${message}" arguments="${messageAttrs}" /></div>
+                <div class="alert alert-block alert-success fade in" role="status">
+                    <a class="close" data-dismiss="alert">×</a>
+                    <s:message code="${message}" arguments="${messageAttrs}" />
+                </div>
             </c:if>
-
+            <c:if test="${usuario != null}">
+                <s:bind path="usuario.*">
+                    <c:if test="${not empty status.errorMessages}">
+                    <div class="alert alert-block alert-error fade in" role="status">
+                        <a class="close" data-dismiss="alert">×</a>
+                        <c:forEach var="error" items="${status.errorMessages}">
+                            <c:out value="${error}" escapeXml="false"/><br />
+                        </c:forEach>
+                    </div>
+                    </c:if>
+                </s:bind>
+            </c:if>
+            
             <table id="usuarios" class="table">
                 <thead>
                     <tr>
