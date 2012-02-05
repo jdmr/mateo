@@ -53,6 +53,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
@@ -78,6 +79,8 @@ public class UsuarioController {
     private SpringSecurityUtils springSecurityUtils;
     @Autowired
     private JavaMailSender mailSender;
+    @Autowired
+    private ResourceBundleMessageSource messageSource;
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -118,7 +121,7 @@ public class UsuarioController {
             
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<Usuario>) params.get("usuarios"), request, response);
+                enviaCorreo(correo, (List<Usuario>) params.get("usuarios"), request);
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
@@ -309,7 +312,7 @@ public class UsuarioController {
 
     }
 
-    private void enviaCorreo(String tipo, List<Usuario> usuarios, HttpServletRequest request, HttpServletResponse response) throws JRException, MessagingException {
+    private void enviaCorreo(String tipo, List<Usuario> usuarios, HttpServletRequest request) throws JRException, MessagingException {
         log.debug("Enviando correo {}", tipo);
         byte[] archivo = null;
         String tipoContenido = null;
@@ -330,12 +333,9 @@ public class UsuarioController {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(request.getUserPrincipal().getName());
-//        String titulo = messageSource.getMessage("usuario.list.label", null, request.getLocale());
-//        helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
-//        helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()));
-        String titulo = "Usuarios";
-        helper.setSubject("Lista de Usuarios");
-        helper.setText("<html><head><title>Lista de Usuarios</title></head><body><p>Anexo encontrará la lista de usuarios que pidió.</p><p>Equipo MATEO</p></body></html>", true);
+        String titulo = messageSource.getMessage("usuario.lista.label", null, request.getLocale());
+        helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
+        helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
         helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
         mailSender.send(message);
     }
