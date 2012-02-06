@@ -51,7 +51,7 @@ public class Organizacion implements Serializable {
     @NotNull
     @Column(unique = true, nullable = false, length = 128, name = "nombre_completo")
     private String nombreCompleto;
-    @OneToMany(mappedBy = "organizacion")
+    @OneToMany(mappedBy = "organizacion", cascade = CascadeType.ALL)
     private List<Empresa> empresas;
 
     public Organizacion() {

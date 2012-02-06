@@ -24,10 +24,13 @@
 package mx.edu.um.mateo.inventario.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Usuario;
 
 /**
  *
@@ -48,6 +51,8 @@ public class Almacen implements Serializable {
     private String nombre;
     @ManyToOne(optional = false)
     private Empresa empresa;
+    @OneToMany(mappedBy = "almacen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Usuario> usuarios = new ArrayList<>();
 
     public Almacen() {
     }
@@ -111,6 +116,20 @@ public class Almacen implements Serializable {
      */
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
+    }
+
+    /**
+     * @return the usuarios
+     */
+    public List<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    /**
+     * @param usuarios the usuarios to set
+     */
+    public void setUsuarios(List<Usuario> usuarios) {
+        this.usuarios = usuarios;
     }
 
     @Override

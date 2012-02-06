@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
+import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
@@ -91,7 +92,7 @@ public class OrganizacionDao {
         Organizacion organizacion = (Organizacion) currentSession().get(Organizacion.class, id);
         return organizacion;
     }
-    
+
     public Organizacion crea(Organizacion organizacion, Usuario usuario) {
         Session session = currentSession();
         session.save(organizacion);
@@ -106,6 +107,7 @@ public class OrganizacionDao {
         }
         session.refresh(empresa);
         session.refresh(organizacion);
+        session.flush();
         return organizacion;
     }
 
@@ -116,14 +118,14 @@ public class OrganizacionDao {
     public Organizacion actualiza(Organizacion organizacion) {
         return this.actualiza(organizacion, null);
     }
-    
+
     public Organizacion actualiza(Organizacion organizacion, Usuario usuario) {
         Session session = currentSession();
         session.update(organizacion);
         if (usuario != null) {
             actualizaUsuario:
-            for(Empresa empresa : organizacion.getEmpresas()) {
-                for(Almacen almacen : empresa.getAlmacenes()) {
+            for (Empresa empresa : organizacion.getEmpresas()) {
+                for (Almacen almacen : empresa.getAlmacenes()) {
                     usuario.setEmpresa(empresa);
                     usuario.setAlmacen(almacen);
                     session.update(usuario);
@@ -131,17 +133,28 @@ public class OrganizacionDao {
                 }
             }
         }
+        session.flush();
         return organizacion;
     }
 
     public String elimina(Long id) throws UltimoException {
+        log.debug("Eliminando organizacion {}", id);
         Criteria criteria = currentSession().createCriteria(Organizacion.class);
         criteria.setProjection(Projections.rowCount());
-        Long cantidad = (Long)criteria.list().get(0);
+        Long cantidad = (Long) criteria.list().get(0);
         if (cantidad > 1) {
             Organizacion organizacion = obtiene(id);
+            log.debug("Buscando usuarios de empresas de {}", organizacion);
+            for (Empresa empresa : organizacion.getEmpresas()) {
+                log.debug("Buscando usuarios de almacenes de {}", empresa);
+                for (Almacen almacen : empresa.getAlmacenes()) {
+                    log.debug("Buscando usuarios de almacen {}", almacen);
+                    currentSession().refresh(almacen);
+                }
+            }
             String nombre = organizacion.getNombre();
             currentSession().delete(organizacion);
+            currentSession().flush();
             return nombre;
         } else {
             throw new UltimoException("No se puede eliminar porque es el ultimo");

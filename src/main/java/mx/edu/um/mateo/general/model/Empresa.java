@@ -56,7 +56,7 @@ public class Empresa implements Serializable {
     private String nombreCompleto;
     @ManyToOne(optional = false)
     private Organizacion organizacion;
-    @OneToMany(mappedBy = "empresa")
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
     private List<Almacen> almacenes;
 
     public Empresa() {

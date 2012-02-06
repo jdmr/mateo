@@ -2,3 +2,4 @@
 target
 mateo.log*
 *.jasper
+/src/main/resources/rebel.xml

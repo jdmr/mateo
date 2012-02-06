@@ -38,7 +38,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.OrganizacionDao;
 import mx.edu.um.mateo.general.model.Organizacion;
-import mx.edu.um.mateo.general.utils.SpringSecurityUtils;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -159,12 +158,12 @@ public class OrganizacionController {
         return "admin/organizacion/ver";
     }
 
-    @RequestMapping("/nuevo")
-    public String nuevo(Model modelo) {
+    @RequestMapping("/nueva")
+    public String nueva(Model modelo) {
         log.debug("Nuevo organizacion");
         Organizacion organizacion = new Organizacion();
         modelo.addAttribute("organizacion", organizacion);
-        return "admin/organizacion/nuevo";
+        return "admin/organizacion/nueva";
     }
 
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
@@ -227,7 +226,7 @@ public class OrganizacionController {
         log.debug("Elimina organizacion");
         try {
             String nombre = organizacionDao.elimina(id);
-            redirectAttributes.addFlashAttribute("message", "organizacion.eliminado.message");
+            redirectAttributes.addFlashAttribute("message", "organizacion.eliminada.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
         } catch (UltimoException e) {
             log.error("No se pudo eliminar el organizacion " + id, e);

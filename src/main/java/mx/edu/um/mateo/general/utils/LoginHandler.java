@@ -50,9 +50,9 @@ public class LoginHandler extends SavedRequestAwareAuthenticationSuccessHandler 
         String username = ((UserDetails)authentication.getPrincipal()).getUsername();
         log.debug("Se ha firmado a {}", username);
         Usuario usuario = (Usuario)authentication.getPrincipal();
-        request.getSession().setAttribute("organizacion", usuario.getEmpresa().getOrganizacion().getNombre());
-        request.getSession().setAttribute("empresa", usuario.getEmpresa().getNombre());
-        request.getSession().setAttribute("almacen", usuario.getAlmacen().getNombre());
+        request.getSession().setAttribute("organizacionLabel", usuario.getEmpresa().getOrganizacion().getNombre());
+        request.getSession().setAttribute("empresaLabel", usuario.getEmpresa().getNombre());
+        request.getSession().setAttribute("almacenLabel", usuario.getAlmacen().getNombre());
         request.getSession().setAttribute("empresaId", usuario.getEmpresa().getId());
         request.getSession().setAttribute("almacenId", usuario.getAlmacen().getId());
     }
