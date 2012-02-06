@@ -49,7 +49,8 @@ public class Usuario implements Serializable, UserDetails {
     @NotEmpty
     @Column(unique = true, nullable = false, length = 128)
     private String username;
-    @Transient
+    @NotEmpty
+    @Column(nullable = false)
     private String password;
     @Column(nullable = true, name = "open_id")
     private String openId;

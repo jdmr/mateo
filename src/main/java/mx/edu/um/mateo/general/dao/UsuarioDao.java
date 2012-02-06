@@ -23,6 +23,7 @@
  */
 package mx.edu.um.mateo.general.dao;
 
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -39,6 +40,7 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +55,8 @@ public class UsuarioDao {
     private static final Logger log = LoggerFactory.getLogger(UsuarioDao.class);
     @Autowired
     private SessionFactory sessionFactory;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UsuarioDao() {
         log.info("Se ha creado una nueva instancia de UsuarioDao");
@@ -142,6 +146,15 @@ public class UsuarioDao {
         Almacen almacen = (Almacen) currentSession().get(Almacen.class, almacenId);
         usuario.setAlmacen(almacen);
         usuario.setEmpresa(almacen.getEmpresa());
+        if (usuario.getPassword() == null) {
+            NumberFormat nf = NumberFormat.getInstance();
+            nf.setMinimumIntegerDigits(9);
+            nf.setMaximumFractionDigits(0);
+            nf.setGroupingUsed(false);
+            String password = nf.format(Math.random()*100000000);
+            usuario.setPassword(password);
+        }
+        usuario.setPassword(passwordEncoder.encodePassword(usuario.getPassword(), usuario.getUsername()));
 
         if (usuario.getRoles() != null) {
             usuario.getRoles().clear();

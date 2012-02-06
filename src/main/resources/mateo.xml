@@ -65,4 +65,6 @@
         </property>
     </bean>
     
+    <bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" />
+    
 </beans>

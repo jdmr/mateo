@@ -23,6 +23,8 @@
  */
 package mx.edu.um.mateo.general.web;
 
+import mx.edu.um.mateo.general.dao.OrganizacionDao;
+import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -53,6 +55,8 @@ public class OrganizacionControllerTest {
     @Autowired
     private WebApplicationContext wac;
     private MockMvc mockMvc;
+    @Autowired
+    private OrganizacionDao organizacionDao;
 
     public OrganizacionControllerTest() {
     }
@@ -88,7 +92,10 @@ public class OrganizacionControllerTest {
 
     @Test
     public void debieraMostrarUsuario() throws Exception {
-        this.mockMvc.perform(get("/admin/organizacion/ver/1"))
+        Organizacion organizacion = new Organizacion("tst-01","test-01","test-01");
+        organizacion = organizacionDao.crea(organizacion);
+        
+        this.mockMvc.perform(get("/admin/organizacion/ver/"+organizacion.getId()))
                 .andExpect(status().isOk())
                 .andExpect(forwardedUrl("/WEB-INF/jsp/admin/organizacion/ver.jsp"))
                 .andExpect(model().attributeExists("organizacion"))
@@ -103,7 +110,7 @@ public class OrganizacionControllerTest {
                 .param("nombreCompleto","TEST--01")
                 )
                 .andExpect(status().isOk())
-                .andExpect(redirectedUrl("/admin/organizacion/ver/2"))
+                .andExpect(redirectedUrl("/admin/organizacion/ver/1"))
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message","organizacion.creada.message"))
                 ;

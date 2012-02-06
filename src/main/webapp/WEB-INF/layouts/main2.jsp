@@ -59,5 +59,6 @@
         <script src="<c:url value='/js/app.js' />"></script>
         <script src="<c:url value='/js/bootstrap.min.js' />"></script>
         <script src="<c:url value='/js/jquery-ui-1.8.17.custom.min.js' />"></script>
+        <sitemesh:write property="content"/>
     </body>
 </html>

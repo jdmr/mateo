@@ -1,7 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
-        <action>
-            <actionName>build</actionName>
+    <action>
+        <actionName>build</actionName>
+        <goals>
+            <goal>package</goal>
+        </goals>
+        <properties>
+            <skipTests>true</skipTests>
+        </properties>
+    </action>
+    <action>
+        <actionName>rebuild</actionName>
+        <goals>
+            <goal>clean</goal>
+            <goal>package</goal>
+        </goals>
+        <properties>
+            <skipTests>true</skipTests>
+        </properties>
+    </action>
+    <action>
+        <actionName>build-with-dependencies</actionName>
+        <reactor>also-make</reactor>
+        <goals>
+            <goal>package</goal>
+        </goals>
+        <properties>
+            <skipTests>true</skipTests>
+        </properties>
+    </action>
+    <action>
+            <actionName>CUSTOM-update</actionName>
+            <displayName>update</displayName>
             <goals>
                 <goal>package</goal>
             </goals>
@@ -9,24 +39,4 @@
                 <skipTests>true</skipTests>
             </properties>
         </action>
-        <action>
-            <actionName>rebuild</actionName>
-            <goals>
-                <goal>clean</goal>
-                <goal>package</goal>
-            </goals>
-            <properties>
-                <skipTests>true</skipTests>
-            </properties>
-        </action>
-        <action>
-            <actionName>build-with-dependencies</actionName>
-            <reactor>also-make</reactor>
-            <goals>
-                <goal>package</goal>
-            </goals>
-            <properties>
-                <skipTests>true</skipTests>
-            </properties>
-        </action>
-    </actions>
+</actions>

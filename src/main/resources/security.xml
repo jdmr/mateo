@@ -16,19 +16,17 @@
     <http pattern="/login.jsp*" security="none"/>
     
     <http auto-config="true" access-decision-manager-ref="webAccessDecisionManager" use-expressions="true">
+        <intercept-url pattern="/inicializa/**" access="permitAll" />
         <intercept-url pattern="/admin/organizacion/**" access="hasAnyRole('ROLE_ADMIN')" />
         <intercept-url pattern="/admin/empresa/**" access="hasAnyRole('ROLE_ORG')" />
         <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_EMP')" />
         <intercept-url pattern="/**" access="isAuthenticated()" />
-        <!--
         <form-login login-page="/login.jsp" 
                     login-processing-url="/entrar" 
                     authentication-failure-url="/login.jsp?error=1" 
                     authentication-success-handler-ref="loginHandler" 
                     />
-        -->
         <openid-login
-            login-page="/login.jsp"
             authentication-failure-url="/login.jsp?error=1"
             authentication-success-handler-ref="loginHandler" 
         >
@@ -44,16 +42,13 @@
     </http>
 
     
-    <!--
-    Usernames/Passwords are
-        rod/koala
-        dianne/emu
-        scott/wombat
-        peter/opal
-    -->
     <beans:bean name="userDetailsService" class="mx.edu.um.mateo.general.service.UserDetailsServiceImpl" />
     <authentication-manager alias="authenticationManager">
-        <authentication-provider user-service-ref="userDetailsService" />
+        <authentication-provider user-service-ref="userDetailsService" >
+            <password-encoder ref="passwordEncoder">
+                <salt-source user-property="username" />
+            </password-encoder>
+        </authentication-provider>
     </authentication-manager>
     
     <beans:bean id="roleHierarchy" class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">

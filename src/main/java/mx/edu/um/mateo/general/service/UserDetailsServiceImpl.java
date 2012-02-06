@@ -49,7 +49,7 @@ public class UserDetailsServiceImpl implements UserDetailsService, Authenticatio
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.debug("loadUserByUsername: {}", username);
-        Usuario usuario = usuarioDao.obtienePorOpenId(username);
+        Usuario usuario = usuarioDao.obtiene(username);
         if (usuario == null) {
             throw new UsernameNotFoundException("No se encontro al usuario " + username);
         }
