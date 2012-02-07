@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="organizacion.lista.label" /></title>
+        <title><s:message code="empresa.lista.label" /></title>
     </head>
     <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
@@ -21,23 +21,23 @@
                 <li><a href="<s:url value='/admin/cliente'/>" ><s:message code="cliente.label" /></a></li>
                 <li><a href="<s:url value='/admin/tipoCliente'/>" ><s:message code="tipoCliente.label" /></a></li>
                 <li><a href="<s:url value='/admin/proveedor'/>" ><s:message code="proveedor.label" /></a></li>
-                <li><a href="<s:url value='/admin/empresa'/>" ><s:message code="empresa.label" /></a></li>
-                <li class="active"><a href="<s:url value='/admin/organizacion'/>" ><s:message code="organizacion.label" /></a></li>
+                <li class="active"><a href="<s:url value='/admin/empresa'/>" ><s:message code="empresa.label" /></a></li>
+                <li><a href="<s:url value='/admin/organizacion'/>" ><s:message code="organizacion.label" /></a></li>
                 <li><a href="<s:url value='/admin/usuario'/>" ><s:message code="usuario.label" /></a></li>
             </ul>
         </header>
 
-        <h1><s:message code="organizacion.lista.label" /></h1>
+        <h1><s:message code="empresa.lista.label" /></h1>
         <hr/>
 
-        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/admin/organizacion' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/admin/empresa' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/admin/organizacion/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='organizacion.nueva.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/admin/empresa/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='empresa.nueva.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><s:message code="buscar.label" /></button>
             </p>
@@ -47,8 +47,8 @@
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
-            <c:if test="${organizacion != null}">
-                <s:bind path="organizacion.*">
+            <c:if test="${empresa != null}">
+                <s:bind path="empresa.*">
                     <c:if test="${not empty status.errorMessages}">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -89,13 +89,15 @@
                                 </c:choose>
                             </a>
                         </th>
+                        <th><s:message code="organizacion.label" /></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${organizaciones}" var="organizacion" varStatus="status">
+                    <c:forEach items="${empresas}" var="empresa" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/admin/organizacion/ver/${organizacion.id}' />">${organizacion.nombre}</a></td>
-                            <td>${organizacion.nombreCompleto}</td>
+                            <td><a href="<c:url value='/admin/empresa/ver/${empresa.id}' />">${empresa.nombre}</a></td>
+                            <td>${empresa.nombreCompleto}</td>
+                            <td>${empresa.organizacion.nombre}</td>
                         </tr>
                     </c:forEach>
                 </tbody>
