@@ -110,7 +110,6 @@ public class OrganizacionControllerTest {
                 .param("nombreCompleto","TEST--01")
                 )
                 .andExpect(status().isOk())
-                .andExpect(redirectedUrl("/admin/organizacion/ver/1"))
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message","organizacion.creada.message"))
                 ;

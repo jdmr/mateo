@@ -56,6 +56,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -188,6 +189,7 @@ public class UsuarioController {
             return "admin/usuario/nuevo";
         }
 
+        String password = null;
         try {
             log.debug("Evaluando roles {}", request.getParameterValues("roles"));
             String[] roles = request.getParameterValues("roles");
@@ -196,13 +198,30 @@ public class UsuarioController {
                 roles = new String[]{"ROLE_USER"};
             }
             Long almacenId = (Long) request.getSession().getAttribute("almacenId");
+            password = KeyGenerators.string().generateKey();
+            usuario.setPassword(password);
             usuario = usuarioDao.crea(usuario, almacenId, roles);
+
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(request.getUserPrincipal().getName());
+            helper.setSubject(messageSource.getMessage("envia.correo.password.titulo.message", new String[]{}, request.getLocale()));
+            helper.setText(messageSource.getMessage("envia.correo.password.contenido.message", new String[]{usuario.getUsername(), password}, request.getLocale()), true);
+            mailSender.send(message);
+
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al usuario", e);
             errors.rejectValue("username", "campo.duplicado.message", new String[]{"username"}, null);
             List<Rol> roles = obtieneRoles();
             modelo.addAttribute("roles", roles);
             return "admin/usuario/nuevo";
+        } catch (MessagingException e) {
+            log.error("No se pudo enviar la contrasena por correo",e);
+            
+            redirectAttributes.addFlashAttribute("message", "usuario.creado.sin.correo.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{usuario.getUsername(), password});
+
+            return "redirect:/admin/usuario/ver/" + usuario.getId();
         }
 
         redirectAttributes.addFlashAttribute("message", "usuario.creado.message");
