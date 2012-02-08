@@ -83,7 +83,7 @@ public class UsuarioDao {
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        
+
         Criteria criteria = currentSession().createCriteria(Usuario.class);
         Criteria countCriteria = currentSession().createCriteria(Usuario.class);
 
@@ -104,7 +104,7 @@ public class UsuarioDao {
         }
 
         if (params.containsKey("order")) {
-            String campo = (String)params.get("order");
+            String campo = (String) params.get("order");
             if (params.get("sort").equals("desc")) {
                 criteria.addOrder(Order.desc(campo));
             } else {
@@ -146,14 +146,6 @@ public class UsuarioDao {
         Almacen almacen = (Almacen) currentSession().get(Almacen.class, almacenId);
         usuario.setAlmacen(almacen);
         usuario.setEmpresa(almacen.getEmpresa());
-        if (usuario.getPassword() == null) {
-            NumberFormat nf = NumberFormat.getInstance();
-            nf.setMinimumIntegerDigits(9);
-            nf.setMaximumFractionDigits(0);
-            nf.setGroupingUsed(false);
-            String password = nf.format(Math.random()*100000000);
-            usuario.setPassword(password);
-        }
         usuario.setPassword(passwordEncoder.encodePassword(usuario.getPassword(), usuario.getUsername()));
 
         if (usuario.getRoles() != null) {
@@ -167,7 +159,7 @@ public class UsuarioDao {
             Rol rol = (Rol) query.uniqueResult();
             usuario.addRol(rol);
         }
-        log.debug("Roles del usuario {}", usuario.getAuthorities());
+        log.debug("Roles del usuario {}", usuario.getRoles());
 
         currentSession().save(usuario);
         currentSession().flush();

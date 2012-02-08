@@ -206,7 +206,7 @@ public class UsuarioController {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setTo(request.getUserPrincipal().getName());
             helper.setSubject(messageSource.getMessage("envia.correo.password.titulo.message", new String[]{}, request.getLocale()));
-            helper.setText(messageSource.getMessage("envia.correo.password.contenido.message", new String[]{usuario.getUsername(), password}, request.getLocale()), true);
+            helper.setText(messageSource.getMessage("envia.correo.password.contenido.message", new String[]{usuario.getNombre(), usuario.getUsername(), password}, request.getLocale()), true);
             mailSender.send(message);
 
         } catch (ConstraintViolationException e) {
