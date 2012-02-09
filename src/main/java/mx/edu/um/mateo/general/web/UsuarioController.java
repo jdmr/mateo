@@ -129,6 +129,8 @@ public class UsuarioController {
             params.remove("reporte");
             try {
                 enviaCorreo(correo, (List<Usuario>) params.get("usuarios"), request);
+                modelo.addAttribute("message", "lista.enviada.message");
+                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("usuario.lista.label", null, request.getLocale()), request.getUserPrincipal().getName()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
