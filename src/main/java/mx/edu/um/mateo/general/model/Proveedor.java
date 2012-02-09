@@ -71,10 +71,11 @@ public class Proveedor implements Serializable {
     public Proveedor() {
     }
 
-    public Proveedor(String nombre, String nombreCompleto, String rfc) {
+    public Proveedor(String nombre, String nombreCompleto, String rfc, Empresa empresa) {
         this.nombre = nombre;
         this.nombreCompleto = nombreCompleto;
         this.rfc = rfc;
+        this.empresa = empresa;
     }
 
     /**
