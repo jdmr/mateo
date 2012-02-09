@@ -27,7 +27,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.validator.constraints.NotBlank;
 
