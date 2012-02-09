@@ -128,6 +128,8 @@ public class OrganizacionController {
             params.remove("reporte");
             try {
                 enviaCorreo(correo, (List<Organizacion>) params.get("organizaciones"), request);
+                modelo.addAttribute("message", "lista.enviada.message");
+                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("organizacion.lista.label", null, request.getLocale()), request.getUserPrincipal().getName()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }

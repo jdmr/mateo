@@ -126,6 +126,8 @@ public class EmpresaController {
             params.remove("reporte");
             try {
                 enviaCorreo(correo, (List<Empresa>) params.get("empresas"), request);
+                modelo.addAttribute("message", "lista.enviada.message");
+                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("empresa.lista.label", null, request.getLocale()), request.getUserPrincipal().getName()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
