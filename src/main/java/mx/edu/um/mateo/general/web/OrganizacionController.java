@@ -38,9 +38,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.OrganizacionDao;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
+import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
+import mx.edu.um.mateo.inventario.model.Almacen;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -186,6 +188,28 @@ public class OrganizacionController {
                 usuario = usuarioDao.obtiene(request.getUserPrincipal().getName());
             }
             organizacion = organizacionDao.crea(organizacion, usuario);
+            
+            String organizacionLabel = organizacion.getNombre();
+            String empresaLabel = null;
+            String almacenLabel = null;
+            Long empresaId = null;
+            Long almacenId = null;
+            actualizaUsuario:
+            for (Empresa empresa : organizacion.getEmpresas()) {
+                empresaLabel = empresa.getNombre();
+                empresaId = empresa.getId();
+                for (Almacen almacen : empresa.getAlmacenes()) {
+                    almacenLabel = almacen.getNombre();
+                    almacenId = almacen.getId();
+                    break actualizaUsuario;
+                }
+            }
+            request.getSession().setAttribute("organizacionLabel", organizacionLabel);
+            request.getSession().setAttribute("empresaLabel", empresaLabel);
+            request.getSession().setAttribute("almacenLabel", almacenLabel);
+            request.getSession().setAttribute("empresaId", empresaId);
+            request.getSession().setAttribute("almacenId", almacenId);
+            
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al organizacion", e);
             errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
@@ -220,6 +244,27 @@ public class OrganizacionController {
                 usuario = usuarioDao.obtiene(request.getUserPrincipal().getName());
             }
             organizacion = organizacionDao.actualiza(organizacion, usuario);
+            
+            String organizacionLabel = organizacion.getNombre();
+            String empresaLabel = null;
+            String almacenLabel = null;
+            Long empresaId = null;
+            Long almacenId = null;
+            actualizaUsuario:
+            for (Empresa empresa : organizacion.getEmpresas()) {
+                empresaLabel = empresa.getNombre();
+                empresaId = empresa.getId();
+                for (Almacen almacen : empresa.getAlmacenes()) {
+                    almacenLabel = almacen.getNombre();
+                    almacenId = almacen.getId();
+                    break actualizaUsuario;
+                }
+            }
+            request.getSession().setAttribute("organizacionLabel", organizacionLabel);
+            request.getSession().setAttribute("empresaLabel", empresaLabel);
+            request.getSession().setAttribute("almacenLabel", almacenLabel);
+            request.getSession().setAttribute("empresaId", empresaId);
+            request.getSession().setAttribute("almacenId", almacenId);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al organizacion", e);
             errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
@@ -234,10 +279,21 @@ public class OrganizacionController {
     }
 
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(@RequestParam Long id, Model modelo, @ModelAttribute Organizacion organizacion, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Organizacion organizacion, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina organizacion");
         try {
             String nombre = organizacionDao.elimina(id);
+            Usuario usuario = usuarioDao.obtiene(request.getUserPrincipal().getName());
+            log.debug("Usuario: {}",usuario);
+            log.debug("Empresa: {}",usuario.getEmpresa());
+            log.debug("Organizacion: {}",usuario.getEmpresa().getOrganizacion());
+            log.debug("Nombre: {}", usuario.getEmpresa().getOrganizacion().getNombre());
+            request.getSession().setAttribute("organizacionLabel", usuario.getEmpresa().getOrganizacion().getNombre());
+            request.getSession().setAttribute("empresaLabel", usuario.getEmpresa().getNombre());
+            request.getSession().setAttribute("almacenLabel", usuario.getAlmacen().getNombre());
+            request.getSession().setAttribute("empresaId", usuario.getEmpresa().getId());
+            request.getSession().setAttribute("almacenId", usuario.getAlmacen().getId());
+            
             redirectAttributes.addFlashAttribute("message", "organizacion.eliminada.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
         } catch (UltimoException e) {

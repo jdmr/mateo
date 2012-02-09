@@ -32,6 +32,7 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
@@ -144,12 +145,34 @@ public class OrganizacionDao {
         Long cantidad = (Long) criteria.list().get(0);
         if (cantidad > 1) {
             Organizacion organizacion = obtiene(id);
-            log.debug("Buscando usuarios de empresas de {}", organizacion);
+            Query query = currentSession().createQuery("select o from Organizacion o where o.id != :organizacionId");
+            query.setLong("organizacionId", id);
+            query.setMaxResults(1);
+            Organizacion otraOrganizacion = (Organizacion) query.uniqueResult();
+            boolean encontreAdministrador = false;
             for (Empresa empresa : organizacion.getEmpresas()) {
-                log.debug("Buscando usuarios de almacenes de {}", empresa);
                 for (Almacen almacen : empresa.getAlmacenes()) {
-                    log.debug("Buscando usuarios de almacen {}", almacen);
                     currentSession().refresh(almacen);
+                    for (Usuario usuario : almacen.getUsuarios()) {
+                        for (Rol rol : usuario.getRoles()) {
+                            if (rol.getAuthority().equals("ROLE_ADMIN")) {
+                                encontreAlmacen:
+                                for (Empresa otraEmpresa : otraOrganizacion.getEmpresas()) {
+                                    for (Almacen otroAlmacen : otraEmpresa.getAlmacenes()) {
+                                        usuario.setEmpresa(otraEmpresa);
+                                        usuario.setAlmacen(otroAlmacen);
+                                        currentSession().update(usuario);
+                                        currentSession().flush();
+                                        encontreAdministrador = true;
+                                        break encontreAlmacen;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (encontreAdministrador) {
+                        currentSession().refresh(almacen);
+                    }
                 }
             }
             String nombre = organizacion.getNombre();
