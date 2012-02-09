@@ -32,6 +32,8 @@ import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -71,6 +73,13 @@ public class EmpresaDao {
         } else {
             params.put("max", Math.min((Integer) params.get("max"), 100));
         }
+
+        if (params.containsKey("pagina")) {
+            Long pagina = (Long) params.get("pagina");
+            Long offset = (pagina - 1) * (Integer) params.get("max");
+            params.put("offset", offset.intValue());
+        }
+
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
@@ -82,8 +91,29 @@ public class EmpresaDao {
             countCriteria.createCriteria("organizacion").add(Restrictions.idEq(params.get("organizacion")));
         }
 
-        criteria.setFirstResult((Integer) params.get("offset"));
-        criteria.setMaxResults((Integer) params.get("max"));
+        if (params.containsKey("filtro")) {
+            String filtro = (String) params.get("filtro");
+            filtro = "%" + filtro + "%";
+            Disjunction propiedades = Restrictions.disjunction();
+            propiedades.add(Restrictions.ilike("nombre", filtro));
+            propiedades.add(Restrictions.ilike("nombreCompleto", filtro));
+            criteria.add(propiedades);
+            countCriteria.add(propiedades);
+        }
+
+        if (params.containsKey("order")) {
+            String campo = (String) params.get("order");
+            if (params.get("sort").equals("desc")) {
+                criteria.addOrder(Order.desc(campo));
+            } else {
+                criteria.addOrder(Order.asc(campo));
+            }
+        }
+
+        if (!params.containsKey("reporte")) {
+            criteria.setFirstResult((Integer) params.get("offset"));
+            criteria.setMaxResults((Integer) params.get("max"));
+        }
         params.put("empresas", criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
