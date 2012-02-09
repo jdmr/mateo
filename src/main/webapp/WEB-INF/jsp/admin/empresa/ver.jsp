@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="organizacion.ver.label" /></title>
+        <title><s:message code="empresa.ver.label" /></title>
     </head>
     <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
@@ -28,18 +28,18 @@
                 <li><a href="<s:url value='/admin/cliente'/>" ><s:message code="cliente.label" /></a></li>
                 <li><a href="<s:url value='/admin/tipoCliente'/>" ><s:message code="tipoCliente.label" /></a></li>
                 <li><a href="<s:url value='/admin/proveedor'/>" ><s:message code="proveedor.label" /></a></li>
-                <li><a href="<s:url value='/admin/empresa'/>" ><s:message code="empresa.label" /></a></li>
-                <li class="active"><a href="<s:url value='/admin/organizacion'/>" ><s:message code="organizacion.label" /></a></li>
+                <li class="active"><a href="<s:url value='/admin/empresa'/>" ><s:message code="empresa.label" /></a></li>
+                <li><a href="<s:url value='/admin/organizacion'/>" ><s:message code="organizacion.label" /></a></li>
                 <li><a href="<s:url value='/admin/usuario'/>" ><s:message code="usuario.label" /></a></li>
             </ul>
         </header>
 
-        <div id="ver-organizacion" class="content scaffold-list" role="main">
-            <h1><s:message code="organizacion.ver.label" /></h1>
+        <div id="ver-empresa" class="content scaffold-list" role="main">
+            <h1><s:message code="empresa.ver.label" /></h1>
 
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/admin/organizacion'/>"><i class="icon-list icon-white"></i> <s:message code='organizacion.lista.label' /></a>
-                <a class="btn btn-primary" href="<s:url value='/admin/organizacion/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='organizacion.nueva.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/admin/empresa'/>"><i class="icon-list icon-white"></i> <s:message code='empresa.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/admin/empresa/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='empresa.nueva.label' /></a>
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
@@ -48,26 +48,26 @@
                 </div>
             </c:if>
 
-            <c:url var="eliminaUrl" value="/admin/organizacion/elimina" />
-            <form:form commandName="organizacion" action="${eliminaUrl}" >
+            <c:url var="eliminaUrl" value="/admin/empresa/elimina" />
+            <form:form commandName="empresa" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="codigo.label" /></div>
-                    <div class="span11">${organizacion.codigo}</div>
+                    <div class="span11">${empresa.codigo}</div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="nombre.label" /></div>
-                    <div class="span11">${organizacion.nombre}</div>
+                    <div class="span11">${empresa.nombre}</div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="nombreCompleto.label" /></div>
-                    <div class="span11">${organizacion.nombreCompleto}</div>
+                    <div class="span11">${empresa.nombreCompleto}</div>
                 </div>
 
                 <p class="well">
-                    <a href="<c:url value='/admin/organizacion/edita/${organizacion.id}' />" class="btn btn-primary"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
+                    <a href="<c:url value='/admin/empresa/edita/${empresa.id}' />" class="btn btn-primary"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
                     <form:hidden path="id" />
                     <input type="submit" name="elimina" value="<s:message code='eliminar.button'/>" class="btn btn-danger icon-remove" style="margin-bottom: 2px;" onclick="return confirm('<s:message code="confirma.elimina.message" />');" />
                 </p>

@@ -26,7 +26,6 @@ package mx.edu.um.mateo.general.dao;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Empresa;
-import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
@@ -100,6 +99,9 @@ public class EmpresaDao {
 
     public Empresa crea(Empresa empresa, Usuario usuario) {
         Session session = currentSession();
+        if (usuario != null) {
+            empresa.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+        }
         session.save(empresa);
         Almacen almacen = new Almacen("CENTRAL", empresa);
         session.save(almacen);
@@ -122,6 +124,9 @@ public class EmpresaDao {
 
     public Empresa actualiza(Empresa empresa, Usuario usuario) {
         Session session = currentSession();
+        if (usuario != null) {
+            empresa.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+        }
         session.update(empresa);
         if (usuario != null) {
             actualizaUsuario:

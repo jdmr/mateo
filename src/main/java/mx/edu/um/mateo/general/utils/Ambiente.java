@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2012 jdmr.
+ * Copyright 2012 J. David Mendoza <jdmendoza@um.edu.mx>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,37 +23,34 @@
  */
 package mx.edu.um.mateo.general.utils;
 
-import java.io.IOException;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Usuario;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 /**
  *
- * @author jdmr
+ * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Component
-public class LoginHandler extends SavedRequestAwareAuthenticationSuccessHandler {
-
-    private static final Logger log = LoggerFactory.getLogger(LoginHandler.class);
-    
+public class Ambiente {
     @Autowired
-    private Ambiente ambiente;
+    private UsuarioDao usuarioDao;
     
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
-        super.onAuthenticationSuccess(request, response, authentication);
-        String username = ((UserDetails)authentication.getPrincipal()).getUsername();
-        log.debug("Se ha firmado a {}", username);
-        Usuario usuario = (Usuario)authentication.getPrincipal();
-        ambiente.actualizaSesion(request, usuario);
+    public void actualizaSesion(HttpServletRequest request) {
+        Usuario usuario = usuarioDao.obtiene(request.getUserPrincipal().getName());
+        this.actualizaSesion(request, usuario);
+    }
+    
+    public void actualizaSesion(HttpServletRequest request, Usuario usuario) {
+        if (usuario != null) {
+            request.getSession().setAttribute("organizacionLabel", usuario.getEmpresa().getOrganizacion().getNombre());
+            request.getSession().setAttribute("empresaLabel", usuario.getEmpresa().getNombre());
+            request.getSession().setAttribute("almacenLabel", usuario.getAlmacen().getNombre());
+            request.getSession().setAttribute("organizacionId", usuario.getEmpresa().getOrganizacion().getId());
+            request.getSession().setAttribute("empresaId", usuario.getEmpresa().getId());
+            request.getSession().setAttribute("almacenId", usuario.getAlmacen().getId());
+        }
     }
 }

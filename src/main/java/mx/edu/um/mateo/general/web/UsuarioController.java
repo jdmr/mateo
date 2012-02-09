@@ -58,6 +58,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -179,6 +180,7 @@ public class UsuarioController {
         return "admin/usuario/nuevo";
     }
 
+    @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Usuario usuario, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
@@ -242,6 +244,7 @@ public class UsuarioController {
         return "admin/usuario/edita";
     }
 
+    @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid Usuario usuario, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -272,6 +275,7 @@ public class UsuarioController {
         return "redirect:/admin/usuario/ver/" + usuario.getId();
     }
 
+    @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(@RequestParam Long id, Model modelo, @ModelAttribute Usuario usuario, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina usuario");

@@ -41,6 +41,7 @@ import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import net.sf.jasperreports.engine.*;
@@ -59,6 +60,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -83,6 +85,8 @@ public class OrganizacionController {
     private ResourceBundleMessageSource messageSource;
     @Autowired
     private UsuarioDao usuarioDao;
+    @Autowired
+    private Ambiente ambiente;
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -174,6 +178,7 @@ public class OrganizacionController {
         return "admin/organizacion/nueva";
     }
 
+    @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Organizacion organizacion, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
@@ -191,27 +196,7 @@ public class OrganizacionController {
             }
             organizacion = organizacionDao.crea(organizacion, usuario);
             
-            String organizacionLabel = organizacion.getNombre();
-            String empresaLabel = null;
-            String almacenLabel = null;
-            Long empresaId = null;
-            Long almacenId = null;
-            actualizaUsuario:
-            for (Empresa empresa : organizacion.getEmpresas()) {
-                empresaLabel = empresa.getNombre();
-                empresaId = empresa.getId();
-                for (Almacen almacen : empresa.getAlmacenes()) {
-                    almacenLabel = almacen.getNombre();
-                    almacenId = almacen.getId();
-                    break actualizaUsuario;
-                }
-            }
-            request.getSession().setAttribute("organizacionLabel", organizacionLabel);
-            request.getSession().setAttribute("empresaLabel", empresaLabel);
-            request.getSession().setAttribute("almacenLabel", almacenLabel);
-            request.getSession().setAttribute("empresaId", empresaId);
-            request.getSession().setAttribute("almacenId", almacenId);
-            
+            ambiente.actualizaSesion(request, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al organizacion", e);
             errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
@@ -233,6 +218,7 @@ public class OrganizacionController {
         return "admin/organizacion/edita";
     }
 
+    @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid Organizacion organizacion, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -247,26 +233,7 @@ public class OrganizacionController {
             }
             organizacion = organizacionDao.actualiza(organizacion, usuario);
             
-            String organizacionLabel = organizacion.getNombre();
-            String empresaLabel = null;
-            String almacenLabel = null;
-            Long empresaId = null;
-            Long almacenId = null;
-            actualizaUsuario:
-            for (Empresa empresa : organizacion.getEmpresas()) {
-                empresaLabel = empresa.getNombre();
-                empresaId = empresa.getId();
-                for (Almacen almacen : empresa.getAlmacenes()) {
-                    almacenLabel = almacen.getNombre();
-                    almacenId = almacen.getId();
-                    break actualizaUsuario;
-                }
-            }
-            request.getSession().setAttribute("organizacionLabel", organizacionLabel);
-            request.getSession().setAttribute("empresaLabel", empresaLabel);
-            request.getSession().setAttribute("almacenLabel", almacenLabel);
-            request.getSession().setAttribute("empresaId", empresaId);
-            request.getSession().setAttribute("almacenId", almacenId);
+            ambiente.actualizaSesion(request, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al organizacion", e);
             errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
@@ -280,21 +247,14 @@ public class OrganizacionController {
         return "redirect:/admin/organizacion/ver/" + organizacion.getId();
     }
 
+    @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Organizacion organizacion, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina organizacion");
         try {
             String nombre = organizacionDao.elimina(id);
-            Usuario usuario = usuarioDao.obtiene(request.getUserPrincipal().getName());
-            log.debug("Usuario: {}",usuario);
-            log.debug("Empresa: {}",usuario.getEmpresa());
-            log.debug("Organizacion: {}",usuario.getEmpresa().getOrganizacion());
-            log.debug("Nombre: {}", usuario.getEmpresa().getOrganizacion().getNombre());
-            request.getSession().setAttribute("organizacionLabel", usuario.getEmpresa().getOrganizacion().getNombre());
-            request.getSession().setAttribute("empresaLabel", usuario.getEmpresa().getNombre());
-            request.getSession().setAttribute("almacenLabel", usuario.getAlmacen().getNombre());
-            request.getSession().setAttribute("empresaId", usuario.getEmpresa().getId());
-            request.getSession().setAttribute("almacenId", usuario.getAlmacen().getId());
+            
+            ambiente.actualizaSesion(request);
             
             redirectAttributes.addFlashAttribute("message", "organizacion.eliminada.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});

@@ -124,6 +124,7 @@ public class OrganizacionDao {
         Session session = currentSession();
         session.update(organizacion);
         if (usuario != null) {
+            session.refresh(organizacion);
             actualizaUsuario:
             for (Empresa empresa : organizacion.getEmpresas()) {
                 for (Almacen almacen : empresa.getAlmacenes()) {
