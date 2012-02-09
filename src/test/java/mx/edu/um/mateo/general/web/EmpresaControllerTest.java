@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2012 jdmr.
+ * Copyright 2012 J. David Mendoza <jdmendoza@um.edu.mx>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@
 package mx.edu.um.mateo.general.web;
 
 import java.util.ArrayList;
+import mx.edu.um.mateo.general.dao.EmpresaDao;
 import mx.edu.um.mateo.general.dao.OrganizacionDao;
 import mx.edu.um.mateo.general.dao.RolDao;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
@@ -34,8 +35,8 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.inventario.model.Almacen;
-import static org.junit.Assert.assertNotNull;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,16 +44,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.server.MockMvc;
-import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.server.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 import org.springframework.test.web.server.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.server.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 
 /**
  *
- * @author jdmr
+ * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = GenericWebXmlContextLoader.class, locations = {
@@ -61,55 +62,56 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class OrganizacionControllerTest extends BaseTest {
+public class EmpresaControllerTest extends BaseTest {
 
-    private static final Logger log = LoggerFactory.getLogger(OrganizacionControllerTest.class);
+    private static final Logger log = LoggerFactory.getLogger(EmpresaControllerTest.class);
     @Autowired
     private WebApplicationContext wac;
     private MockMvc mockMvc;
     @Autowired
     private OrganizacionDao organizacionDao;
     @Autowired
-    private RolDao rolDao;
+    private EmpresaDao empresaDao;
     @Autowired
     private UsuarioDao usuarioDao;
-
-    public OrganizacionControllerTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
+    @Autowired
+    private RolDao rolDao;
+    
     @Before
     public void setUp() {
         this.mockMvc = MockMvcBuilders.webApplicationContextSetup(wac).build();
     }
 
-    @After
-    public void tearDown() {
-    }
-
     @Test
-    public void debieraMostrarListaDeOrganizaciones() throws Exception {
-        this.mockMvc.perform(get("/admin/organizacion")).andExpect(status().isOk()).andExpect(forwardedUrl("/WEB-INF/jsp/admin/organizacion/lista.jsp")).andExpect(model().attributeExists("organizaciones")).andExpect(model().attributeExists("paginacion")).andExpect(model().attributeExists("paginas")).andExpect(model().attributeExists("pagina"));
+    public void debieraMostrarListaDeEmpresas() throws Exception {
+        log.debug("Debiera mostrar lista de empresas");
+        this.mockMvc.perform(
+                get("/admin/empresa"))
+                .andExpect(status().isOk())
+                .andExpect(forwardedUrl("/WEB-INF/jsp/admin/empresa/lista.jsp"))
+                .andExpect(model().attributeExists("empresas"))
+                .andExpect(model().attributeExists("paginacion"))
+                .andExpect(model().attributeExists("paginas"))
+                .andExpect(model().attributeExists("pagina"));
     }
-
+    
     @Test
-    public void debieraMostrarOrganizacion() throws Exception {
+    public void debieraMostrarEmpresa() throws Exception {
+        log.debug("Debiera mostrar empresa");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         organizacion = organizacionDao.crea(organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        empresa = empresaDao.crea(empresa);
+        Long id = empresa.getId();
 
-        this.mockMvc.perform(get("/admin/organizacion/ver/" + organizacion.getId())).andExpect(status().isOk()).andExpect(forwardedUrl("/WEB-INF/jsp/admin/organizacion/ver.jsp")).andExpect(model().attributeExists("organizacion"));
+        this.mockMvc.perform(get("/admin/empresa/ver/" + empresa.getId()))
+                .andExpect(status().isOk())
+                .andExpect(forwardedUrl("/WEB-INF/jsp/admin/empresa/ver.jsp"))
+                .andExpect(model().attributeExists("empresa"));
     }
-
+    
     @Test
-    public void debieraCrearOrganizacion() throws Exception {
-        log.debug("Debiera actualizar organizacion");
+    public void debieraCrearEmpresa() throws Exception {
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
         organizacion = organizacionDao.crea(organizacion);
         Rol rol = new Rol("ROLE_TEST");
@@ -124,11 +126,15 @@ public class OrganizacionControllerTest extends BaseTest {
             }
         }
         usuario = usuarioDao.crea(usuario, almacenId, new String[]{rol.getAuthority()});
-        Long id = usuario.getId();
-        assertNotNull(id);
-
+        
         this.authenticate(usuario, usuario.getPassword(), new ArrayList(usuario.getAuthorities()));
         
-        this.mockMvc.perform(post("/admin/organizacion/crea").param("codigo", "tst-01").param("nombre", "TEST--01").param("nombreCompleto", "TEST--01")).andExpect(status().isOk()).andExpect(flash().attributeExists("message")).andExpect(flash().attribute("message", "organizacion.creada.message"));
+        this.mockMvc.perform(post("/admin/empresa/crea")
+                .param("codigo", "tst-01")
+                .param("nombre", "TEST--01")
+                .param("nombreCompleto", "TEST--01"))
+                .andExpect(status().isOk())
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(flash().attribute("message", "empresa.creada.message"));
     }
 }
