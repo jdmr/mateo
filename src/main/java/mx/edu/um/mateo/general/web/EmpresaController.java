@@ -132,7 +132,7 @@ public class EmpresaController {
             try {
                 enviaCorreo(correo, (List<Empresa>) params.get("empresas"), request);
                 modelo.addAttribute("message", "lista.enviada.message");
-                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("empresa.lista.label", null, request.getLocale()), request.getUserPrincipal().getName()});
+                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("empresa.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
@@ -189,7 +189,7 @@ public class EmpresaController {
         }
 
         try {
-            Usuario usuario = usuarioDao.obtiene(request.getUserPrincipal().getName());
+            Usuario usuario = ambiente.obtieneUsuario();
             empresa = empresaDao.crea(empresa, usuario);
             
             ambiente.actualizaSesion(request, usuario);
@@ -223,7 +223,7 @@ public class EmpresaController {
         }
 
         try {
-            Usuario usuario = usuarioDao.obtiene(request.getUserPrincipal().getName());
+            Usuario usuario = ambiente.obtieneUsuario();
             empresa = empresaDao.actualiza(empresa, usuario);
             
             ambiente.actualizaSesion(request, usuario);
@@ -313,7 +313,7 @@ public class EmpresaController {
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(request.getUserPrincipal().getName());
+        helper.setTo(ambiente.obtieneUsuario().getUsername());
         String titulo = messageSource.getMessage("empresa.lista.label", null, request.getLocale());
         helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
         helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);

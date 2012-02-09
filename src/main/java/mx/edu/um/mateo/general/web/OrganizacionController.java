@@ -131,7 +131,7 @@ public class OrganizacionController {
             try {
                 enviaCorreo(correo, (List<Organizacion>) params.get("organizaciones"), request);
                 modelo.addAttribute("message", "lista.enviada.message");
-                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("organizacion.lista.label", null, request.getLocale()), request.getUserPrincipal().getName()});
+                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("organizacion.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
@@ -189,8 +189,8 @@ public class OrganizacionController {
 
         try {
             Usuario usuario = null;
-            if (request.getUserPrincipal() != null) {
-                usuario = usuarioDao.obtiene(request.getUserPrincipal().getName());
+            if (ambiente.obtieneUsuario() != null) {
+                usuario = ambiente.obtieneUsuario();
             }
             organizacion = organizacionDao.crea(organizacion, usuario);
             
@@ -226,8 +226,8 @@ public class OrganizacionController {
 
         try {
             Usuario usuario = null;
-            if (request.getUserPrincipal() != null) {
-                usuario = usuarioDao.obtiene(request.getUserPrincipal().getName());
+            if (ambiente.obtieneUsuario() != null) {
+                usuario = ambiente.obtieneUsuario();
             }
             organizacion = organizacionDao.actualiza(organizacion, usuario);
             
@@ -318,7 +318,7 @@ public class OrganizacionController {
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(request.getUserPrincipal().getName());
+        helper.setTo(ambiente.obtieneUsuario().getUsername());
         String titulo = messageSource.getMessage("organizacion.lista.label", null, request.getLocale());
         helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
         helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);

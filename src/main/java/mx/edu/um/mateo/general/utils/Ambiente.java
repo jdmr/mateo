@@ -24,9 +24,8 @@
 package mx.edu.um.mateo.general.utils;
 
 import javax.servlet.http.HttpServletRequest;
-import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Usuario;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -35,14 +34,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class Ambiente {
-    @Autowired
-    private UsuarioDao usuarioDao;
-    
+
     public void actualizaSesion(HttpServletRequest request) {
-        Usuario usuario = usuarioDao.obtiene(request.getUserPrincipal().getName());
+        Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         this.actualizaSesion(request, usuario);
     }
-    
+
     public void actualizaSesion(HttpServletRequest request, Usuario usuario) {
         if (usuario != null) {
             request.getSession().setAttribute("organizacionLabel", usuario.getEmpresa().getOrganizacion().getNombre());
@@ -52,5 +49,10 @@ public class Ambiente {
             request.getSession().setAttribute("empresaId", usuario.getEmpresa().getId());
             request.getSession().setAttribute("almacenId", usuario.getAlmacen().getId());
         }
+    }
+
+    public Usuario obtieneUsuario() {
+        Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return usuario;
     }
 }
