@@ -26,7 +26,7 @@
         <link rel="apple-touch-icon" href="<c:url value='/images/apple-touch-icon.png' />">
         <link rel="apple-touch-icon" sizes="114x114" href="<c:url value='/images/apple-touch-icon-retina.png' />">
         <link rel="stylesheet" href="<c:url value='/css/bootstrap.min.css' />" type="text/css">
-        <link rel="stylesheet" href="<c:url value='/css/bootstrap.responsive.min.css' />" type="text/css">
+        <link rel="stylesheet" href="<c:url value='/css/bootstrap-responsive.min.css' />" type="text/css">
         <link rel="stylesheet" href="<c:url value='/css/custom-theme/jquery-ui-1.8.17.custom.css' />" type="text/css">
         <link rel="stylesheet" href="<c:url value='/css/app.css' />" type="text/css">
         <sitemesh:write property='head'/>
@@ -55,10 +55,9 @@
         <script>window.jQuery || document.write('<script src="<c:url value='/js/jquery-1.7.1.min.js'/>"><\/script>')</script>
 
         <!-- end scripts -->        
-        <script src="<c:url value='/js/jquery-1.7.1.min.js' />"></script>
+        <script src="<c:url value='/js/jquery-ui-1.8.17.custom.min.js' />"></script>
         <script src="<c:url value='/js/app.js' />"></script>
         <script src="<c:url value='/js/bootstrap.min.js' />"></script>
-        <script src="<c:url value='/js/jquery-ui-1.8.17.custom.min.js' />"></script>
         <sitemesh:write property="content"/>
     </body>
 </html>
