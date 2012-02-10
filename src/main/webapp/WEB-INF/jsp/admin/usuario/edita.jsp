@@ -41,7 +41,15 @@
             </p>
             <c:url var="actualizaUrl" value="/admin/usuario/actualiza" />
             <form:form commandName="usuario" method="post" action="${actualizaUrl}">
-                <form:errors path="*" cssClass="alert alert-error" element="ul" />
+                <form:errors path="*">
+                    <div class="alert alert-block alert-error fade in" role="status">
+                        <a class="close" data-dismiss="alert">×</a>
+                        <c:forEach items="${messages}" var="message">
+                            <p>${message}</p>
+                        </c:forEach>
+                    </div>
+                </form:errors>
+
                 <form:hidden path="id" />
                 <form:hidden path="version" />
 

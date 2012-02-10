@@ -52,7 +52,7 @@
                 <fieldset>
                     <s:bind path="organizacion.codigo">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="username">
+                            <label for="codigo">
                                 <s:message code="codigo.label" />
                                 <span class="required-indicator">*</span>
                             </label>
