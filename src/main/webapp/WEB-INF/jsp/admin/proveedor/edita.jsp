@@ -33,7 +33,8 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/admin/proveedor'/>"><i class="icon-list icon-white"></i> <s:message code='proveedor.lista.label' /></a>
             </p>
-            <form:form commandName="proveedor" action="crea" method="post">
+            <c:url var="actualizaUrl" value="/admin/proveedor/actualiza" />
+            <form:form commandName="proveedor" action="${actualizaUrl}" method="post">
                 <form:hidden path="id" />
                 <form:hidden path="version" />
                 <form:errors path="*">

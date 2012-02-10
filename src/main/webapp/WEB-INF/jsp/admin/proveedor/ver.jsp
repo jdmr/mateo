@@ -61,7 +61,7 @@
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="fax.label" /></div>
+                    <div class="span1"><s:message code="curp.label" /></div>
                     <div class="span11">${proveedor.fax}</div>
                 </div>
 
