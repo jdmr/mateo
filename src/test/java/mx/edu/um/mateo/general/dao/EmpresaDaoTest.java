@@ -21,16 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package mx.edu.um.mateo.general.dao;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,13 +57,10 @@ public class EmpresaDaoTest {
     @Autowired
     private EmpresaDao instance;
     @Autowired
-    private OrganizacionDao organizacionDao;
-    @Autowired
-    private RolDao rolDao;
-    @Autowired
-    private UsuarioDao usuarioDao;
-    
-    public EmpresaDaoTest() {
+    private SessionFactory sessionFactory;
+
+    private Session currentSession() {
+        return sessionFactory.getCurrentSession();
     }
 
     /**
@@ -70,11 +70,12 @@ public class EmpresaDaoTest {
     public void debieraMostrarListaDeEmpresas() {
         log.debug("Debiera mostrar lista de empresas");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        organizacion = organizacionDao.crea(organizacion);
-        for (int i = 0; i < 19; i++) {
+        currentSession().save(organizacion);
+        for (int i = 0; i < 20; i++) {
             Empresa empresa = new Empresa("test" + i, "test" + i, "test" + i, organizacion);
-            instance.crea(empresa);
+            currentSession().save(empresa);
         }
+
         Map<String, Object> params = null;
         Map result = instance.lista(params);
         assertNotNull(result.get("empresas"));
@@ -90,9 +91,9 @@ public class EmpresaDaoTest {
     public void debieraObtenerEmpresa() {
         log.debug("Debiera obtener empresa");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        organizacion = organizacionDao.crea(organizacion);
+        currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
-        instance.crea(empresa);
+        currentSession().save(empresa);
         Long id = empresa.getId();
         Empresa result = instance.obtiene(id);
         assertEquals("test-01", result.getNombre());
@@ -105,19 +106,20 @@ public class EmpresaDaoTest {
     public void debieraCrearEmpresa() {
         log.debug("Debiera crear empresa");
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
-        organizacion = organizacionDao.crea(organizacion);
+        currentSession().save(organizacion);
         Rol rol = new Rol("ROLE_TEST");
-        rol = rolDao.crea(rol);
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Empresa prueba = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        currentSession().save(prueba);
+        Almacen almacen = new Almacen("TEST01", prueba);
+        currentSession().save(almacen);
         Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
-        Long almacenId = 0l;
-        actualizaUsuario:
-        for (Empresa empresa : organizacion.getEmpresas()) {
-            for (Almacen almacen : empresa.getAlmacenes()) {
-                almacenId = almacen.getId();
-                break actualizaUsuario;
-            }
-        }
-        usuario = usuarioDao.crea(usuario, almacenId, new String[]{rol.getAuthority()});
+        usuario.setEmpresa(prueba);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
         Long id = usuario.getId();
         assertNotNull(id);
 
@@ -135,31 +137,29 @@ public class EmpresaDaoTest {
     public void debieraActualizarEmpresa() {
         log.debug("Debiera actualizar empresa");
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
-        organizacion = organizacionDao.crea(organizacion);
+        currentSession().save(organizacion);
         Rol rol = new Rol("ROLE_TEST");
-        rol = rolDao.crea(rol);
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Empresa test = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        currentSession().save(test);
+        Almacen almacen = new Almacen("TEST01", test);
+        currentSession().save(almacen);
         Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
-        Long almacenId = 0l;
-        actualizaUsuario:
-        for (Empresa empresa : organizacion.getEmpresas()) {
-            for (Almacen almacen : empresa.getAlmacenes()) {
-                almacenId = almacen.getId();
-                break actualizaUsuario;
-            }
-        }
-        usuario = usuarioDao.crea(usuario, almacenId, new String[]{rol.getAuthority()});
+        usuario.setEmpresa(test);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
         Long id = usuario.getId();
         assertNotNull(id);
+        id = test.getId();
+        currentSession().refresh(test);
 
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
-        empresa = instance.crea(empresa, usuario);
-        assertNotNull(empresa);
-        assertNotNull(empresa.getId());
-        assertEquals("tst-01", empresa.getCodigo());
-        
+        Empresa empresa = instance.obtiene(id);
         empresa.setNombre("PRUEBA");
         instance.actualiza(empresa, usuario);
-        
+
         Empresa prueba = instance.obtiene(empresa.getId());
         assertNotNull(prueba);
         assertEquals("PRUEBA", prueba.getNombre());
@@ -172,33 +172,32 @@ public class EmpresaDaoTest {
     public void debieraEliminarEmpresa() throws Exception {
         log.debug("Debiera actualizar empresa");
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
-        organizacion = organizacionDao.crea(organizacion);
+        currentSession().save(organizacion);
         Rol rol = new Rol("ROLE_TEST");
-        rol = rolDao.crea(rol);
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Empresa test = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        currentSession().save(test);
+        Almacen almacen = new Almacen("TEST01", test);
+        currentSession().save(almacen);
         Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
-        Long almacenId = 0l;
-        actualizaUsuario:
-        for (Empresa empresa : organizacion.getEmpresas()) {
-            for (Almacen almacen : empresa.getAlmacenes()) {
-                almacenId = almacen.getId();
-                break actualizaUsuario;
-            }
-        }
-        usuario = usuarioDao.crea(usuario, almacenId, new String[]{rol.getAuthority()});
+        usuario.setEmpresa(test);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
         Long id = usuario.getId();
         assertNotNull(id);
+        id = test.getId();
 
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
-        empresa = instance.crea(empresa, usuario);
-        assertNotNull(empresa);
-        assertNotNull(empresa.getId());
-        assertEquals("tst-01", empresa.getCodigo());
+        Empresa empresa = new Empresa("TEST02", "TEST02", "TEST02", organizacion);
+        currentSession().save(empresa);
 
-        String nombre = instance.elimina(empresa.getId());
+        String nombre = instance.elimina(id);
         assertNotNull(nombre);
-        assertEquals("test-01", nombre);
-        
-        Empresa prueba = instance.obtiene(empresa.getId());
+        assertEquals("TEST01", nombre);
+
+        Empresa prueba = instance.obtiene(id);
         assertNull(prueba);
     }
 }

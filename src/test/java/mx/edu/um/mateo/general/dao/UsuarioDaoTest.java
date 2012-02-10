@@ -23,15 +23,15 @@
  */
 package mx.edu.um.mateo.general.dao;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,13 +55,13 @@ public class UsuarioDaoTest {
     @Autowired
     private UsuarioDao instance;
     @Autowired
-    private RolDao rolDao;
-    @Autowired
-    private OrganizacionDao organizacionDao;
-    @Autowired
-    private EmpresaDao empresaDao;
+    private SessionFactory sessionFactory;
 
     public UsuarioDaoTest() {
+    }
+
+    private Session currentSession() {
+        return sessionFactory.getCurrentSession();
     }
 
     /**
@@ -72,21 +72,22 @@ public class UsuarioDaoTest {
         log.debug("Debiera obtener lista de usuarios");
 
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
-        organizacion = organizacionDao.crea(organizacion);
-
+        currentSession().save(organizacion);
         Rol rol = new Rol("ROLE_TEST");
-        rol = rolDao.crea(rol);
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        currentSession().save(empresa);
+        Almacen almacen = new Almacen("TEST01", empresa);
+        currentSession().save(almacen);
+
         for (int i = 0; i < 20; i++) {
             Usuario usuario = new Usuario("test-" + i + "@test.com", "test-" + i, "TEST " + i, "TEST");
-            Long almacenId = 0l;
-            actualizaUsuario:
-            for (Empresa empresa : organizacion.getEmpresas()) {
-                for (Almacen almacen : empresa.getAlmacenes()) {
-                    almacenId = almacen.getId();
-                    break actualizaUsuario;
-                }
-            }
-            instance.crea(usuario, almacenId, new String[]{rol.getAuthority()});
+            usuario.setEmpresa(empresa);
+            usuario.setAlmacen(almacen);
+            usuario.setRoles(roles);
+            currentSession().save(usuario);
         }
 
         Map<String, Object> params = null;
@@ -104,24 +105,27 @@ public class UsuarioDaoTest {
     public void debieraObtenerUsuario() {
         log.debug("Debiera obtener usuario");
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
-        organizacion = organizacionDao.crea(organizacion);
+        currentSession().save(organizacion);
         Rol rol = new Rol("ROLE_TEST");
-        rol = rolDao.crea(rol);
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        currentSession().save(empresa);
+        Almacen almacen = new Almacen("TEST01", empresa);
+        currentSession().save(almacen);
         Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
-        Long almacenId = 0l;
-        actualizaUsuario:
-        for (Empresa empresa : organizacion.getEmpresas()) {
-            for (Almacen almacen : empresa.getAlmacenes()) {
-                almacenId = almacen.getId();
-                break actualizaUsuario;
-            }
-        }
-        usuario = instance.crea(usuario, almacenId, new String[]{rol.getAuthority()});
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
         Long id = usuario.getId();
+        assertNotNull(id);
 
         Usuario result = instance.obtiene(id);
         assertEquals(usuario, result);
         assertTrue(result.getRoles().contains(rol));
+        assertEquals("test-01@test.com",usuario.getUsername());
     }
 
     /**
@@ -131,19 +135,16 @@ public class UsuarioDaoTest {
     public void debieraCrearUsuario() {
         log.debug("Debiera crear usuario");
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
-        organizacion = organizacionDao.crea(organizacion);
+        currentSession().save(organizacion);
         Rol rol = new Rol("ROLE_TEST");
-        rol = rolDao.crea(rol);
+        currentSession().save(rol);
+        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        currentSession().save(empresa);
+        Almacen almacen = new Almacen("TEST01", empresa);
+        currentSession().save(almacen);
+
         Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
-        Long almacenId = 0l;
-        actualizaUsuario:
-        for (Empresa empresa : organizacion.getEmpresas()) {
-            for (Almacen almacen : empresa.getAlmacenes()) {
-                almacenId = almacen.getId();
-                break actualizaUsuario;
-            }
-        }
-        usuario = instance.crea(usuario, almacenId, new String[]{rol.getAuthority()});
+        usuario = instance.crea(usuario, almacen.getId(), new String[]{rol.getAuthority()});
         Long id = usuario.getId();
         assertNotNull(id);
     }
@@ -155,24 +156,25 @@ public class UsuarioDaoTest {
     public void debieraActualizarUsuario() {
         log.debug("Debiera actualizar usuario");
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
-        organizacion = organizacionDao.crea(organizacion);
+        currentSession().save(organizacion);
         Rol rol = new Rol("ROLE_TEST");
-        rol = rolDao.crea(rol);
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        currentSession().save(empresa);
+        Almacen almacen = new Almacen("TEST01", empresa);
+        currentSession().save(almacen);
         Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
-        Long almacenId = 0l;
-        actualizaUsuario:
-        for (Empresa empresa : organizacion.getEmpresas()) {
-            for (Almacen almacen : empresa.getAlmacenes()) {
-                almacenId = almacen.getId();
-                break actualizaUsuario;
-            }
-        }
-        usuario = instance.crea(usuario, almacenId, new String[]{rol.getAuthority()});
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
         Long id = usuario.getId();
         assertNotNull(id);
 
         usuario.setNombre("PRUEBA");
-        instance.actualiza(usuario, almacenId, new String[]{rol.getAuthority()});
+        instance.actualiza(usuario, almacen.getId(), new String[]{rol.getAuthority()});
 
         Usuario prueba = instance.obtiene(id);
         assertEquals(usuario.getNombre(), prueba.getNombre());
@@ -182,29 +184,31 @@ public class UsuarioDaoTest {
     public void debieraCambiarRolDeUsuario() {
         log.debug("Debiera actualizar usuario");
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
-        organizacion = organizacionDao.crea(organizacion);
+        currentSession().save(organizacion);
         Rol rol = new Rol("ROLE_TEST");
-        rol = rolDao.crea(rol);
+        currentSession().save(rol);
         Rol rol2 = new Rol("ROLE_TEST2");
-        rol2 = rolDao.crea(rol2);
+        currentSession().save(rol2);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        currentSession().save(empresa);
+        Almacen almacen = new Almacen("TEST01", empresa);
+        currentSession().save(almacen);
         Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
-        Long almacenId = 0l;
-        actualizaUsuario:
-        for (Empresa empresa : organizacion.getEmpresas()) {
-            for (Almacen almacen : empresa.getAlmacenes()) {
-                almacenId = almacen.getId();
-                break actualizaUsuario;
-            }
-        }
-        usuario = instance.crea(usuario, almacenId, new String[]{rol.getAuthority()});
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
         Long id = usuario.getId();
+        assertNotNull(id);
 
         Usuario result = instance.obtiene(id);
         assertEquals(usuario, result);
         assertTrue(result.getRoles().contains(rol));
 
         result.setNombre("PRUEBA");
-        instance.actualiza(result, almacenId, new String[]{rol2.getAuthority()});
+        instance.actualiza(result, almacen.getId(), new String[]{rol2.getAuthority()});
 
         Usuario prueba = instance.obtiene(id);
         assertEquals(result.getNombre(), prueba.getNombre());
@@ -218,20 +222,22 @@ public class UsuarioDaoTest {
     public void noDebieraEliminarUsuario() throws UltimoException {
         log.debug("Debiera actualizar usuario");
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
-        organizacion = organizacionDao.crea(organizacion);
+        currentSession().save(organizacion);
         Rol rol = new Rol("ROLE_TEST");
-        rol = rolDao.crea(rol);
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        currentSession().save(empresa);
+        Almacen almacen = new Almacen("TEST01", empresa);
+        currentSession().save(almacen);
         Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
-        Long almacenId = 0l;
-        actualizaUsuario:
-        for (Empresa empresa : organizacion.getEmpresas()) {
-            for (Almacen almacen : empresa.getAlmacenes()) {
-                almacenId = almacen.getId();
-                break actualizaUsuario;
-            }
-        }
-        usuario = instance.crea(usuario, almacenId, new String[]{rol.getAuthority()});
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
         Long id = usuario.getId();
+        assertNotNull(id);
 
         instance.elimina(id);
         fail("Debio lanzar la excepcion de ultimo usuario");
@@ -244,22 +250,27 @@ public class UsuarioDaoTest {
     public void debieraEliminarUsuario() throws UltimoException {
         log.debug("Debiera actualizar usuario");
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
-        organizacion = organizacionDao.crea(organizacion);
+        currentSession().save(organizacion);
         Rol rol = new Rol("ROLE_TEST");
-        rol = rolDao.crea(rol);
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        currentSession().save(empresa);
+        Almacen almacen = new Almacen("TEST01", empresa);
+        currentSession().save(almacen);
         Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
-        Usuario usuario2 = new Usuario("test-02@test.com", "test-02", "TEST2", "TEST");
-        Long almacenId = 0l;
-        actualizaUsuario:
-        for (Empresa empresa : organizacion.getEmpresas()) {
-            for (Almacen almacen : empresa.getAlmacenes()) {
-                almacenId = almacen.getId();
-                break actualizaUsuario;
-            }
-        }
-        usuario = instance.crea(usuario, almacenId, new String[]{rol.getAuthority()});
-        instance.crea(usuario2, almacenId, new String[]{rol.getAuthority()});
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
+        usuario = new Usuario("test-02@test.com", "test-02", "TEST2", "TEST2");
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
         Long id = usuario.getId();
+        assertNotNull(id);
 
         String nombre = instance.elimina(id);
         assertEquals(usuario.getUsername(), nombre);
@@ -272,36 +283,34 @@ public class UsuarioDaoTest {
     public void debieraMostrarLosUsuariosFiltradosPorEmpresa() {
         log.debug("Mostrar los usuarios filtrados por empresa");
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
-        organizacion = organizacionDao.crea(organizacion);
-        Empresa empresa1 = null;
-        for (Empresa empresa : organizacion.getEmpresas()) {
-            empresa1 = empresa;
-        }
-        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST 01", organizacion);
-        empresa = empresaDao.crea(empresa);
-
+        currentSession().save(organizacion);
         Rol rol = new Rol("ROLE_TEST");
-        rol = rolDao.crea(rol);
-        for (int i = 0; i < 30; i++) {
-            Usuario usuario = new Usuario("test-a" + i + "@test.com", "test-" + i, "TEST " + i, "TEST");
-            Long almacenId = 0l;
-            actualizaUsuario:
-            for (Almacen almacen : empresa1.getAlmacenes()) {
-                almacenId = almacen.getId();
-                break actualizaUsuario;
-            }
-            instance.crea(usuario, almacenId, new String[]{rol.getAuthority()});
-        }
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        currentSession().save(empresa);
+        Empresa empresa2 = new Empresa("TEST02", "TEST02", "TEST02", organizacion);
+        currentSession().save(empresa2);
+        Almacen almacen = new Almacen("TEST01", empresa);
+        currentSession().save(almacen);
+        Almacen almacen2 = new Almacen("TEST02", empresa);
+        currentSession().save(almacen2);
 
         for (int i = 0; i < 20; i++) {
+            Usuario usuario = new Usuario("test-a" + i + "@test.com", "test-" + i, "TEST " + i, "TEST");
+            usuario.setEmpresa(empresa);
+            usuario.setAlmacen(almacen);
+            usuario.setRoles(roles);
+            currentSession().save(usuario);
+        }
+
+        for (int i = 0; i < 30; i++) {
             Usuario usuario = new Usuario("test-b" + i + "@test.com", "test-" + i, "TEST " + i, "TEST");
-            Long almacenId = 0l;
-            actualizaUsuario:
-            for (Almacen almacen : empresa.getAlmacenes()) {
-                almacenId = almacen.getId();
-                break actualizaUsuario;
-            }
-            instance.crea(usuario, almacenId, new String[]{rol.getAuthority()});
+            usuario.setEmpresa(empresa2);
+            usuario.setAlmacen(almacen2);
+            usuario.setRoles(roles);
+            currentSession().save(usuario);
         }
 
         Map<String, Object> params = new HashMap<>();
@@ -312,7 +321,7 @@ public class UsuarioDaoTest {
         assertEquals(10, usuarios.size());
         assertTrue(20 <= cantidad);
 
-        params.put("empresa", empresa1.getId());
+        params.put("empresa", empresa2.getId());
         result = instance.lista(params);
         usuarios = (List<Usuario>) result.get("usuarios");
         cantidad = (Long) result.get("cantidad");
