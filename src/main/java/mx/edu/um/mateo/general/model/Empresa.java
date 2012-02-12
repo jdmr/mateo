@@ -24,6 +24,7 @@
 package mx.edu.um.mateo.general.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
@@ -57,7 +58,7 @@ public class Empresa implements Serializable {
     @ManyToOne(optional = false)
     private Organizacion organizacion;
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
-    private List<Almacen> almacenes;
+    private List<Almacen> almacenes = new ArrayList<>();
 
     public Empresa() {
     }

@@ -30,6 +30,7 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Criteria;
+import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Disjunction;
@@ -157,7 +158,16 @@ public class EmpresaDao {
         if (usuario != null) {
             empresa.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         }
-        session.update(empresa);
+        try {
+            session.update(empresa);
+        } catch (NonUniqueObjectException e) {
+            try {
+                session.merge(empresa);
+            } catch (Exception ex) {
+                log.error("No se pudo actualizar la empresa", ex);
+                throw new RuntimeException("No se pudo actualizar la empresa", ex);
+            }
+        }
         if (usuario != null) {
             actualizaUsuario:
             for (Almacen almacen : empresa.getAlmacenes()) {
@@ -167,6 +177,7 @@ public class EmpresaDao {
                 break actualizaUsuario;
             }
         }
+        session.flush();
         return empresa;
     }
 
