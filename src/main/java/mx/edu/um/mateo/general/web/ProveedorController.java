@@ -75,8 +75,6 @@ public class ProveedorController {
     @Autowired
     private ResourceBundleMessageSource messageSource;
     @Autowired
-    private UsuarioDao usuarioDao;
-    @Autowired
     private Ambiente ambiente;
     @Autowired
     private ReporteUtil reporteUtil;
