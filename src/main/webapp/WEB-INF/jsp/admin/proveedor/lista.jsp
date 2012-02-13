@@ -106,10 +106,10 @@
                             <a href="javascript:ordena('telefono');">
                                 <s:message code="telefono.label" />
                                 <c:choose>
-                                    <c:when test="${param.order == 'rfc' && param.sort == 'asc'}">
+                                    <c:when test="${param.order == 'telefono' && param.sort == 'asc'}">
                                         <i class="icon-chevron-up"></i>
                                     </c:when>
-                                    <c:when test="${param.order == 'rfc' && param.sort == 'desc'}">
+                                    <c:when test="${param.order == 'telefono' && param.sort == 'desc'}">
                                         <i class="icon-chevron-down"></i>
                                     </c:when>
                                 </c:choose>
