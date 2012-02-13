@@ -186,8 +186,6 @@ public class ProveedorController {
         try {
             Usuario usuario = ambiente.obtieneUsuario();
             proveedor = proveedorDao.crea(proveedor, usuario);
-
-            ambiente.actualizaSesion(request, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al proveedor", e);
             errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
@@ -220,8 +218,6 @@ public class ProveedorController {
         try {
             Usuario usuario = ambiente.obtieneUsuario();
             proveedor = proveedorDao.actualiza(proveedor, usuario);
-
-            ambiente.actualizaSesion(request, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la proveedor", e);
             errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
@@ -241,8 +237,6 @@ public class ProveedorController {
         log.debug("Elimina proveedor");
         try {
             String nombre = proveedorDao.elimina(id);
-
-            ambiente.actualizaSesion(request);
 
             redirectAttributes.addFlashAttribute("message", "proveedor.eliminado.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});

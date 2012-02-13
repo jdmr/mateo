@@ -68,7 +68,12 @@ public class TipoCliente {
         this.empresa = empresa;
     }
 
-   
+    public TipoCliente(String nombre, String descripcion, BigDecimal margenUtilidad, Empresa empresa) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.margenUtilidad = margenUtilidad;
+        this.empresa = empresa;
+    }
 
     /**
      * @return the id

@@ -34,14 +34,16 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.TipoClienteDao;
-import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.TipoCliente;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.ReporteUtil;
 import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,9 +51,13 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
@@ -144,6 +150,101 @@ public class TipoClienteController {
         // termina paginado
 
         return "admin/tipoCliente/lista";
+    }
+
+    @RequestMapping("/ver/{id}")
+    public String ver(@PathVariable Long id, Model modelo) {
+        log.debug("Mostrando tipoCliente {}", id);
+        TipoCliente tipoCliente = tipoClienteDao.obtiene(id);
+
+        modelo.addAttribute("tipoCliente", tipoCliente);
+
+        return "admin/tipoCliente/ver";
+    }
+
+    @RequestMapping("/nuevo")
+    public String nuevo(Model modelo) {
+        log.debug("Nuevo tipoCliente");
+        TipoCliente tipoCliente = new TipoCliente();
+        modelo.addAttribute("tipoCliente", tipoCliente);
+        return "admin/tipoCliente/nuevo";
+    }
+
+    @Transactional
+    @RequestMapping(value = "/crea", method = RequestMethod.POST)
+    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid TipoCliente tipoCliente, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
+        }
+        if (bindingResult.hasErrors()) {
+            log.debug("Hubo algun error en la forma, regresando");
+            return "admin/tipoCliente/nuevo";
+        }
+
+        try {
+            Usuario usuario = ambiente.obtieneUsuario();
+            tipoCliente = tipoClienteDao.crea(tipoCliente, usuario);
+        } catch (ConstraintViolationException e) {
+            log.error("No se pudo crear al tipoCliente", e);
+            errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
+            errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
+            return "admin/tipoCliente/nuevo";
+        }
+
+        redirectAttributes.addFlashAttribute("message", "tipoCliente.creado.message");
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{tipoCliente.getNombre()});
+
+        return "redirect:/admin/tipoCliente/ver/" + tipoCliente.getId();
+    }
+
+    @RequestMapping("/edita/{id}")
+    public String edita(@PathVariable Long id, Model modelo) {
+        log.debug("Edita tipoCliente {}", id);
+        TipoCliente tipoCliente = tipoClienteDao.obtiene(id);
+        modelo.addAttribute("tipoCliente", tipoCliente);
+        return "admin/tipoCliente/edita";
+    }
+
+    @Transactional
+    @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
+    public String actualiza(HttpServletRequest request, @Valid TipoCliente tipoCliente, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            log.error("Hubo algun error en la forma, regresando");
+            return "admin/tipoCliente/edita";
+        }
+
+        try {
+            Usuario usuario = ambiente.obtieneUsuario();
+            tipoCliente = tipoClienteDao.actualiza(tipoCliente, usuario);
+        } catch (ConstraintViolationException e) {
+            log.error("No se pudo crear la tipoCliente", e);
+            errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
+            errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
+            return "admin/tipoCliente/nuevo";
+        }
+
+        redirectAttributes.addFlashAttribute("message", "tipoCliente.actualizado.message");
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{tipoCliente.getNombre()});
+
+        return "redirect:/admin/tipoCliente/ver/" + tipoCliente.getId();
+    }
+
+    @Transactional
+    @RequestMapping(value = "/elimina", method = RequestMethod.POST)
+    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute TipoCliente tipoCliente, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        log.debug("Elimina tipoCliente");
+        try {
+            String nombre = tipoClienteDao.elimina(id);
+
+            redirectAttributes.addFlashAttribute("message", "tipoCliente.eliminado.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
+        } catch (Exception e) {
+            log.error("No se pudo eliminar la tipoCliente " + id, e);
+            bindingResult.addError(new ObjectError("tipoCliente", new String[]{"tipoCliente.no.eliminado.message"}, null, null));
+            return "admin/tipoCliente/ver";
+        }
+
+        return "redirect:/admin/tipoCliente";
     }
 
     private void generaReporte(String tipo, List<TipoCliente> tiposDeCliente, HttpServletResponse response) throws JRException, IOException {

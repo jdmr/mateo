@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -99,7 +100,7 @@
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/admin/tipoCliente/ver/${tipoCliente.id}' />">${tipoCliente.nombre}</a></td>
                             <td>${tipoCliente.descripcion}</td>
-                            <td>${tipoCliente.margenUtilidad}</td>
+                            <td><fmt:formatNumber type="percent" value="${tipoCliente.margenUtilidad}" /></td>
                             <td>${tipoCliente.empresa.nombre}</td>
                         </tr>
                     </c:forEach>
