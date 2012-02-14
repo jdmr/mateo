@@ -35,7 +35,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
-@Table(name = "proveedores", uniqueConstraints = {
+@Table(name = "clientes", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"empresa_id", "nombre"})})
 public class Cliente implements Serializable {
 
