@@ -23,12 +23,10 @@
  */
 package mx.edu.um.mateo.general.dao;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.SpringSecurityUtils;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.*;
@@ -56,6 +54,8 @@ public class UsuarioDao {
     private SessionFactory sessionFactory;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private SpringSecurityUtils springSecurityUtils;
 
     public UsuarioDao() {
         log.info("Se ha creado una nueva instancia de UsuarioDao");
@@ -217,5 +217,36 @@ public class UsuarioDao {
 
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
+    }
+
+    public List<Almacen> obtieneAlmacenes() {
+        List<Almacen> almacenes;
+        if (springSecurityUtils.ifAnyGranted("ROLE_ADMIN")) {
+            Query query = currentSession().createQuery("select a from Almacen a order by a.empresa.organizacion, a.empresa, a.nombre");
+            almacenes = query.list();
+        } else if (springSecurityUtils.ifAnyGranted("ROLE_ORG")) {
+            Usuario usuario = springSecurityUtils.obtieneUsuario();
+            Query query = currentSession().createQuery("select a from Almacen a where a.organizacion.id = :organizacionId order by a.empresa, a.nombre");
+            query.setLong("organizacionId", usuario.getEmpresa().getOrganizacion().getId());
+            almacenes = query.list();
+        } else {
+            Usuario usuario = springSecurityUtils.obtieneUsuario();
+            Query query = currentSession().createQuery("select a from Almacen a where a.empresa.id = :empresaId order by a.nombre");
+            query.setLong("empresaId", usuario.getEmpresa().getId());
+            almacenes = query.list();
+        }
+        return almacenes;
+    }
+
+    public void asignaAlmacen(Usuario usuario, Long almacenId) {
+        Almacen almacen = (Almacen) currentSession().get(Almacen.class, almacenId);
+        if (almacen != null) {
+            log.debug("Asignando {} a usuario {}", almacen, usuario);
+            currentSession().refresh(usuario);
+            usuario.setAlmacen(almacen);
+            usuario.setEmpresa(almacen.getEmpresa());
+            currentSession().update(usuario);
+            currentSession().flush();
+        }
     }
 }

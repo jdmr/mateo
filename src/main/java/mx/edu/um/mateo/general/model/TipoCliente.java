@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2012 jdmr.
+ * Copyright 2012 J. David Mendoza <jdmendoza@um.edu.mx>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,44 +21,57 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package mx.edu.um.mateo.inventario.model;
+package mx.edu.um.mateo.general.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
 import java.util.Objects;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import mx.edu.um.mateo.general.model.Empresa;
-import mx.edu.um.mateo.general.model.Usuario;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *
- * @author jdmr
+ * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
-@Table(name = "almacenes", uniqueConstraints = {
+@Table(name="tipos_cliente", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"empresa_id", "nombre"})})
-public class Almacen implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class TipoCliente {
+    @Id @GeneratedValue(strategy= GenerationType.IDENTITY) 
     private Long id;
-    @Version
+    @Version 
     private Integer version;
-    @NotNull
-    @Column(nullable = false, length = 64)
+    @NotBlank
+    @Column(nullable=false,length=32)
     private String nombre;
-    @ManyToOne(optional = false)
+    @Column(length=128)
+    private String descripcion;
+    @Column(name="margen_utilidad",scale=2,precision=8)
+    private BigDecimal margenUtilidad=new BigDecimal("0");
+    @ManyToOne(optional=false)
     private Empresa empresa;
-    @OneToMany(mappedBy = "almacen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Usuario> usuarios = new ArrayList<>();
+    
 
-    public Almacen() {
+    public TipoCliente() {
     }
 
-    public Almacen(String nombre, Empresa empresa) {
+    public TipoCliente(String nombre, String descripcion, Empresa empresa) {
         this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.empresa = empresa;
+    }
+
+    public TipoCliente(String nombre, String descripcion, BigDecimal margenUtilidad, Empresa empresa) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.margenUtilidad = margenUtilidad;
         this.empresa = empresa;
     }
 
@@ -105,6 +118,34 @@ public class Almacen implements Serializable {
     }
 
     /**
+     * @return the descripcion
+     */
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    /**
+     * @param descripcion the descripcion to set
+     */
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    /**
+     * @return the margenUtilidad
+     */
+    public BigDecimal getMargenUtilidad() {
+        return margenUtilidad;
+    }
+
+    /**
+     * @param margenUtilidad the margenUtilidad to set
+     */
+    public void setMargenUtilidad(BigDecimal margenUtilidad) {
+        this.margenUtilidad = margenUtilidad;
+    }
+
+    /**
      * @return the empresa
      */
     public Empresa getEmpresa() {
@@ -118,44 +159,6 @@ public class Almacen implements Serializable {
         this.empresa = empresa;
     }
 
-    /**
-     * @return the usuarios
-     */
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
-
-    /**
-     * @param usuarios the usuarios to set
-     */
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
-    
-    /**
-     * Obtiene el nombre con los nombres tanto de empresa y organizacion
-     * 
-     * @return nombre El nombre completo del almacen (organizacion|empresa|almacen)
-     */
-    public String getNombreCompleto() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getEmpresa().getOrganizacion().getNombre());
-        sb.append(" | ");
-        sb.append(getEmpresa().getNombre());
-        sb.append(" | ");
-        sb.append(getNombre());
-        return sb.toString();
-    }
-
-    /**
-     * No hace nada. NO USAR.
-     * 
-     * @param nombreCompleto 
-     */
-    public void setNombreCompleto(String nombreCompleto) {
-        // no hace nada
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -164,7 +167,7 @@ public class Almacen implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Almacen other = (Almacen) obj;
+        final TipoCliente other = (TipoCliente) obj;
         if (!Objects.equals(this.nombre, other.nombre)) {
             return false;
         }
@@ -173,15 +176,16 @@ public class Almacen implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 67 * hash + Objects.hashCode(this.id);
-        hash = 67 * hash + Objects.hashCode(this.version);
-        hash = 67 * hash + Objects.hashCode(this.nombre);
+        int hash = 7;
+        hash = 13 * hash + Objects.hashCode(this.id);
+        hash = 13 * hash + Objects.hashCode(this.version);
+        hash = 13 * hash + Objects.hashCode(this.nombre);
         return hash;
     }
 
     @Override
     public String toString() {
-        return "Almacen{" + "nombre=" + nombre + '}';
+        return "TipoCliente{" + "nombre=" + nombre + ", descripcion=" + descripcion + ", margenUtilidad=" + margenUtilidad + '}';
     }
+    
 }

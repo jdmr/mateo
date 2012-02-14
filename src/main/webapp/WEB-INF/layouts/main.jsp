@@ -62,7 +62,7 @@
             <hr />
             <p>&copy; <s:message code="proyecto.copyright.year.label" /> <s:message code="proyecto.empresa.label" /></p>
         </footer>
-        
+
         <!-- JavaScript at the bottom for fast page loading -->
 
         <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->

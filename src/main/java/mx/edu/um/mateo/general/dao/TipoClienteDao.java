@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2012 jdmr.
+ * Copyright 2012 J. David Mendoza <jdmendoza@um.edu.mx>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,12 +25,10 @@ package mx.edu.um.mateo.general.dao;
 
 import java.util.HashMap;
 import java.util.Map;
-import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Proveedor;
+import mx.edu.um.mateo.general.model.TipoCliente;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.UltimoException;
-import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Criteria;
-import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Disjunction;
@@ -45,18 +43,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author jdmr
+ * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Repository
 @Transactional
-public class EmpresaDao {
+public class TipoClienteDao {
 
-    private static final Logger log = LoggerFactory.getLogger(EmpresaDao.class);
+    private static final Logger log = LoggerFactory.getLogger(TipoClienteDao.class);
     @Autowired
     private SessionFactory sessionFactory;
 
-    public EmpresaDao() {
-        log.info("Nueva instancia de EmpresaDao");
+    public TipoClienteDao() {
+        log.info("Se ha creado una nueva instancia de TipoClienteDao");
     }
 
     private Session currentSession() {
@@ -64,7 +62,7 @@ public class EmpresaDao {
     }
 
     public Map<String, Object> lista(Map<String, Object> params) {
-        log.debug("Buscando lista de empresas con params {}", params);
+        log.debug("Buscando lista de TipoClientes con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
@@ -84,12 +82,12 @@ public class EmpresaDao {
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(Empresa.class);
-        Criteria countCriteria = currentSession().createCriteria(Empresa.class);
+        Criteria criteria = currentSession().createCriteria(TipoCliente.class);
+        Criteria countCriteria = currentSession().createCriteria(TipoCliente.class);
 
-        if (params.containsKey("organizacion")) {
-            criteria.createCriteria("organizacion").add(Restrictions.idEq(params.get("organizacion")));
-            countCriteria.createCriteria("organizacion").add(Restrictions.idEq(params.get("organizacion")));
+        if (params.containsKey("empresa")) {
+            criteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
+            countCriteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
         }
 
         if (params.containsKey("filtro")) {
@@ -97,7 +95,7 @@ public class EmpresaDao {
             filtro = "%" + filtro + "%";
             Disjunction propiedades = Restrictions.disjunction();
             propiedades.add(Restrictions.ilike("nombre", filtro));
-            propiedades.add(Restrictions.ilike("nombreCompleto", filtro));
+            propiedades.add(Restrictions.ilike("descripcion", filtro));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -115,7 +113,7 @@ public class EmpresaDao {
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put("empresas", criteria.list());
+        params.put("tiposDeCliente", criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
@@ -123,75 +121,42 @@ public class EmpresaDao {
         return params;
     }
 
-    public Empresa obtiene(Long id) {
-        Empresa empresa = (Empresa) currentSession().get(Empresa.class, id);
-        return empresa;
+    public TipoCliente obtiene(Long id) {
+        return (TipoCliente) currentSession().get(TipoCliente.class, id);
     }
-
-    public Empresa crea(Empresa empresa, Usuario usuario) {
+    
+    public TipoCliente crea(TipoCliente tipoCliente, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
-            empresa.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+            tipoCliente.setEmpresa(usuario.getEmpresa());
         }
-        session.save(empresa);
-        Almacen almacen = new Almacen("CENTRAL", empresa);
-        session.save(almacen);
-        if (usuario != null) {
-            usuario.setEmpresa(empresa);
-            usuario.setAlmacen(almacen);
-            session.update(usuario);
-        }
-        session.refresh(empresa);
-        return empresa;
-    }
-
-    public Empresa crea(Empresa empresa) {
-        return this.crea(empresa, null);
-    }
-
-    public Empresa actualiza(Empresa empresa) {
-        return this.actualiza(empresa, null);
-    }
-
-    public Empresa actualiza(Empresa empresa, Usuario usuario) {
-        Session session = currentSession();
-        if (usuario != null) {
-            empresa.setOrganizacion(usuario.getEmpresa().getOrganizacion());
-        }
-        try {
-            session.update(empresa);
-        } catch (NonUniqueObjectException e) {
-            try {
-                session.merge(empresa);
-            } catch (Exception ex) {
-                log.error("No se pudo actualizar la empresa", ex);
-                throw new RuntimeException("No se pudo actualizar la empresa", ex);
-            }
-        }
-        if (usuario != null) {
-            actualizaUsuario:
-            for (Almacen almacen : empresa.getAlmacenes()) {
-                usuario.setEmpresa(empresa);
-                usuario.setAlmacen(almacen);
-                session.update(usuario);
-                break actualizaUsuario;
-            }
-        }
+        session.save(tipoCliente);
         session.flush();
-        return empresa;
+        return tipoCliente;
     }
 
-    public String elimina(Long id) throws UltimoException {
-        Criteria criteria = currentSession().createCriteria(Empresa.class);
-        criteria.setProjection(Projections.rowCount());
-        Long cantidad = (Long) criteria.list().get(0);
-        if (cantidad > 1) {
-            Empresa empresa = obtiene(id);
-            String nombre = empresa.getNombre();
-            currentSession().delete(empresa);
-            return nombre;
-        } else {
-            throw new UltimoException("No se puede eliminar porque es el ultimo");
+    public TipoCliente crea(TipoCliente tipoCliente) {
+        return this.crea(tipoCliente, null);
+    }
+    
+    public TipoCliente actualiza(TipoCliente tipoCliente) {
+        return this.actualiza(tipoCliente, null);
+    }
+
+    public TipoCliente actualiza(TipoCliente tipoCliente, Usuario usuario) {
+        Session session = currentSession();
+        if (usuario != null) {
+            tipoCliente.setEmpresa(usuario.getEmpresa());
         }
+        session.update(tipoCliente);
+        session.flush();
+        return tipoCliente;
+    }
+     public String elimina(Long id) {
+        TipoCliente tipoCliente = obtiene(id);
+        String nombre = tipoCliente.getNombre();
+        currentSession().delete(tipoCliente);
+        currentSession().flush();
+        return nombre;
     }
 }

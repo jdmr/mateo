@@ -35,9 +35,9 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import mx.edu.um.mateo.general.dao.ProveedorDao;
-import mx.edu.um.mateo.general.dao.UsuarioDao;
+import mx.edu.um.mateo.general.dao.TipoClienteDao;
 import mx.edu.um.mateo.general.model.Proveedor;
+import mx.edu.um.mateo.general.model.TipoCliente;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.ReporteUtil;
@@ -64,12 +64,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Controller
-@RequestMapping("/admin/proveedor")
-public class ProveedorController {
+@RequestMapping("/admin/tipoCliente")
+public class TipoClienteController {
 
-    private static final Logger log = LoggerFactory.getLogger(ProveedorController.class);
+    private static final Logger log = LoggerFactory.getLogger(TipoClienteController.class);
     @Autowired
-    private ProveedorDao proveedorDao;
+    private TipoClienteDao tipoClienteDao;
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
@@ -88,7 +88,7 @@ public class ProveedorController {
             @RequestParam(required = false) String order,
             @RequestParam(required = false) String sort,
             Model modelo) {
-        log.debug("Mostrando lista de proveedores");
+        log.debug("Mostrando lista de tipos de clientes");
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", request.getSession().getAttribute("empresaId"));
         if (StringUtils.isNotBlank(filtro)) {
@@ -108,9 +108,9 @@ public class ProveedorController {
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put("reporte", true);
-            params = proveedorDao.lista(params);
+            params = tipoClienteDao.lista(params);
             try {
-                generaReporte(tipo, (List<Proveedor>) params.get("proveedores"), response);
+                generaReporte(tipo, (List<TipoCliente>) params.get("tiposDeCliente"), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -119,19 +119,19 @@ public class ProveedorController {
 
         if (StringUtils.isNotBlank(correo)) {
             params.put("reporte", true);
-            params = proveedorDao.lista(params);
+            params = tipoClienteDao.lista(params);
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<Proveedor>) params.get("proveedores"), request);
+                enviaCorreo(correo, (List<TipoCliente>) params.get("tiposDeCliente"), request);
                 modelo.addAttribute("message", "lista.enviado.message");
-                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("proveedor.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("tipoCliente.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-        params = proveedorDao.lista(params);
-        modelo.addAttribute("proveedores", params.get("proveedores"));
+        params = tipoClienteDao.lista(params);
+        modelo.addAttribute("tiposDeCliente", params.get("tiposDeCliente"));
 
         // inicia paginado
         Long cantidad = (Long) params.get("cantidad");
@@ -141,130 +141,130 @@ public class ProveedorController {
         for (long i = 1; i <= cantidadDePaginas + 1; i++) {
             paginas.add(i);
         }
-        List<Proveedor> proveedores = (List<Proveedor>) params.get("proveedores");
+        List<TipoCliente> tiposDeCliente = (List<TipoCliente>) params.get("tiposDeCliente");
         Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (proveedores.size() - 1);
+        Long ultimo = primero + (tiposDeCliente.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
         modelo.addAttribute("paginacion", paginacion);
         modelo.addAttribute("paginas", paginas);
         // termina paginado
 
-        return "admin/proveedor/lista";
+        return "admin/tipoCliente/lista";
     }
 
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
-        log.debug("Mostrando proveedor {}", id);
-        Proveedor proveedor = proveedorDao.obtiene(id);
+        log.debug("Mostrando tipoCliente {}", id);
+        TipoCliente tipoCliente = tipoClienteDao.obtiene(id);
 
-        modelo.addAttribute("proveedor", proveedor);
+        modelo.addAttribute("tipoCliente", tipoCliente);
 
-        return "admin/proveedor/ver";
+        return "admin/tipoCliente/ver";
     }
 
     @RequestMapping("/nuevo")
     public String nuevo(Model modelo) {
-        log.debug("Nuevo proveedor");
-        Proveedor proveedor = new Proveedor();
-        modelo.addAttribute("proveedor", proveedor);
-        return "admin/proveedor/nuevo";
+        log.debug("Nuevo tipoCliente");
+        TipoCliente tipoCliente = new TipoCliente();
+        modelo.addAttribute("tipoCliente", tipoCliente);
+        return "admin/tipoCliente/nuevo";
     }
 
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Proveedor proveedor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid TipoCliente tipoCliente, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
-            return "admin/proveedor/nuevo";
+            return "admin/tipoCliente/nuevo";
         }
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
-            proveedor = proveedorDao.crea(proveedor, usuario);
+            tipoCliente = tipoClienteDao.crea(tipoCliente, usuario);
         } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear al proveedor", e);
+            log.error("No se pudo crear al tipoCliente", e);
             errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
             errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
-            return "admin/proveedor/nuevo";
+            return "admin/tipoCliente/nuevo";
         }
 
-        redirectAttributes.addFlashAttribute("message", "proveedor.creado.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{proveedor.getNombre()});
+        redirectAttributes.addFlashAttribute("message", "tipoCliente.creado.message");
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{tipoCliente.getNombre()});
 
-        return "redirect:/admin/proveedor/ver/" + proveedor.getId();
+        return "redirect:/admin/tipoCliente/ver/" + tipoCliente.getId();
     }
 
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
-        log.debug("Edita proveedor {}", id);
-        Proveedor proveedor = proveedorDao.obtiene(id);
-        modelo.addAttribute("proveedor", proveedor);
-        return "admin/proveedor/edita";
+        log.debug("Edita tipoCliente {}", id);
+        TipoCliente tipoCliente = tipoClienteDao.obtiene(id);
+        modelo.addAttribute("tipoCliente", tipoCliente);
+        return "admin/tipoCliente/edita";
     }
 
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, @Valid Proveedor proveedor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String actualiza(HttpServletRequest request, @Valid TipoCliente tipoCliente, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
-            return "admin/proveedor/edita";
+            return "admin/tipoCliente/edita";
         }
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
-            proveedor = proveedorDao.actualiza(proveedor, usuario);
+            tipoCliente = tipoClienteDao.actualiza(tipoCliente, usuario);
         } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear la proveedor", e);
+            log.error("No se pudo crear la tipoCliente", e);
             errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
             errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
-            return "admin/proveedor/nuevo";
+            return "admin/tipoCliente/nuevo";
         }
 
-        redirectAttributes.addFlashAttribute("message", "proveedor.actualizado.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{proveedor.getNombre()});
+        redirectAttributes.addFlashAttribute("message", "tipoCliente.actualizado.message");
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{tipoCliente.getNombre()});
 
-        return "redirect:/admin/proveedor/ver/" + proveedor.getId();
+        return "redirect:/admin/tipoCliente/ver/" + tipoCliente.getId();
     }
 
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Proveedor proveedor, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        log.debug("Elimina proveedor");
+    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute TipoCliente tipoCliente, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        log.debug("Elimina tipoCliente");
         try {
-            String nombre = proveedorDao.elimina(id);
+            String nombre = tipoClienteDao.elimina(id);
 
-            redirectAttributes.addFlashAttribute("message", "proveedor.eliminado.message");
+            redirectAttributes.addFlashAttribute("message", "tipoCliente.eliminado.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
         } catch (Exception e) {
-            log.error("No se pudo eliminar la proveedor " + id, e);
-            bindingResult.addError(new ObjectError("proveedor", new String[]{"proveedor.no.eliminado.message"}, null, null));
-            return "admin/proveedor/ver";
+            log.error("No se pudo eliminar la tipoCliente " + id, e);
+            bindingResult.addError(new ObjectError("tipoCliente", new String[]{"tipoCliente.no.eliminado.message"}, null, null));
+            return "admin/tipoCliente/ver";
         }
 
-        return "redirect:/admin/proveedor";
+        return "redirect:/admin/tipoCliente";
     }
 
-    private void generaReporte(String tipo, List<Proveedor> proveedores, HttpServletResponse response) throws JRException, IOException {
+    private void generaReporte(String tipo, List<TipoCliente> tiposDeCliente, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
         switch (tipo) {
             case "PDF":
-                archivo = reporteUtil.generaPdf(proveedores, "/mx/edu/um/mateo/general/reportes/proveedores.jrxml");
+                archivo = reporteUtil.generaPdf(tiposDeCliente, "/mx/edu/um/mateo/general/reportes/tiposDeCliente.jrxml");
                 response.setContentType("application/pdf");
-                response.addHeader("Content-Disposition", "attachment; filename=proveedores.pdf");
+                response.addHeader("Content-Disposition", "attachment; filename=tiposDeCliente.pdf");
                 break;
             case "CSV":
-                archivo = reporteUtil.generaCsv(proveedores, "/mx/edu/um/mateo/general/reportes/proveedores.jrxml");
+                archivo = reporteUtil.generaCsv(tiposDeCliente, "/mx/edu/um/mateo/general/reportes/tiposDeCliente.jrxml");
                 response.setContentType("text/csv");
-                response.addHeader("Content-Disposition", "attachment; filename=proveedores.csv");
+                response.addHeader("Content-Disposition", "attachment; filename=tiposDeCliente.csv");
                 break;
             case "XLS":
-                archivo = reporteUtil.generaXls(proveedores, "/mx/edu/um/mateo/general/reportes/proveedores.jrxml");
+                archivo = reporteUtil.generaXls(tiposDeCliente, "/mx/edu/um/mateo/general/reportes/tiposDeCliente.jrxml");
                 response.setContentType("application/vnd.ms-excel");
-                response.addHeader("Content-Disposition", "attachment; filename=proveedores.xls");
+                response.addHeader("Content-Disposition", "attachment; filename=tiposDeCliente.xls");
         }
         if (archivo != null) {
             response.setContentLength(archivo.length);
@@ -276,32 +276,31 @@ public class ProveedorController {
 
     }
 
-    private void enviaCorreo(String tipo, List<Proveedor> proveedores, HttpServletRequest request) throws JRException, MessagingException {
+    private void enviaCorreo(String tipo, List<TipoCliente> tiposDeCliente, HttpServletRequest request) throws JRException, MessagingException {
         log.debug("Enviando correo {}", tipo);
         byte[] archivo = null;
         String tipoContenido = null;
         switch (tipo) {
             case "PDF":
-                archivo = reporteUtil.generaPdf(proveedores, "/mx/edu/um/mateo/general/reportes/proveedores.jrxml");
+                archivo = reporteUtil.generaPdf(tiposDeCliente, "/mx/edu/um/mateo/general/reportes/tiposDeCliente.jrxml");
                 tipoContenido = "application/pdf";
                 break;
             case "CSV":
-                archivo = reporteUtil.generaCsv(proveedores, "/mx/edu/um/mateo/general/reportes/proveedores.jrxml");
+                archivo = reporteUtil.generaCsv(tiposDeCliente, "/mx/edu/um/mateo/general/reportes/tiposDeCliente.jrxml");
                 tipoContenido = "text/csv";
                 break;
             case "XLS":
-                archivo = reporteUtil.generaXls(proveedores, "/mx/edu/um/mateo/general/reportes/proveedores.jrxml");
+                archivo = reporteUtil.generaXls(tiposDeCliente, "/mx/edu/um/mateo/general/reportes/tiposDeCliente.jrxml");
                 tipoContenido = "application/vnd.ms-excel";
         }
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(ambiente.obtieneUsuario().getUsername());
-        String titulo = messageSource.getMessage("proveedor.lista.label", null, request.getLocale());
+        String titulo = messageSource.getMessage("tipoCliente.lista.label", null, request.getLocale());
         helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
         helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
         helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
         mailSender.send(message);
     }
-
 }
