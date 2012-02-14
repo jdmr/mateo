@@ -25,7 +25,7 @@ package mx.edu.um.mateo.general.dao;
 
 import java.util.HashMap;
 import java.util.Map;
-import mx.edu.um.mateo.general.model.Proveedor;
+import mx.edu.um.mateo.general.model.Cliente;
 import mx.edu.um.mateo.general.model.Usuario;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -53,7 +53,7 @@ public class ClienteDao {
     private SessionFactory sessionFactory;
 
     public ClienteDao() {
-        log.info("Se ha creado una nueva instancia de ProveedorDao");
+        log.info("Se ha creado una nueva instancia de ClienteDao");
     }
 
     private Session currentSession() {
@@ -61,7 +61,7 @@ public class ClienteDao {
     }
 
     public Map<String, Object> lista(Map<String, Object> params) {
-        log.debug("Buscando lista de proveedores con params {}", params);
+        log.debug("Buscando lista de clientes con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
@@ -81,12 +81,17 @@ public class ClienteDao {
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(Proveedor.class);
-        Criteria countCriteria = currentSession().createCriteria(Proveedor.class);
+        Criteria criteria = currentSession().createCriteria(Cliente.class);
+        Criteria countCriteria = currentSession().createCriteria(Cliente.class);
 
         if (params.containsKey("empresa")) {
             criteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
             countCriteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
+        }
+
+        if (params.containsKey("tipoCliente")) {
+            criteria.createCriteria("tipoCliente").add(Restrictions.idEq(params.get("tipoCliente")));
+            countCriteria.createCriteria("tipoCliente").add(Restrictions.idEq(params.get("tipoCliente")));
         }
 
         if (params.containsKey("filtro")) {
@@ -115,7 +120,7 @@ public class ClienteDao {
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put("proveedores", criteria.list());
+        params.put("clientes", criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
@@ -123,43 +128,43 @@ public class ClienteDao {
         return params;
     }
 
-    public Proveedor obtiene(Long id) {
-        Proveedor proveedor = (Proveedor) currentSession().get(Proveedor.class, id);
-        return proveedor;
+    public Cliente obtiene(Long id) {
+        Cliente cliente = (Cliente) currentSession().get(Cliente.class, id);
+        return cliente;
     }
 
-    public Proveedor crea(Proveedor proveedor, Usuario usuario) {
+    public Cliente crea(Cliente cliente, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
-            proveedor.setEmpresa(usuario.getEmpresa());
+            cliente.setEmpresa(usuario.getEmpresa());
         }
-        session.save(proveedor);
+        session.save(cliente);
         session.flush();
-        return proveedor;
+        return cliente;
     }
 
-    public Proveedor crea(Proveedor proveedor) {
-        return this.crea(proveedor, null);
+    public Cliente crea(Cliente cliente) {
+        return this.crea(cliente, null);
     }
 
-    public Proveedor actualiza(Proveedor proveedor) {
-        return this.actualiza(proveedor, null);
+    public Cliente actualiza(Cliente cliente) {
+        return this.actualiza(cliente, null);
     }
 
-    public Proveedor actualiza(Proveedor proveedor, Usuario usuario) {
+    public Cliente actualiza(Cliente cliente, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
-            proveedor.setEmpresa(usuario.getEmpresa());
+            cliente.setEmpresa(usuario.getEmpresa());
         }
-        session.update(proveedor);
+        session.update(cliente);
         session.flush();
-        return proveedor;
+        return cliente;
     }
 
     public String elimina(Long id) {
-        Proveedor proveedor = obtiene(id);
-        String nombre = proveedor.getNombre();
-        currentSession().delete(proveedor);
+        Cliente cliente = obtiene(id);
+        String nombre = cliente.getNombre();
+        currentSession().delete(cliente);
         currentSession().flush();
         return nombre;
     }
