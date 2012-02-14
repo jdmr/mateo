@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -63,6 +64,7 @@ public class Proveedor implements Serializable {
     private String fax;
     @Column(length=64)
     private String contacto;
+    @Email
     @Column(length=128)
     private String correo;
     @ManyToOne(optional=false)

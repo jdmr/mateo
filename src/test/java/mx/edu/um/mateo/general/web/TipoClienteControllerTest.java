@@ -23,26 +23,24 @@
  */
 package mx.edu.um.mateo.general.web;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import mx.edu.um.mateo.general.dao.EmpresaDao;
-import mx.edu.um.mateo.general.model.Empresa;
-import mx.edu.um.mateo.general.model.Organizacion;
-import mx.edu.um.mateo.general.model.Rol;
-import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.server.MockMvc;
@@ -64,116 +62,84 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class EmpresaControllerTest extends BaseTest {
-
-    private static final Logger log = LoggerFactory.getLogger(EmpresaControllerTest.class);
+public class TipoClienteControllerTest extends BaseTest {
+    private static final Logger log = LoggerFactory.getLogger(TipoClienteControllerTest.class);
     @Autowired
     private WebApplicationContext wac;
     private MockMvc mockMvc;
     @Autowired
-    private EmpresaDao empresaDao;
-    @Autowired
     private SessionFactory sessionFactory;
-    
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
     
     @Before
     public void setUp() {
         this.mockMvc = MockMvcBuilders.webApplicationContextSetup(wac).build();
     }
-
+    
     @Test
-    public void debieraMostrarListaDeEmpresas() throws Exception {
-        log.debug("Debiera mostrar lista de empresas");
+    public void debieraMostrarListaDeTiposDeCliente() throws Exception {
+        log.debug("Debiera mostrar lista de tiposDeCliente");
         this.mockMvc.perform(
-                get("/admin/empresa"))
+                get("/admin/tipoCliente"))
                 .andExpect(status().isOk())
-                .andExpect(forwardedUrl("/WEB-INF/jsp/admin/empresa/lista.jsp"))
-                .andExpect(model().attributeExists("empresas"))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/admin/tipoCliente/lista.jsp"))
+                .andExpect(model().attributeExists("tiposDeCliente"))
                 .andExpect(model().attributeExists("paginacion"))
                 .andExpect(model().attributeExists("paginas"))
                 .andExpect(model().attributeExists("pagina"));
     }
     
     @Test
-    public void debieraMostrarEmpresa() throws Exception {
-        log.debug("Debiera mostrar empresa");
+    public void debieraMostrarTipoCliente() throws Exception {
+        log.debug("Debiera mostrar tipoCliente");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
         currentSession().save(empresa);
-        Long id = empresa.getId();
-
-        this.mockMvc.perform(get("/admin/empresa/ver/" + id))
+        TipoCliente tipoCliente = new TipoCliente("tst-01", "test-01", new BigDecimal("0"), empresa);
+        currentSession().save(tipoCliente);
+        Long id = tipoCliente.getId();
+        
+        this.mockMvc.perform(get("/admin/tipoCliente/ver/" + id))
                 .andExpect(status().isOk())
-                .andExpect(forwardedUrl("/WEB-INF/jsp/admin/empresa/ver.jsp"))
-                .andExpect(model().attributeExists("empresa"));
+                .andExpect(forwardedUrl("/WEB-INF/jsp/admin/tipoCliente/ver.jsp"))
+                .andExpect(model().attributeExists("tipoCliente"));
+        
     }
     
     @Test
-    public void debieraCrearEmpresa() throws Exception {
-        Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
+    public void debieraCrearTipoCliente() throws Exception {
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa otraEmpresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
-        currentSession().save(otraEmpresa);
-        Almacen almacen = new Almacen("TEST01",otraEmpresa);
-        currentSession().save(almacen);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        currentSession().save(empresa);
         Rol rol = new Rol("ROLE_TEST");
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
-        usuario.setEmpresa(otraEmpresa);
+        Almacen almacen = new Almacen("TEST", empresa);
+        currentSession().save(almacen);
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
         currentSession().save(usuario);
+        Long id = usuario.getId();
+        assertNotNull(id);
         
-        this.authenticate(usuario, usuario.getPassword(), new ArrayList(usuario.getAuthorities()));
+        this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         
-        this.mockMvc.perform(post("/admin/empresa/crea")
-                .param("codigo", "tst-02")
-                .param("nombre", "TEST--02")
-                .param("nombreCompleto", "TEST--02"))
+        this.mockMvc.perform(post("/admin/tipoCliente/crea")
+                .param("nombre", "TEST--01")
+                .param("nombreCompleto", "TEST--01")
+                .param("rfc", "tst-00000001"))
                 .andExpect(status().isOk())
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "empresa.creada.message"));
+                .andExpect(flash().attribute("message", "tipoCliente.creado.message"));
+        
     }
     
-    @Test
-    public void debieraActualizarEmpresa() throws Exception {
-        Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
-        currentSession().save(organizacion);
-        Empresa otraEmpresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
-        currentSession().save(otraEmpresa);
-        Almacen almacen = new Almacen("TEST01",otraEmpresa);
-        currentSession().save(almacen);
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
-        usuario.setEmpresa(otraEmpresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        
-        this.authenticate(usuario, usuario.getPassword(), new ArrayList(usuario.getAuthorities()));
-        
-        Empresa empresa = otraEmpresa;
-        
-        this.mockMvc.perform(post("/admin/empresa/actualiza")
-                .param("id", empresa.getId().toString())
-                .param("version", empresa.getVersion().toString())
-                .param("codigo", "PRUEBA")
-                .param("nombre", empresa.getNombre())
-                .param("nombreCompleto", empresa.getNombreCompleto()))
-                .andExpect(status().isOk())
-                .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "empresa.actualizada.message"));
-        
-        currentSession().refresh(empresa);
-        assertEquals("PRUEBA", empresa.getCodigo());
+    private Session currentSession() {
+        return sessionFactory.getCurrentSession();
     }
+    
 }
