@@ -82,8 +82,6 @@ public class EmpresaController {
     @Autowired
     private ResourceBundleMessageSource messageSource;
     @Autowired
-    private UsuarioDao usuarioDao;
-    @Autowired
     private Ambiente ambiente;
 
     @RequestMapping
@@ -185,13 +183,16 @@ public class EmpresaController {
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                log.debug("Error: {}", error);
+            }
             return "admin/empresa/nueva";
         }
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
             empresa = empresaDao.crea(empresa, usuario);
-            
+
             ambiente.actualizaSesion(request, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al empresa", e);
@@ -219,13 +220,16 @@ public class EmpresaController {
     public String actualiza(HttpServletRequest request, @Valid Empresa empresa, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                log.debug("Error: {}", error);
+            }
             return "admin/empresa/edita";
         }
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
             empresa = empresaDao.actualiza(empresa, usuario);
-            
+
             ambiente.actualizaSesion(request, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la empresa", e);
@@ -246,9 +250,9 @@ public class EmpresaController {
         log.debug("Elimina empresa");
         try {
             String nombre = empresaDao.elimina(id);
-            
+
             ambiente.actualizaSesion(request);
-            
+
             redirectAttributes.addFlashAttribute("message", "empresa.eliminada.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
         } catch (UltimoException e) {

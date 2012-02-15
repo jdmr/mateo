@@ -92,6 +92,9 @@ public class PruebaController {
         rol = new Rol("ROLE_USER");
         rolDao.crea(rol);
 
+        organizacion = new Organizacion("TEST","TEST","TEST");
+        organizacionDao.crea(organizacion, usuario);
+
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMinimumIntegerDigits(2);
         nf.setMaximumFractionDigits(0);
@@ -102,13 +105,10 @@ public class PruebaController {
             sb.append("TST-").append(numero);
             StringBuilder sb2 = new StringBuilder();
             sb2.append("TEST-").append(numero);
-            Empresa empresa = new Empresa(sb.toString(), sb2.toString(), sb2.toString(), organizacion);
+            Empresa empresa = new Empresa(sb.toString(), sb2.toString(), sb2.toString(), "000000000001", organizacion);
             empresaDao.crea(empresa);
         }
         
-        organizacion = new Organizacion("TEST","TEST","TEST");
-        organizacionDao.crea(organizacion, usuario);
-
         return "redirect:/";
     }
 }

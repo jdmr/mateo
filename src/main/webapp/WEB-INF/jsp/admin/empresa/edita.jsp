@@ -76,6 +76,16 @@
                             <form:errors path="nombreCompleto" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
+                    <s:bind path="empresa.rfc">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="rfc">
+                                <s:message code="rfc.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="rfc" maxlength="13" required="true" />
+                            <form:errors path="rfc" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">

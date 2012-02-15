@@ -86,7 +86,7 @@ public class TipoClienteDaoTest {
         log.debug("Debiera mostrar lista de proveedores");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         for (int i = 0; i < 20; i++) {
             TipoCliente tipoCliente = new TipoCliente("test" + i, "test" + i, empresa);
@@ -108,7 +108,7 @@ public class TipoClienteDaoTest {
         log.debug("Debiera obtener tipoCliente");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         TipoCliente tipoCliente = new TipoCliente("tst-01", "test-01", empresa);
         currentSession().save(tipoCliente);
@@ -125,7 +125,7 @@ public class TipoClienteDaoTest {
         log.debug("Debiera crear TipoCliente");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         Rol rol = new Rol("ROLE_TEST");
         currentSession().save(rol);
@@ -153,7 +153,7 @@ public class TipoClienteDaoTest {
         log.debug("Debiera actualizar tipoCliente");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         Rol rol = new Rol("ROLE_TEST");
         currentSession().save(rol);
@@ -187,7 +187,7 @@ public class TipoClienteDaoTest {
         log.debug("Debiera actualizar tipoCliente");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         Rol rol = new Rol("ROLE_TEST");
         currentSession().save(rol);

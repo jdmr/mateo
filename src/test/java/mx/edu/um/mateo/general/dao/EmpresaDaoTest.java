@@ -27,10 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import mx.edu.um.mateo.general.model.Empresa;
-import mx.edu.um.mateo.general.model.Organizacion;
-import mx.edu.um.mateo.general.model.Rol;
-import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -72,7 +69,7 @@ public class EmpresaDaoTest {
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         for (int i = 0; i < 20; i++) {
-            Empresa empresa = new Empresa("test" + i, "test" + i, "test" + i, organizacion);
+            Empresa empresa = new Empresa("test" + i, "test" + i, "test" + i, "000000000001", organizacion);
             currentSession().save(empresa);
         }
 
@@ -92,7 +89,7 @@ public class EmpresaDaoTest {
         log.debug("Debiera obtener empresa");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         Long id = empresa.getId();
         Empresa result = instance.obtiene(id);
@@ -111,7 +108,7 @@ public class EmpresaDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Empresa prueba = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        Empresa prueba = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
         currentSession().save(prueba);
         Almacen almacen = new Almacen("TEST01", prueba);
         currentSession().save(almacen);
@@ -123,7 +120,7 @@ public class EmpresaDaoTest {
         Long id = usuario.getId();
         assertNotNull(id);
 
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         empresa = instance.crea(empresa, usuario);
         assertNotNull(empresa);
         assertNotNull(empresa.getId());
@@ -142,7 +139,7 @@ public class EmpresaDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Empresa test = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        Empresa test = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
         currentSession().save(test);
         Almacen almacen = new Almacen("TEST01", test);
         currentSession().save(almacen);
@@ -154,13 +151,25 @@ public class EmpresaDaoTest {
         Long id = usuario.getId();
         assertNotNull(id);
         id = test.getId();
+        Proveedor proveedor = new Proveedor(test.getNombre(), test.getNombreCompleto(), test.getRfc(), true, test);
+        currentSession().save(proveedor);
+        TipoCliente tipoCliente = new TipoCliente("TIPO1", "TIPO1", test);
+        currentSession().save(tipoCliente);
+        Cliente cliente = new Cliente(test.getNombre(), test.getNombreCompleto(), test.getRfc(), tipoCliente, true, test);
+        currentSession().save(cliente);
+        currentSession().flush();
         currentSession().refresh(test);
 
+        log.debug("Obteniendo empresa");
         Empresa empresa = instance.obtiene(id);
+        log.debug("Modificando nombre");
         empresa.setNombre("PRUEBA");
+        log.debug("Enviando a actualizar empresa");
         instance.actualiza(empresa, usuario);
 
+        log.debug("Obteniendo empresa nuevamente");
         Empresa prueba = instance.obtiene(empresa.getId());
+        log.debug("Haciendo asserts");
         assertNotNull(prueba);
         assertEquals("PRUEBA", prueba.getNombre());
     }
@@ -177,7 +186,7 @@ public class EmpresaDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Empresa test = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        Empresa test = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
         currentSession().save(test);
         Almacen almacen = new Almacen("TEST01", test);
         currentSession().save(almacen);
@@ -190,7 +199,7 @@ public class EmpresaDaoTest {
         assertNotNull(id);
         id = test.getId();
 
-        Empresa empresa = new Empresa("TEST02", "TEST02", "TEST02", organizacion);
+        Empresa empresa = new Empresa("TEST02", "TEST02", "TEST02", "000000000001", organizacion);
         currentSession().save(empresa);
 
         String nombre = instance.elimina(id);

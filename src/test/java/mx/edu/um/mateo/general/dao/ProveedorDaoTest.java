@@ -68,7 +68,7 @@ public class ProveedorDaoTest {
         log.debug("Debiera mostrar lista de proveedores");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         for (int i = 0; i < 20; i++) {
             Proveedor proveedor = new Proveedor("test" + i, "test" + i, "test0000000" + i, empresa);
@@ -90,7 +90,7 @@ public class ProveedorDaoTest {
         log.debug("Debiera obtener proveedor");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         Proveedor proveedor = new Proveedor("tst-01", "test-01", "test-00000001", empresa);
         instance.crea(proveedor);
@@ -107,7 +107,7 @@ public class ProveedorDaoTest {
         log.debug("Debiera crear proveedor");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         Rol rol = new Rol("ROLE_TEST");
         currentSession().save(rol);
@@ -138,7 +138,7 @@ public class ProveedorDaoTest {
         log.debug("Debiera actualizar proveedor");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         Rol rol = new Rol("ROLE_TEST");
         currentSession().save(rol);
@@ -176,7 +176,7 @@ public class ProveedorDaoTest {
         log.debug("Debiera actualizar proveedor");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         Rol rol = new Rol("ROLE_TEST");
         currentSession().save(rol);

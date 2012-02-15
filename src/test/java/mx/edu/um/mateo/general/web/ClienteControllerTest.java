@@ -93,7 +93,7 @@ public class ClienteControllerTest extends BaseTest {
         log.debug("Debiera mostrar cliente");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         TipoCliente tipoCliente = new TipoCliente("TEST-01", "TEST-01", empresa);
         currentSession().save(tipoCliente);
@@ -112,7 +112,7 @@ public class ClienteControllerTest extends BaseTest {
     public void debieraCrearCliente() throws Exception {
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         TipoCliente tipoCliente = new TipoCliente("TEST-01", "TEST-01", empresa);
         currentSession().save(tipoCliente);

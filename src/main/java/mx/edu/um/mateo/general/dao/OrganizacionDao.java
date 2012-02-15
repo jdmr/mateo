@@ -25,10 +25,7 @@ package mx.edu.um.mateo.general.dao;
 
 import java.util.HashMap;
 import java.util.Map;
-import mx.edu.um.mateo.general.model.Empresa;
-import mx.edu.um.mateo.general.model.Organizacion;
-import mx.edu.um.mateo.general.model.Rol;
-import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Criteria;
@@ -128,7 +125,7 @@ public class OrganizacionDao {
     public Organizacion crea(Organizacion organizacion, Usuario usuario) {
         Session session = currentSession();
         session.save(organizacion);
-        Empresa empresa = new Empresa("MTZ", "MATRIZ", "MATRIZ", organizacion);
+        Empresa empresa = new Empresa("MTZ", "MATRIZ", "MATRIZ", "000000000001", organizacion);
         session.save(empresa);
         Almacen almacen = new Almacen("CENTRAL", empresa);
         session.save(almacen);
@@ -137,6 +134,12 @@ public class OrganizacionDao {
             usuario.setAlmacen(almacen);
             session.update(usuario);
         }
+        Proveedor proveedor = new Proveedor(empresa.getNombre(), empresa.getNombreCompleto(), empresa.getRfc(), true, empresa);
+        session.save(proveedor);
+        TipoCliente tipoCliente = new TipoCliente("TIPO1", "TIPO1", empresa);
+        session.save(tipoCliente);
+        Cliente cliente = new Cliente(empresa.getNombre(), empresa.getNombreCompleto(), empresa.getRfc(), tipoCliente, true, empresa);
+        session.save(cliente);
         session.refresh(empresa);
         session.refresh(organizacion);
         session.flush();
