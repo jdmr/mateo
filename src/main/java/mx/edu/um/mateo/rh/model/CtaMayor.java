@@ -182,6 +182,4 @@ public class CtaMayor implements Serializable {
     public String toString() {
         return "CtaMayor{" + "ejercicio=" + ejercicio + ", tipoCuenta=" + tipoCuenta + ", nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + '}';
     }
-    
-    
 }

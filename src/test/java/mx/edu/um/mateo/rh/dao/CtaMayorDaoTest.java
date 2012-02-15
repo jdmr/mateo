@@ -58,6 +58,7 @@ public class CtaMayorDaoTest {
         Map result = instance.lista(params);
         assertNotNull(result.get("ctaMayor"));
         assertNotNull(result.get("cantidad"));
+        
         assertEquals(10, ((List<Empresa>) result.get("ctaMayor")).size());
         assertEquals(20, ((Long) result.get("cantidad")).intValue());
     }
