@@ -26,6 +26,7 @@ package mx.edu.um.mateo.general.dao;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Cliente;
+import mx.edu.um.mateo.general.model.TipoCliente;
 import mx.edu.um.mateo.general.model.Usuario;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -138,6 +139,7 @@ public class ClienteDao {
         if (usuario != null) {
             cliente.setEmpresa(usuario.getEmpresa());
         }
+        cliente.setTipoCliente((TipoCliente)session.get(TipoCliente.class, cliente.getTipoCliente().getId()));
         session.save(cliente);
         session.flush();
         return cliente;
@@ -156,6 +158,7 @@ public class ClienteDao {
         if (usuario != null) {
             cliente.setEmpresa(usuario.getEmpresa());
         }
+        cliente.setTipoCliente((TipoCliente)session.get(TipoCliente.class, cliente.getTipoCliente().getId()));
         session.update(cliente);
         session.flush();
         return cliente;

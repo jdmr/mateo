@@ -97,7 +97,7 @@ public class ClienteDaoTest {
         TipoCliente tipoCliente = new TipoCliente("TEST-01", "TEST-01", empresa);
         currentSession().save(tipoCliente);
         Cliente cliente = new Cliente("tst-01", "test-01", "test-00000001", tipoCliente, empresa);
-        instance.crea(cliente);
+        currentSession().save(cliente);
         Long id = cliente.getId();
         Cliente result = instance.obtiene(id);
         assertEquals("tst-01", result.getNombre());

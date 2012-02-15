@@ -36,7 +36,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.TipoClienteDao;
-import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.TipoCliente;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
@@ -186,7 +185,6 @@ public class TipoClienteController {
             tipoCliente = tipoClienteDao.crea(tipoCliente, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al tipoCliente", e);
-            errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
             errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
             return "admin/tipoCliente/nuevo";
         }
@@ -218,7 +216,6 @@ public class TipoClienteController {
             tipoCliente = tipoClienteDao.actualiza(tipoCliente, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la tipoCliente", e);
-            errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
             errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
             return "admin/tipoCliente/nuevo";
         }
