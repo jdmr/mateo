@@ -11,7 +11,7 @@
 	<field name="nombre" class="java.lang.String"/>
 	<field name="descripcion" class="java.lang.String"/>
 	<field name="margenUtilidad" class="java.math.BigDecimal"/>
-	<field name="organizacion.nombre" class="java.lang.String"/>
+	<field name="empresa.nombre" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>

@@ -86,6 +86,8 @@ public class TipoClienteController {
             @RequestParam(required = false) String correo,
             @RequestParam(required = false) String order,
             @RequestParam(required = false) String sort,
+            Usuario usuario,
+            Errors errors,
             Model modelo) {
         log.debug("Mostrando lista de tipos de clientes");
         Map<String, Object> params = new HashMap<>();
@@ -113,6 +115,8 @@ public class TipoClienteController {
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
+                params.remove("reporte");
+                errors.reject("error.generar.reporte");
             }
         }
 
