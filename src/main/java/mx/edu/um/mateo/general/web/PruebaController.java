@@ -23,15 +23,10 @@
  */
 package mx.edu.um.mateo.general.web;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
-import mx.edu.um.mateo.general.dao.EmpresaDao;
-import mx.edu.um.mateo.general.dao.OrganizacionDao;
-import mx.edu.um.mateo.general.dao.RolDao;
-import mx.edu.um.mateo.general.dao.UsuarioDao;
-import mx.edu.um.mateo.general.model.Empresa;
-import mx.edu.um.mateo.general.model.Organizacion;
-import mx.edu.um.mateo.general.model.Rol;
-import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.dao.*;
+import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -56,6 +51,12 @@ public class PruebaController {
     private UsuarioDao usuarioDao;
     @Autowired
     private EmpresaDao empresaDao;
+    @Autowired
+    private ProveedorDao proveedorDao;
+    @Autowired
+    private TipoClienteDao tipoClienteDao;
+    @Autowired
+    private ClienteDao clienteDao;
 
     @RequestMapping
     public String inicia() {
@@ -99,14 +100,28 @@ public class PruebaController {
         nf.setMinimumIntegerDigits(2);
         nf.setMaximumFractionDigits(0);
         nf.setGroupingUsed(false);
-        for (int i = 1; i <= 30; i++) {
+        for (int i = 1; i <= 29; i++) {
             String numero = nf.format(i);
             StringBuilder sb = new StringBuilder();
             sb.append("TST-").append(numero);
             StringBuilder sb2 = new StringBuilder();
             sb2.append("TEST-").append(numero);
-            Empresa empresa = new Empresa(sb.toString(), sb2.toString(), sb2.toString(), "000000000001", organizacion);
+            Empresa empresa = new Empresa(sb.toString(), sb2.toString(), sb2.toString(), "0000000000"+numero, organizacion);
             empresaDao.crea(empresa);
+        }
+        
+        for (int i = 1; i < 19; i++) {
+            String numero = nf.format(i);
+            StringBuilder sb = new StringBuilder();
+            sb.append("TEST-").append(numero);
+            Proveedor proveedor = new Proveedor(sb.toString(), sb.toString(), "0000000000"+numero, null);
+            proveedorDao.crea(proveedor, usuario);
+            
+            TipoCliente tipoCliente = new TipoCliente(sb.toString(), sb.toString(), new BigDecimal("0.16"), null);
+            tipoClienteDao.crea(tipoCliente, usuario);
+            
+            Cliente cliente = new Cliente(sb.toString(), sb.toString(), "0000000000"+numero, tipoCliente, null);
+            clienteDao.crea(cliente, usuario);
         }
         
         return "redirect:/";
