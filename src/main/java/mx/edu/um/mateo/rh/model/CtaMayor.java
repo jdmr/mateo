@@ -88,14 +88,6 @@ public class CtaMayor implements Serializable {
         this.detalleR = detalleR;
     }
 
-    public Ejercicio getEjercicio() {
-        return ejercicio;
-    }
-
-    public void setEjercicio(Ejercicio ejercicio) {
-        this.ejercicio = ejercicio;
-    }
-
     public Long getId() {
         return id;
     }
