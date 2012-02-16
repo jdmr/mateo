@@ -47,7 +47,7 @@ public class Almacen implements Serializable {
     @Version
     private Integer version;
     @NotNull
-    @Column(nullable = false, length = 64)
+    @Column(nullable = false, length = 128)
     private String nombre;
     @ManyToOne(optional = false)
     private Empresa empresa;
