@@ -67,20 +67,23 @@ public class Producto implements Serializable {
     private String unidadMedida = "Unidades";
     @Column(length = 128)
     private String ubicacion;
-    @Column(nullable = false, scale = 2, precision = 8)
-    private BigDecimal precio = new BigDecimal("0");
-    @Column(nullable = false, scale = 2, precision = 8)
+    @Column(nullable = false, scale = 2, precision = 8, name = "precio_unitario")
+    private BigDecimal precioUnitario = new BigDecimal("0");
+    @Column(nullable = false, scale = 2, precision = 8, name = "ultimo_precio")
     private BigDecimal ultimoPrecio = new BigDecimal("0");
     @Column(nullable = false, scale = 3, precision = 8)
     private BigDecimal existencia = new BigDecimal("0");
-    @Column(nullable = false, scale = 3, precision = 8)
+    @Column(nullable = false, scale = 3, precision = 8, name = "punto_reorden")
     private BigDecimal puntoReorden = new BigDecimal("0");
     @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal iva = new BigDecimal("0.16");
+    @NotBlank
+    @Column(nullable=false, name = "tiempo_entrega")
     private Integer tiempoEntrega = 3;
     @Column(nullable = false)
     private Boolean fraccion = false;
     @ManyToOne(optional = false)
+    @JoinColumn(name = "tipo_producto_id")
     private TipoProducto tipoProducto;
     @ManyToOne(optional = false)
     private Almacen almacen;
@@ -238,17 +241,17 @@ public class Producto implements Serializable {
     }
 
     /**
-     * @return the precio
+     * @return the precioUnitario
      */
-    public BigDecimal getPrecio() {
-        return precio;
+    public BigDecimal getPrecioUnitario() {
+        return precioUnitario;
     }
 
     /**
-     * @param precio the precio to set
+     * @param precioUnitario the precioUnitario to set
      */
-    public void setPrecio(BigDecimal precio) {
-        this.precio = precio;
+    public void setPrecioUnitario(BigDecimal precioUnitario) {
+        this.precioUnitario = precioUnitario;
     }
 
     /**
@@ -389,6 +392,6 @@ public class Producto implements Serializable {
 
     @Override
     public String toString() {
-        return "Producto{" + "id=" + id + ", sku=" + sku + ", nombre=" + nombre + ", precio=" + precio + ", existencia=" + existencia + ", iva=" + iva + ", fraccion=" + fraccion + '}';
+        return "Producto{" + "id=" + id + ", sku=" + sku + ", nombre=" + nombre + ", precioUnitario=" + precioUnitario + ", existencia=" + existencia + ", iva=" + iva + ", fraccion=" + fraccion + '}';
     }
 }
