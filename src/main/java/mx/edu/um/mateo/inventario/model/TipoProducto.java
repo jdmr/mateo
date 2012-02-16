@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2012 J. David Mendoza <jdmendoza@um.edu.mx>.
+ * Copyright 2012 Universidad de Montemorelos A. C.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,19 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package mx.edu.um.mateo.general.model;
+package mx.edu.um.mateo.inventario.model;
 
-import java.math.BigDecimal;
+import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.persistence.Version;
+import javax.persistence.*;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -41,9 +33,10 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
-@Table(name="tipos_cliente", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"empresa_id", "nombre"})})
-public class TipoCliente {
+@Table(name="tipos_producto", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"almacen_id", "nombre"})})
+public class TipoProducto implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -54,25 +47,16 @@ public class TipoCliente {
     private String nombre;
     @Column(length = 128)
     private String descripcion;
-    @Column(name = "margen_utilidad", scale = 2, precision = 8)
-    private BigDecimal margenUtilidad = new BigDecimal("0");
     @ManyToOne(optional = false)
-    private Empresa empresa;
+    private Almacen almacen;
 
-    public TipoCliente() {
+    public TipoProducto() {
     }
 
-    public TipoCliente(String nombre, String descripcion, Empresa empresa) {
+    public TipoProducto(String nombre, String descripcion, Almacen almacen) {
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.empresa = empresa;
-    }
-
-    public TipoCliente(String nombre, String descripcion, BigDecimal margenUtilidad, Empresa empresa) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.margenUtilidad = margenUtilidad;
-        this.empresa = empresa;
+        this.almacen = almacen;
     }
 
     /**
@@ -132,31 +116,17 @@ public class TipoCliente {
     }
 
     /**
-     * @return the margenUtilidad
+     * @return the almacen
      */
-    public BigDecimal getMargenUtilidad() {
-        return margenUtilidad;
+    public Almacen getAlmacen() {
+        return almacen;
     }
 
     /**
-     * @param margenUtilidad the margenUtilidad to set
+     * @param almacen the almacen to set
      */
-    public void setMargenUtilidad(BigDecimal margenUtilidad) {
-        this.margenUtilidad = margenUtilidad;
-    }
-
-    /**
-     * @return the empresa
-     */
-    public Empresa getEmpresa() {
-        return empresa;
-    }
-
-    /**
-     * @param empresa the empresa to set
-     */
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
+    public void setAlmacen(Almacen almacen) {
+        this.almacen = almacen;
     }
 
     @Override
@@ -167,7 +137,7 @@ public class TipoCliente {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final TipoCliente other = (TipoCliente) obj;
+        final TipoProducto other = (TipoProducto) obj;
         if (!Objects.equals(this.nombre, other.nombre)) {
             return false;
         }
@@ -176,16 +146,15 @@ public class TipoCliente {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 13 * hash + Objects.hashCode(this.id);
-        hash = 13 * hash + Objects.hashCode(this.version);
-        hash = 13 * hash + Objects.hashCode(this.nombre);
+        int hash = 3;
+        hash = 37 * hash + Objects.hashCode(this.id);
+        hash = 37 * hash + Objects.hashCode(this.version);
+        hash = 37 * hash + Objects.hashCode(this.nombre);
         return hash;
     }
 
     @Override
     public String toString() {
-        return "TipoCliente{" + "nombre=" + nombre + ", descripcion=" + descripcion + ", margenUtilidad=" + margenUtilidad + '}';
+        return "TipoProducto{" + "id=" + id + ", nombre=" + nombre + '}';
     }
-    
 }

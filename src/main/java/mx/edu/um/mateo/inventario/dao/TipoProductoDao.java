@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2012 J. David Mendoza <jdmendoza@um.edu.mx>.
+ * Copyright 2012 Universidad de Montemorelos A. C.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package mx.edu.um.mateo.general.dao;
+package mx.edu.um.mateo.inventario.dao;
 
 import java.util.HashMap;
 import java.util.Map;
-import mx.edu.um.mateo.general.model.TipoCliente;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.inventario.model.TipoProducto;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -46,22 +46,18 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class TipoClienteDao {
+public class TipoProductoDao {
 
-    private static final Logger log = LoggerFactory.getLogger(TipoClienteDao.class);
+    private static final Logger log = LoggerFactory.getLogger(TipoProductoDao.class);
     @Autowired
     private SessionFactory sessionFactory;
-
-    public TipoClienteDao() {
-        log.info("Se ha creado una nueva instancia de TipoClienteDao");
-    }
-
+    
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
-
+    
     public Map<String, Object> lista(Map<String, Object> params) {
-        log.debug("Buscando lista de TipoClientes con params {}", params);
+        log.debug("Buscando lista de tipos de producto con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
@@ -81,12 +77,12 @@ public class TipoClienteDao {
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(TipoCliente.class);
-        Criteria countCriteria = currentSession().createCriteria(TipoCliente.class);
+        Criteria criteria = currentSession().createCriteria(TipoProducto.class);
+        Criteria countCriteria = currentSession().createCriteria(TipoProducto.class);
 
-        if (params.containsKey("empresa")) {
-            criteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
-            countCriteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
+        if (params.containsKey("almacen")) {
+            criteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
+            countCriteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
         }
 
         if (params.containsKey("filtro")) {
@@ -112,7 +108,7 @@ public class TipoClienteDao {
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put("tiposDeCliente", criteria.list());
+        params.put("tiposDeProducto", criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
@@ -120,43 +116,44 @@ public class TipoClienteDao {
         return params;
     }
 
-    public TipoCliente obtiene(Long id) {
-        return (TipoCliente) currentSession().get(TipoCliente.class, id);
+    public TipoProducto obtiene(Long id) {
+        return (TipoProducto) currentSession().get(TipoProducto.class, id);
     }
 
-    public TipoCliente crea(TipoCliente tipoCliente, Usuario usuario) {
+    public TipoProducto crea(TipoProducto tipoProducto, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
-            tipoCliente.setEmpresa(usuario.getEmpresa());
+            tipoProducto.setAlmacen(usuario.getAlmacen());
         }
-        session.save(tipoCliente);
+        session.save(tipoProducto);
         session.flush();
-        return tipoCliente;
+        return tipoProducto;
     }
 
-    public TipoCliente crea(TipoCliente tipoCliente) {
-        return this.crea(tipoCliente, null);
+    public TipoProducto crea(TipoProducto tipoProducto) {
+        return this.crea(tipoProducto, null);
     }
 
-    public TipoCliente actualiza(TipoCliente tipoCliente) {
-        return this.actualiza(tipoCliente, null);
+    public TipoProducto actualiza(TipoProducto tipoProducto) {
+        return this.actualiza(tipoProducto, null);
     }
 
-    public TipoCliente actualiza(TipoCliente tipoCliente, Usuario usuario) {
+    public TipoProducto actualiza(TipoProducto tipoProducto, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
-            tipoCliente.setEmpresa(usuario.getEmpresa());
+            tipoProducto.setAlmacen(usuario.getAlmacen());
         }
-        session.update(tipoCliente);
+        session.update(tipoProducto);
         session.flush();
-        return tipoCliente;
+        return tipoProducto;
     }
 
     public String elimina(Long id) {
-        TipoCliente tipoCliente = obtiene(id);
-        String nombre = tipoCliente.getNombre();
-        currentSession().delete(tipoCliente);
+        TipoProducto tipoProducto = obtiene(id);
+        String nombre = tipoProducto.getNombre();
+        currentSession().delete(tipoProducto);
         currentSession().flush();
         return nombre;
     }
+    
 }
