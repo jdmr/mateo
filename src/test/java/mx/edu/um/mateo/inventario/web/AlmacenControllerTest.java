@@ -62,8 +62,8 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class TipoProductoControllerTest extends BaseTest {
-    private static final Logger log = LoggerFactory.getLogger(TipoProductoControllerTest.class);
+public class AlmacenControllerTest extends BaseTest {
+    private static final Logger log = LoggerFactory.getLogger(AlmacenControllerTest.class);
     @Autowired
     private WebApplicationContext wac;
     private MockMvc mockMvc;
@@ -76,40 +76,38 @@ public class TipoProductoControllerTest extends BaseTest {
     }
     
     @Test
-    public void debieraMostrarListaDeTiposDeCliente() throws Exception {
-        log.debug("Debiera mostrar lista de tiposDeProducto");
+    public void debieraMostrarListaDeAlmacenes() throws Exception {
+        log.debug("Debiera mostrar lista de almacenes");
         this.mockMvc.perform(
-                get("/inventario/tipoProducto"))
+                get("/inventario/almacen"))
                 .andExpect(status().isOk())
-                .andExpect(forwardedUrl("/WEB-INF/jsp/inventario/tipoProducto/lista.jsp"))
-                .andExpect(model().attributeExists("tiposDeProducto"))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/inventario/almacen/lista.jsp"))
+                .andExpect(model().attributeExists("almacenes"))
                 .andExpect(model().attributeExists("paginacion"))
                 .andExpect(model().attributeExists("paginas"))
                 .andExpect(model().attributeExists("pagina"));
     }
     
     @Test
-    public void debieraMostrarTipoProducto() throws Exception {
-        log.debug("Debiera mostrar tipoProducto");
+    public void debieraMostrarAlmacen() throws Exception {
+        log.debug("Debiera mostrar almacen");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         Almacen almacen = new Almacen("test-01", empresa);
         currentSession().save(almacen);
-        TipoProducto tipoProducto = new TipoProducto("tst-01", "test-01", almacen);
-        currentSession().save(tipoProducto);
-        Long id = tipoProducto.getId();
+        Long id = almacen.getId();
         
-        this.mockMvc.perform(get("/inventario/tipoProducto/ver/" + id))
+        this.mockMvc.perform(get("/inventario/almacen/ver/" + id))
                 .andExpect(status().isOk())
-                .andExpect(forwardedUrl("/WEB-INF/jsp/inventario/tipoProducto/ver.jsp"))
-                .andExpect(model().attributeExists("tipoProducto"));
+                .andExpect(forwardedUrl("/WEB-INF/jsp/inventario/almacen/ver.jsp"))
+                .andExpect(model().attributeExists("almacen"));
         
     }
     
     @Test
-    public void debieraCrearTipoProducto() throws Exception {
+    public void debieraCrearAlmacen() throws Exception {
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
@@ -130,12 +128,12 @@ public class TipoProductoControllerTest extends BaseTest {
         
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         
-        this.mockMvc.perform(post("/inventario/tipoProducto/crea")
+        this.mockMvc.perform(post("/inventario/almacen/crea")
                 .param("nombre", "TEST--01")
-                .param("descripcion", "TEST--01"))
+                )
                 .andExpect(status().isOk())
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "tipoProducto.creado.message"));
+                .andExpect(flash().attribute("message", "almacen.creado.message"));
         
     }
     

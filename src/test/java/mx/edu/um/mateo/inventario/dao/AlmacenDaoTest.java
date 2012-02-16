@@ -21,15 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package mx.edu.um.mateo.inventario.web;
+package mx.edu.um.mateo.inventario.dao;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import mx.edu.um.mateo.general.model.*;
+import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Organizacion;
+import mx.edu.um.mateo.general.model.Rol;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
-import mx.edu.um.mateo.inventario.dao.AlmacenDao;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

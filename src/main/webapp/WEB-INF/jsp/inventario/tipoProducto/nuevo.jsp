@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="proveedor.nuevo.label" /></title>
+        <title><s:message code="tipoProducto.nuevo.label" /></title>
     </head>
     <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
