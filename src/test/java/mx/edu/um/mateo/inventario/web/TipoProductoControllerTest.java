@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package mx.edu.um.mateo.general.web;
+package mx.edu.um.mateo.inventario.web;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -31,6 +31,7 @@ import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import mx.edu.um.mateo.inventario.model.TipoProducto;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import static org.junit.Assert.assertNotNull;
@@ -62,8 +63,8 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class TipoClienteControllerTest extends BaseTest {
-    private static final Logger log = LoggerFactory.getLogger(TipoClienteControllerTest.class);
+public class TipoProductoControllerTest extends BaseTest {
+    private static final Logger log = LoggerFactory.getLogger(TipoProductoControllerTest.class);
     @Autowired
     private WebApplicationContext wac;
     private MockMvc mockMvc;
@@ -77,37 +78,39 @@ public class TipoClienteControllerTest extends BaseTest {
     
     @Test
     public void debieraMostrarListaDeTiposDeCliente() throws Exception {
-        log.debug("Debiera mostrar lista de tiposDeCliente");
+        log.debug("Debiera mostrar lista de tiposDeProducto");
         this.mockMvc.perform(
-                get("/admin/tipoCliente"))
+                get("/inventario/tipoProducto"))
                 .andExpect(status().isOk())
-                .andExpect(forwardedUrl("/WEB-INF/jsp/admin/tipoCliente/lista.jsp"))
-                .andExpect(model().attributeExists("tiposDeCliente"))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/inventario/tipoProducto/lista.jsp"))
+                .andExpect(model().attributeExists("tiposDeProducto"))
                 .andExpect(model().attributeExists("paginacion"))
                 .andExpect(model().attributeExists("paginas"))
                 .andExpect(model().attributeExists("pagina"));
     }
     
     @Test
-    public void debieraMostrarTipoCliente() throws Exception {
-        log.debug("Debiera mostrar tipoCliente");
+    public void debieraMostrarTipoProducto() throws Exception {
+        log.debug("Debiera mostrar tipoProducto");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
-        TipoCliente tipoCliente = new TipoCliente("tst-01", "test-01", new BigDecimal("0"), empresa);
-        currentSession().save(tipoCliente);
-        Long id = tipoCliente.getId();
+        Almacen almacen = new Almacen("test-01", empresa);
+        currentSession().save(almacen);
+        TipoProducto tipoProducto = new TipoProducto("tst-01", "test-01", almacen);
+        currentSession().save(tipoProducto);
+        Long id = tipoProducto.getId();
         
-        this.mockMvc.perform(get("/admin/tipoCliente/ver/" + id))
+        this.mockMvc.perform(get("/inventario/tipoProducto/ver/" + id))
                 .andExpect(status().isOk())
-                .andExpect(forwardedUrl("/WEB-INF/jsp/admin/tipoCliente/ver.jsp"))
-                .andExpect(model().attributeExists("tipoCliente"));
+                .andExpect(forwardedUrl("/WEB-INF/jsp/inventario/tipoProducto/ver.jsp"))
+                .andExpect(model().attributeExists("tipoProducto"));
         
     }
     
     @Test
-    public void debieraCrearTipoCliente() throws Exception {
+    public void debieraCrearTipoProducto() throws Exception {
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
@@ -128,12 +131,12 @@ public class TipoClienteControllerTest extends BaseTest {
         
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         
-        this.mockMvc.perform(post("/admin/tipoCliente/crea")
+        this.mockMvc.perform(post("/inventario/tipoProducto/crea")
                 .param("nombre", "TEST--01")
                 .param("descripcion", "TEST--01"))
                 .andExpect(status().isOk())
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "tipoCliente.creado.message"));
+                .andExpect(flash().attribute("message", "tipoProducto.creado.message"));
         
     }
     
