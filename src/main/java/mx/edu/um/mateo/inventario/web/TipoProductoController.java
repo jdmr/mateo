@@ -254,17 +254,17 @@ public class TipoProductoController {
         byte[] archivo = null;
         switch (tipo) {
             case "PDF":
-                archivo = reporteUtil.generaPdf(tiposDeProducto, "/mx/edu/um/mateo/general/reportes/tiposDeProducto.jrxml");
+                archivo = reporteUtil.generaPdf(tiposDeProducto, "/mx/edu/um/mateo/inventario/reportes/tiposDeProducto.jrxml");
                 response.setContentType("application/pdf");
                 response.addHeader("Content-Disposition", "attachment; filename=tiposDeProducto.pdf");
                 break;
             case "CSV":
-                archivo = reporteUtil.generaCsv(tiposDeProducto, "/mx/edu/um/mateo/general/reportes/tiposDeProducto.jrxml");
+                archivo = reporteUtil.generaCsv(tiposDeProducto, "/mx/edu/um/mateo/inventario/reportes/tiposDeProducto.jrxml");
                 response.setContentType("text/csv");
                 response.addHeader("Content-Disposition", "attachment; filename=tiposDeProducto.csv");
                 break;
             case "XLS":
-                archivo = reporteUtil.generaXls(tiposDeProducto, "/mx/edu/um/mateo/general/reportes/tiposDeProducto.jrxml");
+                archivo = reporteUtil.generaXls(tiposDeProducto, "/mx/edu/um/mateo/inventario/reportes/tiposDeProducto.jrxml");
                 response.setContentType("application/vnd.ms-excel");
                 response.addHeader("Content-Disposition", "attachment; filename=tiposDeProducto.xls");
         }
@@ -284,15 +284,15 @@ public class TipoProductoController {
         String tipoContenido = null;
         switch (tipo) {
             case "PDF":
-                archivo = reporteUtil.generaPdf(tiposDeProducto, "/mx/edu/um/mateo/general/reportes/tiposDeProducto.jrxml");
+                archivo = reporteUtil.generaPdf(tiposDeProducto, "/mx/edu/um/mateo/inventario/reportes/tiposDeProducto.jrxml");
                 tipoContenido = "application/pdf";
                 break;
             case "CSV":
-                archivo = reporteUtil.generaCsv(tiposDeProducto, "/mx/edu/um/mateo/general/reportes/tiposDeProducto.jrxml");
+                archivo = reporteUtil.generaCsv(tiposDeProducto, "/mx/edu/um/mateo/inventario/reportes/tiposDeProducto.jrxml");
                 tipoContenido = "text/csv";
                 break;
             case "XLS":
-                archivo = reporteUtil.generaXls(tiposDeProducto, "/mx/edu/um/mateo/general/reportes/tiposDeProducto.jrxml");
+                archivo = reporteUtil.generaXls(tiposDeProducto, "/mx/edu/um/mateo/inventario/reportes/tiposDeProducto.jrxml");
                 tipoContenido = "application/vnd.ms-excel";
         }
 
