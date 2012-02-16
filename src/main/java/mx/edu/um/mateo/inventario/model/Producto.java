@@ -77,7 +77,6 @@ public class Producto implements Serializable {
     private BigDecimal puntoReorden = new BigDecimal("0");
     @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal iva = new BigDecimal("0.16");
-    @NotBlank
     @Column(nullable=false, name = "tiempo_entrega")
     private Integer tiempoEntrega = 3;
     @Column(nullable = false)
