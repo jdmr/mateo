@@ -137,9 +137,10 @@ public class ProveedorController {
         Integer max = (Integer) params.get("max");
         Long cantidadDePaginas = cantidad / max;
         List<Long> paginas = new ArrayList<>();
-        for (long i = 1; i <= cantidadDePaginas + 1; i++) {
+        long i = 1;
+        do {
             paginas.add(i);
-        }
+        } while (i++ < cantidadDePaginas);
         List<Proveedor> proveedores = (List<Proveedor>) params.get("proveedores");
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (proveedores.size() - 1);

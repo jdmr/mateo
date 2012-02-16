@@ -86,6 +86,8 @@ public class TipoClienteController {
             @RequestParam(required = false) String correo,
             @RequestParam(required = false) String order,
             @RequestParam(required = false) String sort,
+            Usuario usuario,
+            Errors errors,
             Model modelo) {
         log.debug("Mostrando lista de tipos de clientes");
         Map<String, Object> params = new HashMap<>();
@@ -113,6 +115,8 @@ public class TipoClienteController {
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
+                params.remove("reporte");
+                errors.reject("error.generar.reporte");
             }
         }
 
@@ -137,9 +141,10 @@ public class TipoClienteController {
         Integer max = (Integer) params.get("max");
         Long cantidadDePaginas = cantidad / max;
         List<Long> paginas = new ArrayList<>();
-        for (long i = 1; i <= cantidadDePaginas + 1; i++) {
+        long i = 1;
+        do {
             paginas.add(i);
-        }
+        } while (i++ < cantidadDePaginas);
         List<TipoCliente> tiposDeCliente = (List<TipoCliente>) params.get("tiposDeCliente");
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (tiposDeCliente.size() - 1);

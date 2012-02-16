@@ -59,6 +59,11 @@
                     <div class="span11">${empresa.nombreCompleto}</div>
                 </div>
 
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="rfc.label" /></div>
+                    <div class="span11">${empresa.rfc}</div>
+                </div>
+
                 <p class="well">
                     <a href="<c:url value='/admin/empresa/edita/${empresa.id}' />" class="btn btn-primary"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
                     <form:hidden path="id" />

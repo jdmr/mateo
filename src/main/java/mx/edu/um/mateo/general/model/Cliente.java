@@ -67,6 +67,8 @@ public class Cliente implements Serializable {
     @Email
     @Column(length = 128)
     private String correo;
+    @Column(nullable = false)
+    private Boolean base = false;
     @ManyToOne(optional = false)
     private TipoCliente tipoCliente;
     @ManyToOne(optional = false)
@@ -81,6 +83,15 @@ public class Cliente implements Serializable {
         this.rfc = rfc;
         this.empresa = empresa;
         this.tipoCliente = tipoCliente;
+    }
+
+    public Cliente(String nombre, String nombreCompleto, String rfc, TipoCliente tipoCliente, Boolean base, Empresa empresa) {
+        this.nombre = nombre;
+        this.nombreCompleto = nombreCompleto;
+        this.rfc = rfc;
+        this.empresa = empresa;
+        this.tipoCliente = tipoCliente;
+        this.base = base;
     }
 
     /**
@@ -235,6 +246,20 @@ public class Cliente implements Serializable {
      */
     public void setCorreo(String correo) {
         this.correo = correo;
+    }
+
+    /**
+     * @return the base
+     */
+    public Boolean getBase() {
+        return base;
+    }
+
+    /**
+     * @param base the base to set
+     */
+    public void setBase(Boolean base) {
+        this.base = base;
     }
 
     /**

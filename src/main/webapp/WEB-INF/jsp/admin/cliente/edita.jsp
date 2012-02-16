@@ -30,6 +30,7 @@
             <form:form commandName="cliente" action="${actualizaUrl}" method="post">
                 <form:hidden path="id" />
                 <form:hidden path="version" />
+                <form:hidden path="base" />
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>

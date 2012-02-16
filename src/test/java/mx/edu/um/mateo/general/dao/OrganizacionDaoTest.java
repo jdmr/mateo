@@ -101,7 +101,7 @@ public class OrganizacionDaoTest extends BaseTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Empresa empresa = new Empresa("TEST01","TEST01","TEST01", organizacion);
+        Empresa empresa = new Empresa("TEST01","TEST01","TEST01", "000000000001", organizacion);
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TEST01",empresa);
         currentSession().save(almacen);
@@ -128,7 +128,7 @@ public class OrganizacionDaoTest extends BaseTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Empresa empresa = new Empresa("TEST01","TEST01","TEST01", organizacion);
+        Empresa empresa = new Empresa("TEST01","TEST01","TEST01", "000000000001", organizacion);
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TEST01",empresa);
         currentSession().save(almacen);
@@ -163,7 +163,7 @@ public class OrganizacionDaoTest extends BaseTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Empresa empresa = new Empresa("TEST01","TEST01","TEST01", organizacion);
+        Empresa empresa = new Empresa("TEST01","TEST01","TEST01", "000000000001", organizacion);
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TEST01",empresa);
         currentSession().save(almacen);

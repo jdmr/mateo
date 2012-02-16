@@ -38,7 +38,6 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.ClienteDao;
 import mx.edu.um.mateo.general.dao.TipoClienteDao;
 import mx.edu.um.mateo.general.model.Cliente;
-import mx.edu.um.mateo.general.model.TipoCliente;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.ReporteUtil;
@@ -141,9 +140,10 @@ public class ClienteController {
         Integer max = (Integer) params.get("max");
         Long cantidadDePaginas = cantidad / max;
         List<Long> paginas = new ArrayList<>();
-        for (long i = 1; i <= cantidadDePaginas + 1; i++) {
+        long i = 1;
+        do {
             paginas.add(i);
-        }
+        } while (i++ < cantidadDePaginas);
         List<Cliente> clientes = (List<Cliente>) params.get("clientes");
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (clientes.size() - 1);
@@ -170,13 +170,13 @@ public class ClienteController {
         log.debug("Nuevo cliente");
         Cliente cliente = new Cliente();
         modelo.addAttribute("cliente", cliente);
-        
+
         Map<String, Object> params = new HashMap<>();
-        params.put("empresa",request.getSession().getAttribute("empresaId"));
+        params.put("empresa", request.getSession().getAttribute("empresaId"));
         params.put("reporte", true);
         params = tipoClienteDao.lista(params);
         modelo.addAttribute("tiposDeCliente", params.get("tiposDeCliente"));
-        
+
         return "admin/cliente/nuevo";
     }
 
@@ -200,7 +200,7 @@ public class ClienteController {
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
-            log.debug("TipoCliente: {}",cliente.getTipoCliente().getId());
+            log.debug("TipoCliente: {}", cliente.getTipoCliente().getId());
             cliente = clienteDao.crea(cliente, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al cliente", e);
@@ -226,13 +226,13 @@ public class ClienteController {
         log.debug("Edita cliente {}", id);
         Cliente cliente = clienteDao.obtiene(id);
         modelo.addAttribute("cliente", cliente);
-        
+
         Map<String, Object> params = new HashMap<>();
-        params.put("empresa",request.getSession().getAttribute("empresaId"));
+        params.put("empresa", request.getSession().getAttribute("empresaId"));
         params.put("reporte", true);
         params = tipoClienteDao.lista(params);
         modelo.addAttribute("tiposDeCliente", params.get("tiposDeCliente"));
-        
+
         return "admin/cliente/edita";
     }
 
@@ -259,7 +259,7 @@ public class ClienteController {
             errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
 
             Map<String, Object> params = new HashMap<>();
-            params.put("empresa",request.getSession().getAttribute("empresaId"));
+            params.put("empresa", request.getSession().getAttribute("empresaId"));
             params.put("reporte", true);
             params = tipoClienteDao.lista(params);
             modelo.addAttribute("tiposDeCliente", params.get("tiposDeCliente"));
@@ -347,5 +347,4 @@ public class ClienteController {
         helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
         mailSender.send(message);
     }
-
 }
