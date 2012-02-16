@@ -27,10 +27,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import mx.edu.um.mateo.general.dao.EmpresaDao;
-import mx.edu.um.mateo.general.model.Empresa;
-import mx.edu.um.mateo.general.model.Organizacion;
-import mx.edu.um.mateo.general.model.Rol;
-import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.inventario.model.Almacen;
@@ -102,8 +99,14 @@ public class EmpresaControllerTest extends BaseTest {
         log.debug("Debiera mostrar empresa");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
+        Proveedor proveedor = new Proveedor(empresa.getNombre(), empresa.getNombreCompleto(), empresa.getRfc(), true, empresa);
+        currentSession().save(proveedor);
+        TipoCliente tipoCliente = new TipoCliente("TIPO1", "TIPO1", empresa);
+        currentSession().save(tipoCliente);
+        Cliente cliente = new Cliente(empresa.getNombre(), empresa.getNombreCompleto(), empresa.getRfc(), tipoCliente, true, empresa);
+        currentSession().save(cliente);
         Long id = empresa.getId();
 
         this.mockMvc.perform(get("/admin/empresa/ver/" + id))
@@ -116,7 +119,7 @@ public class EmpresaControllerTest extends BaseTest {
     public void debieraCrearEmpresa() throws Exception {
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
         currentSession().save(organizacion);
-        Empresa otraEmpresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        Empresa otraEmpresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(otraEmpresa);
         Almacen almacen = new Almacen("TEST01",otraEmpresa);
         currentSession().save(almacen);
@@ -135,7 +138,9 @@ public class EmpresaControllerTest extends BaseTest {
         this.mockMvc.perform(post("/admin/empresa/crea")
                 .param("codigo", "tst-02")
                 .param("nombre", "TEST--02")
-                .param("nombreCompleto", "TEST--02"))
+                .param("nombreCompleto", "TEST--02")
+                .param("rfc", "000000000001")
+                )
                 .andExpect(status().isOk())
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message", "empresa.creada.message"));
@@ -145,7 +150,7 @@ public class EmpresaControllerTest extends BaseTest {
     public void debieraActualizarEmpresa() throws Exception {
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
         currentSession().save(organizacion);
-        Empresa otraEmpresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        Empresa otraEmpresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(otraEmpresa);
         Almacen almacen = new Almacen("TEST01",otraEmpresa);
         currentSession().save(almacen);
@@ -168,7 +173,9 @@ public class EmpresaControllerTest extends BaseTest {
                 .param("version", empresa.getVersion().toString())
                 .param("codigo", "PRUEBA")
                 .param("nombre", empresa.getNombre())
-                .param("nombreCompleto", empresa.getNombreCompleto()))
+                .param("nombreCompleto", empresa.getNombreCompleto())
+                .param("rfc", "000000000001")
+                )
                 .andExpect(status().isOk())
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message", "empresa.actualizada.message"));

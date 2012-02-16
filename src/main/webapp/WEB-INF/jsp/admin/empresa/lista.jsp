@@ -82,6 +82,19 @@
                                 </c:choose>
                             </a>
                         </th>
+                        <th>
+                            <a href="javascript:ordena('rfc');">
+                                <s:message code="rfc.label" />
+                                <c:choose>
+                                    <c:when test="${param.order == 'rfc' && param.sort == 'asc'}">
+                                        <i class="icon-chevron-up"></i>
+                                    </c:when>
+                                    <c:when test="${param.order == 'rfc' && param.sort == 'desc'}">
+                                        <i class="icon-chevron-down"></i>
+                                    </c:when>
+                                </c:choose>
+                            </a>
+                        </th>
                         <th><s:message code="organizacion.label" /></th>
                     </tr>
                 </thead>
@@ -90,6 +103,7 @@
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/admin/empresa/ver/${empresa.id}' />">${empresa.nombre}</a></td>
                             <td>${empresa.nombreCompleto}</td>
+                            <td>${empresa.rfc}</td>
                             <td>${empresa.organizacion.nombre}</td>
                         </tr>
                     </c:forEach>

@@ -147,9 +147,10 @@ public class UsuarioController {
         Integer max = (Integer) params.get("max");
         Long cantidadDePaginas = cantidad / max;
         List<Long> paginas = new ArrayList<>();
-        for (long i = 1; i <= cantidadDePaginas + 1; i++) {
+        long i = 1;
+        do {
             paginas.add(i);
-        }
+        } while (i++ < cantidadDePaginas);
         List<Usuario> usuarios = (List<Usuario>) params.get("usuarios");
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (usuarios.size() - 1);

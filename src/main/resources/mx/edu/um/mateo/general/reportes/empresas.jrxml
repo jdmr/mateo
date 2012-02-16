@@ -10,6 +10,7 @@
 	<property name="ireport.y" value="0"/>
 	<field name="nombre" class="java.lang.String"/>
 	<field name="nombreCompleto" class="java.lang.String"/>
+	<field name="rfc" class="java.lang.String"/>
 	<field name="organizacion.nombre" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
@@ -41,7 +42,12 @@
 				<text><![CDATA[Nombre Completo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="300" y="0" width="200" height="15"/>
+				<reportElement x="300" y="0" width="100" height="15"/>
+				<textElement/>
+				<text><![CDATA[RFC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="0" width="150" height="15"/>
 				<textElement/>
 				<text><![CDATA[Organización]]></text>
 			</staticText>
@@ -64,7 +70,14 @@
 				<textFieldExpression><![CDATA[$F{nombreCompleto}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="300" y="0" width="200" height="15"/>
+				<reportElement x="300" y="0" width="100" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rfc}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="400" y="0" width="200" height="15"/>
 				<textElement verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>

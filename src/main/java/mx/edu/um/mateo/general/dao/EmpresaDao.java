@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2012 jdmr.
+ * Copyright 2012 Universidad de Montemorelos A. C.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,14 +25,10 @@ package mx.edu.um.mateo.general.dao;
 
 import java.util.HashMap;
 import java.util.Map;
-import mx.edu.um.mateo.general.model.Empresa;
-import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
-import org.hibernate.Criteria;
-import org.hibernate.NonUniqueObjectException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.*;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -45,7 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author jdmr
+ * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Repository
 @Transactional
@@ -141,6 +137,12 @@ public class EmpresaDao {
             usuario.setAlmacen(almacen);
             session.update(usuario);
         }
+        Proveedor proveedor = new Proveedor(empresa.getNombre(), empresa.getNombreCompleto(), empresa.getRfc(), true, empresa);
+        session.save(proveedor);
+        TipoCliente tipoCliente = new TipoCliente("TIPO1", "TIPO1", empresa);
+        session.save(tipoCliente);
+        Cliente cliente = new Cliente(empresa.getNombre(), empresa.getNombreCompleto(), empresa.getRfc(), tipoCliente, true, empresa);
+        session.save(cliente);
         session.refresh(empresa);
         return empresa;
     }
@@ -159,7 +161,31 @@ public class EmpresaDao {
             empresa.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         }
         try {
+            // Actualiza la empresa
+            log.debug("Actualizando empresa");
             session.update(empresa);
+            session.flush();
+            
+            // Actualiza proveedor
+            log.debug("Actualizando proveedor");
+            Query query = session.createQuery("select p from Proveedor p where p.empresa.id = :empresaId and p.base is true");
+            query.setLong("empresaId", empresa.getId());
+            Proveedor proveedor = (Proveedor) query.uniqueResult();
+            log.debug("{}",proveedor);
+            proveedor.setNombre(empresa.getNombre());
+            proveedor.setNombreCompleto(empresa.getNombreCompleto());
+            proveedor.setRfc(empresa.getRfc());
+            session.update(proveedor);
+            
+            // Actualiza cliente
+            log.debug("Actualizando cliente");
+            query = session.createQuery("select c from Cliente c where c.empresa.id = :empresaId and c.base is true");
+            query.setLong("empresaId", empresa.getId());
+            Cliente cliente = (Cliente) query.uniqueResult();
+            cliente.setNombre(empresa.getNombre());
+            cliente.setNombreCompleto(empresa.getNombreCompleto());
+            cliente.setRfc(empresa.getRfc());
+            session.update(cliente);
         } catch (NonUniqueObjectException e) {
             try {
                 session.merge(empresa);

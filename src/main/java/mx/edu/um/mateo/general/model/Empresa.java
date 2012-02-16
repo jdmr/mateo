@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -55,6 +56,10 @@ public class Empresa implements Serializable {
     @NotBlank
     @Column(nullable = false, length = 128, name = "nombre_completo")
     private String nombreCompleto;
+    @NotBlank
+    @Size(min=12,max=13)
+    @Column(nullable = false, length = 13, name = "rfc")
+    private String rfc;
     @ManyToOne(optional = false)
     private Organizacion organizacion;
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
@@ -63,10 +68,11 @@ public class Empresa implements Serializable {
     public Empresa() {
     }
 
-    public Empresa(String codigo, String nombre, String nombreCompleto, Organizacion organizacion) {
+    public Empresa(String codigo, String nombre, String nombreCompleto, String rfc, Organizacion organizacion) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.nombreCompleto = nombreCompleto;
+        this.rfc = rfc;
         this.organizacion = organizacion;
     }
 
@@ -138,6 +144,20 @@ public class Empresa implements Serializable {
      */
     public void setNombreCompleto(String nombreCompleto) {
         this.nombreCompleto = nombreCompleto;
+    }
+
+    /**
+     * @return the rfc
+     */
+    public String getRfc() {
+        return rfc;
+    }
+
+    /**
+     * @param rfc the rfc to set
+     */
+    public void setRfc(String rfc) {
+        this.rfc = rfc;
     }
 
     /**

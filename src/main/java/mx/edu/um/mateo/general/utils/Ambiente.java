@@ -25,6 +25,8 @@ package mx.edu.um.mateo.general.utils;
 
 import javax.servlet.http.HttpServletRequest;
 import mx.edu.um.mateo.general.model.Usuario;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -35,12 +37,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class Ambiente {
 
+    private static final Logger log = LoggerFactory.getLogger(Ambiente.class);
+
     public void actualizaSesion(HttpServletRequest request) {
-        Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Usuario usuario = obtieneUsuario();
         this.actualizaSesion(request, usuario);
     }
 
     public void actualizaSesion(HttpServletRequest request, Usuario usuario) {
+        log.debug("Actualizando sesion");
         if (usuario != null) {
             request.getSession().setAttribute("organizacionLabel", usuario.getEmpresa().getOrganizacion().getNombre());
             request.getSession().setAttribute("empresaLabel", usuario.getEmpresa().getNombre());
