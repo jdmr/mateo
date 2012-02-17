@@ -148,37 +148,7 @@
             </div>
         </form>        
         <content>
-            <script>
-                $(document).ready(function() {
-                    highlightTableRows("usuarios");
-                });
-
-                function buscaPagina(paginaId) {
-                    $('input#pagina').val(paginaId);
-                    document.forms["filtraUsuarios"].submit();
-                }
-                
-                function imprime(tipo) {
-                    $('input#tipo').val(tipo);
-                    document.forms["filtraUsuarios"].submit();
-                }
-                
-                function enviaCorreo(tipo) {
-                    $('#enviaCorreoBtn').button('loading');
-                    $('input#correo').val(tipo);
-                    document.forms["filtraUsuarios"].submit();
-                }
-                
-                function ordena(campo) {
-                    if ($('input#order').val() == campo && $('input#sort').val() == 'asc') {
-                        $('input#sort').val('desc');
-                    } else {
-                        $('input#sort').val('asc');
-                    }
-                    $('input#order').val(campo);
-                    document.forms["filtraUsuarios"].submit();
-                }
-            </script>
+            <script src="<c:url value='/js/lista.js' />"></script>
         </content>
     </body>
 </html>
