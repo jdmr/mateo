@@ -55,7 +55,7 @@ public class ClienteDaoTest {
     private ClienteDao instance;
     @Autowired
     private SessionFactory sessionFactory;
-    
+
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
