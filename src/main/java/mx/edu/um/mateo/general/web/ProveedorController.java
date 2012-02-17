@@ -36,7 +36,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.ProveedorDao;
-import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
@@ -138,9 +137,10 @@ public class ProveedorController {
         Integer max = (Integer) params.get("max");
         Long cantidadDePaginas = cantidad / max;
         List<Long> paginas = new ArrayList<>();
-        for (long i = 1; i <= cantidadDePaginas + 1; i++) {
+        long i = 1;
+        do {
             paginas.add(i);
-        }
+        } while (i++ < cantidadDePaginas);
         List<Proveedor> proveedores = (List<Proveedor>) params.get("proveedores");
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (proveedores.size() - 1);
@@ -186,7 +186,6 @@ public class ProveedorController {
             proveedor = proveedorDao.crea(proveedor, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al proveedor", e);
-            errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
             errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
             return "admin/proveedor/nuevo";
         }
@@ -218,7 +217,6 @@ public class ProveedorController {
             proveedor = proveedorDao.actualiza(proveedor, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la proveedor", e);
-            errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
             errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
             return "admin/proveedor/nuevo";
         }

@@ -37,7 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.EmpresaDao;
-import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
@@ -81,8 +80,6 @@ public class EmpresaController {
     private JavaMailSender mailSender;
     @Autowired
     private ResourceBundleMessageSource messageSource;
-    @Autowired
-    private UsuarioDao usuarioDao;
     @Autowired
     private Ambiente ambiente;
 
@@ -145,9 +142,10 @@ public class EmpresaController {
         Integer max = (Integer) params.get("max");
         Long cantidadDePaginas = cantidad / max;
         List<Long> paginas = new ArrayList<>();
-        for (long i = 1; i <= cantidadDePaginas + 1; i++) {
+        long i = 1;
+        do {
             paginas.add(i);
-        }
+        } while (i++ < cantidadDePaginas);
         List<Empresa> empresas = (List<Empresa>) params.get("empresas");
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (empresas.size() - 1);
@@ -185,13 +183,16 @@ public class EmpresaController {
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                log.debug("Error: {}", error);
+            }
             return "admin/empresa/nueva";
         }
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
             empresa = empresaDao.crea(empresa, usuario);
-            
+
             ambiente.actualizaSesion(request, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al empresa", e);
@@ -219,13 +220,16 @@ public class EmpresaController {
     public String actualiza(HttpServletRequest request, @Valid Empresa empresa, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                log.debug("Error: {}", error);
+            }
             return "admin/empresa/edita";
         }
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
             empresa = empresaDao.actualiza(empresa, usuario);
-            
+
             ambiente.actualizaSesion(request, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la empresa", e);
@@ -246,9 +250,9 @@ public class EmpresaController {
         log.debug("Elimina empresa");
         try {
             String nombre = empresaDao.elimina(id);
-            
+
             ambiente.actualizaSesion(request);
-            
+
             redirectAttributes.addFlashAttribute("message", "empresa.eliminada.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
         } catch (UltimoException e) {

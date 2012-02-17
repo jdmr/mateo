@@ -25,7 +25,6 @@ package mx.edu.um.mateo.general.dao;
 
 import java.util.HashMap;
 import java.util.Map;
-import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.TipoCliente;
 import mx.edu.um.mateo.general.model.Usuario;
 import org.hibernate.Criteria;
@@ -124,7 +123,7 @@ public class TipoClienteDao {
     public TipoCliente obtiene(Long id) {
         return (TipoCliente) currentSession().get(TipoCliente.class, id);
     }
-    
+
     public TipoCliente crea(TipoCliente tipoCliente, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
@@ -138,7 +137,7 @@ public class TipoClienteDao {
     public TipoCliente crea(TipoCliente tipoCliente) {
         return this.crea(tipoCliente, null);
     }
-    
+
     public TipoCliente actualiza(TipoCliente tipoCliente) {
         return this.actualiza(tipoCliente, null);
     }
@@ -152,7 +151,8 @@ public class TipoClienteDao {
         session.flush();
         return tipoCliente;
     }
-     public String elimina(Long id) {
+
+    public String elimina(Long id) {
         TipoCliente tipoCliente = obtiene(id);
         String nombre = tipoCliente.getNombre();
         currentSession().delete(tipoCliente);

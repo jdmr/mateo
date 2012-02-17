@@ -44,20 +44,20 @@ import org.hibernate.validator.constraints.NotBlank;
 @Table(name="tipos_cliente", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"empresa_id", "nombre"})})
 public class TipoCliente {
-    @Id @GeneratedValue(strategy= GenerationType.IDENTITY) 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Version 
+    @Version
     private Integer version;
     @NotBlank
-    @Column(nullable=false,length=32)
+    @Column(nullable = false, length = 32)
     private String nombre;
-    @Column(length=128)
+    @Column(length = 128)
     private String descripcion;
-    @Column(name="margen_utilidad",scale=2,precision=8)
-    private BigDecimal margenUtilidad=new BigDecimal("0");
-    @ManyToOne(optional=false)
+    @Column(name = "margen_utilidad", scale = 2, precision = 8)
+    private BigDecimal margenUtilidad = new BigDecimal("0");
+    @ManyToOne(optional = false)
     private Empresa empresa;
-    
 
     public TipoCliente() {
     }
