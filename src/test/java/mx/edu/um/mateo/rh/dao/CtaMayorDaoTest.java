@@ -54,9 +54,10 @@ public class CtaMayorDaoTest extends BaseTest {
         assertNotNull(ejercicio);
         log.debug("ejercicio >>" + ejercicio);
         for (int i = 0; i < 20; i++) {
-            CtaMayor ctaMayor = new CtaMayor(ejercicio, "test" + i, "test");
+            CtaMayor ctaMayor = new CtaMayor("test" + i, "test");
             currentSession().save(ctaMayor);
-            log.debug("ctaMayor>>" + ejercicio);
+            assertNotNull(ctaMayor);
+            log.debug("ctaMayor>>" + ctaMayor);
         }
 
         Map<String, Object> params = null;
