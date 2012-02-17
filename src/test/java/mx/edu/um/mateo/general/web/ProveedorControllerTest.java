@@ -93,7 +93,7 @@ public class ProveedorControllerTest extends BaseTest {
         log.debug("Debiera mostrar proveedor");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         Proveedor proveedor = new Proveedor("tst-01", "test-01", "test-00000001", empresa);
         currentSession().save(proveedor);
@@ -110,7 +110,7 @@ public class ProveedorControllerTest extends BaseTest {
     public void debieraCrearProveedor() throws Exception {
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         Rol rol = new Rol("ROLE_TEST");
         currentSession().save(rol);

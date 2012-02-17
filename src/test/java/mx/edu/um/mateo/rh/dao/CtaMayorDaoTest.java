@@ -9,6 +9,7 @@ import java.util.Map;
 import mx.edu.um.mateo.general.dao.EmpresaDao;
 import mx.edu.um.mateo.general.dao.EmpresaDaoTest;
 import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.rh.model.CtaMayor;
 import mx.edu.um.mateo.rh.model.Ejercicio;
 import org.hibernate.Session;
@@ -30,11 +31,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class CtaMayorDaoTest {
+public class CtaMayorDaoTest extends BaseTest {
 
-    private static final Logger log = LoggerFactory.getLogger(EmpresaDaoTest.class);
+    private static final Logger log = LoggerFactory.getLogger(CtaMayorDaoTest.class);
     @Autowired
-    private EmpresaDao instance;
+    private CtaMayorDao instance;
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -48,17 +49,22 @@ public class CtaMayorDaoTest {
     @Test
     public void deberiaMostrarListaDeCtaMayor() {
         log.debug("Debiera mostrar lista de ctaMayor");
-        Ejercicio ejercicio = new Ejercicio("test", "test");
+        Ejercicio ejercicio = new Ejercicio("test", "A");
+        currentSession().save(ejercicio);
+        assertNotNull(ejercicio);
+        log.debug("ejercicio >>" + ejercicio);
         for (int i = 0; i < 20; i++) {
-            CtaMayor ctaMayor = new CtaMayor(ejercicio, "test", "test");
+            CtaMayor ctaMayor = new CtaMayor("test" + i, "test");
             currentSession().save(ctaMayor);
+            assertNotNull(ctaMayor);
+            log.debug("ctaMayor>>" + ctaMayor);
         }
 
         Map<String, Object> params = null;
         Map result = instance.lista(params);
         assertNotNull(result.get("ctaMayor"));
         assertNotNull(result.get("cantidad"));
-        
+
         assertEquals(10, ((List<Empresa>) result.get("ctaMayor")).size());
         assertEquals(20, ((Long) result.get("cantidad")).intValue());
     }

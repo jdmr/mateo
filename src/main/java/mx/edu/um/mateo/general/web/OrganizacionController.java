@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2012 jdmr.
+ * Copyright 2012 Universidad de Montemorelos A. C.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -144,9 +144,10 @@ public class OrganizacionController {
         Integer max = (Integer) params.get("max");
         Long cantidadDePaginas = cantidad / max;
         List<Long> paginas = new ArrayList<>();
-        for (long i = 1; i <= cantidadDePaginas + 1; i++) {
+        long i = 1;
+        do {
             paginas.add(i);
-        }
+        } while (i++ < cantidadDePaginas);
         List<Organizacion> organizaciones = (List<Organizacion>) params.get("organizaciones");
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (organizaciones.size() - 1);
@@ -193,7 +194,7 @@ public class OrganizacionController {
                 usuario = ambiente.obtieneUsuario();
             }
             organizacion = organizacionDao.crea(organizacion, usuario);
-            
+
             ambiente.actualizaSesion(request, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al organizacion", e);
@@ -230,7 +231,7 @@ public class OrganizacionController {
                 usuario = ambiente.obtieneUsuario();
             }
             organizacion = organizacionDao.actualiza(organizacion, usuario);
-            
+
             ambiente.actualizaSesion(request, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al organizacion", e);
@@ -251,9 +252,9 @@ public class OrganizacionController {
         log.debug("Elimina organizacion");
         try {
             String nombre = organizacionDao.elimina(id);
-            
+
             ambiente.actualizaSesion(request);
-            
+
             redirectAttributes.addFlashAttribute("message", "organizacion.eliminada.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
         } catch (UltimoException e) {

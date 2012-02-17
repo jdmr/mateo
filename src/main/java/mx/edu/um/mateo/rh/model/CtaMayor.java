@@ -21,79 +21,28 @@ public class CtaMayor implements Serializable {
     private Long id;
     @Version
     private Integer version;
-    @NotBlank
-    @Column(nullable = false)
-    private Ejercicio ejercicio;
-    @Column(nullable = true)
-    private String idCtaMayor;
-    @Column(nullable = true)
-    private String tipoCuenta;
+//    private Ejercicio ejercicio;
+//    private String idCtaMayor;
+//    private String tipoCuenta;
     @NotBlank
     @Column(nullable = false, length = 24)
     private String nombre;
     @NotBlank
     @Column(nullable = false, length = 24)
     private String nombreFiscal;
-    @Column(nullable = true)
-    private Boolean detalle;
-    @Column(nullable = true)
-    private Boolean aviso;
-    @Column(nullable = true)
-    private Boolean auxiliar;
-    @Column(nullable = true)
-    private Boolean iva;
-    @Column(nullable = true)
-    private Double pctIva;
-    @Column(nullable = true)
-    private Boolean detalleR;
+//    private Boolean detalle;
+//    private Boolean aviso;
+//    private Boolean auxiliar;
+//    private Boolean iva;
+//    private Double pctIva;
+//    private Boolean detalleR;
 
     public CtaMayor() {
     }
 
-    public CtaMayor(Ejercicio ejercicio, String nombre, String nombreFiscal) {
-        this.ejercicio = ejercicio;
+    public CtaMayor(String nombre, String nombreFiscal) {
         this.nombre = nombre;
         this.nombreFiscal = nombreFiscal;
-    }
-
-    public Boolean getAuxiliar() {
-        return auxiliar;
-    }
-
-    public void setAuxiliar(Boolean auxiliar) {
-        this.auxiliar = auxiliar;
-    }
-
-    public Boolean getAviso() {
-        return aviso;
-    }
-
-    public void setAviso(Boolean aviso) {
-        this.aviso = aviso;
-    }
-
-    public Boolean getDetalle() {
-        return detalle;
-    }
-
-    public void setDetalle(Boolean detalle) {
-        this.detalle = detalle;
-    }
-
-    public Boolean getDetalleR() {
-        return detalleR;
-    }
-
-    public void setDetalleR(Boolean detalleR) {
-        this.detalleR = detalleR;
-    }
-
-    public Ejercicio getEjercicio() {
-        return ejercicio;
-    }
-
-    public void setEjercicio(Ejercicio ejercicio) {
-        this.ejercicio = ejercicio;
     }
 
     public Long getId() {
@@ -102,22 +51,6 @@ public class CtaMayor implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getIdCtaMayor() {
-        return idCtaMayor;
-    }
-
-    public void setIdCtaMayor(String idCtaMayor) {
-        this.idCtaMayor = idCtaMayor;
-    }
-
-    public Boolean getIva() {
-        return iva;
-    }
-
-    public void setIva(Boolean iva) {
-        this.iva = iva;
     }
 
     public String getNombre() {
@@ -134,22 +67,6 @@ public class CtaMayor implements Serializable {
 
     public void setNombreFiscal(String nombreFiscal) {
         this.nombreFiscal = nombreFiscal;
-    }
-
-    public Double getPctIva() {
-        return pctIva;
-    }
-
-    public void setPctIva(Double pctIva) {
-        this.pctIva = pctIva;
-    }
-
-    public String getTipoCuenta() {
-        return tipoCuenta;
-    }
-
-    public void setTipoCuenta(String tipoCuenta) {
-        this.tipoCuenta = tipoCuenta;
     }
 
     public Integer getVersion() {
@@ -180,6 +97,6 @@ public class CtaMayor implements Serializable {
 
     @Override
     public String toString() {
-        return "CtaMayor{" + "ejercicio=" + ejercicio + ", tipoCuenta=" + tipoCuenta + ", nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + '}';
+        return "CtaMayor{nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + '}';
     }
 }

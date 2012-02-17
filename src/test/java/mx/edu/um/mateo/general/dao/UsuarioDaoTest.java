@@ -77,7 +77,7 @@ public class UsuarioDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TEST01", empresa);
         currentSession().save(almacen);
@@ -110,7 +110,7 @@ public class UsuarioDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TEST01", empresa);
         currentSession().save(almacen);
@@ -138,7 +138,7 @@ public class UsuarioDaoTest {
         currentSession().save(organizacion);
         Rol rol = new Rol("ROLE_TEST");
         currentSession().save(rol);
-        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TEST01", empresa);
         currentSession().save(almacen);
@@ -161,7 +161,7 @@ public class UsuarioDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TEST01", empresa);
         currentSession().save(almacen);
@@ -191,7 +191,7 @@ public class UsuarioDaoTest {
         currentSession().save(rol2);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TEST01", empresa);
         currentSession().save(almacen);
@@ -227,7 +227,7 @@ public class UsuarioDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TEST01", empresa);
         currentSession().save(almacen);
@@ -255,7 +255,7 @@ public class UsuarioDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TEST01", empresa);
         currentSession().save(almacen);
@@ -288,9 +288,9 @@ public class UsuarioDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", organizacion);
+        Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Empresa empresa2 = new Empresa("TEST02", "TEST02", "TEST02", organizacion);
+        Empresa empresa2 = new Empresa("TEST02", "TEST02", "TEST02", "000000000001", organizacion);
         currentSession().save(empresa2);
         Almacen almacen = new Almacen("TEST01", empresa);
         currentSession().save(almacen);

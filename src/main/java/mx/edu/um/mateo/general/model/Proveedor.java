@@ -67,6 +67,8 @@ public class Proveedor implements Serializable {
     @Email
     @Column(length=128)
     private String correo;
+    @Column(nullable = false)
+    private Boolean base = false;
     @ManyToOne(optional=false)
     private Empresa empresa;
 
@@ -78,6 +80,14 @@ public class Proveedor implements Serializable {
         this.nombreCompleto = nombreCompleto;
         this.rfc = rfc;
         this.empresa = empresa;
+    }
+
+    public Proveedor(String nombre, String nombreCompleto, String rfc, Boolean base, Empresa empresa) {
+        this.nombre = nombre;
+        this.nombreCompleto = nombreCompleto;
+        this.rfc = rfc;
+        this.empresa = empresa;
+        this.base = base;
     }
 
     /**
@@ -232,6 +242,20 @@ public class Proveedor implements Serializable {
      */
     public void setCorreo(String correo) {
         this.correo = correo;
+    }
+
+    /**
+     * @return the base
+     */
+    public Boolean getBase() {
+        return base;
+    }
+
+    /**
+     * @param base the base to set
+     */
+    public void setBase(Boolean base) {
+        this.base = base;
     }
 
     /**

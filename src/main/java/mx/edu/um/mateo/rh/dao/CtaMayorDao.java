@@ -64,15 +64,15 @@ public class CtaMayorDao {
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(Empresa.class);
-        Criteria countCriteria = currentSession().createCriteria(Empresa.class);
+        Criteria criteria = currentSession().createCriteria(CtaMayor.class);
+        Criteria countCriteria = currentSession().createCriteria(CtaMayor.class);
         
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             filtro = "%" + filtro + "%";
             Disjunction propiedades = Restrictions.disjunction();
             propiedades.add(Restrictions.ilike("nombre", filtro));
-            propiedades.add(Restrictions.ilike("nombreCompleto", filtro));
+            propiedades.add(Restrictions.ilike("nombreFiscal", filtro));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
