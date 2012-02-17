@@ -28,6 +28,7 @@ import java.util.Map;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import mx.edu.um.mateo.inventario.model.TipoProducto;
 import org.hibernate.*;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
@@ -142,6 +143,8 @@ public class EmpresaDao {
         TipoCliente tipoCliente = new TipoCliente("TIPO1", "TIPO1", empresa);
         session.save(tipoCliente);
         Cliente cliente = new Cliente(empresa.getNombre(), empresa.getNombreCompleto(), empresa.getRfc(), tipoCliente, true, empresa);
+        TipoProducto tipoProducto = new TipoProducto("TIPO1", "TIPO1", almacen);
+        session.save(tipoProducto);
         session.save(cliente);
         session.refresh(empresa);
         return empresa;
@@ -165,18 +168,18 @@ public class EmpresaDao {
             log.debug("Actualizando empresa");
             session.update(empresa);
             session.flush();
-            
+
             // Actualiza proveedor
             log.debug("Actualizando proveedor");
             Query query = session.createQuery("select p from Proveedor p where p.empresa.id = :empresaId and p.base is true");
             query.setLong("empresaId", empresa.getId());
             Proveedor proveedor = (Proveedor) query.uniqueResult();
-            log.debug("{}",proveedor);
+            log.debug("{}", proveedor);
             proveedor.setNombre(empresa.getNombre());
             proveedor.setNombreCompleto(empresa.getNombreCompleto());
             proveedor.setRfc(empresa.getRfc());
             session.update(proveedor);
-            
+
             // Actualiza cliente
             log.debug("Actualizando cliente");
             query = session.createQuery("select c from Cliente c where c.empresa.id = :empresaId and c.base is true");

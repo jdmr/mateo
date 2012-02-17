@@ -53,6 +53,8 @@ public class Almacen implements Serializable {
     private Empresa empresa;
     @OneToMany(mappedBy = "almacen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Usuario> usuarios = new ArrayList<>();
+    @OneToMany(mappedBy = "almacen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<TipoProducto> tiposDeProducto = new ArrayList<>();
 
     public Almacen() {
     }
@@ -129,7 +131,21 @@ public class Almacen implements Serializable {
      * @param usuarios the usuarios to set
      */
     public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
+        this.setUsuarios(usuarios);
+    }
+
+    /**
+     * @return the tiposDeProducto
+     */
+    public List<TipoProducto> getTiposDeProducto() {
+        return tiposDeProducto;
+    }
+
+    /**
+     * @param tiposDeProducto the tiposDeProducto to set
+     */
+    public void setTiposDeProducto(List<TipoProducto> tiposDeProducto) {
+        this.tiposDeProducto = tiposDeProducto;
     }
     
     /**
