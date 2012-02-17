@@ -74,7 +74,6 @@ public class Ejercicio implements Serializable {
         this.status = status;
     }
 
-    
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -95,6 +94,6 @@ public class Ejercicio implements Serializable {
 
     @Override
     public String toString() {
-        return "Ejercicio{" + "nombre=" + nombre + ", status=" + status + '}';
+        return "Ejercicio{nombre=" + nombre + ", status=" + status + '}';
     }
 }
