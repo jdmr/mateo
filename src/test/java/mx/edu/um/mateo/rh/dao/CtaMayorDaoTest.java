@@ -49,7 +49,7 @@ public class CtaMayorDaoTest extends BaseTest {
     @Test
     public void deberiaMostrarListaDeCtaMayor() {
         log.debug("Debiera mostrar lista de ctaMayor");
-        Ejercicio ejercicio = new Ejercicio("test", "test");
+        Ejercicio ejercicio = new Ejercicio("test", "A");
         currentSession().save(ejercicio);
         assertNotNull(ejercicio);
         log.debug("ejercicio >>" + ejercicio);
