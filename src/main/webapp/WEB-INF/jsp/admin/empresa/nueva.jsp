@@ -11,35 +11,28 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="organizacion.nueva.label" /></title>
+        <title><s:message code="empresa.nueva.label" /></title>
     </head>
     <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
             <ul class="nav">
                 <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
-                <li><a href="<c:url value='/inventario' />"><s:message code="inventario.label" /></a></li>
-                <li class="active"><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>
-            </ul>
-        </nav>
-
-        <header class="subhead" id="admin">
-            <ul class="nav nav-pills">
+                <li><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>
                 <li><a href="<s:url value='/admin/cliente'/>" ><s:message code="cliente.label" /></a></li>
                 <li><a href="<s:url value='/admin/tipoCliente'/>" ><s:message code="tipoCliente.label" /></a></li>
                 <li><a href="<s:url value='/admin/proveedor'/>" ><s:message code="proveedor.label" /></a></li>
-                <li><a href="<s:url value='/admin/empresa'/>" ><s:message code="empresa.label" /></a></li>
-                <li class="active"><a href="<s:url value='/admin/organizacion'/>" ><s:message code="organizacion.label" /></a></li>
+                <li class="active"><a href="<s:url value='/admin/empresa'/>" ><s:message code="empresa.label" /></a></li>
+                <li><a href="<s:url value='/admin/organizacion'/>" ><s:message code="organizacion.label" /></a></li>
                 <li><a href="<s:url value='/admin/usuario'/>" ><s:message code="usuario.label" /></a></li>
             </ul>
-        </header>
+        </nav>
 
-        <div id="nueva-organizacion" class="content scaffold-list" role="main">
-            <h1><s:message code="organizacion.nueva.label" /></h1>
+        <div id="nueva-empresa" class="content scaffold-list" role="main">
+            <h1><s:message code="empresa.nueva.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/admin/organizacion'/>"><i class="icon-list icon-white"></i> <s:message code='organizacion.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/admin/empresa'/>"><i class="icon-list icon-white"></i> <s:message code='empresa.lista.label' /></a>
             </p>
-            <form:form commandName="organizacion" action="crea" method="post">
+            <form:form commandName="empresa" action="crea" method="post">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -50,9 +43,9 @@
                 </form:errors>
 
                 <fieldset>
-                    <s:bind path="organizacion.codigo">
+                    <s:bind path="empresa.codigo">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="username">
+                            <label for="codigo">
                                 <s:message code="codigo.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -60,7 +53,7 @@
                             <form:errors path="codigo" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="organizacion.nombre">
+                    <s:bind path="empresa.nombre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombre">
                                 <s:message code="nombre.label" />
@@ -70,7 +63,7 @@
                             <form:errors path="nombre" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="organizacion.nombreCompleto">
+                    <s:bind path="empresa.nombreCompleto">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombreCompleto">
                                 <s:message code="nombreCompleto.label" />

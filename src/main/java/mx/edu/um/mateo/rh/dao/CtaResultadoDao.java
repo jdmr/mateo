@@ -4,7 +4,6 @@
  */
 package mx.edu.um.mateo.rh.dao;
 
-import mx.edu.um.mateo.general.dao.RolDao;
 import mx.edu.um.mateo.rh.model.CtaResultado;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -23,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CtaResultadoDao {
 
     
-    private static final Logger log = LoggerFactory.getLogger(RolDao.class);
+    private static final Logger log = LoggerFactory.getLogger(CtaResultadoDao.class);
     @Autowired
     private SessionFactory sessionFactory;
     
@@ -35,6 +34,7 @@ public class CtaResultadoDao {
         CtaResultado ctaresultado = (CtaResultado) currentSession().get(CtaResultado.class, id);
         return ctaresultado;
     }
+    
     
     public CtaResultado crea(CtaResultado ctaresultado){
         currentSession().save(ctaresultado);

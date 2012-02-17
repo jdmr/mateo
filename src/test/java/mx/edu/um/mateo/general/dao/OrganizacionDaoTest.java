@@ -24,20 +24,23 @@
 
 package mx.edu.um.mateo.general.dao;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,22 +52,24 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class OrganizacionDaoTest {
+public class OrganizacionDaoTest extends BaseTest {
 
     private static final Logger log = LoggerFactory.getLogger(OrganizacionDaoTest.class);
     @Autowired
     private OrganizacionDao instance;
     @Autowired
-    private RolDao rolDao;
-    @Autowired
-    private UsuarioDao usuarioDao;
+    private SessionFactory sessionFactory;
+    
+    private Session currentSession() {
+        return sessionFactory.getCurrentSession();
+    }
     
     @Test
     public void debieraMostrarListaDeOrganizaciones() {
         log.debug("Debiera mostrar lista de organizaciones");
         for(int i = 0; i < 20 ; i++) {
             Organizacion organizacion = new Organizacion("tst-"+i, "test-"+i, "test-"+i);
-            instance.crea(organizacion);
+            currentSession().save(organizacion);
         }
         Map<String, Object> params = null;
         Map<String, Object> result = instance.lista(params);
@@ -78,7 +83,7 @@ public class OrganizacionDaoTest {
     public void debieraObtenerOrganizacion() {
         log.debug("Debiera obtener organizacion");
         Organizacion organizacion = new Organizacion("tst-01","test-01","test-01");
-        organizacion = instance.crea(organizacion);
+        currentSession().save(organizacion);
         assertNotNull(organizacion.getId());
         Long id = organizacion.getId();
         
@@ -91,22 +96,24 @@ public class OrganizacionDaoTest {
     public void debieraCrearOrganizacion() {
         log.debug("Debiera crear organizacion");
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
-        organizacion = instance.crea(organizacion);
+        currentSession().save(organizacion);
         Rol rol = new Rol("ROLE_TEST");
-        rol = rolDao.crea(rol);
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Empresa empresa = new Empresa("TEST01","TEST01","TEST01", organizacion);
+        currentSession().save(empresa);
+        Almacen almacen = new Almacen("TEST01",empresa);
+        currentSession().save(almacen);
         Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
-        Long almacenId = 0l;
-        actualizaUsuario:
-        for (Empresa empresa : organizacion.getEmpresas()) {
-            for (Almacen almacen : empresa.getAlmacenes()) {
-                almacenId = almacen.getId();
-                break actualizaUsuario;
-            }
-        }
-        usuario = usuarioDao.crea(usuario, almacenId, new String[]{rol.getAuthority()});
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
         Long id = usuario.getId();
         assertNotNull(id);
         
+        authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         organizacion = new Organizacion("tst-01","test-01","test-01");
         organizacion = instance.crea(organizacion, usuario);
         assertNotNull(organizacion.getId());
@@ -116,26 +123,25 @@ public class OrganizacionDaoTest {
     public void debieraActualizarOrganizacion() {
         log.debug("Debiera actualizar organizacion");
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
-        organizacion = instance.crea(organizacion);
+        currentSession().save(organizacion);
         Rol rol = new Rol("ROLE_TEST");
-        rol = rolDao.crea(rol);
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Empresa empresa = new Empresa("TEST01","TEST01","TEST01", organizacion);
+        currentSession().save(empresa);
+        Almacen almacen = new Almacen("TEST01",empresa);
+        currentSession().save(almacen);
         Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
-        Long almacenId = 0l;
-        actualizaUsuario:
-        for (Empresa empresa : organizacion.getEmpresas()) {
-            for (Almacen almacen : empresa.getAlmacenes()) {
-                almacenId = almacen.getId();
-                break actualizaUsuario;
-            }
-        }
-        usuario = usuarioDao.crea(usuario, almacenId, new String[]{rol.getAuthority()});
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
         Long id = usuario.getId();
         assertNotNull(id);
-        
-        organizacion = new Organizacion("tst-01","test-01","test-01");
-        organizacion = instance.crea(organizacion, usuario);
-        assertNotNull(organizacion.getId());
         id = organizacion.getId();
+        
+        authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         
         Organizacion result = instance.obtiene(id);
         assertNotNull(result);
@@ -152,29 +158,33 @@ public class OrganizacionDaoTest {
         log.debug("Debiera eliminar organizacion");
         
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
-        organizacion = instance.crea(organizacion);
+        currentSession().save(organizacion);
         Rol rol = new Rol("ROLE_TEST");
-        rol = rolDao.crea(rol);
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Empresa empresa = new Empresa("TEST01","TEST01","TEST01", organizacion);
+        currentSession().save(empresa);
+        Almacen almacen = new Almacen("TEST01",empresa);
+        currentSession().save(almacen);
         Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
-        Long almacenId = 0l;
-        actualizaUsuario:
-        for (Empresa empresa : organizacion.getEmpresas()) {
-            for (Almacen almacen : empresa.getAlmacenes()) {
-                almacenId = almacen.getId();
-                break actualizaUsuario;
-            }
-        }
-        usuario = usuarioDao.crea(usuario, almacenId, new String[]{rol.getAuthority()});
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
         Long id = usuario.getId();
         assertNotNull(id);
-        
-        organizacion = new Organizacion("tst-01","test-01","test-01");
-        organizacion = instance.crea(organizacion, usuario);
-        assertNotNull(organizacion.getId());
         id = organizacion.getId();
-
+        currentSession().refresh(empresa);
+        currentSession().refresh(organizacion);
+        
+        organizacion = new Organizacion("TEST02","TEST02","TEST02");
+        currentSession().save(organizacion);
+        
+        authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
+        
         String nombre = instance.elimina(id);
-        assertEquals("test-01",nombre);
+        assertEquals("TEST01",nombre);
         
         Organizacion prueba = instance.obtiene(id);
         assertNull(prueba);

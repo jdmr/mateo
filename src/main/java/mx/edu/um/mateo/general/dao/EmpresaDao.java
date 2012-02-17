@@ -26,13 +26,15 @@ package mx.edu.um.mateo.general.dao;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Empresa;
-import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Criteria;
+import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
@@ -72,6 +74,13 @@ public class EmpresaDao {
         } else {
             params.put("max", Math.min((Integer) params.get("max"), 100));
         }
+
+        if (params.containsKey("pagina")) {
+            Long pagina = (Long) params.get("pagina");
+            Long offset = (pagina - 1) * (Integer) params.get("max");
+            params.put("offset", offset.intValue());
+        }
+
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
@@ -83,8 +92,29 @@ public class EmpresaDao {
             countCriteria.createCriteria("organizacion").add(Restrictions.idEq(params.get("organizacion")));
         }
 
-        criteria.setFirstResult((Integer) params.get("offset"));
-        criteria.setMaxResults((Integer) params.get("max"));
+        if (params.containsKey("filtro")) {
+            String filtro = (String) params.get("filtro");
+            filtro = "%" + filtro + "%";
+            Disjunction propiedades = Restrictions.disjunction();
+            propiedades.add(Restrictions.ilike("nombre", filtro));
+            propiedades.add(Restrictions.ilike("nombreCompleto", filtro));
+            criteria.add(propiedades);
+            countCriteria.add(propiedades);
+        }
+
+        if (params.containsKey("order")) {
+            String campo = (String) params.get("order");
+            if (params.get("sort").equals("desc")) {
+                criteria.addOrder(Order.desc(campo));
+            } else {
+                criteria.addOrder(Order.asc(campo));
+            }
+        }
+
+        if (!params.containsKey("reporte")) {
+            criteria.setFirstResult((Integer) params.get("offset"));
+            criteria.setMaxResults((Integer) params.get("max"));
+        }
         params.put("empresas", criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
@@ -100,6 +130,9 @@ public class EmpresaDao {
 
     public Empresa crea(Empresa empresa, Usuario usuario) {
         Session session = currentSession();
+        if (usuario != null) {
+            empresa.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+        }
         session.save(empresa);
         Almacen almacen = new Almacen("CENTRAL", empresa);
         session.save(almacen);
@@ -122,7 +155,19 @@ public class EmpresaDao {
 
     public Empresa actualiza(Empresa empresa, Usuario usuario) {
         Session session = currentSession();
-        session.update(empresa);
+        if (usuario != null) {
+            empresa.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+        }
+        try {
+            session.update(empresa);
+        } catch (NonUniqueObjectException e) {
+            try {
+                session.merge(empresa);
+            } catch (Exception ex) {
+                log.error("No se pudo actualizar la empresa", ex);
+                throw new RuntimeException("No se pudo actualizar la empresa", ex);
+            }
+        }
         if (usuario != null) {
             actualizaUsuario:
             for (Almacen almacen : empresa.getAlmacenes()) {
@@ -132,6 +177,7 @@ public class EmpresaDao {
                 break actualizaUsuario;
             }
         }
+        session.flush();
         return empresa;
     }
 

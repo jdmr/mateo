@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import mx.edu.um.mateo.general.model.Usuario;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
@@ -44,16 +45,15 @@ public class LoginHandler extends SavedRequestAwareAuthenticationSuccessHandler 
 
     private static final Logger log = LoggerFactory.getLogger(LoginHandler.class);
     
+    @Autowired
+    private Ambiente ambiente;
+    
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
         super.onAuthenticationSuccess(request, response, authentication);
         String username = ((UserDetails)authentication.getPrincipal()).getUsername();
         log.debug("Se ha firmado a {}", username);
         Usuario usuario = (Usuario)authentication.getPrincipal();
-        request.getSession().setAttribute("organizacionLabel", usuario.getEmpresa().getOrganizacion().getNombre());
-        request.getSession().setAttribute("empresaLabel", usuario.getEmpresa().getNombre());
-        request.getSession().setAttribute("almacenLabel", usuario.getAlmacen().getNombre());
-        request.getSession().setAttribute("empresaId", usuario.getEmpresa().getId());
-        request.getSession().setAttribute("almacenId", usuario.getAlmacen().getId());
+        ambiente.actualizaSesion(request, usuario);
     }
 }

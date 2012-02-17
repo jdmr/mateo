@@ -24,11 +24,12 @@
 package mx.edu.um.mateo.general.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *
@@ -45,19 +46,19 @@ public class Empresa implements Serializable {
     private Long id;
     @Version
     private Integer version;
-    @NotNull
+    @NotBlank
     @Column(nullable = false, length = 6)
     private String codigo;
-    @NotNull
+    @NotBlank
     @Column(nullable = false, length = 64)
     private String nombre;
-    @NotNull
+    @NotBlank
     @Column(nullable = false, length = 128, name = "nombre_completo")
     private String nombreCompleto;
     @ManyToOne(optional = false)
     private Organizacion organizacion;
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
-    private List<Almacen> almacenes;
+    private List<Almacen> almacenes = new ArrayList<>();
 
     public Empresa() {
     }

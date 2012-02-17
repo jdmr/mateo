@@ -40,6 +40,7 @@ import mx.edu.um.mateo.general.dao.EmpresaDao;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -57,6 +58,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -81,6 +83,8 @@ public class EmpresaController {
     private ResourceBundleMessageSource messageSource;
     @Autowired
     private UsuarioDao usuarioDao;
+    @Autowired
+    private Ambiente ambiente;
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -93,6 +97,7 @@ public class EmpresaController {
             Model modelo) {
         log.debug("Mostrando lista de empresas");
         Map<String, Object> params = new HashMap<>();
+        params.put("organizacion", request.getSession().getAttribute("organizacionId"));
         if (StringUtils.isNotBlank(filtro)) {
             params.put("filtro", filtro);
         }
@@ -126,6 +131,8 @@ public class EmpresaController {
             params.remove("reporte");
             try {
                 enviaCorreo(correo, (List<Empresa>) params.get("empresas"), request);
+                modelo.addAttribute("message", "lista.enviada.message");
+                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("empresa.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
@@ -170,6 +177,7 @@ public class EmpresaController {
         return "admin/empresa/nueva";
     }
 
+    @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Empresa empresa, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
@@ -177,23 +185,25 @@ public class EmpresaController {
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
-            return "admin/empresa/nuevo";
+            return "admin/empresa/nueva";
         }
 
         try {
-            Usuario usuario = usuarioDao.obtiene(request.getUserPrincipal().getName());
+            Usuario usuario = ambiente.obtieneUsuario();
             empresa = empresaDao.crea(empresa, usuario);
+            
+            ambiente.actualizaSesion(request, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al empresa", e);
             errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
             errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
-            return "admin/empresa/nuevo";
+            return "admin/empresa/nueva";
         }
 
         redirectAttributes.addFlashAttribute("message", "empresa.creada.message");
         redirectAttributes.addFlashAttribute("messageAttrs", new String[]{empresa.getNombre()});
 
-        return "redirect:/admin/organizacion/ver/" + empresa.getId();
+        return "redirect:/admin/empresa/ver/" + empresa.getId();
     }
 
     @RequestMapping("/edita/{id}")
@@ -204,6 +214,7 @@ public class EmpresaController {
         return "admin/empresa/edita";
     }
 
+    @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid Empresa empresa, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -212,13 +223,15 @@ public class EmpresaController {
         }
 
         try {
-            Usuario usuario = usuarioDao.obtiene(request.getUserPrincipal().getName());
+            Usuario usuario = ambiente.obtieneUsuario();
             empresa = empresaDao.actualiza(empresa, usuario);
+            
+            ambiente.actualizaSesion(request, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la empresa", e);
             errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
             errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
-            return "admin/empresa/nuevo";
+            return "admin/empresa/nueva";
         }
 
         redirectAttributes.addFlashAttribute("message", "empresa.actualizada.message");
@@ -227,11 +240,15 @@ public class EmpresaController {
         return "redirect:/admin/empresa/ver/" + empresa.getId();
     }
 
+    @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(@RequestParam Long id, Model modelo, @ModelAttribute Empresa empresa, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Empresa empresa, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina empresa");
         try {
             String nombre = empresaDao.elimina(id);
+            
+            ambiente.actualizaSesion(request);
+            
             redirectAttributes.addFlashAttribute("message", "empresa.eliminada.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
         } catch (UltimoException e) {
@@ -296,7 +313,7 @@ public class EmpresaController {
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(request.getUserPrincipal().getName());
+        helper.setTo(ambiente.obtieneUsuario().getUsername());
         String titulo = messageSource.getMessage("empresa.lista.label", null, request.getLocale());
         helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
         helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
@@ -304,23 +321,23 @@ public class EmpresaController {
         mailSender.send(message);
     }
 
-    private byte[] generaPdf(List organizaciones) throws JRException {
+    private byte[] generaPdf(List lista) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/empresas.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(organizaciones));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(lista));
         byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
 
         return archivo;
     }
 
-    private byte[] generaCsv(List organizaciones) throws JRException {
+    private byte[] generaCsv(List lista) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRCsvExporter exporter = new JRCsvExporter();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/empresas.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(organizaciones));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(lista));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
         exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
         exporter.exportReport();
@@ -329,13 +346,13 @@ public class EmpresaController {
         return archivo;
     }
 
-    private byte[] generaXls(List organizaciones) throws JRException {
+    private byte[] generaXls(List lista) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRXlsExporter exporter = new JRXlsExporter();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/empresas.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(organizaciones));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(lista));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
         exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
         exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);

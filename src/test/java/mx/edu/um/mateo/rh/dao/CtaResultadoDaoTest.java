@@ -4,6 +4,10 @@
  */
 package mx.edu.um.mateo.rh.dao;
 
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 import mx.edu.um.mateo.rh.model.CtaResultado;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -16,10 +20,15 @@ import static org.junit.Assert.*;
  *
  * @author semdariobarbaamaya
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
+@Transactional
+
 public class CtaResultadoDaoTest {
     
     public CtaResultadoDaoTest() {
     }
+    
 
     @BeforeClass
     public static void setUpClass() throws Exception {

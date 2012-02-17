@@ -131,6 +131,30 @@ public class Almacen implements Serializable {
     public void setUsuarios(List<Usuario> usuarios) {
         this.usuarios = usuarios;
     }
+    
+    /**
+     * Obtiene el nombre con los nombres tanto de empresa y organizacion
+     * 
+     * @return nombre El nombre completo del almacen (organizacion|empresa|almacen)
+     */
+    public String getNombreCompleto() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getEmpresa().getOrganizacion().getNombre());
+        sb.append(" | ");
+        sb.append(getEmpresa().getNombre());
+        sb.append(" | ");
+        sb.append(getNombre());
+        return sb.toString();
+    }
+
+    /**
+     * No hace nada. NO USAR.
+     * 
+     * @param nombreCompleto 
+     */
+    public void setNombreCompleto(String nombreCompleto) {
+        // no hace nada
+    }
 
     @Override
     public boolean equals(Object obj) {

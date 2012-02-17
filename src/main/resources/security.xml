@@ -17,6 +17,7 @@
     
     <http auto-config="true" access-decision-manager-ref="webAccessDecisionManager" use-expressions="true">
         <intercept-url pattern="/inicializa/**" access="permitAll" />
+        <intercept-url pattern="/prueba/**" access="permitAll" />
         <intercept-url pattern="/admin/organizacion/**" access="hasAnyRole('ROLE_ADMIN')" />
         <intercept-url pattern="/admin/empresa/**" access="hasAnyRole('ROLE_ORG')" />
         <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_EMP')" />

@@ -39,6 +39,7 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.SpringSecurityUtils;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import net.sf.jasperreports.engine.*;
@@ -58,6 +59,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -82,6 +84,8 @@ public class UsuarioController {
     private JavaMailSender mailSender;
     @Autowired
     private ResourceBundleMessageSource messageSource;
+    @Autowired
+    private Ambiente ambiente;
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -129,6 +133,8 @@ public class UsuarioController {
             params.remove("reporte");
             try {
                 enviaCorreo(correo, (List<Usuario>) params.get("usuarios"), request);
+                modelo.addAttribute("message", "lista.enviada.message");
+                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("usuario.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
@@ -177,6 +183,7 @@ public class UsuarioController {
         return "admin/usuario/nuevo";
     }
 
+    @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Usuario usuario, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
@@ -204,9 +211,9 @@ public class UsuarioController {
 
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setTo(request.getUserPrincipal().getName());
+            helper.setTo(ambiente.obtieneUsuario().getUsername());
             helper.setSubject(messageSource.getMessage("envia.correo.password.titulo.message", new String[]{}, request.getLocale()));
-            helper.setText(messageSource.getMessage("envia.correo.password.contenido.message", new String[]{usuario.getUsername(), password}, request.getLocale()), true);
+            helper.setText(messageSource.getMessage("envia.correo.password.contenido.message", new String[]{usuario.getNombre(), usuario.getUsername(), password}, request.getLocale()), true);
             mailSender.send(message);
 
         } catch (ConstraintViolationException e) {
@@ -240,6 +247,7 @@ public class UsuarioController {
         return "admin/usuario/edita";
     }
 
+    @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid Usuario usuario, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -270,6 +278,7 @@ public class UsuarioController {
         return "redirect:/admin/usuario/ver/" + usuario.getId();
     }
 
+    @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(@RequestParam Long id, Model modelo, @ModelAttribute Usuario usuario, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina usuario");
@@ -359,7 +368,7 @@ public class UsuarioController {
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(request.getUserPrincipal().getName());
+        helper.setTo(ambiente.obtieneUsuario().getUsername());
         String titulo = messageSource.getMessage("usuario.lista.label", null, request.getLocale());
         helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
         helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);

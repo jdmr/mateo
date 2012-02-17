@@ -17,14 +17,7 @@
         <nav class="navbar navbar-fixed-top" role="navigation">
             <ul class="nav">
                 <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
-                <li><a href="<c:url value='/inventario' />"><s:message code="inventario.label" /></a></li>
-                <li class="active"><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>
-            </ul>
-        </nav>
-
-        <header class="subhead" id="admin">
-            <ul class="nav nav-pills">
+                <li><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>
                 <li><a href="<s:url value='/admin/cliente'/>" ><s:message code="cliente.label" /></a></li>
                 <li><a href="<s:url value='/admin/tipoCliente'/>" ><s:message code="tipoCliente.label" /></a></li>
                 <li><a href="<s:url value='/admin/proveedor'/>" ><s:message code="proveedor.label" /></a></li>
@@ -32,7 +25,7 @@
                 <li class="active"><a href="<s:url value='/admin/organizacion'/>" ><s:message code="organizacion.label" /></a></li>
                 <li><a href="<s:url value='/admin/usuario'/>" ><s:message code="usuario.label" /></a></li>
             </ul>
-        </header>
+        </nav>
 
         <div id="edita-organizacion" class="content scaffold-list" role="main">
             <h1><s:message code="organizacion.edita.label" /></h1>
@@ -41,7 +34,14 @@
             </p>
             <c:url var="actualizaUrl" value="/admin/organizacion/actualiza" />
             <form:form commandName="organizacion" method="post" action="${actualizaUrl}">
-                <form:errors path="*" cssClass="alert alert-error" element="ul" />
+                <form:errors path="*">
+                    <div class="alert alert-block alert-error fade in" role="status">
+                        <a class="close" data-dismiss="alert">×</a>
+                        <c:forEach items="${messages}" var="message">
+                            <p>${message}</p>
+                        </c:forEach>
+                    </div>
+                </form:errors>
                 <form:hidden path="id" />
                 <form:hidden path="version" />
 

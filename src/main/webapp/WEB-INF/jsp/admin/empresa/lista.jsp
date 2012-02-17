@@ -10,14 +10,7 @@
         <nav class="navbar navbar-fixed-top" role="navigation">
             <ul class="nav">
                 <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
-                <li><a href="<c:url value='/inventario' />"><s:message code="inventario.label" /></a></li>
-                <li class="active"><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>
-            </ul>
-        </nav>
-
-        <header class="subhead" id="admin">
-            <ul class="nav nav-pills">
+                <li><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>
                 <li><a href="<s:url value='/admin/cliente'/>" ><s:message code="cliente.label" /></a></li>
                 <li><a href="<s:url value='/admin/tipoCliente'/>" ><s:message code="tipoCliente.label" /></a></li>
                 <li><a href="<s:url value='/admin/proveedor'/>" ><s:message code="proveedor.label" /></a></li>
@@ -25,7 +18,7 @@
                 <li><a href="<s:url value='/admin/organizacion'/>" ><s:message code="organizacion.label" /></a></li>
                 <li><a href="<s:url value='/admin/usuario'/>" ><s:message code="usuario.label" /></a></li>
             </ul>
-        </header>
+        </nav>
 
         <h1><s:message code="empresa.lista.label" /></h1>
         <hr/>
@@ -117,7 +110,7 @@
                 </div>
                 <div class="span4">
                     <div class="btn-group pull-right" style="margin-top: 22px;margin-left: 10px;">
-                        <a class="btn" href="javascript:enviaCorreo('PDF');"><s:message code="envia.correo.label" /></a>
+                        <button id="enviaCorreoBtn" class="btn" data-loading-text="<s:message code='enviando.label'/>" onclick="javascript:enviaCorreo('XLS');" ><s:message code="envia.correo.label" /></button>
                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="javascript:enviaCorreo('PDF');"><img src="<c:url value='/images/pdf.gif' />" /></a></li>
@@ -151,6 +144,7 @@
                 }
                 
                 function enviaCorreo(tipo) {
+                    $('#enviaCorreoBtn').button('loading');
                     $('input#correo').val(tipo);
                     document.forms["filtraLista"].submit();
                 }

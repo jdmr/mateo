@@ -40,6 +40,7 @@ import mx.edu.um.mateo.general.dao.OrganizacionDao;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -57,6 +58,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -81,6 +83,8 @@ public class OrganizacionController {
     private ResourceBundleMessageSource messageSource;
     @Autowired
     private UsuarioDao usuarioDao;
+    @Autowired
+    private Ambiente ambiente;
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -126,6 +130,8 @@ public class OrganizacionController {
             params.remove("reporte");
             try {
                 enviaCorreo(correo, (List<Organizacion>) params.get("organizaciones"), request);
+                modelo.addAttribute("message", "lista.enviada.message");
+                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("organizacion.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
@@ -170,6 +176,7 @@ public class OrganizacionController {
         return "admin/organizacion/nueva";
     }
 
+    @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Organizacion organizacion, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
@@ -182,10 +189,12 @@ public class OrganizacionController {
 
         try {
             Usuario usuario = null;
-            if (request.getUserPrincipal() != null) {
-                usuario = usuarioDao.obtiene(request.getUserPrincipal().getName());
+            if (ambiente.obtieneUsuario() != null) {
+                usuario = ambiente.obtieneUsuario();
             }
             organizacion = organizacionDao.crea(organizacion, usuario);
+            
+            ambiente.actualizaSesion(request, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al organizacion", e);
             errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
@@ -207,6 +216,7 @@ public class OrganizacionController {
         return "admin/organizacion/edita";
     }
 
+    @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid Organizacion organizacion, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -216,10 +226,12 @@ public class OrganizacionController {
 
         try {
             Usuario usuario = null;
-            if (request.getUserPrincipal() != null) {
-                usuario = usuarioDao.obtiene(request.getUserPrincipal().getName());
+            if (ambiente.obtieneUsuario() != null) {
+                usuario = ambiente.obtieneUsuario();
             }
             organizacion = organizacionDao.actualiza(organizacion, usuario);
+            
+            ambiente.actualizaSesion(request, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al organizacion", e);
             errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
@@ -233,11 +245,15 @@ public class OrganizacionController {
         return "redirect:/admin/organizacion/ver/" + organizacion.getId();
     }
 
+    @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(@RequestParam Long id, Model modelo, @ModelAttribute Organizacion organizacion, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Organizacion organizacion, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina organizacion");
         try {
             String nombre = organizacionDao.elimina(id);
+            
+            ambiente.actualizaSesion(request);
+            
             redirectAttributes.addFlashAttribute("message", "organizacion.eliminada.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
         } catch (UltimoException e) {
@@ -302,7 +318,7 @@ public class OrganizacionController {
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(request.getUserPrincipal().getName());
+        helper.setTo(ambiente.obtieneUsuario().getUsername());
         String titulo = messageSource.getMessage("organizacion.lista.label", null, request.getLocale());
         helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
         helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);

@@ -15,6 +15,7 @@
 package mx.edu.um.mateo.general.utils;
 
 import java.util.*;
+import mx.edu.um.mateo.general.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -229,4 +230,8 @@ public class SpringSecurityUtils {
         return reachable;
     }
 
+    public Usuario obtieneUsuario() {
+        Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return usuario;
+    }
 }

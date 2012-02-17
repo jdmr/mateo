@@ -70,11 +70,32 @@ public class CtaResultado implements Serializable{
     }
     
     
-     public CtaResultado(Ejercicio ejercicio,String tipoCuenta, String nombre, String idCtaResultado) {
-         
+     public CtaResultado(Ejercicio ejercicio, String tipoCuenta, String nombre, String idCtaResultado) {
+         this.ejercicio = ejercicio;
+         this.tipoCuenta = tipoCuenta;
+         this.nombre = nombre;
+         this.idCtaResultado = idCtaResultado;
     }
 
-    
+     
+     /////
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    /////////
 
     public Boolean getAuxiliar() {
         return auxiliar;
@@ -164,6 +185,7 @@ public class CtaResultado implements Serializable{
         this.tipoCuenta = tipoCuenta;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;
@@ -175,11 +197,13 @@ public class CtaResultado implements Serializable{
         return true;
     }
 
+    @Override
     public int hashCode() {
         int hash = 3;
         return hash;
     }
 
+    @Override
     public String toString() {
         return "CtaResultado{" + "ejercicio=" + ejercicio + ", nombre=" + nombre + '}';
     }
