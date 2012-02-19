@@ -26,10 +26,10 @@ package mx.edu.um.mateo.inventario.dao;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.inventario.model.TipoProducto;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import mx.edu.um.mateo.inventario.model.Almacen;
+import mx.edu.um.mateo.inventario.model.Entrada;
+import mx.edu.um.mateo.inventario.model.Folio;
+import org.hibernate.*;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -46,18 +46,22 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class TipoProductoDao {
+public class EntradaDao {
 
-    private static final Logger log = LoggerFactory.getLogger(TipoProductoDao.class);
+    private static final Logger log = LoggerFactory.getLogger(EntradaDao.class);
     @Autowired
     private SessionFactory sessionFactory;
+
+    public EntradaDao() {
+        log.info("Nueva instancia de EntradaDao");
+    }
 
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
 
     public Map<String, Object> lista(Map<String, Object> params) {
-        log.debug("Buscando lista de tipos de producto con params {}", params);
+        log.debug("Buscando lista de entradas con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
@@ -77,8 +81,8 @@ public class TipoProductoDao {
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(TipoProducto.class);
-        Criteria countCriteria = currentSession().createCriteria(TipoProducto.class);
+        Criteria criteria = currentSession().createCriteria(Entrada.class);
+        Criteria countCriteria = currentSession().createCriteria(Entrada.class);
 
         if (params.containsKey("almacen")) {
             criteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
@@ -108,7 +112,7 @@ public class TipoProductoDao {
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put("tiposDeProducto", criteria.list());
+        params.put("entradas", criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
@@ -116,43 +120,69 @@ public class TipoProductoDao {
         return params;
     }
 
-    public TipoProducto obtiene(Long id) {
-        return (TipoProducto) currentSession().get(TipoProducto.class, id);
+    public Entrada obtiene(Long id) {
+        return (Entrada) currentSession().get(Entrada.class, id);
     }
 
-    public TipoProducto crea(TipoProducto tipoProducto, Usuario usuario) {
+    public Entrada crea(Entrada entrada, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
-            tipoProducto.setAlmacen(usuario.getAlmacen());
+            entrada.setAlmacen(usuario.getAlmacen());
         }
-        session.save(tipoProducto);
+        entrada.setFolio(getFolio(entrada.getAlmacen()));
+        session.save(entrada);
         session.flush();
-        return tipoProducto;
+        return entrada;
     }
 
-    public TipoProducto crea(TipoProducto tipoProducto) {
-        return this.crea(tipoProducto, null);
+    public Entrada crea(Entrada entrada) {
+        return this.crea(entrada, null);
     }
 
-    public TipoProducto actualiza(TipoProducto tipoProducto) {
-        return this.actualiza(tipoProducto, null);
+    public Entrada actualiza(Entrada entrada) {
+        return this.actualiza(entrada, null);
     }
 
-    public TipoProducto actualiza(TipoProducto tipoProducto, Usuario usuario) {
+    public Entrada actualiza(Entrada entrada, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
-            tipoProducto.setAlmacen(usuario.getAlmacen());
+            entrada.setAlmacen(usuario.getAlmacen());
         }
-        session.update(tipoProducto);
+        session.update(entrada);
         session.flush();
-        return tipoProducto;
+        return entrada;
     }
 
     public String elimina(Long id) {
-        TipoProducto tipoProducto = obtiene(id);
-        String nombre = tipoProducto.getNombre();
-        currentSession().delete(tipoProducto);
+        Entrada entrada = obtiene(id);
+        String nombre = entrada.getFolio();
+        currentSession().delete(entrada);
         currentSession().flush();
         return nombre;
+    }
+
+    private String getFolio(Almacen almacen) {
+        Query query = currentSession().createQuery("select f from Folio f where f.nombre = :nombre and f.almacen.id = :almacenId");
+        query.setString("nombre", "ENTRADA-TEMPORAL");
+        query.setLong("almacenId",almacen.getId());
+        query.setLockOptions(LockOptions.UPGRADE);
+        Folio folio = (Folio) query.uniqueResult();
+        if (folio == null) {
+            folio = new Folio("ENTRADA-TEMPORAL");
+            folio.setAlmacen(almacen);
+            currentSession().save(folio);
+            currentSession().flush();
+            return getFolio(almacen);
+        }
+        folio.setValor(folio.getValor()+1);
+        java.text.NumberFormat nf = java.text.DecimalFormat.getInstance();
+        nf.setGroupingUsed(false);
+        nf.setMinimumIntegerDigits(9);
+        nf.setMaximumIntegerDigits(9);
+        nf.setMaximumFractionDigits(0);
+        StringBuilder sb = new StringBuilder();
+        sb.append("TE-");
+        sb.append(nf.format(folio.getValor()));
+        return sb.toString();
     }
 }
