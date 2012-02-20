@@ -93,11 +93,9 @@ public class EjercicioDaoTest extends BaseTest {
         assertNotNull(ejercicio);
         currentSession().save(ejercicio);
 
-        Ejercicio ejercicio1 = new Ejercicio("test1", Constantes.STATUS_ACTIVO);
-        assertNotNull(ejercicio1);
-        currentSession().save(ejercicio1);
+        ejercicio.setNombre("test1");
         
-        ejercicio = instance.actualiza(ejercicio1);
+        ejercicio = instance.actualiza(ejercicio);
         log.debug("ctaMayor >>" + ejercicio);
         assertEquals("test1", ejercicio.getNombre());
     }
