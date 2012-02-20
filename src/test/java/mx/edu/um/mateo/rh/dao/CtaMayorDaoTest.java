@@ -97,12 +97,10 @@ public class CtaMayorDaoTest extends BaseTest {
         CtaMayor ctaMayor = new CtaMayor("test", "test");
         assertNotNull(ctaMayor);
         currentSession().save(ctaMayor);
-
-        CtaMayor ctaMayor1 = new CtaMayor("test1", "test");
-        assertNotNull(ctaMayor1);
-        currentSession().save(ctaMayor1);
         
-        ctaMayor = instance.actualiza(ctaMayor1);
+        ctaMayor.setNombre("test1");
+
+        ctaMayor = instance.actualiza(ctaMayor);
         log.debug("ctaMayor >>" + ctaMayor);
         assertEquals("test1", ctaMayor.getNombre());
     }
