@@ -75,7 +75,7 @@ public class AlmacenDaoTest {
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         for (int i = 0; i < 20; i++) {
-            Almacen almacen = new Almacen("TST", "test" + i, empresa);
+            Almacen almacen = new Almacen("TST"+i, "test" + i, empresa);
             currentSession().save(almacen);
         }
 

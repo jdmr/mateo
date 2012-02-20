@@ -39,6 +39,11 @@
             <form:form commandName="almacen" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="codigo.label" /></div>
+                    <div class="span11">${almacen.codigo}</div>
+                </div>
+
+                <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="nombre.label" /></div>
                     <div class="span11">${almacen.nombre}</div>
                 </div>

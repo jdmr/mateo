@@ -131,6 +131,7 @@ public class AlmacenControllerTest extends BaseTest {
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         
         this.mockMvc.perform(post("/inventario/almacen/crea")
+                .param("codigo", "TST-01")
                 .param("nombre", "TEST--01")
                 )
                 .andExpect(status().isOk())
