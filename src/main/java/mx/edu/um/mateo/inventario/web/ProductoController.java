@@ -38,8 +38,9 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.ReporteUtil;
+import mx.edu.um.mateo.inventario.dao.ProductoDao;
 import mx.edu.um.mateo.inventario.dao.TipoProductoDao;
-import mx.edu.um.mateo.inventario.model.TipoProducto;
+import mx.edu.um.mateo.inventario.model.Producto;
 import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
@@ -63,10 +64,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Controller
-@RequestMapping("/inventario/tipoProducto")
-public class TipoProductoController {
+@RequestMapping("/inventario/producto")
+public class ProductoController {
 
-    private static final Logger log = LoggerFactory.getLogger(TipoProductoController.class);
+    private static final Logger log = LoggerFactory.getLogger(ProductoController.class);
+    @Autowired
+    private ProductoDao productoDao;
     @Autowired
     private TipoProductoDao tipoProductoDao;
     @Autowired
@@ -109,9 +112,9 @@ public class TipoProductoController {
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put("reporte", true);
-            params = tipoProductoDao.lista(params);
+            params = productoDao.lista(params);
             try {
-                generaReporte(tipo, (List<TipoProducto>) params.get("tiposDeProducto"), response);
+                generaReporte(tipo, (List<Producto>) params.get("productos"), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -122,19 +125,19 @@ public class TipoProductoController {
 
         if (StringUtils.isNotBlank(correo)) {
             params.put("reporte", true);
-            params = tipoProductoDao.lista(params);
+            params = productoDao.lista(params);
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<TipoProducto>) params.get("tiposDeProducto"), request);
+                enviaCorreo(correo, (List<Producto>) params.get("productos"), request);
                 modelo.addAttribute("message", "lista.enviada.message");
-                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("tipoProducto.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("producto.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-        params = tipoProductoDao.lista(params);
-        modelo.addAttribute("tiposDeProducto", params.get("tiposDeProducto"));
+        params = productoDao.lista(params);
+        modelo.addAttribute("productos", params.get("productos"));
 
         // inicia paginado
         Long cantidad = (Long) params.get("cantidad");
@@ -145,128 +148,156 @@ public class TipoProductoController {
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<TipoProducto> tiposDeProducto = (List<TipoProducto>) params.get("tiposDeProducto");
+        List<Producto> productos = (List<Producto>) params.get("productos");
         Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (tiposDeProducto.size() - 1);
+        Long ultimo = primero + (productos.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
         modelo.addAttribute("paginacion", paginacion);
         modelo.addAttribute("paginas", paginas);
         // termina paginado
 
-        return "inventario/tipoProducto/lista";
+        return "inventario/producto/lista";
     }
 
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
-        log.debug("Mostrando tipoProducto {}", id);
-        TipoProducto tipoProducto = tipoProductoDao.obtiene(id);
+        log.debug("Mostrando producto {}", id);
+        Producto producto = productoDao.obtiene(id);
 
-        modelo.addAttribute("tipoProducto", tipoProducto);
+        modelo.addAttribute("producto", producto);
 
-        return "inventario/tipoProducto/ver";
+        return "inventario/producto/ver";
     }
 
     @RequestMapping("/nuevo")
-    public String nuevo(Model modelo) {
-        log.debug("Nuevo tipoProducto");
-        TipoProducto tipoProducto = new TipoProducto();
-        modelo.addAttribute("tipoProducto", tipoProducto);
-        return "inventario/tipoProducto/nuevo";
+    public String nuevo(HttpServletRequest request, Model modelo) {
+        log.debug("Nuevo producto");
+        Producto producto = new Producto();
+        modelo.addAttribute("producto", producto);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("almacen", request.getSession().getAttribute("almacenId"));
+        params.put("reporte", true);
+        params = tipoProductoDao.lista(params);
+        modelo.addAttribute("tiposDeProducto", params.get("tiposDeProducto"));
+
+        return "inventario/producto/nuevo";
     }
 
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid TipoProducto tipoProducto, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Producto producto, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
-            return "inventario/tipoProducto/nuevo";
+            return "inventario/producto/nuevo";
         }
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
-            tipoProducto = tipoProductoDao.crea(tipoProducto, usuario);
+            producto = productoDao.crea(producto, usuario);
         } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear al tipoProducto", e);
+            log.error("No se pudo crear al producto", e);
             errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
-            return "inventario/tipoProducto/nuevo";
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("almacen", request.getSession().getAttribute("almacenId"));
+            params.put("reporte", true);
+            params = tipoProductoDao.lista(params);
+            modelo.addAttribute("tiposDeProducto", params.get("tiposDeProducto"));
+
+            return "inventario/producto/nuevo";
         }
 
-        redirectAttributes.addFlashAttribute("message", "tipoProducto.creado.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{tipoProducto.getNombre()});
+        redirectAttributes.addFlashAttribute("message", "producto.creado.message");
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{producto.getNombre()});
 
-        return "redirect:/inventario/tipoProducto/ver/" + tipoProducto.getId();
+        return "redirect:/inventario/producto/ver/" + producto.getId();
     }
 
     @RequestMapping("/edita/{id}")
-    public String edita(@PathVariable Long id, Model modelo) {
-        log.debug("Edita tipoProducto {}", id);
-        TipoProducto tipoProducto = tipoProductoDao.obtiene(id);
-        modelo.addAttribute("tipoProducto", tipoProducto);
-        return "inventario/tipoProducto/edita";
+    public String edita(HttpServletRequest request, @PathVariable Long id, Model modelo) {
+        log.debug("Edita producto {}", id);
+        Producto producto = productoDao.obtiene(id);
+        modelo.addAttribute("producto", producto);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("almacen", request.getSession().getAttribute("almacenId"));
+        params.put("reporte", true);
+        params = tipoProductoDao.lista(params);
+        modelo.addAttribute("tiposDeProducto", params.get("tiposDeProducto"));
+
+        return "inventario/producto/edita";
     }
 
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, @Valid TipoProducto tipoProducto, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String actualiza(HttpServletRequest request, @Valid Producto producto, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
-            return "inventario/tipoProducto/edita";
+            return "inventario/producto/edita";
         }
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
-            tipoProducto = tipoProductoDao.actualiza(tipoProducto, usuario);
+            producto = productoDao.actualiza(producto, usuario);
         } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear la tipoProducto", e);
+            log.error("No se pudo crear la producto", e);
             errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
-            return "inventario/tipoProducto/nuevo";
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("almacen", request.getSession().getAttribute("almacenId"));
+            params.put("reporte", true);
+            params = tipoProductoDao.lista(params);
+            modelo.addAttribute("tiposDeProducto", params.get("tiposDeProducto"));
+
+            return "inventario/producto/nuevo";
         }
 
-        redirectAttributes.addFlashAttribute("message", "tipoProducto.actualizado.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{tipoProducto.getNombre()});
+        redirectAttributes.addFlashAttribute("message", "producto.actualizado.message");
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{producto.getNombre()});
 
-        return "redirect:/inventario/tipoProducto/ver/" + tipoProducto.getId();
+        return "redirect:/inventario/producto/ver/" + producto.getId();
     }
 
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute TipoProducto tipoProducto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        log.debug("Elimina tipoProducto");
+    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Producto producto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        log.debug("Elimina producto");
         try {
-            String nombre = tipoProductoDao.elimina(id);
+            String nombre = productoDao.elimina(id);
 
-            redirectAttributes.addFlashAttribute("message", "tipoProducto.eliminado.message");
+            redirectAttributes.addFlashAttribute("message", "producto.eliminado.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
         } catch (Exception e) {
-            log.error("No se pudo eliminar la tipoProducto " + id, e);
-            bindingResult.addError(new ObjectError("tipoProducto", new String[]{"tipoProducto.no.eliminado.message"}, null, null));
-            return "inventario/tipoProducto/ver";
+            log.error("No se pudo eliminar la producto " + id, e);
+            bindingResult.addError(new ObjectError("producto", new String[]{"producto.no.eliminado.message"}, null, null));
+            return "inventario/producto/ver";
         }
 
-        return "redirect:/inventario/tipoProducto";
+        return "redirect:/inventario/producto";
     }
 
-    private void generaReporte(String tipo, List<TipoProducto> tiposDeProducto, HttpServletResponse response) throws JRException, IOException {
+    private void generaReporte(String tipo, List<Producto> productos, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
         switch (tipo) {
             case "PDF":
-                archivo = reporteUtil.generaPdf(tiposDeProducto, "/mx/edu/um/mateo/inventario/reportes/tiposDeProducto.jrxml");
+                archivo = reporteUtil.generaPdf(productos, "/mx/edu/um/mateo/inventario/reportes/productos.jrxml");
                 response.setContentType("application/pdf");
-                response.addHeader("Content-Disposition", "attachment; filename=tiposDeProducto.pdf");
+                response.addHeader("Content-Disposition", "attachment; filename=productos.pdf");
                 break;
             case "CSV":
-                archivo = reporteUtil.generaCsv(tiposDeProducto, "/mx/edu/um/mateo/inventario/reportes/tiposDeProducto.jrxml");
+                archivo = reporteUtil.generaCsv(productos, "/mx/edu/um/mateo/inventario/reportes/productos.jrxml");
                 response.setContentType("text/csv");
-                response.addHeader("Content-Disposition", "attachment; filename=tiposDeProducto.csv");
+                response.addHeader("Content-Disposition", "attachment; filename=productos.csv");
                 break;
             case "XLS":
-                archivo = reporteUtil.generaXls(tiposDeProducto, "/mx/edu/um/mateo/inventario/reportes/tiposDeProducto.jrxml");
+                archivo = reporteUtil.generaXls(productos, "/mx/edu/um/mateo/inventario/reportes/productos.jrxml");
                 response.setContentType("application/vnd.ms-excel");
-                response.addHeader("Content-Disposition", "attachment; filename=tiposDeProducto.xls");
+                response.addHeader("Content-Disposition", "attachment; filename=productos.xls");
         }
         if (archivo != null) {
             response.setContentLength(archivo.length);
@@ -278,28 +309,28 @@ public class TipoProductoController {
 
     }
 
-    private void enviaCorreo(String tipo, List<TipoProducto> tiposDeProducto, HttpServletRequest request) throws JRException, MessagingException {
+    private void enviaCorreo(String tipo, List<Producto> productos, HttpServletRequest request) throws JRException, MessagingException {
         log.debug("Enviando correo {}", tipo);
         byte[] archivo = null;
         String tipoContenido = null;
         switch (tipo) {
             case "PDF":
-                archivo = reporteUtil.generaPdf(tiposDeProducto, "/mx/edu/um/mateo/inventario/reportes/tiposDeProducto.jrxml");
+                archivo = reporteUtil.generaPdf(productos, "/mx/edu/um/mateo/inventario/reportes/productos.jrxml");
                 tipoContenido = "application/pdf";
                 break;
             case "CSV":
-                archivo = reporteUtil.generaCsv(tiposDeProducto, "/mx/edu/um/mateo/inventario/reportes/tiposDeProducto.jrxml");
+                archivo = reporteUtil.generaCsv(productos, "/mx/edu/um/mateo/inventario/reportes/productos.jrxml");
                 tipoContenido = "text/csv";
                 break;
             case "XLS":
-                archivo = reporteUtil.generaXls(tiposDeProducto, "/mx/edu/um/mateo/inventario/reportes/tiposDeProducto.jrxml");
+                archivo = reporteUtil.generaXls(productos, "/mx/edu/um/mateo/inventario/reportes/productos.jrxml");
                 tipoContenido = "application/vnd.ms-excel";
         }
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(ambiente.obtieneUsuario().getUsername());
-        String titulo = messageSource.getMessage("tipoProducto.lista.label", null, request.getLocale());
+        String titulo = messageSource.getMessage("producto.lista.label", null, request.getLocale());
         helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
         helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
         helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
