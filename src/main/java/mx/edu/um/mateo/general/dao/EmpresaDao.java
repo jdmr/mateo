@@ -131,7 +131,7 @@ public class EmpresaDao {
             empresa.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         }
         session.save(empresa);
-        Almacen almacen = new Almacen("CENTRAL", empresa);
+        Almacen almacen = new Almacen("CT","CENTRAL", empresa);
         session.save(almacen);
         if (usuario != null) {
             usuario.setEmpresa(empresa);

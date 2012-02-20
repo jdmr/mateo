@@ -149,7 +149,7 @@ public class PruebaController {
             Cliente cliente = new Cliente(sb.toString(), sb.toString(), "0000000000" + numero, tipoCliente, null);
             clienteDao.crea(cliente, usuario);
 
-            Almacen almacen = new Almacen(sb.toString(), emp);
+            Almacen almacen = new Almacen("TST-"+numero, sb.toString(), emp);
             almacenDao.crea(almacen);
             
             TipoProducto tipoProducto = new TipoProducto(sb.toString(), sb.toString(), alm);

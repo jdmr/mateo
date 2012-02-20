@@ -26,8 +26,10 @@ package mx.edu.um.mateo.inventario.dao;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.inventario.model.Entrada;
+import mx.edu.um.mateo.inventario.model.Estatus;
 import mx.edu.um.mateo.inventario.model.Folio;
 import org.hibernate.*;
 import org.hibernate.criterion.Disjunction;
@@ -129,7 +131,11 @@ public class EntradaDao {
         if (usuario != null) {
             entrada.setAlmacen(usuario.getAlmacen());
         }
-        entrada.setFolio(getFolio(entrada.getAlmacen()));
+        Query query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
+        query.setString("nombre", Constantes.ABIERTA);
+        Estatus estatus = (Estatus) query.uniqueResult();
+        entrada.setEstatus(estatus);
+        entrada.setFolio(getFolioTemporal(entrada.getAlmacen()));
         session.save(entrada);
         session.flush();
         return entrada;
@@ -144,27 +150,66 @@ public class EntradaDao {
     }
 
     public Entrada actualiza(Entrada entrada, Usuario usuario) {
-        Session session = currentSession();
-        if (usuario != null) {
-            entrada.setAlmacen(usuario.getAlmacen());
+        switch (entrada.getEstatus().getNombre()) {
+            case Constantes.ABIERTA:
+                Session session = currentSession();
+                if (usuario != null) {
+                    entrada.setAlmacen(usuario.getAlmacen());
+                }
+                session.update(entrada);
+                session.flush();
+                return entrada;
+            default:
+                throw new RuntimeException("No se puede actualizar una entrada que no este abierta");
         }
-        session.update(entrada);
-        session.flush();
+    }
+    
+    public Entrada cierra(Entrada entrada, Usuario usuario) {
+        switch (entrada.getEstatus().getNombre()) {
+            case Constantes.ABIERTA:
+                if (usuario != null) {
+                    entrada.setAlmacen(usuario.getAlmacen());
+                }
+                break;
+            case Constantes.PENDIENTE:
+                Entrada pendiente = (Entrada) currentSession().get(Entrada.class, entrada.getId());
+                if (entrada.getVersion() != pendiente.getVersion()) {
+                    throw new RuntimeException("No es la ultima version de la entrada");
+                }
+                pendiente.setFactura(entrada.getFactura());
+                pendiente.setFechaFactura(entrada.getFechaFactura());
+                entrada = pendiente;
+                break;
+            default:
+                throw new RuntimeException("No se puede actualizar una entrada que no este abierta");
+        }
+        Query query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
+        query.setString("nombre", Constantes.CERRADA);
+        Estatus estatus = (Estatus) query.uniqueResult();
+        entrada.setEstatus(estatus);
+        entrada.setFolio(getFolio(entrada.getAlmacen()));
+        
+        currentSession().update(entrada);
+        currentSession().flush();
         return entrada;
     }
 
     public String elimina(Long id) {
         Entrada entrada = obtiene(id);
-        String nombre = entrada.getFolio();
-        currentSession().delete(entrada);
-        currentSession().flush();
-        return nombre;
+        if (entrada.getEstatus().getNombre().equals(Constantes.ABIERTA)) {
+            String nombre = entrada.getFolio();
+            currentSession().delete(entrada);
+            currentSession().flush();
+            return nombre;
+        } else {
+            throw new RuntimeException("No se puede eliminar una entrada que no este abierta");
+        }
     }
 
-    private String getFolio(Almacen almacen) {
+    private String getFolioTemporal(Almacen almacen) {
         Query query = currentSession().createQuery("select f from Folio f where f.nombre = :nombre and f.almacen.id = :almacenId");
         query.setString("nombre", "ENTRADA-TEMPORAL");
-        query.setLong("almacenId",almacen.getId());
+        query.setLong("almacenId", almacen.getId());
         query.setLockOptions(LockOptions.UPGRADE);
         Folio folio = (Folio) query.uniqueResult();
         if (folio == null) {
@@ -172,9 +217,9 @@ public class EntradaDao {
             folio.setAlmacen(almacen);
             currentSession().save(folio);
             currentSession().flush();
-            return getFolio(almacen);
+            return getFolioTemporal(almacen);
         }
-        folio.setValor(folio.getValor()+1);
+        folio.setValor(folio.getValor() + 1);
         java.text.NumberFormat nf = java.text.DecimalFormat.getInstance();
         nf.setGroupingUsed(false);
         nf.setMinimumIntegerDigits(9);
@@ -182,6 +227,36 @@ public class EntradaDao {
         nf.setMaximumFractionDigits(0);
         StringBuilder sb = new StringBuilder();
         sb.append("TE-");
+        sb.append(almacen.getEmpresa().getOrganizacion().getCodigo());
+        sb.append(almacen.getEmpresa().getCodigo());
+        sb.append(almacen.getCodigo());
+        sb.append(nf.format(folio.getValor()));
+        return sb.toString();
+    }
+    
+    private String getFolio(Almacen almacen) {
+        Query query = currentSession().createQuery("select f from Folio f where f.nombre = :nombre and f.almacen.id = :almacenId");
+        query.setString("nombre", "ENTRADA");
+        query.setLong("almacenId", almacen.getId());
+        query.setLockOptions(LockOptions.UPGRADE);
+        Folio folio = (Folio) query.uniqueResult();
+        if (folio == null) {
+            folio = new Folio("ENTRADA");
+            folio.setAlmacen(almacen);
+            currentSession().save(folio);
+            return getFolio(almacen);
+        }
+        folio.setValor(folio.getValor() + 1);
+        java.text.NumberFormat nf = java.text.DecimalFormat.getInstance();
+        nf.setGroupingUsed(false);
+        nf.setMinimumIntegerDigits(9);
+        nf.setMaximumIntegerDigits(9);
+        nf.setMaximumFractionDigits(0);
+        StringBuilder sb = new StringBuilder();
+        sb.append("E-");
+        sb.append(almacen.getEmpresa().getOrganizacion().getCodigo());
+        sb.append(almacen.getEmpresa().getCodigo());
+        sb.append(almacen.getCodigo());
         sb.append(nf.format(folio.getValor()));
         return sb.toString();
     }

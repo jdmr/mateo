@@ -128,7 +128,7 @@ public class OrganizacionDao {
         session.save(organizacion);
         Empresa empresa = new Empresa("MTZ", "MATRIZ", "MATRIZ", "000000000001", organizacion);
         session.save(empresa);
-        Almacen almacen = new Almacen("CENTRAL", empresa);
+        Almacen almacen = new Almacen("CT","CENTRAL", empresa);
         session.save(almacen);
         if (usuario != null) {
             usuario.setEmpresa(empresa);

@@ -26,11 +26,13 @@ package mx.edu.um.mateo.inventario.web;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import mx.edu.um.mateo.general.model.*;
+import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Organizacion;
+import mx.edu.um.mateo.general.model.Rol;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.inventario.model.Almacen;
-import mx.edu.um.mateo.inventario.model.TipoProducto;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import static org.junit.Assert.assertNotNull;
@@ -95,7 +97,7 @@ public class AlmacenControllerTest extends BaseTest {
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Almacen almacen = new Almacen("test-01", empresa);
+        Almacen almacen = new Almacen("TST", "test-01", empresa);
         currentSession().save(almacen);
         Long id = almacen.getId();
         
@@ -116,7 +118,7 @@ public class AlmacenControllerTest extends BaseTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Almacen almacen = new Almacen("TEST", empresa);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);

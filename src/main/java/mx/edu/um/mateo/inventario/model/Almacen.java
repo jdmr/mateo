@@ -28,9 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *
@@ -38,7 +38,9 @@ import mx.edu.um.mateo.general.model.Usuario;
  */
 @Entity
 @Table(name = "almacenes", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"empresa_id", "nombre"})})
+    @UniqueConstraint(columnNames = {"empresa_id", "codigo"}),
+    @UniqueConstraint(columnNames = {"empresa_id", "nombre"})
+})
 public class Almacen implements Serializable {
 
     @Id
@@ -46,7 +48,10 @@ public class Almacen implements Serializable {
     private Long id;
     @Version
     private Integer version;
-    @NotNull
+    @NotBlank
+    @Column(nullable = false, length = 6)
+    private String codigo;
+    @NotBlank
     @Column(nullable = false, length = 128)
     private String nombre;
     @ManyToOne(optional = false)
@@ -59,7 +64,8 @@ public class Almacen implements Serializable {
     public Almacen() {
     }
 
-    public Almacen(String nombre, Empresa empresa) {
+    public Almacen(String codigo, String nombre, Empresa empresa) {
+        this.codigo = codigo;
         this.nombre = nombre;
         this.empresa = empresa;
     }
@@ -90,6 +96,20 @@ public class Almacen implements Serializable {
      */
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    /**
+     * @return the codigo
+     */
+    public String getCodigo() {
+        return codigo;
+    }
+
+    /**
+     * @param codigo the codigo to set
+     */
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     /**

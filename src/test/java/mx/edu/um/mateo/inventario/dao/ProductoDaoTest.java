@@ -94,7 +94,7 @@ public class ProductoDaoTest {
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Almacen almacen = new Almacen("tst-01", empresa);
+        Almacen almacen = new Almacen("TST", "tst-01", empresa);
         currentSession().save(almacen);
         TipoProducto tipoProducto = new TipoProducto("TEST-01", null, almacen);
         currentSession().save(tipoProducto);
@@ -120,7 +120,7 @@ public class ProductoDaoTest {
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Almacen almacen = new Almacen("tst-01", empresa);
+        Almacen almacen = new Almacen("TST", "tst-01", empresa);
         currentSession().save(almacen);
         TipoProducto tipoProducto = new TipoProducto("TEST-01", null, almacen);
         currentSession().save(tipoProducto);
@@ -146,7 +146,7 @@ public class ProductoDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Almacen almacen = new Almacen("TEST", empresa);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         TipoProducto tipoProducto = new TipoProducto("TEST-01", null, almacen);
         currentSession().save(tipoProducto);
@@ -179,7 +179,7 @@ public class ProductoDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Almacen almacen = new Almacen("TEST", empresa);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         TipoProducto tipoProducto = new TipoProducto("TEST-01", null, almacen);
         currentSession().save(tipoProducto);
@@ -221,7 +221,7 @@ public class ProductoDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Almacen almacen = new Almacen("TEST", empresa);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         TipoProducto tipoProducto = new TipoProducto("TEST-01", null, almacen);
         currentSession().save(tipoProducto);

@@ -28,5 +28,8 @@ package mx.edu.um.mateo.general.utils;
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public class Constantes {
+
     public static final String ABIERTA = "ABIERTA";
+    public static final String PENDIENTE = "PENDIENTE";
+    public static final String CERRADA = "CERRADA";
 }

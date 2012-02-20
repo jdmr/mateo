@@ -89,9 +89,9 @@ public class EntradaDaoTest {
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Almacen almacen = new Almacen("tst-01", empresa);
+        Almacen almacen = new Almacen("TST", "tst-01", empresa);
         currentSession().save(almacen);
-        Estatus estatus = new Estatus(Constantes.ABIERTA, Integer.MIN_VALUE);
+        Estatus estatus = new Estatus(Constantes.ABIERTA);
         currentSession().save(estatus);
         Proveedor proveedor = new Proveedor("tst-01", "test-01", "test-00000001", empresa);
         currentSession().save(proveedor);
@@ -117,9 +117,9 @@ public class EntradaDaoTest {
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Almacen almacen = new Almacen("tst-01", empresa);
+        Almacen almacen = new Almacen("TST", "tst-01", empresa);
         currentSession().save(almacen);
-        Estatus estatus = new Estatus(Constantes.ABIERTA, Integer.MIN_VALUE);
+        Estatus estatus = new Estatus(Constantes.ABIERTA);
         currentSession().save(estatus);
         Proveedor proveedor = new Proveedor("tst-01", "test-01", "test-00000001", empresa);
         currentSession().save(proveedor);
@@ -145,9 +145,9 @@ public class EntradaDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Almacen almacen = new Almacen("TEST", empresa);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
-        Estatus estatus = new Estatus(Constantes.ABIERTA, Integer.MIN_VALUE);
+        Estatus estatus = new Estatus(Constantes.ABIERTA);
         currentSession().save(estatus);
         Proveedor proveedor = new Proveedor("tst-01", "test-01", "test-00000001", empresa);
         currentSession().save(proveedor);
@@ -180,9 +180,9 @@ public class EntradaDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Almacen almacen = new Almacen("TEST", empresa);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
-        Estatus estatus = new Estatus(Constantes.ABIERTA, Integer.MIN_VALUE);
+        Estatus estatus = new Estatus(Constantes.ABIERTA);
         currentSession().save(estatus);
         Proveedor proveedor = new Proveedor("tst-01", "test-01", "test-00000001", empresa);
         currentSession().save(proveedor);
@@ -209,6 +209,88 @@ public class EntradaDaoTest {
     }
 
     /**
+     * Debiera actualizar tipo de cliente
+     */
+    @Test
+    public void debieraCerrarEntrada() {
+        log.debug("Debiera cerrar entrada");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        Estatus estatus = new Estatus(Constantes.ABIERTA);
+        currentSession().save(estatus);
+        Estatus estatus2 = new Estatus(Constantes.CERRADA);
+        currentSession().save(estatus2);
+        Proveedor proveedor = new Proveedor("tst-01", "test-01", "test-00000001", empresa);
+        currentSession().save(proveedor);
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
+        Long id = usuario.getId();
+        assertNotNull(id);
+
+        Entrada entrada = new Entrada("tst-01", "test-01", new Date(), estatus, proveedor, almacen);
+        entrada = instance.crea(entrada, usuario);
+        assertNotNull(entrada);
+        assertNotNull(entrada.getId());
+        assertEquals("test-01", entrada.getFactura());
+
+        instance.cierra(entrada, usuario);
+
+        Entrada prueba = instance.obtiene(entrada.getId());
+        assertNotNull(prueba);
+        assertEquals("E-tst-01tst-01TST000000001", prueba.getFolio());
+    }
+
+    @Test(expected=RuntimeException.class)
+    public void noDebieraActualizarEntrada() {
+        log.debug("No debiera actualizar entrada no abierta");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        Estatus estatus = new Estatus(Constantes.ABIERTA);
+        currentSession().save(estatus);
+        Estatus estatus2 = new Estatus(Constantes.CERRADA);
+        currentSession().save(estatus2);
+        Proveedor proveedor = new Proveedor("tst-01", "test-01", "test-00000001", empresa);
+        currentSession().save(proveedor);
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
+        Long id = usuario.getId();
+        assertNotNull(id);
+
+        Entrada entrada = new Entrada("tst-01", "test-01", new Date(), estatus, proveedor, almacen);
+        entrada = instance.crea(entrada, usuario);
+        assertNotNull(entrada);
+        assertNotNull(entrada.getId());
+        assertEquals("test-01", entrada.getFactura());
+
+        entrada.setFactura("PRUEBA");
+        entrada.setEstatus(estatus2);
+        instance.actualiza(entrada, usuario);
+        fail("Debiera lanzar una excepcion porque el estatus de la entrada es cerrada");
+    }
+
+    /**
      * Debiera Eliminar tipo de cliente
      *
      * @throws Exception
@@ -224,9 +306,9 @@ public class EntradaDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Almacen almacen = new Almacen("TEST", empresa);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
-        Estatus estatus = new Estatus(Constantes.ABIERTA, Integer.MIN_VALUE);
+        Estatus estatus = new Estatus(Constantes.ABIERTA);
         currentSession().save(estatus);
         Proveedor proveedor = new Proveedor("tst-01", "test-01", "test-00000001", empresa);
         currentSession().save(proveedor);
@@ -246,7 +328,7 @@ public class EntradaDaoTest {
 
         String nombre = instance.elimina(entrada.getId());
         assertNotNull(nombre);
-        assertEquals("TE-000000001", nombre);
+        assertEquals("TE-tst-01tst-01TST000000001", nombre);
 
         Entrada prueba = instance.obtiene(entrada.getId());
         assertNull(prueba);
