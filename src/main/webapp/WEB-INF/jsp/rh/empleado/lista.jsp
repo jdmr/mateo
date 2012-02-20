@@ -4,40 +4,33 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="usuario.lista.label" /></title>
+        <title><s:message code="cliente.lista.label" /></title>
     </head>
     <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
             <ul class="nav">
                 <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
-                <li><a href="<c:url value='/inventario' />"><s:message code="inventario.label" /></a></li>
-                <li class="active"><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>
-            </ul>
-        </nav>
-
-        <header class="subhead" id="admin">
-            <ul class="nav nav-pills">
-                <li><a href="<s:url value='/admin/cliente'/>" ><s:message code="cliente.label" /></a></li>
+                <li><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>
+                <li class="active"><a href="<s:url value='/admin/cliente'/>" ><s:message code="cliente.label" /></a></li>
                 <li><a href="<s:url value='/admin/tipoCliente'/>" ><s:message code="tipoCliente.label" /></a></li>
                 <li><a href="<s:url value='/admin/proveedor'/>" ><s:message code="proveedor.label" /></a></li>
                 <li><a href="<s:url value='/admin/empresa'/>" ><s:message code="empresa.label" /></a></li>
                 <li><a href="<s:url value='/admin/organizacion'/>" ><s:message code="organizacion.label" /></a></li>
-                <li class="active"><a href="<s:url value='/admin/usuario'/>" ><s:message code="usuario.label" /></a></li>
+                <li><a href="<s:url value='/admin/usuario'/>" ><s:message code="usuario.label" /></a></li>
             </ul>
-        </header>
+        </nav>
 
-        <h1><s:message code="usuario.lista.label" /></h1>
+        <h1><s:message code="cliente.lista.label" /></h1>
         <hr/>
 
-        <form name="filtraUsuarios" class="form-search" method="post" action="<c:url value='/admin/usuario' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/admin/cliente' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/admin/usuario/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='usuario.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/admin/cliente/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='cliente.nuevo.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><s:message code="buscar.label" /></button>
             </p>
@@ -47,8 +40,8 @@
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
-            <c:if test="${usuario != null}">
-                <s:bind path="usuario.*">
+            <c:if test="${cliente != null}">
+                <s:bind path="cliente.*">
                     <c:if test="${not empty status.errorMessages}">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -60,25 +53,12 @@
                 </s:bind>
             </c:if>
             
-            <table id="usuarios" class="table">
+            <table id="lista" class="table">
                 <thead>
                     <tr>
                         <th>
-                            <a href="javascript:ordena('username');">
-                                <s:message code="usuario.username.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'username' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'username' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
-                        <th>
                             <a href="javascript:ordena('nombre');">
-                                <s:message code="usuario.nombre.label" />
+                                <s:message code="nombre.label" />
                                 <c:choose>
                                     <c:when test="${param.order == 'nombre' && param.sort == 'asc'}">
                                         <i class="icon-chevron-up"></i>
@@ -90,13 +70,78 @@
                             </a>
                         </th>
                         <th>
-                            <a href="javascript:ordena('apellido');">
-                                <s:message code="usuario.apellido.label" />
+                            <a href="javascript:ordena('nombreCompleto');">
+                                <s:message code="nombreCompleto.label" />
                                 <c:choose>
-                                    <c:when test="${param.order == 'apellido' && param.sort == 'asc'}">
+                                    <c:when test="${param.order == 'nombreCompleto' && param.sort == 'asc'}">
                                         <i class="icon-chevron-up"></i>
                                     </c:when>
-                                    <c:when test="${param.order == 'apellido' && param.sort == 'desc'}">
+                                    <c:when test="${param.order == 'nombreCompleto' && param.sort == 'desc'}">
+                                        <i class="icon-chevron-down"></i>
+                                    </c:when>
+                                </c:choose>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="javascript:ordena('rfc');">
+                                <s:message code="rfc.label" />
+                                <c:choose>
+                                    <c:when test="${param.order == 'rfc' && param.sort == 'asc'}">
+                                        <i class="icon-chevron-up"></i>
+                                    </c:when>
+                                    <c:when test="${param.order == 'rfc' && param.sort == 'desc'}">
+                                        <i class="icon-chevron-down"></i>
+                                    </c:when>
+                                </c:choose>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="javascript:ordena('telefono');">
+                                <s:message code="telefono.label" />
+                                <c:choose>
+                                    <c:when test="${param.order == 'telefono' && param.sort == 'asc'}">
+                                        <i class="icon-chevron-up"></i>
+                                    </c:when>
+                                    <c:when test="${param.order == 'telefono' && param.sort == 'desc'}">
+                                        <i class="icon-chevron-down"></i>
+                                    </c:when>
+                                </c:choose>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="javascript:ordena('contacto');">
+                                <s:message code="contacto.label" />
+                                <c:choose>
+                                    <c:when test="${param.order == 'contacto' && param.sort == 'asc'}">
+                                        <i class="icon-chevron-up"></i>
+                                    </c:when>
+                                    <c:when test="${param.order == 'contacto' && param.sort == 'desc'}">
+                                        <i class="icon-chevron-down"></i>
+                                    </c:when>
+                                </c:choose>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="javascript:ordena('correo');">
+                                <s:message code="correo.label" />
+                                <c:choose>
+                                    <c:when test="${param.order == 'correo' && param.sort == 'asc'}">
+                                        <i class="icon-chevron-up"></i>
+                                    </c:when>
+                                    <c:when test="${param.order == 'correo' && param.sort == 'desc'}">
+                                        <i class="icon-chevron-down"></i>
+                                    </c:when>
+                                </c:choose>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="javascript:ordena('tipoCliente');">
+                                <s:message code="tipoCliente.label" />
+                                <c:choose>
+                                    <c:when test="${param.order == 'tipoCliente' && param.sort == 'asc'}">
+                                        <i class="icon-chevron-up"></i>
+                                    </c:when>
+                                    <c:when test="${param.order == 'tipoCliente' && param.sort == 'desc'}">
                                         <i class="icon-chevron-down"></i>
                                     </c:when>
                                 </c:choose>
@@ -106,12 +151,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${usuarios}" var="usuario" varStatus="status">
+                    <c:forEach items="${clientes}" var="cliente" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/admin/usuario/ver/${usuario.id}' />">${usuario.username}</a></td>
-                            <td>${usuario.nombre}</td>
-                            <td>${usuario.apellido}</td>
-                            <td>${usuario.empresa.nombre}</td>
+                            <td><a href="<c:url value='/admin/cliente/ver/${cliente.id}' />">${cliente.nombre}</a></td>
+                            <td>${cliente.nombreCompleto}</td>
+                            <td>${cliente.rfc}</td>
+                            <td>${cliente.telefono}</td>
+                            <td>${cliente.contacto}</td>
+                            <td>${cliente.correo}</td>
+                            <td>${cliente.tipoCliente.nombre}</td>
+                            <td>${cliente.empresa.nombre}</td>
                         </tr>
                     </c:forEach>
                 </tbody>
@@ -150,23 +199,24 @@
         <content>
             <script>
                 $(document).ready(function() {
-                    highlightTableRows("usuarios");
+                    highlightTableRows("lista");
+
                 });
 
                 function buscaPagina(paginaId) {
                     $('input#pagina').val(paginaId);
-                    document.forms["filtraUsuarios"].submit();
+                    document.forms["filtraLista"].submit();
                 }
                 
                 function imprime(tipo) {
                     $('input#tipo').val(tipo);
-                    document.forms["filtraUsuarios"].submit();
+                    document.forms["filtraLista"].submit();
                 }
                 
                 function enviaCorreo(tipo) {
                     $('#enviaCorreoBtn').button('loading');
                     $('input#correo').val(tipo);
-                    document.forms["filtraUsuarios"].submit();
+                    document.forms["filtraLista"].submit();
                 }
                 
                 function ordena(campo) {
@@ -176,7 +226,7 @@
                         $('input#sort').val('asc');
                     }
                     $('input#order').val(campo);
-                    document.forms["filtraUsuarios"].submit();
+                    document.forms["filtraLista"].submit();
                 }
             </script>
         </content>
