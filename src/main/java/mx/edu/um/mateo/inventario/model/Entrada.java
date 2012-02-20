@@ -25,7 +25,9 @@ package mx.edu.um.mateo.inventario.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -73,6 +75,8 @@ public class Entrada implements Serializable {
     private Proveedor proveedor;
     @ManyToOne(optional = false)
     private Almacen almacen;
+    @OneToMany(mappedBy = "entrada")
+    private List<LoteEntrada> lotes = new ArrayList<>();
 
     public Entrada() {
     }
@@ -280,6 +284,20 @@ public class Entrada implements Serializable {
      */
     public void setAlmacen(Almacen almacen) {
         this.almacen = almacen;
+    }
+
+    /**
+     * @return the lotes
+     */
+    public List<LoteEntrada> getLotes() {
+        return lotes;
+    }
+
+    /**
+     * @param lotes the lotes to set
+     */
+    public void setLotes(List<LoteEntrada> lotes) {
+        this.lotes = lotes;
     }
 
     @Override

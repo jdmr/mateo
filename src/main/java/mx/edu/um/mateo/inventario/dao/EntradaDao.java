@@ -23,14 +23,14 @@
  */
 package mx.edu.um.mateo.inventario.dao;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.inventario.model.Almacen;
-import mx.edu.um.mateo.inventario.model.Entrada;
-import mx.edu.um.mateo.inventario.model.Estatus;
-import mx.edu.um.mateo.inventario.model.Folio;
+import mx.edu.um.mateo.general.utils.ProductoNoSoportaFraccionException;
+import mx.edu.um.mateo.inventario.model.*;
 import org.hibernate.*;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
@@ -183,6 +183,19 @@ public class EntradaDao {
             default:
                 throw new RuntimeException("No se puede actualizar una entrada que no este abierta");
         }
+        for(LoteEntrada lote : entrada.getLotes()) {
+            Producto producto = lote.getProducto();
+            producto.setPrecioUnitario(costoPromedio(lote));
+            if (!entrada.getDevolucion()) {
+                producto.setUltimoPrecio(lote.getPrecioUnitario());
+            }
+            producto.setExistencia(producto.getExistencia().add(lote.getCantidad()));
+            currentSession().update(producto);
+            
+            BigDecimal subtotal = lote.getPrecioUnitario().multiply(lote.getCantidad());
+            entrada.setIva(entrada.getIva().add(lote.getIva()));
+            entrada.setTotal(entrada.getTotal().add(subtotal.add(lote.getIva())));
+        }
         Query query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
         query.setString("nombre", Constantes.CERRADA);
         Estatus estatus = (Estatus) query.uniqueResult();
@@ -203,6 +216,30 @@ public class EntradaDao {
             return nombre;
         } else {
             throw new RuntimeException("No se puede eliminar una entrada que no este abierta");
+        }
+    }
+    
+    public LoteEntrada creaLote(LoteEntrada lote) throws ProductoNoSoportaFraccionException {
+        if (!lote.getProducto().getFraccion()) {
+            BigDecimal[] resultado = lote.getCantidad().divideAndRemainder(new BigDecimal("1"));
+            if (resultado[1].doubleValue() > 0) {
+                throw new ProductoNoSoportaFraccionException();
+            }
+        }
+        
+        BigDecimal subtotal = lote.getPrecioUnitario().multiply(lote.getCantidad());
+        BigDecimal iva = subtotal.multiply(lote.getProducto().getIva()).setScale(2, RoundingMode.HALF_UP);
+        lote.setIva(iva);
+        
+        currentSession().save(lote);
+        
+        return lote;
+    }
+    
+    public void eliminaLote(Long id) {
+        LoteEntrada lote = (LoteEntrada) currentSession().get(LoteEntrada.class, id);
+        if (lote.getEntrada().getEstatus().getNombre().equals(Constantes.ABIERTA)) {
+            currentSession().delete(lote);
         }
     }
 
@@ -259,5 +296,17 @@ public class EntradaDao {
         sb.append(almacen.getCodigo());
         sb.append(nf.format(folio.getValor()));
         return sb.toString();
+    }
+    
+    private BigDecimal costoPromedio(LoteEntrada lote) {
+        Producto producto = lote.getProducto();
+        
+        BigDecimal cantidad = lote.getCantidad();
+        BigDecimal viejoBalance = producto.getPrecioUnitario().multiply(producto.getExistencia());
+        BigDecimal nuevoBalance = lote.getPrecioUnitario().multiply(cantidad);
+        
+        BigDecimal balanceTotal = viejoBalance.add(nuevoBalance);
+        BigDecimal articulos = cantidad.add(producto.getExistencia());
+        return balanceTotal.divide(articulos).setScale(2, RoundingMode.HALF_UP);
     }
 }
