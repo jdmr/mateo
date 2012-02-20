@@ -34,7 +34,7 @@ public class CtaMayorDao {
     private static final Logger log = LoggerFactory.getLogger(EmpresaDao.class);
     @Autowired
     private SessionFactory sessionFactory;
-    
+
     public CtaMayorDao() {
         log.info("Nueva instancia de CtaMayorDao");
     }
@@ -104,7 +104,7 @@ public class CtaMayorDao {
     }
     
     public CtaMayor crea(CtaMayor ctaMayor) {
-        ctaMayor = new CtaMayor();
+    ctaMayor = new CtaMayor();
         currentSession().save(ctaMayor);
         return ctaMayor;
     }

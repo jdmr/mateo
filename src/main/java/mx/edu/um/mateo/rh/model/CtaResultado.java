@@ -5,14 +5,7 @@
 package mx.edu.um.mateo.rh.model;
 
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Version;
+import javax.persistence.*;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -22,27 +15,28 @@ import org.hibernate.validator.constraints.NotBlank;
 
 
 @Entity
-@Table(name = "ctaresultados")
+@Table(name = "ctaresultado")
 
 public class CtaResultado implements Serializable{
-    
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Version
     private Integer version;
-    @ManyToOne(optional = false)
-    private Ejercicio ejercicio;
-   @NotBlank
-    @Column(nullable = false, length = 24)
-    private String tipoCuenta;
-   @NotBlank
+   // @ManyToOne(optional = false)
+    //private Ejercicio ejercicio;
+   //@NotBlank
+    //@Column(nullable = false, length = 24)
+    //private String tipoCuenta;
+ 
+    @NotBlank
     @Column(nullable = false, length = 24)
     private String nombre;
     @NotBlank
     @Column(nullable = false, length = 24)
     private String nombreFiscal;
+    /**
    @NotBlank
     @Column(nullable = false)
     private Boolean detalle;
@@ -64,93 +58,31 @@ public class CtaResultado implements Serializable{
     @NotBlank
     @Column(nullable = false, length = 24)
     private String idCtaResultado;
-    
+    */
     
     public CtaResultado() {
     }
     
-    
+    /**
      public CtaResultado(Ejercicio ejercicio, String tipoCuenta, String nombre, String idCtaResultado) {
          this.ejercicio = ejercicio;
          this.tipoCuenta = tipoCuenta;
          this.nombre = nombre;
          this.idCtaResultado = idCtaResultado;
     }
-
+     */
+    
+     public CtaResultado(String nombre, String nombreFiscal) {
+         this.nombre = nombre;
+         this.nombreFiscal = nombreFiscal;
+    }
      
-     /////
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    /////////
-
-    public Boolean getAuxiliar() {
-        return auxiliar;
-    }
-
-    public void setAuxiliar(Boolean auxiliar) {
-        this.auxiliar = auxiliar;
-    }
-
-    public Boolean getAviso() {
-        return aviso;
-    }
-
-    public void setAviso(Boolean aviso) {
-        this.aviso = aviso;
-    }
-
-    public Boolean getDetalle() {
-        return detalle;
-    }
-
-    public void setDetalle(Boolean detalle) {
-        this.detalle = detalle;
-    }
-
-    public Boolean getDetalleR() {
-        return detalleR;
-    }
-
-    public void setDetalleR(Boolean detalleR) {
-        this.detalleR = detalleR;
-    }
-
-    public Ejercicio getEjercicio() {
-        return ejercicio;
-    }
-
-    public void setEjercicio(Ejercicio ejercicio) {
-        this.ejercicio = ejercicio;
-    }
-
-    public String getIdCtaResultado() {
-        return idCtaResultado;
-    }
-
-    public void setIdCtaResultado(String idCtaResultado) {
-        this.idCtaResultado = idCtaResultado;
-    }
-
-    public Boolean getIva() {
-        return iva;
-    }
-
-    public void setIva(Boolean iva) {
-        this.iva = iva;
     }
 
     public String getNombre() {
@@ -169,20 +101,11 @@ public class CtaResultado implements Serializable{
         this.nombreFiscal = nombreFiscal;
     }
 
-    public Double getPctIva() {
-        return pctIva;
+    public Integer getVersion() {
+        return version;
     }
-
-    public void setPctIva(Double pctIva) {
-        this.pctIva = pctIva;
-    }
-
-    public String getTipoCuenta() {
-        return tipoCuenta;
-    }
-
-    public void setTipoCuenta(String tipoCuenta) {
-        this.tipoCuenta = tipoCuenta;
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     @Override
@@ -199,13 +122,13 @@ public class CtaResultado implements Serializable{
 
     @Override
     public int hashCode() {
-        int hash = 3;
+        int hash = 5;
         return hash;
     }
 
     @Override
     public String toString() {
-        return "CtaResultado{" + "ejercicio=" + ejercicio + ", nombre=" + nombre + '}';
+        return "CtaResultado{nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + '}';
     }
     
 }

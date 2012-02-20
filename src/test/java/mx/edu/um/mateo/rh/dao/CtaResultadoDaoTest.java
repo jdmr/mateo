@@ -4,15 +4,21 @@
  */
 package mx.edu.um.mateo.rh.dao;
 
+import java.util.List;
+import java.util.Map;
+import mx.edu.um.mateo.general.test.BaseTest;
+import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.rh.model.Ejercicio;
+import org.slf4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import mx.edu.um.mateo.rh.model.CtaResultado;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -24,55 +30,42 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
 
-public class CtaResultadoDaoTest {
+public class CtaResultadoDaoTest extends BaseTest{
     
-    public CtaResultadoDaoTest() {
-    }
-    
+    private static final Logger log = LoggerFactory.getLogger(CtaResultadoDaoTest.class);
+    @Autowired
+    private CtaResultadoDao instance;
+    @Autowired
+    private SessionFactory sessionFactory;
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
+    private Session currentSession() {
+        return sessionFactory.getCurrentSession();
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of obtiene method, of class CtaResultadoDao.
      */
     @Test
-    public void testObtiene() {
-        System.out.println("obtiene");
-        Long id = null;
-        CtaResultadoDao instance = new CtaResultadoDao();
-        CtaResultado expResult = null;
-        CtaResultado result = instance.obtiene(id);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+    public void deberiaMostrarListaDeCtaResultado() {
+        log.debug("Debiera mostrar lista de ctaResultado");
+        Ejercicio ejercicio = new Ejercicio("test", "A");
+        currentSession().save(ejercicio);
+        assertNotNull(ejercicio);
+        log.debug("ejercicio >>" + ejercicio);
+        for (int i = 0; i < 20; i++) {
+            CtaResultado ctaResultado = new CtaResultado("test" + i, "test");
+            currentSession().save(ctaResultado);
+            assertNotNull(ctaResultado);
+            log.debug("ctaResultado>>" + ctaResultado);
+        }
 
-    /**
-     * Test of crea method, of class CtaResultadoDao.
-     */
-    @Test
-    public void testCrea() {
-        System.out.println("crea");
-        CtaResultado ctaresultado = null;
-        CtaResultadoDao instance = new CtaResultadoDao();
-        CtaResultado expResult = null;
-        CtaResultado result = instance.crea(ctaresultado);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Map<String, Object> params = null;
+        Map result = instance.lista(params); 
+        assertNotNull(result.get("ctaResultado"));
+        assertNotNull(result.get("cantidad"));
+
+        assertEquals(10, ((List<Empresa>) result.get("ctaResultado")).size());
+        assertEquals(20, ((Long) result.get("cantidad")).intValue());
     }
 }
