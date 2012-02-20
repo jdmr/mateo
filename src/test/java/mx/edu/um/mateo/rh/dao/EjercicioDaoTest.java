@@ -6,6 +6,7 @@ package mx.edu.um.mateo.rh.dao;
 
 import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.rh.model.Ejercicio;
@@ -47,7 +48,7 @@ public class EjercicioDaoTest extends BaseTest {
     public void deberiaMostrarListaDeEjercicio() {
         log.debug("Debiera mostrar lista de Ejercicio");
         for (int i = 0; i < 20; i++) {
-            Ejercicio ejercicio = new Ejercicio("test" + i, "A");
+            Ejercicio ejercicio = new Ejercicio("test" + i, Constantes.STATUS_ACTIVO);
             currentSession().save(ejercicio);
             assertNotNull(ejercicio);
             log.debug("Ejercicio >>" + ejercicio);
@@ -65,7 +66,7 @@ public class EjercicioDaoTest extends BaseTest {
     @Test
     public void deberiaObtenerListaDeEjercicio() {
         log.debug("Debiera obtener Lista de Ejercicios");
-        Ejercicio ejercicio = new Ejercicio("test", "A");
+        Ejercicio ejercicio = new Ejercicio("test", Constantes.STATUS_ACTIVO);
         currentSession().save(ejercicio);
         assertNotNull(ejercicio);
         Long id = ejercicio.getId();
@@ -78,18 +79,34 @@ public class EjercicioDaoTest extends BaseTest {
     @Test
     public void deberiaCrearEjercicio() {
         log.debug("Deberia crear un Ejercicio");
-        Ejercicio ejercicio = new Ejercicio("test", "A");
+        Ejercicio ejercicio = new Ejercicio("test", Constantes.STATUS_ACTIVO);
         assertNotNull(ejercicio);
         log.debug("ejercicio >> " + ejercicio);
         ejercicio = instance.crea(ejercicio);
         assertNotNull(ejercicio.getId());
+    }
+    
+    @Test
+    public void deberiaActualizarEjercicio() {
+        log.debug("Deberia actualizar CtaMayor");
+        Ejercicio ejercicio = new Ejercicio("test", Constantes.STATUS_ACTIVO);
+        assertNotNull(ejercicio);
+        currentSession().save(ejercicio);
+
+        Ejercicio ejercicio1 = new Ejercicio("test1", Constantes.STATUS_ACTIVO);
+        assertNotNull(ejercicio1);
+        currentSession().save(ejercicio1);
+        
+        ejercicio = instance.actualiza(ejercicio1);
+        log.debug("ctaMayor >>" + ejercicio);
+        assertEquals("test1", ejercicio.getNombre());
     }
 
     @Test
     public void deberiaEliminarEjercicio() throws UltimoException {
         log.debug("Debiera eliminar Ejercicio");
 
-        Ejercicio ejercicio = new Ejercicio("test", "A");
+        Ejercicio ejercicio = new Ejercicio("test", Constantes.STATUS_ACTIVO);
         currentSession().save(ejercicio);
         assertNotNull(ejercicio);
         String nombre = instance.elimina(ejercicio.getId());
