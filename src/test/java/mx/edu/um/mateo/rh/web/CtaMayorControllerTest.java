@@ -17,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.server.MockMvc;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.server.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 import org.springframework.test.web.server.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -73,13 +74,27 @@ public class CtaMayorControllerTest extends BaseTest {
 
     @Test
     public void debieraMostrarCtaMayor() throws Exception {
-        CtaMayor ctaMayor = new CtaMayor("tst-01", "test-01");
+        CtaMayor ctaMayor = new CtaMayor("test", "test");
         ctaMayor = ctaMayorDao.crea(ctaMayor);
 
         this.mockMvc.perform(get("/rh/ctaMayor/ver/" + ctaMayor.getId())).
                 andExpect(status().isOk()).
                 andExpect(forwardedUrl("/WEB-INF/jsp/rh/ctaMayor/ver.jsp")).
                 andExpect(model().attributeExists("ctaMayor"));
+    }
+    
+    @Test
+    public void debieraCrearCtaMayor() throws Exception {
+        log.debug("Debiera crear ctaMayor");
+        CtaMayor ctaMayor = new CtaMayor("test", "test");
+        ctaMayor = ctaMayorDao.crea(ctaMayor);
+
+        this.mockMvc.perform(post("/rh/ctaMayor/crea").
+                param("nombre", "test").
+                param("nombreFiscal", "test")).
+                andExpect(status().isOk()).
+                andExpect(flash().attributeExists("message")).
+                andExpect(flash().attribute("message", "ctaMayor.creada.message"));
     }
 //    /**
 //     * Test of lista method, of class CtaMayorController.
