@@ -39,6 +39,7 @@ import mx.edu.um.mateo.general.dao.ProveedorDao;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.utils.LabelValueBean;
 import mx.edu.um.mateo.general.utils.ReporteUtil;
 import mx.edu.um.mateo.inventario.dao.EntradaDao;
 import mx.edu.um.mateo.inventario.model.Entrada;
@@ -271,6 +272,29 @@ public class EntradaController {
         return "redirect:/inventario/entrada";
     }
 
+    @RequestMapping(value = "/proveedores", params = "term", produces = "application/json")
+    public @ResponseBody List<LabelValueBean> proveedores(HttpServletRequest request, @RequestParam("term") String filtro) {
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", request.getSession().getAttribute("empresaId"));
+        params.put("filtro", filtro);
+        params = proveedorDao.lista(params);
+        List<LabelValueBean> valores = new ArrayList<>();
+        List<Proveedor> proveedores = (List<Proveedor>) params.get("proveedores");
+        for (Proveedor proveedor : proveedores) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(proveedor.getNombre());
+            sb.append(" | ");
+            sb.append(proveedor.getRfc());
+            sb.append(" | ");
+            sb.append(proveedor.getNombreCompleto());
+            valores.add(new LabelValueBean(proveedor.getId(), sb.toString(), proveedor.getNombre()));
+        }
+        return valores;
+    }
+
     private void generaReporte(String tipo, List<Entrada> entradas, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
@@ -327,5 +351,4 @@ public class EntradaController {
         helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
         mailSender.send(message);
     }
-    
 }

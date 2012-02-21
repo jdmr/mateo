@@ -176,6 +176,11 @@
             <artifactId>mail</artifactId>
             <version>1.4.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.0</version>
+        </dependency>
     </dependencies>
 
     <build>
