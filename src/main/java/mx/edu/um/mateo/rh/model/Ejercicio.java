@@ -4,6 +4,11 @@
  */
 package mx.edu.um.mateo.rh.model;
 
+/**
+ *
+ * @author semdariobarbaamaya
+ */
+    
 import java.io.Serializable;
 import javax.persistence.*;
 import org.hibernate.validator.constraints.NotBlank;

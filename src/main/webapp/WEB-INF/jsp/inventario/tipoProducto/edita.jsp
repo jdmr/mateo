@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="tipoProducto.nuevo.label" /></title>
+        <title><s:message code="tipoProducto.edita.label" /></title>
     </head>
     <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
@@ -21,7 +21,7 @@
         </nav>
 
         <div id="nuevo-tipoProducto" class="content scaffold-list" role="main">
-            <h1><s:message code="tipoProducto.nuevo.label" /></h1>
+            <h1><s:message code="tipoProducto.edita.label" /></h1>
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/inventario/tipoProducto'/>"><i class="icon-list icon-white"></i> <s:message code='tipoProducto.lista.label' /></a>
             </p>
@@ -55,7 +55,7 @@
                                 <s:message code="descripcion.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:textarea path="descripcion" maxlength="128" required="true" cssClass="span3" />
+                            <form:textarea path="descripcion" maxlength="128" cssClass="span3" />
                             <form:errors path="descripcion" cssClass="alert alert-error" />
                         </div>
                     </s:bind>

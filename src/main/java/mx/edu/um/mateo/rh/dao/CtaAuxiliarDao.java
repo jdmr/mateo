@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.EmpresaDao;
 import mx.edu.um.mateo.general.utils.UltimoException;
-import mx.edu.um.mateo.rh.model.CtaMayor;
+import mx.edu.um.mateo.rh.model.CtaAuxiliar;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -24,48 +24,49 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author nujev
+ * @author semdariobarbaamaya
  */
+
 @Repository
 @Transactional
-public class CtaMayorDao {
-
+public class CtaAuxiliarDao {
+    
     private static final Logger log = LoggerFactory.getLogger(EmpresaDao.class);
     @Autowired
     private SessionFactory sessionFactory;
-
-    public CtaMayorDao() {
-        log.info("Nueva instancia de CtaMayorDao");
+    
+     public CtaAuxiliarDao() {
+        log.info("Nueva instancia de CtaResultadoDao");
     }
-
-    private Session currentSession() {
+     
+      private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
-
-    public Map<String, Object> lista(Map<String, Object> params) {
-        log.debug("Buscando lista de ctaMayor con params {}", params);
+    
+     public Map<String, Object> lista(Map<String, Object> params) {
+        log.debug("Buscando lista de ctaResultado con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
-
+        
         if (!params.containsKey("max")) {
             params.put("max", 10);
         } else {
             params.put("max", Math.min((Integer) params.get("max"), 100));
         }
-
+        
         if (params.containsKey("pagina")) {
             Long pagina = (Long) params.get("pagina");
             Long offset = (pagina - 1) * (Integer) params.get("max");
             params.put("offset", offset.intValue());
         }
-
+        
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(CtaMayor.class);
-        Criteria countCriteria = currentSession().createCriteria(CtaMayor.class);
-
+        Criteria criteria = currentSession().createCriteria(CtaAuxiliar.class);
+        Criteria countCriteria = currentSession().createCriteria(CtaAuxiliar.class);
+        
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             filtro = "%" + filtro + "%";
@@ -75,7 +76,7 @@ public class CtaMayorDao {
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
-
+        
         if (params.containsKey("order")) {
             String campo = (String) params.get("order");
             if (params.get("sort").equals("desc")) {
@@ -84,40 +85,40 @@ public class CtaMayorDao {
                 criteria.addOrder(Order.asc(campo));
             }
         }
-
         if (!params.containsKey("reporte")) {
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put("ctaMayor", criteria.list());
-
+        params.put("ctaAuxiliar", criteria.list());
+        
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
-
+        
         return params;
     }
-
-    public CtaMayor obtiene(Long id) {
-        CtaMayor ctaMayor = (CtaMayor) currentSession().get(CtaMayor.class, id);
-        return ctaMayor;
+     
+     public CtaAuxiliar obtiene(Long id){
+        CtaAuxiliar ctaAuxiliar = (CtaAuxiliar) currentSession().get(CtaAuxiliar.class, id);
+        return ctaAuxiliar;
     }
-
-    public CtaMayor crea(CtaMayor ctaMayor) {
-    ctaMayor = new CtaMayor();
-        currentSession().save(ctaMayor);
-        currentSession().flush();
-        return ctaMayor;
+    
+    public CtaAuxiliar crea(CtaAuxiliar ctaAuxiliar){
+         ctaAuxiliar = new CtaAuxiliar();
+        currentSession().save(ctaAuxiliar);
+        return ctaAuxiliar;
     }
-
-    public CtaMayor actualiza(CtaMayor ctaMayor) {
-        currentSession().saveOrUpdate(ctaMayor);
-        return ctaMayor;
+    
+    public CtaAuxiliar actualiza(CtaAuxiliar ctaAuxiliar) {
+        currentSession().saveOrUpdate(ctaAuxiliar);
+        return ctaAuxiliar;
     }
-
+    
     public String elimina(Long id) throws UltimoException {
-        CtaMayor ctamayor = obtiene(id);
-        currentSession().delete(ctamayor);
-        String nombre = ctamayor.getNombre();
+        CtaAuxiliar ctaauxiliar = obtiene(id);
+        currentSession().delete(ctaauxiliar);
+        String nombre = ctaauxiliar.getNombre();
         return nombre;
     }
+
 }
+ 
