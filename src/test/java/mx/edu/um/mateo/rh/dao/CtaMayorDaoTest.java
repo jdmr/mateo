@@ -90,6 +90,21 @@ public class CtaMayorDaoTest extends BaseTest {
         ctaMayor = instance.crea(ctaMayor);
         assertNotNull(ctaMayor.getId());
     }
+    
+    @Test
+    public void deberiaActualizarCtaMayor() {
+        log.debug("Deberia actualizar CtaMayor");
+        CtaMayor ctaMayor = new CtaMayor("test", "test");
+        assertNotNull(ctaMayor);
+        currentSession().save(ctaMayor);
+        
+        ctaMayor.setNombre("test1");
+
+        ctaMayor = instance.actualiza(ctaMayor);
+        log.debug("ctaMayor >>" + ctaMayor);
+        assertEquals("test1", ctaMayor.getNombre());
+    }
+    
 
     @Test
     public void deberiaEliminarCtaMayor() throws UltimoException {
@@ -103,8 +118,5 @@ public class CtaMayorDaoTest extends BaseTest {
 
         CtaMayor prueba = instance.obtiene(ctaMayor.getId());
         assertNull(prueba);
-
-
-
     }
 }
