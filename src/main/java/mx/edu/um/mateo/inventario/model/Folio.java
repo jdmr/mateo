@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2012 jdmr.
+ * Copyright 2012 Universidad de Montemorelos A. C.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,50 +24,38 @@
 package mx.edu.um.mateo.inventario.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
-import mx.edu.um.mateo.general.model.Empresa;
-import mx.edu.um.mateo.general.model.Usuario;
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  *
- * @author jdmr
+ * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
-@Table(name = "almacenes", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"empresa_id", "codigo"}),
-    @UniqueConstraint(columnNames = {"empresa_id", "nombre"})
-})
-public class Almacen implements Serializable {
+@Table(name = "folio_inventario", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"almacen_id", "nombre"})})
+public class Folio implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Version
     private Integer version;
-    @NotBlank
-    @Column(nullable = false, length = 6)
-    private String codigo;
-    @NotBlank
+    @NotNull
     @Column(nullable = false, length = 128)
     private String nombre;
+    @NotNull
+    @Column(nullable = false)
+    private Long valor = 0l;
     @ManyToOne(optional = false)
-    private Empresa empresa;
-    @OneToMany(mappedBy = "almacen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Usuario> usuarios = new ArrayList<>();
-    @OneToMany(mappedBy = "almacen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<TipoProducto> tiposDeProducto = new ArrayList<>();
+    private Almacen almacen;
 
-    public Almacen() {
+    public Folio() {
     }
-
-    public Almacen(String codigo, String nombre, Empresa empresa) {
-        this.codigo = codigo;
+    
+    public Folio(String nombre) {
         this.nombre = nombre;
-        this.empresa = empresa;
     }
 
     /**
@@ -99,20 +87,6 @@ public class Almacen implements Serializable {
     }
 
     /**
-     * @return the codigo
-     */
-    public String getCodigo() {
-        return codigo;
-    }
-
-    /**
-     * @param codigo the codigo to set
-     */
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
-
-    /**
      * @return the nombre
      */
     public String getNombre() {
@@ -127,69 +101,31 @@ public class Almacen implements Serializable {
     }
 
     /**
-     * @return the empresa
+     * @return the valor
      */
-    public Empresa getEmpresa() {
-        return empresa;
+    public Long getValor() {
+        return valor;
     }
 
     /**
-     * @param empresa the empresa to set
+     * @param valor the valor to set
      */
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
+    public void setValor(Long valor) {
+        this.valor = valor;
     }
 
     /**
-     * @return the usuarios
+     * @return the almacen
      */
-    public List<Usuario> getUsuarios() {
-        return usuarios;
+    public Almacen getAlmacen() {
+        return almacen;
     }
 
     /**
-     * @param usuarios the usuarios to set
+     * @param almacen the almacen to set
      */
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.setUsuarios(usuarios);
-    }
-
-    /**
-     * @return the tiposDeProducto
-     */
-    public List<TipoProducto> getTiposDeProducto() {
-        return tiposDeProducto;
-    }
-
-    /**
-     * @param tiposDeProducto the tiposDeProducto to set
-     */
-    public void setTiposDeProducto(List<TipoProducto> tiposDeProducto) {
-        this.tiposDeProducto = tiposDeProducto;
-    }
-    
-    /**
-     * Obtiene el nombre con los nombres tanto de empresa y organizacion
-     * 
-     * @return nombre El nombre completo del almacen (organizacion|empresa|almacen)
-     */
-    public String getNombreCompleto() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getEmpresa().getOrganizacion().getNombre());
-        sb.append(" | ");
-        sb.append(getEmpresa().getNombre());
-        sb.append(" | ");
-        sb.append(getNombre());
-        return sb.toString();
-    }
-
-    /**
-     * No hace nada. NO USAR.
-     * 
-     * @param nombreCompleto 
-     */
-    public void setNombreCompleto(String nombreCompleto) {
-        // no hace nada
+    public void setAlmacen(Almacen almacen) {
+        this.almacen = almacen;
     }
 
     @Override
@@ -200,7 +136,7 @@ public class Almacen implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Almacen other = (Almacen) obj;
+        final Folio other = (Folio) obj;
         if (!Objects.equals(this.nombre, other.nombre)) {
             return false;
         }
@@ -209,7 +145,7 @@ public class Almacen implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 5;
+        int hash = 7;
         hash = 67 * hash + Objects.hashCode(this.id);
         hash = 67 * hash + Objects.hashCode(this.version);
         hash = 67 * hash + Objects.hashCode(this.nombre);
@@ -218,6 +154,6 @@ public class Almacen implements Serializable {
 
     @Override
     public String toString() {
-        return "Almacen{" + "nombre=" + nombre + '}';
+        return "Folio{" + "nombre=" + nombre + ", valor=" + valor + ", almacen=" + almacen + '}';
     }
 }

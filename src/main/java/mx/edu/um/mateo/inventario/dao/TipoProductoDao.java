@@ -51,11 +51,11 @@ public class TipoProductoDao {
     private static final Logger log = LoggerFactory.getLogger(TipoProductoDao.class);
     @Autowired
     private SessionFactory sessionFactory;
-    
+
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
-    
+
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de tipos de producto con params {}", params);
         if (params == null) {
@@ -155,5 +155,4 @@ public class TipoProductoDao {
         currentSession().flush();
         return nombre;
     }
-    
 }
