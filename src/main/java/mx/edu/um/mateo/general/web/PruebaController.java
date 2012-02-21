@@ -27,10 +27,12 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import mx.edu.um.mateo.general.dao.*;
 import mx.edu.um.mateo.general.model.*;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inventario.dao.AlmacenDao;
 import mx.edu.um.mateo.inventario.dao.ProductoDao;
 import mx.edu.um.mateo.inventario.dao.TipoProductoDao;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import mx.edu.um.mateo.inventario.model.Estatus;
 import mx.edu.um.mateo.inventario.model.Producto;
 import mx.edu.um.mateo.inventario.model.TipoProducto;
 import org.hibernate.Query;
@@ -73,8 +75,8 @@ public class PruebaController {
     private ProductoDao productoDao;
     @Autowired
     private SessionFactory sessionFactory;
-    
-    private Session currentSession(){
+
+    private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
 
@@ -113,6 +115,13 @@ public class PruebaController {
         rol = new Rol("ROLE_USER");
         rolDao.crea(rol);
 
+        Estatus estatus = new Estatus(Constantes.ABIERTA, 0);
+        currentSession().save(estatus);
+        estatus = new Estatus(Constantes.PENDIENTE, 1);
+        currentSession().save(estatus);
+        estatus = new Estatus(Constantes.CERRADA, 2);
+        currentSession().save(estatus);
+
         organizacion = new Organizacion("TEST", "TEST", "TEST");
         organizacionDao.crea(organizacion, usuario);
 
@@ -149,17 +158,15 @@ public class PruebaController {
             Cliente cliente = new Cliente(sb.toString(), sb.toString(), "0000000000" + numero, tipoCliente, null);
             clienteDao.crea(cliente, usuario);
 
-            Almacen almacen = new Almacen("TST-"+numero, sb.toString(), emp);
+            Almacen almacen = new Almacen("TST-" + numero, sb.toString(), emp);
             almacenDao.crea(almacen);
-            
+
             TipoProducto tipoProducto = new TipoProducto(sb.toString(), sb.toString(), alm);
             tipoProductoDao.crea(tipoProducto);
-            
-            Producto producto = new Producto("TST-"+numero, sb.toString(), sb.toString(), sb.toString(), tp, alm);
+
+            Producto producto = new Producto("TST-" + numero, sb.toString(), sb.toString(), sb.toString(), tp, alm);
             productoDao.crea(producto);
         }
-
-
 
         return "redirect:/";
     }

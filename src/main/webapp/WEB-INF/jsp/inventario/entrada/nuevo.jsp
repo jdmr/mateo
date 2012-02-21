@@ -113,7 +113,7 @@
                                         <s:message code="iva.label" />
                                         <span class="required-indicator">*</span>
                                     </label>
-                                    <form:input path="iva" cssClass="span6" required="true" cssStyle="text-align:right;" type="number" step="0.01" min="0" max="1" />
+                                    <form:input path="iva" cssClass="span6" required="true" cssStyle="text-align:right;" type="number" step="0.01" min="0" />
                                     <form:errors path="iva" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
@@ -127,7 +127,7 @@
                                         <s:message code="total.label" />
                                         <span class="required-indicator">*</span>
                                     </label>
-                                    <form:input path="total" cssClass="span6" required="true" cssStyle="text-align:right;" type="number" step="0.01" min="0" max="1" />
+                                    <form:input path="total" cssClass="span6" required="true" cssStyle="text-align:right;" type="number" step="0.01" min="0" />
                                     <form:errors path="total" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
@@ -140,7 +140,7 @@
                                     <label for="tipoCambio">
                                         <s:message code="tipoCambio.label" />
                                     </label>
-                                    <form:input path="tipoCambio" maxlength="5" cssClass="span6" cssStyle="text-align:right;" type="number" step="0.01" min="0" max="1" />
+                                    <form:input path="tipoCambio" maxlength="5" cssClass="span6" cssStyle="text-align:right;" type="number" step="0.01" min="0" />
                                     <form:errors path="tipoCambio" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
@@ -165,6 +165,8 @@
                             }
                         })
                         .focus();
+                    $("input#fechaFactura").datepicker($.datepicker.regional['es']);
+                    $("input#fechaFactura").datepicker("option","firstDay",0);
                 });
             </script>                    
         </content>

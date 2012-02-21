@@ -30,7 +30,11 @@ import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import mx.edu.um.mateo.inventario.model.Estatus;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +56,8 @@ public class InicializaController {
     private RolDao rolDao;
     @Autowired
     private UsuarioDao usuarioDao;
+    @Autowired
+    private SessionFactory sessionFactory;
     
     @RequestMapping
     public String inicia() {
@@ -88,6 +94,17 @@ public class InicializaController {
         rol = new Rol("ROLE_USER");
         rolDao.crea(rol);
 
+        Estatus estatus = new Estatus(Constantes.ABIERTA, 0);
+        currentSession().save(estatus);
+        estatus = new Estatus(Constantes.PENDIENTE, 1);
+        currentSession().save(estatus);
+        estatus = new Estatus(Constantes.CERRADA, 2);
+        currentSession().save(estatus);
+
         return "redirect:/";
+    }
+    
+    private Session currentSession() {
+        return sessionFactory.getCurrentSession();
     }
 }

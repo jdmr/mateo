@@ -203,7 +203,7 @@ public class EntradaController {
             entrada = entradaDao.crea(entrada, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la entrada", e);
-            errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
+            errors.rejectValue("factura", "campo.duplicado.message", new String[]{"factura"}, null);
 
             return "inventario/entrada/nuevo";
         }
@@ -273,7 +273,8 @@ public class EntradaController {
     }
 
     @RequestMapping(value = "/proveedores", params = "term", produces = "application/json")
-    public @ResponseBody List<LabelValueBean> proveedores(HttpServletRequest request, @RequestParam("term") String filtro) {
+    public @ResponseBody
+    List<LabelValueBean> proveedores(HttpServletRequest request, @RequestParam("term") String filtro) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
