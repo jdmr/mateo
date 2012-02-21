@@ -94,11 +94,11 @@ public class InicializaController {
         rol = new Rol("ROLE_USER");
         rolDao.crea(rol);
 
-        Estatus estatus = new Estatus(Constantes.ABIERTA, 0);
+        Estatus estatus = new Estatus(Constantes.ABIERTA, 100);
         currentSession().save(estatus);
-        estatus = new Estatus(Constantes.PENDIENTE, 1);
+        estatus = new Estatus(Constantes.PENDIENTE, 200);
         currentSession().save(estatus);
-        estatus = new Estatus(Constantes.CERRADA, 2);
+        estatus = new Estatus(Constantes.CERRADA, 300);
         currentSession().save(estatus);
 
         return "redirect:/";

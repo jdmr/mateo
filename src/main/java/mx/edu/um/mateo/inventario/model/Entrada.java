@@ -33,6 +33,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.general.model.Proveedor;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *
@@ -56,6 +57,7 @@ public class Entrada implements Serializable {
     @Column(nullable = false, length = 64)
     private String factura;
     @NotNull
+    @DateTimeFormat(pattern="dd/MM/yyyy")
     @Temporal(javax.persistence.TemporalType.DATE)
     @Column(name = "fecha_factura")
     private Date fechaFactura;
@@ -68,7 +70,6 @@ public class Entrada implements Serializable {
     @Column(scale = 2, precision = 8, nullable = false)
     private BigDecimal total = new BigDecimal("0");
     private Boolean devolucion = false;
-    private Boolean pendiente = false;
     @ManyToOne(optional = false)
     private Estatus estatus;
     @ManyToOne(optional = false)
@@ -228,20 +229,6 @@ public class Entrada implements Serializable {
      */
     public void setDevolucion(Boolean devolucion) {
         this.devolucion = devolucion;
-    }
-
-    /**
-     * @return the pendiente
-     */
-    public Boolean getPendiente() {
-        return pendiente;
-    }
-
-    /**
-     * @param pendiente the pendiente to set
-     */
-    public void setPendiente(Boolean pendiente) {
-        this.pendiente = pendiente;
     }
 
     /**

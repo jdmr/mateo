@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="producto.edita.label" /></title>
+        <title><s:message code="entrada.edita.label" /></title>
     </head>
     <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
@@ -13,22 +13,23 @@
                 <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
                 <li><a href="<c:url value='/inventario' />"><s:message code="inventario.label" /></a></li>
                 <li><a href="<s:url value='/inventario/salida'/>" ><s:message code="salida.lista.label" /></a></li>
-                <li><a href="<s:url value='/inventario/entrada'/>" ><s:message code="entrada.lista.label" /></a></li>
-                <li class="active"><a href="<s:url value='/inventario/producto'/>" ><s:message code="producto.lista.label" /></a></li>
+                <li class="active"><a href="<s:url value='/inventario/entrada'/>" ><s:message code="entrada.lista.label" /></a></li>
+                <li><a href="<s:url value='/inventario/producto'/>" ><s:message code="producto.lista.label" /></a></li>
                 <li><a href="<s:url value='/inventario/tipoProducto'/>" ><s:message code="tipoProducto.lista.label" /></a></li>
                 <li><a href="<s:url value='/inventario/almacen'/>" ><s:message code="almacen.lista.label" /></a></li>
             </ul>
         </nav>
 
-        <div id="nuevo-producto" class="content scaffold-list" role="main">
-            <h1><s:message code="producto.edita.label" /></h1>
+        <div id="nuevo-entrada" class="content scaffold-list" role="main">
+            <h1><s:message code="entrada.edita.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/inventario/producto'/>"><i class="icon-list icon-white"></i> <s:message code='producto.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/inventario/entrada'/>"><i class="icon-list icon-white"></i> <s:message code='entrada.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="/inventario/producto/actualiza" />
-            <form:form commandName="producto" action="${actualizaUrl}" method="post">
+            <c:url var="actualizaUrl" value="/inventario/entrada/actualiza" />
+            <form:form commandName="entrada" action="${actualizaUrl}" method="post">
                 <form:hidden path="id" />
                 <form:hidden path="version" />
+                <form:hidden path="proveedor.id" id="proveedorId" />
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -40,153 +41,110 @@
 
                 <fieldset>
                     <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="producto.codigo">
+                        <div class="span12">
+                            <s:bind path="entrada.proveedor">
                                 <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="codigo">
-                                        <s:message code="codigo.label" />
+                                    <label for="proveedorNombre">
+                                        <s:message code="proveedor.label" />
                                         <span class="required-indicator">*</span>
                                     </label>
-                                    <form:input path="codigo" maxlength="6" required="true" cssClass="span3" />
-                                    <form:errors path="codigo" cssClass="alert alert-error" />
+                                    <form:input id="proveedorNombre" path="proveedor.nombre" cssClass="span6" />
+                                    <form:errors path="proveedor" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
                         </div>
-                        <div class="span4">
-                            <s:bind path="producto.sku">
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <s:bind path="entrada.factura">
                                 <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="sku">
-                                        <s:message code="sku.label" />
+                                    <label for="factura">
+                                        <s:message code="factura.label" />
                                         <span class="required-indicator">*</span>
                                     </label>
-                                    <form:input path="sku" maxlength="64" required="true" cssClass="span10" />
-                                    <form:errors path="sku" cssClass="alert alert-error" />
+                                    <form:input path="factura" required="true" cssClass="span6" />
+                                    <form:errors path="factura" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <s:bind path="entrada.fechaFactura">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="fechaFactura">
+                                        <s:message code="fechaFactura.label" />
+                                        <span class="required-indicator">*</span>
+                                    </label>
+                                    <form:input path="fechaFactura" required="true" maxlength="64" cssClass="span6" />
+                                    <form:errors path="fechaFactura" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <s:bind path="entrada.comentarios">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="comentarios">
+                                        <s:message code="comentarios.label" />
+                                    </label>
+                                    <form:textarea path="comentarios" cssClass="span6" />
+                                    <form:errors path="comentarios" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <s:bind path="entrada.devolucion">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="devolucion">
+                                        <s:message code="devolucion.label" />
+                                    </label>
+                                    <form:checkbox path="devolucion" cssClass="span3" />
+                                    <form:errors path="devolucion" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
                         </div>
                     </div>
                     <div class="row-fluid">
                         <div class="span4">
-                            <s:bind path="producto.nombre">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="nombre">
-                                        <s:message code="nombre.label" />
-                                        <span class="required-indicator">*</span>
-                                    </label>
-                                    <form:input path="nombre" maxlength="128" required="true" cssClass="span10" />
-                                    <form:errors path="nombre" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                        <div class="span4">
-                            <s:bind path="producto.descripcion">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="descripcion">
-                                        <s:message code="descripcion.label" />
-                                        <span class="required-indicator">*</span>
-                                    </label>
-                                    <form:textarea path="descripcion" maxlength="254" required="true" cssClass="span10" />
-                                    <form:errors path="descripcion" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="producto.marca">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="marca">
-                                        <s:message code="marca.label" />
-                                    </label>
-                                    <form:input path="marca" maxlength="64" cssClass="span10" />
-                                    <form:errors path="marca" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                        <div class="span4">
-                            <s:bind path="producto.modelo">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="modelo">
-                                        <s:message code="modelo.label" />
-                                    </label>
-                                    <form:input path="modelo" maxlength="64" cssClass="span10" />
-                                    <form:errors path="modelo" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="producto.unidadMedida">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="unidadMedida">
-                                        <s:message code="unidadMedida.label" />
-                                        <span class="required-indicator">*</span>
-                                    </label>
-                                    <form:input path="unidadMedida" maxlength="32" required="true" cssClass="span5" />
-                                    <form:errors path="unidadMedida" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                        <div class="span4">
-                            <s:bind path="producto.ubicacion">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="ubicacion">
-                                        <s:message code="ubicacion.label" />
-                                    </label>
-                                    <form:input path="ubicacion" maxlength="128" cssClass="span10" />
-                                    <form:errors path="ubicacion" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="producto.fraccion">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="fraccion">
-                                        <s:message code="fraccion.label" />
-                                    </label>
-                                    <form:checkbox path="fraccion" cssClass="span3" />
-                                    <form:errors path="fraccion" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                        <div class="span4">
-                            <s:bind path="producto.tiempoEntrega">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="tiempoEntrega">
-                                        <s:message code="tiempoEntrega.label" />
-                                        <span class="required-indicator">*</span>
-                                    </label>
-                                    <form:input path="tiempoEntrega" maxlength="6" cssClass="span10" required="true" cssStyle="text-align:right;" type="number" step="1" min="1" max="30" />
-                                    <form:errors path="tiempoEntrega" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="producto.iva">
+                            <s:bind path="entrada.iva">
                                 <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                     <label for="iva">
                                         <s:message code="iva.label" />
                                         <span class="required-indicator">*</span>
                                     </label>
-                                    <form:input path="iva" maxlength="5" cssClass="span10" required="true" cssStyle="text-align:right;" type="number" step="0.01" min="0" max="1" />
+                                    <form:input path="iva" cssClass="span6" required="true" cssStyle="text-align:right;" type="number" step="0.01" min="0" />
                                     <form:errors path="iva" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
                         </div>
+                    </div>
+                    <div class="row-fluid">
                         <div class="span4">
-                            <s:bind path="producto.tipoProducto">
+                            <s:bind path="entrada.total">
                                 <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="tipoProducto">
-                                        <s:message code="tipoProducto.label" />
+                                    <label for="total">
+                                        <s:message code="total.label" />
                                         <span class="required-indicator">*</span>
                                     </label>
-                                    <form:select id="tipoProductoId" path="tipoProducto.id" items="${tiposDeProducto}" itemLabel="nombre" itemValue="id" cssClass="span10" required="true" />
-                                    <form:errors path="tipoProducto" cssClass="alert alert-error" />
+                                    <form:input path="total" cssClass="span6" required="true" cssStyle="text-align:right;" type="number" step="0.01" min="0" />
+                                    <form:errors path="total" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <s:bind path="entrada.tipoCambio">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="tipoCambio">
+                                        <s:message code="tipoCambio.label" />
+                                    </label>
+                                    <form:input path="tipoCambio" maxlength="5" cssClass="span6" cssStyle="text-align:right;" type="number" step="0.01" min="0" />
+                                    <form:errors path="tipoCambio" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
                         </div>
@@ -201,7 +159,7 @@
         <content>
             <script>
                 $(document).ready(function() {
-                    $('input#nombre').focus();
+                    $('input#proveedorNombre').focus();
                 });
             </script>                    
         </content>

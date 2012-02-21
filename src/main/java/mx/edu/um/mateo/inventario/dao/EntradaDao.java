@@ -149,13 +149,22 @@ public class EntradaDao {
         return this.actualiza(entrada, null);
     }
 
-    public Entrada actualiza(Entrada entrada, Usuario usuario) {
+    public Entrada actualiza(Entrada otraEntrada, Usuario usuario) {
+        Entrada entrada = (Entrada) currentSession().get(Entrada.class, otraEntrada.getId());
         switch (entrada.getEstatus().getNombre()) {
             case Constantes.ABIERTA:
                 Session session = currentSession();
-                if (usuario != null) {
-                    entrada.setAlmacen(usuario.getAlmacen());
+                if (otraEntrada.getVersion() != entrada.getVersion()) {
+                    throw new RuntimeException("No es la ultima version de la entrada");
                 }
+                entrada.setFactura(otraEntrada.getFactura());
+                entrada.setFechaFactura(otraEntrada.getFechaFactura());
+                entrada.setComentarios(otraEntrada.getComentarios());
+                entrada.setTipoCambio(otraEntrada.getTipoCambio());
+                entrada.setDevolucion(otraEntrada.getDevolucion());
+                entrada.setIva(otraEntrada.getIva());
+                entrada.setTotal(otraEntrada.getTotal());
+                entrada.setProveedor(otraEntrada.getProveedor());
                 session.update(entrada);
                 session.flush();
                 return entrada;

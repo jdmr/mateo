@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="producto.ver.label" /></title>
+        <title><s:message code="entrada.ver.label" /></title>
     </head>
     <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
@@ -14,19 +14,19 @@
                 <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
                 <li><a href="<c:url value='/inventario' />"><s:message code="inventario.label" /></a></li>
                 <li><a href="<s:url value='/inventario/salida'/>" ><s:message code="salida.lista.label" /></a></li>
-                <li><a href="<s:url value='/inventario/entrada'/>" ><s:message code="entrada.lista.label" /></a></li>
-                <li class="active"><a href="<s:url value='/inventario/producto'/>" ><s:message code="producto.lista.label" /></a></li>
+                <li class="active"><a href="<s:url value='/inventario/entrada'/>" ><s:message code="entrada.lista.label" /></a></li>
+                <li><a href="<s:url value='/inventario/producto'/>" ><s:message code="producto.lista.label" /></a></li>
                 <li><a href="<s:url value='/inventario/tipoProducto'/>" ><s:message code="tipoProducto.lista.label" /></a></li>
                 <li><a href="<s:url value='/inventario/almacen'/>" ><s:message code="almacen.lista.label" /></a></li>
             </ul>
         </nav>
 
-        <div id="ver-producto" class="content scaffold-list" role="main">
-            <h1><s:message code="producto.ver.label" /></h1>
+        <div id="ver-entrada" class="content scaffold-list" role="main">
+            <h1><s:message code="entrada.ver.label" /></h1>
 
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/inventario/producto'/>"><i class="icon-list icon-white"></i> <s:message code='producto.lista.label' /></a>
-                <a class="btn btn-primary" href="<s:url value='/inventario/producto/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='producto.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/inventario/entrada'/>"><i class="icon-list icon-white"></i> <s:message code='entrada.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/inventario/entrada/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='entrada.nuevo.label' /></a>
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
@@ -35,76 +35,52 @@
                 </div>
             </c:if>
 
-            <c:url var="eliminaUrl" value="/inventario/producto/elimina" />
-            <form:form commandName="producto" action="${eliminaUrl}" >
+            <c:url var="eliminaUrl" value="/inventario/entrada/elimina" />
+            <form:form commandName="entrada" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="codigo.label" /></div>
-                    <div class="span11">${producto.codigo}</div>
+                    <div class="span1"><s:message code="folio.label" /></div>
+                    <div class="span11">${entrada.folio}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="sku.label" /></div>
-                    <div class="span11">${producto.sku}</div>
+                    <div class="span1"><s:message code="estatus.label" /></div>
+                    <div class="span11">${entrada.estatus.nombre}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="nombre.label" /></div>
-                    <div class="span11">${producto.nombre}</div>
+                    <div class="span1"><s:message code="factura.label" /></div>
+                    <div class="span11">${entrada.factura}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="descripcion.label" /></div>
-                    <div class="span11">${producto.descripcion}</div>
+                    <div class="span1"><s:message code="fechaFactura.label" /></div>
+                    <div class="span11">${entrada.fechaFactura}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="marca.label" /></div>
-                    <div class="span11">${producto.marca}</div>
+                    <div class="span1"><s:message code="comentarios.label" /></div>
+                    <div class="span11">${entrada.comentarios}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="modelo.label" /></div>
-                    <div class="span11">${producto.modelo}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="ubicacion.label" /></div>
-                    <div class="span11">${producto.ubicacion}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="precioUnitario.label" /></div>
-                    <div class="span11">${producto.precioUnitario}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="ultimoPrecio.label" /></div>
-                    <div class="span11">${producto.ultimoPrecio}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="existencia.label" /></div>
-                    <div class="span11">${producto.existencia} ${producto.unidadMedida}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="puntoReorden.label" /></div>
-                    <div class="span11">${producto.puntoReorden}</div>
+                    <div class="span1"><s:message code="tipoCambio.label" /></div>
+                    <div class="span11">${entrada.tipoCambio}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="iva.label" /></div>
-                    <div class="span11">${producto.iva}</div>
+                    <div class="span11">${entrada.iva}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="tiempoEntrega.label" /></div>
-                    <div class="span11">${producto.tiempoEntrega}</div>
+                    <div class="span1"><s:message code="total.label" /></div>
+                    <div class="span11">${entrada.total}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="fraccion.label" /></div>
-                    <div class="span11">${producto.fraccion}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="tipoProducto.label" /></div>
-                    <div class="span11">${producto.tipoProducto.nombre}</div>
+                    <div class="span1"><s:message code="devolucion.label" /></div>
+                    <div class="span11">${entrada.devolucion}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="almacen.label" /></div>
-                    <div class="span11">${producto.almacen.nombre}</div>
+                    <div class="span11">${entrada.almacen.nombre}</div>
                 </div>
 
                 <p class="well">
-                    <a href="<c:url value='/inventario/producto/edita/${producto.id}' />" class="btn btn-primary"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
+                    <a href="<c:url value='/inventario/entrada/edita/${entrada.id}' />" class="btn btn-primary"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
                     <form:hidden path="id" />
                     <input type="submit" name="elimina" value="<s:message code='eliminar.button'/>" class="btn btn-danger icon-remove" style="margin-bottom: 2px;" onclick="return confirm('<s:message code="confirma.elimina.message" />');" />
                 </p>
