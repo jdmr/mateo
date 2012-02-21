@@ -62,10 +62,13 @@ public class CtaMayorControllerTest extends BaseTest {
 
     @Test
     public void debieraMostrarListaDeCtaMayor() throws Exception {
-        CtaMayor ctaMayor = new CtaMayor("tst-01", "test-01");
-        ctaMayor = ctaMayorDao.crea(ctaMayor);
-
-        this.mockMvc.perform(get("/rh/ctaMayor")).andExpect(status().isOk()).andExpect(forwardedUrl("/WEB-INF/jsp/rh/ctaMayor/lista.jsp")).andExpect(model().attributeExists("ctaMayor")).andExpect(model().attributeExists("paginacion")).andExpect(model().attributeExists("paginas")).andExpect(model().attributeExists("pagina"));
+        this.mockMvc.perform(get("/rh/ctaMayor")).
+                andExpect(status().isOk()).
+                andExpect(forwardedUrl("/WEB-INF/jsp/rh/ctaMayor/lista.jsp")).
+                andExpect(model().attributeExists("ctaMayores")).
+                andExpect(model().attributeExists("paginacion")).
+                andExpect(model().attributeExists("paginas")).
+                andExpect(model().attributeExists("pagina"));
     }
 
     @Test
@@ -73,7 +76,10 @@ public class CtaMayorControllerTest extends BaseTest {
         CtaMayor ctaMayor = new CtaMayor("tst-01", "test-01");
         ctaMayor = ctaMayorDao.crea(ctaMayor);
 
-        this.mockMvc.perform(get("/rh/ctaMayor/ver/" + ctaMayor.getId())).andExpect(status().isOk()).andExpect(forwardedUrl("/WEB-INF/jsp/rh/ctaMayor/ver.jsp")).andExpect(model().attributeExists("ctaMayor"));
+        this.mockMvc.perform(get("/rh/ctaMayor/ver/" + ctaMayor.getId())).
+                andExpect(status().isOk()).
+                andExpect(forwardedUrl("/WEB-INF/jsp/rh/ctaMayor/ver.jsp")).
+                andExpect(model().attributeExists("ctaMayor"));
     }
 //    /**
 //     * Test of lista method, of class CtaMayorController.
