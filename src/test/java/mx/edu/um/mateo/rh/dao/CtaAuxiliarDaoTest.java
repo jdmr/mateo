@@ -35,14 +35,14 @@ public class CtaAuxiliarDaoTest extends BaseTest{
     
     private static final Logger log = LoggerFactory.getLogger(CtaAuxiliarDaoTest.class);
     @Autowired
-    private CtaResultadoDao instance;
+    private CtaAuxiliarDao instance;
     @Autowired
     private SessionFactory sessionFactory;
 
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
-  /**  
+   
    @Test
     public void deberiaMostrarListaDeCtaAuxiliar() {
         log.debug("Debiera mostrar lista de ctaAuxiliar");
@@ -65,5 +65,4 @@ public class CtaAuxiliarDaoTest extends BaseTest{
         assertEquals(10, ((List<Empresa>) result.get("ctaAuxiliar")).size());
         assertEquals(20, ((Long) result.get("cantidad")).intValue());
     } 
-     */
 }

@@ -5,6 +5,7 @@
 package mx.edu.um.mateo.rh.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.*;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -122,7 +123,10 @@ public class CtaResultado implements Serializable{
 
     @Override
     public int hashCode() {
-        int hash = id.intValue();
+        int hash = 5;
+        hash = 79 * hash + Objects.hashCode(this.id);
+        hash = 79 * hash + Objects.hashCode(this.version);
+        hash = 79 * hash + Objects.hashCode(this.nombre);
         return hash;
     }
 
