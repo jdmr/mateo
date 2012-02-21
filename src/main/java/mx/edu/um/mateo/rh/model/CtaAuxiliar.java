@@ -13,70 +13,33 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author semdariobarbaamaya
  */
 
-
 @Entity
-@Table(name = "ctaresultado")
+@Table(name = "ctaauxiliar")
 
-public class CtaResultado implements Serializable{
+public class CtaAuxiliar implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Version
     private Integer version;
-   // @ManyToOne(optional = false)
-    //private Ejercicio ejercicio;
-   //@NotBlank
-    //@Column(nullable = false, length = 24)
-    //private String tipoCuenta;
- 
+    
     @NotBlank
     @Column(nullable = false, length = 24)
     private String nombre;
     @NotBlank
     @Column(nullable = false, length = 24)
     private String nombreFiscal;
-    /**
-   @NotBlank
-    @Column(nullable = false)
-    private Boolean detalle;
-    @NotBlank
-    @Column(nullable = false)
-    private Boolean aviso;
-    @NotBlank
-    @Column(nullable = false)
-    private Boolean auxiliar;
-    @NotBlank
-    @Column(nullable = false)
-    private Boolean iva;
-    @NotBlank
-    @Column(nullable = false)
-    private Boolean detalleR;
-    @NotBlank
-    @Column(nullable = false, length = 24)
-    private Double pctIva;
-    @NotBlank
-    @Column(nullable = false, length = 24)
-    private String idCtaResultado;
-    */
-    
-    public CtaResultado() {
+
+    public CtaAuxiliar() {
+        
     }
-    
-    /**
-     public CtaResultado(Ejercicio ejercicio, String tipoCuenta, String nombre, String idCtaResultado) {
-         this.ejercicio = ejercicio;
-         this.tipoCuenta = tipoCuenta;
-         this.nombre = nombre;
-         this.idCtaResultado = idCtaResultado;
+
+    public CtaAuxiliar(String nombre, String nombreFiscal) {
+        this.nombre = nombre;
+        this.nombreFiscal = nombreFiscal;
     }
-     */
-    
-     public CtaResultado(String nombre, String nombreFiscal) {
-         this.nombre = nombre;
-         this.nombreFiscal = nombreFiscal;
-    }
-     
+
     public Long getId() {
         return id;
     }
@@ -104,11 +67,11 @@ public class CtaResultado implements Serializable{
     public Integer getVersion() {
         return version;
     }
+
     public void setVersion(Integer version) {
         this.version = version;
     }
 
-    @Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;
@@ -116,19 +79,17 @@ public class CtaResultado implements Serializable{
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final CtaResultado other = (CtaResultado) obj;
+        final CtaAuxiliar other = (CtaAuxiliar) obj;
         return true;
     }
 
-    @Override
     public int hashCode() {
         int hash = id.intValue();
         return hash;
     }
 
-    @Override
     public String toString() {
-        return "CtaResultado{nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + '}';
+        return "CtaAuxiliar{id=" + id + ", version=" + version + ", nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + '}';
     }
     
 }
