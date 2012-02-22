@@ -74,6 +74,7 @@ public class CtaMayorControllerTest extends BaseTest {
 
     @Test
     public void debieraMostrarCtaMayor() throws Exception {
+        log.debug("Debiera mostrar ctaMayor");
         CtaMayor ctaMayor = new CtaMayor("test", "test");
         ctaMayor = ctaMayorDao.crea(ctaMayor);
 
@@ -82,148 +83,40 @@ public class CtaMayorControllerTest extends BaseTest {
                 andExpect(forwardedUrl("/WEB-INF/jsp/rh/ctaMayor/ver.jsp")).
                 andExpect(model().attributeExists("ctaMayor"));
     }
-    
+
     @Test
     public void debieraCrearCtaMayor() throws Exception {
         log.debug("Debiera crear ctaMayor");
         CtaMayor ctaMayor = new CtaMayor("test", "test");
         ctaMayor = ctaMayorDao.crea(ctaMayor);
 
-        this.mockMvc.perform(post("/rh/ctaMayor/crea").
-                param("nombre", "test").
-                param("nombreFiscal", "test")).
+        this.mockMvc.perform(post("/rh/ctaMayor/crea").param("nombre", "test").param("nombreFiscal", "test")).
                 andExpect(status().isOk()).
                 andExpect(flash().attributeExists("message")).
                 andExpect(flash().attribute("message", "ctaMayor.creada.message"));
     }
-//    /**
-//     * Test of lista method, of class CtaMayorController.
-//     */
-//    @Test
-//    public void testLista() {
-//        System.out.println("lista");
-//        HttpServletRequest request = null;
-//        HttpServletResponse response = null;
-//        String filtro = "";
-//        Long pagina = null;
-//        String tipo = "";
-//        String correo = "";
-//        String order = "";
-//        String sort = "";
-//        Model modelo = null;
-//        CtaMayorController instance = new CtaMayorController();
-//        String expResult = "";
-//        String result = instance.lista(request, response, filtro, pagina, tipo, correo, order, sort, modelo);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of ver method, of class CtaMayorController.
-//     */
-//    @Test
-//    public void testVer() {
-//        System.out.println("ver");
-//        Long id = null;
-//        Model modelo = null;
-//        CtaMayorController instance = new CtaMayorController();
-//        String expResult = "";
-//        String result = instance.ver(id, modelo);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of nueva method, of class CtaMayorController.
-//     */
-//    @Test
-//    public void testNueva() {
-//        System.out.println("nueva");
-//        Model modelo = null;
-//        CtaMayorController instance = new CtaMayorController();
-//        String expResult = "";
-//        String result = instance.nueva(modelo);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of crea method, of class CtaMayorController.
-//     */
-//    @Test
-//    public void testCrea() {
-//        System.out.println("crea");
-//        HttpServletRequest request = null;
-//        HttpServletResponse response = null;
-//        CtaMayor CtaMayor = null;
-//        BindingResult bindingResult = null;
-//        Errors errors = null;
-//        Model modelo = null;
-//        RedirectAttributes redirectAttributes = null;
-//        CtaMayorController instance = new CtaMayorController();
-//        String expResult = "";
-//        String result = instance.crea(request, response, CtaMayor, bindingResult, errors, modelo, redirectAttributes);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of edita method, of class CtaMayorController.
-//     */
-//    @Test
-//    public void testEdita() {
-//        System.out.println("edita");
-//        Long id = null;
-//        Model modelo = null;
-//        CtaMayorController instance = new CtaMayorController();
-//        String expResult = "";
-//        String result = instance.edita(id, modelo);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of actualiza method, of class CtaMayorController.
-//     */
-//    @Test
-//    public void testActualiza() {
-//        System.out.println("actualiza");
-//        HttpServletRequest request = null;
-//        CtaMayor CtaMayor = null;
-//        BindingResult bindingResult = null;
-//        Errors errors = null;
-//        Model modelo = null;
-//        RedirectAttributes redirectAttributes = null;
-//        CtaMayorController instance = new CtaMayorController();
-//        String expResult = "";
-//        String result = instance.actualiza(request, CtaMayor, bindingResult, errors, modelo, redirectAttributes);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
-//
-//    /**
-//     * Test of elimina method, of class CtaMayorController.
-//     */
-//    @Test
-//    public void testElimina() {
-//        System.out.println("elimina");
-//        HttpServletRequest request = null;
-//        Long id = null;
-//        Model modelo = null;
-//        CtaMayor CtaMayor = null;
-//        BindingResult bindingResult = null;
-//        RedirectAttributes redirectAttributes = null;
-//        CtaMayorController instance = new CtaMayorController();
-//        String expResult = "";
-//        String result = instance.elimina(request, id, modelo, CtaMayor, bindingResult, redirectAttributes);
-//        assertEquals(expResult, result);
-//        // TODO review the generated test code and remove the default call to fail.
-//        fail("The test case is a prototype.");
-//    }
+
+    @Test
+    public void debieraActualizarCtaMayor() throws Exception {
+        log.debug("Debiera actualizar ctaMayor");
+        CtaMayor ctaMayor = new CtaMayor("test", "test");
+        ctaMayor = ctaMayorDao.actualiza(ctaMayor);
+
+        this.mockMvc.perform(post("/rh/ctaMayor/actualiza").param("nombre", "test1").param("nombreFiscal","test")).
+                andExpect(status().isOk()).
+                andExpect(flash().attributeExists("message")).
+                andExpect(flash().attribute("message", "ctaMayor.actualizada.message"));
+    }
+    
+    @Test
+    public void debieraEliminarCtaMayor() throws Exception {
+        log.debug("Debiera eliminar ctaMayor");
+        CtaMayor ctaMayor = new CtaMayor("test", "test");
+        ctaMayorDao.elimina(ctaMayor.getId());
+
+        this.mockMvc.perform(post("/rh/ctaMayor/elimina")).
+                andExpect(status().isOk()).
+                andExpect(flash().attributeExists("message")).
+                andExpect(flash().attribute("message", "ctaMayor.eliminada.message"));
+    }
 }
