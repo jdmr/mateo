@@ -89,7 +89,7 @@ public class CtaMayorDao {
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put("ctaMayor", criteria.list());
+        params.put("ctaMayores", criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
