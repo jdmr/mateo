@@ -100,7 +100,7 @@
                                         <td>${lote.iva}</td>
                                         <td>${lote.total}</td>
                                         <td>
-                                            <a href="<c:url value='/inventario/entrada/lote/elimina/${lote.id}' />" class="btn btn-danger"><i class="icon-remove-circle icon-white"></i></a>
+                                            <a href="<c:url value='/inventario/entrada/lote/elimina/${lote.id}' />" class="btn btn-danger"><i class="icon-remove icon-white"></i></a>
                                         </td>
                                     </tr>
                                 </c:forEach>
