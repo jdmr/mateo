@@ -25,6 +25,7 @@ package mx.edu.um.mateo.inventario.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.*;
@@ -57,6 +58,10 @@ public class LoteEntrada implements Serializable {
     private Date fechaCreacion;
 
     public LoteEntrada() {
+    }
+    
+    public LoteEntrada(Entrada entrada) {
+        this.entrada = entrada;
     }
 
     public LoteEntrada(BigDecimal cantidad, BigDecimal precioUnitario, Producto producto, Entrada entrada) {
@@ -177,6 +182,11 @@ public class LoteEntrada implements Serializable {
      */
     public void setFechaCreacion(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+    
+    public BigDecimal getTotal() {
+        BigDecimal total = iva.add(precioUnitario.multiply(cantidad)).setScale(2, RoundingMode.HALF_UP);
+        return total;
     }
 
     @Override

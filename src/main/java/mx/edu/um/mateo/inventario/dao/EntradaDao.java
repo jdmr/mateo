@@ -126,6 +126,10 @@ public class EntradaDao {
         return (Entrada) currentSession().get(Entrada.class, id);
     }
 
+    public Entrada carga(Long id) {
+        return (Entrada) currentSession().load(Entrada.class, id);
+    }
+
     public Entrada crea(Entrada entrada, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
@@ -172,7 +176,7 @@ public class EntradaDao {
                 throw new RuntimeException("No se puede actualizar una entrada que no este abierta");
         }
     }
-    
+
     public Entrada cierra(Entrada entrada, Usuario usuario) {
         switch (entrada.getEstatus().getNombre()) {
             case Constantes.ABIERTA:
@@ -192,7 +196,7 @@ public class EntradaDao {
             default:
                 throw new RuntimeException("No se puede actualizar una entrada que no este abierta");
         }
-        for(LoteEntrada lote : entrada.getLotes()) {
+        for (LoteEntrada lote : entrada.getLotes()) {
             Producto producto = lote.getProducto();
             producto.setPrecioUnitario(costoPromedio(lote));
             if (!entrada.getDevolucion()) {
@@ -200,7 +204,7 @@ public class EntradaDao {
             }
             producto.setExistencia(producto.getExistencia().add(lote.getCantidad()));
             currentSession().update(producto);
-            
+
             BigDecimal subtotal = lote.getPrecioUnitario().multiply(lote.getCantidad());
             entrada.setIva(entrada.getIva().add(lote.getIva()));
             entrada.setTotal(entrada.getTotal().add(subtotal.add(lote.getIva())));
@@ -210,7 +214,7 @@ public class EntradaDao {
         Estatus estatus = (Estatus) query.uniqueResult();
         entrada.setEstatus(estatus);
         entrada.setFolio(getFolio(entrada.getAlmacen()));
-        
+
         currentSession().update(entrada);
         currentSession().flush();
         return entrada;
@@ -227,7 +231,7 @@ public class EntradaDao {
             throw new RuntimeException("No se puede eliminar una entrada que no este abierta");
         }
     }
-    
+
     public LoteEntrada creaLote(LoteEntrada lote) throws ProductoNoSoportaFraccionException {
         if (!lote.getProducto().getFraccion()) {
             BigDecimal[] resultado = lote.getCantidad().divideAndRemainder(new BigDecimal("1"));
@@ -235,21 +239,26 @@ public class EntradaDao {
                 throw new ProductoNoSoportaFraccionException();
             }
         }
-        
+
         BigDecimal subtotal = lote.getPrecioUnitario().multiply(lote.getCantidad());
         BigDecimal iva = subtotal.multiply(lote.getProducto().getIva()).setScale(2, RoundingMode.HALF_UP);
         lote.setIva(iva);
-        
+
         currentSession().save(lote);
-        
+
         return lote;
     }
-    
-    public void eliminaLote(Long id) {
+
+    public Long eliminaLote(Long id) {
+        log.debug("Eliminando lote {}", id);
         LoteEntrada lote = (LoteEntrada) currentSession().get(LoteEntrada.class, id);
         if (lote.getEntrada().getEstatus().getNombre().equals(Constantes.ABIERTA)) {
+            id = lote.getEntrada().getId();
             currentSession().delete(lote);
+            currentSession().flush();
+            return id;
         }
+        throw new RuntimeException("No se pudo eliminar el lote " + id);
     }
 
     private String getFolioTemporal(Almacen almacen) {
@@ -279,7 +288,7 @@ public class EntradaDao {
         sb.append(nf.format(folio.getValor()));
         return sb.toString();
     }
-    
+
     private String getFolio(Almacen almacen) {
         Query query = currentSession().createQuery("select f from Folio f where f.nombre = :nombre and f.almacen.id = :almacenId");
         query.setString("nombre", "ENTRADA");
@@ -306,14 +315,14 @@ public class EntradaDao {
         sb.append(nf.format(folio.getValor()));
         return sb.toString();
     }
-    
+
     private BigDecimal costoPromedio(LoteEntrada lote) {
         Producto producto = lote.getProducto();
-        
+
         BigDecimal cantidad = lote.getCantidad();
         BigDecimal viejoBalance = producto.getPrecioUnitario().multiply(producto.getExistencia());
         BigDecimal nuevoBalance = lote.getPrecioUnitario().multiply(cantidad);
-        
+
         BigDecimal balanceTotal = viejoBalance.add(nuevoBalance);
         BigDecimal articulos = cantidad.add(producto.getExistencia());
         return balanceTotal.divide(articulos).setScale(2, RoundingMode.HALF_UP);

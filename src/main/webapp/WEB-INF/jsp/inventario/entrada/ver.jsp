@@ -78,12 +78,58 @@
                     <div class="span1"><s:message code="almacen.label" /></div>
                     <div class="span11">${entrada.almacen.nombre}</div>
                 </div>
+                <div class="row-fluid">
+                    <div class="span12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th><s:message code="producto.label" /></th>
+                                    <th><s:message code="cantidad.label" /></th>
+                                    <th><s:message code="precioUnitario.label" /></th>
+                                    <th><s:message code="iva.label" /></th>
+                                    <th><s:message code="total.label" /></th>
+                                    <th><s:message code="acciones.label" /></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <c:forEach items="${entrada.lotes}" var="lote" varStatus="status">
+                                    <tr>
+                                        <td>${lote.producto.nombre}</td>
+                                        <td>${lote.cantidad}</td>
+                                        <td>${lote.precioUnitario}</td>
+                                        <td>${lote.iva}</td>
+                                        <td>${lote.total}</td>
+                                        <td>
+                                            <a href="<c:url value='/inventario/entrada/lote/elimina/${lote.id}' />" class="btn btn-danger"><i class="icon-remove-circle icon-white"></i></a>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-                <p class="well">
-                    <a href="<c:url value='/inventario/entrada/edita/${entrada.id}' />" class="btn btn-primary"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
-                    <form:hidden path="id" />
-                    <input type="submit" name="elimina" value="<s:message code='eliminar.button'/>" class="btn btn-danger icon-remove" style="margin-bottom: 2px;" onclick="return confirm('<s:message code="confirma.elimina.message" />');" />
-                </p>
+                <c:if test="${puedeEditar || puedeCerrar || puedePendiente || puedeEliminar || puedeEditarPendiente}">
+                    <p class="well">
+                        <c:if test="${puedeEditar}">
+                            <a href="<c:url value='/inventario/entrada/edita/${entrada.id}' />" class="btn btn-primary"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
+                            <a href="<c:url value='/inventario/entrada/lote/${entrada.id}' />" class="btn btn-primary"><i class="icon-edit icon-white"></i> <s:message code="nuevo.lote.button" /></a>
+                        </c:if>
+                        <c:if test="${puedeCerrar}">
+                            <a href="<c:url value='/inventario/entrada/cerrar/${entrada.id}' />" class="btn btn-warning"><i class="icon-edit icon-white"></i> <s:message code="cerrar.button" /></a>
+                        </c:if>
+                        <c:if test="${puedePendiente}">
+                            <a href="<c:url value='/inventario/entrada/pendiente/${entrada.id}' />" class="btn btn-warning"><i class="icon-edit icon-white"></i> <s:message code="pendiente.button" /></a>
+                        </c:if>
+                        <c:if test="${puedeEditarPendiente}">
+                            <a href="<c:url value='/inventario/entrada/editaPendiente/${entrada.id}' />" class="btn btn-warning"><i class="icon-edit icon-white"></i> <s:message code="cerrar.button" /></a>
+                        </c:if>
+                        <c:if test="${puedeEliminar}">
+                            <form:hidden path="id" />
+                            <input type="submit" name="elimina" value="<s:message code='eliminar.button'/>" class="btn btn-danger icon-remove" style="margin-bottom: 2px;" onclick="return confirm('<s:message code="confirma.elimina.message" />');" />
+                        </c:if>
+                    </p>
+                </c:if>
             </form:form>
         </div>
     </body>
