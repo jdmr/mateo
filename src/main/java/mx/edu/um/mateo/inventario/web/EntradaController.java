@@ -344,6 +344,57 @@ public class EntradaController {
         return "redirect:/inventario/entrada/ver/" + id;
     }
 
+    @RequestMapping(value = "/pendiente/cerrar", method = RequestMethod.POST)
+    public String cerrarPendiente(HttpServletRequest request, @ModelAttribute Entrada entrada, RedirectAttributes redirectAttributes) {
+        log.debug("Cierra entrada {}", entrada.getFolio());
+        try {
+            entrada = entradaDao.cierraPendiente(entrada, ambiente.obtieneUsuario());
+            redirectAttributes.addFlashAttribute("message", "entrada.cerrada.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{entrada.getFolio()});
+        } catch (NoSePuedeCerrarEntradaException e) {
+            log.error("No se pudo cerrar la entrada", e);
+            redirectAttributes.addFlashAttribute("message", "entrada.no.cerrada.message");
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+        }
+
+        return "redirect:/inventario/entrada/ver/" + entrada.getId();
+    }
+
+    @RequestMapping("/pendiente/{id}")
+    public String pendiente(HttpServletRequest request, @PathVariable Long id, RedirectAttributes redirectAttributes) {
+        log.debug("Poniendo pendiente a entrada {}", id);
+        try {
+            String folio = entradaDao.pendiente(id, ambiente.obtieneUsuario());
+            redirectAttributes.addFlashAttribute("message", "entrada.pendiente.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{folio});
+        } catch (NoCuadraException e) {
+            log.error("No se pudo poner en pendiente la entrada", e);
+            redirectAttributes.addFlashAttribute("message", "entrada.no.cuadra.message");
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+        } catch (NoSePuedeCerrarEntradaException e) {
+            log.error("No se pudo poner en pendiente la entrada", e);
+            redirectAttributes.addFlashAttribute("message", "entrada.no.pendiente.message");
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+        }
+
+        return "redirect:/inventario/entrada/ver/" + id;
+    }
+
+    @RequestMapping("/pendiente/edita/{id}")
+    public String editaPendiente(HttpServletRequest request, @PathVariable Long id, Model modelo, RedirectAttributes redirectAttributes) {
+        log.debug("Editando entrada pendiente {}", id);
+        Entrada entrada = entradaDao.obtiene(id);
+        if (entrada.getEstatus().getNombre().equals(Constantes.PENDIENTE)) {
+            modelo.addAttribute("entrada", entrada);
+            return "inventario/entrada/pendiente";
+        } else {
+            redirectAttributes.addFlashAttribute("message", "entrada.no.pendiente.message");
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+            return "redirect:/inventario/entrada/ver/" + id;
+        }
+
+    }
+
     @RequestMapping(value = "/proveedores", params = "term", produces = "application/json")
     public @ResponseBody
     List<LabelValueBean> proveedores(HttpServletRequest request, @RequestParam("term") String filtro) {
