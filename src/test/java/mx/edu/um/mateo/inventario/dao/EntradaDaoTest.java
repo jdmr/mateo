@@ -421,6 +421,8 @@ public class EntradaDaoTest {
         assertNotNull(id);
 
         Entrada entrada = new Entrada("tst-01", "test-01", new Date(), estatus, proveedor, almacen);
+        entrada.setIva(new BigDecimal("32.00"));
+        entrada.setTotal(new BigDecimal("232.00"));
         entrada = instance.crea(entrada, usuario);
         assertNotNull(entrada);
         assertNotNull(entrada.getId());
