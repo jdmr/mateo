@@ -29,8 +29,10 @@ import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.general.utils.ProductoNoSoportaFraccionException;
+import mx.edu.um.mateo.inventario.utils.ProductoNoSoportaFraccionException;
 import mx.edu.um.mateo.inventario.model.*;
+import mx.edu.um.mateo.inventario.utils.NoCuadraException;
+import mx.edu.um.mateo.inventario.utils.NoSePuedeCerrarEntradaException;
 import org.hibernate.*;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
@@ -177,47 +179,82 @@ public class EntradaDao {
         }
     }
 
-    public Entrada cierra(Entrada entrada, Usuario usuario) {
-        switch (entrada.getEstatus().getNombre()) {
-            case Constantes.ABIERTA:
-                if (usuario != null) {
-                    entrada.setAlmacen(usuario.getAlmacen());
-                }
-                break;
-            case Constantes.PENDIENTE:
-                Entrada pendiente = (Entrada) currentSession().get(Entrada.class, entrada.getId());
-                if (entrada.getVersion() != pendiente.getVersion()) {
-                    throw new RuntimeException("No es la ultima version de la entrada");
-                }
-                pendiente.setFactura(entrada.getFactura());
-                pendiente.setFechaFactura(entrada.getFechaFactura());
-                entrada = pendiente;
-                break;
-            default:
-                throw new RuntimeException("No se puede actualizar una entrada que no este abierta");
-        }
-        for (LoteEntrada lote : entrada.getLotes()) {
-            Producto producto = lote.getProducto();
-            producto.setPrecioUnitario(costoPromedio(lote));
-            if (!entrada.getDevolucion()) {
-                producto.setUltimoPrecio(lote.getPrecioUnitario());
+    public String cierra(Long entradaId, Usuario usuario) throws NoSePuedeCerrarEntradaException, NoCuadraException {
+        Entrada entrada = (Entrada) currentSession().get(Entrada.class, entradaId);
+        entrada = cierra(entrada, usuario);
+        return entrada.getFolio();
+    }
+
+    public Entrada cierra(Entrada entrada, Usuario usuario) throws NoSePuedeCerrarEntradaException, NoCuadraException {
+        if (entrada != null) {
+            switch (entrada.getEstatus().getNombre()) {
+                case Constantes.ABIERTA:
+                    if (usuario != null) {
+                        entrada.setAlmacen(usuario.getAlmacen());
+                    }
+                    break;
+                case Constantes.PENDIENTE:
+                    Entrada pendiente = (Entrada) currentSession().get(Entrada.class, entrada.getId());
+                    if (entrada.getVersion() != pendiente.getVersion()) {
+                        throw new NoSePuedeCerrarEntradaException("No es la ultima version de la entrada");
+                    }
+                    pendiente.setFactura(entrada.getFactura());
+                    pendiente.setFechaFactura(entrada.getFechaFactura());
+                    entrada = pendiente;
+                    break;
+                default:
+                    throw new NoSePuedeCerrarEntradaException("No se puede actualizar una entrada que no este abierta");
             }
-            producto.setExistencia(producto.getExistencia().add(lote.getCantidad()));
-            currentSession().update(producto);
+            BigDecimal iva = entrada.getIva();
+            BigDecimal total = entrada.getTotal();
+            entrada.setIva(BigDecimal.ZERO);
+            entrada.setTotal(BigDecimal.ZERO);
+            for (LoteEntrada lote : entrada.getLotes()) {
+                Producto producto = lote.getProducto();
+                producto.setPrecioUnitario(costoPromedio(lote));
+                if (!entrada.getDevolucion()) {
+                    producto.setUltimoPrecio(lote.getPrecioUnitario());
+                }
+                producto.setExistencia(producto.getExistencia().add(lote.getCantidad()));
+                currentSession().update(producto);
 
-            BigDecimal subtotal = lote.getPrecioUnitario().multiply(lote.getCantidad());
-            entrada.setIva(entrada.getIva().add(lote.getIva()));
-            entrada.setTotal(entrada.getTotal().add(subtotal.add(lote.getIva())));
+                BigDecimal subtotal = lote.getPrecioUnitario().multiply(lote.getCantidad());
+                entrada.setIva(entrada.getIva().add(lote.getIva()));
+                entrada.setTotal(entrada.getTotal().add(subtotal.add(lote.getIva())));
+            }
+            // Si tanto el iva o el total difieren mas de un 5% del valor que 
+            // viene en la factura lanzar excepcion
+            if (iva.compareTo(entrada.getIva()) != 0 || total.compareTo(entrada.getTotal()) != 0) {
+                BigDecimal variacion = new BigDecimal("0.05");
+                BigDecimal topeIva = entrada.getIva().multiply(variacion);
+                BigDecimal topeTotal = entrada.getTotal().multiply(variacion);
+                if (iva.compareTo(entrada.getIva()) < 0 || total.compareTo(entrada.getTotal()) < 0) {
+                    if (iva.compareTo(entrada.getIva().subtract(topeIva)) >= 0 && total.compareTo(entrada.getTotal().subtract(topeTotal)) >= 0) {
+                        // todavia puede pasar
+                    } else {
+                        throw new NoCuadraException("No se puede cerrar porque no cuadran los totales");
+                    }
+                } else {
+                    if (iva.compareTo(entrada.getIva().add(topeIva)) <= 0 && total.compareTo(entrada.getTotal().add(topeTotal)) <= 0) {
+                        // todavia puede pasar
+                    } else {
+                        throw new NoCuadraException("No se puede cerrar porque no cuadran los totales");
+                    }
+                }
+            }
+
+            Query query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
+            query.setString("nombre", Constantes.CERRADA);
+            Estatus estatus = (Estatus) query.uniqueResult();
+            entrada.setEstatus(estatus);
+            entrada.setFolio(getFolio(entrada.getAlmacen()));
+
+            currentSession().update(entrada);
+            currentSession().flush();
+            return entrada;
+        } else {
+            throw new NoSePuedeCerrarEntradaException("No se puede cerrar la entrada pues no existe");
         }
-        Query query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
-        query.setString("nombre", Constantes.CERRADA);
-        Estatus estatus = (Estatus) query.uniqueResult();
-        entrada.setEstatus(estatus);
-        entrada.setFolio(getFolio(entrada.getAlmacen()));
-
-        currentSession().update(entrada);
-        currentSession().flush();
-        return entrada;
     }
 
     public String elimina(Long id) {

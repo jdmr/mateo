@@ -25,6 +25,7 @@ package mx.edu.um.mateo.inventario.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,7 +58,7 @@ public class Entrada implements Serializable {
     @Column(nullable = false, length = 64)
     private String factura;
     @NotNull
-    @DateTimeFormat(pattern="dd/MM/yyyy")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(javax.persistence.TemporalType.DATE)
     @Column(name = "fecha_factura")
     private Date fechaFactura;
@@ -285,6 +286,11 @@ public class Entrada implements Serializable {
      */
     public void setLotes(List<LoteEntrada> lotes) {
         this.lotes = lotes;
+    }
+
+    public BigDecimal getSubtotal() {
+        BigDecimal subtotal = total.subtract(iva).setScale(2, RoundingMode.HALF_UP);
+        return subtotal;
     }
 
     @Override

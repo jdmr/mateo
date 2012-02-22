@@ -26,10 +26,10 @@
 
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/inventario/entrada'/>"><i class="icon-list icon-white"></i> <s:message code='entrada.lista.label' /></a>
-                <a class="btn btn-primary" href="<s:url value='/inventario/entrada/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='entrada.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/inventario/entrada/nuevo'/>"><i class="icon-shopping-cart icon-white"></i> <s:message code='entrada.nuevo.label' /></a>
             </p>
             <c:if test="${not empty message}">
-                <div class="alert alert-block alert-success fade in" role="status">
+                <div class="alert alert-block <c:choose><c:when test='${not empty messageStyle}'>${messageStyle}</c:when><c:otherwise>alert-success</c:otherwise></c:choose> fade in" role="status">
                     <a class="close" data-dismiss="alert">×</a>
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
@@ -72,7 +72,7 @@
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="devolucion.label" /></div>
-                    <div class="span11">${entrada.devolucion}</div>
+                    <div class="span11"><form:checkbox path="devolucion" disabled="true" /></div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="almacen.label" /></div>
@@ -84,27 +84,63 @@
                             <thead>
                                 <tr>
                                     <th><s:message code="producto.label" /></th>
-                                    <th><s:message code="cantidad.label" /></th>
-                                    <th><s:message code="precioUnitario.label" /></th>
-                                    <th><s:message code="iva.label" /></th>
-                                    <th><s:message code="total.label" /></th>
-                                    <th><s:message code="acciones.label" /></th>
+                                    <th style="text-align: right;"><s:message code="cantidad.label" /></th>
+                                    <th style="text-align: right;"><s:message code="precioUnitario.label" /></th>
+                                    <th style="text-align: right;"><s:message code="iva.label" /></th>
+                                    <th style="text-align: right;"><s:message code="total.label" /></th>
+                                    <c:if test="${puedeEditar}">
+                                        <th><s:message code="acciones.label" /></th>
+                                    </c:if>
                                 </tr>
                             </thead>
                             <tbody>
                                 <c:forEach items="${entrada.lotes}" var="lote" varStatus="status">
                                     <tr>
                                         <td>${lote.producto.nombre}</td>
-                                        <td>${lote.cantidad}</td>
-                                        <td>${lote.precioUnitario}</td>
-                                        <td>${lote.iva}</td>
-                                        <td>${lote.total}</td>
-                                        <td>
-                                            <a href="<c:url value='/inventario/entrada/lote/elimina/${lote.id}' />" class="btn btn-danger"><i class="icon-remove icon-white"></i></a>
-                                        </td>
+                                        <td style="text-align: right;">${lote.cantidad}</td>
+                                        <td style="text-align: right;">${lote.precioUnitario}</td>
+                                        <td style="text-align: right;">${lote.iva}</td>
+                                        <td style="text-align: right;">${lote.total}</td>
+                                        <c:if test="${puedeEditar}">
+                                            <td>
+                                                <a href="<c:url value='/inventario/entrada/lote/elimina/${lote.id}' />" class="btn btn-mini btn-danger"><i class="icon-remove icon-white"></i></a>
+                                            </td>
+                                        </c:if>
                                     </tr>
                                 </c:forEach>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th style="text-align: right;"><s:message code="subtotal.label" /></th>
+                                    <th style="text-align: right;"><span class="${estiloTotales}">${subtotal}</span></th>
+                                    <c:if test="${puedeEditar}">
+                                        <th>${entrada.subtotal}</th>
+                                    </c:if>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th style="text-align: right;"><s:message code="iva.label" /></th>
+                                    <th style="text-align: right;"><span class="${estiloTotales}">${iva}</span></th>
+                                    <c:if test="${puedeEditar}">
+                                        <th>${entrada.iva}</th>
+                                    </c:if>
+                                </tr>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th style="text-align: right;"><s:message code="total.label" /></th>
+                                    <th style="text-align: right;"><span class="${estiloTotales}">${total}</span></th>
+                                    <c:if test="${puedeEditar}">
+                                        <th>${entrada.total}</th>
+                                    </c:if>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -113,16 +149,16 @@
                     <p class="well">
                         <c:if test="${puedeEditar}">
                             <a href="<c:url value='/inventario/entrada/edita/${entrada.id}' />" class="btn btn-primary"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
-                            <a href="<c:url value='/inventario/entrada/lote/${entrada.id}' />" class="btn btn-primary"><i class="icon-edit icon-white"></i> <s:message code="nuevo.lote.button" /></a>
+                            <a href="<c:url value='/inventario/entrada/lote/${entrada.id}' />" class="btn btn-success"><i class="icon-shopping-cart icon-white"></i> <s:message code="nuevo.lote.button" /></a>
                         </c:if>
                         <c:if test="${puedeCerrar}">
-                            <a href="<c:url value='/inventario/entrada/cerrar/${entrada.id}' />" class="btn btn-warning"><i class="icon-edit icon-white"></i> <s:message code="cerrar.button" /></a>
+                            <a href="<c:url value='/inventario/entrada/cerrar/${entrada.id}' />" class="btn btn-warning"><i class="icon-lock icon-white"></i> <s:message code="cerrar.button" /></a>
                         </c:if>
                         <c:if test="${puedePendiente}">
-                            <a href="<c:url value='/inventario/entrada/pendiente/${entrada.id}' />" class="btn btn-warning"><i class="icon-edit icon-white"></i> <s:message code="pendiente.button" /></a>
+                            <a href="<c:url value='/inventario/entrada/pendiente/${entrada.id}' />" class="btn btn-warning"><i class="icon-asterisk icon-white"></i> <s:message code="pendiente.button" /></a>
                         </c:if>
                         <c:if test="${puedeEditarPendiente}">
-                            <a href="<c:url value='/inventario/entrada/editaPendiente/${entrada.id}' />" class="btn btn-warning"><i class="icon-edit icon-white"></i> <s:message code="cerrar.button" /></a>
+                            <a href="<c:url value='/inventario/entrada/editaPendiente/${entrada.id}' />" class="btn btn-warning"><i class="icon-asterisk icon-white"></i> <s:message code="cerrar.button" /></a>
                         </c:if>
                         <c:if test="${puedeEliminar}">
                             <form:hidden path="id" />
