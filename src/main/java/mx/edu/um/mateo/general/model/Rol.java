@@ -35,6 +35,7 @@ import org.springframework.security.core.GrantedAuthority;
  */
 @Entity
 @Table(name = "roles")
+@Cacheable
 public class Rol implements Serializable, GrantedAuthority {
 
     @Id

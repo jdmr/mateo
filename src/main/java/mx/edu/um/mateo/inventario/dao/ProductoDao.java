@@ -52,13 +52,13 @@ public class ProductoDao {
     private static final Logger log = LoggerFactory.getLogger(ProductoDao.class);
     @Autowired
     private SessionFactory sessionFactory;
-    
+
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
-    
+
     public Map<String, Object> lista(Map<String, Object> params) {
-        log.debug("Buscando lista de tipos de producto con params {}", params);
+        log.debug("Buscando lista de productos con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
@@ -90,8 +90,12 @@ public class ProductoDao {
             String filtro = (String) params.get("filtro");
             filtro = "%" + filtro + "%";
             Disjunction propiedades = Restrictions.disjunction();
+            propiedades.add(Restrictions.ilike("sku", filtro));
             propiedades.add(Restrictions.ilike("nombre", filtro));
             propiedades.add(Restrictions.ilike("descripcion", filtro));
+            propiedades.add(Restrictions.ilike("marca", filtro));
+            propiedades.add(Restrictions.ilike("modelo", filtro));
+            propiedades.add(Restrictions.ilike("ubicacion", filtro));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -126,7 +130,7 @@ public class ProductoDao {
         if (usuario != null) {
             producto.setAlmacen(usuario.getAlmacen());
         }
-        producto.setTipoProducto((TipoProducto)session.get(TipoProducto.class, producto.getTipoProducto().getId()));
+        producto.setTipoProducto((TipoProducto) session.get(TipoProducto.class, producto.getTipoProducto().getId()));
         session.save(producto);
         session.flush();
         return producto;
@@ -145,7 +149,7 @@ public class ProductoDao {
         if (usuario != null) {
             producto.setAlmacen(usuario.getAlmacen());
         }
-        producto.setTipoProducto((TipoProducto)session.get(TipoProducto.class, producto.getTipoProducto().getId()));
+        producto.setTipoProducto((TipoProducto) session.get(TipoProducto.class, producto.getTipoProducto().getId()));
         session.update(producto);
         session.flush();
         return producto;
@@ -158,5 +162,4 @@ public class ProductoDao {
         currentSession().flush();
         return nombre;
     }
-    
 }

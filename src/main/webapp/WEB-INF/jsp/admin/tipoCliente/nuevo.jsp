@@ -63,7 +63,7 @@
                                 <s:message code="margenUtilidad.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="margenUtilidad" maxlength="128" required="true" cssClass="span3" cssStyle="text-align:right;" />
+                            <form:input path="margenUtilidad" maxlength="128" required="true" cssClass="span3" cssStyle="text-align:right;" type="number" step="0.01" min="0" max="10" />
                             <form:errors path="margenUtilidad" cssClass="alert alert-error" />
                         </div>
                     </s:bind>

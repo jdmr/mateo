@@ -25,15 +25,12 @@ package mx.edu.um.mateo.inventario.dao;
 
 import java.util.HashMap;
 import java.util.Map;
-import mx.edu.um.mateo.general.model.Cliente;
-import mx.edu.um.mateo.general.model.Proveedor;
-import mx.edu.um.mateo.general.model.TipoCliente;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import mx.edu.um.mateo.inventario.model.TipoProducto;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueObjectException;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Disjunction;
@@ -140,6 +137,8 @@ public class AlmacenDao {
         if (usuario != null) {
             usuario.setAlmacen(almacen);
         }
+        TipoProducto tipoProducto = new TipoProducto("TIPO1", "TIPO1", almacen);
+        session.save(tipoProducto);
         session.flush();
         return almacen;
     }
@@ -162,7 +161,7 @@ public class AlmacenDao {
             log.debug("Actualizando almacen");
             session.update(almacen);
             session.flush();
-            
+
         } catch (NonUniqueObjectException e) {
             try {
                 session.merge(almacen);
@@ -192,5 +191,4 @@ public class AlmacenDao {
             throw new UltimoException("No se puede eliminar porque es el ultimo");
         }
     }
-    
 }

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
+              name="Productos" 
+              pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.7715610000000082"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="sku" class="java.lang.String"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="marca" class="java.lang.String"/>
+	<field name="modelo" class="java.lang.String"/>
+	<field name="ubicacion" class="java.lang.String"/>
+	<field name="unidadMedida" class="java.lang.String"/>
+	<field name="precioUnitario" class="java.math.BigDecimal"/>
+	<field name="ultimoPrecio" class="java.math.BigDecimal"/>
+	<field name="existencia" class="java.math.BigDecimal"/>
+	<field name="iva" class="java.math.BigDecimal"/>
+	<field name="fraccion" class="java.lang.Boolean"/>
+	<field name="tipoProducto.nombre" class="java.lang.String"/>
+	<field name="almacen.nombre" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="34" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="752" height="31"/>
+				<textElement textAlignment="Left">
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reporte de Productos]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="25"/>
+				<textElement/>
+				<text><![CDATA[SKU]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="100" height="25"/>
+				<textElement/>
+				<text><![CDATA[Nombre]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="200" height="25"/>
+				<textElement/>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="0" width="100" height="25"/>
+				<textElement />
+				<text><![CDATA[Marca]]></text>
+			</staticText >
+			<staticText>
+				<reportElement x="500" y="0" width="100" height="25"/>
+				<textElement />
+				<text><![CDATA[Modelo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="600" y="0" width="150" height="25"/>
+				<textElement />
+				<text><![CDATA[Ubicación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="25" width="100" height="25"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Precio Unitario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="25" width="100" height="25"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Último Precio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="25" width="100" height="25"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Existencias]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="305" y="25" width="45" height="25"/>
+				<textElement/>
+				<text><![CDATA[Unidades]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="350" y="25" width="50" height="25"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[IVA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="25" width="100" height="25"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[¿Acepta Fracción?]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="500" y="25" width="100" height="25"/>
+				<textElement/>
+				<text><![CDATA[TipoProducto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="600" y="25" width="100" height="25"/>
+				<textElement/>
+				<text><![CDATA[Almacén]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="35" splitType="Stretch">
+			<textField isStretchWithOverflow="true" >
+				<reportElement x="0" y="0" width="100" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sku}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="100" y="0" width="100" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="200" y="0" width="200" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="400" y="0" width="100" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{marca}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="500" y="0" width="100" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{modelo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="600" y="0" width="150" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ubicacion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" >
+				<reportElement x="0" y="15" width="100" height="15"/>
+				<textElement verticalAlignment="Middle" textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{precioUnitario}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" >
+				<reportElement x="100" y="15" width="100" height="15"/>
+				<textElement verticalAlignment="Middle" textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ultimoPrecio}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" >
+				<reportElement x="200" y="15" width="100" height="15"/>
+				<textElement verticalAlignment="Middle" textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{existencia}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" >
+				<reportElement x="305" y="15" width="45" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{unidadMedida}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" >
+				<reportElement x="350" y="15" width="50" height="15"/>
+				<textElement verticalAlignment="Middle" textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{iva}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" >
+				<reportElement x="400" y="15" width="100" height="15"/>
+				<textElement verticalAlignment="Middle" textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fraccion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" >
+				<reportElement x="500" y="15" width="100" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipoProducto.nombre}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" >
+				<reportElement x="600" y="15" width="100" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{almacen.nombre}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

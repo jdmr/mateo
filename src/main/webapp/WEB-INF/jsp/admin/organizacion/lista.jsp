@@ -125,38 +125,7 @@
             </div>
         </form>        
         <content>
-            <script>
-                $(document).ready(function() {
-                    highlightTableRows("lista");
-
-                });
-
-                function buscaPagina(paginaId) {
-                    $('input#pagina').val(paginaId);
-                    document.forms["filtraLista"].submit();
-                }
-                
-                function imprime(tipo) {
-                    $('input#tipo').val(tipo);
-                    document.forms["filtraLista"].submit();
-                }
-                
-                function enviaCorreo(tipo) {
-                    $('#enviaCorreoBtn').button('loading');
-                    $('input#correo').val(tipo);
-                    document.forms["filtraLista"].submit();
-                }
-                
-                function ordena(campo) {
-                    if ($('input#order').val() == campo && $('input#sort').val() == 'asc') {
-                        $('input#sort').val('desc');
-                    } else {
-                        $('input#sort').val('asc');
-                    }
-                    $('input#order').val(campo);
-                    document.forms["filtraLista"].submit();
-                }
-            </script>
+            <script src="<c:url value='/js/lista.js' />"></script>
         </content>
     </body>
 </html>

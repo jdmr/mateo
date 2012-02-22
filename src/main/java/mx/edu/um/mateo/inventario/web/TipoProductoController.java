@@ -127,7 +127,7 @@ public class TipoProductoController {
             params.remove("reporte");
             try {
                 enviaCorreo(correo, (List<TipoProducto>) params.get("tiposDeProducto"), request);
-                modelo.addAttribute("message", "lista.enviado.message");
+                modelo.addAttribute("message", "lista.enviada.message");
                 modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("tipoProducto.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);

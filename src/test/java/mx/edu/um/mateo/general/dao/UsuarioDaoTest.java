@@ -79,7 +79,7 @@ public class UsuarioDaoTest {
         roles.add(rol);
         Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Almacen almacen = new Almacen("TEST01", empresa);
+        Almacen almacen = new Almacen("TST", "TEST01", empresa);
         currentSession().save(almacen);
 
         for (int i = 0; i < 20; i++) {
@@ -112,7 +112,7 @@ public class UsuarioDaoTest {
         roles.add(rol);
         Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Almacen almacen = new Almacen("TEST01", empresa);
+        Almacen almacen = new Almacen("TST", "TEST01", empresa);
         currentSession().save(almacen);
         Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
         usuario.setEmpresa(empresa);
@@ -140,7 +140,7 @@ public class UsuarioDaoTest {
         currentSession().save(rol);
         Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Almacen almacen = new Almacen("TEST01", empresa);
+        Almacen almacen = new Almacen("TST", "TEST01", empresa);
         currentSession().save(almacen);
 
         Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
@@ -163,7 +163,7 @@ public class UsuarioDaoTest {
         roles.add(rol);
         Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Almacen almacen = new Almacen("TEST01", empresa);
+        Almacen almacen = new Almacen("TST", "TEST01", empresa);
         currentSession().save(almacen);
         Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
         usuario.setEmpresa(empresa);
@@ -193,7 +193,7 @@ public class UsuarioDaoTest {
         roles.add(rol);
         Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Almacen almacen = new Almacen("TEST01", empresa);
+        Almacen almacen = new Almacen("TST", "TEST01", empresa);
         currentSession().save(almacen);
         Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
         usuario.setEmpresa(empresa);
@@ -229,7 +229,7 @@ public class UsuarioDaoTest {
         roles.add(rol);
         Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Almacen almacen = new Almacen("TEST01", empresa);
+        Almacen almacen = new Almacen("TST", "TEST01", empresa);
         currentSession().save(almacen);
         Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
         usuario.setEmpresa(empresa);
@@ -257,7 +257,7 @@ public class UsuarioDaoTest {
         roles.add(rol);
         Empresa empresa = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Almacen almacen = new Almacen("TEST01", empresa);
+        Almacen almacen = new Almacen("TST", "TEST01", empresa);
         currentSession().save(almacen);
         Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
         usuario.setEmpresa(empresa);
@@ -292,9 +292,9 @@ public class UsuarioDaoTest {
         currentSession().save(empresa);
         Empresa empresa2 = new Empresa("TEST02", "TEST02", "TEST02", "000000000001", organizacion);
         currentSession().save(empresa2);
-        Almacen almacen = new Almacen("TEST01", empresa);
+        Almacen almacen = new Almacen("TST1", "TEST01", empresa);
         currentSession().save(almacen);
-        Almacen almacen2 = new Almacen("TEST02", empresa);
+        Almacen almacen2 = new Almacen("TST2", "TEST02", empresa);
         currentSession().save(almacen2);
 
         for (int i = 0; i < 20; i++) {
