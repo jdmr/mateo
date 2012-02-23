@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.EmpresaDao;
 import mx.edu.um.mateo.general.utils.UltimoException;
-import mx.edu.um.mateo.rh.model.CtaMayor;
+import mx.edu.um.mateo.rh.model.CuentaMayor;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -28,13 +28,13 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class CtaMayorDao {
+public class CuentaMayorDao {
 
     private static final Logger log = LoggerFactory.getLogger(EmpresaDao.class);
     @Autowired
     private SessionFactory sessionFactory;
 
-    public CtaMayorDao() {
+    public CuentaMayorDao() {
         log.info("Nueva instancia de CtaMayorDao");
     }
 
@@ -63,8 +63,8 @@ public class CtaMayorDao {
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(CtaMayor.class);
-        Criteria countCriteria = currentSession().createCriteria(CtaMayor.class);
+        Criteria criteria = currentSession().createCriteria(CuentaMayor.class);
+        Criteria countCriteria = currentSession().createCriteria(CuentaMayor.class);
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
@@ -97,25 +97,29 @@ public class CtaMayorDao {
         return params;
     }
 
-    public CtaMayor obtiene(Long id) {
-        CtaMayor ctaMayor = (CtaMayor) currentSession().get(CtaMayor.class, id);
+    public CuentaMayor obtiene(Long id) {
+        CuentaMayor ctaMayor = (CuentaMayor) currentSession().get(CuentaMayor.class, id);
         return ctaMayor;
     }
 
-    public CtaMayor crea(CtaMayor ctaMayor) {
-    ctaMayor = new CtaMayor();
+//<<<<<<< HEAD:src/main/java/mx/edu/um/mateo/rh/dao/CtaMayorDao.java
+//    public CtaMayor crea(CtaMayor ctaMayor) {
+//    ctaMayor = new CtaMayor();
+//=======
+    public CuentaMayor crea(CuentaMayor ctaMayor) {
+//>>>>>>> 05f517e388d96b64023614a89f3db30afef06e9f:src/main/java/mx/edu/um/mateo/rh/dao/CuentaMayorDao.java
         currentSession().save(ctaMayor);
         currentSession().flush();
         return ctaMayor;
     }
 
-    public CtaMayor actualiza(CtaMayor ctaMayor) {
+    public CuentaMayor actualiza(CuentaMayor ctaMayor) {
         currentSession().saveOrUpdate(ctaMayor);
         return ctaMayor;
     }
 
     public String elimina(Long id) throws UltimoException {
-        CtaMayor ctamayor = obtiene(id);
+        CuentaMayor ctamayor = obtiene(id);
         currentSession().delete(ctamayor);
         String nombre = ctamayor.getNombre();
         return nombre;
