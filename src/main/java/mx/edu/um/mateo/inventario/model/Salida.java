@@ -25,27 +25,21 @@ package mx.edu.um.mateo.inventario.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import mx.edu.um.mateo.general.model.Proveedor;
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.format.annotation.DateTimeFormat;
+import mx.edu.um.mateo.general.model.Cliente;
 
 /**
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
-@Table(name = "entradas", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"almacen_id", "folio"}),
-    @UniqueConstraint(columnNames = {"almacen_id", "factura"})
+@Table(name = "salida", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"almacen_id", "folio"})
 })
-public class Entrada implements Serializable {
+public class Salida implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,41 +48,40 @@ public class Entrada implements Serializable {
     private Integer version;
     @Column(nullable = false, length = 64)
     private String folio;
-    @NotBlank
-    @Column(nullable = false, length = 64)
-    private String factura;
-    @NotNull
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @Temporal(javax.persistence.TemporalType.DATE)
-    @Column(name = "fecha_factura")
-    private Date fechaFactura;
-    @Column(length = 128)
+    @Column(length = 64)
+    private String atendio;
+    @Column(length = 64)
+    private String reporte;
+    @Column(length = 64)
+    private String empleado;
+    @Column(length = 64)
+    private String departamento;
+    @Column(length = 254)
     private String comentarios;
-    @Column(scale = 2, precision = 8)
-    private BigDecimal tipoCambio;
     @Column(scale = 2, precision = 8, nullable = false)
     private BigDecimal iva = new BigDecimal("0");
     @Column(scale = 2, precision = 8, nullable = false)
     private BigDecimal total = new BigDecimal("0");
-    private Boolean devolucion = false;
     @ManyToOne(optional = false)
     private Estatus estatus;
     @ManyToOne(optional = false)
-    private Proveedor proveedor;
+    private Cliente cliente;
     @ManyToOne(optional = false)
     private Almacen almacen;
-    @OneToMany(mappedBy = "entrada", cascade = CascadeType.REMOVE)
-    private List<LoteEntrada> lotes = new ArrayList<>();
+    @OneToMany(mappedBy = "salida", cascade = CascadeType.REMOVE)
+    private List<LoteSalida> lotes = new ArrayList<>();
 
-    public Entrada() {
+    public Salida() {
     }
 
-    public Entrada(String folio, String factura, Date fechaFactura, Estatus estatus, Proveedor proveedor, Almacen almacen) {
-        this.folio = folio;
-        this.factura = factura;
-        this.fechaFactura = fechaFactura;
+    public Salida(String atendio, String reporte, String empleado, String departamento, String comentarios, Estatus estatus, Cliente cliente, Almacen almacen) {
+        this.atendio = atendio;
+        this.reporte = reporte;
+        this.empleado = empleado;
+        this.departamento = departamento;
+        this.comentarios = comentarios;
         this.estatus = estatus;
-        this.proveedor = proveedor;
+        this.cliente = cliente;
         this.almacen = almacen;
     }
 
@@ -135,31 +128,59 @@ public class Entrada implements Serializable {
     }
 
     /**
-     * @return the factura
+     * @return the atendio
      */
-    public String getFactura() {
-        return factura;
+    public String getAtendio() {
+        return atendio;
     }
 
     /**
-     * @param factura the factura to set
+     * @param atendio the atendio to set
      */
-    public void setFactura(String factura) {
-        this.factura = factura;
+    public void setAtendio(String atendio) {
+        this.atendio = atendio;
     }
 
     /**
-     * @return the fechaFactura
+     * @return the reporte
      */
-    public Date getFechaFactura() {
-        return fechaFactura;
+    public String getReporte() {
+        return reporte;
     }
 
     /**
-     * @param fechaFactura the fechaFactura to set
+     * @param reporte the reporte to set
      */
-    public void setFechaFactura(Date fechaFactura) {
-        this.fechaFactura = fechaFactura;
+    public void setReporte(String reporte) {
+        this.reporte = reporte;
+    }
+
+    /**
+     * @return the empleado
+     */
+    public String getEmpleado() {
+        return empleado;
+    }
+
+    /**
+     * @param empleado the empleado to set
+     */
+    public void setEmpleado(String empleado) {
+        this.empleado = empleado;
+    }
+
+    /**
+     * @return the departamento
+     */
+    public String getDepartamento() {
+        return departamento;
+    }
+
+    /**
+     * @param departamento the departamento to set
+     */
+    public void setDepartamento(String departamento) {
+        this.departamento = departamento;
     }
 
     /**
@@ -174,20 +195,6 @@ public class Entrada implements Serializable {
      */
     public void setComentarios(String comentarios) {
         this.comentarios = comentarios;
-    }
-
-    /**
-     * @return the tipoCambio
-     */
-    public BigDecimal getTipoCambio() {
-        return tipoCambio;
-    }
-
-    /**
-     * @param tipoCambio the tipoCambio to set
-     */
-    public void setTipoCambio(BigDecimal tipoCambio) {
-        this.tipoCambio = tipoCambio;
     }
 
     /**
@@ -219,20 +226,6 @@ public class Entrada implements Serializable {
     }
 
     /**
-     * @return the devolucion
-     */
-    public Boolean getDevolucion() {
-        return devolucion;
-    }
-
-    /**
-     * @param devolucion the devolucion to set
-     */
-    public void setDevolucion(Boolean devolucion) {
-        this.devolucion = devolucion;
-    }
-
-    /**
      * @return the estatus
      */
     public Estatus getEstatus() {
@@ -247,17 +240,17 @@ public class Entrada implements Serializable {
     }
 
     /**
-     * @return the proveedor
+     * @return the cliente
      */
-    public Proveedor getProveedor() {
-        return proveedor;
+    public Cliente getCliente() {
+        return cliente;
     }
 
     /**
-     * @param proveedor the proveedor to set
+     * @param cliente the cliente to set
      */
-    public void setProveedor(Proveedor proveedor) {
-        this.proveedor = proveedor;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     /**
@@ -277,20 +270,15 @@ public class Entrada implements Serializable {
     /**
      * @return the lotes
      */
-    public List<LoteEntrada> getLotes() {
+    public List<LoteSalida> getLotes() {
         return lotes;
     }
 
     /**
      * @param lotes the lotes to set
      */
-    public void setLotes(List<LoteEntrada> lotes) {
+    public void setLotes(List<LoteSalida> lotes) {
         this.lotes = lotes;
-    }
-
-    public BigDecimal getSubtotal() {
-        BigDecimal subtotal = total.subtract(iva).setScale(2, RoundingMode.HALF_UP);
-        return subtotal;
     }
 
     @Override
@@ -301,7 +289,7 @@ public class Entrada implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Entrada other = (Entrada) obj;
+        final Salida other = (Salida) obj;
         if (!Objects.equals(this.folio, other.folio)) {
             return false;
         }
@@ -310,15 +298,15 @@ public class Entrada implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 23 * hash + Objects.hashCode(this.id);
-        hash = 23 * hash + Objects.hashCode(this.version);
-        hash = 23 * hash + Objects.hashCode(this.folio);
+        int hash = 3;
+        hash = 67 * hash + Objects.hashCode(this.id);
+        hash = 67 * hash + Objects.hashCode(this.version);
+        hash = 67 * hash + Objects.hashCode(this.folio);
         return hash;
     }
 
     @Override
     public String toString() {
-        return "Entrada{" + "folio=" + folio + ", factura=" + factura + ", total=" + total + '}';
+        return "Salida{" + "folio=" + folio + ", atendio=" + atendio + ", reporte=" + reporte + ", empleado=" + empleado + ", departamento=" + departamento + ", iva=" + iva + ", total=" + total + ", estatus=" + estatus + ", cliente=" + cliente + ", almacen=" + almacen + '}';
     }
 }

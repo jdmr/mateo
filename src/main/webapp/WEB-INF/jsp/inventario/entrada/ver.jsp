@@ -158,7 +158,7 @@
                             <a href="<c:url value='/inventario/entrada/pendiente/${entrada.id}' />" class="btn btn-warning"><i class="icon-asterisk icon-white"></i> <s:message code="pendiente.button" /></a>
                         </c:if>
                         <c:if test="${puedeEditarPendiente}">
-                            <a href="<c:url value='/inventario/entrada/editaPendiente/${entrada.id}' />" class="btn btn-warning"><i class="icon-asterisk icon-white"></i> <s:message code="cerrar.button" /></a>
+                            <a href="<c:url value='/inventario/entrada/pendiente/edita/${entrada.id}' />" class="btn btn-warning"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
                         </c:if>
                         <c:if test="${puedeEliminar}">
                             <form:hidden path="id" />
