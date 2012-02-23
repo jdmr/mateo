@@ -19,6 +19,7 @@ import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.rh.dao.CtaResultadoDao;
 import mx.edu.um.mateo.rh.dao.CtaResultadoDao;
+import mx.edu.um.mateo.rh.model.CtaMayor;
 import mx.edu.um.mateo.rh.model.CtaResultado;
 import mx.edu.um.mateo.rh.model.CtaResultado;
 import org.junit.*;
@@ -74,8 +75,10 @@ public class CtaResultadoControllerTest {
     public void tearDown() {
     }
 
-    @Test
+ @Test
     public void debieraMostrarListaDeCtaResultado() throws Exception {
+        log.debug("Debiera monstrar lista de ctaResultado");
+        
         this.mockMvc.perform(get("/rh/ctaResultado")).
                 andExpect(status().isOk()).
                 andExpect(forwardedUrl("/WEB-INF/jsp/rh/ctaResultado/lista.jsp")).
@@ -84,9 +87,9 @@ public class CtaResultadoControllerTest {
                 andExpect(model().attributeExists("paginas")).
                 andExpect(model().attributeExists("pagina"));
     }
-
-    @Test
+ @Test
     public void debieraMostrarCtaResultado() throws Exception {
+        log.debug("Debiera mostrar ctaMayor");
         CtaResultado ctaResultado = new CtaResultado("test", "test");
         ctaResultado = ctaResultadoDao.crea(ctaResultado);
 
@@ -99,14 +102,32 @@ public class CtaResultadoControllerTest {
     @Test
     public void debieraCrearCtaResultado() throws Exception {
         log.debug("Debiera crear ctaResultado");
-        CtaResultado ctaResultado = new CtaResultado("test", "test");
-        ctaResultado = ctaResultadoDao.crea(ctaResultado);
-
-        this.mockMvc.perform(post("/rh/ctaResultado/crea").
-                param("nombre", "test").
-                param("nombreFiscal", "test")).
+        
+        this.mockMvc.perform(post("/rh/ctaResultado/crea").param("nombre", "test").param("nombreFiscal", "test")).
                 andExpect(status().isOk()).
                 andExpect(flash().attributeExists("message")).
                 andExpect(flash().attribute("message", "ctaResultado.creada.message"));
+    }
+
+    @Test
+    public void debieraActualizarCtaResultado() throws Exception {
+        log.debug("Debiera actualizar ctaResultado");
+
+        this.mockMvc.perform(post("/rh/ctaResultado/actualiza").param("nombre", "test1").param("nombreFiscal", "test")).
+                andExpect(status().isOk()).
+                andExpect(flash().attributeExists("message")).
+                andExpect(flash().attribute("message", "ctaResultado.actualizada.message"));
+    }
+
+    @Test
+    public void debieraEliminarCtaResultado() throws Exception {
+        log.debug("Debiera eliminar ctaResultado");
+        CtaResultado ctaResultado = new CtaResultado("test", "test");
+        ctaResultadoDao.crea(ctaResultado);
+
+        this.mockMvc.perform(post("/rh/ctaResultado/elimina").param("id", ctaResultado.getId().toString())).
+                andExpect(status().isOk()).
+                andExpect(flash().attributeExists("message")).
+                andExpect(flash().attribute("message", "ctaResultado.eliminada.message"));
     }
 }
