@@ -103,10 +103,6 @@ public class CtaMayorDao {
     }
 
     public CtaMayor crea(CtaMayor ctaMayor) {
-<<<<<<< HEAD
-    ctaMayor = new CtaMayor();
-=======
->>>>>>> 3ac0a820e3f689169370748b00704278873b615f
         currentSession().save(ctaMayor);
         currentSession().flush();
         return ctaMayor;

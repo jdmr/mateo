@@ -103,8 +103,10 @@ public class CtaAuxiliarDao {
     }
     
     public CtaAuxiliar crea(CtaAuxiliar ctaAuxiliar){
-         ctaAuxiliar = new CtaAuxiliar();
         currentSession().save(ctaAuxiliar);
+        currentSession().flush();
+        //ctaAuxiliar = new CtaAuxiliar();
+        //currentSession().save(ctaAuxiliar);
         return ctaAuxiliar;
     }
     

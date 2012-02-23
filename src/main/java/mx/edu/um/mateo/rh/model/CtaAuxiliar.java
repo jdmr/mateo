@@ -24,7 +24,6 @@ public class CtaAuxiliar implements Serializable{
     private Long id;
     @Version
     private Integer version;
-    
     @NotBlank
     @Column(nullable = false, length = 24)
     private String nombre;
@@ -33,7 +32,6 @@ public class CtaAuxiliar implements Serializable{
     private String nombreFiscal;
 
     public CtaAuxiliar() {
-        
     }
 
     public CtaAuxiliar(String nombre, String nombreFiscal) {
@@ -73,6 +71,7 @@ public class CtaAuxiliar implements Serializable{
         this.version = version;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;
@@ -84,6 +83,7 @@ public class CtaAuxiliar implements Serializable{
         return true;
     }
 
+    @Override
     public int hashCode() {
        int hash = 5;
         hash = 79 * hash + Objects.hashCode(this.id);
@@ -92,8 +92,9 @@ public class CtaAuxiliar implements Serializable{
         return hash;
     }
 
+    @Override
     public String toString() {
-        return "CtaAuxiliar{id=" + id + ", version=" + version + ", nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + '}';
+        return "CtaAuxiliar{nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + '}';
     }
     
 }

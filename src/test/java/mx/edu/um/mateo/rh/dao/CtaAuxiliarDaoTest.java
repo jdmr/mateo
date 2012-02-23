@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.test.BaseTest;
+import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.rh.model.CtaAuxiliar;
 import mx.edu.um.mateo.rh.model.Ejercicio;
 import org.hibernate.Session;
@@ -64,5 +65,58 @@ public class CtaAuxiliarDaoTest extends BaseTest{
 
         assertEquals(10, ((List<Empresa>) result.get("ctaAuxiliar")).size());
         assertEquals(20, ((Long) result.get("cantidad")).intValue());
-    } 
+    }
+   
+   
+    @Test
+    public void debieraObtenerCtaAuxiliar() {
+        log.debug("Debiera obtener ctaAuxiliar");
+        CtaAuxiliar ctaAuxiliar = new CtaAuxiliar("test", "test");
+        currentSession().save(ctaAuxiliar);
+        assertNotNull(ctaAuxiliar.getId());
+        Long id = ctaAuxiliar.getId();
+
+        CtaAuxiliar result = instance.obtiene(id);
+        assertNotNull(result);
+        assertEquals("test", result.getNombre());
+    }
+
+    @Test
+    public void deberiaCrearCtaAuxiliar() {
+        log.debug("Deberia crear CtaAuxiliar");
+        CtaAuxiliar ctaAuxiliar = new CtaAuxiliar("test", "test");
+        assertNotNull(ctaAuxiliar);
+        log.debug("ctaAuxiliar >> " + ctaAuxiliar);
+        ctaAuxiliar = instance.crea(ctaAuxiliar);
+        assertNotNull(ctaAuxiliar.getId());
+    }
+    
+    @Test
+    public void deberiaActualizarCtaAuxiliar() {
+        log.debug("Deberia actualizar CtaAuxiliar");
+        CtaAuxiliar ctaAuxiliar = new CtaAuxiliar("test", "test");
+        assertNotNull(ctaAuxiliar);
+        currentSession().save(ctaAuxiliar);
+        
+        ctaAuxiliar.setNombre("test1");
+
+        ctaAuxiliar = instance.actualiza(ctaAuxiliar);
+        log.debug("ctaAuxiliar >>" + ctaAuxiliar);
+        assertEquals("test1", ctaAuxiliar.getNombre());
+    }
+    
+
+    @Test
+    public void deberiaEliminarCtaAuxiliar() throws UltimoException {
+        log.debug("Debiera eliminar Ejercicio");
+
+        CtaAuxiliar ctaAuxiliar = new CtaAuxiliar("test", "A");
+        currentSession().save(ctaAuxiliar);
+        assertNotNull(ctaAuxiliar);
+        String nombre = instance.elimina(ctaAuxiliar.getId());
+        assertEquals("test", nombre);
+
+        CtaAuxiliar prueba = instance.obtiene(ctaAuxiliar.getId());
+        assertNull(prueba);
+    }
 }
