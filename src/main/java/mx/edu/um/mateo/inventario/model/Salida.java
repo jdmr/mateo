@@ -25,6 +25,7 @@ package mx.edu.um.mateo.inventario.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -279,6 +280,11 @@ public class Salida implements Serializable {
      */
     public void setLotes(List<LoteSalida> lotes) {
         this.lotes = lotes;
+    }
+
+    public BigDecimal getSubtotal() {
+        BigDecimal subtotal = total.subtract(iva).setScale(2, RoundingMode.HALF_UP);
+        return subtotal;
     }
 
     @Override

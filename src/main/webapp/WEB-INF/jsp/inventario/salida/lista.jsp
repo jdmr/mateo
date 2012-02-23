@@ -5,43 +5,43 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="entrada.lista.label" /></title>
+        <title><s:message code="salida.lista.label" /></title>
     </head>
     <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
             <ul class="nav">
                 <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
                 <li><a href="<c:url value='/inventario' />"><s:message code="inventario.label" /></a></li>
-                <li><a href="<s:url value='/inventario/salida'/>" ><s:message code="salida.lista.label" /></a></li>
-                <li class="active"><a href="<s:url value='/inventario/entrada'/>" ><s:message code="entrada.lista.label" /></a></li>
+                <li class="active"><a href="<s:url value='/inventario/salida'/>" ><s:message code="salida.lista.label" /></a></li>
+                <li><a href="<s:url value='/inventario/entrada'/>" ><s:message code="entrada.lista.label" /></a></li>
                 <li><a href="<s:url value='/inventario/producto'/>" ><s:message code="producto.lista.label" /></a></li>
                 <li><a href="<s:url value='/inventario/tipoProducto'/>" ><s:message code="tipoProducto.lista.label" /></a></li>
                 <li><a href="<s:url value='/inventario/almacen'/>" ><s:message code="almacen.lista.label" /></a></li>
             </ul>
         </nav>
 
-        <h1><s:message code="entrada.lista.label" /></h1>
+        <h1><s:message code="salida.lista.label" /></h1>
         <hr/>
 
-        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/inventario/entrada' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/inventario/salida' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/inventario/entrada/nueva'/>"><i class="icon-shopping-cart icon-white"></i> <s:message code='entrada.nueva.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/inventario/salida/nueva'/>"><i class="icon-shopping-cart icon-white"></i> <s:message code='salida.nueva.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><s:message code="buscar.label" /></button>
             </p>
             <c:if test="${not empty message}">
-                <div class="alert alert-block alert-success fade in" role="status">
+                <div class="alert alert-block <c:choose><c:when test='${not empty messageStyle}'>${messageStyle}</c:when><c:otherwise>alert-success</c:otherwise></c:choose> fade in" role="status">
                     <a class="close" data-dismiss="alert">×</a>
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
-            <c:if test="${entrada != null}">
-                <s:bind path="entrada.*">
+            <c:if test="${salida != null}">
+                <s:bind path="salida.*">
                     <c:if test="${not empty status.errorMessages}">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -70,32 +70,6 @@
                             </a>
                         </th>
                         <th>
-                            <a href="javascript:ordena('factura');">
-                                <s:message code="factura.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'factura' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'factura' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="javascript:ordena('fechaFactura');">
-                                <s:message code="fechaFactura.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'fechaFactura' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'fechaFactura' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
-                        <th>
                             <a href="javascript:ordena('estatus');">
                                 <s:message code="estatus.label" />
                                 <c:choose>
@@ -109,13 +83,65 @@
                             </a>
                         </th>
                         <th>
-                            <a href="javascript:ordena('proveedor');">
-                                <s:message code="proveedor.label" />
+                            <a href="javascript:ordena('reporte');">
+                                <s:message code="reporte.label" />
                                 <c:choose>
-                                    <c:when test="${param.order == 'proveedor' && param.sort == 'asc'}">
+                                    <c:when test="${param.order == 'reporte' && param.sort == 'asc'}">
                                         <i class="icon-chevron-up"></i>
                                     </c:when>
-                                    <c:when test="${param.order == 'proveedor' && param.sort == 'desc'}">
+                                    <c:when test="${param.order == 'reporte' && param.sort == 'desc'}">
+                                        <i class="icon-chevron-down"></i>
+                                    </c:when>
+                                </c:choose>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="javascript:ordena('atendio');">
+                                <s:message code="atendio.label" />
+                                <c:choose>
+                                    <c:when test="${param.order == 'atendio' && param.sort == 'asc'}">
+                                        <i class="icon-chevron-up"></i>
+                                    </c:when>
+                                    <c:when test="${param.order == 'atendio' && param.sort == 'desc'}">
+                                        <i class="icon-chevron-down"></i>
+                                    </c:when>
+                                </c:choose>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="javascript:ordena('empleado');">
+                                <s:message code="empleado.label" />
+                                <c:choose>
+                                    <c:when test="${param.order == 'empleado' && param.sort == 'asc'}">
+                                        <i class="icon-chevron-up"></i>
+                                    </c:when>
+                                    <c:when test="${param.order == 'empleado' && param.sort == 'desc'}">
+                                        <i class="icon-chevron-down"></i>
+                                    </c:when>
+                                </c:choose>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="javascript:ordena('departamento');">
+                                <s:message code="departamento.label" />
+                                <c:choose>
+                                    <c:when test="${param.order == 'departamento' && param.sort == 'asc'}">
+                                        <i class="icon-chevron-up"></i>
+                                    </c:when>
+                                    <c:when test="${param.order == 'departamento' && param.sort == 'desc'}">
+                                        <i class="icon-chevron-down"></i>
+                                    </c:when>
+                                </c:choose>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="javascript:ordena('cliente');">
+                                <s:message code="cliente.label" />
+                                <c:choose>
+                                    <c:when test="${param.order == 'cliente' && param.sort == 'asc'}">
+                                        <i class="icon-chevron-up"></i>
+                                    </c:when>
+                                    <c:when test="${param.order == 'cliente' && param.sort == 'desc'}">
                                         <i class="icon-chevron-down"></i>
                                     </c:when>
                                 </c:choose>
@@ -147,34 +173,22 @@
                                 </c:choose>
                             </a>
                         </th>
-                        <th>
-                            <a href="javascript:ordena('devolucion');">
-                                <s:message code="devolucion.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'devolucion' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'devolucion' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
                         <th><s:message code="almacen.label" /></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${entradas}" var="entrada" varStatus="status">
+                    <c:forEach items="${salidas}" var="salida" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/inventario/entrada/ver/${entrada.id}' />">${entrada.folio}</a></td>
-                            <td>${entrada.factura}</td>
-                            <td>${entrada.fechaFactura}</td>
-                            <td>${entrada.estatus.nombre}</td>
-                            <td>${entrada.proveedor.nombre}</td>
-                            <td>${entrada.iva}</td>
-                            <td>${entrada.total}</td>
-                            <td>${entrada.devolucion}</td>
-                            <td>${entrada.almacen.nombre}</td>
+                            <td><a href="<c:url value='/inventario/salida/ver/${salida.id}' />">${salida.folio}</a></td>
+                            <td>${salida.estatus.nombre}</td>
+                            <td>${salida.reporte}</td>
+                            <td>${salida.atendio}</td>
+                            <td>${salida.empleado}</td>
+                            <td>${salida.departamento}</td>
+                            <td>${salida.cliente.nombre}</td>
+                            <td>${salida.iva}</td>
+                            <td>${salida.total}</td>
+                            <td>${salida.almacen.nombre}</td>
                         </tr>
                     </c:forEach>
                 </tbody>

@@ -215,6 +215,7 @@ public class SalidaDao {
                 Estatus estatus = (Estatus) query.uniqueResult();
                 salida.setEstatus(estatus);
                 salida.setFolio(getFolio(salida.getAlmacen()));
+                salida.setAtendio(usuario.getApellido()+", "+usuario.getNombre());
 
                 currentSession().update(salida);
                 currentSession().flush();
@@ -253,9 +254,16 @@ public class SalidaDao {
             BigDecimal subtotal = lote.getPrecioUnitario().multiply(lote.getCantidad());
             BigDecimal iva = subtotal.multiply(lote.getProducto().getIva()).setScale(2, RoundingMode.HALF_UP);
             lote.setIva(iva);
+            BigDecimal total = subtotal.add(iva).setScale(2, RoundingMode.HALF_UP);
+            
+            Salida salida = lote.getSalida();
+            salida.setIva(salida.getIva().add(iva));
+            salida.setTotal(salida.getTotal().add(total));
 
+            currentSession().save(salida);
             currentSession().save(lote);
-
+            currentSession().flush();
+            
             return lote;
         } else {
             throw new NoEstaAbiertaException("No se puede crear un lote en una salida que no este abierta");
@@ -267,6 +275,10 @@ public class SalidaDao {
         LoteSalida lote = (LoteSalida) currentSession().get(LoteSalida.class, id);
         if (lote.getSalida().getEstatus().getNombre().equals(Constantes.ABIERTA)) {
             id = lote.getSalida().getId();
+            Salida salida = lote.getSalida();
+            salida.setIva(salida.getIva().subtract(lote.getIva()));
+            salida.setTotal(salida.getTotal().subtract(lote.getTotal()));
+            currentSession().save(salida);
             currentSession().delete(lote);
             currentSession().flush();
             return id;
