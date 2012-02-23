@@ -27,17 +27,17 @@ package mx.edu.um.mateo.inventario.utils;
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
-public class NoSePuedeCerrarEntradaException extends Exception {
+public class NoSePuedeCerrarException extends Exception {
 
-    public NoSePuedeCerrarEntradaException(String message, Throwable cause) {
+    public NoSePuedeCerrarException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public NoSePuedeCerrarEntradaException(String message) {
+    public NoSePuedeCerrarException(String message) {
         super(message);
     }
 
-    public NoSePuedeCerrarEntradaException() {
+    public NoSePuedeCerrarException() {
     }
     
 }

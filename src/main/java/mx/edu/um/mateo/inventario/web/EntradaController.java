@@ -23,12 +23,12 @@
  */
 package mx.edu.um.mateo.inventario.web;
 
-import mx.edu.um.mateo.inventario.utils.ProductoNoSoportaFraccionException;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.logging.Level;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
@@ -38,14 +38,16 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.ProveedorDao;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.*;
+import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.general.utils.LabelValueBean;
+import mx.edu.um.mateo.general.utils.ReporteUtil;
 import mx.edu.um.mateo.inventario.dao.EntradaDao;
 import mx.edu.um.mateo.inventario.dao.ProductoDao;
 import mx.edu.um.mateo.inventario.model.Entrada;
 import mx.edu.um.mateo.inventario.model.LoteEntrada;
 import mx.edu.um.mateo.inventario.model.Producto;
-import mx.edu.um.mateo.inventario.utils.NoCuadraException;
-import mx.edu.um.mateo.inventario.utils.NoSePuedeCerrarEntradaException;
+import mx.edu.um.mateo.inventario.utils.*;
 import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
@@ -293,6 +295,12 @@ public class EntradaController {
             Proveedor proveedor = proveedorDao.obtiene(new Long(request.getParameter("proveedor.id")));
             entrada.setProveedor(proveedor);
             entrada = entradaDao.actualiza(entrada, usuario);
+        } catch (NoEstaAbiertaException e) {
+            log.error("No se pudo actualizar la entrada", e);
+            modelo.addAttribute("message", "entrada.intento.modificar.cerrada.message");
+            modelo.addAttribute("messageStyle", "alert-error");
+            modelo.addAttribute("messageAttrs", new String[]{entrada.getFolio()});
+            return "inventario/entrada/nuevo";
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la entrada", e);
             errors.rejectValue("factura", "campo.duplicado.message", new String[]{"factura"}, null);
@@ -331,11 +339,20 @@ public class EntradaController {
             String folio = entradaDao.cierra(id, ambiente.obtieneUsuario());
             redirectAttributes.addFlashAttribute("message", "entrada.cerrada.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{folio});
+        } catch (NoEstaAbiertaException e) {
+            log.error("No se pudo cerrar la entrada", e);
+            redirectAttributes.addFlashAttribute("message", "entrada.intento.modificar.cerrada.message");
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{""});
+        } catch (NoSePuedeCerrarEnCeroException e) {
+            log.error("No se pudo cerrar la entrada", e);
+            redirectAttributes.addFlashAttribute("message", "entrada.no.cerrada.en.cero.message");
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
         } catch (NoCuadraException e) {
             log.error("No se pudo cerrar la entrada", e);
             redirectAttributes.addFlashAttribute("message", "entrada.no.cuadra.message");
             redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
-        } catch (NoSePuedeCerrarEntradaException e) {
+        } catch (NoSePuedeCerrarException e) {
             log.error("No se pudo cerrar la entrada", e);
             redirectAttributes.addFlashAttribute("message", "entrada.no.cerrada.message");
             redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
@@ -351,7 +368,7 @@ public class EntradaController {
             entrada = entradaDao.cierraPendiente(entrada, ambiente.obtieneUsuario());
             redirectAttributes.addFlashAttribute("message", "entrada.cerrada.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{entrada.getFolio()});
-        } catch (NoSePuedeCerrarEntradaException e) {
+        } catch (NoSePuedeCerrarException e) {
             log.error("No se pudo cerrar la entrada", e);
             redirectAttributes.addFlashAttribute("message", "entrada.no.cerrada.message");
             redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
@@ -367,11 +384,20 @@ public class EntradaController {
             String folio = entradaDao.pendiente(id, ambiente.obtieneUsuario());
             redirectAttributes.addFlashAttribute("message", "entrada.pendiente.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{folio});
+        } catch (NoEstaAbiertaException e) {
+            log.error("No se pudo cerrar la entrada", e);
+            redirectAttributes.addFlashAttribute("message", "entrada.intento.modificar.cerrada.message");
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{""});
+        } catch (NoSePuedeCerrarEnCeroException e) {
+            log.error("No se pudo poner en pendiente la entrada", e);
+            redirectAttributes.addFlashAttribute("message", "entrada.no.cerrada.en.cero.message");
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
         } catch (NoCuadraException e) {
             log.error("No se pudo poner en pendiente la entrada", e);
             redirectAttributes.addFlashAttribute("message", "entrada.no.cuadra.message");
             redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
-        } catch (NoSePuedeCerrarEntradaException e) {
+        } catch (NoSePuedeCerrarException e) {
             log.error("No se pudo poner en pendiente la entrada", e);
             redirectAttributes.addFlashAttribute("message", "entrada.no.pendiente.message");
             redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
@@ -477,6 +503,11 @@ public class EntradaController {
             lote.setEntrada(entrada);
             lote.setFechaCreacion(new Date());
             lote = entradaDao.creaLote(lote);
+        } catch (NoEstaAbiertaException e) {
+            log.error("No se pudo cerrar la entrada", e);
+            redirectAttributes.addFlashAttribute("message", "entrada.intento.modificar.cerrada.message");
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{""});
         } catch (ProductoNoSoportaFraccionException e) {
             log.error("No se pudo crear la entrada porque no se encontro el producto", e);
             return "inventario/entrada/lote/" + request.getParameter("entrada.id");
@@ -491,9 +522,15 @@ public class EntradaController {
     @RequestMapping("/lote/elimina/{id}")
     public String eliminaLote(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         log.debug("Eliminando lote {}", id);
-        id = entradaDao.eliminaLote(id);
-
-        redirectAttributes.addFlashAttribute("message", "lote.eliminado.message");
+        try {
+            id = entradaDao.eliminaLote(id);
+            redirectAttributes.addFlashAttribute("message", "lote.eliminado.message");
+        } catch (NoEstaAbiertaException e) {
+            log.error("No se pudo cerrar la entrada", e);
+            redirectAttributes.addFlashAttribute("message", "entrada.intento.modificar.cerrada.message");
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{""});
+        }
 
         return "redirect:/inventario/entrada/ver/" + id;
     }
