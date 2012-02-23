@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Entity
 @Table(name = "ctamayor")
-public class CtaMayor implements Serializable {
+public class CuentaMayor implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,10 +37,10 @@ public class CtaMayor implements Serializable {
 //    private Double pctIva;
 //    private Boolean detalleR;
 
-    public CtaMayor() {
+    public CuentaMayor() {
     }
 
-    public CtaMayor(String nombre, String nombreFiscal) {
+    public CuentaMayor(String nombre, String nombreFiscal) {
         this.nombre = nombre;
         this.nombreFiscal = nombreFiscal;
     }
@@ -85,7 +85,7 @@ public class CtaMayor implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final CtaMayor other = (CtaMayor) obj;
+        final CuentaMayor other = (CuentaMayor) obj;
         return true;
     }
 
