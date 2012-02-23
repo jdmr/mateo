@@ -90,7 +90,7 @@ public class TipoProductoDaoTest {
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Almacen almacen = new Almacen("tst-01", empresa);
+        Almacen almacen = new Almacen("TST", "tst-01", empresa);
         currentSession().save(almacen);
         for (int i = 0; i < 20; i++) {
             TipoProducto tipoProducto = new TipoProducto("test" + i, "test" + i, almacen);
@@ -114,7 +114,7 @@ public class TipoProductoDaoTest {
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Almacen almacen = new Almacen("tst-01", empresa);
+        Almacen almacen = new Almacen("TST", "tst-01", empresa);
         currentSession().save(almacen);
         TipoProducto tipoProducto = new TipoProducto("tst-01", "test-01", almacen);
         currentSession().save(tipoProducto);
@@ -138,7 +138,7 @@ public class TipoProductoDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Almacen almacen = new Almacen("TEST", empresa);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
@@ -169,7 +169,7 @@ public class TipoProductoDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Almacen almacen = new Almacen("TEST", empresa);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
@@ -195,7 +195,8 @@ public class TipoProductoDaoTest {
 
     /**
      * Debiera Eliminar tipo de cliente
-     * @throws Exception 
+     *
+     * @throws Exception
      */
     @Test
     public void debieraEliminarTipoProducto() throws Exception {
@@ -208,7 +209,7 @@ public class TipoProductoDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Almacen almacen = new Almacen("TEST", empresa);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);

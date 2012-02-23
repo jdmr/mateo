@@ -229,6 +229,7 @@
                     document.forms["filtraLista"].submit();
                 }
             </script>
+            <script src="<c:url value='/js/lista.js' />"></script>
         </content>
     </body>
 </html>

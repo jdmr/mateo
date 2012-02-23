@@ -121,7 +121,7 @@ public class EmpresaControllerTest extends BaseTest {
         currentSession().save(organizacion);
         Empresa otraEmpresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(otraEmpresa);
-        Almacen almacen = new Almacen("TEST01",otraEmpresa);
+        Almacen almacen = new Almacen("TST", "TEST01",otraEmpresa);
         currentSession().save(almacen);
         Rol rol = new Rol("ROLE_TEST");
         currentSession().save(rol);
@@ -152,7 +152,7 @@ public class EmpresaControllerTest extends BaseTest {
         currentSession().save(organizacion);
         Empresa otraEmpresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(otraEmpresa);
-        Almacen almacen = new Almacen("TEST01",otraEmpresa);
+        Almacen almacen = new Almacen("TST", "TEST01",otraEmpresa);
         currentSession().save(almacen);
         Rol rol = new Rol("ROLE_TEST");
         currentSession().save(rol);

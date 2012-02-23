@@ -31,8 +31,8 @@ import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.junit.*;
 import static org.junit.Assert.*;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,16 +49,17 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
 public class TipoClienteDaoTest {
-     private static final Logger log = LoggerFactory.getLogger(TipoClienteDaoTest.class);
+
+    private static final Logger log = LoggerFactory.getLogger(TipoClienteDaoTest.class);
     @Autowired
     private TipoClienteDao instance;
     @Autowired
     private SessionFactory sessionFactory;
-    
+
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
-    
+
     public TipoClienteDaoTest() {
     }
 
@@ -69,11 +70,11 @@ public class TipoClienteDaoTest {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -113,11 +114,12 @@ public class TipoClienteDaoTest {
         TipoCliente tipoCliente = new TipoCliente("tst-01", "test-01", empresa);
         currentSession().save(tipoCliente);
         Long id = tipoCliente.getId();
-        
+
         TipoCliente result = instance.obtiene(id);
         assertEquals("tst-01", result.getNombre());
     }
-/**
+
+    /**
      * Test of crea method, of class ProveedorDao.
      */
     @Test
@@ -131,7 +133,7 @@ public class TipoClienteDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Almacen almacen = new Almacen("TEST", empresa);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
@@ -147,7 +149,7 @@ public class TipoClienteDaoTest {
         assertNotNull(tipoCliente.getId());
         assertEquals("tst-01", tipoCliente.getNombre());
     }
-    
+
     @Test
     public void debieraActualizarTipoCliente() {
         log.debug("Debiera actualizar tipoCliente");
@@ -159,7 +161,7 @@ public class TipoClienteDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Almacen almacen = new Almacen("TEST", empresa);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
@@ -182,7 +184,8 @@ public class TipoClienteDaoTest {
         assertNotNull(prueba);
         assertEquals("PRUEBA", prueba.getNombre());
     }
-  @Test
+
+    @Test
     public void debieraEliminarTipoCliente() throws Exception {
         log.debug("Debiera actualizar tipoCliente");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
@@ -193,7 +196,7 @@ public class TipoClienteDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Almacen almacen = new Almacen("TEST", empresa);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
@@ -217,4 +220,3 @@ public class TipoClienteDaoTest {
         assertNull(prueba);
     }
 }
-

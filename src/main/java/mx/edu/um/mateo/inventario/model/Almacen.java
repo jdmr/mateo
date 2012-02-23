@@ -28,9 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *
@@ -38,7 +38,9 @@ import mx.edu.um.mateo.general.model.Usuario;
  */
 @Entity
 @Table(name = "almacenes", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"empresa_id", "nombre"})})
+    @UniqueConstraint(columnNames = {"empresa_id", "codigo"}),
+    @UniqueConstraint(columnNames = {"empresa_id", "nombre"})
+})
 public class Almacen implements Serializable {
 
     @Id
@@ -46,18 +48,24 @@ public class Almacen implements Serializable {
     private Long id;
     @Version
     private Integer version;
-    @NotNull
+    @NotBlank
+    @Column(nullable = false, length = 6)
+    private String codigo;
+    @NotBlank
     @Column(nullable = false, length = 128)
     private String nombre;
     @ManyToOne(optional = false)
     private Empresa empresa;
     @OneToMany(mappedBy = "almacen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Usuario> usuarios = new ArrayList<>();
+    @OneToMany(mappedBy = "almacen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<TipoProducto> tiposDeProducto = new ArrayList<>();
 
     public Almacen() {
     }
 
-    public Almacen(String nombre, Empresa empresa) {
+    public Almacen(String codigo, String nombre, Empresa empresa) {
+        this.codigo = codigo;
         this.nombre = nombre;
         this.empresa = empresa;
     }
@@ -88,6 +96,20 @@ public class Almacen implements Serializable {
      */
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    /**
+     * @return the codigo
+     */
+    public String getCodigo() {
+        return codigo;
+    }
+
+    /**
+     * @param codigo the codigo to set
+     */
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     /**
@@ -129,7 +151,21 @@ public class Almacen implements Serializable {
      * @param usuarios the usuarios to set
      */
     public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
+        this.setUsuarios(usuarios);
+    }
+
+    /**
+     * @return the tiposDeProducto
+     */
+    public List<TipoProducto> getTiposDeProducto() {
+        return tiposDeProducto;
+    }
+
+    /**
+     * @param tiposDeProducto the tiposDeProducto to set
+     */
+    public void setTiposDeProducto(List<TipoProducto> tiposDeProducto) {
+        this.tiposDeProducto = tiposDeProducto;
     }
     
     /**

@@ -28,6 +28,7 @@ import java.util.Map;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import mx.edu.um.mateo.inventario.model.TipoProducto;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -127,7 +128,7 @@ public class OrganizacionDao {
         session.save(organizacion);
         Empresa empresa = new Empresa("MTZ", "MATRIZ", "MATRIZ", "000000000001", organizacion);
         session.save(empresa);
-        Almacen almacen = new Almacen("CENTRAL", empresa);
+        Almacen almacen = new Almacen("CT","CENTRAL", empresa);
         session.save(almacen);
         if (usuario != null) {
             usuario.setEmpresa(empresa);
@@ -140,6 +141,8 @@ public class OrganizacionDao {
         session.save(tipoCliente);
         Cliente cliente = new Cliente(empresa.getNombre(), empresa.getNombreCompleto(), empresa.getRfc(), tipoCliente, true, empresa);
         session.save(cliente);
+        TipoProducto tipoProducto = new TipoProducto("TIPO1", "TIPO1", almacen);
+        session.save(tipoProducto);
         session.refresh(empresa);
         session.refresh(organizacion);
         session.flush();
