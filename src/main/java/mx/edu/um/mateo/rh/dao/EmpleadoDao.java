@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import mx.edu.um.mateo.general.utils.UltimoException;
-import mx.edu.um.mateo.rh.model.CtaMayor;
+import mx.edu.um.mateo.rh.model.CuentaMayor;
 import mx.edu.um.mateo.rh.model.Ejercicio;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
