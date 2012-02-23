@@ -6,8 +6,8 @@ package mx.edu.um.mateo.rh.web;
 
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
-import mx.edu.um.mateo.rh.dao.CtaMayorDao;
-import mx.edu.um.mateo.rh.model.CtaMayor;
+import mx.edu.um.mateo.rh.dao.CuentaMayorDao;
+import mx.edu.um.mateo.rh.model.CuentaMayor;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -32,16 +32,16 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:security.xml",
     "classpath:dispatcher-servlet.xml"
 })
-public class CtaMayorControllerTest extends BaseTest {
+public class CuentaMayorControllerTest extends BaseTest {
 
-    private static final Logger log = LoggerFactory.getLogger(CtaMayorControllerTest.class);
+    private static final Logger log = LoggerFactory.getLogger(CuentaMayorControllerTest.class);
     @Autowired
     private WebApplicationContext wac;
     private MockMvc mockMvc;
     @Autowired
-    private CtaMayorDao ctaMayorDao;
+    private CuentaMayorDao ctaMayorDao;
 
-    public CtaMayorControllerTest() {
+    public CuentaMayorControllerTest() {
     }
 
     @BeforeClass
@@ -77,7 +77,7 @@ public class CtaMayorControllerTest extends BaseTest {
     @Test
     public void debieraMostrarCtaMayor() throws Exception {
         log.debug("Debiera mostrar ctaMayor");
-        CtaMayor ctaMayor = new CtaMayor("test", "test");
+        CuentaMayor ctaMayor = new CuentaMayor("test", "test");
         ctaMayor = ctaMayorDao.crea(ctaMayor);
 
         this.mockMvc.perform(get("/rh/ctaMayor/ver/" + ctaMayor.getId())).
@@ -109,7 +109,7 @@ public class CtaMayorControllerTest extends BaseTest {
     @Test
     public void debieraEliminarCtaMayor() throws Exception {
         log.debug("Debiera eliminar ctaMayor");
-        CtaMayor ctaMayor = new CtaMayor("test", "test");
+        CuentaMayor ctaMayor = new CuentaMayor("test", "test");
         ctaMayorDao.crea(ctaMayor);
 
         this.mockMvc.perform(post("/rh/ctaMayor/elimina").param("id", ctaMayor.getId().toString())).
