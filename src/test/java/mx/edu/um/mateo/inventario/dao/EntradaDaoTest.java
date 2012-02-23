@@ -27,8 +27,10 @@ import java.math.BigDecimal;
 import java.util.*;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.general.utils.ProductoNoSoportaFraccionException;
 import mx.edu.um.mateo.inventario.model.*;
+import mx.edu.um.mateo.inventario.utils.NoCuadraException;
+import mx.edu.um.mateo.inventario.utils.NoSePuedeCerrarEntradaException;
+import mx.edu.um.mateo.inventario.utils.ProductoNoSoportaFraccionException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import static org.junit.Assert.*;
@@ -345,7 +347,7 @@ public class EntradaDaoTest {
     }
     
     @Test
-    public void debieraCerrarEntrada() {
+    public void debieraCerrarEntrada() throws NoSePuedeCerrarEntradaException, NoCuadraException {
         log.debug("Debiera cerrar entrada");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
@@ -385,7 +387,7 @@ public class EntradaDaoTest {
     }
 
     @Test
-    public void debieraCerrarEntradaConLotes() throws ProductoNoSoportaFraccionException {
+    public void debieraCerrarEntradaConLotes() throws ProductoNoSoportaFraccionException, NoSePuedeCerrarEntradaException, NoCuadraException {
         log.debug("Debiera cerrar entrada con lotes");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
@@ -419,6 +421,8 @@ public class EntradaDaoTest {
         assertNotNull(id);
 
         Entrada entrada = new Entrada("tst-01", "test-01", new Date(), estatus, proveedor, almacen);
+        entrada.setIva(new BigDecimal("32.00"));
+        entrada.setTotal(new BigDecimal("232.00"));
         entrada = instance.crea(entrada, usuario);
         assertNotNull(entrada);
         assertNotNull(entrada.getId());

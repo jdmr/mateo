@@ -23,12 +23,12 @@
  */
 package mx.edu.um.mateo.inventario.web;
 
+import mx.edu.um.mateo.inventario.utils.ProductoNoSoportaFraccionException;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
@@ -38,11 +38,14 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.ProveedorDao;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.Ambiente;
-import mx.edu.um.mateo.general.utils.LabelValueBean;
-import mx.edu.um.mateo.general.utils.ReporteUtil;
+import mx.edu.um.mateo.general.utils.*;
 import mx.edu.um.mateo.inventario.dao.EntradaDao;
+import mx.edu.um.mateo.inventario.dao.ProductoDao;
 import mx.edu.um.mateo.inventario.model.Entrada;
+import mx.edu.um.mateo.inventario.model.LoteEntrada;
+import mx.edu.um.mateo.inventario.model.Producto;
+import mx.edu.um.mateo.inventario.utils.NoCuadraException;
+import mx.edu.um.mateo.inventario.utils.NoSePuedeCerrarEntradaException;
 import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
@@ -74,6 +77,8 @@ public class EntradaController {
     private EntradaDao entradaDao;
     @Autowired
     private ProveedorDao proveedorDao;
+    @Autowired
+    private ProductoDao productoDao;
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
@@ -165,8 +170,55 @@ public class EntradaController {
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando entrada {}", id);
         Entrada entrada = entradaDao.obtiene(id);
+        switch (entrada.getEstatus().getNombre()) {
+            case Constantes.ABIERTA:
+                modelo.addAttribute("puedeEditar", true);
+                modelo.addAttribute("puedeEliminar", true);
+                modelo.addAttribute("puedeCerrar", true);
+                modelo.addAttribute("puedePendiente", true);
+                break;
+            case Constantes.PENDIENTE:
+                modelo.addAttribute("puedeEditarPendiente", true);
+                break;
+        }
 
         modelo.addAttribute("entrada", entrada);
+
+        BigDecimal subtotal = new BigDecimal("0").setScale(2, RoundingMode.HALF_UP);
+        BigDecimal iva = new BigDecimal("0").setScale(2, RoundingMode.HALF_UP);
+        for (LoteEntrada lote : entrada.getLotes()) {
+            subtotal = subtotal.add(lote.getPrecioUnitario().multiply(lote.getCantidad()));
+            iva = iva.add(lote.getIva());
+        }
+        BigDecimal total = subtotal.add(iva);
+        modelo.addAttribute("subtotal", subtotal.setScale(2, RoundingMode.HALF_UP));
+        modelo.addAttribute("iva", iva);
+        modelo.addAttribute("total", total.setScale(2, RoundingMode.HALF_UP));
+        if (iva.compareTo(entrada.getIva()) == 0 && total.compareTo(entrada.getTotal()) == 0) {
+            modelo.addAttribute("estiloTotales", "label label-success");
+        } else {
+            BigDecimal variacion = new BigDecimal("0.05");
+            BigDecimal topeIva = entrada.getIva().multiply(variacion);
+            BigDecimal topeTotal = entrada.getTotal().multiply(variacion);
+            log.debug("Estilos {} {} {} {} {} {}", new Object[]{iva, entrada.getIva(), topeIva, total, entrada.getTotal(), topeTotal});
+            if (iva.compareTo(entrada.getIva()) < 0 || total.compareTo(entrada.getTotal()) < 0) {
+                log.debug("La diferencia es menor");
+                if (iva.compareTo(entrada.getIva().subtract(topeIva)) >= 0 && total.compareTo(entrada.getTotal().subtract(topeTotal)) >= 0) {
+                    modelo.addAttribute("estiloTotales", "label label-warning");
+                } else {
+                    modelo.addAttribute("estiloTotales", "label label-important");
+                }
+            } else {
+                log.debug("La diferencia es mayor {} {}", new Object[]{iva.compareTo(entrada.getIva().add(topeIva)), total.compareTo(entrada.getTotal().add(topeTotal))});
+                if (iva.compareTo(entrada.getIva().add(topeIva)) <= 0 && total.compareTo(entrada.getTotal().add(topeTotal)) <= 0) {
+                    log.debug("estilo warning");
+                    modelo.addAttribute("estiloTotales", "label label-warning");
+                } else {
+                    log.debug("estilo error");
+                    modelo.addAttribute("estiloTotales", "label label-important");
+                }
+            }
+        }
 
         return "inventario/entrada/ver";
     }
@@ -272,6 +324,26 @@ public class EntradaController {
         return "redirect:/inventario/entrada";
     }
 
+    @RequestMapping("/cerrar/{id}")
+    public String cerrar(HttpServletRequest request, @PathVariable Long id, RedirectAttributes redirectAttributes) {
+        log.debug("Cierra entrada {}", id);
+        try {
+            String folio = entradaDao.cierra(id, ambiente.obtieneUsuario());
+            redirectAttributes.addFlashAttribute("message", "entrada.cerrada.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{folio});
+        } catch (NoCuadraException e) {
+            log.error("No se pudo cerrar la entrada", e);
+            redirectAttributes.addFlashAttribute("message", "entrada.no.cuadra.message");
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+        } catch (NoSePuedeCerrarEntradaException e) {
+            log.error("No se pudo cerrar la entrada", e);
+            redirectAttributes.addFlashAttribute("message", "entrada.no.cerrada.message");
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+        }
+
+        return "redirect:/inventario/entrada/ver/" + id;
+    }
+
     @RequestMapping(value = "/proveedores", params = "term", produces = "application/json")
     public @ResponseBody
     List<LabelValueBean> proveedores(HttpServletRequest request, @RequestParam("term") String filtro) {
@@ -294,6 +366,85 @@ public class EntradaController {
             valores.add(new LabelValueBean(proveedor.getId(), sb.toString(), proveedor.getNombre()));
         }
         return valores;
+    }
+
+    @RequestMapping(value = "/productos", params = "term", produces = "application/json")
+    public @ResponseBody
+    List<LabelValueBean> productos(HttpServletRequest request, @RequestParam("term") String filtro) {
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("almacen", request.getSession().getAttribute("almacenId"));
+        params.put("filtro", filtro);
+        params = productoDao.lista(params);
+        List<LabelValueBean> valores = new ArrayList<>();
+        List<Producto> productos = (List<Producto>) params.get("productos");
+        for (Producto producto : productos) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(producto.getSku());
+            sb.append(" | ");
+            sb.append(producto.getNombre());
+            sb.append(" | ");
+            sb.append(producto.getDescripcion());
+            sb.append(" | ");
+            sb.append(producto.getExistencia()).append(" ").append(producto.getUnidadMedida());
+            sb.append(" | ");
+            sb.append(producto.getPrecioUnitario());
+            valores.add(new LabelValueBean(producto.getId(), sb.toString()));
+        }
+        return valores;
+    }
+
+    @RequestMapping("/lote/{id}")
+    public String nuevoLote(@PathVariable Long id, Model modelo) {
+        log.debug("Nuevo lote para entrada {}", id);
+        Entrada entrada = entradaDao.carga(id);
+        LoteEntrada lote = new LoteEntrada(entrada);
+
+        modelo.addAttribute("lote", lote);
+
+        return "inventario/entrada/lote";
+    }
+
+    @RequestMapping(value = "/lote/crea", method = RequestMethod.POST)
+    public String creaLote(HttpServletRequest request, @Valid LoteEntrada lote, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            log.error("Hubo algun error en la forma, regresando");
+            return "inventario/entrada/lote/" + request.getParameter("entrada.id");
+        }
+
+        try {
+            if (request.getParameter("producto.id") == null) {
+                log.warn("No se puede crear la entrada si no ha seleccionado un proveedor");
+                errors.rejectValue("producto", "lote.sin.producto.message");
+                return "inventario/entrada/lote/" + request.getParameter("entrada.id");
+            }
+            Producto producto = productoDao.obtiene(new Long(request.getParameter("producto.id")));
+            Entrada entrada = entradaDao.obtiene(new Long(request.getParameter("entrada.id")));
+            lote.setProducto(producto);
+            lote.setEntrada(entrada);
+            lote.setFechaCreacion(new Date());
+            lote = entradaDao.creaLote(lote);
+        } catch (ProductoNoSoportaFraccionException e) {
+            log.error("No se pudo crear la entrada porque no se encontro el producto", e);
+            return "inventario/entrada/lote/" + request.getParameter("entrada.id");
+        }
+
+        redirectAttributes.addFlashAttribute("message", "lote.creado.message");
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{lote.getProducto().getNombre(), lote.getCantidad().toString(), lote.getPrecioUnitario().toString(), lote.getProducto().getUnidadMedida(), lote.getIva().add(lote.getPrecioUnitario().multiply(lote.getCantidad())).toString()});
+
+        return "redirect:/inventario/entrada/ver/" + lote.getEntrada().getId();
+    }
+
+    @RequestMapping("/lote/elimina/{id}")
+    public String eliminaLote(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        log.debug("Eliminando lote {}", id);
+        id = entradaDao.eliminaLote(id);
+
+        redirectAttributes.addFlashAttribute("message", "lote.eliminado.message");
+
+        return "redirect:/inventario/entrada/ver/" + id;
     }
 
     private void generaReporte(String tipo, List<Entrada> entradas, HttpServletResponse response) throws JRException, IOException {
