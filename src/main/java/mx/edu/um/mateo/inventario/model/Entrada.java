@@ -25,12 +25,16 @@ package mx.edu.um.mateo.inventario.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.general.model.Proveedor;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *
@@ -54,6 +58,7 @@ public class Entrada implements Serializable {
     @Column(nullable = false, length = 64)
     private String factura;
     @NotNull
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(javax.persistence.TemporalType.DATE)
     @Column(name = "fecha_factura")
     private Date fechaFactura;
@@ -66,13 +71,14 @@ public class Entrada implements Serializable {
     @Column(scale = 2, precision = 8, nullable = false)
     private BigDecimal total = new BigDecimal("0");
     private Boolean devolucion = false;
-    private Boolean pendiente = false;
     @ManyToOne(optional = false)
     private Estatus estatus;
     @ManyToOne(optional = false)
     private Proveedor proveedor;
     @ManyToOne(optional = false)
     private Almacen almacen;
+    @OneToMany(mappedBy = "entrada")
+    private List<LoteEntrada> lotes = new ArrayList<>();
 
     public Entrada() {
     }
@@ -227,20 +233,6 @@ public class Entrada implements Serializable {
     }
 
     /**
-     * @return the pendiente
-     */
-    public Boolean getPendiente() {
-        return pendiente;
-    }
-
-    /**
-     * @param pendiente the pendiente to set
-     */
-    public void setPendiente(Boolean pendiente) {
-        this.pendiente = pendiente;
-    }
-
-    /**
      * @return the estatus
      */
     public Estatus getEstatus() {
@@ -280,6 +272,25 @@ public class Entrada implements Serializable {
      */
     public void setAlmacen(Almacen almacen) {
         this.almacen = almacen;
+    }
+
+    /**
+     * @return the lotes
+     */
+    public List<LoteEntrada> getLotes() {
+        return lotes;
+    }
+
+    /**
+     * @param lotes the lotes to set
+     */
+    public void setLotes(List<LoteEntrada> lotes) {
+        this.lotes = lotes;
+    }
+
+    public BigDecimal getSubtotal() {
+        BigDecimal subtotal = total.subtract(iva).setScale(2, RoundingMode.HALF_UP);
+        return subtotal;
     }
 
     @Override

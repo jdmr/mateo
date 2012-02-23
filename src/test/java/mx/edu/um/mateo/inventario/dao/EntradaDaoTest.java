@@ -23,12 +23,14 @@
  */
 package mx.edu.um.mateo.inventario.dao;
 
+import java.math.BigDecimal;
 import java.util.*;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.inventario.model.Almacen;
-import mx.edu.um.mateo.inventario.model.Entrada;
-import mx.edu.um.mateo.inventario.model.Estatus;
+import mx.edu.um.mateo.inventario.model.*;
+import mx.edu.um.mateo.inventario.utils.NoCuadraException;
+import mx.edu.um.mateo.inventario.utils.NoSePuedeCerrarEntradaException;
+import mx.edu.um.mateo.inventario.utils.ProductoNoSoportaFraccionException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import static org.junit.Assert.*;
@@ -208,49 +210,6 @@ public class EntradaDaoTest {
         assertEquals("PRUEBA", prueba.getFactura());
     }
 
-    /**
-     * Debiera actualizar tipo de cliente
-     */
-    @Test
-    public void debieraCerrarEntrada() {
-        log.debug("Debiera cerrar entrada");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Estatus estatus = new Estatus(Constantes.ABIERTA);
-        currentSession().save(estatus);
-        Estatus estatus2 = new Estatus(Constantes.CERRADA);
-        currentSession().save(estatus2);
-        Proveedor proveedor = new Proveedor("tst-01", "test-01", "test-00000001", empresa);
-        currentSession().save(proveedor);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
-        assertNotNull(id);
-
-        Entrada entrada = new Entrada("tst-01", "test-01", new Date(), estatus, proveedor, almacen);
-        entrada = instance.crea(entrada, usuario);
-        assertNotNull(entrada);
-        assertNotNull(entrada.getId());
-        assertEquals("test-01", entrada.getFactura());
-
-        instance.cierra(entrada, usuario);
-
-        Entrada prueba = instance.obtiene(entrada.getId());
-        assertNotNull(prueba);
-        assertEquals("E-tst-01tst-01TST000000001", prueba.getFolio());
-    }
-
     @Test(expected=RuntimeException.class)
     public void noDebieraActualizarEntrada() {
         log.debug("No debiera actualizar entrada no abierta");
@@ -288,6 +247,59 @@ public class EntradaDaoTest {
         entrada.setEstatus(estatus2);
         instance.actualiza(entrada, usuario);
         fail("Debiera lanzar una excepcion porque el estatus de la entrada es cerrada");
+    }
+    
+    @Test
+    public void debieraCrearLotes() throws ProductoNoSoportaFraccionException {
+        log.debug("Debiera crear lotes");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        Estatus estatus = new Estatus(Constantes.ABIERTA);
+        currentSession().save(estatus);
+        Estatus estatus2 = new Estatus(Constantes.CERRADA);
+        currentSession().save(estatus2);
+        Proveedor proveedor = new Proveedor("tst-01", "test-01", "test-00000001", empresa);
+        currentSession().save(proveedor);
+        TipoProducto tipoProducto = new TipoProducto("TEST-1", null, almacen);
+        currentSession().save(tipoProducto);
+        Producto producto1 = new Producto("TEST1", "TEST1", "TEST1", "TEST1", tipoProducto, almacen);
+        currentSession().save(producto1);
+        Producto producto2 = new Producto("TEST2", "TEST2", "TEST2", "TEST2", tipoProducto, almacen);
+        currentSession().save(producto2);
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
+        Long id = usuario.getId();
+        assertNotNull(id);
+
+        Entrada entrada = new Entrada("tst-01", "test-01", new Date(), estatus, proveedor, almacen);
+        entrada = instance.crea(entrada, usuario);
+        assertNotNull(entrada);
+        assertNotNull(entrada.getId());
+        assertEquals("test-01", entrada.getFactura());
+        
+        LoteEntrada lote = new LoteEntrada(new BigDecimal(10), new BigDecimal(10), producto1, entrada);
+        lote = instance.creaLote(lote);
+        assertNotNull(lote);
+        assertNotNull(lote.getId());
+        
+        lote = new LoteEntrada(new BigDecimal(10), new BigDecimal(10), producto2, entrada);
+        lote = instance.creaLote(lote);
+        assertNotNull(lote);
+        assertNotNull(lote.getId());
+        
+        currentSession().refresh(entrada);
+        assertEquals(2, entrada.getLotes().size());
     }
 
     /**
@@ -333,4 +345,118 @@ public class EntradaDaoTest {
         Entrada prueba = instance.obtiene(entrada.getId());
         assertNull(prueba);
     }
+    
+    @Test
+    public void debieraCerrarEntrada() throws NoSePuedeCerrarEntradaException, NoCuadraException {
+        log.debug("Debiera cerrar entrada");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        Estatus estatus = new Estatus(Constantes.ABIERTA);
+        currentSession().save(estatus);
+        Estatus estatus2 = new Estatus(Constantes.CERRADA);
+        currentSession().save(estatus2);
+        Proveedor proveedor = new Proveedor("tst-01", "test-01", "test-00000001", empresa);
+        currentSession().save(proveedor);
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
+        Long id = usuario.getId();
+        assertNotNull(id);
+
+        Entrada entrada = new Entrada("tst-01", "test-01", new Date(), estatus, proveedor, almacen);
+        entrada = instance.crea(entrada, usuario);
+        assertNotNull(entrada);
+        assertNotNull(entrada.getId());
+        assertEquals("test-01", entrada.getFactura());
+
+        instance.cierra(entrada, usuario);
+
+        Entrada prueba = instance.obtiene(entrada.getId());
+        assertNotNull(prueba);
+        assertEquals("E-tst-01tst-01TST000000001", prueba.getFolio());
+    }
+
+    @Test
+    public void debieraCerrarEntradaConLotes() throws ProductoNoSoportaFraccionException, NoSePuedeCerrarEntradaException, NoCuadraException {
+        log.debug("Debiera cerrar entrada con lotes");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        Estatus estatus = new Estatus(Constantes.ABIERTA);
+        currentSession().save(estatus);
+        Estatus estatus2 = new Estatus(Constantes.CERRADA);
+        currentSession().save(estatus2);
+        Proveedor proveedor = new Proveedor("tst-01", "test-01", "test-00000001", empresa);
+        currentSession().save(proveedor);
+        TipoProducto tipoProducto = new TipoProducto("TEST-1", null, almacen);
+        currentSession().save(tipoProducto);
+        Producto producto1 = new Producto("TEST1", "TEST1", "TEST1", "TEST1", tipoProducto, almacen);
+        currentSession().save(producto1);
+        Producto producto2 = new Producto("TEST2", "TEST2", "TEST2", "TEST2", tipoProducto, almacen);
+        producto2.setFraccion(true);
+        currentSession().save(producto2);
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
+        Long id = usuario.getId();
+        assertNotNull(id);
+
+        Entrada entrada = new Entrada("tst-01", "test-01", new Date(), estatus, proveedor, almacen);
+        entrada.setIva(new BigDecimal("32.00"));
+        entrada.setTotal(new BigDecimal("232.00"));
+        entrada = instance.crea(entrada, usuario);
+        assertNotNull(entrada);
+        assertNotNull(entrada.getId());
+        assertEquals("test-01", entrada.getFactura());
+        
+        LoteEntrada lote = new LoteEntrada(new BigDecimal(10), new BigDecimal(10), producto1, entrada);
+        lote = instance.creaLote(lote);
+        assertNotNull(lote);
+        assertNotNull(lote.getId());
+        
+        lote = new LoteEntrada(new BigDecimal("10"), new BigDecimal("10"), producto2, entrada);
+        lote = instance.creaLote(lote);
+        assertNotNull(lote);
+        assertNotNull(lote.getId());
+        
+        currentSession().refresh(entrada);
+        assertEquals(2, entrada.getLotes().size());
+        
+        instance.cierra(entrada, usuario);
+
+        Entrada prueba = instance.obtiene(entrada.getId());
+        assertNotNull(prueba);
+        assertEquals("E-tst-01tst-01TST000000001", prueba.getFolio());
+
+        currentSession().refresh(producto1);
+        currentSession().refresh(producto2);
+        assertEquals(new BigDecimal("232.00"), prueba.getTotal());
+        assertEquals(new BigDecimal("32.00"), prueba.getIva());
+        assertEquals(new BigDecimal("10.000"), producto1.getExistencia());
+        assertEquals(new BigDecimal("10.00"), producto1.getPrecioUnitario());
+        assertEquals(new BigDecimal("10.00"), producto1.getUltimoPrecio());
+        assertEquals(new BigDecimal("10.000"), producto2.getExistencia());
+        assertEquals(new BigDecimal("10.00"), producto2.getPrecioUnitario());
+        assertEquals(new BigDecimal("10.00"), producto2.getUltimoPrecio());
+    }
+
 }
