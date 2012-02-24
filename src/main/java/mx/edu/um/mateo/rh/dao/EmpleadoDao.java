@@ -115,6 +115,12 @@ public class EmpleadoDao {
         currentSession().saveOrUpdate(Empleado);
         return Empleado;
     }
+    public String elimina(Long id) throws UltimoException {
+        Empleado ctamayor = obtiene(id);
+        currentSession().delete(ctamayor);
+        String nombre = ctamayor.getNombre();
+        return nombre;
+    }
 //private EmpleadoLaborales empleadoLaborales;
 //private EmpleadoPersonales empleadoPersonales;
 //private Nacionalidades nacionalidad;

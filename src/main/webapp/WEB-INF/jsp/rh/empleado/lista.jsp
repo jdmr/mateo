@@ -197,7 +197,7 @@
             </div>
         </form>        
         <content>
-<<<<<<< HEAD
+
             <script>
                 $(document).ready(function() {
                     highlightTableRows("lista");
@@ -230,9 +230,9 @@
                     document.forms["filtraLista"].submit();
                 }
             </script>
-=======
+
             <script src="<c:url value='/js/lista.js' />"></script>
->>>>>>> 13ae2f98273cb1d960eda82b44cea0b7b43bf674
+
         </content>
     </body>
 </html>
