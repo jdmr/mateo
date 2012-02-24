@@ -32,7 +32,7 @@
 
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/admin/empresa'/>"><i class="icon-list icon-white"></i> <s:message code='empresa.lista.label' /></a>
-                <a class="btn btn-primary" href="<s:url value='/admin/empresa/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='empresa.nueva.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/admin/empresa/nueva'/>"><i class="icon-file icon-white"></i> <s:message code='empresa.nueva.label' /></a>
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
@@ -45,23 +45,31 @@
             <form:form commandName="empresa" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="codigo.label" /></div>
-                    <div class="span11">${empresa.codigo}</div>
+                    <div class="span4">
+                        <h4><s:message code="codigo.label" /></h4>
+                        <h3>${empresa.codigo}</h3>
+                    </div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="nombre.label" /></div>
-                    <div class="span11">${empresa.nombre}</div>
+                    <div class="span4">
+                        <h4><s:message code="nombre.label" /></h4>
+                        <h3>${empresa.nombre}</h3>
+                    </div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="nombreCompleto.label" /></div>
-                    <div class="span11">${empresa.nombreCompleto}</div>
+                    <div class="span4">
+                        <h4><s:message code="nombreCompleto.label" /></h4>
+                        <h3>${empresa.nombreCompleto}</h3>
+                    </div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="rfc.label" /></div>
-                    <div class="span11">${empresa.rfc}</div>
+                    <div class="span4">
+                        <h4><s:message code="rfc.label" /></h4>
+                        <h3>${empresa.rfc}</h3>
+                    </div>
                 </div>
 
                 <p class="well">

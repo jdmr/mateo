@@ -39,48 +39,64 @@
             <form:form commandName="entrada" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="folio.label" /></div>
-                    <div class="span11">${entrada.folio}</div>
+                    <div class="span4">
+                        <h4><s:message code="folio.label" /></h4>
+                        <h3>${entrada.folio}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="estatus.label" /></h4>
+                        <h2>${entrada.estatus.nombre}</h2>
+                    </div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="estatus.label" /></div>
-                    <div class="span11">${entrada.estatus.nombre}</div>
+                    <div class="span4">
+                        <h4><s:message code="factura.label" /></h4>
+                        <h3>${entrada.factura}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="fechaFactura.label" /></h4>
+                        <h3>${entrada.fechaFactura}</h3>
+                    </div>
+                </div>
+                <c:if test="${not empty entrada.comentarios}">
+                    <div class="row-fluid" style="margin-bottom: 10px;">
+                        <div class="span8">
+                            <h4><s:message code="comentarios.label" /></h4>
+                            <h3>${entrada.comentarios}</h3>
+                        </div>
+                    </div>
+                </c:if>
+                <c:if test="${entrada.devolucion || entrada.tipoCambio}">
+                    <div class="row-fluid" style="padding-bottom: 10px;">
+                        <div class="span4">
+                            <h4><s:message code="devolucion.label" /></h4>
+                            <h3><form:checkbox path="devolucion" disabled="true" /></h3>
+                        </div>
+                        <div class="span4">
+                            <h4><s:message code="tipoCambio.label" /></h4>
+                            <h3>${entrada.tipoCambio}</h3>
+                        </div>
+                    </div>
+                </c:if>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span4">
+                        <h4><s:message code="iva.label" /></h4>
+                        <h3>${entrada.iva}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="total.label" /></h4>
+                        <h3>${entrada.total}</h3>
+                    </div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="factura.label" /></div>
-                    <div class="span11">${entrada.factura}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="fechaFactura.label" /></div>
-                    <div class="span11">${entrada.fechaFactura}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="comentarios.label" /></div>
-                    <div class="span11">${entrada.comentarios}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="tipoCambio.label" /></div>
-                    <div class="span11">${entrada.tipoCambio}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="iva.label" /></div>
-                    <div class="span11">${entrada.iva}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="total.label" /></div>
-                    <div class="span11">${entrada.total}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="devolucion.label" /></div>
-                    <div class="span11"><form:checkbox path="devolucion" disabled="true" /></div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="proveedor.label" /></div>
-                    <div class="span11">${entrada.proveedor.nombre}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="almacen.label" /></div>
-                    <div class="span11">${entrada.almacen.nombre}</div>
+                    <div class="span4">
+                        <h4><s:message code="proveedor.label" /></h4>
+                        <h3>${entrada.proveedor.nombre}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="almacen.label" /></h4>
+                        <h3>${entrada.almacen.nombre}</h3>
+                    </div>
                 </div>
                 <div class="row-fluid">
                     <div class="span12">

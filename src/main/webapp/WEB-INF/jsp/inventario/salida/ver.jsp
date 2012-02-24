@@ -38,49 +38,65 @@
             <c:url var="eliminaUrl" value="/inventario/salida/elimina" />
             <form:form commandName="salida" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="folio.label" /></div>
-                    <div class="span11">${salida.folio}</div>
+                <div class="row-fluid" style="margin-bottom: 10px;">
+                    <div class="span4">
+                        <h4><s:message code="folio.label" /></h4>
+                        <h3>${salida.folio}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="estatus.label" /></h4>
+                        <h2>${salida.estatus.nombre}</h2>
+                    </div>
                 </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="estatus.label" /></div>
-                    <div class="span11">${salida.estatus.nombre}</div>
+                <div class="row-fluid" style="margin-bottom: 10px;">
+                    <div class="span4">
+                        <h4><s:message code="reporte.label" /></h4>
+                        <h3>${salida.reporte}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="atendio.label" /></h4>
+                        <h3>${salida.atendio}</h3>
+                    </div>
                 </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="reporte.label" /></div>
-                    <div class="span11">${salida.reporte}</div>
+                <c:if test="${not empty salida.empleado || not empty salida.departamento}">
+                    <div class="row-fluid" style="margin-bottom: 10px;">
+                        <div class="span4">
+                            <h4><s:message code="empleado.label" /></h4>
+                            <h3>${salida.empleado}</h3>
+                        </div>
+                        <div class="span4">
+                            <h4><s:message code="departamento.label" /></h4>
+                            <h3>${salida.departamento}</h3>
+                        </div>
+                    </div>
+                </c:if>
+                <c:if test="${not empty salida.comentarios}">
+                    <div class="row-fluid" style="margin-bottom: 10px;">
+                        <div class="span8">
+                            <h4><s:message code="comentarios.label" /></h4>
+                            <h3>${salida.comentarios}</h3>
+                        </div>
+                    </div>
+                </c:if>
+                <div class="row-fluid" style="margin-bottom: 10px;">
+                    <div class="span4">
+                        <h4><s:message code="iva.label" /></h4>
+                        <h3>${salida.iva}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="total.label" /></h4>
+                        <h3>${salida.total}</h3>
+                    </div>
                 </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="atendio.label" /></div>
-                    <div class="span11">${salida.atendio}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="empleado.label" /></div>
-                    <div class="span11">${salida.empleado}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="departamento.label" /></div>
-                    <div class="span11">${salida.departamento}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="comentarios.label" /></div>
-                    <div class="span11">${salida.comentarios}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="iva.label" /></div>
-                    <div class="span11">${salida.iva}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="total.label" /></div>
-                    <div class="span11">${salida.total}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="cliente.label" /></div>
-                    <div class="span11">${salida.cliente.nombre}</div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="almacen.label" /></div>
-                    <div class="span11">${salida.almacen.nombre}</div>
+                <div class="row-fluid" style="margin-bottom: 10px;">
+                    <div class="span4">
+                        <h4><s:message code="cliente.label" /></h4>
+                        <h3>${salida.cliente.nombre}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="almacen.label" /></h4>
+                        <h3>${salida.almacen.nombre}</h3>
+                    </div>
                 </div>
                 <div class="row-fluid">
                     <div class="span12">

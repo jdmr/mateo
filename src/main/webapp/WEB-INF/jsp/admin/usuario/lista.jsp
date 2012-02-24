@@ -53,7 +53,7 @@
                 </s:bind>
             </c:if>
             
-            <table id="usuarios" class="table">
+            <table id="lista" class="table">
                 <thead>
                     <tr>
                         <th>
