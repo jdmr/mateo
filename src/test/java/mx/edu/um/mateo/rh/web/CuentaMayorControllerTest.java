@@ -4,10 +4,10 @@
  */
 package mx.edu.um.mateo.rh.web;
 
+import mx.edu.um.mateo.contabilidad.dao.CuentaMayorDao;
+import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
-import mx.edu.um.mateo.rh.dao.CuentaMayorDao;
-import mx.edu.um.mateo.rh.model.CuentaMayor;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -65,9 +65,9 @@ public class CuentaMayorControllerTest extends BaseTest {
     public void debieraMostrarListaDeCtaMayor() throws Exception {
         log.debug("Debiera monstrar lista de ctaMayor");
         
-        this.mockMvc.perform(get("/rh/ctaMayor")).
+        this.mockMvc.perform(get("/contabilidad/mayor")).
                 andExpect(status().isOk()).
-                andExpect(forwardedUrl("/WEB-INF/jsp/rh/ctaMayor/lista.jsp")).
+                andExpect(forwardedUrl("/WEB-INF/jsp/contabilidad/mayor/lista.jsp")).
                 andExpect(model().attributeExists("ctaMayores")).
                 andExpect(model().attributeExists("paginacion")).
                 andExpect(model().attributeExists("paginas")).
@@ -80,9 +80,9 @@ public class CuentaMayorControllerTest extends BaseTest {
         CuentaMayor ctaMayor = new CuentaMayor("test", "test");
         ctaMayor = ctaMayorDao.crea(ctaMayor);
 
-        this.mockMvc.perform(get("/rh/ctaMayor/ver/" + ctaMayor.getId())).
+        this.mockMvc.perform(get("/contabilidad/mayor/ver/" + ctaMayor.getId())).
                 andExpect(status().isOk()).
-                andExpect(forwardedUrl("/WEB-INF/jsp/rh/ctaMayor/ver.jsp")).
+                andExpect(forwardedUrl("/WEB-INF/jsp/contabilidad/mayor/ver.jsp")).
                 andExpect(model().attributeExists("ctaMayor"));
     }
 
@@ -90,7 +90,7 @@ public class CuentaMayorControllerTest extends BaseTest {
     public void debieraCrearCtaMayor() throws Exception {
         log.debug("Debiera crear ctaMayor");
         
-        this.mockMvc.perform(post("/rh/ctaMayor/crea").param("nombre", "test").param("nombreFiscal", "test")).
+        this.mockMvc.perform(post("/contabilidad/mayor/crea").param("nombre", "test").param("nombreFiscal", "test")).
                 andExpect(status().isOk()).
                 andExpect(flash().attributeExists("message")).
                 andExpect(flash().attribute("message", "ctaMayor.creada.message"));
@@ -100,7 +100,7 @@ public class CuentaMayorControllerTest extends BaseTest {
     public void debieraActualizarCtaMayor() throws Exception {
         log.debug("Debiera actualizar ctaMayor");
 
-        this.mockMvc.perform(post("/rh/ctaMayor/actualiza").param("nombre", "test1").param("nombreFiscal", "test")).
+        this.mockMvc.perform(post("/contabilidad/mayor/actualiza").param("nombre", "test1").param("nombreFiscal", "test")).
                 andExpect(status().isOk()).
                 andExpect(flash().attributeExists("message")).
                 andExpect(flash().attribute("message", "ctaMayor.actualizada.message"));
@@ -112,7 +112,7 @@ public class CuentaMayorControllerTest extends BaseTest {
         CuentaMayor ctaMayor = new CuentaMayor("test", "test");
         ctaMayorDao.crea(ctaMayor);
 
-        this.mockMvc.perform(post("/rh/ctaMayor/elimina").param("id", ctaMayor.getId().toString())).
+        this.mockMvc.perform(post("/contabilidad/mayor/elimina").param("id", ctaMayor.getId().toString())).
                 andExpect(status().isOk()).
                 andExpect(flash().attributeExists("message")).
                 andExpect(flash().attribute("message", "ctaMayor.eliminada.message"));

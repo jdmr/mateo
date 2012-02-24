@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.model;
+package mx.edu.um.mateo.contabilidad.model;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -18,7 +18,7 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 @Table(name = "ctaresultado")
 
-public class CtaResultado implements Serializable{
+public class CuentaResultado implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,11 +61,11 @@ public class CtaResultado implements Serializable{
     private String idCtaResultado;
     */
     
-    public CtaResultado() {
+    public CuentaResultado() {
     }
     
     /**
-     public CtaResultado(Ejercicio ejercicio, String tipoCuenta, String nombre, String idCtaResultado) {
+     public CuentaResultado(Ejercicio ejercicio, String tipoCuenta, String nombre, String idCtaResultado) {
          this.ejercicio = ejercicio;
          this.tipoCuenta = tipoCuenta;
          this.nombre = nombre;
@@ -73,7 +73,7 @@ public class CtaResultado implements Serializable{
     }
      */
     
-     public CtaResultado(String nombre, String nombreFiscal) {
+     public CuentaResultado(String nombre, String nombreFiscal) {
          this.nombre = nombre;
          this.nombreFiscal = nombreFiscal;
     }
@@ -117,7 +117,7 @@ public class CtaResultado implements Serializable{
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final CtaResultado other = (CtaResultado) obj;
+        final CuentaResultado other = (CuentaResultado) obj;
         return true;
     }
 
