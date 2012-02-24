@@ -105,8 +105,6 @@ public class CtaAuxiliarDao {
     public CtaAuxiliar crea(CtaAuxiliar ctaAuxiliar){
         currentSession().save(ctaAuxiliar);
         currentSession().flush();
-        //ctaAuxiliar = new CtaAuxiliar();
-        //currentSession().save(ctaAuxiliar);
         return ctaAuxiliar;
     }
     

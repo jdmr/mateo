@@ -58,18 +58,17 @@ public class CtaAuxiliarControllerTest extends BaseTest{
         this.mockMvc = MockMvcBuilders.webApplicationContextSetup(wac).build();
     }
 
-    /*
     @After
     public void tearDown() {
     }
-     */
+    
     @Test
     public void debieraMostrarListaDeCtaAuxiliar() throws Exception {
-        log.debug("Debiera mostrar lista de almacenes");/////
+        log.debug("Debiera mostrar lista de ctaAuxiliar");
         this.mockMvc.perform(get("/rh/ctaAuxiliar")).
                 andExpect(status().isOk()).
                 andExpect(forwardedUrl("/WEB-INF/jsp/rh/ctaAuxiliar/lista.jsp")).
-                andExpect(model().attributeExists("ctaAuxiliar")).
+                andExpect(model().attributeExists("ctaAuxiliares")).
                 andExpect(model().attributeExists("paginacion")).
                 andExpect(model().attributeExists("paginas")).
                 andExpect(model().attributeExists("pagina"));
@@ -98,5 +97,27 @@ public class CtaAuxiliarControllerTest extends BaseTest{
                 andExpect(status().isOk()).
                 andExpect(flash().attributeExists("message")).
                 andExpect(flash().attribute("message", "ctaAuxiliar.creada.message"));
+    }
+    
+     @Test
+    public void debieraActualizarCtaAuxiliar() throws Exception {
+        log.debug("Debiera actualizar ctaAuxiliar");
+
+        this.mockMvc.perform(post("/rh/ctaAuxiliar/actualiza").param("nombre", "test1").param("nombreFiscal", "test")).
+                andExpect(status().isOk()).
+                andExpect(flash().attributeExists("message")).
+                andExpect(flash().attribute("message", "ctaAuxiliar.actualizada.message"));
+    }
+
+    @Test
+    public void debieraEliminarCtaAuxiliar() throws Exception {
+        log.debug("Debiera eliminar ctaAuxiliar");
+        CtaAuxiliar ctaAuxiliar = new CtaAuxiliar("test", "test");
+        ctaAuxiliarDao.crea(ctaAuxiliar);
+
+        this.mockMvc.perform(post("/rh/ctaAuxiliar/elimina").param("id", ctaAuxiliar.getId().toString())).
+                andExpect(status().isOk()).
+                andExpect(flash().attributeExists("message")).
+                andExpect(flash().attribute("message", "ctaAuxiliar.eliminada.message"));
     }
 }
