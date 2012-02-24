@@ -1,10 +1,28 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * The MIT License
+ *
+ * Copyright 2012 Universidad de Montemorelos A. C.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
-package mx.edu.um.mateo.rh.web;
+package mx.edu.um.mateo.contabilidad.web;
 
-import com.google.inject.internal.Errors;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -12,25 +30,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.ui.Model;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import mx.edu.um.mateo.general.dao.UsuarioDao;
+import mx.edu.um.mateo.contabilidad.dao.CuentaMayorDao;
+import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.utils.Ambiente;
-import mx.edu.um.mateo.rh.dao.CtaAuxiliarDao;
-import mx.edu.um.mateo.rh.model.CtaAuxiliar;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
@@ -38,6 +47,7 @@ import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,33 +56,28 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
- * @author semdariobarbaamaya
+ * @author jdmr
  */
-
 @Controller
-@RequestMapping("/rh/ctaAuxiliar")
-public class CtaAuxiliarController {
-  
-     private static final Logger log = LoggerFactory.getLogger(CtaAuxiliarController.class);
+@RequestMapping("/contabilidad/mayor")
+public class CuentaMayorController {
+
+    private static final Logger log = LoggerFactory.getLogger(CuentaMayorController.class);
     @Autowired
-    private CtaAuxiliarDao ctaAuxiliarDao;
+    private CuentaMayorDao ctaMayorDao;
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
     private ResourceBundleMessageSource messageSource;
-    @Autowired
-    private UsuarioDao usuarioDao;
     @Autowired
     private Ambiente ambiente;
 
@@ -85,7 +90,7 @@ public class CtaAuxiliarController {
             @RequestParam(required = false) String order,
             @RequestParam(required = false) String sort,
             Model modelo) {
-        log.debug("Mostrando lista de ctaAuxiliares");
+        log.debug("Mostrando lista de ctaMayores");
         Map<String, Object> params = new HashMap<>();
         if (StringUtils.isNotBlank(filtro)) {
             params.put("filtro", filtro);
@@ -104,9 +109,9 @@ public class CtaAuxiliarController {
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put("reporte", true);
-            params = ctaAuxiliarDao.lista(params);
+            params = ctaMayorDao.lista(params);
             try {
-                generaReporte(tipo, (List<CtaAuxiliar>) params.get("ctaAuxiliares"), response);
+                generaReporte(tipo, (List<CuentaMayor>) params.get("ctaMayores"), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -115,19 +120,19 @@ public class CtaAuxiliarController {
 
         if (StringUtils.isNotBlank(correo)) {
             params.put("reporte", true);
-            params = ctaAuxiliarDao.lista(params);
+            params = ctaMayorDao.lista(params);
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<CtaAuxiliar>) params.get("ctaAuxiliares"), request);
+                enviaCorreo(correo, (List<CuentaMayor>) params.get("ctaMayores"), request);
                 modelo.addAttribute("message", "lista.enviada.message");
-                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("ctaAuxiliar.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("ctaMayor.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-        params = ctaAuxiliarDao.lista(params);
-        modelo.addAttribute("ctaAuxiliares", params.get("ctaAuxiliares"));
+        params = ctaMayorDao.lista(params);
+        modelo.addAttribute("ctaMayores", params.get("ctaMayores"));
 
         // inicia paginado
         Long cantidad = (Long) params.get("cantidad");
@@ -138,123 +143,123 @@ public class CtaAuxiliarController {
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<CtaAuxiliar> ctaAuxiliares = (List<CtaAuxiliar>) params.get("ctaAuxiliares");
+        List<CuentaMayor> ctaMayores = (List<CuentaMayor>) params.get("ctaMayores");
         Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (ctaAuxiliares.size() - 1);
+        Long ultimo = primero + (ctaMayores.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
         modelo.addAttribute("paginacion", paginacion);
         modelo.addAttribute("paginas", paginas);
         // termina paginado
 
-        return "rh/ctaAuxiliar/lista";
+        return "contabilidad/mayor/lista";
     }
 
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
-        log.debug("Mostrando ctaAuxiliar {}", id);
-        CtaAuxiliar ctaAuxiliar = ctaAuxiliarDao.obtiene(id);
+        log.debug("Mostrando ctaMayor {}", id);
+        CuentaMayor ctaMayor = ctaMayorDao.obtiene(id);
 
-        modelo.addAttribute("ctaAuxiliar", ctaAuxiliar);
+        modelo.addAttribute("ctaMayor", ctaMayor);
 
-        return "rh/ctaAuxiliar/ver";
+        return "contabilidad/mayor/ver";
     }
 
     @RequestMapping("/nueva")
     public String nueva(Model modelo) {
-        log.debug("Nuevo ctaAuxiliar");
-        CtaAuxiliar ctaAuxiliar = new CtaAuxiliar();
-        modelo.addAttribute("ctaAuxiliar", ctaAuxiliar);
-        return "rh/ctaAuxiliar/nueva";
+        log.debug("Nuevo ctaMayor");
+        CuentaMayor ctaMayor = new CuentaMayor();
+        modelo.addAttribute("ctaMayor", ctaMayor);
+        return "contabilidad/mayor/nueva";
     }
 
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid CtaAuxiliar ctaAuxiliar, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid CuentaMayor ctaMayor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
-            return "rh/ctaMayor/nuevo";
+            return "contabilidad/mayor/nuevo";
         }
 
         try {
-            ctaAuxiliar = ctaAuxiliarDao.crea(ctaAuxiliar);
+            ctaMayor = ctaMayorDao.crea(ctaMayor);
         } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear al ctaAuxiliar", e);
-            return "rh/ctaAuxiliar/nuevo";
+            log.error("No se pudo crear al ctaMayor", e);
+            return "contabilidad/mayor/nuevo";
         }
 
-        redirectAttributes.addFlashAttribute("message", "ctaAuxiliar.creada.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{ctaAuxiliar.getNombre()});
+        redirectAttributes.addFlashAttribute("message", "ctaMayor.creada.message");
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{ctaMayor.getNombre()});
 
-        return "redirect:/rh/ctaAuxiliar/ver/" + ctaAuxiliar.getId();
+        return "redirect:/contabilidad/mayor/ver/" + ctaMayor.getId();
     }
 
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
-        log.debug("Edita ctaAuxiliar {}", id);
-        CtaAuxiliar ctaAuxiliar = ctaAuxiliarDao.obtiene(id);
-        modelo.addAttribute("ctaAuxiliar", ctaAuxiliar);
-        return "rh/ctaAuxiliar/edita";
+        log.debug("Edita ctaMayor {}", id);
+        CuentaMayor ctaMayor = ctaMayorDao.obtiene(id);
+        modelo.addAttribute("ctaMayor", ctaMayor);
+        return "contabilidad/mayor/edita";
     }
 
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, @Valid CtaAuxiliar ctaAuxiliar, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String actualiza(HttpServletRequest request, @Valid CuentaMayor ctaMayor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
-            return "rh/ctaAuxiliar/edita";
+            return "contabilidad/mayor/edita";
         }
         try {
-            ctaAuxiliar = ctaAuxiliarDao.actualiza(ctaAuxiliar);
+            ctaMayor = ctaMayorDao.actualiza(ctaMayor);
         } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear al ctaAuxiliar", e);
-            return "rh/ctaAuxiliar/nuevo";
+            log.error("No se pudo crear al ctaMayor", e);
+            return "contabilidad/mayor/nuevo";
         }
 
-        redirectAttributes.addFlashAttribute("message", "ctaAuxiliar.actualizada.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{ctaAuxiliar.getNombre()});
+        redirectAttributes.addFlashAttribute("message", "ctaMayor.actualizada.message");
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{ctaMayor.getNombre()});
 
-        return "redirect:/rh/ctaAuxiliar/ver/" + ctaAuxiliar.getId();
+        return "redirect:/contabilidad/mayor/ver/" + ctaMayor.getId();
     }
 
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute CtaAuxiliar ctaAuxiliar, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        log.debug("Elimina ctaAuxiliar");
+    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute CuentaMayor ctaMayor, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        log.debug("Elimina ctaMayor");
         try {
-            String nombre = ctaAuxiliarDao.elimina(id);
+            String nombre = ctaMayorDao.elimina(id);
 
-            redirectAttributes.addFlashAttribute("message", "ctaAuxiliar.eliminada.message");
+            redirectAttributes.addFlashAttribute("message", "ctaMayor.eliminada.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
         } catch (Exception e) {
-            log.error("No se pudo eliminar el ctaAuxiliar " + id, e);
-            bindingResult.addError(new ObjectError("ctaAuxiliar", new String[]{"ctaAuxiliar.no.eliminada.message"}, null, null));
-            return "rh/ctaAuxiliar/ver";
+            log.error("No se pudo eliminar el ctaMayor " + id, e);
+            bindingResult.addError(new ObjectError("ctaMayor", new String[]{"ctaMayor.no.eliminada.message"}, null, null));
+            return "contabilidad/mayor/ver";
         }
 
-        return "redirect:/rh/ctaAuxiliar";
+        return "redirect:/contabilidad/mayor";
     }
 
-    private void generaReporte(String tipo, List<CtaAuxiliar> ctaAuxiliares, HttpServletResponse response) throws JRException, IOException {
+    private void generaReporte(String tipo, List<CuentaMayor> ctaMayores, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
         switch (tipo) {
             case "PDF":
-                archivo = generaPdf(ctaAuxiliares);
+                archivo = generaPdf(ctaMayores);
                 response.setContentType("application/pdf");
-                response.addHeader("Content-Disposition", "attachment; filename=ctaAuxiliares.pdf");
+                response.addHeader("Content-Disposition", "attachment; filename=ctaMayores.pdf");
                 break;
             case "CSV":
-                archivo = generaCsv(ctaAuxiliares);
+                archivo = generaCsv(ctaMayores);
                 response.setContentType("text/csv");
-                response.addHeader("Content-Disposition", "attachment; filename=ctaAuxiliares.csv");
+                response.addHeader("Content-Disposition", "attachment; filename=ctaMayores.csv");
                 break;
             case "XLS":
-                archivo = generaXls(ctaAuxiliares);
+                archivo = generaXls(ctaMayores);
                 response.setContentType("application/vnd.ms-excel");
-                response.addHeader("Content-Disposition", "attachment; filename=ctaAuxiliares.xls");
+                response.addHeader("Content-Disposition", "attachment; filename=ctaMayores.xls");
         }
         if (archivo != null) {
             response.setContentLength(archivo.length);
@@ -266,51 +271,51 @@ public class CtaAuxiliarController {
 
     }
 
-    private void enviaCorreo(String tipo, List<CtaAuxiliar> ctaAuxiliares, HttpServletRequest request) throws JRException, MessagingException {
+    private void enviaCorreo(String tipo, List<CuentaMayor> ctaMayores, HttpServletRequest request) throws JRException, MessagingException {
         log.debug("Enviando correo {}", tipo);
         byte[] archivo = null;
         String tipoContenido = null;
         switch (tipo) {
             case "PDF":
-                archivo = generaPdf(ctaAuxiliares);
+                archivo = generaPdf(ctaMayores);
                 tipoContenido = "application/pdf";
                 break;
             case "CSV":
-                archivo = generaCsv(ctaAuxiliares);
+                archivo = generaCsv(ctaMayores);
                 tipoContenido = "text/csv";
                 break;
             case "XLS":
-                archivo = generaXls(ctaAuxiliares);
+                archivo = generaXls(ctaMayores);
                 tipoContenido = "application/vnd.ms-excel";
         }
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(ambiente.obtieneUsuario().getUsername());
-        String titulo = messageSource.getMessage("ctaAuxiliar.lista.label", null, request.getLocale());
+        String titulo = messageSource.getMessage("ctaMayor.lista.label", null, request.getLocale());
         helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
         helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
         helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
         mailSender.send(message);
     }
 
-    private byte[] generaPdf(List ctaAuxiliares) throws JRException {
+    private byte[] generaPdf(List ctaMayores) throws JRException {
         Map<String, Object> params = new HashMap<>();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/ctaAuxiliares.jrxml"));
+        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/ctaMayores.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(ctaAuxiliares));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(ctaMayores));
         byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
 
         return archivo;
     }
 
-    private byte[] generaCsv(List ctaAuxiliares) throws JRException {
+    private byte[] generaCsv(List ctaMayores) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRCsvExporter exporter = new JRCsvExporter();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/ctaAuxiliares.jrxml"));
+        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/ctaMayores.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(ctaAuxiliares));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(ctaMayores));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
         exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
         exporter.exportReport();
@@ -319,13 +324,13 @@ public class CtaAuxiliarController {
         return archivo;
     }
 
-    private byte[] generaXls(List ctaAuxiliares) throws JRException {
+    private byte[] generaXls(List ctaMayores) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRXlsExporter exporter = new JRXlsExporter();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/ctaAuxiliares.jrxml"));
+        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/ctaMayores.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(ctaAuxiliares));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(ctaMayores));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
         exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
         exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);

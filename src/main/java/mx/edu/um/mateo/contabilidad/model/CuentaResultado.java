@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.model;
+package mx.edu.um.mateo.contabilidad.model;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -14,31 +14,70 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author semdariobarbaamaya
  */
 
-@Entity
-@Table(name = "ctaauxiliar")
 
-public class CtaAuxiliar implements Serializable{
+@Entity
+@Table(name = "ctaresultado")
+
+public class CuentaResultado implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Version
     private Integer version;
+   // @ManyToOne(optional = false)
+    //private Ejercicio ejercicio;
+   //@NotBlank
+    //@Column(nullable = false, length = 24)
+    //private String tipoCuenta;
+ 
     @NotBlank
     @Column(nullable = false, length = 24)
     private String nombre;
     @NotBlank
     @Column(nullable = false, length = 24)
     private String nombreFiscal;
-
-    public CtaAuxiliar() {
+    /**
+   @NotBlank
+    @Column(nullable = false)
+    private Boolean detalle;
+    @NotBlank
+    @Column(nullable = false)
+    private Boolean aviso;
+    @NotBlank
+    @Column(nullable = false)
+    private Boolean auxiliar;
+    @NotBlank
+    @Column(nullable = false)
+    private Boolean iva;
+    @NotBlank
+    @Column(nullable = false)
+    private Boolean detalleR;
+    @NotBlank
+    @Column(nullable = false, length = 24)
+    private Double pctIva;
+    @NotBlank
+    @Column(nullable = false, length = 24)
+    private String idCtaResultado;
+    */
+    
+    public CuentaResultado() {
     }
-
-    public CtaAuxiliar(String nombre, String nombreFiscal) {
-        this.nombre = nombre;
-        this.nombreFiscal = nombreFiscal;
+    
+    /**
+     public CuentaResultado(Ejercicio ejercicio, String tipoCuenta, String nombre, String idCtaResultado) {
+         this.ejercicio = ejercicio;
+         this.tipoCuenta = tipoCuenta;
+         this.nombre = nombre;
+         this.idCtaResultado = idCtaResultado;
     }
-
+     */
+    
+     public CuentaResultado(String nombre, String nombreFiscal) {
+         this.nombre = nombre;
+         this.nombreFiscal = nombreFiscal;
+    }
+     
     public Long getId() {
         return id;
     }
@@ -66,7 +105,6 @@ public class CtaAuxiliar implements Serializable{
     public Integer getVersion() {
         return version;
     }
-
     public void setVersion(Integer version) {
         this.version = version;
     }
@@ -79,13 +117,13 @@ public class CtaAuxiliar implements Serializable{
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final CtaAuxiliar other = (CtaAuxiliar) obj;
+        final CuentaResultado other = (CuentaResultado) obj;
         return true;
     }
 
     @Override
     public int hashCode() {
-       int hash = 5;
+        int hash = 5;
         hash = 79 * hash + Objects.hashCode(this.id);
         hash = 79 * hash + Objects.hashCode(this.version);
         hash = 79 * hash + Objects.hashCode(this.nombre);
@@ -94,7 +132,7 @@ public class CtaAuxiliar implements Serializable{
 
     @Override
     public String toString() {
-        return "CtaAuxiliar{nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + '}';
+        return "CtaResultado{nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + '}';
     }
     
 }

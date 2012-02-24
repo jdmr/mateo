@@ -4,23 +4,23 @@
  */
 package mx.edu.um.mateo.rh.web;
 
-import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import mx.edu.um.mateo.contabilidad.dao.CuentaAuxiliarDao;
+import mx.edu.um.mateo.contabilidad.model.CuentaAuxiliar;
 import mx.edu.um.mateo.general.test.BaseTest;
-import mx.edu.um.mateo.rh.dao.CtaAuxiliarDao;
-import mx.edu.um.mateo.rh.model.CtaAuxiliar;
+import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import org.junit.*;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.server.MockMvc;
-import org.springframework.test.web.server.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
+import org.springframework.test.web.server.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 /**
  *
@@ -33,16 +33,16 @@ import static org.springframework.test.web.server.result.MockMvcResultMatchers.*
     "classpath:security.xml",
     "classpath:dispatcher-servlet.xml"
 })
-public class CtaAuxiliarControllerTest extends BaseTest{
+public class CuentaAuxiliarControllerTest extends BaseTest{
     
-    private static final Logger log = LoggerFactory.getLogger(CtaAuxiliarControllerTest.class);
+    private static final Logger log = LoggerFactory.getLogger(CuentaAuxiliarControllerTest.class);
     @Autowired
     private WebApplicationContext wac;
     private MockMvc mockMvc;
     @Autowired
-    private CtaAuxiliarDao ctaAuxiliarDao;
+    private CuentaAuxiliarDao ctaAuxiliarDao;
 
-    public CtaAuxiliarControllerTest() {
+    public CuentaAuxiliarControllerTest() {
     }
 
     @BeforeClass
@@ -65,10 +65,10 @@ public class CtaAuxiliarControllerTest extends BaseTest{
     @Test
     public void debieraMostrarListaDeCtaAuxiliar() throws Exception {
         log.debug("Debiera mostrar lista de ctaAuxiliar");
-        this.mockMvc.perform(get("/rh/ctaAuxiliar")).
+        this.mockMvc.perform(get("/contabilidad/auxiliar")).
                 andExpect(status().isOk()).
-                andExpect(forwardedUrl("/WEB-INF/jsp/rh/ctaAuxiliar/lista.jsp")).
-                andExpect(model().attributeExists("ctaAuxiliares")).
+                andExpect(forwardedUrl("/WEB-INF/jsp/contabilidad/auxiliar/lista.jsp")).
+                andExpect(model().attributeExists("auxiliares")).
                 andExpect(model().attributeExists("paginacion")).
                 andExpect(model().attributeExists("paginas")).
                 andExpect(model().attributeExists("pagina"));
@@ -76,22 +76,22 @@ public class CtaAuxiliarControllerTest extends BaseTest{
 
     @Test
     public void debieraMostrarCtaAuxiliar() throws Exception {
-        CtaAuxiliar ctaAuxiliar = new CtaAuxiliar("test", "test");
+        CuentaAuxiliar ctaAuxiliar = new CuentaAuxiliar("test", "test");
         ctaAuxiliar = ctaAuxiliarDao.crea(ctaAuxiliar);
 
-        this.mockMvc.perform(get("/rh/ctaAuxiliar/ver/" + ctaAuxiliar.getId())).
+        this.mockMvc.perform(get("/contabilidad/auxiliar/ver/" + ctaAuxiliar.getId())).
                 andExpect(status().isOk()).
-                andExpect(forwardedUrl("/WEB-INF/jsp/rh/ctaAuxiliar/ver.jsp")).
+                andExpect(forwardedUrl("/WEB-INF/jsp/contabilidad/auxiliar/ver.jsp")).
                 andExpect(model().attributeExists("ctaAuxiliar"));
     }
     
     @Test
     public void debieraCrearCtaAuxiliar() throws Exception {
         log.debug("Debiera crear ctaAuxiliar");
-        CtaAuxiliar ctaAuxiliar = new CtaAuxiliar("test", "test");
+        CuentaAuxiliar ctaAuxiliar = new CuentaAuxiliar("test", "test");
         ctaAuxiliar = ctaAuxiliarDao.crea(ctaAuxiliar);
 
-        this.mockMvc.perform(post("/rh/ctaAuxiliar/crea").
+        this.mockMvc.perform(post("/contabilidad/auxiliar/crea").
                 param("nombre", "test").
                 param("nombreFiscal", "test")).
                 andExpect(status().isOk()).
@@ -103,7 +103,7 @@ public class CtaAuxiliarControllerTest extends BaseTest{
     public void debieraActualizarCtaAuxiliar() throws Exception {
         log.debug("Debiera actualizar ctaAuxiliar");
 
-        this.mockMvc.perform(post("/rh/ctaAuxiliar/actualiza").param("nombre", "test1").param("nombreFiscal", "test")).
+        this.mockMvc.perform(post("/contabilidad/auxiliar/actualiza").param("nombre", "test1").param("nombreFiscal", "test")).
                 andExpect(status().isOk()).
                 andExpect(flash().attributeExists("message")).
                 andExpect(flash().attribute("message", "ctaAuxiliar.actualizada.message"));
@@ -112,10 +112,10 @@ public class CtaAuxiliarControllerTest extends BaseTest{
     @Test
     public void debieraEliminarCtaAuxiliar() throws Exception {
         log.debug("Debiera eliminar ctaAuxiliar");
-        CtaAuxiliar ctaAuxiliar = new CtaAuxiliar("test", "test");
+        CuentaAuxiliar ctaAuxiliar = new CuentaAuxiliar("test", "test");
         ctaAuxiliarDao.crea(ctaAuxiliar);
 
-        this.mockMvc.perform(post("/rh/ctaAuxiliar/elimina").param("id", ctaAuxiliar.getId().toString())).
+        this.mockMvc.perform(post("/contabilidad/auxiliar/elimina").param("id", ctaAuxiliar.getId().toString())).
                 andExpect(status().isOk()).
                 andExpect(flash().attributeExists("message")).
                 andExpect(flash().attribute("message", "ctaAuxiliar.eliminada.message"));

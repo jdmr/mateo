@@ -2,13 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.dao;
+package mx.edu.um.mateo.contabilidad.dao;
 
 import java.util.HashMap;
 import java.util.Map;
-import mx.edu.um.mateo.general.dao.EmpresaDao;
 import mx.edu.um.mateo.general.utils.UltimoException;
-import mx.edu.um.mateo.rh.model.CtaAuxiliar;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -24,59 +23,58 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author semdariobarbaamaya
+ * @author nujev
  */
-
 @Repository
 @Transactional
-public class CtaAuxiliarDao {
-    
-    private static final Logger log = LoggerFactory.getLogger(EmpresaDao.class);
+public class EjercicioDao {
+
+    private static final Logger log = LoggerFactory.getLogger(EjercicioDao.class);
     @Autowired
     private SessionFactory sessionFactory;
-    
-     public CtaAuxiliarDao() {
-        log.info("Nueva instancia de CtaResultadoDao");
+
+    public EjercicioDao() {
+        log.info("Nueva instancia de EjercicioDao");
     }
-     
-      private Session currentSession() {
+
+    private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
-    
-     public Map<String, Object> lista(Map<String, Object> params) {
-        log.debug("Buscando lista de ctaResultado con params {}", params);
+
+    public Map<String, Object> lista(Map<String, Object> params) {
+        log.debug("Buscando lista de Ejercicio con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
-        
+
         if (!params.containsKey("max")) {
             params.put("max", 10);
         } else {
             params.put("max", Math.min((Integer) params.get("max"), 100));
         }
-        
+
         if (params.containsKey("pagina")) {
             Long pagina = (Long) params.get("pagina");
             Long offset = (pagina - 1) * (Integer) params.get("max");
             params.put("offset", offset.intValue());
         }
-        
+
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(CtaAuxiliar.class);
-        Criteria countCriteria = currentSession().createCriteria(CtaAuxiliar.class);
-        
+        Criteria criteria = currentSession().createCriteria(Ejercicio.class);
+        Criteria countCriteria = currentSession().createCriteria(Ejercicio.class);
+
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             filtro = "%" + filtro + "%";
             Disjunction propiedades = Restrictions.disjunction();
             propiedades.add(Restrictions.ilike("nombre", filtro));
-            propiedades.add(Restrictions.ilike("nombreFiscal", filtro));
+            propiedades.add(Restrictions.ilike("status", filtro));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
-        
+
         if (params.containsKey("order")) {
             String campo = (String) params.get("order");
             if (params.get("sort").equals("desc")) {
@@ -85,40 +83,38 @@ public class CtaAuxiliarDao {
                 criteria.addOrder(Order.asc(campo));
             }
         }
+
         if (!params.containsKey("reporte")) {
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put("ctaAuxiliar", criteria.list());
-        
+        params.put("ejercicio", criteria.list());
+
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
-        
+
         return params;
     }
-     
-     public CtaAuxiliar obtiene(Long id){
-        CtaAuxiliar ctaAuxiliar = (CtaAuxiliar) currentSession().get(CtaAuxiliar.class, id);
-        return ctaAuxiliar;
-    }
-    
-    public CtaAuxiliar crea(CtaAuxiliar ctaAuxiliar){
-        currentSession().save(ctaAuxiliar);
-        currentSession().flush();
-        return ctaAuxiliar;
-    }
-    
-    public CtaAuxiliar actualiza(CtaAuxiliar ctaAuxiliar) {
-        currentSession().saveOrUpdate(ctaAuxiliar);
-        return ctaAuxiliar;
-    }
-    
-    public String elimina(Long id) throws UltimoException {
-        CtaAuxiliar ctaauxiliar = obtiene(id);
-        currentSession().delete(ctaauxiliar);
-        String nombre = ctaauxiliar.getNombre();
-        return nombre;
+
+    public Ejercicio obtiene(Long id) {
+        Ejercicio Ejercicio = (Ejercicio) currentSession().get(Ejercicio.class, id);
+        return Ejercicio;
     }
 
+    public Ejercicio crea(Ejercicio Ejercicio) {
+        currentSession().save(Ejercicio);
+        return Ejercicio;
+    }
+
+    public Ejercicio actualiza(Ejercicio Ejercicio) {
+        currentSession().saveOrUpdate(Ejercicio);
+        return Ejercicio;
+    }
+
+    public String elimina(Long id) throws UltimoException {
+        Ejercicio Ejercicio = obtiene(id);
+        currentSession().delete(Ejercicio);
+        String nombre = Ejercicio.getNombre();
+        return nombre;
+    }
 }
- 

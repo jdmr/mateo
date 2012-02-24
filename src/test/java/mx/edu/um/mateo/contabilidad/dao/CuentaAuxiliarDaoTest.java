@@ -2,15 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.dao;
+package mx.edu.um.mateo.contabilidad.dao;
 
+import mx.edu.um.mateo.contabilidad.dao.CuentaAuxiliarDao;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.utils.UltimoException;
-import mx.edu.um.mateo.rh.model.CtaAuxiliar;
-import mx.edu.um.mateo.rh.model.Ejercicio;
+import mx.edu.um.mateo.contabilidad.model.CuentaAuxiliar;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Test;
@@ -32,11 +33,11 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
 
-public class CtaAuxiliarDaoTest extends BaseTest{
+public class CuentaAuxiliarDaoTest extends BaseTest{
     
-    private static final Logger log = LoggerFactory.getLogger(CtaAuxiliarDaoTest.class);
+    private static final Logger log = LoggerFactory.getLogger(CuentaAuxiliarDaoTest.class);
     @Autowired
-    private CtaAuxiliarDao instance;
+    private CuentaAuxiliarDao instance;
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -52,7 +53,7 @@ public class CtaAuxiliarDaoTest extends BaseTest{
         assertNotNull(ejercicio);
         log.debug("ejercicio >>" + ejercicio);
         for (int i = 0; i < 20; i++) {
-            CtaAuxiliar ctaAuxiliar = new CtaAuxiliar("test" + i, "test");
+            CuentaAuxiliar ctaAuxiliar = new CuentaAuxiliar("test" + i, "test");
             currentSession().save(ctaAuxiliar);
             assertNotNull(ctaAuxiliar);
             log.debug("ctaAuxiliar>>" + ctaAuxiliar);
@@ -60,10 +61,10 @@ public class CtaAuxiliarDaoTest extends BaseTest{
 
         Map<String, Object> params = null;
         Map result = instance.lista(params); 
-        assertNotNull(result.get("ctaAuxiliar"));
+        assertNotNull(result.get("auxiliares"));
         assertNotNull(result.get("cantidad"));
 
-        assertEquals(10, ((List<Empresa>) result.get("ctaAuxiliar")).size());
+        assertEquals(10, ((List<Empresa>) result.get("auxiliares")).size());
         assertEquals(20, ((Long) result.get("cantidad")).intValue());
     }
    
@@ -71,12 +72,12 @@ public class CtaAuxiliarDaoTest extends BaseTest{
     @Test
     public void debieraObtenerCtaAuxiliar() {
         log.debug("Debiera obtener ctaAuxiliar");
-        CtaAuxiliar ctaAuxiliar = new CtaAuxiliar("test", "test");
+        CuentaAuxiliar ctaAuxiliar = new CuentaAuxiliar("test", "test");
         currentSession().save(ctaAuxiliar);
         assertNotNull(ctaAuxiliar.getId());
         Long id = ctaAuxiliar.getId();
 
-        CtaAuxiliar result = instance.obtiene(id);
+        CuentaAuxiliar result = instance.obtiene(id);
         assertNotNull(result);
         assertEquals("test", result.getNombre());
     }
@@ -84,7 +85,7 @@ public class CtaAuxiliarDaoTest extends BaseTest{
     @Test
     public void deberiaCrearCtaAuxiliar() {
         log.debug("Deberia crear CtaAuxiliar");
-        CtaAuxiliar ctaAuxiliar = new CtaAuxiliar("test", "test");
+        CuentaAuxiliar ctaAuxiliar = new CuentaAuxiliar("test", "test");
         assertNotNull(ctaAuxiliar);
         log.debug("ctaAuxiliar >> " + ctaAuxiliar);
         ctaAuxiliar = instance.crea(ctaAuxiliar);
@@ -94,7 +95,7 @@ public class CtaAuxiliarDaoTest extends BaseTest{
     @Test
     public void deberiaActualizarCtaAuxiliar() {
         log.debug("Deberia actualizar CtaAuxiliar");
-        CtaAuxiliar ctaAuxiliar = new CtaAuxiliar("test", "test");
+        CuentaAuxiliar ctaAuxiliar = new CuentaAuxiliar("test", "test");
         assertNotNull(ctaAuxiliar);
         currentSession().save(ctaAuxiliar);
         
@@ -110,13 +111,13 @@ public class CtaAuxiliarDaoTest extends BaseTest{
     public void deberiaEliminarCtaAuxiliar() throws UltimoException {
         log.debug("Debiera eliminar Ejercicio");
 
-        CtaAuxiliar ctaAuxiliar = new CtaAuxiliar("test", "A");
+        CuentaAuxiliar ctaAuxiliar = new CuentaAuxiliar("test", "A");
         currentSession().save(ctaAuxiliar);
         assertNotNull(ctaAuxiliar);
         String nombre = instance.elimina(ctaAuxiliar.getId());
         assertEquals("test", nombre);
 
-        CtaAuxiliar prueba = instance.obtiene(ctaAuxiliar.getId());
+        CuentaAuxiliar prueba = instance.obtiene(ctaAuxiliar.getId());
         assertNull(prueba);
     }
 }

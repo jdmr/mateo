@@ -2,14 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.dao;
+package mx.edu.um.mateo.contabilidad.dao;
 
+import mx.edu.um.mateo.contabilidad.dao.CuentaResultadoDao;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.model.Empresa;
-import mx.edu.um.mateo.rh.model.CtaResultado;
-import mx.edu.um.mateo.rh.model.Ejercicio;
+import mx.edu.um.mateo.contabilidad.model.CuentaResultado;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import org.slf4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -30,11 +31,11 @@ import static org.junit.Assert.*;
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
 
-public class CtaResultadoDaoTest extends BaseTest{
+public class CuentaResultadoDaoTest extends BaseTest{
     
-    private static final Logger log = LoggerFactory.getLogger(CtaResultadoDaoTest.class);
+    private static final Logger log = LoggerFactory.getLogger(CuentaResultadoDaoTest.class);
     @Autowired
-    private CtaResultadoDao instance;
+    private CuentaResultadoDao instance;
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -44,7 +45,7 @@ public class CtaResultadoDaoTest extends BaseTest{
 
 
     /**
-     * Test of obtiene method, of class CtaResultadoDao.
+     * Test of obtiene method, of class CuentaResultadoDao.
      */
     @Test
     public void deberiaMostrarListaDeCtaResultado() {
@@ -54,7 +55,7 @@ public class CtaResultadoDaoTest extends BaseTest{
         assertNotNull(ejercicio);
         log.debug("ejercicio >>" + ejercicio);
         for (int i = 0; i < 20; i++) {
-            CtaResultado ctaResultado = new CtaResultado("test" + i, "test");
+            CuentaResultado ctaResultado = new CuentaResultado("test" + i, "test");
             currentSession().save(ctaResultado);
             assertNotNull(ctaResultado);
             log.debug("ctaResultado>>" + ctaResultado);
