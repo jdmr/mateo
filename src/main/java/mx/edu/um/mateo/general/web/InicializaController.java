@@ -63,7 +63,7 @@ public class InicializaController {
     public String inicia() {
         return "/inicializa/index";
     }
-
+     
     @Transactional
     @RequestMapping(method = RequestMethod.POST)
     public String guarda(

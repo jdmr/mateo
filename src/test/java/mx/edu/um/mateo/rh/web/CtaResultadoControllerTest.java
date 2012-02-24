@@ -19,7 +19,6 @@ import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.rh.dao.CtaResultadoDao;
 import mx.edu.um.mateo.rh.dao.CtaResultadoDao;
-import mx.edu.um.mateo.rh.model.CtaMayor;
 import mx.edu.um.mateo.rh.model.CtaResultado;
 import mx.edu.um.mateo.rh.model.CtaResultado;
 import org.junit.*;

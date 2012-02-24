@@ -39,38 +39,42 @@
             <form:form commandName="cliente" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="nombre.label" /></div>
-                    <div class="span11">${cliente.nombre}</div>
+                    <div class="span8">
+                        <h4><s:message code="usuario.username.label" /></h4>
+                        <h3>${usuario.username}</h3>
+                    </div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="nombreCompleto.label" /></div>
-                    <div class="span11">${cliente.nombreCompleto}</div>
+                    <div class="span8">
+                        <h4><s:message code="usuario.nombre.label" /></h4>
+                        <h3>${usuario.nombre}</h3>
+                    </div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="rfc.label" /></div>
-                    <div class="span11">${cliente.rfc}</div>
+                    <div class="span8">
+                        <h4><s:message code="usuario.apellido.label" /></h4>
+                        <h3>${usuario.apellido}</h3>
+                    </div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="curp.label" /></div>
-                    <div class="span11">${cliente.fax}</div>
+                    <div class="span8">
+                        <h4><s:message code="empresa.label" /></h4>
+                        <h3>${usuario.empresa.nombre}</h3>
+                    </div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="direccion.label" /></div>
-                    <div class="span11">${cliente.direccion}</div>
-                </div>
-
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="telefono.label" /></div>
-                    <div class="span11">${cliente.telefono}</div>
-                </div>
-
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="fax.label" /></div>
-                    <div class="span11">${cliente.fax}</div>
+                    <div class="span8">
+                        <h4><s:message code="rol.list.label" /></h4>
+                        <h3>
+                            <c:forEach items="${roles}" var="rol">
+                                <form:checkbox path="roles" value="${rol.authority}" disabled="true" /> <s:message code="${rol.authority}" />&nbsp;
+                            </c:forEach>
+                        </h3>
+                    </div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">

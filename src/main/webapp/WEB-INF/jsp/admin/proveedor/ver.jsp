@@ -39,49 +39,61 @@
             <form:form commandName="proveedor" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="nombre.label" /></div>
-                    <div class="span11">${proveedor.nombre}</div>
+                    <div class="span4">
+                        <h4><s:message code="nombre.label" /></h4>
+                        <h3>${proveedor.nombre}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="nombreCompleto.label" /></h4>
+                        <h3>${proveedor.nombreCompleto}</h3>
+                    </div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="nombreCompleto.label" /></div>
-                    <div class="span11">${proveedor.nombreCompleto}</div>
+                    <div class="span4">
+                        <h4><s:message code="rfc.label" /></h4>
+                        <h3>${proveedor.rfc}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="curp.label" /></h4>
+                        <h3>${proveedor.curp}</h3>
+                    </div>
                 </div>
 
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="rfc.label" /></div>
-                    <div class="span11">${proveedor.rfc}</div>
-                </div>
+                <c:if test="${not empty proveedor.direccion}">
+                    <div class="row-fluid" style="padding-bottom: 10px;">
+                        <div class="span8">
+                            <h4><s:message code="direccion.label" /></h4>
+                            <h3>${proveedor.direccion}</h3>
+                        </div>
+                    </div>
+                </c:if>
 
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="curp.label" /></div>
-                    <div class="span11">${proveedor.fax}</div>
-                </div>
+                <c:if test="${not empty proveedor.telefono || not empty proveedor.fax}">
+                    <div class="row-fluid" style="padding-bottom: 10px;">
+                        <div class="span4">
+                            <h4><s:message code="telefono.label" /></h4>
+                            <h3>${proveedor.telefono}</h3>
+                        </div>
+                        <div class="span4">
+                            <h4><s:message code="fax.label" /></h4>
+                            <h3>${proveedor.fax}</h3>
+                        </div>
+                    </div>
+                </c:if>
 
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="direccion.label" /></div>
-                    <div class="span11">${proveedor.direccion}</div>
-                </div>
-
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="telefono.label" /></div>
-                    <div class="span11">${proveedor.telefono}</div>
-                </div>
-
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="fax.label" /></div>
-                    <div class="span11">${proveedor.fax}</div>
-                </div>
-
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="contacto.label" /></div>
-                    <div class="span11">${proveedor.contacto}</div>
-                </div>
-
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="correo.label" /></div>
-                    <div class="span11">${proveedor.correo}</div>
-                </div>
+                <c:if test="${not empty proveedor.contacto || not empty proveedor.correo}">
+                    <div class="row-fluid" style="padding-bottom: 10px;">
+                        <div class="span4">
+                            <h4><s:message code="contacto.label" /></h4>
+                            <h3>${proveedor.contacto}</h3>
+                        </div>
+                        <div class="span4">
+                            <h4><s:message code="correo.label" /></h4>
+                            <h3>${proveedor.correo}</h3>
+                        </div>
+                    </div>
+                </c:if>
 
                 <p class="well">
                     <a href="<c:url value='/admin/proveedor/edita/${proveedor.id}' />" class="btn btn-primary"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
