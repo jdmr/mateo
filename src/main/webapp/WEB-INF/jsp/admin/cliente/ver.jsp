@@ -39,53 +39,67 @@
             <form:form commandName="cliente" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="nombre.label" /></div>
-                    <div class="span11">${cliente.nombre}</div>
+                    <div class="span4">
+                        <h4><s:message code="nombre.label" /></h4>
+                        <h3>${cliente.nombre}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="nombreCompleto.label" /></h4>
+                        <h3>${cliente.nombreCompleto}</h3>
+                    </div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="nombreCompleto.label" /></div>
-                    <div class="span11">${cliente.nombreCompleto}</div>
+                    <div class="span4">
+                        <h4><s:message code="rfc.label" /></h4>
+                        <h3>${cliente.rfc}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="curp.label" /></h4>
+                        <h3>${cliente.curp}</h3>
+                    </div>
                 </div>
 
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="rfc.label" /></div>
-                    <div class="span11">${cliente.rfc}</div>
-                </div>
+                <c:if test="${not empty cliente.direccion}">
+                    <div class="row-fluid" style="padding-bottom: 10px;">
+                        <div class="span8">
+                            <h4><s:message code="direccion.label" /></h4>
+                            <h3>${cliente.direccion}</h3>
+                        </div>
+                    </div>
+                </c:if>
+
+                <c:if test="${not empty cliente.telefono || not empty cliente.fax}">
+                    <div class="row-fluid" style="padding-bottom: 10px;">
+                        <div class="span4">
+                            <h4><s:message code="telefono.label" /></h4>
+                            <h3>${cliente.telefono}</h3>
+                        </div>
+                        <div class="span4">
+                            <h4><s:message code="fax.label" /></h4>
+                            <h3>${cliente.fax}</h3>
+                        </div>
+                    </div>
+                </c:if>
+
+                <c:if test="${not empty cliente.contacto || not empty cliente.correo}">
+                    <div class="row-fluid" style="padding-bottom: 10px;">
+                        <div class="span4">
+                            <h4><s:message code="contacto.label" /></h4>
+                            <h3>${cliente.contacto}</h3>
+                        </div>
+                        <div class="span4">
+                            <h4><s:message code="correo.label" /></h4>
+                            <h3>${cliente.correo}</h3>
+                        </div>
+                    </div>
+                </c:if>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="curp.label" /></div>
-                    <div class="span11">${cliente.fax}</div>
-                </div>
-
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="direccion.label" /></div>
-                    <div class="span11">${cliente.direccion}</div>
-                </div>
-
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="telefono.label" /></div>
-                    <div class="span11">${cliente.telefono}</div>
-                </div>
-
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="fax.label" /></div>
-                    <div class="span11">${cliente.fax}</div>
-                </div>
-
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="contacto.label" /></div>
-                    <div class="span11">${cliente.contacto}</div>
-                </div>
-
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="correo.label" /></div>
-                    <div class="span11">${cliente.correo}</div>
-                </div>
-
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="tipoCliente.label" /></div>
-                    <div class="span11">${cliente.tipoCliente.nombre}</div>
+                    <div class="span4">
+                        <h4><s:message code="tipoCliente.label" /></h4>
+                        <h3>${cliente.tipoCliente.nombre}</h3>
+                    </div>
                 </div>
 
                 <p class="well">

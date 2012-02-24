@@ -47,4 +47,12 @@ public class NoHayExistenciasSuficientes extends Exception {
         super(message);
         this.producto = producto;
     }
+
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
 }

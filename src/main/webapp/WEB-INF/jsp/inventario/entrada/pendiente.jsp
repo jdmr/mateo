@@ -20,7 +20,7 @@
             </ul>
         </nav>
 
-        <div id="nuevo-entrada" class="content scaffold-list" role="main">
+        <div id="pendiente-entrada" class="content scaffold-list" role="main">
             <h1><s:message code="entrada.edita.label" /></h1>
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/inventario/entrada'/>"><i class="icon-list icon-white"></i> <s:message code='entrada.lista.label' /></a>

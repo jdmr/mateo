@@ -23,7 +23,9 @@
  */
 package mx.edu.um.mateo.inventario.dao;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inventario.model.Producto;
@@ -119,6 +121,24 @@ public class ProductoDao {
         params.put("cantidad", (Long) countCriteria.list().get(0));
 
         return params;
+    }
+    
+    public List<Producto> listaParaSalida(String filtro, Long almacenId) {
+        Criteria criteria = currentSession().createCriteria(Producto.class);
+        criteria.createCriteria("almacen").add(Restrictions.idEq(almacenId));            
+        filtro = "%" + filtro + "%";
+        Disjunction propiedades = Restrictions.disjunction();
+        propiedades.add(Restrictions.ilike("sku", filtro));
+        propiedades.add(Restrictions.ilike("nombre", filtro));
+        propiedades.add(Restrictions.ilike("descripcion", filtro));
+        propiedades.add(Restrictions.ilike("marca", filtro));
+        propiedades.add(Restrictions.ilike("modelo", filtro));
+        propiedades.add(Restrictions.ilike("ubicacion", filtro));
+        criteria.add(propiedades);
+
+        criteria.add(Restrictions.gt("existencia", BigDecimal.ZERO));
+        criteria.setMaxResults(10);
+        return criteria.list();
     }
 
     public Producto obtiene(Long id) {

@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="proveedor.nuevo.label" /></title>
+        <title><s:message code="proveedor.edita.label" /></title>
     </head>
     <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
@@ -22,7 +22,7 @@
         </nav>
 
         <div id="nuevo-proveedor" class="content scaffold-list" role="main">
-            <h1><s:message code="proveedor.nuevo.label" /></h1>
+            <h1><s:message code="proveedor.edita.label" /></h1>
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/admin/proveedor'/>"><i class="icon-list icon-white"></i> <s:message code='proveedor.lista.label' /></a>
             </p>
@@ -49,8 +49,7 @@
                                         <s:message code="nombre.label" />
                                         <span class="required-indicator">*</span>
                                     </label>
-                                    <form:input path="nombre" maxlength="128" required="true" cssClass="span10" />
-                                    <form:errors path="nombre" cssClass="alert alert-error" />
+                                    <form:input path="nombre" maxlength="128" required="true" cssClass="span4" />
                                 </div>
                             </s:bind>
                         </div>
@@ -61,8 +60,7 @@
                                         <s:message code="nombreCompleto.label" />
                                         <span class="required-indicator">*</span>
                                     </label>
-                                    <form:input path="nombreCompleto" maxlength="128" required="true" cssClass="span10" />
-                                    <form:errors path="nombreCompleto" cssClass="alert alert-error" />
+                                    <form:input path="nombreCompleto" maxlength="128" required="true" cssClass="span4" />
                                 </div>
                             </s:bind>
                         </div>
@@ -75,8 +73,7 @@
                                         <s:message code="rfc.label" />
                                         <span class="required-indicator">*</span>
                                     </label>
-                                    <form:input path="rfc" maxlength="13" required="true" cssClass="span10" />
-                                    <form:errors path="rfc" cssClass="alert alert-error" />
+                                    <form:input path="rfc" maxlength="13" required="true" cssClass="span4" min="12" />
                                 </div>
                             </s:bind>
                         </div>
@@ -86,8 +83,7 @@
                                     <label for="curp">
                                         <s:message code="curp.label" />
                                     </label>
-                                    <form:input path="curp" maxlength="18" cssClass="span10" />
-                                    <form:errors path="curp" cssClass="alert alert-error" />
+                                    <form:input path="curp" maxlength="18" cssClass="span4" />
                                 </div>
                             </s:bind>
                         </div>
@@ -99,8 +95,7 @@
                                     <label for="direccion">
                                         <s:message code="direccion.label" />
                                     </label>
-                                    <form:textarea path="direccion" cssClass="span11" cssStyle="height: 90px;" />
-                                    <form:errors path="direccion" cssClass="alert alert-error" />
+                                    <form:textarea path="direccion" cssClass="span8" cssStyle="height: 90px;" />
                                 </div>
                             </s:bind>
                         </div>
@@ -112,8 +107,7 @@
                                     <label for="telefono">
                                         <s:message code="telefono.label" />
                                     </label>
-                                    <form:input path="telefono" maxlength="25" cssClass="span10" />
-                                    <form:errors path="telefono" cssClass="alert alert-error" />
+                                    <form:input path="telefono" maxlength="25" cssClass="span4" />
                                 </div>
                             </s:bind>
                         </div>
@@ -123,8 +117,7 @@
                                     <label for="fax">
                                         <s:message code="fax.label" />
                                     </label>
-                                    <form:input path="fax" maxlength="25" cssClass="span10" />
-                                    <form:errors path="fax" cssClass="alert alert-error" />
+                                    <form:input path="fax" maxlength="25" cssClass="span4" />
                                 </div>
                             </s:bind>
                         </div>
@@ -136,8 +129,7 @@
                                     <label for="contacto">
                                         <s:message code="contacto.label" />
                                     </label>
-                                    <form:input path="contacto" maxlength="64" cssClass="span10" />
-                                    <form:errors path="contacto" cssClass="alert alert-error" />
+                                    <form:input path="contacto" maxlength="64" cssClass="span4" />
                                 </div>
                             </s:bind>
                         </div>
@@ -147,8 +139,7 @@
                                     <label for="correo">
                                         <s:message code="correo.label" />
                                     </label>
-                                    <form:input path="correo" maxlength="128" cssClass="span10" />
-                                    <form:errors path="correo" cssClass="alert alert-error" />
+                                    <form:input path="correo" maxlength="128" cssClass="span4" type="email" />
                                 </div>
                             </s:bind>
                         </div>
