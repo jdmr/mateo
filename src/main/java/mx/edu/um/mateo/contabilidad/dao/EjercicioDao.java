@@ -2,13 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.dao;
+package mx.edu.um.mateo.contabilidad.dao;
 
 import java.util.HashMap;
 import java.util.Map;
-import mx.edu.um.mateo.general.dao.EmpresaDao;
 import mx.edu.um.mateo.general.utils.UltimoException;
-import mx.edu.um.mateo.rh.model.CuentaMayor;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -28,14 +27,14 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class CuentaMayorDao {
+public class EjercicioDao {
 
-    private static final Logger log = LoggerFactory.getLogger(EmpresaDao.class);
+    private static final Logger log = LoggerFactory.getLogger(EjercicioDao.class);
     @Autowired
     private SessionFactory sessionFactory;
 
-    public CuentaMayorDao() {
-        log.info("Nueva instancia de CtaMayorDao");
+    public EjercicioDao() {
+        log.info("Nueva instancia de EjercicioDao");
     }
 
     private Session currentSession() {
@@ -43,7 +42,7 @@ public class CuentaMayorDao {
     }
 
     public Map<String, Object> lista(Map<String, Object> params) {
-        log.debug("Buscando lista de ctaMayor con params {}", params);
+        log.debug("Buscando lista de Ejercicio con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
@@ -63,15 +62,15 @@ public class CuentaMayorDao {
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(CuentaMayor.class);
-        Criteria countCriteria = currentSession().createCriteria(CuentaMayor.class);
+        Criteria criteria = currentSession().createCriteria(Ejercicio.class);
+        Criteria countCriteria = currentSession().createCriteria(Ejercicio.class);
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             filtro = "%" + filtro + "%";
             Disjunction propiedades = Restrictions.disjunction();
             propiedades.add(Restrictions.ilike("nombre", filtro));
-            propiedades.add(Restrictions.ilike("nombreFiscal", filtro));
+            propiedades.add(Restrictions.ilike("status", filtro));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -89,7 +88,7 @@ public class CuentaMayorDao {
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put("ctaMayores", criteria.list());
+        params.put("ejercicio", criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
@@ -97,26 +96,25 @@ public class CuentaMayorDao {
         return params;
     }
 
-    public CuentaMayor obtiene(Long id) {
-        CuentaMayor ctaMayor = (CuentaMayor) currentSession().get(CuentaMayor.class, id);
-        return ctaMayor;
+    public Ejercicio obtiene(Long id) {
+        Ejercicio Ejercicio = (Ejercicio) currentSession().get(Ejercicio.class, id);
+        return Ejercicio;
     }
 
-    public CuentaMayor crea(CuentaMayor ctaMayor) {
-        currentSession().save(ctaMayor);
-        currentSession().flush();
-        return ctaMayor;
+    public Ejercicio crea(Ejercicio Ejercicio) {
+        currentSession().save(Ejercicio);
+        return Ejercicio;
     }
 
-    public CuentaMayor actualiza(CuentaMayor ctaMayor) {
-        currentSession().saveOrUpdate(ctaMayor);
-        return ctaMayor;
+    public Ejercicio actualiza(Ejercicio Ejercicio) {
+        currentSession().saveOrUpdate(Ejercicio);
+        return Ejercicio;
     }
 
     public String elimina(Long id) throws UltimoException {
-        CuentaMayor ctamayor = obtiene(id);
-        currentSession().delete(ctamayor);
-        String nombre = ctamayor.getNombre();
+        Ejercicio Ejercicio = obtiene(id);
+        currentSession().delete(Ejercicio);
+        String nombre = Ejercicio.getNombre();
         return nombre;
     }
 }

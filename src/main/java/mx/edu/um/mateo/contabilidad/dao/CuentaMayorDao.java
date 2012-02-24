@@ -2,43 +2,40 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.dao;
+package mx.edu.um.mateo.contabilidad.dao;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+import mx.edu.um.mateo.general.dao.EmpresaDao;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
-import mx.edu.um.mateo.contabilidad.model.Ejercicio;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import mx.edu.um.mateo.rh.model.Empleado;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
 
 /**
  *
- * @author develop
+ * @author nujev
  */
-@Repository("empleadoDao")
+@Repository
 @Transactional
-public class EmpleadoDao {
+public class CuentaMayorDao {
 
-    private static final Logger log = LoggerFactory.getLogger(EmpleadoDao.class);
+    private static final Logger log = LoggerFactory.getLogger(EmpresaDao.class);
     @Autowired
     private SessionFactory sessionFactory;
 
-    public EmpleadoDao() {
-        log.info("Nueva instancia de EmpleadoDao");
+    public CuentaMayorDao() {
+        log.info("Nueva instancia de CtaMayorDao");
     }
 
     private Session currentSession() {
@@ -46,7 +43,7 @@ public class EmpleadoDao {
     }
 
     public Map<String, Object> lista(Map<String, Object> params) {
-        log.debug("Buscando lista de empleados con params {}", params);
+        log.debug("Buscando lista de ctaMayor con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
@@ -66,8 +63,8 @@ public class EmpleadoDao {
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(Empleado.class);
-        Criteria countCriteria = currentSession().createCriteria(Empleado.class);
+        Criteria criteria = currentSession().createCriteria(CuentaMayor.class);
+        Criteria countCriteria = currentSession().createCriteria(CuentaMayor.class);
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
@@ -92,7 +89,7 @@ public class EmpleadoDao {
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put("empleado", criteria.list());
+        params.put("ctaMayores", criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
@@ -100,22 +97,26 @@ public class EmpleadoDao {
         return params;
     }
 
-    public Empleado obtiene(Long id) {
-        Empleado empleado = (Empleado) currentSession().get(Empleado.class, id);
-        return empleado;
+    public CuentaMayor obtiene(Long id) {
+        CuentaMayor ctaMayor = (CuentaMayor) currentSession().get(CuentaMayor.class, id);
+        return ctaMayor;
     }
 
-    public Empleado crea(Empleado empleado) {
-        empleado = new Empleado();
-        currentSession().save(empleado);
-        return empleado;
+    public CuentaMayor crea(CuentaMayor ctaMayor) {
+        currentSession().save(ctaMayor);
+        currentSession().flush();
+        return ctaMayor;
     }
 
-    public Empleado actualiza(Empleado Empleado) {
-        currentSession().saveOrUpdate(Empleado);
-        return Empleado;
+    public CuentaMayor actualiza(CuentaMayor ctaMayor) {
+        currentSession().saveOrUpdate(ctaMayor);
+        return ctaMayor;
     }
-//private EmpleadoLaborales empleadoLaborales;
-//private EmpleadoPersonales empleadoPersonales;
-//private Nacionalidades nacionalidad;
+
+    public String elimina(Long id) throws UltimoException {
+        CuentaMayor ctamayor = obtiene(id);
+        currentSession().delete(ctamayor);
+        String nombre = ctamayor.getNombre();
+        return nombre;
+    }
 }
