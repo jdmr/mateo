@@ -4,14 +4,12 @@
  */
 package mx.edu.um.mateo.contabilidad.dao;
 
-import mx.edu.um.mateo.contabilidad.dao.CuentaMayorDao;
 import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.utils.UltimoException;
-import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
-import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import static org.junit.Assert.*;
@@ -47,35 +45,30 @@ public class CuentaMayorDaoTest extends BaseTest {
      * Test of lista method, of class CuentaMayorDao.
      */
     @Test
-    public void deberiaMostrarListaDeCtaMayor() {
-        log.debug("Debiera mostrar lista de ctaMayor");
-        Ejercicio ejercicio = new Ejercicio("test", "A");
-        currentSession().save(ejercicio);
-        assertNotNull(ejercicio);
-        log.debug("ejercicio >>" + ejercicio);
+    public void deberiaMostrarListaDeCuentaMayor() {
+        log.debug("Debiera mostrar lista de cuentaMayor");
         for (int i = 0; i < 20; i++) {
-            CuentaMayor ctaMayor = new CuentaMayor("test" + i, "test");
-            currentSession().save(ctaMayor);
-            assertNotNull(ctaMayor);
-            log.debug("ctaMayor>>" + ctaMayor);
+            CuentaMayor cuentaMayor = new CuentaMayor("test" + i, "test");
+            currentSession().save(cuentaMayor);
+            assertNotNull(cuentaMayor);
         }
 
         Map<String, Object> params = null;
         Map result = instance.lista(params);
-        assertNotNull(result.get("ctaMayores"));
+        assertNotNull(result.get("mayores"));
         assertNotNull(result.get("cantidad"));
 
-        assertEquals(10, ((List<Empresa>) result.get("ctaMayores")).size());
+        assertEquals(10, ((List<Empresa>) result.get("mayores")).size());
         assertEquals(20, ((Long) result.get("cantidad")).intValue());
     }
 
     @Test
-    public void debieraObtenerCtaMayor() {
-        log.debug("Debiera obtener ctaMayor");
-        CuentaMayor ctaMayor = new CuentaMayor("test", "test");
-        currentSession().save(ctaMayor);
-        assertNotNull(ctaMayor.getId());
-        Long id = ctaMayor.getId();
+    public void debieraObtenerCuentaMayor() {
+        log.debug("Debiera obtener cuentaMayor");
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "test");
+        currentSession().save(cuentaMayor);
+        assertNotNull(cuentaMayor.getId());
+        Long id = cuentaMayor.getId();
 
         CuentaMayor result = instance.obtiene(id);
         assertNotNull(result);
@@ -83,41 +76,39 @@ public class CuentaMayorDaoTest extends BaseTest {
     }
 
     @Test
-    public void deberiaCrearCtaMayor() {
-        log.debug("Deberia crear CtaMayor");
-        CuentaMayor ctaMayor = new CuentaMayor("test", "test");
-        assertNotNull(ctaMayor);
-        log.debug("ctaMayor >> " + ctaMayor);
-        ctaMayor = instance.crea(ctaMayor);
-        assertNotNull(ctaMayor.getId());
+    public void deberiaCrearCuentaMayor() {
+        log.debug("Deberia crear CuentaMayor");
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "test");
+        assertNotNull(cuentaMayor);
+        cuentaMayor = instance.crea(cuentaMayor);
+        assertNotNull(cuentaMayor.getId());
     }
     
     @Test
-    public void deberiaActualizarCtaMayor() {
-        log.debug("Deberia actualizar CtaMayor");
-        CuentaMayor ctaMayor = new CuentaMayor("test", "test");
-        assertNotNull(ctaMayor);
-        currentSession().save(ctaMayor);
+    public void deberiaActualizarCuentaMayor() {
+        log.debug("Deberia actualizar CuentaMayor");
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "test");
+        assertNotNull(cuentaMayor);
+        currentSession().save(cuentaMayor);
         
-        ctaMayor.setNombre("test1");
+        cuentaMayor.setNombre("test1");
 
-        ctaMayor = instance.actualiza(ctaMayor);
-        log.debug("ctaMayor >>" + ctaMayor);
-        assertEquals("test1", ctaMayor.getNombre());
+        cuentaMayor = instance.actualiza(cuentaMayor);
+        assertEquals("test1", cuentaMayor.getNombre());
     }
     
 
     @Test
-    public void deberiaEliminarCtaMayor() throws UltimoException {
-        log.debug("Debiera eliminar Ejercicio");
+    public void deberiaEliminarCuentaMayor() throws UltimoException {
+        log.debug("Debiera eliminar CuentaMayor");
 
-        CuentaMayor ctaMayor = new CuentaMayor("test", "A");
-        currentSession().save(ctaMayor);
-        assertNotNull(ctaMayor);
-        String nombre = instance.elimina(ctaMayor.getId());
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "A");
+        currentSession().save(cuentaMayor);
+        assertNotNull(cuentaMayor);
+        String nombre = instance.elimina(cuentaMayor.getId());
         assertEquals("test", nombre);
 
-        CuentaMayor prueba = instance.obtiene(ctaMayor.getId());
+        CuentaMayor prueba = instance.obtiene(cuentaMayor.getId());
         assertNull(prueba);
     }
 }
