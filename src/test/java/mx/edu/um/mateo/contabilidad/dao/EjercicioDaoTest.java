@@ -2,14 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.dao;
+package mx.edu.um.mateo.contabilidad.dao;
 
+import mx.edu.um.mateo.contabilidad.dao.EjercicioDao;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.utils.UltimoException;
-import mx.edu.um.mateo.rh.model.Ejercicio;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import static org.junit.Assert.*;
