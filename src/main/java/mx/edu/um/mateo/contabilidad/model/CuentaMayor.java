@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.model;
+package mx.edu.um.mateo.contabilidad.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
@@ -13,37 +13,36 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author nujev
  */
 @Entity
-@Table(name = "ejercicio")
-public class Ejercicio implements Serializable {
+@Table(name = "ctamayor")
+public class CuentaMayor implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Version
     private Integer version;
+//    private Ejercicio ejercicio;
+//    private String idCtaMayor;
+//    private String tipoCuenta;
     @NotBlank
     @Column(nullable = false, length = 24)
     private String nombre;
     @NotBlank
-    @Column(nullable = false, length = 2)
-    private String status;
-    //private String mascBalance;
-    //private String mascResultado;
-    //private String mascAuxiliar;
-    //private String mascCcosto;
-    //private Byte nivelContable;
-    //private Byte nivelTauxiliar;
-    //private Set ccostos;
-    //private Set ctasMayor;
-    //private Set auxiliares;
-    //private Set libros;
+    @Column(nullable = false, length = 24)
+    private String nombreFiscal;
+//    private Boolean detalle;
+//    private Boolean aviso;
+//    private Boolean auxiliar;
+//    private Boolean iva;
+//    private Double pctIva;
+//    private Boolean detalleR;
 
-    public Ejercicio() {
+    public CuentaMayor() {
     }
 
-    public Ejercicio(String nombre, String status) {
+    public CuentaMayor(String nombre, String nombreFiscal) {
         this.nombre = nombre;
-        this.status = status;
+        this.nombreFiscal = nombreFiscal;
     }
 
     public Long getId() {
@@ -54,32 +53,28 @@ public class Ejercicio implements Serializable {
         this.id = id;
     }
 
-    /**
-     * @return the nombre
-     */
     public String getNombre() {
         return nombre;
     }
 
-    /**
-     * @param nombre the nombre to set
-     */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
-    /**
-     * @return the status
-     */
-    public String getStatus() {
-        return status;
+    public String getNombreFiscal() {
+        return nombreFiscal;
     }
 
-    /**
-     * @param status the status to set
-     */
-    public void setStatus(String status) {
-        this.status = status;
+    public void setNombreFiscal(String nombreFiscal) {
+        this.nombreFiscal = nombreFiscal;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     @Override
@@ -90,7 +85,7 @@ public class Ejercicio implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Ejercicio other = (Ejercicio) obj;
+        final CuentaMayor other = (CuentaMayor) obj;
         return true;
     }
 
@@ -102,6 +97,6 @@ public class Ejercicio implements Serializable {
 
     @Override
     public String toString() {
-        return "Ejercicio{nombre=" + nombre + ", status=" + status + '}';
+        return "CtaMayor{nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + '}';
     }
 }
