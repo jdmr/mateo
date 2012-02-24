@@ -38,8 +38,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.utils.Ambiente;
-import mx.edu.um.mateo.rh.dao.CtaMayorDao;
-import mx.edu.um.mateo.rh.model.CtaMayor;
+import mx.edu.um.mateo.rh.dao.CuentaMayorDao;
+import mx.edu.um.mateo.rh.model.CuentaMayor;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -70,11 +70,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping("/rh/ctaMayor")
-public class CtaMayorController {
+public class CuentaMayorController {
 
-    private static final Logger log = LoggerFactory.getLogger(CtaMayorController.class);
+    private static final Logger log = LoggerFactory.getLogger(CuentaMayorController.class);
     @Autowired
-    private CtaMayorDao ctaMayorDao;
+    private CuentaMayorDao ctaMayorDao;
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
@@ -114,7 +114,7 @@ public class CtaMayorController {
             params.put("reporte", true);
             params = ctaMayorDao.lista(params);
             try {
-                generaReporte(tipo, (List<CtaMayor>) params.get("ctaMayores"), response);
+                generaReporte(tipo, (List<CuentaMayor>) params.get("ctaMayores"), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -127,7 +127,7 @@ public class CtaMayorController {
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<CtaMayor>) params.get("ctaMayores"), request);
+                enviaCorreo(correo, (List<CuentaMayor>) params.get("ctaMayores"), request);
                 modelo.addAttribute("message", "lista.enviada.message");
                 modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("ctaMayor.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
@@ -146,7 +146,7 @@ public class CtaMayorController {
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<CtaMayor> ctaMayores = (List<CtaMayor>) params.get("ctaMayores");
+        List<CuentaMayor> ctaMayores = (List<CuentaMayor>) params.get("ctaMayores");
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (ctaMayores.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
@@ -160,7 +160,7 @@ public class CtaMayorController {
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando ctaMayor {}", id);
-        CtaMayor ctaMayor = ctaMayorDao.obtiene(id);
+        CuentaMayor ctaMayor = ctaMayorDao.obtiene(id);
 
         modelo.addAttribute("ctaMayor", ctaMayor);
 
@@ -170,14 +170,14 @@ public class CtaMayorController {
     @RequestMapping("/nueva")
     public String nueva(Model modelo) {
         log.debug("Nuevo ctaMayor");
-        CtaMayor ctaMayor = new CtaMayor();
+        CuentaMayor ctaMayor = new CuentaMayor();
         modelo.addAttribute("ctaMayor", ctaMayor);
         return "rh/ctaMayor/nueva";
     }
 
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid CtaMayor ctaMayor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid CuentaMayor ctaMayor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
@@ -202,14 +202,14 @@ public class CtaMayorController {
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Edita ctaMayor {}", id);
-        CtaMayor ctaMayor = ctaMayorDao.obtiene(id);
+        CuentaMayor ctaMayor = ctaMayorDao.obtiene(id);
         modelo.addAttribute("ctaMayor", ctaMayor);
         return "rh/ctaMayor/edita";
     }
 
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, @Valid CtaMayor ctaMayor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String actualiza(HttpServletRequest request, @Valid CuentaMayor ctaMayor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
             return "rh/ctaMayor/edita";
@@ -229,7 +229,7 @@ public class CtaMayorController {
 
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute CtaMayor ctaMayor, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute CuentaMayor ctaMayor, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina ctaMayor");
         try {
             String nombre = ctaMayorDao.elimina(id);
@@ -245,7 +245,7 @@ public class CtaMayorController {
         return "redirect:/rh/ctaMayor";
     }
 
-    private void generaReporte(String tipo, List<CtaMayor> ctaMayores, HttpServletResponse response) throws JRException, IOException {
+    private void generaReporte(String tipo, List<CuentaMayor> ctaMayores, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
         switch (tipo) {
@@ -274,7 +274,7 @@ public class CtaMayorController {
 
     }
 
-    private void enviaCorreo(String tipo, List<CtaMayor> ctaMayores, HttpServletRequest request) throws JRException, MessagingException {
+    private void enviaCorreo(String tipo, List<CuentaMayor> ctaMayores, HttpServletRequest request) throws JRException, MessagingException {
         log.debug("Enviando correo {}", tipo);
         byte[] archivo = null;
         String tipoContenido = null;

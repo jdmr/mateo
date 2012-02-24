@@ -30,7 +30,7 @@
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/inventario/tipoProducto/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='tipoProducto.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/inventario/tipoProducto/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='tipoProducto.nuevo.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><s:message code="buscar.label" /></button>
             </p>

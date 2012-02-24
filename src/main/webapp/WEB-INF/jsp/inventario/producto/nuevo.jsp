@@ -44,7 +44,7 @@
                                         <s:message code="codigo.label" />
                                         <span class="required-indicator">*</span>
                                     </label>
-                                    <form:input path="codigo" maxlength="6" required="true" cssClass="span3" />
+                                    <form:input path="codigo" maxlength="6" required="true" cssClass="span2" />
                                     <form:errors path="codigo" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
@@ -56,7 +56,7 @@
                                         <s:message code="sku.label" />
                                         <span class="required-indicator">*</span>
                                     </label>
-                                    <form:input path="sku" maxlength="64" required="true" cssClass="span10" />
+                                    <form:input path="sku" maxlength="64" required="true" cssClass="span4" />
                                     <form:errors path="sku" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
@@ -70,7 +70,7 @@
                                         <s:message code="nombre.label" />
                                         <span class="required-indicator">*</span>
                                     </label>
-                                    <form:input path="nombre" maxlength="128" required="true" cssClass="span10" />
+                                    <form:input path="nombre" maxlength="128" required="true" cssClass="span4" />
                                     <form:errors path="nombre" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
@@ -82,7 +82,7 @@
                                         <s:message code="descripcion.label" />
                                         <span class="required-indicator">*</span>
                                     </label>
-                                    <form:textarea path="descripcion" maxlength="254" required="true" cssClass="span10" />
+                                    <form:textarea path="descripcion" maxlength="254" required="true" cssClass="span4" />
                                     <form:errors path="descripcion" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
@@ -95,7 +95,7 @@
                                     <label for="marca">
                                         <s:message code="marca.label" />
                                     </label>
-                                    <form:input path="marca" maxlength="64" cssClass="span10" />
+                                    <form:input path="marca" maxlength="64" cssClass="span4" />
                                     <form:errors path="marca" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
@@ -106,7 +106,7 @@
                                     <label for="modelo">
                                         <s:message code="modelo.label" />
                                     </label>
-                                    <form:input path="modelo" maxlength="64" cssClass="span10" />
+                                    <form:input path="modelo" maxlength="64" cssClass="span4" />
                                     <form:errors path="modelo" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
@@ -120,7 +120,7 @@
                                         <s:message code="unidadMedida.label" />
                                         <span class="required-indicator">*</span>
                                     </label>
-                                    <form:input path="unidadMedida" maxlength="32" required="true" cssClass="span5" />
+                                    <form:input path="unidadMedida" maxlength="32" required="true" cssClass="span2" />
                                     <form:errors path="unidadMedida" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
@@ -131,7 +131,7 @@
                                     <label for="ubicacion">
                                         <s:message code="ubicacion.label" />
                                     </label>
-                                    <form:input path="ubicacion" maxlength="128" cssClass="span10" />
+                                    <form:input path="ubicacion" maxlength="128" cssClass="span4" />
                                     <form:errors path="ubicacion" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
@@ -156,7 +156,7 @@
                                         <s:message code="tiempoEntrega.label" />
                                         <span class="required-indicator">*</span>
                                     </label>
-                                    <form:input path="tiempoEntrega" maxlength="6" cssClass="span10" required="true" cssStyle="text-align:right;" type="number" step="1" min="1" max="30" />
+                                    <form:input path="tiempoEntrega" maxlength="6" cssClass="span4" required="true" cssStyle="text-align:right;" type="number" step="1" min="1" max="30" />
                                     <form:errors path="tiempoEntrega" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
@@ -170,7 +170,7 @@
                                         <s:message code="iva.label" />
                                         <span class="required-indicator">*</span>
                                     </label>
-                                    <form:input path="iva" maxlength="5" cssClass="span10" required="true" cssStyle="text-align:right;" type="number" step="0.01" min="0" max="1" />
+                                    <form:input path="iva" maxlength="5" cssClass="span4" required="true" cssStyle="text-align:right;" type="number" step="0.01" min="0" max="1" />
                                     <form:errors path="iva" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
@@ -182,7 +182,7 @@
                                         <s:message code="tipoProducto.label" />
                                         <span class="required-indicator">*</span>
                                     </label>
-                                    <form:select id="tipoProductoId" path="tipoProducto.id" items="${tiposDeProducto}" itemLabel="nombre" itemValue="id" cssClass="span10" required="true" />
+                                    <form:select id="tipoProductoId" path="tipoProducto.id" items="${tiposDeProducto}" itemLabel="nombre" itemValue="id" cssClass="span4" required="true" />
                                     <form:errors path="tipoProducto" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>

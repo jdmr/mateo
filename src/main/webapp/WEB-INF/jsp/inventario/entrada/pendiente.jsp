@@ -20,12 +20,12 @@
             </ul>
         </nav>
 
-        <div id="edita-entrada" class="content scaffold-list" role="main">
+        <div id="pendiente-entrada" class="content scaffold-list" role="main">
             <h1><s:message code="entrada.edita.label" /></h1>
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/inventario/entrada'/>"><i class="icon-list icon-white"></i> <s:message code='entrada.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="/inventario/entrada/actualiza" />
+            <c:url var="actualizaUrl" value="/inventario/entrada/pendiente/cerrar" />
             <form:form commandName="entrada" action="${actualizaUrl}" method="post">
                 <form:hidden path="id" />
                 <form:hidden path="version" />
@@ -40,20 +40,6 @@
                 </form:errors>
 
                 <fieldset>
-                    <div class="row-fluid">
-                        <div class="span12">
-                            <s:bind path="entrada.proveedor">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="proveedorNombre">
-                                        <s:message code="proveedor.label" />
-                                        <span class="required-indicator">*</span>
-                                    </label>
-                                    <form:input id="proveedorNombre" path="proveedor.nombre" cssClass="span6" />
-                                    <form:errors path="proveedor" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
                     <div class="row-fluid">
                         <div class="span12">
                             <s:bind path="entrada.factura">
@@ -95,60 +81,6 @@
                             </s:bind>
                         </div>
                     </div>
-                    <div class="row-fluid">
-                        <div class="span12">
-                            <s:bind path="entrada.devolucion">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="devolucion">
-                                        <s:message code="devolucion.label" />
-                                    </label>
-                                    <form:checkbox path="devolucion" cssClass="span3" />
-                                    <form:errors path="devolucion" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="entrada.iva">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="iva">
-                                        <s:message code="iva.label" />
-                                        <span class="required-indicator">*</span>
-                                    </label>
-                                    <form:input path="iva" cssClass="span6" required="true" cssStyle="text-align:right;" type="number" step="0.01" min="0" />
-                                    <form:errors path="iva" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="entrada.total">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="total">
-                                        <s:message code="total.label" />
-                                        <span class="required-indicator">*</span>
-                                    </label>
-                                    <form:input path="total" cssClass="span6" required="true" cssStyle="text-align:right;" type="number" step="0.01" min="0" />
-                                    <form:errors path="total" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="entrada.tipoCambio">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="tipoCambio">
-                                        <s:message code="tipoCambio.label" />
-                                    </label>
-                                    <form:input path="tipoCambio" maxlength="5" cssClass="span6" cssStyle="text-align:right;" type="number" step="0.01" min="0" />
-                                    <form:errors path="tipoCambio" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
@@ -159,18 +91,7 @@
         <content>
             <script>
                 $(document).ready(function() {
-                    $('input#proveedorNombre')
-                        .autocomplete({
-                            source: "<c:url value='/inventario/entrada/proveedores' />",
-                            select: function(event, ui) {
-                                $("input#proveedorId").val(ui.item.id);
-                                $("input#factura").focus();
-                                return false;
-                            }
-                        })
-                        .focus();
-                    $("input#fechaFactura").datepicker($.datepicker.regional['es']);
-                    $("input#fechaFactura").datepicker("option","firstDay",0);
+                    $('input#factura').focus();
                 });
             </script>                    
         </content>

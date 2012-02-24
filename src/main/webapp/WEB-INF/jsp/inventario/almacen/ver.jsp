@@ -26,7 +26,7 @@
 
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/inventario/almacen'/>"><i class="icon-list icon-white"></i> <s:message code='almacen.lista.label' /></a>
-                <a class="btn btn-primary" href="<s:url value='/inventario/almacen/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='almacen.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/inventario/almacen/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='almacen.nuevo.label' /></a>
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
@@ -39,13 +39,17 @@
             <form:form commandName="almacen" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="codigo.label" /></div>
-                    <div class="span11">${almacen.codigo}</div>
+                    <div class="span4">
+                        <h4><s:message code="codigo.label" /></h4>
+                        <h3>${almacen.codigo}</h3>
+                    </div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="nombre.label" /></div>
-                    <div class="span11">${almacen.nombre}</div>
+                    <div class="span4">
+                        <h4><s:message code="nombre.label" /></h4>
+                        <h3>${almacen.nombre}</h3>
+                    </div>
                 </div>
 
                 <p class="well">

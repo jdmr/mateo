@@ -32,7 +32,7 @@
 
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/admin/organizacion'/>"><i class="icon-list icon-white"></i> <s:message code='organizacion.lista.label' /></a>
-                <a class="btn btn-primary" href="<s:url value='/admin/organizacion/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='organizacion.nueva.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/admin/organizacion/nueva'/>"><i class="icon-file icon-white"></i> <s:message code='organizacion.nueva.label' /></a>
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
@@ -45,18 +45,24 @@
             <form:form commandName="organizacion" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="codigo.label" /></div>
-                    <div class="span11">${organizacion.codigo}</div>
+                    <div class="span6">
+                        <h4><s:message code="codigo.label" /></h4>
+                        <h3>${organizacion.codigo}</h3>
+                    </div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="nombre.label" /></div>
-                    <div class="span11">${organizacion.nombre}</div>
+                    <div class="span6">
+                        <h4><s:message code="nombre.label" /></h4>
+                        <h3>${organizacion.nombre}</h3>
+                    </div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="nombreCompleto.label" /></div>
-                    <div class="span11">${organizacion.nombreCompleto}</div>
+                    <div class="span6">
+                        <h4><s:message code="nombreCompleto.label" /></h4>
+                        <h3>${organizacion.nombreCompleto}</h3>
+                    </div>
                 </div>
 
                 <p class="well">
