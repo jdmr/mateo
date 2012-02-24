@@ -39,7 +39,7 @@ public class CuentaMayorControllerTest extends BaseTest {
     private WebApplicationContext wac;
     private MockMvc mockMvc;
     @Autowired
-    private CuentaMayorDao ctaMayorDao;
+    private CuentaMayorDao cuentaMayorDao;
 
     public CuentaMayorControllerTest() {
     }
@@ -62,59 +62,59 @@ public class CuentaMayorControllerTest extends BaseTest {
     }
 
     @Test
-    public void debieraMostrarListaDeCtaMayor() throws Exception {
-        log.debug("Debiera monstrar lista de ctaMayor");
+    public void debieraMostrarListaDeCuentaMayor() throws Exception {
+        log.debug("Debiera monstrar lista de cuentas de mayor");
         
         this.mockMvc.perform(get("/contabilidad/mayor")).
                 andExpect(status().isOk()).
                 andExpect(forwardedUrl("/WEB-INF/jsp/contabilidad/mayor/lista.jsp")).
-                andExpect(model().attributeExists("ctaMayores")).
+                andExpect(model().attributeExists("mayores")).
                 andExpect(model().attributeExists("paginacion")).
                 andExpect(model().attributeExists("paginas")).
                 andExpect(model().attributeExists("pagina"));
     }
 
     @Test
-    public void debieraMostrarCtaMayor() throws Exception {
-        log.debug("Debiera mostrar ctaMayor");
-        CuentaMayor ctaMayor = new CuentaMayor("test", "test");
-        ctaMayor = ctaMayorDao.crea(ctaMayor);
+    public void debieraMostrarCuentaMayor() throws Exception {
+        log.debug("Debiera mostrar cuenta de mayor");
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "test");
+        cuentaMayor = cuentaMayorDao.crea(cuentaMayor);
 
-        this.mockMvc.perform(get("/contabilidad/mayor/ver/" + ctaMayor.getId())).
+        this.mockMvc.perform(get("/contabilidad/mayor/ver/" + cuentaMayor.getId())).
                 andExpect(status().isOk()).
                 andExpect(forwardedUrl("/WEB-INF/jsp/contabilidad/mayor/ver.jsp")).
-                andExpect(model().attributeExists("ctaMayor"));
+                andExpect(model().attributeExists("mayor"));
     }
 
     @Test
-    public void debieraCrearCtaMayor() throws Exception {
-        log.debug("Debiera crear ctaMayor");
+    public void debieraCrearCuentaMayor() throws Exception {
+        log.debug("Debiera crear cuenta de mayor");
         
         this.mockMvc.perform(post("/contabilidad/mayor/crea").param("nombre", "test").param("nombreFiscal", "test")).
                 andExpect(status().isOk()).
                 andExpect(flash().attributeExists("message")).
-                andExpect(flash().attribute("message", "ctaMayor.creada.message"));
+                andExpect(flash().attribute("message", "cuentaMayor.creada.message"));
     }
 
     @Test
-    public void debieraActualizarCtaMayor() throws Exception {
-        log.debug("Debiera actualizar ctaMayor");
+    public void debieraActualizarCuentaMayor() throws Exception {
+        log.debug("Debiera actualizar cuenta de mayor");
 
         this.mockMvc.perform(post("/contabilidad/mayor/actualiza").param("nombre", "test1").param("nombreFiscal", "test")).
                 andExpect(status().isOk()).
                 andExpect(flash().attributeExists("message")).
-                andExpect(flash().attribute("message", "ctaMayor.actualizada.message"));
+                andExpect(flash().attribute("message", "cuentaMayor.actualizada.message"));
     }
 
     @Test
     public void debieraEliminarCtaMayor() throws Exception {
-        log.debug("Debiera eliminar ctaMayor");
-        CuentaMayor ctaMayor = new CuentaMayor("test", "test");
-        ctaMayorDao.crea(ctaMayor);
+        log.debug("Debiera eliminar cuenta de mayor");
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "test");
+        cuentaMayorDao.crea(cuentaMayor);
 
-        this.mockMvc.perform(post("/contabilidad/mayor/elimina").param("id", ctaMayor.getId().toString())).
+        this.mockMvc.perform(post("/contabilidad/mayor/elimina").param("id", cuentaMayor.getId().toString())).
                 andExpect(status().isOk()).
                 andExpect(flash().attributeExists("message")).
-                andExpect(flash().attribute("message", "ctaMayor.eliminada.message"));
+                andExpect(flash().attribute("message", "cuentaMayor.eliminada.message"));
     }
 }
