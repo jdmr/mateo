@@ -194,7 +194,7 @@ public class ProductoController {
     }
 
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, @Valid Producto producto, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes, @RequestParam("imagen") MultipartFile archivo) {
+    public String crea(HttpServletRequest request, @Valid Producto producto, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes, @RequestParam(value = "imagen", required = false) MultipartFile archivo) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
@@ -205,7 +205,7 @@ public class ProductoController {
 
         try {
 
-            if (!archivo.isEmpty()) {
+            if (archivo != null && !archivo.isEmpty()) {
                 Imagen imagen = new Imagen(
                         archivo.getOriginalFilename(),
                         archivo.getContentType(),
@@ -263,14 +263,14 @@ public class ProductoController {
 
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, @Valid Producto producto, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes, @RequestParam("imagen") MultipartFile archivo) {
+    public String actualiza(HttpServletRequest request, @Valid Producto producto, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes, @RequestParam(value = "imagen", required = false) MultipartFile archivo) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
             return "inventario/producto/edita";
         }
 
         try {
-            if (!archivo.isEmpty()) {
+            if (archivo != null && !archivo.isEmpty()) {
                 Imagen imagen = new Imagen(
                         archivo.getOriginalFilename(),
                         archivo.getContentType(),
