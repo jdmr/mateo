@@ -60,9 +60,9 @@
         <footer>
             <hr />
             <div class="row-fluid">
-                <div class="span8">&copy; <s:message code="proyecto.copyright.year.label" /> <s:message code="proyecto.empresa.label" /></div>
+                <div class="span8"><p>&copy; <s:message code="proyecto.copyright.year.label" /> <s:message code="proyecto.empresa.label" /></p></div>
                 <div class="span4">
-                    <p class="pull-right" style="margin-right: 10px;"><a href="<c:url value='/perfil' />">${sessionScope.organizacionLabel} | ${sessionScope.empresaLabel} | ${sessionScope.almacenLabel}</a></p>
+                    <p class="pull-right" style="margin-right: 20px;"><a href="<c:url value='/perfil' />">${sessionScope.organizacionLabel} | ${sessionScope.empresaLabel} | ${sessionScope.almacenLabel}</a></p>
                 </div>
             </div>
         </footer>
