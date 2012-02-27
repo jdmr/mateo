@@ -29,12 +29,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.ReporteUtil;
@@ -43,6 +45,9 @@ import mx.edu.um.mateo.inventario.dao.TipoProductoDao;
 import mx.edu.um.mateo.inventario.model.Producto;
 import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +62,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -80,6 +87,8 @@ public class ProductoController {
     private Ambiente ambiente;
     @Autowired
     private ReporteUtil reporteUtil;
+    @Autowired
+    private SessionFactory sessionFactory;
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -184,9 +193,8 @@ public class ProductoController {
         return "inventario/producto/nuevo";
     }
 
-    @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Producto producto, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String crea(HttpServletRequest request, @Valid Producto producto, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes, @RequestParam(value = "imagen", required = false) MultipartFile archivo) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
@@ -196,11 +204,32 @@ public class ProductoController {
         }
 
         try {
+
+            if (archivo != null && !archivo.isEmpty()) {
+                Imagen imagen = new Imagen(
+                        archivo.getOriginalFilename(),
+                        archivo.getContentType(),
+                        archivo.getSize(),
+                        archivo.getBytes());
+                producto.getImagenes().add(imagen);
+            }
             Usuario usuario = ambiente.obtieneUsuario();
             producto = productoDao.crea(producto, usuario);
+
         } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear al producto", e);
+            log.error("No se pudo crear el producto", e);
             errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("almacen", request.getSession().getAttribute("almacenId"));
+            params.put("reporte", true);
+            params = tipoProductoDao.lista(params);
+            modelo.addAttribute("tiposDeProducto", params.get("tiposDeProducto"));
+
+            return "inventario/producto/nuevo";
+        } catch (IOException e) {
+            log.error("No se pudo crear el producto", e);
+            errors.rejectValue("imagenes", "problema.con.imagen.message", new String[]{archivo.getOriginalFilename()}, null);
 
             Map<String, Object> params = new HashMap<>();
             params.put("almacen", request.getSession().getAttribute("almacenId"));
@@ -234,17 +263,36 @@ public class ProductoController {
 
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, @Valid Producto producto, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String actualiza(HttpServletRequest request, @Valid Producto producto, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes, @RequestParam(value = "imagen", required = false) MultipartFile archivo) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
             return "inventario/producto/edita";
         }
 
         try {
+            if (archivo != null && !archivo.isEmpty()) {
+                Imagen imagen = new Imagen(
+                        archivo.getOriginalFilename(),
+                        archivo.getContentType(),
+                        archivo.getSize(),
+                        archivo.getBytes());
+                producto.getImagenes().add(imagen);
+            }
             Usuario usuario = ambiente.obtieneUsuario();
             producto = productoDao.actualiza(producto, usuario);
+        } catch (IOException e) {
+            log.error("No se pudo actualizar el producto", e);
+            errors.rejectValue("imagenes", "problema.con.imagen.message", new String[]{archivo.getOriginalFilename()}, null);
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("almacen", request.getSession().getAttribute("almacenId"));
+            params.put("reporte", true);
+            params = tipoProductoDao.lista(params);
+            modelo.addAttribute("tiposDeProducto", params.get("tiposDeProducto"));
+
+            return "inventario/producto/edita";
         } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear la producto", e);
+            log.error("No se pudo actualizar el producto", e);
             errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
 
             Map<String, Object> params = new HashMap<>();
@@ -253,7 +301,7 @@ public class ProductoController {
             params = tipoProductoDao.lista(params);
             modelo.addAttribute("tiposDeProducto", params.get("tiposDeProducto"));
 
-            return "inventario/producto/nuevo";
+            return "inventario/producto/edita";
         }
 
         redirectAttributes.addFlashAttribute("message", "producto.actualizado.message");
@@ -335,5 +383,9 @@ public class ProductoController {
         helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
         helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
         mailSender.send(message);
+    }
+
+    private Session currentSession() {
+        return sessionFactory.getCurrentSession();
     }
 }

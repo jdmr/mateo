@@ -100,6 +100,10 @@ public class InicializaController {
         currentSession().save(estatus);
         estatus = new Estatus(Constantes.CERRADA, 300);
         currentSession().save(estatus);
+        estatus = new Estatus(Constantes.FACTURADA, 400);
+        currentSession().save(estatus);
+        estatus = new Estatus(Constantes.CANCELADA, 500);
+        currentSession().save(estatus);
 
         return "redirect:/";
     }
