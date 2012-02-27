@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.web;
+package mx.edu.um.mateo.contabilidad.web;
 
 import mx.edu.um.mateo.contabilidad.dao.CuentaMayorDao;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
@@ -20,7 +20,9 @@ import static org.springframework.test.web.server.request.MockMvcRequestBuilders
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 import org.springframework.test.web.server.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+
 
 /**
  *
@@ -32,6 +34,7 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:security.xml",
     "classpath:dispatcher-servlet.xml"
 })
+@Transactional
 public class CuentaMayorControllerTest extends BaseTest {
 
     private static final Logger log = LoggerFactory.getLogger(CuentaMayorControllerTest.class);
@@ -77,7 +80,7 @@ public class CuentaMayorControllerTest extends BaseTest {
     @Test
     public void debieraMostrarCuentaMayor() throws Exception {
         log.debug("Debiera mostrar cuenta de mayor");
-        CuentaMayor cuentaMayor = new CuentaMayor("test", "test");
+        CuentaMayor cuentaMayor = new CuentaMayor("test1", "test");
         cuentaMayor = cuentaMayorDao.crea(cuentaMayor);
 
         this.mockMvc.perform(get("/contabilidad/mayor/ver/" + cuentaMayor.getId())).
@@ -90,7 +93,7 @@ public class CuentaMayorControllerTest extends BaseTest {
     public void debieraCrearCuentaMayor() throws Exception {
         log.debug("Debiera crear cuenta de mayor");
         
-        this.mockMvc.perform(post("/contabilidad/mayor/crea").param("nombre", "test").param("nombreFiscal", "test")).
+        this.mockMvc.perform(post("/contabilidad/mayor/crea").param("nombre", "test2").param("nombreFiscal", "test")).
                 andExpect(status().isOk()).
                 andExpect(flash().attributeExists("message")).
                 andExpect(flash().attribute("message", "cuentaMayor.creada.message"));
@@ -100,7 +103,7 @@ public class CuentaMayorControllerTest extends BaseTest {
     public void debieraActualizarCuentaMayor() throws Exception {
         log.debug("Debiera actualizar cuenta de mayor");
 
-        this.mockMvc.perform(post("/contabilidad/mayor/actualiza").param("nombre", "test1").param("nombreFiscal", "test")).
+        this.mockMvc.perform(post("/contabilidad/mayor/actualiza").param("nombre", "test3").param("nombreFiscal", "test")).
                 andExpect(status().isOk()).
                 andExpect(flash().attributeExists("message")).
                 andExpect(flash().attribute("message", "cuentaMayor.actualizada.message"));

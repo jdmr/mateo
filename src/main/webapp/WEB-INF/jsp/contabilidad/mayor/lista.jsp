@@ -10,23 +10,22 @@
         <nav class="navbar navbar-fixed-top" role="navigation">
             <ul class="nav">
                 <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li><a href="<c:url value='/rh' />"><s:message code="rh.label" /></a></li>
-                <li><a href="<s:url value='/rh/empleado'/>" ><s:message code="empleado.label" /></a></li>
-                <li class="active"><a href="<s:url value='/rh/cuentaMayor'/>" ><s:message code="cuentaMayor.label" /></a></li>
+                <li><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
+                <li class="active"><a href="<s:url value='/contabilidad/mayor'/>" ><s:message code="cuentaMayor.label" /></a></li>
             </ul>
         </nav>
 
         <h1><s:message code="cuentaMayor.lista.label" /></h1>
         <hr/>
 
-        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/rh/cuentaMayor' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/contabilidad/mayor' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/rh/cuentaMayor/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='cuentaMayor.nueva.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/mayor/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='cuentaMayor.nueva.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><s:message code="buscar.label" /></button>
             </p>
@@ -36,8 +35,8 @@
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
-            <c:if test="${cuentaMayor != null}">
-                <s:bind path="cuentaMayor.*">
+            <c:if test="${mayor != null}">
+                <s:bind path="mayor.*">
                     <c:if test="${not empty status.errorMessages}">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -54,7 +53,7 @@
                     <tr>
                         <th>
                             <a href="javascript:ordena('nombre');">
-                                <s:message code="nombre.label" />
+                                <s:message code="cuentaMayor.nombre.label" />
                                 <c:choose>
                                     <c:when test="${param.order == 'nombre' && param.sort == 'asc'}">
                                         <i class="icon-chevron-up"></i>
@@ -67,7 +66,7 @@
                         </th>
                         <th>
                             <a href="javascript:ordena('nombreFiscal');">
-                                <s:message code="nombreFiscal.label" />
+                                <s:message code="cuentaMayor.nombreFiscal.label" />
                                 <c:choose>
                                     <c:when test="${param.order == 'nombreFiscal' && param.sort == 'asc'}">
                                         <i class="icon-chevron-up"></i>
@@ -81,10 +80,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${cuentaMayores}" var="cuentaMayor" varStatus="status">
+                    <c:forEach items="${mayores}" var="mayor" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/rh/cuentaMayor/ver/${cuentaMayor.id}' />">${cuentaMayor.nombre}</a></td>
-                            <td>${cuentaMayor.nombreFiscal}</td>
+                            <td><a href="<c:url value='/contabilidad/mayor/ver/${mayor.id}' />">${mayor.nombre}</a></td>
+                            <td>${mayor.nombreFiscal}</td>
                         </tr>
                     </c:forEach>
                 </tbody>

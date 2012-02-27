@@ -185,6 +185,7 @@ public class CuentaMayorController {
 
         try {
             cuentaMayor = cuentaMayorDao.crea(cuentaMayor);
+            log.debug("Creando la cuenta de mayor {}", cuentaMayor.getId());
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la cuenta de mayor", e);
             return "contabilidad/mayor/nuevo";
@@ -198,9 +199,9 @@ public class CuentaMayorController {
 
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
-        log.debug("Edita cuentaMayor {}", id);
+        log.debug("Editar cuenta de mayor {}", id);
         CuentaMayor cuentaMayor = cuentaMayorDao.obtiene(id);
-        modelo.addAttribute("cuentaMayor", cuentaMayor);
+        modelo.addAttribute("mayor", cuentaMayor);
         return "contabilidad/mayor/edita";
     }
 
@@ -213,6 +214,7 @@ public class CuentaMayorController {
         }
         try {
             cuentaMayor = cuentaMayorDao.actualiza(cuentaMayor);
+            log.debug("Actualizando la cuenta de mayor {}",cuentaMayor.getId());
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la cuenta de mayor", e);
             return "contabilidad/mayor/nuevo";
