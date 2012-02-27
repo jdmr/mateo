@@ -38,88 +38,97 @@
             <c:url var="eliminaUrl" value="/inventario/producto/elimina" />
             <form:form commandName="producto" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span4">
-                        <h4><s:message code="codigo.label" /></h4>
-                        <h3>${producto.codigo}</h3>
-                    </div>
-                    <div class="span4">
-                        <h4><s:message code="sku.label" /></h4>
-                        <h3>${producto.sku}</h3>
-                    </div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span4">
-                        <h4><s:message code="nombre.label" /></h4>
-                        <h3>${producto.nombre}</h3>
-                    </div>
-                    <div class="span4">
-                        <h4><s:message code="descripcion.label" /></h4>
-                        <h3>${producto.descripcion}</h3>
-                    </div>
-                </div>
-                <c:if test="${not empty producto.marca || not empty producto.modelo}">
-                    <div class="row-fluid" style="padding-bottom: 10px;">
-                        <div class="span4">
-                            <h4><s:message code="marca.label" /></h4>
-                            <h3>${producto.marca}</h3>
+                <div class="row-fluid" class="span12">
+                    <div class="span8">
+                        <div class="row-fluid" style="padding-bottom: 10px;">
+                            <div class="span6">
+                                <h4><s:message code="codigo.label" /></h4>
+                                <h3>${producto.codigo}</h3>
+                            </div>
+                            <div class="span6">
+                                <h4><s:message code="sku.label" /></h4>
+                                <h3>${producto.sku}</h3>
+                            </div>
                         </div>
-                        <div class="span4">
-                            <h4><s:message code="modelo.label" /></h4>
-                            <h3>${producto.modelo}</h3>
+                        <div class="row-fluid" style="padding-bottom: 10px;">
+                            <div class="span6">
+                                <h4><s:message code="nombre.label" /></h4>
+                                <h3>${producto.nombre}</h3>
+                            </div>
+                            <div class="span6">
+                                <h4><s:message code="descripcion.label" /></h4>
+                                <h3>${producto.descripcion}</h3>
+                            </div>
+                        </div>
+                        <c:if test="${not empty producto.marca || not empty producto.modelo}">
+                            <div class="row-fluid" style="padding-bottom: 10px;">
+                                <div class="span6">
+                                    <h4><s:message code="marca.label" /></h4>
+                                    <h3>${producto.marca}</h3>
+                                </div>
+                                <div class="span6">
+                                    <h4><s:message code="modelo.label" /></h4>
+                                    <h3>${producto.modelo}</h3>
+                                </div>
+                            </div>
+                        </c:if>
+                        <c:if test="${producto.fraccion || not empty producto.ubicacion}">
+                            <div class="row-fluid" style="padding-bottom: 10px;">
+                                <div class="span6">
+                                    <h4><s:message code="fraccion.label" /></h4>
+                                    <h3><form:checkbox path="fraccion" disabled="true" /></h3>
+                                </div>
+                                <div class="span6">
+                                    <h4><s:message code="ubicacion.label" /></h4>
+                                    <h3>${producto.ubicacion}</h3>
+                                </div>
+                            </div>
+                        </c:if>
+                        <div class="row-fluid" style="padding-bottom: 10px;">
+                            <div class="span6">
+                                <h4><s:message code="precioUnitario.label" /></h4>
+                                <h3>${producto.precioUnitario}</h3>
+                            </div>
+                            <div class="span6">
+                                <h4><s:message code="ultimoPrecio.label" /></h4>
+                                <h3>${producto.ultimoPrecio}</h3>
+                            </div>
+                        </div>
+                        <div class="row-fluid" style="padding-bottom: 10px;">
+                            <div class="span6">
+                                <h4><s:message code="existencia.label" /></h4>
+                                <h3>${producto.existencia} ${producto.unidadMedida}</h3>
+                            </div>
+                            <div class="span6">
+                                <h4><s:message code="iva.label" /></h4>
+                                <h3><fmt:formatNumber value="${producto.iva}" type="percent" /></h3>
+                            </div>
+                        </div>
+                        <div class="row-fluid" style="padding-bottom: 10px;">
+                            <div class="span6">
+                                <h4><s:message code="puntoReorden.label" /></h4>
+                                <h3>${producto.puntoReorden}</h3>
+                            </div>
+                            <div class="span6">
+                                <h4><s:message code="tiempoEntrega.label" /></h4>
+                                <h3>${producto.tiempoEntrega}</h3>
+                            </div>
+                        </div>
+                        <div class="row-fluid" style="padding-bottom: 10px;">
+                            <div class="span6">
+                                <h4><s:message code="tipoProducto.label" /></h4>
+                                <h3>${producto.tipoProducto.nombre}</h3>
+                            </div>
+                            <div class="span6">
+                                <h4><s:message code="almacen.label" /></h4>
+                                <h3>${producto.almacen.nombre}</h3>
+                            </div>
                         </div>
                     </div>
-                </c:if>
-                <c:if test="${producto.fraccion || not empty producto.ubicacion}">
-                    <div class="row-fluid" style="padding-bottom: 10px;">
-                        <div class="span4">
-                            <h4><s:message code="fraccion.label" /></h4>
-                            <h3><form:checkbox path="fraccion" disabled="true" /></h3>
+                    <div class="span4">
+                        <div class="row-fluid" class="span4">
+                            <p><img src="<c:url value='/imagen/producto/${producto.id}' />" </p>
                         </div>
-                        <div class="span4">
-                            <h4><s:message code="ubicacion.label" /></h4>
-                            <h3>${producto.ubicacion}</h3>
-                        </div>
-                    </div>
-                </c:if>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span4">
-                        <h4><s:message code="precioUnitario.label" /></h4>
-                        <h3>${producto.precioUnitario}</h3>
-                    </div>
-                    <div class="span4">
-                        <h4><s:message code="ultimoPrecio.label" /></h4>
-                        <h3>${producto.ultimoPrecio}</h3>
-                    </div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span4">
-                        <h4><s:message code="existencia.label" /></h4>
-                        <h3>${producto.existencia} ${producto.unidadMedida}</h3>
-                    </div>
-                    <div class="span4">
-                        <h4><s:message code="iva.label" /></h4>
-                        <h3><fmt:formatNumber value="${producto.iva}" type="percent" /></h3>
-                    </div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span4">
-                        <h4><s:message code="puntoReorden.label" /></h4>
-                        <h3>${producto.puntoReorden}</h3>
-                    </div>
-                    <div class="span4">
-                        <h4><s:message code="tiempoEntrega.label" /></h4>
-                        <h3>${producto.tiempoEntrega}</h3>
-                    </div>
-                </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span4">
-                        <h4><s:message code="tipoProducto.label" /></h4>
-                        <h3>${producto.tipoProducto.nombre}</h3>
-                    </div>
-                    <div class="span4">
-                        <h4><s:message code="almacen.label" /></h4>
-                        <h3>${producto.almacen.nombre}</h3>
                     </div>
                 </div>
 

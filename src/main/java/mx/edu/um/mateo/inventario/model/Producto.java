@@ -25,8 +25,11 @@ package mx.edu.um.mateo.inventario.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
+import mx.edu.um.mateo.general.model.Imagen;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -77,7 +80,7 @@ public class Producto implements Serializable {
     private BigDecimal puntoReorden = new BigDecimal("0");
     @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal iva = new BigDecimal("0.16");
-    @Column(nullable=false, name = "tiempo_entrega")
+    @Column(nullable = false, name = "tiempo_entrega")
     private Integer tiempoEntrega = 3;
     @Column(nullable = false)
     private Boolean fraccion = false;
@@ -86,6 +89,11 @@ public class Producto implements Serializable {
     private TipoProducto tipoProducto;
     @ManyToOne(optional = false)
     private Almacen almacen;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "productos_imagenes", joinColumns = {
+        @JoinColumn(name = "producto_id", unique = true)}, inverseJoinColumns = {
+        @JoinColumn(name = "imagen_id")})
+    private List<Imagen> imagenes = new ArrayList<>();
 
     public Producto() {
     }
@@ -363,6 +371,20 @@ public class Producto implements Serializable {
      */
     public void setAlmacen(Almacen almacen) {
         this.almacen = almacen;
+    }
+
+    /**
+     * @return the imagenes
+     */
+    public List<Imagen> getImagenes() {
+        return imagenes;
+    }
+
+    /**
+     * @param imagenes the imagenes to set
+     */
+    public void setImagenes(List<Imagen> imagenes) {
+        this.imagenes = imagenes;
     }
 
     @Override

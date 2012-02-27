@@ -10,7 +10,7 @@
        ">
 
     <context:property-placeholder location="classpath*:ambiente/mateo.properties,file:${user.home}/mateo*.properties"/>
-            
+    
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
         <property name="driverClassName" value="${jdbc.driverClassName}" />
         <property name="url" value="${jdbc.url}" />

@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inventario.model.Producto;
 import mx.edu.um.mateo.inventario.model.TipoProducto;
@@ -177,6 +178,12 @@ public class ProductoDao {
         nuevo.setTiempoEntrega(producto.getTiempoEntrega());
         nuevo.setUnidadMedida(producto.getUnidadMedida());
         nuevo.setTipoProducto((TipoProducto) session.get(TipoProducto.class, producto.getTipoProducto().getId()));
+        if (producto.getImagenes().size() > 0) {
+            Imagen imagen = nuevo.getImagenes().get(0);
+            nuevo.getImagenes().clear();
+            nuevo.getImagenes().add(producto.getImagenes().get(0));
+            session.delete(imagen);
+        }
         session.update(nuevo);
         session.flush();
         return producto;
