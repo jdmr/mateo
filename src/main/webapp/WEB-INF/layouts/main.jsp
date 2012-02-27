@@ -46,7 +46,6 @@
                         <p class="navbar-text pull-right">
                             <s:message code="mensaje.bienvenida" /> <a href="<c:url value='/perfil' />"><%= request.getUserPrincipal().getName()%></a> 
                             <a href="<c:url value='/salir' />"><i class="icon-off icon-white"></i></a></p>
-                        <p class="navbar-text pull-right" style="padding-right: 10px;"><a href="<c:url value='/perfil' />">${sessionScope.organizacionLabel} | ${sessionScope.empresaLabel} | ${sessionScope.almacenLabel}</a></p>
                     </div><!--/.nav-collapse -->
                 </div>
             </div>
@@ -60,7 +59,12 @@
 
         <footer>
             <hr />
-            <p>&copy; <s:message code="proyecto.copyright.year.label" /> <s:message code="proyecto.empresa.label" /></p>
+            <div class="row-fluid">
+                <div class="span8">&copy; <s:message code="proyecto.copyright.year.label" /> <s:message code="proyecto.empresa.label" /></div>
+                <div class="span4">
+                    <p class="pull-right" style="margin-right: 10px;"><a href="<c:url value='/perfil' />">${sessionScope.organizacionLabel} | ${sessionScope.empresaLabel} | ${sessionScope.almacenLabel}</a></p>
+                </div>
+            </div>
         </footer>
 
         <!-- JavaScript at the bottom for fast page loading -->
