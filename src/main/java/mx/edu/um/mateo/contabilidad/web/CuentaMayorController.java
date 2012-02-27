@@ -185,7 +185,7 @@ public class CuentaMayorController {
 
         try {
             cuentaMayor = cuentaMayorDao.crea(cuentaMayor);
-            log.debug("Creando la cuenta de mayor {}", cuentaMayor.getId());
+            //log.debug("Creando la cuenta de mayor {}", cuentaMayor.getId());
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la cuenta de mayor", e);
             return "contabilidad/mayor/nuevo";
@@ -214,7 +214,7 @@ public class CuentaMayorController {
         }
         try {
             cuentaMayor = cuentaMayorDao.actualiza(cuentaMayor);
-            log.debug("Actualizando la cuenta de mayor {}",cuentaMayor.getId());
+            //log.debug("Actualizando la cuenta de mayor {}",cuentaMayor.getId());
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la cuenta de mayor", e);
             return "contabilidad/mayor/nuevo";
