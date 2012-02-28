@@ -159,7 +159,9 @@ public class OrganizacionDao {
 
     public Organizacion actualiza(Organizacion organizacion, Usuario usuario) {
         Session session = currentSession();
+        log.debug("NombreCompleto: {}", organizacion.getNombreCompleto());
         session.update(organizacion);
+        session.flush();
         if (usuario != null) {
             session.refresh(organizacion);
             actualizaUsuario:

@@ -26,7 +26,7 @@
 
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/inventario/tipoProducto'/>"><i class="icon-list icon-white"></i> <s:message code='tipoProducto.lista.label' /></a>
-                <a class="btn btn-primary" href="<s:url value='/inventario/tipoProducto/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='tipoProducto.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/inventario/tipoProducto/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='tipoProducto.nuevo.label' /></a>
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
@@ -39,13 +39,17 @@
             <form:form commandName="tipoProducto" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="nombre.label" /></div>
-                    <div class="span11">${tipoProducto.nombre}</div>
+                    <div class="span4">
+                        <h4><s:message code="nombre.label" /></h4>
+                        <h3>${tipoProducto.nombre}</h3>
+                    </div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="descripcion.label" /></div>
-                    <div class="span11">${tipoProducto.descripcion}</div>
+                    <div class="span4">
+                        <h4><s:message code="descripcion.label" /></h4>
+                        <h3>${tipoProducto.descripcion}</h3>
+                    </div>
                 </div>
 
                 <p class="well">

@@ -23,21 +23,36 @@
  */
 package mx.edu.um.mateo.inventario.utils;
 
+import mx.edu.um.mateo.inventario.model.Producto;
+
 /**
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
-public class NoSePuedeCerrarEntradaException extends Exception {
+public class NoHayExistenciasSuficientes extends Exception {
+    private Producto producto;
 
-    public NoSePuedeCerrarEntradaException(String message, Throwable cause) {
+    public NoHayExistenciasSuficientes(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public NoSePuedeCerrarEntradaException(String message) {
+    public NoHayExistenciasSuficientes(String message) {
         super(message);
     }
 
-    public NoSePuedeCerrarEntradaException() {
+    public NoHayExistenciasSuficientes() {
     }
     
+    public NoHayExistenciasSuficientes(String message, Producto producto) {
+        super(message);
+        this.producto = producto;
+    }
+
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
 }

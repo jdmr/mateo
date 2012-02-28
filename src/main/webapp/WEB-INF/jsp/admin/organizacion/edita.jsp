@@ -48,11 +48,11 @@
                 <fieldset>
                     <s:bind path="organizacion.codigo">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="username">
+                            <label for="codigo">
                                 <s:message code="codigo.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="codigo" maxlength="128" required="true" />
+                            <form:input path="codigo" maxlength="128" required="true" cssClass="span3" />
                             <form:errors path="codigo" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -62,7 +62,7 @@
                                 <s:message code="nombre.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="nombre" maxlength="128" required="true" />
+                            <form:input path="nombre" maxlength="128" required="true" cssClass="span4" />
                             <form:errors path="nombre" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -72,7 +72,7 @@
                                 <s:message code="nombreCompleto.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="nombreCompleto" maxlength="128" required="true" />
+                            <form:input path="nombreCompleto" maxlength="128" required="true" cssClass="span4" />
                             <form:errors path="nombreCompleto" cssClass="alert alert-error" />
                         </div>
                     </s:bind>

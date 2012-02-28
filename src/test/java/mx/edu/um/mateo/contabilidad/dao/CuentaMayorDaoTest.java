@@ -2,15 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.dao;
+package mx.edu.um.mateo.contabilidad.dao;
 
+import mx.edu.um.mateo.contabilidad.dao.CuentaMayorDao;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.utils.UltimoException;
-import mx.edu.um.mateo.rh.model.CtaMayor;
-import mx.edu.um.mateo.rh.model.Ejercicio;
+import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import static org.junit.Assert.*;
@@ -30,11 +31,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class CtaMayorDaoTest extends BaseTest {
+public class CuentaMayorDaoTest extends BaseTest {
 
-    private static final Logger log = LoggerFactory.getLogger(CtaMayorDaoTest.class);
+    private static final Logger log = LoggerFactory.getLogger(CuentaMayorDaoTest.class);
     @Autowired
-    private CtaMayorDao instance;
+    private CuentaMayorDao instance;
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -43,7 +44,7 @@ public class CtaMayorDaoTest extends BaseTest {
     }
 
     /**
-     * Test of lista method, of class CtaMayorDao.
+     * Test of lista method, of class CuentaMayorDao.
      */
     @Test
     public void deberiaMostrarListaDeCtaMayor() {
@@ -53,7 +54,7 @@ public class CtaMayorDaoTest extends BaseTest {
         assertNotNull(ejercicio);
         log.debug("ejercicio >>" + ejercicio);
         for (int i = 0; i < 20; i++) {
-            CtaMayor ctaMayor = new CtaMayor("test" + i, "test");
+            CuentaMayor ctaMayor = new CuentaMayor("test" + i, "test");
             currentSession().save(ctaMayor);
             assertNotNull(ctaMayor);
             log.debug("ctaMayor>>" + ctaMayor);
@@ -71,12 +72,12 @@ public class CtaMayorDaoTest extends BaseTest {
     @Test
     public void debieraObtenerCtaMayor() {
         log.debug("Debiera obtener ctaMayor");
-        CtaMayor ctaMayor = new CtaMayor("test", "test");
+        CuentaMayor ctaMayor = new CuentaMayor("test", "test");
         currentSession().save(ctaMayor);
         assertNotNull(ctaMayor.getId());
         Long id = ctaMayor.getId();
 
-        CtaMayor result = instance.obtiene(id);
+        CuentaMayor result = instance.obtiene(id);
         assertNotNull(result);
         assertEquals("test", result.getNombre());
     }
@@ -84,7 +85,7 @@ public class CtaMayorDaoTest extends BaseTest {
     @Test
     public void deberiaCrearCtaMayor() {
         log.debug("Deberia crear CtaMayor");
-        CtaMayor ctaMayor = new CtaMayor("test", "test");
+        CuentaMayor ctaMayor = new CuentaMayor("test", "test");
         assertNotNull(ctaMayor);
         log.debug("ctaMayor >> " + ctaMayor);
         ctaMayor = instance.crea(ctaMayor);
@@ -94,7 +95,7 @@ public class CtaMayorDaoTest extends BaseTest {
     @Test
     public void deberiaActualizarCtaMayor() {
         log.debug("Deberia actualizar CtaMayor");
-        CtaMayor ctaMayor = new CtaMayor("test", "test");
+        CuentaMayor ctaMayor = new CuentaMayor("test", "test");
         assertNotNull(ctaMayor);
         currentSession().save(ctaMayor);
         
@@ -110,13 +111,13 @@ public class CtaMayorDaoTest extends BaseTest {
     public void deberiaEliminarCtaMayor() throws UltimoException {
         log.debug("Debiera eliminar Ejercicio");
 
-        CtaMayor ctaMayor = new CtaMayor("test", "A");
+        CuentaMayor ctaMayor = new CuentaMayor("test", "A");
         currentSession().save(ctaMayor);
         assertNotNull(ctaMayor);
         String nombre = instance.elimina(ctaMayor.getId());
         assertEquals("test", nombre);
 
-        CtaMayor prueba = instance.obtiene(ctaMayor.getId());
+        CuentaMayor prueba = instance.obtiene(ctaMayor.getId());
         assertNull(prueba);
     }
 }

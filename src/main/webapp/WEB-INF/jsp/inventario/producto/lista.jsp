@@ -30,7 +30,7 @@
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/inventario/producto/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='producto.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/inventario/producto/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='producto.nuevo.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><s:message code="buscar.label" /></button>
             </p>
@@ -134,7 +134,7 @@
                                 </c:choose>
                             </a>
                         </th>
-                        <th>
+                        <th style="text-align:right;">
                             <a href="javascript:ordena('existencia');">
                                 <s:message code="existencia.label" />
                                 <c:choose>
@@ -147,7 +147,7 @@
                                 </c:choose>
                             </a>
                         </th>
-                        <th>
+                        <th style="text-align:right;">
                             <a href="javascript:ordena('precioUnitario');">
                                 <s:message code="precioUnitario.label" />
                                 <c:choose>
@@ -160,7 +160,7 @@
                                 </c:choose>
                             </a>
                         </th>
-                        <th>
+                        <th style="text-align:center;">
                             <a href="javascript:ordena('fraccion');">
                                 <s:message code="fraccion.label" />
                                 <c:choose>
@@ -185,9 +185,9 @@
                             <td>${producto.marca}</td>
                             <td>${producto.modelo}</td>
                             <td>${producto.ubicacion}</td>
-                            <td>${producto.existencia}</td>
-                            <td>${producto.precioUnitario}</td>
-                            <td>${producto.fraccion}</td>
+                            <td style="text-align:right;">${producto.existencia} ${producto.unidadMedida}</td>
+                            <td style="text-align:right;">${producto.precioUnitario}</td>
+                            <td style="text-align:center;"><input type="checkbox" value="" disabled="true" <c:if test="${producto.fraccion}">checked="checked"</c:if> /></td>
                             <td>${producto.almacen.nombre}</td>
                         </tr>
                     </c:forEach>

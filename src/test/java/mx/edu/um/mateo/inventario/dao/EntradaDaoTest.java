@@ -28,9 +28,7 @@ import java.util.*;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inventario.model.*;
-import mx.edu.um.mateo.inventario.utils.NoCuadraException;
-import mx.edu.um.mateo.inventario.utils.NoSePuedeCerrarEntradaException;
-import mx.edu.um.mateo.inventario.utils.ProductoNoSoportaFraccionException;
+import mx.edu.um.mateo.inventario.utils.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import static org.junit.Assert.*;
@@ -172,7 +170,7 @@ public class EntradaDaoTest {
      * Debiera actualizar tipo de cliente
      */
     @Test
-    public void debieraActualizarEntrada() {
+    public void debieraActualizarEntrada() throws NoEstaAbiertaException {
         log.debug("Debiera actualizar entrada");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
@@ -210,8 +208,8 @@ public class EntradaDaoTest {
         assertEquals("PRUEBA", prueba.getFactura());
     }
 
-    @Test(expected=RuntimeException.class)
-    public void noDebieraActualizarEntrada() {
+    @Test(expected = NoEstaAbiertaException.class)
+    public void noDebieraActualizarEntrada() throws NoEstaAbiertaException {
         log.debug("No debiera actualizar entrada no abierta");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
@@ -248,9 +246,9 @@ public class EntradaDaoTest {
         instance.actualiza(entrada, usuario);
         fail("Debiera lanzar una excepcion porque el estatus de la entrada es cerrada");
     }
-    
+
     @Test
-    public void debieraCrearLotes() throws ProductoNoSoportaFraccionException {
+    public void debieraCrearLotes() throws ProductoNoSoportaFraccionException, NoEstaAbiertaException {
         log.debug("Debiera crear lotes");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
@@ -287,17 +285,17 @@ public class EntradaDaoTest {
         assertNotNull(entrada);
         assertNotNull(entrada.getId());
         assertEquals("test-01", entrada.getFactura());
-        
+
         LoteEntrada lote = new LoteEntrada(new BigDecimal(10), new BigDecimal(10), producto1, entrada);
         lote = instance.creaLote(lote);
         assertNotNull(lote);
         assertNotNull(lote.getId());
-        
+
         lote = new LoteEntrada(new BigDecimal(10), new BigDecimal(10), producto2, entrada);
         lote = instance.creaLote(lote);
         assertNotNull(lote);
         assertNotNull(lote.getId());
-        
+
         currentSession().refresh(entrada);
         assertEquals(2, entrada.getLotes().size());
     }
@@ -345,9 +343,9 @@ public class EntradaDaoTest {
         Entrada prueba = instance.obtiene(entrada.getId());
         assertNull(prueba);
     }
-    
-    @Test
-    public void debieraCerrarEntrada() throws NoSePuedeCerrarEntradaException, NoCuadraException {
+
+    @Test(expected = NoSePuedeCerrarEnCeroException.class)
+    public void noDebieraCerrarEntrada() throws NoSePuedeCerrarException, NoCuadraException, NoSePuedeCerrarEnCeroException, NoEstaAbiertaException {
         log.debug("Debiera cerrar entrada");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
@@ -380,14 +378,11 @@ public class EntradaDaoTest {
         assertEquals("test-01", entrada.getFactura());
 
         instance.cierra(entrada, usuario);
-
-        Entrada prueba = instance.obtiene(entrada.getId());
-        assertNotNull(prueba);
-        assertEquals("E-tst-01tst-01TST000000001", prueba.getFolio());
+        fail("Debiera lanzar excepcion de que no puede cerrar la entrada en cero");
     }
 
     @Test
-    public void debieraCerrarEntradaConLotes() throws ProductoNoSoportaFraccionException, NoSePuedeCerrarEntradaException, NoCuadraException {
+    public void debieraCerrarEntradaConLotes() throws ProductoNoSoportaFraccionException, NoSePuedeCerrarException, NoCuadraException, NoSePuedeCerrarEnCeroException, NoEstaAbiertaException {
         log.debug("Debiera cerrar entrada con lotes");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
@@ -427,20 +422,20 @@ public class EntradaDaoTest {
         assertNotNull(entrada);
         assertNotNull(entrada.getId());
         assertEquals("test-01", entrada.getFactura());
-        
+
         LoteEntrada lote = new LoteEntrada(new BigDecimal(10), new BigDecimal(10), producto1, entrada);
         lote = instance.creaLote(lote);
         assertNotNull(lote);
         assertNotNull(lote.getId());
-        
+
         lote = new LoteEntrada(new BigDecimal("10"), new BigDecimal("10"), producto2, entrada);
         lote = instance.creaLote(lote);
         assertNotNull(lote);
         assertNotNull(lote.getId());
-        
+
         currentSession().refresh(entrada);
         assertEquals(2, entrada.getLotes().size());
-        
+
         instance.cierra(entrada, usuario);
 
         Entrada prueba = instance.obtiene(entrada.getId());
@@ -458,5 +453,4 @@ public class EntradaDaoTest {
         assertEquals(new BigDecimal("10.00"), producto2.getPrecioUnitario());
         assertEquals(new BigDecimal("10.00"), producto2.getUltimoPrecio());
     }
-
 }

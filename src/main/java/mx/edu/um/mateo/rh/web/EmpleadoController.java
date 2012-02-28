@@ -54,7 +54,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/rh/empleado")
 public class EmpleadoController {
     
-    private static final Logger log = LoggerFactory.getLogger(CtaMayorController.class);
+    private static final Logger log = LoggerFactory.getLogger(EmpleadoController.class);
     @Autowired
     private EmpleadoDao empleadoDao;
     @Autowired

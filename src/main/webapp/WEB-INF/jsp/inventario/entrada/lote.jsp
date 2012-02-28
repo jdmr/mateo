@@ -20,7 +20,7 @@
             </ul>
         </nav>
 
-        <div id="nuevo-entrada" class="content scaffold-list" role="main">
+        <div id="nuevo-lote" class="content scaffold-list" role="main">
             <h1><s:message code="lote.nuevo.label" /></h1>
             <c:url var="creaUrl" value="/inventario/entrada/lote/crea" />
             <form:form commandName="lote" action="${creaUrl}" method="post">

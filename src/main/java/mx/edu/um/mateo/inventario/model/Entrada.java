@@ -77,7 +77,7 @@ public class Entrada implements Serializable {
     private Proveedor proveedor;
     @ManyToOne(optional = false)
     private Almacen almacen;
-    @OneToMany(mappedBy = "entrada")
+    @OneToMany(mappedBy = "entrada", cascade = CascadeType.REMOVE)
     private List<LoteEntrada> lotes = new ArrayList<>();
 
     public Entrada() {
