@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+  <persistence-unit name="mx.edu.um_mateo_war_1.0-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>mx.edu.um.mateo.PurchaseOrder</class>
+    <class>mx.edu.um.mateo.ProductCode</class>
+    <class>mx.edu.um.mateo.MicroMarket</class>
+    <class>mx.edu.um.mateo.Product</class>
+    <class>mx.edu.um.mateo.Customer</class>
+    <class>mx.edu.um.mateo.Manufacturer</class>
+    <class>mx.edu.um.mateo.DiscountCode</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:derby://localhost:1527/sample"/>
+      <property name="javax.persistence.jdbc.password" value="app"/>
+      <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>
+      <property name="javax.persistence.jdbc.user" value="app"/>
+    </properties>
+  </persistence-unit>
+</persistence>
