@@ -292,7 +292,8 @@ public class CuentaMayorController {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(ambiente.obtieneUsuario().getUsername());
-        String titulo = messageSource.getMessage("mayor.lista.label", null, request.getLocale());
+        log.debug("usuario >>" + ambiente.obtieneUsuario().getUsername());
+        String titulo = messageSource.getMessage("cuentaMayor.lista.label", null, request.getLocale());
         helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
         helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
         helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
