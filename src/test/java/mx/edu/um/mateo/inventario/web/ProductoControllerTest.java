@@ -48,8 +48,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.server.MockMvc;
+import static org.springframework.test.web.server.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.server.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 import org.springframework.test.web.server.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -138,7 +138,7 @@ public class ProductoControllerTest extends BaseTest {
         
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         
-        this.mockMvc.perform(post("/inventario/producto/crea")
+        this.mockMvc.perform(fileUpload("/inventario/producto/crea")
                 .param("codigo", "TST-01")
                 .param("sku", "TEST--01")
                 .param("nombre", "TEST--01")

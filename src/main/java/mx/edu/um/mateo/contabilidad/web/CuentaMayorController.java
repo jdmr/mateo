@@ -143,9 +143,9 @@ public class CuentaMayorController {
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<CuentaMayor> cuentaMayores = (List<CuentaMayor>) params.get("mayores");
+        List<CuentaMayor> mayores = (List<CuentaMayor>) params.get("mayores");
         Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (cuentaMayores.size() - 1);
+        Long ultimo = primero + (mayores.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
         modelo.addAttribute("paginacion", paginacion);
         modelo.addAttribute("paginas", paginas);
@@ -157,9 +157,9 @@ public class CuentaMayorController {
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando cuenta de mayor {}", id);
-        CuentaMayor cuentaMayor = cuentaMayorDao.obtiene(id);
+        CuentaMayor mayor = cuentaMayorDao.obtiene(id);
 
-        modelo.addAttribute("mayor", cuentaMayor);
+        modelo.addAttribute("mayor", mayor);
 
         return "contabilidad/mayor/ver";
     }
@@ -167,14 +167,14 @@ public class CuentaMayorController {
     @RequestMapping("/nueva")
     public String nueva(Model modelo) {
         log.debug("Nueva cuenta de mayor");
-        CuentaMayor cuentaMayor = new CuentaMayor();
-        modelo.addAttribute("mayor", cuentaMayor);
+        CuentaMayor mayor = new CuentaMayor();
+        modelo.addAttribute("mayor", mayor);
         return "contabilidad/mayor/nueva";
     }
 
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid CuentaMayor cuentaMayor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid CuentaMayor mayor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
@@ -184,51 +184,49 @@ public class CuentaMayorController {
         }
 
         try {
-            cuentaMayor = cuentaMayorDao.crea(cuentaMayor);
-            //log.debug("Creando la cuenta de mayor {}", cuentaMayor.getId());
+            mayor = cuentaMayorDao.crea(mayor);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la cuenta de mayor", e);
             return "contabilidad/mayor/nuevo";
         }
 
         redirectAttributes.addFlashAttribute("message", "cuentaMayor.creada.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{cuentaMayor.getNombre()});
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{mayor.getNombre()});
 
-        return "redirect:/contabilidad/mayor/ver/" + cuentaMayor.getId();
+        return "redirect:/contabilidad/mayor/ver/" + mayor.getId();
     }
 
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Editar cuenta de mayor {}", id);
-        CuentaMayor cuentaMayor = cuentaMayorDao.obtiene(id);
-        modelo.addAttribute("mayor", cuentaMayor);
+        CuentaMayor mayor = cuentaMayorDao.obtiene(id);
+        modelo.addAttribute("mayor", mayor);
         return "contabilidad/mayor/edita";
     }
 
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, @Valid CuentaMayor cuentaMayor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String actualiza(HttpServletRequest request, @Valid CuentaMayor mayor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
             return "contabilidad/mayor/edita";
         }
         try {
-            cuentaMayor = cuentaMayorDao.actualiza(cuentaMayor);
-            //log.debug("Actualizando la cuenta de mayor {}",cuentaMayor.getId());
+            mayor = cuentaMayorDao.actualiza(mayor);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la cuenta de mayor", e);
             return "contabilidad/mayor/nuevo";
         }
 
         redirectAttributes.addFlashAttribute("message", "cuentaMayor.actualizada.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{cuentaMayor.getNombre()});
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{mayor.getNombre()});
 
-        return "redirect:/contabilidad/mayor/ver/" + cuentaMayor.getId();
+        return "redirect:/contabilidad/mayor/ver/" + mayor.getId();
     }
 
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute CuentaMayor cuentaMayor, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute CuentaMayor mayor, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina cuenta de mayor");
         try {
             String nombre = cuentaMayorDao.elimina(id);
@@ -244,24 +242,24 @@ public class CuentaMayorController {
         return "redirect:/contabilidad/mayor";
     }
 
-    private void generaReporte(String tipo, List<CuentaMayor> cuentaMayores, HttpServletResponse response) throws JRException, IOException {
+    private void generaReporte(String tipo, List<CuentaMayor> mayores, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
         switch (tipo) {
             case "PDF":
-                archivo = generaPdf(cuentaMayores);
+                archivo = generaPdf(mayores);
                 response.setContentType("application/pdf");
-                response.addHeader("Content-Disposition", "attachment; filename=cuentaMayores.pdf");
+                response.addHeader("Content-Disposition", "attachment; filename=CuentaMayores.pdf");
                 break;
             case "CSV":
-                archivo = generaCsv(cuentaMayores);
+                archivo = generaCsv(mayores);
                 response.setContentType("text/csv");
-                response.addHeader("Content-Disposition", "attachment; filename=cuentaMayores.csv");
+                response.addHeader("Content-Disposition", "attachment; filename=CuentaMayores.csv");
                 break;
             case "XLS":
-                archivo = generaXls(cuentaMayores);
+                archivo = generaXls(mayores);
                 response.setContentType("application/vnd.ms-excel");
-                response.addHeader("Content-Disposition", "attachment; filename=cuentaMayores.xls");
+                response.addHeader("Content-Disposition", "attachment; filename=CuentaMayores.xls");
         }
         if (archivo != null) {
             response.setContentLength(archivo.length);
@@ -273,51 +271,51 @@ public class CuentaMayorController {
 
     }
 
-    private void enviaCorreo(String tipo, List<CuentaMayor> cuentaMayores, HttpServletRequest request) throws JRException, MessagingException {
+    private void enviaCorreo(String tipo, List<CuentaMayor> mayores, HttpServletRequest request) throws JRException, MessagingException {
         log.debug("Enviando correo {}", tipo);
         byte[] archivo = null;
         String tipoContenido = null;
         switch (tipo) {
             case "PDF":
-                archivo = generaPdf(cuentaMayores);
+                archivo = generaPdf(mayores);
                 tipoContenido = "application/pdf";
                 break;
             case "CSV":
-                archivo = generaCsv(cuentaMayores);
+                archivo = generaCsv(mayores);
                 tipoContenido = "text/csv";
                 break;
             case "XLS":
-                archivo = generaXls(cuentaMayores);
+                archivo = generaXls(mayores);
                 tipoContenido = "application/vnd.ms-excel";
         }
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(ambiente.obtieneUsuario().getUsername());
-        String titulo = messageSource.getMessage("cuentaMayor.lista.label", null, request.getLocale());
+        String titulo = messageSource.getMessage("mayor.lista.label", null, request.getLocale());
         helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
         helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
         helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
         mailSender.send(message);
     }
 
-    private byte[] generaPdf(List cuentaMayores) throws JRException {
+    private byte[] generaPdf(List mayores) throws JRException {
         Map<String, Object> params = new HashMap<>();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/cuentaMayores.jrxml"));
+        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/mayores.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(cuentaMayores));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(mayores));
         byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
 
         return archivo;
     }
 
-    private byte[] generaCsv(List cuentaMayores) throws JRException {
+    private byte[] generaCsv(List mayores) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRCsvExporter exporter = new JRCsvExporter();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/cuentaMayores.jrxml"));
+        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/mayores.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(cuentaMayores));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(mayores));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
         exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
         exporter.exportReport();
@@ -326,13 +324,13 @@ public class CuentaMayorController {
         return archivo;
     }
 
-    private byte[] generaXls(List cuentaMayores) throws JRException {
+    private byte[] generaXls(List mayores) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRXlsExporter exporter = new JRXlsExporter();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/cuentaMayores.jrxml"));
+        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/mayores.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(cuentaMayores));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(mayores));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
         exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
         exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);

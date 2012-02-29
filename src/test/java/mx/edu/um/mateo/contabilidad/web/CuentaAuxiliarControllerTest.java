@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.web;
+package mx.edu.um.mateo.contabilidad.web;
 
 import mx.edu.um.mateo.contabilidad.dao.CuentaAuxiliarDao;
 import mx.edu.um.mateo.contabilidad.model.CuentaAuxiliar;
@@ -20,6 +20,7 @@ import static org.springframework.test.web.server.request.MockMvcRequestBuilders
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 import org.springframework.test.web.server.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
@@ -31,8 +32,8 @@ import org.springframework.web.context.WebApplicationContext;
 @ContextConfiguration(loader = GenericWebXmlContextLoader.class, locations = {
     "classpath:mateo.xml",
     "classpath:security.xml",
-    "classpath:dispatcher-servlet.xml"
-})
+    "classpath:dispatcher-servlet.xml"})
+@Transactional
 public class CuentaAuxiliarControllerTest extends BaseTest{
     
     private static final Logger log = LoggerFactory.getLogger(CuentaAuxiliarControllerTest.class);

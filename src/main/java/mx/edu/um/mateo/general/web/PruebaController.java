@@ -40,11 +40,7 @@ import mx.edu.um.mateo.inventario.utils.NoCuadraException;
 import mx.edu.um.mateo.inventario.utils.NoEstaAbiertaException;
 import mx.edu.um.mateo.inventario.utils.NoSePuedeCerrarException;
 import mx.edu.um.mateo.inventario.utils.ProductoNoSoportaFraccionException;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,6 +131,10 @@ public class PruebaController {
             currentSession().save(estatus2);
             estatus2 = new Estatus(Constantes.CERRADA, 300);
             currentSession().save(estatus2);
+            estatus2 = new Estatus(Constantes.FACTURADA, 400);
+            currentSession().save(estatus2);
+            estatus2 = new Estatus(Constantes.CANCELADA, 500);
+            currentSession().save(estatus2);
 
             organizacion = new Organizacion("TEST", "TEST", "TEST");
             organizacionDao.crea(organizacion, usuario);
@@ -198,7 +198,7 @@ public class PruebaController {
                 currentSession().refresh(entrada);
                 entradaDao.cierra(entrada, usuario);
             }
-            
+
             transaction.commit();
 
         } catch (HibernateException | ProductoNoSoportaFraccionException | NoEstaAbiertaException | NoSePuedeCerrarException | NoCuadraException e) {
@@ -208,6 +208,49 @@ public class PruebaController {
             }
             throw new RuntimeException("No se pudieron cargar los datos de prueba", e);
         }
+
+        return "redirect:/";
+    }
+
+    @RequestMapping("/carga")
+    public String carga() {
+        log.debug("Cargando datos");
+
+        Organizacion organizacion = new Organizacion("UM", "UM", "Universidad de Montemorelos");
+        organizacion = organizacionDao.crea(organizacion);
+        Rol rol = new Rol("ROLE_ADMIN");
+        rol = rolDao.crea(rol);
+        Usuario usuario = new Usuario(
+                "jdmendoza@um.edu.mx",
+                "admin2k1",
+                "Admin",
+                "User");
+        Long almacenId = 0l;
+        actualizaUsuario:
+        for (Empresa empresa : organizacion.getEmpresas()) {
+            for (Almacen almacen : empresa.getAlmacenes()) {
+                almacenId = almacen.getId();
+                break actualizaUsuario;
+            }
+        }
+        usuarioDao.crea(usuario, almacenId, new String[]{rol.getAuthority()});
+        rol = new Rol("ROLE_ORG");
+        rolDao.crea(rol);
+        rol = new Rol("ROLE_EMP");
+        rolDao.crea(rol);
+        rol = new Rol("ROLE_USER");
+        rolDao.crea(rol);
+
+        Estatus estatus = new Estatus(Constantes.ABIERTA, 100);
+        currentSession().save(estatus);
+        Estatus estatus2 = new Estatus(Constantes.PENDIENTE, 200);
+        currentSession().save(estatus2);
+        estatus2 = new Estatus(Constantes.CERRADA, 300);
+        currentSession().save(estatus2);
+        estatus2 = new Estatus(Constantes.FACTURADA, 400);
+        currentSession().save(estatus2);
+        estatus2 = new Estatus(Constantes.CANCELADA, 500);
+        currentSession().save(estatus2);
 
         return "redirect:/";
     }

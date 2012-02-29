@@ -32,4 +32,6 @@ public class Constantes {
     public static final String ABIERTA = "ABIERTA";
     public static final String PENDIENTE = "PENDIENTE";
     public static final String CERRADA = "CERRADA";
+    public static final String FACTURADA = "FACTURADA";
+    public static final String CANCELADA = "CANCELADA";
 }

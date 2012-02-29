@@ -25,7 +25,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/inventario/producto'/>"><i class="icon-list icon-white"></i> <s:message code='producto.lista.label' /></a>
             </p>
-            <form:form commandName="producto" action="crea" method="post">
+            <form:form commandName="producto" action="crea" method="post" enctype="multipart/form-data">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -186,6 +186,16 @@
                                     <form:errors path="tipoProducto" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <div class="control-group">
+                                <label for="imagen">
+                                    <s:message code="imagen.label" />
+                                </label>
+                                <input name="imagen" type="file" />
+                            </div>
                         </div>
                     </div>
                 </fieldset>

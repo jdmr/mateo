@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inventario.model.Producto;
 import mx.edu.um.mateo.inventario.model.TipoProducto;
@@ -166,11 +167,24 @@ public class ProductoDao {
 
     public Producto actualiza(Producto producto, Usuario usuario) {
         Session session = currentSession();
-        if (usuario != null) {
-            producto.setAlmacen(usuario.getAlmacen());
+        Producto nuevo = (Producto) session.get(Producto.class, producto.getId());
+        nuevo.setCodigo(producto.getCodigo());
+        nuevo.setDescripcion(producto.getDescripcion());
+        nuevo.setFraccion(producto.getFraccion());
+        nuevo.setIva(producto.getIva());
+        nuevo.setMarca(producto.getMarca());
+        nuevo.setNombre(producto.getNombre());
+        nuevo.setSku(producto.getSku());
+        nuevo.setTiempoEntrega(producto.getTiempoEntrega());
+        nuevo.setUnidadMedida(producto.getUnidadMedida());
+        nuevo.setTipoProducto((TipoProducto) session.get(TipoProducto.class, producto.getTipoProducto().getId()));
+        if (producto.getImagenes().size() > 0) {
+            Imagen imagen = nuevo.getImagenes().get(0);
+            nuevo.getImagenes().clear();
+            nuevo.getImagenes().add(producto.getImagenes().get(0));
+            session.delete(imagen);
         }
-        producto.setTipoProducto((TipoProducto) session.get(TipoProducto.class, producto.getTipoProducto().getId()));
-        session.update(producto);
+        session.update(nuevo);
         session.flush();
         return producto;
     }
