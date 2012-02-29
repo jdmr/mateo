@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author nujev
  */
 @Entity
-@Table(name = "ctamayor")
+@Table(name = "cuentamayor")
 public class CuentaMayor implements Serializable {
 
     @Id
@@ -97,6 +97,6 @@ public class CuentaMayor implements Serializable {
 
     @Override
     public String toString() {
-        return "CtaMayor{nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + '}';
+        return "CuentaMayor{nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + '}';
     }
 }

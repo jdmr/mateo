@@ -48,11 +48,14 @@ public class Empleado implements Serializable {
     public Empleado() {
     }
 
-    public Empleado(String clave, String nombre, String apPaterno, String apMaterno) {
+    public Empleado(String clave, String nombre, String apPaterno, String apMaterno, String genero, String direccion, String status) {
         this.clave = clave;
         this.nombre = nombre;
         this.apPaterno = apPaterno;
         this.apMaterno = apMaterno;
+        this.genero = genero;
+        this.direccion = direccion;
+        this.status = status;
     }
 
     public String getApMaterno() {

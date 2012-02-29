@@ -92,7 +92,7 @@ public class EmpleadoDao {
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put("empleado", criteria.list());
+        params.put("empleados", criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
@@ -106,7 +106,7 @@ public class EmpleadoDao {
     }
 
     public Empleado crea(Empleado empleado) {
-        empleado = new Empleado();
+ 
         currentSession().save(empleado);
         return empleado;
     }

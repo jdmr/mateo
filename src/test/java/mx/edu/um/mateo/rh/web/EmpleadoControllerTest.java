@@ -78,7 +78,15 @@ import org.springframework.web.context.WebApplicationContext;
     @Test
     public void debieraMostrarEmpleado() throws Exception {
         log.debug("Debiera mostrar empleado");
-        Empleado empleado = new Empleado("test", "test", "test", "test");
+        Empleado empleado = new Empleado();
+        empleado.setClave("test");
+        empleado.setNombre("test");
+        empleado.setApPaterno("test");
+        empleado.setApMaterno("test");
+        empleado.setGenero("m");
+        empleado.setDireccion("test");
+        empleado.setStatus("te");
+        
         empleado = empleadoDao.crea(empleado);
 
         this.mockMvc.perform(get("/rh/empleado/ver/" + empleado.getId())).
@@ -90,19 +98,32 @@ import org.springframework.web.context.WebApplicationContext;
     @Test
     public void debieraCrearEmpleado() throws Exception {
         log.debug("Debiera crear empleado");
-        
-        this.mockMvc.perform(post("/rh/empleado/crea").param("nombre", "test").param("nombreFiscal", "test")).
-                andExpect(status().isOk()).
-                andExpect(flash().attributeExists("message")).
-                andExpect(flash().attribute("message", "empleado.creado.message"));
+                
+        this.mockMvc.perform(post("/rh/empleado/crea")
+                .param("clave", "test")
+                .param("nombre","test")
+                .param("apPaterno","test")
+                .param("apMaterno","test")
+                .param("genero","m")
+                .param("direccion","test")
+                .param("status","te"))
+                .andExpect(status().isOk())
+                .andExpect(flash().attributeExists("message"));
     }
     
     @Test
     public void debieraActualizarEmpleado() throws Exception {
         log.debug("Debiera actualizar empleado");
 
-        this.mockMvc.perform(post("/rh/empleado/actualiza").param("nombre", "test1").param("nombreFiscal", "test")).
-                andExpect(status().isOk()).
+        this.mockMvc.perform(post("/rh/empleado/actualiza")                
+                .param("clave", "test1")
+                .param("nombre","test1")
+                .param("apPaterno","test1")
+                .param("apMaterno","test1")
+                .param("genero","1")
+                .param("direccion","test1")
+                .param("status","t1"))                
+                .andExpect(status().isOk()).
                 andExpect(flash().attributeExists("message")).
                 andExpect(flash().attribute("message", "empleado.actualizado.message"));
     }
@@ -110,7 +131,14 @@ import org.springframework.web.context.WebApplicationContext;
     @Test
     public void debieraEliminarEmpleado() throws Exception {
         log.debug("Debiera eliminar empleado");
-        Empleado empleado = new Empleado("test", "test", "test", "test");
+        Empleado empleado = new Empleado();
+        empleado.setClave("test");
+        empleado.setNombre("test");
+        empleado.setApPaterno("test");
+        empleado.setApMaterno("test");
+        empleado.setGenero("m");
+        empleado.setDireccion("test");
+        empleado.setStatus("te");
         empleadoDao.crea(empleado);
 
         this.mockMvc.perform(post("/rh/empleado/elimina").param("id", empleado.getId().toString())).

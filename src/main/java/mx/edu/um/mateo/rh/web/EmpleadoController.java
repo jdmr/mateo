@@ -130,6 +130,8 @@ public class EmpleadoController {
         } while (i++ < cantidadDePaginas);
         List<Empleado> empleados = (List<Empleado>) params.get("empleados");
         Long primero = ((pagina - 1) * max) + 1;
+        log.debug("primero", primero);
+        log.debug("size", empleados.size());
         Long ultimo = primero + (empleados.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
         modelo.addAttribute("paginacion", paginacion);
@@ -161,7 +163,7 @@ public class EmpleadoController {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
         if (bindingResult.hasErrors()) {
-            log.debug("Hubo algun error en la forma, regresando");
+            log.debug("Hubo algun error en la forma, regresando "+bindingResult);
             return "rh/empleado/nuevo";
         }
 
@@ -172,7 +174,7 @@ public class EmpleadoController {
             return "rh/empleado/nuevo";
         }
 
-        redirectAttributes.addFlashAttribute("message", "empleado.creada.message");
+        redirectAttributes.addFlashAttribute("message", "empleado.creado.message");
         redirectAttributes.addFlashAttribute("messageAttrs", new String[]{empleado.getNombre()});
 
         return "redirect:/rh/empleado/ver/" + empleado.getId();
@@ -198,7 +200,7 @@ public class EmpleadoController {
             return "rh/empleado/nuevo";
         }
 
-        redirectAttributes.addFlashAttribute("message", "empleado.actualizada.message");
+        redirectAttributes.addFlashAttribute("message", "empleado.actualizado.message");
         redirectAttributes.addFlashAttribute("messageAttrs", new String[]{empleado.getNombre()});
 
         return "redirect:/rh/empleado/ver/" + empleado.getId();
@@ -210,11 +212,11 @@ public class EmpleadoController {
         try {
             String nombre = empleadoDao.elimina(id);
 
-            redirectAttributes.addFlashAttribute("message", "empleado.eliminada.message");
+            redirectAttributes.addFlashAttribute("message", "empleado.eliminado.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
         } catch (Exception e) {
             log.error("No se pudo eliminar el empleado " + id, e);
-            bindingResult.addError(new ObjectError("empleado", new String[]{"empleado.no.eliminada.message"}, null, null));
+            bindingResult.addError(new ObjectError("empleado", new String[]{"empleado.no.eliminado.message"}, null, null));
             return "rh/empleado/ver";
         }
 
