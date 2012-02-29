@@ -54,10 +54,10 @@ public class EmpleadoDaoTest {
 
         Map<String, Object> params = null;
         Map result = instance.lista(params);
-        assertNotNull(result.get("empleado"));
+        assertNotNull(result.get("empleados"));
         assertNotNull(result.get("cantidad"));
 
-        assertEquals(1, ((List<Empresa>) result.get("empleado")).size());
+        assertEquals(1, ((List<Empresa>) result.get("empleados")).size());
         assertEquals(1, ((Long) result.get("cantidad")).intValue());
 
     }
@@ -71,10 +71,10 @@ public class EmpleadoDaoTest {
         List<Empleado> lista = insertaEmpleados(1);
         Map<String, Object> params = null;
         Map result = instance.lista(params);
-        assertNotNull(result.get("empleado"));
+        assertNotNull(result.get("empleados"));
         assertNotNull(result.get("cantidad"));
 
-        assertEquals(1, ((List<Empresa>) result.get("empleado")).size());
+        assertEquals(1, ((List<Empresa>) result.get("empleados")).size());
         assertEquals(1, ((Long) result.get("cantidad")).intValue());
     }
 
@@ -83,7 +83,7 @@ public class EmpleadoDaoTest {
      */
     @Test
     public void testActualiza() {
-        log.debug("Deberia actualizar empleado");
+        log.debug("Deberia actualizar empleados");
         List<Empleado> lista = insertaEmpleados(1);
         log.debug("lista"+lista.size());
         Empleado empleado = lista.get(0);
@@ -91,7 +91,7 @@ public class EmpleadoDaoTest {
         empleado.setNombre("Juan1");
 
         empleado = instance.actualiza(empleado);
-        log.debug("empleado >>" + empleado);
+        log.debug("empleados >>" + empleado);
         assertEquals("Juan1", empleado.getNombre());
     }
 
