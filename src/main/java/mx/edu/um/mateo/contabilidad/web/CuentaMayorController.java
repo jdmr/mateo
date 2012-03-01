@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.contabilidad.dao.CuentaMayorDao;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -89,6 +90,8 @@ public class CuentaMayorController {
             @RequestParam(required = false) String correo,
             @RequestParam(required = false) String order,
             @RequestParam(required = false) String sort,
+            Usuario usuario,
+            Errors errors,
             Model modelo) {
         log.debug("Mostrando lista de cuentas de mayores");
         Map<String, Object> params = new HashMap<>();
@@ -115,6 +118,8 @@ public class CuentaMayorController {
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
+                params.remove("reporte");
+                //errors.reject("error.generar.reporte");
             }
         }
 
