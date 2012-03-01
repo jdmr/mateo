@@ -6,8 +6,8 @@ package mx.edu.um.mateo.contabilidad.dao;
 
 import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
-import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import org.hibernate.Session;
@@ -55,11 +55,11 @@ public class CuentaMayorDaoTest extends BaseTest {
 
         Map<String, Object> params = null;
         Map result = instance.lista(params);
-        assertNotNull(result.get("mayores"));
-        assertNotNull(result.get("cantidad"));
+        assertNotNull(result.get(Constantes.CONTAINSKEY_MAYORES));
+        assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
 
-        assertEquals(10, ((List<CuentaMayor>) result.get("mayores")).size());
-        assertEquals(20, ((Long) result.get("cantidad")).intValue());
+        assertEquals(10, ((List<CuentaMayor>) result.get(Constantes.CONTAINSKEY_MAYORES)).size());
+        assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
 
     @Test
