@@ -112,6 +112,7 @@ public class CuentaMayorDao {
     public CuentaMayor actualiza(CuentaMayor cuentaMayor) {
         log.debug("Actualizando cuenta de mayor {}", cuentaMayor);
         currentSession().saveOrUpdate(cuentaMayor);
+        currentSession().flush();
         return cuentaMayor;
     }
 
@@ -119,6 +120,7 @@ public class CuentaMayorDao {
         log.debug("Eliminando cuenta de mayor con id {}", id);
         CuentaMayor ctamayor = obtiene(id);
         currentSession().delete(ctamayor);
+        currentSession().flush();
         String nombre = ctamayor.getNombre();
         return nombre;
     }

@@ -58,7 +58,7 @@ public class CuentaMayorDaoTest extends BaseTest {
         assertNotNull(result.get("mayores"));
         assertNotNull(result.get("cantidad"));
 
-        assertEquals(10, ((List<Empresa>) result.get("mayores")).size());
+        assertEquals(10, ((List<CuentaMayor>) result.get("mayores")).size());
         assertEquals(20, ((Long) result.get("cantidad")).intValue());
     }
 
