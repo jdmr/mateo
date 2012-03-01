@@ -6,9 +6,8 @@ package mx.edu.um.mateo.contabilidad.dao;
 
 import java.util.HashMap;
 import java.util.Map;
-import mx.edu.um.mateo.general.dao.EmpresaDao;
-import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
+import mx.edu.um.mateo.general.utils.UltimoException;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -30,12 +29,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CuentaMayorDao {
 
-    private static final Logger log = LoggerFactory.getLogger(EmpresaDao.class);
+    private static final Logger log = LoggerFactory.getLogger(CuentaMayorDao.class);
     @Autowired
     private SessionFactory sessionFactory;
 
     public CuentaMayorDao() {
-        log.info("Nueva instancia de CtaMayorDao");
+        log.info("Nueva instancia de CuentaMayorDao");
     }
 
     private Session currentSession() {
@@ -43,7 +42,7 @@ public class CuentaMayorDao {
     }
 
     public Map<String, Object> lista(Map<String, Object> params) {
-        log.debug("Buscando lista de ctaMayor con params {}", params);
+        log.debug("Buscando lista de cuenta de mayor con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
@@ -89,7 +88,7 @@ public class CuentaMayorDao {
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put("ctaMayores", criteria.list());
+        params.put("mayores", criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
@@ -98,24 +97,30 @@ public class CuentaMayorDao {
     }
 
     public CuentaMayor obtiene(Long id) {
+        log.debug("Obtiene cuenta de mayor con id = {}", id);
         CuentaMayor ctaMayor = (CuentaMayor) currentSession().get(CuentaMayor.class, id);
         return ctaMayor;
     }
 
-    public CuentaMayor crea(CuentaMayor ctaMayor) {
-        currentSession().save(ctaMayor);
+    public CuentaMayor crea(CuentaMayor cuentaMayor) {
+        log.debug("Creando cuenta de mayor : {}", cuentaMayor);
+        currentSession().save(cuentaMayor);
         currentSession().flush();
-        return ctaMayor;
+        return cuentaMayor;
     }
 
-    public CuentaMayor actualiza(CuentaMayor ctaMayor) {
-        currentSession().saveOrUpdate(ctaMayor);
-        return ctaMayor;
+    public CuentaMayor actualiza(CuentaMayor cuentaMayor) {
+        log.debug("Actualizando cuenta de mayor {}", cuentaMayor);
+        currentSession().saveOrUpdate(cuentaMayor);
+        currentSession().flush();
+        return cuentaMayor;
     }
 
     public String elimina(Long id) throws UltimoException {
+        log.debug("Eliminando cuenta de mayor con id {}", id);
         CuentaMayor ctamayor = obtiene(id);
         currentSession().delete(ctamayor);
+        currentSession().flush();
         String nombre = ctamayor.getNombre();
         return nombre;
     }
