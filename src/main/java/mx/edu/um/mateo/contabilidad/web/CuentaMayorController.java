@@ -36,6 +36,7 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.dao.CuentaMayorDao;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -69,7 +70,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author jdmr
  */
 @Controller
-@RequestMapping("/contabilidad/mayor")
+@RequestMapping(Constantes.PATH_CUENTA_MAYOR)
 public class CuentaMayorController {
 
     private static final Logger log = LoggerFactory.getLogger(CuentaMayorController.class);
@@ -96,67 +97,67 @@ public class CuentaMayorController {
         log.debug("Mostrando lista de cuentas de mayores");
         Map<String, Object> params = new HashMap<>();
         if (StringUtils.isNotBlank(filtro)) {
-            params.put("filtro", filtro);
+            params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }
         if (pagina != null) {
-            params.put("pagina", pagina);
-            modelo.addAttribute("pagina", pagina);
+            params.put(Constantes.CONTAINSKEY_PAGINA, pagina);
+            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
         } else {
             pagina = 1L;
-            modelo.addAttribute("pagina", pagina);
+            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
         }
         if (StringUtils.isNotBlank(order)) {
-            params.put("order", order);
-            params.put("sort", sort);
+            params.put(Constantes.CONTAINSKEY_ORDER, order);
+            params.put(Constantes.CONTAINSKEY_SORT, sort);
         }
 
         if (StringUtils.isNotBlank(tipo)) {
-            params.put("reporte", true);
+            params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = cuentaMayorDao.lista(params);
             try {
-                generaReporte(tipo, (List<CuentaMayor>) params.get("mayores"), response);
+                generaReporte(tipo, (List<CuentaMayor>) params.get(Constantes.CONTAINSKEY_MAYORES), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
-                params.remove("reporte");
+                params.remove(Constantes.CONTAINSKEY_REPORTE);
                 //errors.reject("error.generar.reporte");
             }
         }
 
         if (StringUtils.isNotBlank(correo)) {
-            params.put("reporte", true);
+            params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = cuentaMayorDao.lista(params);
 
-            params.remove("reporte");
+            params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<CuentaMayor>) params.get("mayores"), request);
-                modelo.addAttribute("message", "lista.enviada.message");
-                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("cuentaMayor.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+                enviaCorreo(correo, (List<CuentaMayor>) params.get(Constantes.CONTAINSKEY_MAYORES), request);
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("cuentaMayor.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
         params = cuentaMayorDao.lista(params);
-        modelo.addAttribute("mayores", params.get("mayores"));
+        modelo.addAttribute(Constantes.CONTAINSKEY_MAYORES, params.get(Constantes.CONTAINSKEY_MAYORES));
 
         // inicia paginado
-        Long cantidad = (Long) params.get("cantidad");
-        Integer max = (Integer) params.get("max");
+        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
+        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
         Long cantidadDePaginas = cantidad / max;
         List<Long> paginas = new ArrayList<>();
         long i = 1;
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<CuentaMayor> mayores = (List<CuentaMayor>) params.get("mayores");
+        List<CuentaMayor> mayores = (List<CuentaMayor>) params.get(Constantes.CONTAINSKEY_MAYORES);
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (mayores.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute("paginacion", paginacion);
-        modelo.addAttribute("paginas", paginas);
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
         // termina paginado
 
-        return "contabilidad/mayor/lista";
+        return Constantes.PATH_CUENTA_MAYOR_LISTA;
     }
 
     @RequestMapping("/ver/{id}")
@@ -164,17 +165,17 @@ public class CuentaMayorController {
         log.debug("Mostrando cuenta de mayor {}", id);
         CuentaMayor mayor = cuentaMayorDao.obtiene(id);
 
-        modelo.addAttribute("mayor", mayor);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_MAYOR, mayor);
 
-        return "contabilidad/mayor/ver";
+        return Constantes.PATH_CUENTA_MAYOR_VER;
     }
 
     @RequestMapping("/nueva")
     public String nueva(Model modelo) {
         log.debug("Nueva cuenta de mayor");
         CuentaMayor mayor = new CuentaMayor();
-        modelo.addAttribute("mayor", mayor);
-        return "contabilidad/mayor/nueva";
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_MAYOR, mayor);
+        return Constantes.PATH_CUENTA_MAYOR_NUEVA;
     }
 
     @Transactional
@@ -185,28 +186,28 @@ public class CuentaMayorController {
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
-            return "contabilidad/mayor/nuevo";
+            return Constantes.PATH_CUENTA_MAYOR_NUEVA;
         }
 
         try {
             mayor = cuentaMayorDao.crea(mayor);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la cuenta de mayor", e);
-            return "contabilidad/mayor/nuevo";
+            return Constantes.PATH_CUENTA_MAYOR_NUEVA;
         }
 
-        redirectAttributes.addFlashAttribute("message", "cuentaMayor.creada.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{mayor.getNombre()});
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.creada.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{mayor.getNombre()});
 
-        return "redirect:/contabilidad/mayor/ver/" + mayor.getId();
+        return "redirect:" + Constantes.PATH_CUENTA_MAYOR_VER + "/" + mayor.getId();
     }
 
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Editar cuenta de mayor {}", id);
         CuentaMayor mayor = cuentaMayorDao.obtiene(id);
-        modelo.addAttribute("mayor", mayor);
-        return "contabilidad/mayor/edita";
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_MAYOR, mayor);
+        return Constantes.PATH_CUENTA_MAYOR_EDITA;
     }
 
     @Transactional
@@ -214,19 +215,19 @@ public class CuentaMayorController {
     public String actualiza(HttpServletRequest request, @Valid CuentaMayor mayor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
-            return "contabilidad/mayor/edita";
+            return Constantes.PATH_CUENTA_MAYOR_EDITA;
         }
         try {
             mayor = cuentaMayorDao.actualiza(mayor);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la cuenta de mayor", e);
-            return "contabilidad/mayor/nuevo";
+            return Constantes.PATH_CUENTA_MAYOR_NUEVA;
         }
 
-        redirectAttributes.addFlashAttribute("message", "cuentaMayor.actualizada.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{mayor.getNombre()});
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.actualizada.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{mayor.getNombre()});
 
-        return "redirect:/contabilidad/mayor/ver/" + mayor.getId();
+        return "redirect:" + Constantes.PATH_CUENTA_MAYOR_VER + "/" + mayor.getId();
     }
 
     @Transactional
@@ -236,15 +237,15 @@ public class CuentaMayorController {
         try {
             String nombre = cuentaMayorDao.elimina(id);
 
-            redirectAttributes.addFlashAttribute("message", "cuentaMayor.eliminada.message");
-            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.eliminada.message");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
         } catch (Exception e) {
             log.error("No se pudo eliminar la cuenta de mayor " + id, e);
-            bindingResult.addError(new ObjectError("cuentaMayor", new String[]{"cuentaMayor.no.eliminada.message"}, null, null));
-            return "contabilidad/mayor/ver";
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_MAYOR, new String[]{"cuentaMayor.no.eliminada.message"}, null, null));
+            return Constantes.PATH_CUENTA_MAYOR_VER;
         }
 
-        return "redirect:/contabilidad/mayor";
+        return "redirect:" + Constantes.PATH_CUENTA_MAYOR;
     }
 
     private void generaReporte(String tipo, List<CuentaMayor> mayores, HttpServletResponse response) throws JRException, IOException {
@@ -297,7 +298,6 @@ public class CuentaMayorController {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(ambiente.obtieneUsuario().getUsername());
-        log.debug("usuario >>" + ambiente.obtieneUsuario().getUsername());
         String titulo = messageSource.getMessage("cuentaMayor.lista.label", null, request.getLocale());
         helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
         helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
