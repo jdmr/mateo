@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.contabilidad.web;
 
+import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.dao.CuentaMayorDao;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.test.BaseTest;
@@ -22,7 +23,6 @@ import static org.springframework.test.web.server.result.MockMvcResultMatchers.*
 import org.springframework.test.web.server.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-
 
 /**
  *
@@ -67,14 +67,14 @@ public class CuentaMayorControllerTest extends BaseTest {
     @Test
     public void debieraMostrarListaDeCuentaMayor() throws Exception {
         log.debug("Debiera monstrar lista de cuentas de mayor");
-        
-        this.mockMvc.perform(get("/contabilidad/mayor")).
-                andExpect(status().isOk()).
-                andExpect(forwardedUrl("/WEB-INF/jsp/contabilidad/mayor/lista.jsp")).
-                andExpect(model().attributeExists("mayores")).
-                andExpect(model().attributeExists("paginacion")).
-                andExpect(model().attributeExists("paginas")).
-                andExpect(model().attributeExists("pagina"));
+
+        this.mockMvc.perform(get(Constantes.PATH_CUENTA_MAYOR))
+                .andExpect(status().isOk())
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_CUENTA_MAYOR_LISTA + ".jsp"))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_MAYORES))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINAS))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINA));
     }
 
     @Test
@@ -83,30 +83,35 @@ public class CuentaMayorControllerTest extends BaseTest {
         CuentaMayor cuentaMayor = new CuentaMayor("test1", "test");
         cuentaMayor = cuentaMayorDao.crea(cuentaMayor);
 
-        this.mockMvc.perform(get("/contabilidad/mayor/ver/" + cuentaMayor.getId())).
-                andExpect(status().isOk()).
-                andExpect(forwardedUrl("/WEB-INF/jsp/contabilidad/mayor/ver.jsp")).
-                andExpect(model().attributeExists("mayor"));
+        this.mockMvc.perform(get(Constantes.PATH_CUENTA_MAYOR_VER +"/"+ cuentaMayor.getId()))
+                .andExpect(status().isOk())
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_CUENTA_MAYOR_VER + ".jsp"))
+                .andExpect(model()
+                .attributeExists(Constantes.ADDATTRIBUTE_MAYOR));
     }
 
     @Test
     public void debieraCrearCuentaMayor() throws Exception {
         log.debug("Debiera crear cuenta de mayor");
-        
-        this.mockMvc.perform(post("/contabilidad/mayor/crea").param("nombre", "test2").param("nombreFiscal", "test")).
-                andExpect(status().isOk()).
-                andExpect(flash().attributeExists("message")).
-                andExpect(flash().attribute("message", "cuentaMayor.creada.message"));
+
+        this.mockMvc.perform(post(Constantes.PATH_CUENTA_MAYOR_CREA)
+                .param("nombre", "test2")
+                .param("nombreFiscal", "test"))
+                .andExpect(status().isOk())
+                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.creada.message"));
     }
 
     @Test
     public void debieraActualizarCuentaMayor() throws Exception {
         log.debug("Debiera actualizar cuenta de mayor");
 
-        this.mockMvc.perform(post("/contabilidad/mayor/actualiza").param("nombre", "test3").param("nombreFiscal", "test")).
-                andExpect(status().isOk()).
-                andExpect(flash().attributeExists("message")).
-                andExpect(flash().attribute("message", "cuentaMayor.actualizada.message"));
+        this.mockMvc.perform(post(Constantes.PATH_CUENTA_MAYOR_ACTUALIZA)
+                .param("nombre", "test3")
+                .param("nombreFiscal", "test"))
+                .andExpect(status().isOk())
+                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.actualizada.message"));
     }
 
     @Test
@@ -115,9 +120,10 @@ public class CuentaMayorControllerTest extends BaseTest {
         CuentaMayor cuentaMayor = new CuentaMayor("test", "test");
         cuentaMayorDao.crea(cuentaMayor);
 
-        this.mockMvc.perform(post("/contabilidad/mayor/elimina").param("id", cuentaMayor.getId().toString())).
-                andExpect(status().isOk()).
-                andExpect(flash().attributeExists("message")).
-                andExpect(flash().attribute("message", "cuentaMayor.eliminada.message"));
+        this.mockMvc.perform(post(Constantes.PATH_CUENTA_MAYOR_ELIMINA)
+                .param("id", cuentaMayor.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.eliminada.message"));
     }
 }

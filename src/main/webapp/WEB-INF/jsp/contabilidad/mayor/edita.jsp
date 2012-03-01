@@ -43,7 +43,7 @@
                     <s:bind path="mayor.nombre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombre">
-                                <s:message code="cuentaMayor.nombre.label" />
+                                <s:message code="nombre.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="nombre" maxlength="128" required="true" />
@@ -53,7 +53,7 @@
                     <s:bind path="mayor.nombreFiscal">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombreFiscal">
-                                <s:message code="cuentaMayor.nombreFiscal.label" />
+                                <s:message code="nombreFiscal.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="nombreFiscal" maxlength="128" required="true" />
