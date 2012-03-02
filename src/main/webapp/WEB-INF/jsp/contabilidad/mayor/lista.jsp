@@ -30,7 +30,7 @@
                 <button type="submit" class="btn"><s:message code="buscar.label" /></button>
             </p>
             <c:if test="${not empty message}">
-                <div class="alert alert-block alert-success fade in" role="status">
+                <div class="alert alert-block <c:choose><c:when test='${not empty messageStyle}'>${messageStyle}</c:when><c:otherwise>alert-success</c:otherwise></c:choose> fade in" role="status">
                     <a class="close" data-dismiss="alert">×</a>
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
@@ -53,7 +53,7 @@
                     <tr>
                         <th>
                             <a href="javascript:ordena('nombre');">
-                                <s:message code="cuentaMayor.nombre.label" />
+                                <s:message code="nombre.label" />
                                 <c:choose>
                                     <c:when test="${param.order == 'nombre' && param.sort == 'asc'}">
                                         <i class="icon-chevron-up"></i>
@@ -66,7 +66,7 @@
                         </th>
                         <th>
                             <a href="javascript:ordena('nombreFiscal');">
-                                <s:message code="cuentaMayor.nombreFiscal.label" />
+                                <s:message code="nombreFiscal.label" />
                                 <c:choose>
                                     <c:when test="${param.order == 'nombreFiscal' && param.sort == 'asc'}">
                                         <i class="icon-chevron-up"></i>
