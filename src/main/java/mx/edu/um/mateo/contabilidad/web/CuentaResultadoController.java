@@ -171,10 +171,10 @@ public class CuentaResultadoController {
         }
 
         try {
-            Usuario usuario = ambiente.obtieneUsuario();
+            //Usuario usuario = ambiente.obtieneUsuario();
             ctaResultado = ctaResultadoDao.crea(ctaResultado);
 
-            ambiente.actualizaSesion(request, usuario);
+            //ambiente.actualizaSesion(request, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al ctaResultado", e);
             errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
@@ -208,10 +208,10 @@ public class CuentaResultadoController {
         }
 
         try {
-            Usuario usuario = ambiente.obtieneUsuario();
+            //Usuario usuario = ambiente.obtieneUsuario();
             ctaResultado = ctaResultadoDao.actualiza(ctaResultado);
 
-            ambiente.actualizaSesion(request, usuario);
+           // ambiente.actualizaSesion(request, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la ctaResultado", e);
             errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
@@ -232,10 +232,11 @@ public class CuentaResultadoController {
         try {
             String nombre = ctaResultadoDao.elimina(id);
 
-            ambiente.actualizaSesion(request);
+           // ambiente.actualizaSesion(request);
 
             redirectAttributes.addFlashAttribute("message", "ctaResultado.eliminada.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
+            log.debug("massage");
         } catch (UltimoException e) {
             log.error("No se pudo eliminar el ctaResultado " + id, e);
             bindingResult.addError(new ObjectError("ctaResultado", new String[]{"ultima.ctaResultado.no.eliminada.message"}, null, null));
@@ -352,4 +353,3 @@ public class CuentaResultadoController {
         return archivo;
     }
 }
-

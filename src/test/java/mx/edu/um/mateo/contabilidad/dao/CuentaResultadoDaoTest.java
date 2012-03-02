@@ -63,10 +63,10 @@ public class CuentaResultadoDaoTest extends BaseTest{
 
         Map<String, Object> params = null;
         Map result = instance.lista(params); 
-        assertNotNull(result.get("ctaResultado"));
+        assertNotNull(result.get("ctaResultados"));
         assertNotNull(result.get("cantidad"));
 
-        assertEquals(10, ((List<Empresa>) result.get("ctaResultado")).size());
+        assertEquals(10, ((List<Empresa>) result.get("ctaResultados")).size());
         assertEquals(20, ((Long) result.get("cantidad")).intValue());
     }
 }
