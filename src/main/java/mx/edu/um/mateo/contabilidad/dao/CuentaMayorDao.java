@@ -6,6 +6,7 @@ package mx.edu.um.mateo.contabilidad.dao;
 
 import java.util.HashMap;
 import java.util.Map;
+import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import org.hibernate.Criteria;
@@ -47,26 +48,26 @@ public class CuentaMayorDao {
             params = new HashMap<>();
         }
 
-        if (!params.containsKey("max")) {
-            params.put("max", 10);
+        if (!params.containsKey(Constantes.CONTAINSKEY_MAX)) {
+            params.put(Constantes.CONTAINSKEY_MAX, 10);
         } else {
-            params.put("max", Math.min((Integer) params.get("max"), 100));
+            params.put(Constantes.CONTAINSKEY_MAX, Math.min((Integer) params.get(Constantes.CONTAINSKEY_MAX), 100));
         }
 
-        if (params.containsKey("pagina")) {
-            Long pagina = (Long) params.get("pagina");
-            Long offset = (pagina - 1) * (Integer) params.get("max");
-            params.put("offset", offset.intValue());
+        if (params.containsKey(Constantes.CONTAINSKEY_PAGINA)) {
+            Long pagina = (Long) params.get(Constantes.CONTAINSKEY_PAGINA);
+            Long offset = (pagina - 1) * (Integer) params.get(Constantes.CONTAINSKEY_MAX);
+            params.put(Constantes.CONTAINSKEY_OFFSET, offset.intValue());
         }
 
-        if (!params.containsKey("offset")) {
-            params.put("offset", 0);
+        if (!params.containsKey(Constantes.CONTAINSKEY_OFFSET)) {
+            params.put(Constantes.CONTAINSKEY_OFFSET, 0);
         }
         Criteria criteria = currentSession().createCriteria(CuentaMayor.class);
         Criteria countCriteria = currentSession().createCriteria(CuentaMayor.class);
 
-        if (params.containsKey("filtro")) {
-            String filtro = (String) params.get("filtro");
+        if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
+            String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);
             filtro = "%" + filtro + "%";
             Disjunction propiedades = Restrictions.disjunction();
             propiedades.add(Restrictions.ilike("nombre", filtro));
@@ -75,31 +76,31 @@ public class CuentaMayorDao {
             countCriteria.add(propiedades);
         }
 
-        if (params.containsKey("order")) {
-            String campo = (String) params.get("order");
-            if (params.get("sort").equals("desc")) {
+        if (params.containsKey(Constantes.CONTAINSKEY_ORDER)) {
+            String campo = (String) params.get(Constantes.CONTAINSKEY_ORDER);
+            if (params.get(Constantes.CONTAINSKEY_SORT).equals(Constantes.CONTAINSKEY_DESC)) {
                 criteria.addOrder(Order.desc(campo));
             } else {
                 criteria.addOrder(Order.asc(campo));
             }
         }
 
-        if (!params.containsKey("reporte")) {
-            criteria.setFirstResult((Integer) params.get("offset"));
-            criteria.setMaxResults((Integer) params.get("max"));
+        if (!params.containsKey(Constantes.CONTAINSKEY_REPORTE)) {
+            criteria.setFirstResult((Integer) params.get(Constantes.CONTAINSKEY_OFFSET));
+            criteria.setMaxResults((Integer) params.get(Constantes.CONTAINSKEY_MAX));
         }
-        params.put("mayores", criteria.list());
+        params.put(Constantes.CONTAINSKEY_MAYORES, criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
-        params.put("cantidad", (Long) countCriteria.list().get(0));
+        params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));
 
         return params;
     }
 
     public CuentaMayor obtiene(Long id) {
         log.debug("Obtiene cuenta de mayor con id = {}", id);
-        CuentaMayor ctaMayor = (CuentaMayor) currentSession().get(CuentaMayor.class, id);
-        return ctaMayor;
+        CuentaMayor cuentaMayor = (CuentaMayor) currentSession().get(CuentaMayor.class, id);
+        return cuentaMayor;
     }
 
     public CuentaMayor crea(CuentaMayor cuentaMayor) {
@@ -111,17 +112,17 @@ public class CuentaMayorDao {
 
     public CuentaMayor actualiza(CuentaMayor cuentaMayor) {
         log.debug("Actualizando cuenta de mayor {}", cuentaMayor);
-        currentSession().saveOrUpdate(cuentaMayor);
+        currentSession().update(cuentaMayor);
         currentSession().flush();
         return cuentaMayor;
     }
 
     public String elimina(Long id) throws UltimoException {
         log.debug("Eliminando cuenta de mayor con id {}", id);
-        CuentaMayor ctamayor = obtiene(id);
-        currentSession().delete(ctamayor);
+        CuentaMayor cuentaMayor = obtiene(id);
+        currentSession().delete(cuentaMayor);
         currentSession().flush();
-        String nombre = ctamayor.getNombre();
+        String nombre = cuentaMayor.getNombre();
         return nombre;
     }
 }

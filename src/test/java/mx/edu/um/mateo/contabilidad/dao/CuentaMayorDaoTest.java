@@ -6,8 +6,8 @@ package mx.edu.um.mateo.contabilidad.dao;
 
 import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
-import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import org.hibernate.Session;
@@ -47,6 +47,7 @@ public class CuentaMayorDaoTest extends BaseTest {
     @Test
     public void deberiaMostrarListaDeCuentaMayor() {
         log.debug("Debiera mostrar lista de cuentaMayor");
+
         for (int i = 0; i < 20; i++) {
             CuentaMayor cuentaMayor = new CuentaMayor("test" + i, "test");
             currentSession().save(cuentaMayor);
@@ -55,58 +56,73 @@ public class CuentaMayorDaoTest extends BaseTest {
 
         Map<String, Object> params = null;
         Map result = instance.lista(params);
-        assertNotNull(result.get("mayores"));
-        assertNotNull(result.get("cantidad"));
+        assertNotNull(result.get(Constantes.CONTAINSKEY_MAYORES));
+        assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
 
-        assertEquals(10, ((List<CuentaMayor>) result.get("mayores")).size());
-        assertEquals(20, ((Long) result.get("cantidad")).intValue());
+        assertEquals(10, ((List<CuentaMayor>) result.get(Constantes.CONTAINSKEY_MAYORES)).size());
+        assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
 
     @Test
     public void debieraObtenerCuentaMayor() {
         log.debug("Debiera obtener cuentaMayor");
-        CuentaMayor cuentaMayor = new CuentaMayor("test", "test");
+
+        String nombre = "test";
+        CuentaMayor cuentaMayor = new CuentaMayor(nombre, "test");
         currentSession().save(cuentaMayor);
         assertNotNull(cuentaMayor.getId());
         Long id = cuentaMayor.getId();
 
         CuentaMayor result = instance.obtiene(id);
         assertNotNull(result);
-        assertEquals("test", result.getNombre());
+        assertEquals(nombre, result.getNombre());
+
+        assertEquals(result, cuentaMayor);
     }
 
     @Test
     public void deberiaCrearCuentaMayor() {
         log.debug("Deberia crear CuentaMayor");
+
         CuentaMayor cuentaMayor = new CuentaMayor("test", "test");
         assertNotNull(cuentaMayor);
-        cuentaMayor = instance.crea(cuentaMayor);
-        assertNotNull(cuentaMayor.getId());
+
+        CuentaMayor cuentaMayor2 = instance.crea(cuentaMayor);
+        assertNotNull(cuentaMayor2);
+        assertNotNull(cuentaMayor2.getId());
+
+        assertEquals(cuentaMayor, cuentaMayor2);
     }
-    
+
     @Test
     public void deberiaActualizarCuentaMayor() {
         log.debug("Deberia actualizar CuentaMayor");
+
         CuentaMayor cuentaMayor = new CuentaMayor("test", "test");
         assertNotNull(cuentaMayor);
         currentSession().save(cuentaMayor);
-        
-        cuentaMayor.setNombre("test1");
 
-        cuentaMayor = instance.actualiza(cuentaMayor);
-        assertEquals("test1", cuentaMayor.getNombre());
+        String nombre = "test1";
+        cuentaMayor.setNombre(nombre);
+
+        CuentaMayor cuentaMayor2 = instance.actualiza(cuentaMayor);
+        assertNotNull(cuentaMayor2);
+        assertEquals(nombre, cuentaMayor.getNombre());
+
+        assertEquals(cuentaMayor, cuentaMayor2);
     }
-    
 
     @Test
     public void deberiaEliminarCuentaMayor() throws UltimoException {
         log.debug("Debiera eliminar CuentaMayor");
 
-        CuentaMayor cuentaMayor = new CuentaMayor("test", "A");
+        String nom = "test";
+        CuentaMayor cuentaMayor = new CuentaMayor(nom, "test");
         currentSession().save(cuentaMayor);
         assertNotNull(cuentaMayor);
+        
         String nombre = instance.elimina(cuentaMayor.getId());
-        assertEquals("test", nombre);
+        assertEquals(nom, nombre);
 
         CuentaMayor prueba = instance.obtiene(cuentaMayor.getId());
         assertNull(prueba);

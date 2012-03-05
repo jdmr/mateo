@@ -49,4 +49,39 @@ public class Constantes {
     public static final String DECIMAL_PATTERN = "###,###,###,##0.00";
     public static final String CURRENCY_PATTERN = "$###,###,##0.00";
     public static final String PERCENTAGE_PATTERN = "#.00%";
+    /**
+     * Valores para el los containsKey
+     */
+    public static final String CONTAINSKEY_MAX = "max";
+    public static final String CONTAINSKEY_PAGINA = "pagina";
+    public static final String CONTAINSKEY_PAGINAS = "paginas";
+    public static final String CONTAINSKEY_PAGINACION = "paginacion";
+    public static final String CONTAINSKEY_OFFSET = "offset";
+    public static final String CONTAINSKEY_FILTRO = "filtro";
+    public static final String CONTAINSKEY_ORDER = "order";
+    public static final String CONTAINSKEY_SORT = "sort";
+    public static final String CONTAINSKEY_DESC = "desc";
+    public static final String CONTAINSKEY_REPORTE = "reporte";
+    public static final String CONTAINSKEY_CANTIDAD = "cantidad";
+    public static final String CONTAINSKEY_MESSAGE = "message";
+    public static final String CONTAINSKEY_MESSAGE_ATTRS = "messageAttrs";
+    /**
+     * Valores para el los containsKey para las clases
+     */
+    public static final String CONTAINSKEY_MAYORES = "mayores";
+    /**
+     * Valores para el los addAttribute para las clases
+     */
+    public static final String ADDATTRIBUTE_MAYOR = "mayor";
+    /**
+     * Valores para el los path's para las clases
+     */
+    public static final String PATH_CUENTA_MAYOR = "/contabilidad/mayor";
+    public static final String PATH_CUENTA_MAYOR_LISTA = "/contabilidad/mayor/lista";
+    public static final String PATH_CUENTA_MAYOR_VER = "/contabilidad/mayor/ver";
+    public static final String PATH_CUENTA_MAYOR_NUEVA = "/contabilidad/mayor/nueva";
+    public static final String PATH_CUENTA_MAYOR_EDITA = "/contabilidad/mayor/edita";
+    public static final String PATH_CUENTA_MAYOR_CREA = "/contabilidad/mayor/crea";
+    public static final String PATH_CUENTA_MAYOR_ACTUALIZA = "/contabilidad/mayor/actualiza";
+    public static final String PATH_CUENTA_MAYOR_ELIMINA = "/contabilidad/mayor/elimina";
 }
