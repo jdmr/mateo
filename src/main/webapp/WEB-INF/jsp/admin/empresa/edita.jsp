@@ -89,7 +89,8 @@
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
-                    <input type="submit" name="actualiza" value="<s:message code='actualizar.button' />" class="btn btn-large btn-primary" />
+                    <button type="submit" name="actualizarBtn" class="btn btn-primary btn-large" id="actualizar" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='actualizar.button'/></button>
+                    <a class="btn btn-large" href="<s:url value='/admin/empresa/ver/${empresa.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>

@@ -212,7 +212,7 @@ public class UsuarioController {
 
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setTo(ambiente.obtieneUsuario().getUsername());
+            helper.setTo(usuario.getUsername());
             helper.setSubject(messageSource.getMessage("envia.correo.password.titulo.message", new String[]{}, request.getLocale()));
             helper.setText(messageSource.getMessage("envia.correo.password.contenido.message", new String[]{usuario.getNombre(), usuario.getUsername(), password}, request.getLocale()), true);
             mailSender.send(message);
@@ -270,7 +270,7 @@ public class UsuarioController {
             errors.rejectValue("username", "campo.duplicado.message", new String[]{"username"}, null);
             List<Rol> roles = obtieneRoles();
             modelo.addAttribute("roles", roles);
-            return "admin/usuario/nuevo";
+            return "admin/usuario/edita";
         }
 
         redirectAttributes.addFlashAttribute("message", "usuario.actualizado.message");

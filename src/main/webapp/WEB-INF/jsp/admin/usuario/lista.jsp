@@ -32,7 +32,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/admin/usuario/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='usuario.nuevo.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
-                <button type="submit" class="btn"><s:message code="buscar.label" /></button>
+                <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
@@ -53,7 +53,7 @@
                 </s:bind>
             </c:if>
             
-            <table id="lista" class="table">
+            <table id="lista" class="table table-striped">
                 <thead>
                     <tr>
                         <th>
@@ -124,7 +124,7 @@
                 </div>
                 <div class="span4">
                     <div class="btn-group pull-right" style="margin-top: 22px;margin-left: 10px;">
-                        <button id="enviaCorreoBtn" class="btn" data-loading-text="<s:message code='enviando.label'/>" onclick="javascript:enviaCorreo('XLS');" ><s:message code="envia.correo.label" /></button>
+                        <button id="enviaCorreoBtn" class="btn" data-loading-text="<s:message code='enviando.label'/>" onclick="javascript:enviaCorreo('XLS');" ><i class="icon-envelope"></i> <s:message code="envia.correo.label" /></button>
                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="javascript:enviaCorreo('PDF');"><img src="<c:url value='/images/pdf.gif' />" /></a></li>
