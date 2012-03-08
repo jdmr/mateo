@@ -47,8 +47,9 @@ public class CuentaMayorDaoTest extends BaseTest {
     @Test
     public void deberiaMostrarListaDeCuentaMayor() {
         log.debug("Debiera mostrar lista de cuentaMayor");
+
         for (int i = 0; i < 20; i++) {
-            CuentaMayor cuentaMayor = new CuentaMayor("test" + i, "test");
+            CuentaMayor cuentaMayor = new CuentaMayor("test" + i, "test", "test",false,false,false,false,0.0);
             currentSession().save(cuentaMayor);
             assertNotNull(cuentaMayor);
         }
@@ -65,48 +66,63 @@ public class CuentaMayorDaoTest extends BaseTest {
     @Test
     public void debieraObtenerCuentaMayor() {
         log.debug("Debiera obtener cuentaMayor");
-        CuentaMayor cuentaMayor = new CuentaMayor("test", "test");
+
+        String nombre = "test";
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test",false,false,false,false,0.0);
         currentSession().save(cuentaMayor);
         assertNotNull(cuentaMayor.getId());
         Long id = cuentaMayor.getId();
 
         CuentaMayor result = instance.obtiene(id);
         assertNotNull(result);
-        assertEquals("test", result.getNombre());
+        assertEquals(nombre, result.getNombre());
+
+        assertEquals(result, cuentaMayor);
     }
 
     @Test
     public void deberiaCrearCuentaMayor() {
         log.debug("Deberia crear CuentaMayor");
-        CuentaMayor cuentaMayor = new CuentaMayor("test", "test");
+
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test",false,false,false,false,0.0);
         assertNotNull(cuentaMayor);
-        cuentaMayor = instance.crea(cuentaMayor);
-        assertNotNull(cuentaMayor.getId());
+
+        CuentaMayor cuentaMayor2 = instance.crea(cuentaMayor);
+        assertNotNull(cuentaMayor2);
+        assertNotNull(cuentaMayor2.getId());
+
+        assertEquals(cuentaMayor, cuentaMayor2);
     }
-    
+
     @Test
     public void deberiaActualizarCuentaMayor() {
         log.debug("Deberia actualizar CuentaMayor");
-        CuentaMayor cuentaMayor = new CuentaMayor("test", "test");
+
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test",false,false,false,false,0.0);
         assertNotNull(cuentaMayor);
         currentSession().save(cuentaMayor);
-        
-        cuentaMayor.setNombre("test1");
 
-        cuentaMayor = instance.actualiza(cuentaMayor);
-        assertEquals("test1", cuentaMayor.getNombre());
+        String nombre = "test1";
+        cuentaMayor.setNombre(nombre);
+
+        CuentaMayor cuentaMayor2 = instance.actualiza(cuentaMayor);
+        assertNotNull(cuentaMayor2);
+        assertEquals(nombre, cuentaMayor.getNombre());
+
+        assertEquals(cuentaMayor, cuentaMayor2);
     }
-    
 
     @Test
     public void deberiaEliminarCuentaMayor() throws UltimoException {
         log.debug("Debiera eliminar CuentaMayor");
 
-        CuentaMayor cuentaMayor = new CuentaMayor("test", "A");
+        String nom = "test";
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test",false,false,false,false,0.0);
         currentSession().save(cuentaMayor);
         assertNotNull(cuentaMayor);
+
         String nombre = instance.elimina(cuentaMayor.getId());
-        assertEquals("test", nombre);
+        assertEquals(nom, nombre);
 
         CuentaMayor prueba = instance.obtiene(cuentaMayor.getId());
         assertNull(prueba);
