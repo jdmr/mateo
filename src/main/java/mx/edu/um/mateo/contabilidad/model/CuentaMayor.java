@@ -5,6 +5,7 @@
 package mx.edu.um.mateo.contabilidad.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.*;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -30,19 +31,33 @@ public class CuentaMayor implements Serializable {
     @NotBlank
     @Column(nullable = false, length = 24)
     private String nombreFiscal;
-//    private Boolean detalle;
-//    private Boolean aviso;
-//    private Boolean auxiliar;
-//    private Boolean iva;
-//    private Double pctIva;
+    @NotBlank
+    @Column(nullable = false, length = 50)
+    private String clave;
+    @Column(nullable = false)
+    private Boolean detalle;
+    @Column(nullable = false)
+    private Boolean aviso;
+    @Column(nullable = false)
+    private Boolean auxiliar;
+    @Column(nullable = false)
+    private Boolean iva;
+    @Column(nullable = false)
+    private Double pctIva;
 //    private Boolean detalleR;
 
     public CuentaMayor() {
     }
 
-    public CuentaMayor(String nombre, String nombreFiscal) {
+    public CuentaMayor(String nombre, String nombreFiscal, String clave, Boolean detalle, Boolean aviso, Boolean auxiliar, Boolean iva, Double pctIva) {
         this.nombre = nombre;
         this.nombreFiscal = nombreFiscal;
+        this.clave = clave;
+        this.detalle = detalle;
+        this.aviso = aviso;
+        this.auxiliar = auxiliar;
+        this.iva = iva;
+        this.pctIva = pctIva;
     }
 
     public Long getId() {
@@ -51,6 +66,14 @@ public class CuentaMayor implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     public String getNombre() {
@@ -69,12 +92,59 @@ public class CuentaMayor implements Serializable {
         this.nombreFiscal = nombreFiscal;
     }
 
-    public Integer getVersion() {
-        return version;
+    public String getClave() {
+        return clave;
     }
 
-    public void setVersion(Integer version) {
-        this.version = version;
+    public void setClave(String clave) {
+        this.clave = clave;
+    }
+
+    public Boolean getDetalle() {
+        return detalle;
+    }
+
+    public void setDetalle(Boolean detalle) {
+        this.detalle = detalle;
+    }
+
+    public Boolean getAviso() {
+        return aviso;
+    }
+
+    public void setAviso(Boolean aviso) {
+        this.aviso = aviso;
+    }
+
+    public Boolean getAuxiliar() {
+        return auxiliar;
+    }
+
+    public void setAuxiliar(Boolean auxiliar) {
+        this.auxiliar = auxiliar;
+    }
+
+    public Boolean getIva() {
+        return iva;
+    }
+
+    public void setIva(Boolean iva) {
+        this.iva = iva;
+    }
+
+    public Double getPctIva() {
+        return pctIva;
+    }
+
+    public void setPctIva(Double pctIva) {
+        this.pctIva = pctIva;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this.nombreFiscal);
+        return hash;
     }
 
     @Override
@@ -86,17 +156,14 @@ public class CuentaMayor implements Serializable {
             return false;
         }
         final CuentaMayor other = (CuentaMayor) obj;
+        if (!Objects.equals(this.nombreFiscal, other.nombreFiscal)) {
+            return false;
+        }
         return true;
     }
 
     @Override
-    public int hashCode() {
-        int hash = 5;
-        return hash;
-    }
-
-    @Override
     public String toString() {
-        return "CuentaMayor{nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + '}';
+        return "CuentaMayor{" + "nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + ", clave=" + clave + ", detalle=" + detalle + ", aviso=" + aviso + ", auxiliar=" + auxiliar + ", iva=" + iva + ", pctIva=" + pctIva + '}';
     }
 }

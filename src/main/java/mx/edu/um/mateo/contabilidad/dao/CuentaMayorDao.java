@@ -18,6 +18,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,8 +100,8 @@ public class CuentaMayorDao {
 
     public CuentaMayor obtiene(Long id) {
         log.debug("Obtiene cuenta de mayor con id = {}", id);
-        CuentaMayor ctaMayor = (CuentaMayor) currentSession().get(CuentaMayor.class, id);
-        return ctaMayor;
+        CuentaMayor cuentaMayor = (CuentaMayor) currentSession().get(CuentaMayor.class, id);
+        return cuentaMayor;
     }
 
     public CuentaMayor crea(CuentaMayor cuentaMayor) {
@@ -112,17 +113,24 @@ public class CuentaMayorDao {
 
     public CuentaMayor actualiza(CuentaMayor cuentaMayor) {
         log.debug("Actualizando cuenta de mayor {}", cuentaMayor);
-        currentSession().saveOrUpdate(cuentaMayor);
+        
+        //trae el objeto de la DB 
+        CuentaMayor nueva = (CuentaMayor)currentSession().get(CuentaMayor.class, cuentaMayor.getId());
+        //actualiza el objeto
+        BeanUtils.copyProperties(cuentaMayor, nueva);
+        //lo guarda en la BD
+        
+        currentSession().update(nueva);
         currentSession().flush();
-        return cuentaMayor;
+        return nueva;
     }
 
     public String elimina(Long id) throws UltimoException {
         log.debug("Eliminando cuenta de mayor con id {}", id);
-        CuentaMayor ctamayor = obtiene(id);
-        currentSession().delete(ctamayor);
+        CuentaMayor cuentaMayor = obtiene(id);
+        currentSession().delete(cuentaMayor);
         currentSession().flush();
-        String nombre = ctamayor.getNombre();
+        String nombre = cuentaMayor.getNombre();
         return nombre;
     }
 }
