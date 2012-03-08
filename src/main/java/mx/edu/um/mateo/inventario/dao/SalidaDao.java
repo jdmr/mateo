@@ -167,6 +167,7 @@ public class SalidaDao {
         switch (salida.getEstatus().getNombre()) {
             case Constantes.ABIERTA:
                 Session session = currentSession();
+                salida.setVersion(otraSalida.getVersion());
                 salida.setReporte(otraSalida.getReporte());
                 salida.setEmpleado(otraSalida.getEmpleado());
                 salida.setComentarios(otraSalida.getComentarios());

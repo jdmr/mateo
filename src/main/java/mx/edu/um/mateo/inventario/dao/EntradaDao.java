@@ -161,6 +161,7 @@ public class EntradaDao {
         switch (entrada.getEstatus().getNombre()) {
             case Constantes.ABIERTA:
                 Session session = currentSession();
+                entrada.setVersion(otraEntrada.getVersion());
                 entrada.setFactura(otraEntrada.getFactura());
                 entrada.setFechaFactura(otraEntrada.getFechaFactura());
                 entrada.setComentarios(otraEntrada.getComentarios());

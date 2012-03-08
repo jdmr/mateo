@@ -168,7 +168,7 @@ public class UsuarioDao {
 
     public Usuario actualiza(Usuario usuario, Long almacenId, String[] nombreDeRoles) {
         Usuario nuevoUsuario = (Usuario) currentSession().get(Usuario.class, usuario.getId());
-        
+        nuevoUsuario.setVersion(usuario.getVersion());
         nuevoUsuario.setUsername(usuario.getUsername());
         nuevoUsuario.setNombre(usuario.getNombre());
         nuevoUsuario.setApellido(usuario.getApellido());
