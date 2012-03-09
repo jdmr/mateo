@@ -89,6 +89,12 @@ public class XProducto implements Serializable {
     private String creador;
     @Column(nullable = false)
     private String actividad;
+    @Column(name = "entrada_id")
+    private Long entradaId;
+    @Column(name = "salida_id")
+    private Long salidaId;
+    @Column(name = "cancelacion_id")
+    private Long cancelacionId;
 
     public XProducto() {
     }
@@ -399,6 +405,48 @@ public class XProducto implements Serializable {
      */
     public void setActividad(String actividad) {
         this.actividad = actividad;
+    }
+
+    /**
+     * @return the entradaId
+     */
+    public Long getEntradaId() {
+        return entradaId;
+    }
+
+    /**
+     * @param entradaId the entradaId to set
+     */
+    public void setEntradaId(Long entradaId) {
+        this.entradaId = entradaId;
+    }
+
+    /**
+     * @return the salidaId
+     */
+    public Long getSalidaId() {
+        return salidaId;
+    }
+
+    /**
+     * @param salidaId the salidaId to set
+     */
+    public void setSalidaId(Long salidaId) {
+        this.salidaId = salidaId;
+    }
+
+    /**
+     * @return the cancelacionId
+     */
+    public Long getCancelacionId() {
+        return cancelacionId;
+    }
+
+    /**
+     * @param cancelacionId the cancelacionId to set
+     */
+    public void setCancelacionId(Long cancelacionId) {
+        this.cancelacionId = cancelacionId;
     }
 
     @Override
