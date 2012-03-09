@@ -168,8 +168,8 @@
                 <c:if test="${puedeEditar || puedeCerrar || puedePendiente || puedeEliminar || puedeEditarPendiente}">
                     <p class="well">
                         <c:if test="${puedeEditar}">
-                            <a href="<c:url value='/inventario/salida/edita/${salida.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
-                            <a href="<c:url value='/inventario/salida/lote/${salida.id}' />" class="btn btn-success btn-large"><i class="icon-shopping-cart icon-white"></i> <s:message code="lote.nuevo.button" /></a>
+                            <a href="<c:url value='/inventario/salida/edita/${salida.id}' />" class="btn btn-large"><i class="icon-edit"></i> <s:message code="editar.button" /></a>
+                            <a href="<c:url value='/inventario/salida/lote/${salida.id}' />" class="btn btn-primary btn-large"><i class="icon-shopping-cart icon-white"></i> <s:message code="lote.nuevo.button" /></a>
                         </c:if>
                         <c:if test="${puedeCerrar}">
                             <a href="<c:url value='/inventario/salida/cerrar/${salida.id}' />" class="btn btn-warning btn-large"><i class="icon-lock icon-white"></i> <s:message code="cerrar.button" /></a>

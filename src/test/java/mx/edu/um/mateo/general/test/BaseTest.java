@@ -34,8 +34,8 @@ import org.springframework.security.core.userdetails.UserDetails;
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
-public class BaseTest {
-    
+public abstract class BaseTest {
+
     public Authentication authenticate(UserDetails principal, String credentials, List<GrantedAuthority> authorities) {
         Authentication authentication = new TestingAuthenticationToken(principal, credentials, authorities);
         authentication.setAuthenticated(true);
