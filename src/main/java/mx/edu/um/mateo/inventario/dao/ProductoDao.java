@@ -182,6 +182,7 @@ public class ProductoDao {
     public Producto actualiza(Producto producto, Usuario usuario) {
         Session session = currentSession();
         Producto nuevo = (Producto) session.get(Producto.class, producto.getId());
+        nuevo.setVersion(producto.getVersion());
         nuevo.setCodigo(producto.getCodigo());
         nuevo.setDescripcion(producto.getDescripcion());
         nuevo.setFraccion(producto.getFraccion());

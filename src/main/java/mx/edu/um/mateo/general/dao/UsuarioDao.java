@@ -167,31 +167,28 @@ public class UsuarioDao {
     }
 
     public Usuario actualiza(Usuario usuario, Long almacenId, String[] nombreDeRoles) {
-        Usuario viejoUsuario = (Usuario) currentSession().get(Usuario.class, usuario.getId());
-        if (viejoUsuario.getVersion() == usuario.getVersion()) {
-            usuario.setAlmacen(viejoUsuario.getAlmacen());
-            usuario.setEmpresa(viejoUsuario.getEmpresa());
+        Usuario nuevoUsuario = (Usuario) currentSession().get(Usuario.class, usuario.getId());
+        nuevoUsuario.setVersion(usuario.getVersion());
+        nuevoUsuario.setUsername(usuario.getUsername());
+        nuevoUsuario.setNombre(usuario.getNombre());
+        nuevoUsuario.setApellido(usuario.getApellido());
 
-            usuario.getRoles().clear();
-            Query query = currentSession().createQuery("select r from Rol r where r.authority = :nombre");
-            for (String nombre : nombreDeRoles) {
-                query.setString("nombre", nombre);
-                Rol rol = (Rol) query.uniqueResult();
-                usuario.addRol(rol);
-            }
-            log.debug("Roles del usuario {}", usuario.getAuthorities());
-            try {
-                currentSession().update(usuario);
-                currentSession().flush();
-            } catch (NonUniqueObjectException e) {
-                log.warn("Ya hay un objeto previamente cargado, intentando hacer merge", e);
-                currentSession().merge(usuario);
-                currentSession().flush();
-            }
-            return usuario;
-        } else {
-            throw new RuntimeException("No se pude actualizar porque ya alguien lo actualizo antes");
+        nuevoUsuario.getRoles().clear();
+        Query query = currentSession().createQuery("select r from Rol r where r.authority = :nombre");
+        for (String nombre : nombreDeRoles) {
+            query.setString("nombre", nombre);
+            Rol rol = (Rol) query.uniqueResult();
+            nuevoUsuario.addRol(rol);
         }
+        try {
+            currentSession().update(nuevoUsuario);
+            currentSession().flush();
+        } catch (NonUniqueObjectException e) {
+            log.warn("Ya hay un objeto previamente cargado, intentando hacer merge", e);
+            currentSession().merge(nuevoUsuario);
+            currentSession().flush();
+        }
+        return nuevoUsuario;
     }
 
     public String elimina(Long id) throws UltimoException {

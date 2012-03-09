@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="entrada.nuevo.label" /></title>
+        <title><s:message code="entrada.nueva.label" /></title>
     </head>
     <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
@@ -20,8 +20,8 @@
             </ul>
         </nav>
 
-        <div id="nuevo-entrada" class="content scaffold-list" role="main">
-            <h1><s:message code="entrada.nuevo.label" /></h1>
+        <div id="nueva-entrada" class="content scaffold-list" role="main">
+            <h1><s:message code="entrada.nueva.label" /></h1>
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/inventario/entrada'/>"><i class="icon-list icon-white"></i> <s:message code='entrada.lista.label' /></a>
             </p>
@@ -148,7 +148,8 @@
                     </div>
                 </fieldset>
                 <p class="well" style="margin-top: 10px;">
-                    <input type="submit" name="_action_crea" class="btn btn-primary btn-large span2" value="<s:message code='crear.button'/>" id="crea" />
+                    <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
+                    <a class="btn btn-large" href="<s:url value='/inventario/entrada'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>
