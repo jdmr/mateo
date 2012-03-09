@@ -25,6 +25,7 @@ package mx.edu.um.mateo.inventario.dao;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -35,12 +36,10 @@ import mx.edu.um.mateo.inventario.utils.NoHayExistenciasSuficientes;
 import mx.edu.um.mateo.inventario.utils.NoSePuedeCerrarException;
 import mx.edu.um.mateo.inventario.utils.ProductoNoSoportaFraccionException;
 import org.hibernate.*;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,14 +95,13 @@ public class SalidaDao {
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
-            filtro = "%" + filtro + "%";
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("folio", filtro));
-            propiedades.add(Restrictions.ilike("reporte", filtro));
-            propiedades.add(Restrictions.ilike("empleado", filtro));
-            propiedades.add(Restrictions.ilike("departamento", filtro));
-            propiedades.add(Restrictions.ilike("atendio", filtro));
-            propiedades.add(Restrictions.ilike("comentarios", filtro));
+            propiedades.add(Restrictions.ilike("folio", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("reporte", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("empleado", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("departamento", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("atendio", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("comentarios", filtro, MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -205,6 +203,17 @@ public class SalidaDao {
                     lote.setPrecioUnitario(producto.getPrecioUnitario());
                     producto.setExistencia(producto.getExistencia().subtract(lote.getCantidad()));
                     currentSession().update(producto);
+                    XProducto xproducto = new XProducto();
+                    BeanUtils.copyProperties(producto, xproducto);
+                    xproducto.setId(null);
+                    xproducto.setSalidaId(salida.getId());
+                    xproducto.setProductoId(producto.getId());
+                    xproducto.setTipoProductoId(producto.getTipoProducto().getId());
+                    xproducto.setAlmacenId(producto.getAlmacen().getId());
+                    xproducto.setFechaCreacion(new Date());
+                    xproducto.setActividad(Constantes.ACTUALIZAR);
+                    xproducto.setCreador((usuario != null) ? usuario.getUsername() : "admin");
+                    currentSession().save(xproducto);
 
                     BigDecimal subtotal = lote.getPrecioUnitario().multiply(lote.getCantidad());
                     salida.setIva(salida.getIva().add(lote.getIva()));
