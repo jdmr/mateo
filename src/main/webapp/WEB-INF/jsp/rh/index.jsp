@@ -15,11 +15,9 @@
      <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
             <ul class="nav">
-                <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li class="active"><a href="<c:url value='/RH' />"><s:message code="rh.label" /></a></li>
+                <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>              
                 <li class="active"><a href="<c:url value='/rh' />"><s:message code="rh.label" /></a></li>
-                <li><a href="<s:url value='/rh/empleado'/>" ><s:message code="empleado.label" /></a></li>
-                <li><a href="<s:url value='/rh/cuentaMayor'/>" ><s:message code="cuentaMayor.label" /></a></li>
+                <li><a href="<s:url value='/rh/empleado'/>" ><s:message code="empleado.label" /></a></li>             
             </ul>
         </nav>
         <h1><s:message code="rh.label" /></h1>

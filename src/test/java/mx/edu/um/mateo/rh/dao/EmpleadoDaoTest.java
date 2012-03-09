@@ -4,11 +4,16 @@
  */
 package mx.edu.um.mateo.rh.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
+import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.rh.model.Empleado;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.junit.*;
 import static org.junit.Assert.*;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import mx.edu.um.mateo.general.model.Empresa;
 
 /**
  *
@@ -59,7 +60,7 @@ public class EmpleadoDaoTest {
 
         assertEquals(1, ((List<Empresa>) result.get("empleados")).size());
         assertEquals(1, ((Long) result.get("cantidad")).intValue());
-
+        
     }
 
     /**

@@ -69,10 +69,12 @@ public class Constantes {
      * Valores para el los containsKey para las clases
      */
     public static final String CONTAINSKEY_MAYORES = "mayores";
+     public static final String CONTAINSKEY_EMPLEADOS = "empleados";
     /**
      * Valores para el los addAttribute para las clases
      */
     public static final String ADDATTRIBUTE_MAYOR = "mayor";
+     public static final String ADDATTRIBUTE_EMPLEADO = "empleado";
     /**
      * Valores para el los path's para las clases
      */
@@ -84,4 +86,11 @@ public class Constantes {
     public static final String PATH_CUENTA_MAYOR_CREA = "/contabilidad/mayor/crea";
     public static final String PATH_CUENTA_MAYOR_ACTUALIZA = "/contabilidad/mayor/actualiza";
     public static final String PATH_CUENTA_MAYOR_ELIMINA = "/contabilidad/mayor/elimina";
+    public static final String PATH_EMPLEADO = "/rh/empleado";
+    public static final String PATH_EMPLEADO_LISTA = "rh/empleado/lista";
+    public static final String PATH_EMPLEADO_VER = "rh/empleado/ver";
+    public static final String PATH_EMPLEADO_NUEVA = "rh/empleado/nueva"; 
+    public static final String PATH_EMPLEADO_NUEVO = "rh/empleado/nuevo";
+    public static final String PATH_EMPLEADO_EDITA = "rh/empleado/edita";
+    
 }

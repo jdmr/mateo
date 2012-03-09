@@ -11,7 +11,7 @@
         <nav class="navbar navbar-fixed-top" role="navigation">
             <ul class="nav">
                 <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>
+                <li><a href="<c:url value='/rh' />"><s:message code="rh.label" /></a></li>
                 <li class="active"><a href="<s:url value='/admin/cliente'/>" ><s:message code="cliente.label" /></a></li>
                 <li><a href="<s:url value='/admin/tipoCliente'/>" ><s:message code="tipoCliente.label" /></a></li>
                 <li><a href="<s:url value='/admin/proveedor'/>" ><s:message code="proveedor.label" /></a></li>

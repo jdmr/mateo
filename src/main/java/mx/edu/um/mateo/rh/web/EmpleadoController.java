@@ -18,6 +18,7 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.rh.dao.EmpleadoDao;
@@ -51,7 +52,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 
 @Controller
-@RequestMapping("/rh/empleado")
+@RequestMapping(Constantes.PATH_EMPLEADO)
 public class EmpleadoController {
     
     private static final Logger log = LoggerFactory.getLogger(EmpleadoController.class);
@@ -78,25 +79,25 @@ public class EmpleadoController {
         log.debug("Mostrando lista de Empleados");
         Map<String, Object> params = new HashMap<>();
          if (StringUtils.isNotBlank(filtro)) {
-            params.put("filtro", filtro);
+            params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }
         if (pagina != null) {
-            params.put("pagina", pagina);
-            modelo.addAttribute("pagina", pagina);
+            params.put(Constantes.CONTAINSKEY_PAGINA, pagina);
+            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
         } else {
             pagina = 1L;
-            modelo.addAttribute("pagina", pagina);
+            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
         }
         if (StringUtils.isNotBlank(order)) {
-            params.put("order", order);
-            params.put("sort", sort);
+            params.put(Constantes.CONTAINSKEY_ORDER, order);
+            params.put(Constantes.CONTAINSKEY_SORT, sort);
         }
 
         if (StringUtils.isNotBlank(tipo)) {
-            params.put("reporte", true);
+            params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = empleadoDao.lista(params);
             try {
-                generaReporte(tipo, (List<Empleado>) params.get("empleados"), response);
+                generaReporte(tipo, (List<Empleado>) params.get(Constantes.CONTAINSKEY_EMPLEADOS), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -104,57 +105,57 @@ public class EmpleadoController {
         }
 
         if (StringUtils.isNotBlank(correo)) {
-            params.put("reporte", true);
+            params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = empleadoDao.lista(params);
 
-            params.remove("reporte");
+            params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<Empleado>) params.get("empleados"), request);
-                modelo.addAttribute("message", "lista.enviada.message");
-                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("empleado.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+                enviaCorreo(correo, (List<Empleado>) params.get(Constantes.CONTAINSKEY_EMPLEADOS), request);
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("empleado.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
         params = empleadoDao.lista(params);
-        modelo.addAttribute("empleados", params.get("empleados"));
+        modelo.addAttribute(Constantes.CONTAINSKEY_EMPLEADOS, params.get(Constantes.CONTAINSKEY_EMPLEADOS));
 
         // inicia paginado
-        Long cantidad = (Long) params.get("cantidad");
-        Integer max = (Integer) params.get("max");
+        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
+        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
         Long cantidadDePaginas = cantidad / max;
         List<Long> paginas = new ArrayList<>();
         long i = 1;
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<Empleado> empleados = (List<Empleado>) params.get("empleados");
+        List<Empleado> empleados = (List<Empleado>) params.get(Constantes.CONTAINSKEY_EMPLEADOS);
         Long primero = ((pagina - 1) * max) + 1;
         log.debug("primero", primero);
         log.debug("size", empleados.size());
         Long ultimo = primero + (empleados.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute("paginacion", paginacion);
-        modelo.addAttribute("paginas", paginas);
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
         // termina paginado
 
-        return "rh/empleado/lista";
+        return Constantes.PATH_EMPLEADO_LISTA;
     }
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando empleado {}", id);
         Empleado empleado = empleadoDao.obtiene(id);
 
-        modelo.addAttribute("empleado", empleado);
+        modelo.addAttribute(Constantes.PATH_EMPLEADO, empleado);
 
-        return "rh/empleado/ver";
+        return Constantes.PATH_EMPLEADO_VER;
     }
     @RequestMapping("/nueva")
     public String nueva(Model modelo) {
         log.debug("Nuevo empleado");
         Empleado empleado = new Empleado();
-        modelo.addAttribute("empleado", empleado);
-        return "rh/empleado/nueva";
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_EMPLEADO, empleado);
+        return Constantes.PATH_EMPLEADO_NUEVA;
     }
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
@@ -164,46 +165,46 @@ public class EmpleadoController {
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando "+bindingResult);
-            return "rh/empleado/nuevo";
+            return Constantes.PATH_EMPLEADO_NUEVO;
         }
 
         try {
             empleado = empleadoDao.crea(empleado);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al empleado", e);
-            return "rh/empleado/nuevo";
+            return Constantes.PATH_EMPLEADO_NUEVO;
         }
 
-        redirectAttributes.addFlashAttribute("message", "empleado.creado.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{empleado.getNombre()});
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "empleado.creado.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{empleado.getNombre()});
 
-        return "redirect:/rh/empleado/ver/" + empleado.getId();
+        return "redirect:" + Constantes.PATH_EMPLEADO_VER + "/" + empleado.getId();
     }
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Edita empleado {}", id);
         Empleado empleado = empleadoDao.obtiene(id);
-        modelo.addAttribute("empleado", empleado);
-        return "rh/empleado/edita";
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_EMPLEADO, empleado);
+        return Constantes.PATH_EMPLEADO_EDITA;
     }
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid Empleado empleado, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
-            return "rh/empleado/edita";
+            return Constantes.PATH_EMPLEADO_EDITA;
         }
         try {
             empleado = empleadoDao.actualiza(empleado);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al ctaMayor", e);
-            return "rh/empleado/nuevo";
+            return Constantes.PATH_EMPLEADO_NUEVO;
         }
 
-        redirectAttributes.addFlashAttribute("message", "empleado.actualizado.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{empleado.getNombre()});
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "empleado.actualizado.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{empleado.getNombre()});
 
-        return "redirect:/rh/empleado/ver/" + empleado.getId();
+        return "redirect:" + Constantes.PATH_EMPLEADO_VER + "/" + empleado.getId();
     }
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
@@ -212,15 +213,15 @@ public class EmpleadoController {
         try {
             String nombre = empleadoDao.elimina(id);
 
-            redirectAttributes.addFlashAttribute("message", "empleado.eliminado.message");
-            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "empleado.eliminado.message");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
         } catch (Exception e) {
             log.error("No se pudo eliminar el empleado " + id, e);
-            bindingResult.addError(new ObjectError("empleado", new String[]{"empleado.no.eliminado.message"}, null, null));
-            return "rh/empleado/ver";
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_EMPLEADO, new String[]{"empleado.no.eliminado.message"}, null, null));
+            return Constantes.PATH_EMPLEADO_VER;
         }
 
-        return "redirect:/rh/empleado";
+        return "redirect:" + Constantes.PATH_EMPLEADO;
     }
     private void generaReporte(String tipo, List<Empleado> empleados, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
