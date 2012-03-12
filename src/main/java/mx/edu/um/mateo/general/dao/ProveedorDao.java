@@ -27,15 +27,10 @@ import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.UltimoException;
-import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,13 +88,12 @@ public class ProveedorDao {
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
-            filtro = "%" + filtro + "%";
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("nombre", filtro));
-            propiedades.add(Restrictions.ilike("nombreCompleto", filtro));
-            propiedades.add(Restrictions.ilike("rfc", filtro));
-            propiedades.add(Restrictions.ilike("correo", filtro));
-            propiedades.add(Restrictions.ilike("contacto", filtro));
+            propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("nombreCompleto", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("rfc", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("correo", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("contacto", filtro, MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }

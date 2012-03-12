@@ -64,6 +64,12 @@ public class Empresa implements Serializable {
     private Organizacion organizacion;
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
     private List<Almacen> almacenes = new ArrayList<>();
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
+    private List<Proveedor> proveedores = new ArrayList<>();
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
+    private List<TipoCliente> tiposDeCliente = new ArrayList<>();
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
+    private List<Cliente> clientes = new ArrayList<>();
 
     public Empresa() {
     }
@@ -186,6 +192,48 @@ public class Empresa implements Serializable {
      */
     public void setAlmacenes(List<Almacen> almacenes) {
         this.almacenes = almacenes;
+    }
+
+    /**
+     * @return the proveedores
+     */
+    public List<Proveedor> getProveedores() {
+        return proveedores;
+    }
+
+    /**
+     * @param proveedores the proveedores to set
+     */
+    public void setProveedores(List<Proveedor> proveedores) {
+        this.proveedores = proveedores;
+    }
+
+    /**
+     * @return the tiposDeCliente
+     */
+    public List<TipoCliente> getTiposDeCliente() {
+        return tiposDeCliente;
+    }
+
+    /**
+     * @param tiposDeCliente the tiposDeCliente to set
+     */
+    public void setTiposDeCliente(List<TipoCliente> tiposDeCliente) {
+        this.tiposDeCliente = tiposDeCliente;
+    }
+
+    /**
+     * @return the clientes
+     */
+    public List<Cliente> getClientes() {
+        return clientes;
+    }
+
+    /**
+     * @param clientes the clientes to set
+     */
+    public void setClientes(List<Cliente> clientes) {
+        this.clientes = clientes;
     }
 
     @Override

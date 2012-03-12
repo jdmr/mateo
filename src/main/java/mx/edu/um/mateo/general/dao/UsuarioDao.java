@@ -30,10 +30,7 @@ import mx.edu.um.mateo.general.utils.SpringSecurityUtils;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.*;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,11 +90,10 @@ public class UsuarioDao {
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
-            filtro = "%" + filtro + "%";
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("username", filtro));
-            propiedades.add(Restrictions.ilike("nombre", filtro));
-            propiedades.add(Restrictions.ilike("apellido", filtro));
+            propiedades.add(Restrictions.ilike("username", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("apellido", filtro, MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -167,31 +163,28 @@ public class UsuarioDao {
     }
 
     public Usuario actualiza(Usuario usuario, Long almacenId, String[] nombreDeRoles) {
-        Usuario viejoUsuario = (Usuario) currentSession().get(Usuario.class, usuario.getId());
-        if (viejoUsuario.getVersion() == usuario.getVersion()) {
-            usuario.setAlmacen(viejoUsuario.getAlmacen());
-            usuario.setEmpresa(viejoUsuario.getEmpresa());
+        Usuario nuevoUsuario = (Usuario) currentSession().get(Usuario.class, usuario.getId());
+        nuevoUsuario.setVersion(usuario.getVersion());
+        nuevoUsuario.setUsername(usuario.getUsername());
+        nuevoUsuario.setNombre(usuario.getNombre());
+        nuevoUsuario.setApellido(usuario.getApellido());
 
-            usuario.getRoles().clear();
-            Query query = currentSession().createQuery("select r from Rol r where r.authority = :nombre");
-            for (String nombre : nombreDeRoles) {
-                query.setString("nombre", nombre);
-                Rol rol = (Rol) query.uniqueResult();
-                usuario.addRol(rol);
-            }
-            log.debug("Roles del usuario {}", usuario.getAuthorities());
-            try {
-                currentSession().update(usuario);
-                currentSession().flush();
-            } catch (NonUniqueObjectException e) {
-                log.warn("Ya hay un objeto previamente cargado, intentando hacer merge", e);
-                currentSession().merge(usuario);
-                currentSession().flush();
-            }
-            return usuario;
-        } else {
-            throw new RuntimeException("No se pude actualizar porque ya alguien lo actualizo antes");
+        nuevoUsuario.getRoles().clear();
+        Query query = currentSession().createQuery("select r from Rol r where r.authority = :nombre");
+        for (String nombre : nombreDeRoles) {
+            query.setString("nombre", nombre);
+            Rol rol = (Rol) query.uniqueResult();
+            nuevoUsuario.addRol(rol);
         }
+        try {
+            currentSession().update(nuevoUsuario);
+            currentSession().flush();
+        } catch (NonUniqueObjectException e) {
+            log.warn("Ya hay un objeto previamente cargado, intentando hacer merge", e);
+            currentSession().merge(nuevoUsuario);
+            currentSession().flush();
+        }
+        return nuevoUsuario;
     }
 
     public String elimina(Long id) throws UltimoException {

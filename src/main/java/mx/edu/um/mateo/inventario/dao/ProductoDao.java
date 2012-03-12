@@ -24,22 +24,23 @@
 package mx.edu.um.mateo.inventario.dao;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inventario.model.Producto;
 import mx.edu.um.mateo.inventario.model.TipoProducto;
+import mx.edu.um.mateo.inventario.model.XProducto;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,14 +92,13 @@ public class ProductoDao {
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
-            filtro = "%" + filtro + "%";
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("sku", filtro));
-            propiedades.add(Restrictions.ilike("nombre", filtro));
-            propiedades.add(Restrictions.ilike("descripcion", filtro));
-            propiedades.add(Restrictions.ilike("marca", filtro));
-            propiedades.add(Restrictions.ilike("modelo", filtro));
-            propiedades.add(Restrictions.ilike("ubicacion", filtro));
+            propiedades.add(Restrictions.ilike("sku", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("descripcion", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("marca", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("modelo", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("ubicacion", filtro, MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -123,10 +123,10 @@ public class ProductoDao {
 
         return params;
     }
-    
+
     public List<Producto> listaParaSalida(String filtro, Long almacenId) {
         Criteria criteria = currentSession().createCriteria(Producto.class);
-        criteria.createCriteria("almacen").add(Restrictions.idEq(almacenId));            
+        criteria.createCriteria("almacen").add(Restrictions.idEq(almacenId));
         filtro = "%" + filtro + "%";
         Disjunction propiedades = Restrictions.disjunction();
         propiedades.add(Restrictions.ilike("sku", filtro));
@@ -153,6 +153,16 @@ public class ProductoDao {
         }
         producto.setTipoProducto((TipoProducto) session.get(TipoProducto.class, producto.getTipoProducto().getId()));
         session.save(producto);
+        XProducto xproducto = new XProducto();
+        BeanUtils.copyProperties(producto, xproducto);
+        xproducto.setId(null);
+        xproducto.setProductoId(producto.getId());
+        xproducto.setTipoProductoId(producto.getTipoProducto().getId());
+        xproducto.setAlmacenId(producto.getAlmacen().getId());
+        xproducto.setFechaCreacion(new Date());
+        xproducto.setActividad(Constantes.CREAR);
+        xproducto.setCreador((usuario != null) ? usuario.getUsername() : "admin");
+        session.save(xproducto);
         session.flush();
         return producto;
     }
@@ -168,6 +178,7 @@ public class ProductoDao {
     public Producto actualiza(Producto producto, Usuario usuario) {
         Session session = currentSession();
         Producto nuevo = (Producto) session.get(Producto.class, producto.getId());
+        nuevo.setVersion(producto.getVersion());
         nuevo.setCodigo(producto.getCodigo());
         nuevo.setDescripcion(producto.getDescripcion());
         nuevo.setFraccion(producto.getFraccion());
@@ -185,6 +196,16 @@ public class ProductoDao {
             session.delete(imagen);
         }
         session.update(nuevo);
+        XProducto xproducto = new XProducto();
+        BeanUtils.copyProperties(nuevo, xproducto);
+        xproducto.setId(null);
+        xproducto.setProductoId(producto.getId());
+        xproducto.setTipoProductoId(producto.getTipoProducto().getId());
+        xproducto.setAlmacenId(producto.getAlmacen().getId());
+        xproducto.setFechaCreacion(new Date());
+        xproducto.setActividad(Constantes.ACTUALIZAR);
+        xproducto.setCreador((usuario != null) ? usuario.getUsername() : "admin");
+        session.save(xproducto);
         session.flush();
         return producto;
     }

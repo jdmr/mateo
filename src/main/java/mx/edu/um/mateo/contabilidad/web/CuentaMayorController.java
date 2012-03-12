@@ -72,7 +72,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping(Constantes.PATH_CUENTA_MAYOR)
 public class CuentaMayorController {
-
+    
     private static final Logger log = LoggerFactory.getLogger(CuentaMayorController.class);
     @Autowired
     private CuentaMayorDao cuentaMayorDao;
@@ -82,7 +82,7 @@ public class CuentaMayorController {
     private ResourceBundleMessageSource messageSource;
     @Autowired
     private Ambiente ambiente;
-
+    
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -110,7 +110,7 @@ public class CuentaMayorController {
             params.put(Constantes.CONTAINSKEY_ORDER, order);
             params.put(Constantes.CONTAINSKEY_SORT, sort);
         }
-
+        
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = cuentaMayorDao.lista(params);
@@ -123,11 +123,11 @@ public class CuentaMayorController {
                 //errors.reject("error.generar.reporte");
             }
         }
-
+        
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = cuentaMayorDao.lista(params);
-
+            
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
                 enviaCorreo(correo, (List<CuentaMayor>) params.get(Constantes.CONTAINSKEY_MAYORES), request);
@@ -159,17 +159,17 @@ public class CuentaMayorController {
 
         return Constantes.PATH_CUENTA_MAYOR_LISTA;
     }
-
+    
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando cuenta de mayor {}", id);
         CuentaMayor mayor = cuentaMayorDao.obtiene(id);
-
+        
         modelo.addAttribute(Constantes.ADDATTRIBUTE_MAYOR, mayor);
-
+        
         return Constantes.PATH_CUENTA_MAYOR_VER;
     }
-
+    
     @RequestMapping("/nueva")
     public String nueva(Model modelo) {
         log.debug("Nueva cuenta de mayor");
@@ -177,7 +177,7 @@ public class CuentaMayorController {
         modelo.addAttribute(Constantes.ADDATTRIBUTE_MAYOR, mayor);
         return Constantes.PATH_CUENTA_MAYOR_NUEVA;
     }
-
+    
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request, HttpServletResponse response, @Valid CuentaMayor mayor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
@@ -188,20 +188,20 @@ public class CuentaMayorController {
             log.debug("Hubo algun error en la forma, regresando");
             return Constantes.PATH_CUENTA_MAYOR_NUEVA;
         }
-
+        
         try {
             mayor = cuentaMayorDao.crea(mayor);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la cuenta de mayor", e);
             return Constantes.PATH_CUENTA_MAYOR_NUEVA;
         }
-
+        
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.creada.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{mayor.getNombre()});
-
+        
         return "redirect:" + Constantes.PATH_CUENTA_MAYOR_VER + "/" + mayor.getId();
     }
-
+    
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Editar cuenta de mayor {}", id);
@@ -209,7 +209,7 @@ public class CuentaMayorController {
         modelo.addAttribute(Constantes.ADDATTRIBUTE_MAYOR, mayor);
         return Constantes.PATH_CUENTA_MAYOR_EDITA;
     }
-
+    
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid CuentaMayor mayor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
@@ -223,20 +223,20 @@ public class CuentaMayorController {
             log.error("No se pudo crear la cuenta de mayor", e);
             return Constantes.PATH_CUENTA_MAYOR_NUEVA;
         }
-
+        
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.actualizada.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{mayor.getNombre()});
-
+        
         return "redirect:" + Constantes.PATH_CUENTA_MAYOR_VER + "/" + mayor.getId();
     }
-
+    
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute CuentaMayor mayor, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina cuenta de mayor");
         try {
             String nombre = cuentaMayorDao.elimina(id);
-
+            
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.eliminada.message");
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
         } catch (Exception e) {
@@ -244,10 +244,10 @@ public class CuentaMayorController {
             bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_MAYOR, new String[]{"cuentaMayor.no.eliminada.message"}, null, null));
             return Constantes.PATH_CUENTA_MAYOR_VER;
         }
-
+        
         return "redirect:" + Constantes.PATH_CUENTA_MAYOR;
     }
-
+    
     private void generaReporte(String tipo, List<CuentaMayor> mayores, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
@@ -274,9 +274,9 @@ public class CuentaMayorController {
                 bos.flush();
             }
         }
-
+        
     }
-
+    
     private void enviaCorreo(String tipo, List<CuentaMayor> mayores, HttpServletRequest request) throws JRException, MessagingException {
         log.debug("Enviando correo {}", tipo);
         byte[] archivo = null;
@@ -294,7 +294,7 @@ public class CuentaMayorController {
                 archivo = generaXls(mayores);
                 tipoContenido = "application/vnd.ms-excel";
         }
-
+        
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(ambiente.obtieneUsuario().getUsername());
@@ -304,17 +304,17 @@ public class CuentaMayorController {
         helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
         mailSender.send(message);
     }
-
+    
     private byte[] generaPdf(List mayores) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/mayores.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(mayores));
         byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
-
+        
         return archivo;
     }
-
+    
     private byte[] generaCsv(List mayores) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRCsvExporter exporter = new JRCsvExporter();
@@ -326,10 +326,10 @@ public class CuentaMayorController {
         exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
         exporter.exportReport();
         byte[] archivo = byteArrayOutputStream.toByteArray();
-
+        
         return archivo;
     }
-
+    
     private byte[] generaXls(List mayores) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRXlsExporter exporter = new JRXlsExporter();
@@ -347,7 +347,7 @@ public class CuentaMayorController {
         exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
         exporter.exportReport();
         byte[] archivo = byteArrayOutputStream.toByteArray();
-
+        
         return archivo;
     }
 }

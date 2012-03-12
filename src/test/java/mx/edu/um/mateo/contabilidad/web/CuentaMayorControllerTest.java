@@ -9,6 +9,8 @@ import mx.edu.um.mateo.contabilidad.dao.CuentaMayorDao;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -23,6 +25,7 @@ import static org.springframework.test.web.server.result.MockMvcResultMatchers.*
 import org.springframework.test.web.server.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -44,9 +47,6 @@ public class CuentaMayorControllerTest extends BaseTest {
     @Autowired
     private CuentaMayorDao cuentaMayorDao;
 
-    public CuentaMayorControllerTest() {
-    }
-
     @BeforeClass
     public static void setUpClass() throws Exception {
     }
@@ -67,6 +67,12 @@ public class CuentaMayorControllerTest extends BaseTest {
     @Test
     public void debieraMostrarListaDeCuentaMayor() throws Exception {
         log.debug("Debiera monstrar lista de cuentas de mayor");
+        
+        for (int i = 0; i < 20; i++) {
+            CuentaMayor cuentaMayor = new CuentaMayor("test" + i, "test", "test",false,false,false,false,0.0);
+            cuentaMayorDao.crea(cuentaMayor);
+            assertNotNull(cuentaMayor);
+        }
 
         this.mockMvc.perform(get(Constantes.PATH_CUENTA_MAYOR))
                 .andExpect(status().isOk())
@@ -80,8 +86,9 @@ public class CuentaMayorControllerTest extends BaseTest {
     @Test
     public void debieraMostrarCuentaMayor() throws Exception {
         log.debug("Debiera mostrar cuenta de mayor");
-        CuentaMayor cuentaMayor = new CuentaMayor("test1", "test");
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test",false,false,false,false,0.0);
         cuentaMayor = cuentaMayorDao.crea(cuentaMayor);
+        assertNotNull(cuentaMayor);
 
         this.mockMvc.perform(get(Constantes.PATH_CUENTA_MAYOR_VER +"/"+ cuentaMayor.getId()))
                 .andExpect(status().isOk())
@@ -95,8 +102,14 @@ public class CuentaMayorControllerTest extends BaseTest {
         log.debug("Debiera crear cuenta de mayor");
 
         this.mockMvc.perform(post(Constantes.PATH_CUENTA_MAYOR_CREA)
-                .param("nombre", "test2")
-                .param("nombreFiscal", "test"))
+                .param("nombre", "test")
+                .param("nombreFiscal", "test")
+                .param("clave","test")
+                .param("detalle", "false")
+                .param("aviso", "false")
+                .param("auxiliar", "false")
+                .param("iva", "false")
+                .param("pctIva", "0.0"))
                 .andExpect(status().isOk())
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
                 .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.creada.message"));
@@ -105,10 +118,21 @@ public class CuentaMayorControllerTest extends BaseTest {
     @Test
     public void debieraActualizarCuentaMayor() throws Exception {
         log.debug("Debiera actualizar cuenta de mayor");
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test",false,false,false,false,0.0);
+        cuentaMayor = cuentaMayorDao.crea(cuentaMayor);
+        assertNotNull(cuentaMayor);
 
         this.mockMvc.perform(post(Constantes.PATH_CUENTA_MAYOR_ACTUALIZA)
-                .param("nombre", "test3")
-                .param("nombreFiscal", "test"))
+                .param("id",cuentaMayor.getId().toString())
+                .param("version", cuentaMayor.getVersion().toString())
+                .param("nombre", "test1")
+                .param("nombreFiscal", cuentaMayor.getNombreFiscal())
+                .param("clave",cuentaMayor.getClave())
+                .param("detalle", cuentaMayor.getDetalle().toString())
+                .param("aviso", cuentaMayor.getAviso().toString())
+                .param("auxiliar", cuentaMayor.getAuxiliar().toString())
+                .param("iva", cuentaMayor.getIva().toString())
+                .param("pctIva", cuentaMayor.getPctIva().toString()))
                 .andExpect(status().isOk())
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
                 .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.actualizada.message"));
@@ -117,8 +141,9 @@ public class CuentaMayorControllerTest extends BaseTest {
     @Test
     public void debieraEliminarCtaMayor() throws Exception {
         log.debug("Debiera eliminar cuenta de mayor");
-        CuentaMayor cuentaMayor = new CuentaMayor("test", "test");
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test",false,false,false,false,0.0);
         cuentaMayorDao.crea(cuentaMayor);
+        assertNotNull(cuentaMayor);
 
         this.mockMvc.perform(post(Constantes.PATH_CUENTA_MAYOR_ELIMINA)
                 .param("id", cuentaMayor.getId().toString()))

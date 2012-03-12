@@ -25,6 +25,7 @@ package mx.edu.um.mateo.inventario.dao;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -32,12 +33,10 @@ import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inventario.model.*;
 import mx.edu.um.mateo.inventario.utils.*;
 import org.hibernate.*;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,11 +92,10 @@ public class EntradaDao {
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
-            filtro = "%" + filtro + "%";
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("folio", filtro));
-            propiedades.add(Restrictions.ilike("factura", filtro));
-            propiedades.add(Restrictions.ilike("comentarios", filtro));
+            propiedades.add(Restrictions.ilike("folio", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("factura", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("comentarios", filtro, MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -161,6 +159,7 @@ public class EntradaDao {
         switch (entrada.getEstatus().getNombre()) {
             case Constantes.ABIERTA:
                 Session session = currentSession();
+                entrada.setVersion(otraEntrada.getVersion());
                 entrada.setFactura(otraEntrada.getFactura());
                 entrada.setFechaFactura(otraEntrada.getFechaFactura());
                 entrada.setComentarios(otraEntrada.getComentarios());
@@ -185,7 +184,7 @@ public class EntradaDao {
                     entrada.setAlmacen(usuario.getAlmacen());
                 }
 
-                entrada = preparaParaCerrar(entrada);
+                entrada = preparaParaCerrar(entrada, usuario);
 
                 Query query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
                 query.setString("nombre", Constantes.PENDIENTE);
@@ -218,7 +217,7 @@ public class EntradaDao {
                     entrada.setAlmacen(usuario.getAlmacen());
                 }
 
-                entrada = preparaParaCerrar(entrada);
+                entrada = preparaParaCerrar(entrada, usuario);
                 Query query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
                 query.setString("nombre", Constantes.CERRADA);
                 Estatus estatus = (Estatus) query.uniqueResult();
@@ -368,7 +367,7 @@ public class EntradaDao {
         return balanceTotal.divide(articulos).setScale(2, RoundingMode.HALF_UP);
     }
 
-    private Entrada preparaParaCerrar(Entrada entrada) throws NoCuadraException, NoSePuedeCerrarEnCeroException {
+    private Entrada preparaParaCerrar(Entrada entrada, Usuario usuario) throws NoCuadraException, NoSePuedeCerrarEnCeroException {
         BigDecimal iva = entrada.getIva();
         BigDecimal total = entrada.getTotal();
         entrada.setIva(BigDecimal.ZERO);
@@ -381,6 +380,17 @@ public class EntradaDao {
             }
             producto.setExistencia(producto.getExistencia().add(lote.getCantidad()));
             currentSession().update(producto);
+            XProducto xproducto = new XProducto();
+            BeanUtils.copyProperties(producto, xproducto);
+            xproducto.setId(null);
+            xproducto.setEntradaId(entrada.getId());
+            xproducto.setProductoId(producto.getId());
+            xproducto.setTipoProductoId(producto.getTipoProducto().getId());
+            xproducto.setAlmacenId(producto.getAlmacen().getId());
+            xproducto.setFechaCreacion(new Date());
+            xproducto.setActividad(Constantes.ACTUALIZAR);
+            xproducto.setCreador((usuario != null) ? usuario.getUsername() : "admin");
+            currentSession().save(xproducto);
 
             BigDecimal subtotal = lote.getPrecioUnitario().multiply(lote.getCantidad());
             entrada.setIva(entrada.getIva().add(lote.getIva()));
