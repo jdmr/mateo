@@ -53,6 +53,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping(Constantes.PATH_EMPLEADO)
+@Transactional
 public class EmpleadoController {
     
     private static final Logger log = LoggerFactory.getLogger(EmpleadoController.class);

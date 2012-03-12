@@ -5,8 +5,6 @@
 package mx.edu.um.mateo.rh.model;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
 import javax.persistence.*;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -15,12 +13,14 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author develop
  */
 @Entity
-@Table(name = "empleado")
+@Table(name = "empleados")
 public class Empleado implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Version
+    private Integer version;
     @NotBlank
     @Column(nullable = false, length = 10)
     private String clave;
@@ -42,8 +42,7 @@ public class Empleado implements Serializable {
     @NotBlank
     @Column(nullable = false, length = 2)
     private String status;
-    @Version
-    private Integer version;
+   
 
     public Empleado() {
     }
@@ -154,10 +153,3 @@ public class Empleado implements Serializable {
         return "Empleado{ id= " + id + ", nombre=" + nombre + ", status=" + status + '}';
     }
 }
-//    private Set comunicaciones;
-//    private Set puestos;
-//    private Set dependientes;
-//    private Set perDeds;
-//    private Set regsPatronales;
-//    private Set vacaciones;
-//    private Set estudios;

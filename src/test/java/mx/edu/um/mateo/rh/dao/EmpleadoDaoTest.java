@@ -7,6 +7,7 @@ package mx.edu.um.mateo.rh.dao;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.rh.model.Empleado;
@@ -55,11 +56,11 @@ public class EmpleadoDaoTest {
 
         Map<String, Object> params = null;
         Map result = instance.lista(params);
-        assertNotNull(result.get("empleados"));
-        assertNotNull(result.get("cantidad"));
+        assertNotNull(result.get(Constantes.CONTAINSKEY_EMPLEADOS));
+        assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
 
-        assertEquals(1, ((List<Empresa>) result.get("empleados")).size());
-        assertEquals(1, ((Long) result.get("cantidad")).intValue());
+        assertEquals(1, ((List<Empresa>) result.get(Constantes.CONTAINSKEY_EMPLEADOS)).size());
+        assertEquals(1, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
         
     }
 
@@ -72,11 +73,11 @@ public class EmpleadoDaoTest {
         List<Empleado> lista = insertaEmpleados(1);
         Map<String, Object> params = null;
         Map result = instance.lista(params);
-        assertNotNull(result.get("empleados"));
-        assertNotNull(result.get("cantidad"));
+        assertNotNull(result.get(Constantes.CONTAINSKEY_EMPLEADOS));
+        assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
 
-        assertEquals(1, ((List<Empresa>) result.get("empleados")).size());
-        assertEquals(1, ((Long) result.get("cantidad")).intValue());
+        assertEquals(1, ((List<Empresa>) result.get(Constantes.CONTAINSKEY_EMPLEADOS)).size());
+        assertEquals(1, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
 
     /**

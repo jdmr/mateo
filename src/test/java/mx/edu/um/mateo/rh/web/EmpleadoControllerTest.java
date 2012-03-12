@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.rh.web;
 
+import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.rh.dao.EmpleadoDao;
@@ -20,6 +21,7 @@ import static org.springframework.test.web.server.request.MockMvcRequestBuilders
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 import org.springframework.test.web.server.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 
@@ -33,6 +35,7 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:security.xml",
     "classpath:dispatcher-servlet.xml"
     })
+    @Transactional
     public class EmpleadoControllerTest extends BaseTest {
     
     private static final Logger log = LoggerFactory.getLogger(EmpleadoControllerTest.class);
@@ -64,15 +67,15 @@ import org.springframework.web.context.WebApplicationContext;
     
     @Test
     public void debieraMostrarListaDeEmpleados() throws Exception {
-        log.debug("Debiera monstrar lista de empleados");
+        log.debug("Debiera mostrar lista de empleados");
         
-        this.mockMvc.perform(get("/rh/empleado")).
+        this.mockMvc.perform(get(Constantes.PATH_EMPLEADO)).
                 andExpect(status().isOk()).
-                andExpect(forwardedUrl("/WEB-INF/jsp/rh/empleado/lista.jsp")).
-                andExpect(model().attributeExists("empleados")).
-                andExpect(model().attributeExists("paginacion")).
-                andExpect(model().attributeExists("paginas")).
-                andExpect(model().attributeExists("pagina"));
+                andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_EMPLEADO_LISTA + ".jsp")).
+                andExpect(model().attributeExists(Constantes.CONTAINSKEY_EMPLEADOS)).
+                andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION)).
+                andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINAS)).
+                andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINA));
     }
     
     @Test
@@ -89,17 +92,18 @@ import org.springframework.web.context.WebApplicationContext;
         
         empleado = empleadoDao.crea(empleado);
 
-        this.mockMvc.perform(get("/rh/empleado/ver/" + empleado.getId())).
+        this.mockMvc.perform(get(Constantes.PATH_EMPLEADO_VER + "/"+ empleado.getId())).
                 andExpect(status().isOk()).
-                andExpect(forwardedUrl("/WEB-INF/jsp/rh/empleado/ver.jsp")).
-                andExpect(model().attributeExists("empleado"));
+                andExpect(forwardedUrl("/WEB-INF/jsp"+ Constantes.PATH_EMPLEADO_VER + ".jsp")).
+                andExpect(model()
+                .attributeExists(Constantes.PATH_EMPLEADO));
     }
     
     @Test
     public void debieraCrearEmpleado() throws Exception {
         log.debug("Debiera crear empleado");
                 
-        this.mockMvc.perform(post("/rh/empleado/crea")
+        this.mockMvc.perform(post(Constantes.PATH_EMPLEADO_CREA)
                 .param("clave", "test")
                 .param("nombre","test")
                 .param("apPaterno","test")
@@ -108,14 +112,14 @@ import org.springframework.web.context.WebApplicationContext;
                 .param("direccion","test")
                 .param("status","te"))
                 .andExpect(status().isOk())
-                .andExpect(flash().attributeExists("message"));
+                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE));
     }
     
     @Test
     public void debieraActualizarEmpleado() throws Exception {
         log.debug("Debiera actualizar empleado");
 
-        this.mockMvc.perform(post("/rh/empleado/actualiza")                
+        this.mockMvc.perform(post(Constantes.PATH_EMPLEADO_ACTUALIZA)                
                 .param("clave", "test1")
                 .param("nombre","test1")
                 .param("apPaterno","test1")
@@ -124,8 +128,8 @@ import org.springframework.web.context.WebApplicationContext;
                 .param("direccion","test1")
                 .param("status","t1"))                
                 .andExpect(status().isOk()).
-                andExpect(flash().attributeExists("message")).
-                andExpect(flash().attribute("message", "empleado.actualizado.message"));
+                andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE)).
+                andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "empleado.actualizado.message"));
     }
     
     @Test
@@ -141,10 +145,10 @@ import org.springframework.web.context.WebApplicationContext;
         empleado.setStatus("te");
         empleadoDao.crea(empleado);
 
-        this.mockMvc.perform(post("/rh/empleado/elimina").param("id", empleado.getId().toString())).
+        this.mockMvc.perform(post(Constantes.PATH_EMPLEADO_ELIMINA).param("id", empleado.getId().toString())).
                 andExpect(status().isOk()).
-                andExpect(flash().attributeExists("message")).
-                andExpect(flash().attribute("message", "empleado.eliminado.message"));
+                andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE)).
+                andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "empleado.eliminado.message"));
     }
     
 }
