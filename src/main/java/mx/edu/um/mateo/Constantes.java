@@ -69,10 +69,12 @@ public class Constantes {
      * Valores para el los containsKey para las clases
      */
     public static final String CONTAINSKEY_MAYORES = "mayores";
+    public static final String CONTAINSKEY_RESULTADOS = "resultados";
     /**
      * Valores para el los addAttribute para las clases
      */
     public static final String ADDATTRIBUTE_MAYOR = "mayor";
+    public static final String ADDATTRIBUTE_RESULTADO = "resultado";
     /**
      * Valores para el los path's para las clases
      */
@@ -84,4 +86,13 @@ public class Constantes {
     public static final String PATH_CUENTA_MAYOR_CREA = "/contabilidad/mayor/crea";
     public static final String PATH_CUENTA_MAYOR_ACTUALIZA = "/contabilidad/mayor/actualiza";
     public static final String PATH_CUENTA_MAYOR_ELIMINA = "/contabilidad/mayor/elimina";
+
+ public static final String PATH_CUENTA_RESULTADO = "/contabilidad/resultado";
+    public static final String PATH_CUENTA_RESULTADO_LISTA = "/contabilidad/resultado/lista";
+    public static final String PATH_CUENTA_RESULTADO_VER = "/contabilidad/resultado/ver";
+    public static final String PATH_CUENTA_RESULTADO_NUEVA = "/contabilidad/resultado/nueva";
+    public static final String PATH_CUENTA_RESULTADO_EDITA = "/contabilidad/resultado/edita";
+    public static final String PATH_CUENTA_RESULTADO_CREA = "/contabilidad/resultado/crea";
+    public static final String PATH_CUENTA_RESULTADO_ACTUALIZA = "/contabilidad/resultado/actualiza";
+    public static final String PATH_CUENTA_RESULTADO_ELIMINA = "/contabilidad/resultado/elimina";
 }

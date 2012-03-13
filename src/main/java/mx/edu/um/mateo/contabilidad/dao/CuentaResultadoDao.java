@@ -6,6 +6,7 @@ package mx.edu.um.mateo.contabilidad.dao;
 
 import java.util.HashMap;
 import java.util.Map;
+import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.model.CuentaResultado;
 import mx.edu.um.mateo.general.dao.EmpresaDao;
 import mx.edu.um.mateo.general.utils.UltimoException;
@@ -40,31 +41,31 @@ public class CuentaResultadoDao {
     }
 
     public Map<String, Object> lista(Map<String, Object> params) {
-        log.debug("Buscando lista de ctaResultado con params {}", params);
+        log.debug("Buscando lista de cuentaResultado con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
 
-        if (!params.containsKey("max")) {
-            params.put("max", 10);
+        if (!params.containsKey(Constantes.CONTAINSKEY_MAX)) {
+            params.put(Constantes.CONTAINSKEY_MAX, 10);
         } else {
-            params.put("max", Math.min((Integer) params.get("max"), 100));
+            params.put(Constantes.CONTAINSKEY_MAX, Math.min((Integer) params.get(Constantes.CONTAINSKEY_MAX), 100));
         }
 
-        if (params.containsKey("pagina")) {
-            Long pagina = (Long) params.get("pagina");
-            Long offset = (pagina - 1) * (Integer) params.get("max");
-            params.put("offset", offset.intValue());
+        if (params.containsKey(Constantes.CONTAINSKEY_PAGINA)) {
+            Long pagina = (Long) params.get(Constantes.CONTAINSKEY_PAGINA);
+            Long offset = (pagina - 1) * (Integer) params.get(Constantes.CONTAINSKEY_MAX);
+            params.put(Constantes.CONTAINSKEY_OFFSET, offset.intValue());
         }
 
-        if (!params.containsKey("offset")) {
-            params.put("offset", 0);
+        if (!params.containsKey(Constantes.CONTAINSKEY_OFFSET)) {
+            params.put(Constantes.CONTAINSKEY_OFFSET, 0);
         }
         Criteria criteria = currentSession().createCriteria(CuentaResultado.class);
         Criteria countCriteria = currentSession().createCriteria(CuentaResultado.class);
 
-        if (params.containsKey("filtro")) {
-            String filtro = (String) params.get("filtro");
+        if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
+            String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);
             Disjunction propiedades = Restrictions.disjunction();
             propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
             propiedades.add(Restrictions.ilike("nombreFiscal", filtro, MatchMode.ANYWHERE));
@@ -72,49 +73,49 @@ public class CuentaResultadoDao {
             countCriteria.add(propiedades);
         }
 
-        if (params.containsKey("order")) {
-            String campo = (String) params.get("order");
-            if (params.get("sort").equals("desc")) {
+        if (params.containsKey(Constantes.CONTAINSKEY_ORDER)) {
+            String campo = (String) params.get(Constantes.CONTAINSKEY_ORDER);
+            if (params.get(Constantes.CONTAINSKEY_SORT).equals(Constantes.CONTAINSKEY_DESC)) {
                 criteria.addOrder(Order.desc(campo));
             } else {
                 criteria.addOrder(Order.asc(campo));
             }
         }
-        if (!params.containsKey("reporte")) {
-            criteria.setFirstResult((Integer) params.get("offset"));
-            criteria.setMaxResults((Integer) params.get("max"));
+        if (!params.containsKey(Constantes.CONTAINSKEY_REPORTE)) {
+            criteria.setFirstResult((Integer) params.get(Constantes.CONTAINSKEY_OFFSET));
+            criteria.setMaxResults((Integer) params.get(Constantes.CONTAINSKEY_MAX));
         }
-        params.put("ctaResultados", criteria.list());
+        params.put(Constantes.CONTAINSKEY_RESULTADOS, criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
-        params.put("cantidad", (Long) countCriteria.list().get(0));
+        params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));
 
         return params;
     }
 
     public CuentaResultado obtiene(Long id) {
-        CuentaResultado ctaResultado = (CuentaResultado) currentSession().get(CuentaResultado.class, id);
-        return ctaResultado;
+        CuentaResultado cuentaResultado = (CuentaResultado) currentSession().get(CuentaResultado.class, id);
+        return cuentaResultado;
     }
 
-    public CuentaResultado crea(CuentaResultado ctaResultado) {
-        currentSession().save(ctaResultado);
+    public CuentaResultado crea(CuentaResultado cuentaResultado) {
+        currentSession().save(cuentaResultado);
         currentSession().flush();
-        return ctaResultado;
-//        ctaResultado = new CuentaResultado();
-//        currentSession().save(ctaResultado);
-//        return ctaResultado;
+        return cuentaResultado;
+//        cuentaResultado = new CuentaResultado();
+//        currentSession().save(cuentaResultado);
+//        return cuentaResultado;
     }
 
-    public CuentaResultado actualiza(CuentaResultado ctaResultado) {
-        currentSession().saveOrUpdate(ctaResultado);
-        return ctaResultado;
+    public CuentaResultado actualiza(CuentaResultado cuentaResultado) {
+        currentSession().saveOrUpdate(cuentaResultado);
+        return cuentaResultado;
     }
 
     public String elimina(Long id) throws UltimoException {
-        CuentaResultado ctaresultado = obtiene(id);
-        currentSession().delete(ctaresultado);
-        String nombre = ctaresultado.getNombre();
+        CuentaResultado cuentaresultado = obtiene(id);
+        currentSession().delete(cuentaresultado);
+        String nombre = cuentaresultado.getNombre();
         return nombre;
     }
 }

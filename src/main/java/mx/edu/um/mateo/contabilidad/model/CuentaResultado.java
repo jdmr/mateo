@@ -16,7 +16,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 
 @Entity
-@Table(name = "ctaresultado")
+@Table(name = "cuentaresultado")
 
 public class CuentaResultado implements Serializable{
     
