@@ -130,12 +130,12 @@ public class ProductoDao {
         criteria.createCriteria("almacen").add(Restrictions.idEq(almacenId));
         filtro = "%" + filtro + "%";
         Disjunction propiedades = Restrictions.disjunction();
-        propiedades.add(Restrictions.ilike("sku", filtro));
-        propiedades.add(Restrictions.ilike("nombre", filtro));
-        propiedades.add(Restrictions.ilike("descripcion", filtro));
-        propiedades.add(Restrictions.ilike("marca", filtro));
-        propiedades.add(Restrictions.ilike("modelo", filtro));
-        propiedades.add(Restrictions.ilike("ubicacion", filtro));
+        propiedades.add(Restrictions.ilike("sku", filtro, MatchMode.ANYWHERE));
+        propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
+        propiedades.add(Restrictions.ilike("descripcion", filtro, MatchMode.ANYWHERE));
+        propiedades.add(Restrictions.ilike("marca", filtro, MatchMode.ANYWHERE));
+        propiedades.add(Restrictions.ilike("modelo", filtro, MatchMode.ANYWHERE));
+        propiedades.add(Restrictions.ilike("ubicacion", filtro, MatchMode.ANYWHERE));
         criteria.add(propiedades);
 
         criteria.add(Restrictions.gt("existencia", BigDecimal.ZERO));
