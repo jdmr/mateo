@@ -141,6 +141,9 @@ public class EntradaDao {
         Estatus estatus = (Estatus) query.uniqueResult();
         entrada.setEstatus(estatus);
         entrada.setFolio(getFolioTemporal(entrada.getAlmacen()));
+        Date fecha = new Date();
+        entrada.setFechaCreacion(fecha);
+        entrada.setFechaModificacion(fecha);
         session.save(entrada);
         session.flush();
         return entrada;
@@ -168,6 +171,7 @@ public class EntradaDao {
                 entrada.setIva(otraEntrada.getIva());
                 entrada.setTotal(otraEntrada.getTotal());
                 entrada.setProveedor(otraEntrada.getProveedor());
+                entrada.setFechaModificacion(new Date());
                 session.update(entrada);
                 session.flush();
                 return entrada;
@@ -191,6 +195,7 @@ public class EntradaDao {
                 Estatus estatus = (Estatus) query.uniqueResult();
                 entrada.setEstatus(estatus);
                 entrada.setFolio(getFolio(entrada.getAlmacen()));
+                entrada.setFechaModificacion(new Date());
 
                 currentSession().update(entrada);
                 currentSession().flush();
@@ -223,6 +228,7 @@ public class EntradaDao {
                 Estatus estatus = (Estatus) query.uniqueResult();
                 entrada.setEstatus(estatus);
                 entrada.setFolio(getFolio(entrada.getAlmacen()));
+                entrada.setFechaModificacion(new Date());
 
                 currentSession().update(entrada);
                 currentSession().flush();
@@ -249,6 +255,7 @@ public class EntradaDao {
         query.setString("nombre", Constantes.CERRADA);
         Estatus estatus = (Estatus) query.uniqueResult();
         entrada.setEstatus(estatus);
+        entrada.setFechaModificacion(new Date());
 
         currentSession().update(entrada);
         currentSession().flush();
