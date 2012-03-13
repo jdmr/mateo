@@ -143,7 +143,7 @@ public class CuentaMayor implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 17 * hash + Objects.hashCode(this.nombreFiscal);
+        hash = 37 * hash + Objects.hashCode(this.clave);
         return hash;
     }
 
@@ -156,7 +156,7 @@ public class CuentaMayor implements Serializable {
             return false;
         }
         final CuentaMayor other = (CuentaMayor) obj;
-        if (!Objects.equals(this.nombreFiscal, other.nombreFiscal)) {
+        if (!Objects.equals(this.clave, other.clave)) {
             return false;
         }
         return true;

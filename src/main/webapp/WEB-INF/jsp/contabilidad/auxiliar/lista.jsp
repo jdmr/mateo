@@ -4,28 +4,28 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="cuentaMayor.lista.label" /></title>
+        <title><s:message code="cuentaAuxiliar.lista.label" /></title>
     </head>
     <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
             <ul class="nav">
                 <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
                 <li><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
-                <li class="active"><a href="<s:url value='/contabilidad/mayor'/>" ><s:message code="cuentaMayor.label" /></a></li>
+                <li class="active"><a href="<s:url value='/contabilidad/auxiliar'/>" ><s:message code="cuentaAuxiliar.label" /></a></li>
             </ul>
         </nav>
 
-        <h1><s:message code="cuentaMayor.lista.label" /></h1>
+        <h1><s:message code="cuentaAuxiliar.lista.label" /></h1>
         <hr/>
 
-        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/contabilidad/mayor' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/contabilidad/auxiliar' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/contabilidad/mayor/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='cuentaMayor.nueva.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/auxiliar/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='cuentaAuxiliar.nueva.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
@@ -35,8 +35,8 @@
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
-            <c:if test="${mayor != null}">
-                <s:bind path="mayor.*">
+            <c:if test="${auxiliar != null}">
+                <s:bind path="auxiliar.*">
                     <c:if test="${not empty status.errorMessages}">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -90,84 +90,19 @@
                                 </c:choose>
                             </a>
                         </th>
-                        <th>
-                            <a href="javascript:ordena('detalle');">
-                                <s:message code="detalle.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'detalle' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'detalle' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="javascript:ordena('aviso');">
-                                <s:message code="aviso.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'aviso' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'aviso' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="javascript:ordena('auxiliar');">
-                                <s:message code="auxiliar.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'auxiliar' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'auxiliar' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
                     </tr>
-                    <th>
-                            <a href="javascript:ordena('iva');">
-                                <s:message code="iva.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'iva' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'iva' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="javascript:ordena('ptcIva');">
-                                <s:message code="ptcIva.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'ptcIva' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'ptcIva' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
                 </thead>
                 <tbody>
-                    <c:forEach items="${mayores}" var="mayor" varStatus="status">
+                    <c:forEach items="${auxiliares}" var="auxiliar" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/contabilidad/mayor/ver/${mayor.id}' />">${mayor.nombre}</a></td>
-                            <td>${mayor.nombreFiscal}</td>
-                            <td>${mayor.clave}</td>
-                            <td>${mayor.detalle}</td>
-                            <td>${mayor.aviso}</td>
-                            <td>${mayor.auxiliar}</td>
-                            <td>${mayor.iva}</td>
-                            <td>${mayor.pctIva}</td>
+                            <td><a href="<c:url value='/contabilidad/auxiliar/ver/${auxiliar.id}' />">${auxiliar.nombre}</a></td>
+                            <td>${auxiliar.nombreFiscal}</td>
+                            <td>${auxiliar.clave}</td>
+                            <td>${auxiliar.detalle}</td>
+                            <td>${auxiliar.aviso}</td>
+                            <td>${auxiliar.auxiliar}</td>
+                            <td>${auxiliar.iva}</td>
+                            <td>${auxiliar.pctIva}</td>
                         </tr>
                     </c:forEach>
                 </tbody>
