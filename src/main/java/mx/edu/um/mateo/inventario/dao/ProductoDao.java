@@ -35,6 +35,7 @@ import mx.edu.um.mateo.inventario.model.Producto;
 import mx.edu.um.mateo.inventario.model.TipoProducto;
 import mx.edu.um.mateo.inventario.model.XProducto;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.*;
@@ -216,5 +217,48 @@ public class ProductoDao {
         currentSession().delete(producto);
         currentSession().flush();
         return nombre;
+    }
+
+    public Map<String, Object> historial(Long id, Map<String, Object> params) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select new map(");
+        sb.append("p.actividad as actividad, p.creador as creador ");
+        sb.append(", p.precioUnitario as precioUnitario, p.ultimoPrecio as ultimoPrecio ");
+        sb.append(", p.existencia as existencia ");
+        sb.append(", p.fechaCreacion as fecha ");
+        sb.append(", p.entradaId as entradaId ");
+        sb.append(", p.salidaId as salidaId ");
+        sb.append(", p.cancelacionId as cancelacionId ");
+        sb.append(", (select e.folio from Entrada e where e.id = p.entradaId) as folioEntrada ");
+        sb.append(", (select s.folio from Salida s where s.id = p.salidaId) as folioSalida ");
+        sb.append(", (select c.folio from Cancelacion c where c.id = p.salidaId) as folioCancelacion ");
+        sb.append(") from XProducto p where p.productoId = :productoId order by p.id desc");
+        Query query = currentSession().createQuery(sb.toString());
+        query.setLong("productoId", id);
+        if (params.containsKey("max")) {
+            Integer max = (Integer) params.get("max");
+            query.setMaxResults(max);
+            params.put("max", max);
+        } else {
+            query.setMaxResults(10);
+            params.put("max", 10);
+        }
+        if (params.containsKey("offset")) {
+            Integer offset = (Integer) params.get("offset");
+            query.setFirstResult(offset);
+            params.put("offset", offset);
+        } else {
+            query.setFirstResult(0);
+            params.put("offset", 0);
+        }
+        params.put("historial", query.list());
+        
+        sb = new StringBuilder();
+        sb.append("select count(*) as cantidad from XProducto p where p.productoId = :productoId");
+        query = currentSession().createQuery(sb.toString());
+        query.setLong("productoId", id);
+        params.put("cantidad", query.uniqueResult());
+        
+        return params;
     }
 }
