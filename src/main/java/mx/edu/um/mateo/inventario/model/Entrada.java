@@ -59,7 +59,7 @@ public class Entrada implements Serializable {
     private String factura;
     @NotNull
     @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @Temporal(TemporalType.DATE)
     @Column(name = "fecha_factura")
     private Date fechaFactura;
     @Column(length = 128)
@@ -79,6 +79,12 @@ public class Entrada implements Serializable {
     private Almacen almacen;
     @OneToMany(mappedBy = "entrada", cascade = CascadeType.REMOVE)
     private List<LoteEntrada> lotes = new ArrayList<>();
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, name = "date_created")
+    private Date fechaCreacion;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, name = "last_updated")
+    private Date fechaModificacion;
 
     public Entrada() {
     }
@@ -90,6 +96,9 @@ public class Entrada implements Serializable {
         this.estatus = estatus;
         this.proveedor = proveedor;
         this.almacen = almacen;
+        Date fecha = new Date();
+        this.fechaCreacion = fecha;
+        this.fechaModificacion = fecha;
     }
 
     /**
@@ -291,6 +300,34 @@ public class Entrada implements Serializable {
     public BigDecimal getSubtotal() {
         BigDecimal subtotal = total.subtract(iva).setScale(2, RoundingMode.HALF_UP);
         return subtotal;
+    }
+
+    /**
+     * @return the fechaCreacion
+     */
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    /**
+     * @param fechaCreacion the fechaCreacion to set
+     */
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    /**
+     * @return the fechaModificacion
+     */
+    public Date getFechaModificacion() {
+        return fechaModificacion;
+    }
+
+    /**
+     * @param fechaModificacion the fechaModificacion to set
+     */
+    public void setFechaModificacion(Date fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
     }
 
     @Override

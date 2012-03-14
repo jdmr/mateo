@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.logging.Level;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
@@ -180,6 +181,10 @@ public class SalidaController {
                 break;
             case Constantes.PENDIENTE:
                 modelo.addAttribute("puedeEditarPendiente", true);
+                modelo.addAttribute("puedeCancelar", true);
+                break;
+            case Constantes.CERRADA:
+                modelo.addAttribute("puedeCancelar", true);
                 break;
         }
 
@@ -253,7 +258,7 @@ public class SalidaController {
             }
             Cliente cliente = clienteDao.obtiene(new Long(request.getParameter("cliente.id")));
             salida.setCliente(cliente);
-            salida.setAtendio(usuario.getApellido()+", "+usuario.getNombre());
+            salida.setAtendio(usuario.getApellido() + ", " + usuario.getNombre());
             salida = salidaDao.crea(salida, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la salida", e);
@@ -294,7 +299,7 @@ public class SalidaController {
             }
             Cliente cliente = clienteDao.obtiene(new Long(request.getParameter("cliente.id")));
             salida.setCliente(cliente);
-            salida.setAtendio(usuario.getApellido()+", "+usuario.getNombre());
+            salida.setAtendio(usuario.getApellido() + ", " + usuario.getNombre());
             salida = salidaDao.actualiza(salida, usuario);
         } catch (NoEstaAbiertaException e) {
             log.error("No se pudo actualizar la salida", e);
@@ -363,6 +368,28 @@ public class SalidaController {
         return "redirect:/inventario/salida/ver/" + id;
     }
 
+    @RequestMapping("/cancela/{id}")
+    public String cancela(@PathVariable Long id, Model modelo, RedirectAttributes redirectAttributes) {
+        try {
+            log.debug("Cancela salida {}", id);
+            Map<String, Object> resultado = salidaDao.preCancelacion(id, ambiente.obtieneUsuario());
+            modelo.addAttribute("salida", resultado.get("salida"));
+            modelo.addAttribute("productos", resultado.get("productos"));
+            modelo.addAttribute("entradas", resultado.get("entradas"));
+            modelo.addAttribute("salidas", resultado.get("salidas"));
+            modelo.addAttribute("productosCancelados", resultado.get("productosCancelados"));
+            modelo.addAttribute("productosSinHistoria", resultado.get("productosSinHistoria"));
+
+            return "inventario/salida/cancela";
+        } catch (NoEstaCerradaException e) {
+            log.error("No se puede cancela la salida", e);
+            redirectAttributes.addFlashAttribute("message", "salida.no.cerrada.para.cancelar.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{e.getSalida().getFolio()});
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+            return "redrect:/inventario/salida/ver/" + id;
+        }
+    }
+
     @RequestMapping(value = "/clientes", params = "term", produces = "application/json")
     public @ResponseBody
     List<LabelValueBean> clientes(HttpServletRequest request, @RequestParam("term") String filtro) {
@@ -393,7 +420,7 @@ public class SalidaController {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
-        List<Producto> productos = productoDao.listaParaSalida(filtro, (Long)request.getSession().getAttribute("almacenId"));
+        List<Producto> productos = productoDao.listaParaSalida(filtro, (Long) request.getSession().getAttribute("almacenId"));
         List<LabelValueBean> valores = new ArrayList<>();
         for (Producto producto : productos) {
             StringBuilder sb = new StringBuilder();

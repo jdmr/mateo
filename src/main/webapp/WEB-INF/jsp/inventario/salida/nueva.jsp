@@ -118,13 +118,11 @@
                             source: "<c:url value='/inventario/salida/clientes' />",
                             select: function(event, ui) {
                                 $("input#clienteId").val(ui.item.id);
-                                $("input#factura").focus();
+                                $("input#reporte").focus();
                                 return false;
                             }
                         })
                         .focus();
-                    $("input#fechaFactura").datepicker($.datepicker.regional['es']);
-                    $("input#fechaFactura").datepicker("option","firstDay",0);
                 });
             </script>                    
         </content>
