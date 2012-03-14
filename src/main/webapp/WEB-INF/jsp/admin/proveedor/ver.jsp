@@ -8,18 +8,9 @@
         <title><s:message code="proveedor.ver.label" /></title>
     </head>
     <body>
-        <nav class="navbar navbar-fixed-top" role="navigation">
-            <ul class="nav">
-                <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>
-                <li><a href="<s:url value='/admin/cliente'/>" ><s:message code="cliente.label" /></a></li>
-                <li><a href="<s:url value='/admin/tipoCliente'/>" ><s:message code="tipoCliente.label" /></a></li>
-                <li class="active"><a href="<s:url value='/admin/proveedor'/>" ><s:message code="proveedor.label" /></a></li>
-                <li><a href="<s:url value='/admin/empresa'/>" ><s:message code="empresa.label" /></a></li>
-                <li><a href="<s:url value='/admin/organizacion'/>" ><s:message code="organizacion.label" /></a></li>
-                <li><a href="<s:url value='/admin/usuario'/>" ><s:message code="usuario.label" /></a></li>
-            </ul>
-        </nav>
+        <jsp:include page="../menu.jsp" >
+            <jsp:param name="menu" value="proveedor" />
+        </jsp:include>
 
         <div id="ver-proveedor" class="content scaffold-list" role="main">
             <h1><s:message code="proveedor.ver.label" /></h1>
