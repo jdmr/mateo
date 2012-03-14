@@ -64,9 +64,6 @@ public class Cancelacion implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "date_created")
     private Date fechaCreacion;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, name = "last_updated")
-    private Date fechaModificacion;
 
     public Cancelacion() {
     }
@@ -239,20 +236,6 @@ public class Cancelacion implements Serializable {
      */
     public void setFechaCreacion(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
-    }
-
-    /**
-     * @return the fechaModificacion
-     */
-    public Date getFechaModificacion() {
-        return fechaModificacion;
-    }
-
-    /**
-     * @param fechaModificacion the fechaModificacion to set
-     */
-    public void setFechaModificacion(Date fechaModificacion) {
-        this.fechaModificacion = fechaModificacion;
     }
 
     @Override

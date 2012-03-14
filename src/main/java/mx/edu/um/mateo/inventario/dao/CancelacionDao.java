@@ -24,14 +24,14 @@
 package mx.edu.um.mateo.inventario.dao;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.inventario.model.Cancelacion;
 import mx.edu.um.mateo.inventario.model.Folio;
-import org.hibernate.LockOptions;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.*;
+import org.hibernate.criterion.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +58,71 @@ public class CancelacionDao {
         log.info("Nueva instance de CancelacionDao");
     }
 
+    public Map<String, Object> lista(Map<String, Object> params) {
+        log.debug("Buscando lista de cancelaciones con params {}", params);
+        if (params == null) {
+            params = new HashMap<>();
+        }
+
+        if (!params.containsKey("max")) {
+            params.put("max", 10);
+        } else {
+            params.put("max", Math.min((Integer) params.get("max"), 100));
+        }
+
+        if (params.containsKey("pagina")) {
+            Long pagina = (Long) params.get("pagina");
+            Long offset = (pagina - 1) * (Integer) params.get("max");
+            params.put("offset", offset.intValue());
+        }
+
+        if (!params.containsKey("offset")) {
+            params.put("offset", 0);
+        }
+        Criteria criteria = currentSession().createCriteria(Cancelacion.class);
+        Criteria countCriteria = currentSession().createCriteria(Cancelacion.class);
+
+        if (params.containsKey("almacen")) {
+            criteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
+            countCriteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
+        }
+
+        if (params.containsKey("filtro")) {
+            String filtro = (String) params.get("filtro");
+            Disjunction propiedades = Restrictions.disjunction();
+            propiedades.add(Restrictions.ilike("folio", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("comentarios", filtro, MatchMode.ANYWHERE));
+            criteria.add(propiedades);
+            countCriteria.add(propiedades);
+        }
+
+        if (params.containsKey("order")) {
+            String campo = (String) params.get("order");
+            if (params.get("sort").equals("desc")) {
+                criteria.addOrder(Order.desc(campo));
+            } else {
+                criteria.addOrder(Order.asc(campo));
+            }
+        } else {
+            criteria.addOrder(Order.desc("fechaCreacion"));
+        }
+
+        if (!params.containsKey("reporte")) {
+            criteria.setFirstResult((Integer) params.get("offset"));
+            criteria.setMaxResults((Integer) params.get("max"));
+        }
+        params.put("cancelaciones", criteria.list());
+
+        countCriteria.setProjection(Projections.rowCount());
+        params.put("cantidad", (Long) countCriteria.list().get(0));
+
+        return params;
+    }
+
+    public Cancelacion obtiene(Long id) {
+        return (Cancelacion) currentSession().get(Cancelacion.class, id);
+    }
+
     public Cancelacion crea(Cancelacion cancelacion) {
         return this.crea(cancelacion, null);
     }
@@ -66,11 +131,10 @@ public class CancelacionDao {
         Date fecha = new Date();
         cancelacion.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
         cancelacion.setFechaCreacion(fecha);
-        cancelacion.setFechaModificacion(fecha);
         currentSession().save(cancelacion);
         return cancelacion;
     }
-    
+
     public String getFolio(Almacen almacen) {
         Query query = currentSession().createQuery("select f from Folio f where f.nombre = :nombre and f.almacen.id = :almacenId");
         query.setString("nombre", "CANCELACION");
@@ -97,6 +161,4 @@ public class CancelacionDao {
         sb.append(nf.format(folio.getValor()));
         return sb.toString();
     }
-
-    
 }

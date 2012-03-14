@@ -549,7 +549,7 @@ public class SalidaDao {
             if (salidas != null && salidas.size() > 0) {
                 cancelacion.setSalidas(salidas);
             }
-            cancelacion = cancelacionDao.crea(cancelacion);
+            cancelacion = cancelacionDao.crea(cancelacion, usuario);
             currentSession().flush();
             for (Producto producto : productos) {
                 auditaProducto(producto, usuario, Constantes.CANCELAR, null, cancelacion.getId(), fecha);

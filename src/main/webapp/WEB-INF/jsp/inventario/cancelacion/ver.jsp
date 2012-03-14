@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="cancelacion.label" /></title>
+        <title><s:message code="cancelacion.ver.label" arguments="${cancelacion.folio}" /></title>
     </head>
     <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
@@ -21,7 +21,7 @@
             </ul>
         </nav>
 
-        <h1><s:message code="cancelacion.label" /></h1>
+        <h1><s:message code="cancelacion.ver.label" arguments="${cancelacion.folio}" /></h1>
         <hr/>
 
         <c:if test="${not empty message}">
@@ -31,7 +31,23 @@
             </div>
         </c:if>
         
-        <c:if test="${cancelacion.productos != null}">
+        <div class="row-fluid">
+            <div class="span4">
+                <h4><s:message code="comentarios.label" /></h4>
+                <h3>${cancelacion.comentarios}</h3>
+            </div>
+            <div class="span4">
+                <h4><s:message code="creador.label" /></h4>
+                <h3>${cancelacion.creador}</h3>
+            </div>
+            <div class="span4">
+                <h4><s:message code="fechaCreacion.label" /></h4>
+                <h3>${cancelacion.fechaCreacion}</h3>
+            </div>
+        </div>
+        <hr/>
+        
+        <c:if test="${not empty cancelacion.productos}">
             <h2><s:message code="producto.lista.label" /></h2>
             <table id="productos" class="table table-striped">
                 <thead>
@@ -63,7 +79,7 @@
             </table>
         </c:if>
                         
-        <c:if test="${cancelacion.entradas != null}">
+        <c:if test="${not empty cancelacion.entradas}">
             <h2><s:message code="entrada.lista.label" /></h2>
             <table id="productos" class="table table-striped">
                 <thead>
@@ -93,7 +109,7 @@
             </table>
         </c:if>
             
-        <c:if test="${cancelacion.salidas != null}">
+        <c:if test="${not empty cancelacion.salidas}">
             <h2><s:message code="salida.lista.label" /></h2>
             <table id="productos" class="table table-striped">
                 <thead>
