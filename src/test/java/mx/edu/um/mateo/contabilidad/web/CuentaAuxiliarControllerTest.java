@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.contabilidad.web;
 
+import java.math.BigDecimal;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.dao.CuentaAuxiliarDao;
 import mx.edu.um.mateo.contabilidad.model.CuentaAuxiliar;
@@ -67,7 +68,7 @@ public class CuentaAuxiliarControllerTest extends BaseTest {
         log.debug("Debiera monstrar lista de cuentas de auxiliar");
         
         for (int i = 0; i < 20; i++) {
-            CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test" + i, "test", "test",false,false,false,false,0.0);
+            CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test" + i, "test", "test",false,false,false,false,BigDecimal.ZERO);
             cuentaAuxiliarDao.crea(cuentaAuxiliar);
             assertNotNull(cuentaAuxiliar);
         }
@@ -84,7 +85,7 @@ public class CuentaAuxiliarControllerTest extends BaseTest {
     @Test
     public void debieraMostrarCuentaAuxiliar() throws Exception {
         log.debug("Debiera mostrar cuenta de auxiliar");
-        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,0.0);
+        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,BigDecimal.ZERO);
         cuentaAuxiliar = cuentaAuxiliarDao.crea(cuentaAuxiliar);
         assertNotNull(cuentaAuxiliar);
 
@@ -116,7 +117,7 @@ public class CuentaAuxiliarControllerTest extends BaseTest {
     @Test
     public void debieraActualizarCuentaAuxiliar() throws Exception {
         log.debug("Debiera actualizar cuenta de auxiliar");
-        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,0.0);
+        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,BigDecimal.ZERO);
         cuentaAuxiliar = cuentaAuxiliarDao.crea(cuentaAuxiliar);
         assertNotNull(cuentaAuxiliar);
 
@@ -130,7 +131,7 @@ public class CuentaAuxiliarControllerTest extends BaseTest {
                 .param("aviso", cuentaAuxiliar.getAviso().toString())
                 .param("auxiliar", cuentaAuxiliar.getAuxiliar().toString())
                 .param("iva", cuentaAuxiliar.getIva().toString())
-                .param("pctIva", cuentaAuxiliar.getPctIva().toString()))
+                .param("pctIva", cuentaAuxiliar.getPorcentajeIva().toString()))
                 .andExpect(status().isOk())
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
                 .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaAuxiliar.actualizada.message"));
@@ -139,7 +140,7 @@ public class CuentaAuxiliarControllerTest extends BaseTest {
     @Test
     public void debieraEliminarCtaAuxiliar() throws Exception {
         log.debug("Debiera eliminar cuenta de auxiliar");
-        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,0.0);
+        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,BigDecimal.ZERO);
         cuentaAuxiliarDao.crea(cuentaAuxiliar);
         assertNotNull(cuentaAuxiliar);
 

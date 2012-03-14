@@ -143,13 +143,13 @@
                             </a>
                         </th>
                         <th>
-                            <a href="javascript:ordena('pctIva');">
-                                <s:message code="pctIva.label" />
+                            <a href="javascript:ordena('porcentajeIva');">
+                                <s:message code="porcentajeIva.label" />
                                 <c:choose>
-                                    <c:when test="${param.order == 'pctIva' && param.sort == 'asc'}">
+                                    <c:when test="${param.order == 'porcentajeIva' && param.sort == 'asc'}">
                                         <i class="icon-chevron-up"></i>
                                     </c:when>
-                                    <c:when test="${param.order == 'pctIva' && param.sort == 'desc'}">
+                                    <c:when test="${param.order == 'porcentajeIva' && param.sort == 'desc'}">
                                         <i class="icon-chevron-down"></i>
                                     </c:when>
                                 </c:choose>
@@ -167,7 +167,7 @@
                             <td><input type="checkbox" value="" disabled="true" <c:if test="${mayor.aviso}">checked="checked"</c:if> /></td>
                             <td><input type="checkbox" value="" disabled="true" <c:if test="${mayor.auxiliar}">checked="checked"</c:if> /></td>
                             <td ><input type="checkbox" value="" disabled="true" <c:if test="${mayor.iva}">checked="checked"</c:if> /></td>
-                            <td>${mayor.pctIva}</td>
+                            <td>${mayor.porcentajeIva}</td>
                         </tr>
                     </c:forEach>
                 </tbody>

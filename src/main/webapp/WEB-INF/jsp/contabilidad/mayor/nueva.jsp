@@ -108,14 +108,14 @@
                             <form:errors path="iva" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="mayor.pctIva">
+                    <s:bind path="mayor.porcentajeIva">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="pctIva">
-                                <s:message code="pctIva.label" />
+                            <label for="porcentajeIva">
+                                <s:message code="porcentajeIva.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="pctIva" maxlength="128" required="true" />
-                            <form:errors path="pctIva" cssClass="alert alert-error" />
+                            <form:input path="porcentajeIva" maxlength="128" required="true" />
+                            <form:errors path="porcentajeIva" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                 </fieldset>

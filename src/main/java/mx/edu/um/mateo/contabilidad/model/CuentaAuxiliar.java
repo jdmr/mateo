@@ -5,6 +5,7 @@
 package mx.edu.um.mateo.contabilidad.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 import javax.persistence.*;
 import org.hibernate.validator.constraints.NotBlank;
@@ -43,13 +44,13 @@ public class CuentaAuxiliar implements Serializable {
     @Column(nullable = false)
     private Boolean iva;
     @Column(nullable = false)
-    private Double pctIva = new Double("0");
+    private BigDecimal porcentajeIva = new BigDecimal("0");
 //    private Boolean detalleR;
 
     public CuentaAuxiliar() {
     }
 
-    public CuentaAuxiliar(String nombre, String nombreFiscal, String clave, Boolean detalle, Boolean aviso, Boolean auxiliar, Boolean iva, Double pctIva) {
+    public CuentaAuxiliar(String nombre, String nombreFiscal, String clave, Boolean detalle, Boolean aviso, Boolean auxiliar, Boolean iva, BigDecimal porcentajeIva) {
         this.nombre = nombre;
         this.nombreFiscal = nombreFiscal;
         this.clave = clave;
@@ -57,7 +58,7 @@ public class CuentaAuxiliar implements Serializable {
         this.aviso = aviso;
         this.auxiliar = auxiliar;
         this.iva = iva;
-        this.pctIva = pctIva;
+        this.porcentajeIva = porcentajeIva;
     }
 
     public Long getId() {
@@ -132,12 +133,12 @@ public class CuentaAuxiliar implements Serializable {
         this.iva = iva;
     }
 
-    public Double getPctIva() {
-        return pctIva;
+    public BigDecimal getPorcentajeIva() {
+        return porcentajeIva;
     }
 
-    public void setPctIva(Double pctIva) {
-        this.pctIva = pctIva;
+    public void setPorcentajeIva(BigDecimal porcentajeIva) {
+        this.porcentajeIva = porcentajeIva;
     }
 
     @Override
@@ -164,6 +165,6 @@ public class CuentaAuxiliar implements Serializable {
 
     @Override
     public String toString() {
-        return "CuentaAuxiliar{" + "nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + ", clave=" + clave + ", detalle=" + detalle + ", aviso=" + aviso + ", auxiliar=" + auxiliar + ", iva=" + iva + ", pctIva=" + pctIva + '}';
+        return "CuentaAuxiliar{" + "nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + ", clave=" + clave + ", detalle=" + detalle + ", aviso=" + aviso + ", auxiliar=" + auxiliar + ", iva=" + iva + ", porcentajeIva=" + porcentajeIva + '}';
     }
 }

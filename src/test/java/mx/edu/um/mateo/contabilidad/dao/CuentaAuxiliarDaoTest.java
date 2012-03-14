@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.contabilidad.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
@@ -49,7 +50,7 @@ public class CuentaAuxiliarDaoTest extends BaseTest {
         log.debug("Debiera mostrar lista de cuentaAuxiliar");
 
         for (int i = 0; i < 20; i++) {
-            CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test" + i, "test", "test",false,false,false,false,0.0);
+            CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test" + i, "test", "test",false,false,false,false,BigDecimal.ZERO);
             currentSession().save(cuentaAuxiliar);
             assertNotNull(cuentaAuxiliar);
         }
@@ -68,7 +69,7 @@ public class CuentaAuxiliarDaoTest extends BaseTest {
         log.debug("Debiera obtener cuentaAuxiliar");
 
         String nombre = "test";
-        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,0.0);
+        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,BigDecimal.ZERO);
         currentSession().save(cuentaAuxiliar);
         assertNotNull(cuentaAuxiliar.getId());
         Long id = cuentaAuxiliar.getId();
@@ -84,7 +85,7 @@ public class CuentaAuxiliarDaoTest extends BaseTest {
     public void deberiaCrearCuentaAuxiliar() {
         log.debug("Deberia crear CuentaAuxiliar");
 
-        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,0.0);
+        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,BigDecimal.ZERO);
         assertNotNull(cuentaAuxiliar);
 
         CuentaAuxiliar cuentaAuxiliar2 = instance.crea(cuentaAuxiliar);
@@ -98,7 +99,7 @@ public class CuentaAuxiliarDaoTest extends BaseTest {
     public void deberiaActualizarCuentaAuxiliar() {
         log.debug("Deberia actualizar CuentaAuxiliar");
 
-        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,0.0);
+        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,BigDecimal.ZERO);
         assertNotNull(cuentaAuxiliar);
         currentSession().save(cuentaAuxiliar);
 
@@ -117,7 +118,7 @@ public class CuentaAuxiliarDaoTest extends BaseTest {
         log.debug("Debiera eliminar CuentaAuxiliar");
 
         String nom = "test";
-        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,0.0);
+        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,BigDecimal.ZERO);
         currentSession().save(cuentaAuxiliar);
         assertNotNull(cuentaAuxiliar);
 

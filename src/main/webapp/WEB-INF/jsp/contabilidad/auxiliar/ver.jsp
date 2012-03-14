@@ -68,8 +68,8 @@
                     <div class="span11"><form:checkbox path="iva" disabled="true" /></div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="pctIva.label" /></div>
-                    <div class="span11">${auxiliar.pctIva}</div>
+                    <div class="span1"><s:message code="porcentajeIva.label" /></div>
+                    <div class="span11">${auxiliar.porcentajeIva}</div>
                 </div>
                 
                 <p class="well">
