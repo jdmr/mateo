@@ -58,6 +58,66 @@
                             <form:errors path="nombreFiscal" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
+                    <s:bind path="mayor.clave">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="clave">
+                                <s:message code="clave.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="clave" maxlength="128" required="true" />
+                            <form:errors path="clave" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="mayor.detalle">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="detalle">
+                                <s:message code="detalle.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:checkbox path="detalle" cssClass="span3" />
+                            <form:errors path="detalle" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="mayor.aviso">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="aviso">
+                                <s:message code="aviso.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:checkbox path="aviso" cssClass="span3" />
+                            <form:errors path="aviso" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="mayor.auxiliar">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="auxiliar">
+                                <s:message code="auxiliar.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:checkbox path="auxiliar" cssClass="span3" />
+                            <form:errors path="auxiliar" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="mayor.iva">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="iva">
+                                <s:message code="iva.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:checkbox path="iva" cssClass="span3" />
+                            <form:errors path="iva" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="mayor.pctIva">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="pctIva">
+                                <s:message code="pctIva.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="pctIva" maxlength="128" required="true" />
+                            <form:errors path="pctIva" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">

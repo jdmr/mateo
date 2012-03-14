@@ -4,10 +4,12 @@
  */
 package mx.edu.um.mateo.contabilidad.web;
 
+import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.dao.CuentaAuxiliarDao;
 import mx.edu.um.mateo.contabilidad.model.CuentaAuxiliar;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
+import static org.junit.Assert.assertNotNull;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -25,26 +27,23 @@ import org.springframework.web.context.WebApplicationContext;
 
 /**
  *
- * @author semdariobarbaamaya
+ * @author nujev
  */
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = GenericWebXmlContextLoader.class, locations = {
     "classpath:mateo.xml",
     "classpath:security.xml",
-    "classpath:dispatcher-servlet.xml"})
+    "classpath:dispatcher-servlet.xml"
+})
 @Transactional
-public class CuentaAuxiliarControllerTest extends BaseTest{
-    
+public class CuentaAuxiliarControllerTest extends BaseTest {
+
     private static final Logger log = LoggerFactory.getLogger(CuentaAuxiliarControllerTest.class);
     @Autowired
     private WebApplicationContext wac;
     private MockMvc mockMvc;
     @Autowired
-    private CuentaAuxiliarDao ctaAuxiliarDao;
-
-    public CuentaAuxiliarControllerTest() {
-    }
+    private CuentaAuxiliarDao cuentaAuxiliarDao;
 
     @BeforeClass
     public static void setUpClass() throws Exception {
@@ -62,63 +61,92 @@ public class CuentaAuxiliarControllerTest extends BaseTest{
     @After
     public void tearDown() {
     }
-    
+
     @Test
-    public void debieraMostrarListaDeCtaAuxiliar() throws Exception {
-        log.debug("Debiera mostrar lista de ctaAuxiliar");
-        this.mockMvc.perform(get("/contabilidad/auxiliar")).
-                andExpect(status().isOk()).
-                andExpect(forwardedUrl("/WEB-INF/jsp/contabilidad/auxiliar/lista.jsp")).
-                andExpect(model().attributeExists("auxiliares")).
-                andExpect(model().attributeExists("paginacion")).
-                andExpect(model().attributeExists("paginas")).
-                andExpect(model().attributeExists("pagina"));
+    public void debieraMostrarListaDeCuentaAuxiliar() throws Exception {
+        log.debug("Debiera monstrar lista de cuentas de auxiliar");
+        
+        for (int i = 0; i < 20; i++) {
+            CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test" + i, "test", "test",false,false,false,false,0.0);
+            cuentaAuxiliarDao.crea(cuentaAuxiliar);
+            assertNotNull(cuentaAuxiliar);
+        }
+
+        this.mockMvc.perform(get(Constantes.PATH_CUENTA_AUXILIAR))
+                .andExpect(status().isOk())
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_CUENTA_AUXILIAR_LISTA + ".jsp"))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_AUXILIARES))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINAS))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINA));
     }
 
     @Test
-    public void debieraMostrarCtaAuxiliar() throws Exception {
-        CuentaAuxiliar ctaAuxiliar = new CuentaAuxiliar("test", "test");
-        ctaAuxiliar = ctaAuxiliarDao.crea(ctaAuxiliar);
+    public void debieraMostrarCuentaAuxiliar() throws Exception {
+        log.debug("Debiera mostrar cuenta de auxiliar");
+        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,0.0);
+        cuentaAuxiliar = cuentaAuxiliarDao.crea(cuentaAuxiliar);
+        assertNotNull(cuentaAuxiliar);
 
-        this.mockMvc.perform(get("/contabilidad/auxiliar/ver/" + ctaAuxiliar.getId())).
-                andExpect(status().isOk()).
-                andExpect(forwardedUrl("/WEB-INF/jsp/contabilidad/auxiliar/ver.jsp")).
-                andExpect(model().attributeExists("ctaAuxiliar"));
+        this.mockMvc.perform(get(Constantes.PATH_CUENTA_AUXILIAR_VER +"/"+ cuentaAuxiliar.getId()))
+                .andExpect(status().isOk())
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_CUENTA_AUXILIAR_VER + ".jsp"))
+                .andExpect(model()
+                .attributeExists(Constantes.ADDATTRIBUTE_AUXILIAR));
     }
-    
+
     @Test
-    public void debieraCrearCtaAuxiliar() throws Exception {
-        log.debug("Debiera crear ctaAuxiliar");
-        CuentaAuxiliar ctaAuxiliar = new CuentaAuxiliar("test", "test");
-        ctaAuxiliar = ctaAuxiliarDao.crea(ctaAuxiliar);
+    public void debieraCrearCuentaAuxiliar() throws Exception {
+        log.debug("Debiera crear cuenta de auxiliar");
 
-        this.mockMvc.perform(post("/contabilidad/auxiliar/crea").
-                param("nombre", "test").
-                param("nombreFiscal", "test")).
-                andExpect(status().isOk()).
-                andExpect(flash().attributeExists("message")).
-                andExpect(flash().attribute("message", "ctaAuxiliar.creada.message"));
+        this.mockMvc.perform(post(Constantes.PATH_CUENTA_AUXILIAR_CREA)
+                .param("nombre", "test")
+                .param("nombreFiscal", "test")
+                .param("clave","test")
+                .param("detalle", "false")
+                .param("aviso", "false")
+                .param("auxiliar", "false")
+                .param("iva", "false")
+                .param("pctIva", "0.0"))
+                .andExpect(status().isOk())
+                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaAuxiliar.creada.message"));
     }
-    
-     @Test
-    public void debieraActualizarCtaAuxiliar() throws Exception {
-        log.debug("Debiera actualizar ctaAuxiliar");
 
-        this.mockMvc.perform(post("/contabilidad/auxiliar/actualiza").param("nombre", "test1").param("nombreFiscal", "test")).
-                andExpect(status().isOk()).
-                andExpect(flash().attributeExists("message")).
-                andExpect(flash().attribute("message", "ctaAuxiliar.actualizada.message"));
+    @Test
+    public void debieraActualizarCuentaAuxiliar() throws Exception {
+        log.debug("Debiera actualizar cuenta de auxiliar");
+        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,0.0);
+        cuentaAuxiliar = cuentaAuxiliarDao.crea(cuentaAuxiliar);
+        assertNotNull(cuentaAuxiliar);
+
+        this.mockMvc.perform(post(Constantes.PATH_CUENTA_AUXILIAR_ACTUALIZA)
+                .param("id",cuentaAuxiliar.getId().toString())
+                .param("version", cuentaAuxiliar.getVersion().toString())
+                .param("nombre", "test1")
+                .param("nombreFiscal", cuentaAuxiliar.getNombreFiscal())
+                .param("clave",cuentaAuxiliar.getClave())
+                .param("detalle", cuentaAuxiliar.getDetalle().toString())
+                .param("aviso", cuentaAuxiliar.getAviso().toString())
+                .param("auxiliar", cuentaAuxiliar.getAuxiliar().toString())
+                .param("iva", cuentaAuxiliar.getIva().toString())
+                .param("pctIva", cuentaAuxiliar.getPctIva().toString()))
+                .andExpect(status().isOk())
+                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaAuxiliar.actualizada.message"));
     }
 
     @Test
     public void debieraEliminarCtaAuxiliar() throws Exception {
-        log.debug("Debiera eliminar ctaAuxiliar");
-        CuentaAuxiliar ctaAuxiliar = new CuentaAuxiliar("test", "test");
-        ctaAuxiliarDao.crea(ctaAuxiliar);
+        log.debug("Debiera eliminar cuenta de auxiliar");
+        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,0.0);
+        cuentaAuxiliarDao.crea(cuentaAuxiliar);
+        assertNotNull(cuentaAuxiliar);
 
-        this.mockMvc.perform(post("/contabilidad/auxiliar/elimina").param("id", ctaAuxiliar.getId().toString())).
-                andExpect(status().isOk()).
-                andExpect(flash().attributeExists("message")).
-                andExpect(flash().attribute("message", "ctaAuxiliar.eliminada.message"));
+        this.mockMvc.perform(post(Constantes.PATH_CUENTA_AUXILIAR_ELIMINA)
+                .param("id", cuentaAuxiliar.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaAuxiliar.eliminada.message"));
     }
 }

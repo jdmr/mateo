@@ -12,6 +12,7 @@
                 <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
                 <li class="active"><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
                 <li><a href="<s:url value='/contabilidad/mayor'/>" ><s:message code="cuentaMayor.label" /></a></li>
+                <li><a href="<s:url value='/contabilidad/auxiliar'/>" ><s:message code="cuentaAuxiliar.label" /></a></li>
             </ul>
         </nav>
         <h1><s:message code="contabilidad.label" /></h1>
@@ -22,5 +23,5 @@
             </div>
         </c:if>
 
-    </body>
+    </body>as
 </html>
