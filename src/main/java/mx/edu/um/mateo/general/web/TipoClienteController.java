@@ -38,16 +38,10 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.TipoClienteDao;
 import mx.edu.um.mateo.general.model.TipoCliente;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.Ambiente;
-import mx.edu.um.mateo.general.utils.ReporteUtil;
 import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,19 +58,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping("/admin/tipoCliente")
-public class TipoClienteController {
+public class TipoClienteController extends BaseController {
 
-    private static final Logger log = LoggerFactory.getLogger(TipoClienteController.class);
     @Autowired
     private TipoClienteDao tipoClienteDao;
-    @Autowired
-    private JavaMailSender mailSender;
-    @Autowired
-    private ResourceBundleMessageSource messageSource;
-    @Autowired
-    private Ambiente ambiente;
-    @Autowired
-    private ReporteUtil reporteUtil;
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,

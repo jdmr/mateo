@@ -37,10 +37,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.OrganizacionDao;
-import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -51,11 +49,7 @@ import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,19 +66,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping("/admin/organizacion")
-public class OrganizacionController {
+public class OrganizacionController extends BaseController {
 
-    private static final Logger log = LoggerFactory.getLogger(OrganizacionController.class);
     @Autowired
     private OrganizacionDao organizacionDao;
-    @Autowired
-    private JavaMailSender mailSender;
-    @Autowired
-    private ResourceBundleMessageSource messageSource;
-    @Autowired
-    private UsuarioDao usuarioDao;
-    @Autowired
-    private Ambiente ambiente;
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,

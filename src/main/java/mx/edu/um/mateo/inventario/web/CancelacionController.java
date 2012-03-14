@@ -34,17 +34,12 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import mx.edu.um.mateo.general.utils.Ambiente;
-import mx.edu.um.mateo.general.utils.ReporteUtil;
+import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inventario.dao.CancelacionDao;
 import mx.edu.um.mateo.inventario.model.Cancelacion;
 import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -59,19 +54,10 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 @RequestMapping("/inventario/cancelacion")
-public class CancelacionController {
+public class CancelacionController extends BaseController {
 
-    private static final Logger log = LoggerFactory.getLogger(CancelacionController.class);
     @Autowired
     private CancelacionDao cancelacionDao;
-    @Autowired
-    private JavaMailSender mailSender;
-    @Autowired
-    private ResourceBundleMessageSource messageSource;
-    @Autowired
-    private Ambiente ambiente;
-    @Autowired
-    private ReporteUtil reporteUtil;
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,

@@ -41,6 +41,7 @@ import mx.edu.um.mateo.contabilidad.dao.CuentaMayorDao;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.web.BaseController;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -71,17 +72,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping(Constantes.PATH_CUENTA_MAYOR)
-public class CuentaMayorController {
+public class CuentaMayorController extends BaseController {
     
-    private static final Logger log = LoggerFactory.getLogger(CuentaMayorController.class);
     @Autowired
     private CuentaMayorDao cuentaMayorDao;
-    @Autowired
-    private JavaMailSender mailSender;
-    @Autowired
-    private ResourceBundleMessageSource messageSource;
-    @Autowired
-    private Ambiente ambiente;
     
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,

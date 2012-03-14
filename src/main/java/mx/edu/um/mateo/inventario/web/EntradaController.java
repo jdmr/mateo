@@ -41,6 +41,7 @@ import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.LabelValueBean;
 import mx.edu.um.mateo.general.utils.ReporteUtil;
+import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inventario.dao.EntradaDao;
 import mx.edu.um.mateo.inventario.dao.ProductoDao;
 import mx.edu.um.mateo.inventario.model.Entrada;
@@ -71,23 +72,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping("/inventario/entrada")
-public class EntradaController {
+public class EntradaController extends BaseController {
 
-    private static final Logger log = LoggerFactory.getLogger(EntradaController.class);
     @Autowired
     private EntradaDao entradaDao;
     @Autowired
     private ProveedorDao proveedorDao;
     @Autowired
     private ProductoDao productoDao;
-    @Autowired
-    private JavaMailSender mailSender;
-    @Autowired
-    private ResourceBundleMessageSource messageSource;
-    @Autowired
-    private Ambiente ambiente;
-    @Autowired
-    private ReporteUtil reporteUtil;
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,

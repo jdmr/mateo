@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2012 J. David Mendoza <jdmendoza@um.edu.mx>.
+ * Copyright 2012 Universidad de Montemorelos A. C.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,26 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package mx.edu.um.mateo.rh.web;
+package mx.edu.um.mateo.general.web;
 
+import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.utils.ReporteUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.mail.javamail.JavaMailSender;
 
 /**
  *
- * @author AMDA
+ * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
-@Controller
-@RequestMapping("/rh")
-public class RhController {
-
-    private static final Logger log = LoggerFactory.getLogger(RhController.class);
-
-    @RequestMapping
-    public String index() {
-        log.debug("Mostrando indice de rh");
-        return "rh/index";
-    }
+public abstract class BaseController {
+    protected final transient Logger log = LoggerFactory.getLogger(getClass());
+    @Autowired
+    protected JavaMailSender mailSender;
+    @Autowired
+    protected ResourceBundleMessageSource messageSource;
+    @Autowired
+    protected Ambiente ambiente;
+    @Autowired
+    protected ReporteUtil reporteUtil;
+    
 }
