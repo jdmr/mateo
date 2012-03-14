@@ -51,7 +51,7 @@ public class CuentaResultadoDaoTest extends BaseTest{
      * Test of obtiene method, of class CuentaResultadoDao.
      */
     @Test
-    public void deberiaMostrarListaDeCtaResultado() {
+    public void deberiaMostrarListaDeCuentaResultado() {
         log.debug("Debiera mostrar lista de cuentaResultado");
         Ejercicio ejercicio = new Ejercicio("test", "A");
         currentSession().save(ejercicio);

@@ -66,7 +66,7 @@ public class CuentaResultadoControllerTest extends BaseTest {
     }
 
     @Test
-    public void debieraMostrarListaDeCtaResultado() throws Exception {
+    public void debieraMostrarListaDeCuentaResultado() throws Exception {
         log.debug("Debiera monstrar lista de cuentaResultados");
         
         this.mockMvc.perform(get(Constantes.PATH_CUENTA_RESULTADO)).
@@ -79,7 +79,7 @@ public class CuentaResultadoControllerTest extends BaseTest {
     }
 
     @Test
-    public void debieraMostrarCtaResultado() throws Exception {
+    public void debieraMostrarCuentaResultado() throws Exception {
 
   log.debug("Debiera mostrar cuenta de mayor");
         CuentaResultado cuentaResultado = new CuentaResultado("test", "test");
@@ -94,7 +94,7 @@ public class CuentaResultadoControllerTest extends BaseTest {
     }
 
     @Test
-    public void debieraCrearCtaResultado() throws Exception {
+    public void debieraCrearCuentaResultado() throws Exception {
         log.debug("Debiera crear cuentaResultado");
         
         this.mockMvc.perform(post(Constantes.PATH_CUENTA_RESULTADO_CREA).param("nombre", "test").param("nombreFiscal", "test")).
@@ -104,7 +104,7 @@ public class CuentaResultadoControllerTest extends BaseTest {
     }
 
     @Test
-    public void debieraActualizarCtaResultado() throws Exception {
+    public void debieraActualizarCuentaResultado() throws Exception {
         log.debug("Debiera actualizar cuentaResultado");
 
         this.mockMvc.perform(post(Constantes.PATH_CUENTA_RESULTADO_ACTUALIZA).param("nombre", "test1").param("nombreFiscal", "test")).
@@ -114,7 +114,7 @@ public class CuentaResultadoControllerTest extends BaseTest {
     }
 
     @Test
-    public void debieraEliminarCtaResultado() throws Exception {
+    public void debieraEliminarCuentaResultado() throws Exception {
         log.debug("Debiera eliminar cuentaResultado");
         CuentaResultado cuentaResultado = new CuentaResultado("test", "test");
         cuentaResultadoDao.crea(cuentaResultado);
