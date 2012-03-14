@@ -38,16 +38,16 @@
             <c:if test="${mayor != null}">
                 <s:bind path="mayor.*">
                     <c:if test="${not empty status.errorMessages}">
-                    <div class="alert alert-block alert-error fade in" role="status">
-                        <a class="close" data-dismiss="alert">×</a>
-                        <c:forEach var="error" items="${status.errorMessages}">
-                            <c:out value="${error}" escapeXml="false"/><br />
-                        </c:forEach>
-                    </div>
+                        <div class="alert alert-block alert-error fade in" role="status">
+                            <a class="close" data-dismiss="alert">×</a>
+                            <c:forEach var="error" items="${status.errorMessages}">
+                                <c:out value="${error}" escapeXml="false"/><br />
+                            </c:forEach>
+                        </div>
                     </c:if>
                 </s:bind>
             </c:if>
-            
+
             <table id="lista" class="table table-striped">
                 <thead>
                     <tr>
@@ -129,8 +129,7 @@
                                 </c:choose>
                             </a>
                         </th>
-                    </tr>
-                    <th>
+                        <th>
                             <a href="javascript:ordena('iva');">
                                 <s:message code="iva.label" />
                                 <c:choose>
@@ -144,18 +143,19 @@
                             </a>
                         </th>
                         <th>
-                            <a href="javascript:ordena('ptcIva');">
-                                <s:message code="ptcIva.label" />
+                            <a href="javascript:ordena('pctIva');">
+                                <s:message code="pctIva.label" />
                                 <c:choose>
-                                    <c:when test="${param.order == 'ptcIva' && param.sort == 'asc'}">
+                                    <c:when test="${param.order == 'pctIva' && param.sort == 'asc'}">
                                         <i class="icon-chevron-up"></i>
                                     </c:when>
-                                    <c:when test="${param.order == 'ptcIva' && param.sort == 'desc'}">
+                                    <c:when test="${param.order == 'pctIva' && param.sort == 'desc'}">
                                         <i class="icon-chevron-down"></i>
                                     </c:when>
                                 </c:choose>
                             </a>
                         </th>
+                    </tr>
                 </thead>
                 <tbody>
                     <c:forEach items="${mayores}" var="mayor" varStatus="status">
@@ -163,10 +163,10 @@
                             <td><a href="<c:url value='/contabilidad/mayor/ver/${mayor.id}' />">${mayor.nombre}</a></td>
                             <td>${mayor.nombreFiscal}</td>
                             <td>${mayor.clave}</td>
-                            <td>${mayor.detalle}</td>
-                            <td>${mayor.aviso}</td>
-                            <td>${mayor.auxiliar}</td>
-                            <td>${mayor.iva}</td>
+                            <td><input type="checkbox" value="" disabled="true" <c:if test="${mayor.detalle}">checked="checked"</c:if> /></td>
+                            <td><input type="checkbox" value="" disabled="true" <c:if test="${mayor.aviso}">checked="checked"</c:if> /></td>
+                            <td><input type="checkbox" value="" disabled="true" <c:if test="${mayor.auxiliar}">checked="checked"</c:if> /></td>
+                            <td ><input type="checkbox" value="" disabled="true" <c:if test="${mayor.iva}">checked="checked"</c:if> /></td>
                             <td>${mayor.pctIva}</td>
                         </tr>
                     </c:forEach>
@@ -203,8 +203,8 @@
                 </div>
             </div>
         </form>        
-        <content>
-            <script src="<c:url value='/js/lista.js' />"></script>
-        </content>
-    </body>
+    <content>
+        <script src="<c:url value='/js/lista.js' />"></script>
+    </content>
+</body>
 </html>

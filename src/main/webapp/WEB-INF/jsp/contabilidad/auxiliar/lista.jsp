@@ -48,7 +48,7 @@
                 </s:bind>
             </c:if>
             
-            <table id="lista" class="table table-striped">
+                        <table id="lista" class="table table-striped">
                 <thead>
                     <tr>
                         <th>
@@ -90,6 +90,71 @@
                                 </c:choose>
                             </a>
                         </th>
+                        <th>
+                            <a href="javascript:ordena('detalle');">
+                                <s:message code="detalle.label" />
+                                <c:choose>
+                                    <c:when test="${param.order == 'detalle' && param.sort == 'asc'}">
+                                        <i class="icon-chevron-up"></i>
+                                    </c:when>
+                                    <c:when test="${param.order == 'detalle' && param.sort == 'desc'}">
+                                        <i class="icon-chevron-down"></i>
+                                    </c:when>
+                                </c:choose>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="javascript:ordena('aviso');">
+                                <s:message code="aviso.label" />
+                                <c:choose>
+                                    <c:when test="${param.order == 'aviso' && param.sort == 'asc'}">
+                                        <i class="icon-chevron-up"></i>
+                                    </c:when>
+                                    <c:when test="${param.order == 'aviso' && param.sort == 'desc'}">
+                                        <i class="icon-chevron-down"></i>
+                                    </c:when>
+                                </c:choose>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="javascript:ordena('auxiliar');">
+                                <s:message code="auxiliar.label" />
+                                <c:choose>
+                                    <c:when test="${param.order == 'auxiliar' && param.sort == 'asc'}">
+                                        <i class="icon-chevron-up"></i>
+                                    </c:when>
+                                    <c:when test="${param.order == 'auxiliar' && param.sort == 'desc'}">
+                                        <i class="icon-chevron-down"></i>
+                                    </c:when>
+                                </c:choose>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="javascript:ordena('iva');">
+                                <s:message code="iva.label" />
+                                <c:choose>
+                                    <c:when test="${param.order == 'iva' && param.sort == 'asc'}">
+                                        <i class="icon-chevron-up"></i>
+                                    </c:when>
+                                    <c:when test="${param.order == 'iva' && param.sort == 'desc'}">
+                                        <i class="icon-chevron-down"></i>
+                                    </c:when>
+                                </c:choose>
+                            </a>
+                        </th>
+                        <th>
+                            <a href="javascript:ordena('pctIva');">
+                                <s:message code="pctIva.label" />
+                                <c:choose>
+                                    <c:when test="${param.order == 'pctIva' && param.sort == 'asc'}">
+                                        <i class="icon-chevron-up"></i>
+                                    </c:when>
+                                    <c:when test="${param.order == 'pctIva' && param.sort == 'desc'}">
+                                        <i class="icon-chevron-down"></i>
+                                    </c:when>
+                                </c:choose>
+                            </a>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -98,10 +163,10 @@
                             <td><a href="<c:url value='/contabilidad/auxiliar/ver/${auxiliar.id}' />">${auxiliar.nombre}</a></td>
                             <td>${auxiliar.nombreFiscal}</td>
                             <td>${auxiliar.clave}</td>
-                            <td>${auxiliar.detalle}</td>
-                            <td>${auxiliar.aviso}</td>
-                            <td>${auxiliar.auxiliar}</td>
-                            <td>${auxiliar.iva}</td>
+                            <td><input type="checkbox" value="" disabled="true" <c:if test="${auxiliar.detalle}">checked="checked"</c:if> /></td>
+                            <td><input type="checkbox" value="" disabled="true" <c:if test="${auxiliar.aviso}">checked="checked"</c:if> /></td>
+                            <td><input type="checkbox" value="" disabled="true" <c:if test="${auxiliar.auxiliar}">checked="checked"</c:if> /></td>
+                            <td ><input type="checkbox" value="" disabled="true" <c:if test="${auxiliar.iva}">checked="checked"</c:if> /></td>
                             <td>${auxiliar.pctIva}</td>
                         </tr>
                     </c:forEach>

@@ -43,7 +43,7 @@ public class CuentaMayor implements Serializable {
     @Column(nullable = false)
     private Boolean iva;
     @Column(nullable = false)
-    private Double pctIva;
+    private Double pctIva = new Double("0");
 //    private Boolean detalleR;
 
     public CuentaMayor() {

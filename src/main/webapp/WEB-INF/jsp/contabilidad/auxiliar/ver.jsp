@@ -43,12 +43,35 @@
                     <div class="span1"><s:message code="nombre.label" /></div>
                     <div class="span11">${auxiliar.nombre}</div>
                 </div>
-
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="nombreFiscal.label" /></div>
                     <div class="span11">${auxiliar.nombreFiscal}</div>
                 </div>
-
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="clave.label" /></div>
+                    <div class="span11">${auxiliar.clave}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="detalle.label" /></div>
+                    <div class="span11"><form:checkbox path="detalle" disabled="true" /></div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="aviso.label" /></div>
+                    <div class="span11"><form:checkbox path="aviso" disabled="true" /></div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="auxiliar.label" /></div>
+                    <div class="span11"><form:checkbox path="auxiliar" disabled="true" /></div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="iva.label" /></div>
+                    <div class="span11"><form:checkbox path="iva" disabled="true" /></div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="pctIva.label" /></div>
+                    <div class="span11">${auxiliar.pctIva}</div>
+                </div>
+                
                 <p class="well">
                     <a href="<c:url value='/contabilidad/auxiliar/edita/${auxiliar.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
                     <form:hidden path="id" />

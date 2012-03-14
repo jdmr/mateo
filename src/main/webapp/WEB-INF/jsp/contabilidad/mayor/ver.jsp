@@ -43,10 +43,33 @@
                     <div class="span1"><s:message code="nombre.label" /></div>
                     <div class="span11">${mayor.nombre}</div>
                 </div>
-
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="nombreFiscal.label" /></div>
                     <div class="span11">${mayor.nombreFiscal}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="clave.label" /></div>
+                    <div class="span11">${mayor.clave}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="detalle.label" /></div>
+                    <div class="span11"><form:checkbox path="detalle" disabled="true" /></div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="aviso.label" /></div>
+                    <div class="span11"><form:checkbox path="aviso" disabled="true" /></div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="auxiliar.label" /></div>
+                    <div class="span11"><form:checkbox path="auxiliar" disabled="true" /></div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="iva.label" /></div>
+                    <div class="span11"><form:checkbox path="iva" disabled="true" /></div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="pctIva.label" /></div>
+                    <div class="span11">${mayor.pctIva}</div>
                 </div>
 
                 <p class="well">
