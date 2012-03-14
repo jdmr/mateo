@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
@@ -43,11 +42,10 @@ import mx.edu.um.mateo.general.utils.ReporteUtil;
 import mx.edu.um.mateo.inventario.dao.ProductoDao;
 import mx.edu.um.mateo.inventario.dao.TipoProductoDao;
 import mx.edu.um.mateo.inventario.model.Producto;
+import mx.edu.um.mateo.inventario.model.XProducto;
 import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +61,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -328,6 +325,37 @@ public class ProductoController {
         return "redirect:/inventario/producto";
     }
 
+    @RequestMapping("/historial/{id}")
+    public String historial(@PathVariable Long id, @RequestParam(required = false) Long pagina, Model modelo) {
+        log.debug("Mostrando historial del producto {}", id);
+        Map<String, Object> params = new HashMap<>();
+        params = productoDao.historial(id, params);
+
+        modelo.addAttribute("historial", params.get("historial"));
+
+        // inicia paginado
+        Long cantidad = (Long) params.get("cantidad");
+        Integer max = (Integer) params.get("max");
+        Long cantidadDePaginas = cantidad / max;
+        List<Long> paginas = new ArrayList<>();
+        long i = 1;
+        do {
+            paginas.add(i);
+        } while (i++ < cantidadDePaginas);
+        List<XProducto> productos = (List<XProducto>) params.get("historial");
+        if (pagina == null) {
+            pagina = 1l;
+        }
+        Long primero = ((pagina - 1) * max) + 1;
+        Long ultimo = primero + (productos.size() - 1);
+        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
+        modelo.addAttribute("paginacion", paginacion);
+        modelo.addAttribute("paginas", paginas);
+        // termina paginado
+        
+        return "inventario/producto/historial";
+    }
+
     private void generaReporte(String tipo, List<Producto> productos, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
@@ -385,7 +413,4 @@ public class ProductoController {
         mailSender.send(message);
     }
 
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
 }

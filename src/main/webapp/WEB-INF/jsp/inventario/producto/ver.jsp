@@ -134,6 +134,7 @@
 
                 <p class="well">
                     <a href="<c:url value='/inventario/producto/edita/${producto.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
+                    <a href="<c:url value='/inventario/producto/historial/${producto.id}' />" class="btn btn-primary btn-large"><i class="icon-book icon-white"></i> <s:message code="historial.button" /></a>
                     <form:hidden path="id" />
                     <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="eliminar"  onclick="return confirm('<s:message code="confirma.elimina.message" />');" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='eliminar.button'/></button>
                 </p>

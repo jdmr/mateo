@@ -165,18 +165,21 @@
                     </div>
                 </div>
 
-                <c:if test="${puedeEditar || puedeCerrar || puedePendiente || puedeEliminar || puedeEditarPendiente}">
+                <c:if test="${puedeEditar || puedeCerrar || puedePendiente || puedeEliminar || puedeEditarPendiente || puedeCancelar}">
                     <p class="well">
                         <c:if test="${puedeEditar}">
                             <a href="<c:url value='/inventario/salida/edita/${salida.id}' />" class="btn btn-large"><i class="icon-edit"></i> <s:message code="editar.button" /></a>
                             <a href="<c:url value='/inventario/salida/lote/${salida.id}' />" class="btn btn-primary btn-large"><i class="icon-shopping-cart icon-white"></i> <s:message code="lote.nuevo.button" /></a>
                         </c:if>
                         <c:if test="${puedeCerrar}">
-                            <a href="<c:url value='/inventario/salida/cerrar/${salida.id}' />" class="btn btn-warning btn-large"><i class="icon-lock icon-white"></i> <s:message code="cerrar.button" /></a>
+                            <a href="<c:url value='/inventario/salida/cerrar/${salida.id}' />" class="btn btn-warning btn-large" onclick="return confirm('<s:message code="confirma.cerrar2.message" />');"><i class="icon-lock icon-white"></i> <s:message code="cerrar.button" /></a>
                         </c:if>
                         <c:if test="${puedeEliminar}">
                             <form:hidden path="id" />
-                            <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="eliminar"  onclick="return confirm('<s:message code="confirma.elimina.message" />');" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='eliminar.button'/></button>
+                            <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="eliminar"  onclick="return confirm('<s:message code="confirma.elimina2.message" />');" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='eliminar.button'/></button>
+                        </c:if>
+                        <c:if test="${puedeCancelar}">
+                            <a href="<c:url value='/inventario/salida/cancela/${salida.id}' />" class="btn btn-warning btn-large" onclick="return confirm('<s:message code="confirma.cancela2.message" />');"><i class="icon-exclamation-sign icon-white"></i> <s:message code="cancelar.button" /></a>
                         </c:if>
                     </p>
                 </c:if>
