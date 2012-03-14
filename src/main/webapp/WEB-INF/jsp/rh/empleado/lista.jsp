@@ -156,70 +156,9 @@
                     </c:forEach>
                 </tbody>
             </table>
-            <div class="row-fluid">
-                <div class="span8">
-                    <div class="pagination">
-                        <ul>
-                            <li class="disabled"><a href="#"><s:message code="mensaje.paginacion" arguments="${paginacion}" /></a></li>
-                            <c:forEach items="${paginas}" var="paginaId">
-                                <li <c:if test="${pagina == paginaId}" >class="active"</c:if>>
-                                    <a href="javascript:buscaPagina(${paginaId});" >${paginaId}</a>
-                                </li>
-                            </c:forEach>
-                        </ul>
-                    </div>
-                </div>
-                <div class="span4">
-                    <div class="btn-group pull-right" style="margin-top: 22px;margin-left: 10px;">
-                        <button id="enviaCorreoBtn" class="btn" data-loading-text="<s:message code='enviando.label'/>" onclick="javascript:enviaCorreo('XLS');" ><s:message code="envia.correo.label" /></button>
-                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="javascript:enviaCorreo('PDF');"><img src="<c:url value='/images/pdf.gif' />" /></a></li>
-                            <li><a href="javascript:enviaCorreo('CSV');"><img src="<c:url value='/images/csv.gif' />" /></a></li>
-                            <li><a href="javascript:enviaCorreo('XLS');"><img src="<c:url value='/images/xls.gif' />" /></a></li>
-                        </ul>
-                    </div>
-                    <p class="pull-right" style="margin-top: 20px;">
-                        <a href="javascript:imprime('PDF');"><img src="<c:url value='/images/pdf.gif' />" /></a>
-                        <a href="javascript:imprime('CSV');"><img src="<c:url value='/images/csv.gif' />" /></a>
-                        <a href="javascript:imprime('XLS');"><img src="<c:url value='/images/xls.gif' />" /></a>
-                    </p>
-                </div>
-            </div>
+            <jsp:include page="/WEB-INF/jsp/paginacion.jsp" />
         </form>        
         <content>
-            <script>
-                $(document).ready(function() {
-                    highlightTableRows("lista");
-
-                });
-
-                function buscaPagina(paginaId) {
-                    $('input#pagina').val(paginaId);
-                    document.forms["filtraLista"].submit();
-                }
-                
-                function imprime(tipo) {
-                    $('input#tipo').val(tipo);
-                    document.forms["filtraLista"].submit();
-                }
-                
-                function enviaCorreo(tipo) {
-                    $('#enviaCorreoBtn').button('loading');
-                    $('input#correo').val(tipo);
-                    document.forms["filtraLista"].submit();
-                }
-                
-                function ordena(campo) {
-                    if ($('input#order').val() == campo && $('input#sort').val() == 'asc') {
-                        $('input#sort').val('desc');
-                    } else {
-                        $('input#sort').val('asc');
-                    }
-                    $('input#order').val(campo);
-                    document.forms["filtraLista"].submit();
-                }
-            </script>
             <script src="<c:url value='/js/lista.js' />"></script>
         </content>
     </body>
