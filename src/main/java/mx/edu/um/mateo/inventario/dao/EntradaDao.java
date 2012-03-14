@@ -195,7 +195,6 @@ public class EntradaDao {
                 Estatus estatus = (Estatus) query.uniqueResult();
                 entrada.setEstatus(estatus);
                 entrada.setFolio(getFolio(entrada.getAlmacen()));
-                entrada.setFechaModificacion(new Date());
 
                 currentSession().update(entrada);
                 currentSession().flush();
@@ -228,7 +227,6 @@ public class EntradaDao {
                 Estatus estatus = (Estatus) query.uniqueResult();
                 entrada.setEstatus(estatus);
                 entrada.setFolio(getFolio(entrada.getAlmacen()));
-                entrada.setFechaModificacion(new Date());
 
                 currentSession().update(entrada);
                 currentSession().flush();
@@ -371,7 +369,7 @@ public class EntradaDao {
 
         BigDecimal balanceTotal = viejoBalance.add(nuevoBalance);
         BigDecimal articulos = cantidad.add(producto.getExistencia());
-        return balanceTotal.divide(articulos).setScale(2, RoundingMode.HALF_UP);
+        return balanceTotal.divide(articulos, 10, RoundingMode.HALF_UP).setScale(2, RoundingMode.HALF_UP);
     }
 
     private Entrada preparaParaCerrar(Entrada entrada, Usuario usuario) throws NoCuadraException, NoSePuedeCerrarEnCeroException {
@@ -379,6 +377,7 @@ public class EntradaDao {
         BigDecimal total = entrada.getTotal();
         entrada.setIva(BigDecimal.ZERO);
         entrada.setTotal(BigDecimal.ZERO);
+        Date fecha = new Date();
         for (LoteEntrada lote : entrada.getLotes()) {
             Producto producto = lote.getProducto();
             producto.setPrecioUnitario(costoPromedio(lote));
@@ -386,18 +385,9 @@ public class EntradaDao {
                 producto.setUltimoPrecio(lote.getPrecioUnitario());
             }
             producto.setExistencia(producto.getExistencia().add(lote.getCantidad()));
+            producto.setFechaModificacion(fecha);
             currentSession().update(producto);
-            XProducto xproducto = new XProducto();
-            BeanUtils.copyProperties(producto, xproducto);
-            xproducto.setId(null);
-            xproducto.setEntradaId(entrada.getId());
-            xproducto.setProductoId(producto.getId());
-            xproducto.setTipoProductoId(producto.getTipoProducto().getId());
-            xproducto.setAlmacenId(producto.getAlmacen().getId());
-            xproducto.setFechaCreacion(new Date());
-            xproducto.setActividad(Constantes.ACTUALIZAR);
-            xproducto.setCreador((usuario != null) ? usuario.getUsername() : "admin");
-            currentSession().save(xproducto);
+            auditaProducto(producto, usuario, Constantes.ACTUALIZAR, entrada.getId(), null, fecha);
 
             BigDecimal subtotal = lote.getPrecioUnitario().multiply(lote.getCantidad());
             entrada.setIva(entrada.getIva().add(lote.getIva()));
@@ -427,6 +417,23 @@ public class EntradaDao {
             }
         }
 
+        entrada.setFechaModificacion(fecha);
+
         return entrada;
+    }
+
+    private void auditaProducto(Producto producto, Usuario usuario, String actividad, Long entradaId, Long cancelacionId, Date fecha) {
+        XProducto xproducto = new XProducto();
+        BeanUtils.copyProperties(producto, xproducto);
+        xproducto.setId(null);
+        xproducto.setEntradaId(entradaId);
+        xproducto.setCancelacionId(cancelacionId);
+        xproducto.setProductoId(producto.getId());
+        xproducto.setTipoProductoId(producto.getTipoProducto().getId());
+        xproducto.setAlmacenId(producto.getAlmacen().getId());
+        xproducto.setFechaCreacion(fecha);
+        xproducto.setActividad(actividad);
+        xproducto.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
+        currentSession().save(xproducto);
     }
 }

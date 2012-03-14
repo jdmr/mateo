@@ -179,7 +179,7 @@
                             <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="eliminar"  onclick="return confirm('<s:message code="confirma.elimina2.message" />');" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='eliminar.button'/></button>
                         </c:if>
                         <c:if test="${puedeCancelar}">
-                            <a href="<c:url value='/inventario/salida/cancela/${salida.id}' />" class="btn btn-warning btn-large" onclick="return confirm('<s:message code="confirma.cancela2.message" />');"><i class="icon-exclamation-sign icon-white"></i> <s:message code="cancelar.button" /></a>
+                            <a href="<c:url value='/inventario/salida/cancela/${salida.id}' />" class="btn btn-warning btn-large" ><i class="icon-exclamation-sign icon-white"></i> <s:message code="cancelar.button" /></a>
                         </c:if>
                     </p>
                 </c:if>

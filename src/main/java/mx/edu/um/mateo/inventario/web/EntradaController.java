@@ -491,10 +491,11 @@ public class EntradaController {
         }
 
         try {
-            if (request.getParameter("producto.id") == null) {
+            if (StringUtils.isBlank(request.getParameter("producto.id"))) {
                 log.warn("No se puede crear la entrada si no ha seleccionado un proveedor");
-                errors.rejectValue("producto", "lote.sin.producto.message");
-                return "inventario/entrada/lote/" + request.getParameter("entrada.id");
+                modelo.addAttribute("lote", lote);
+                modelo.addAttribute("message", "lote.sin.producto.message");
+                return "inventario/entrada/lote";
             }
             Producto producto = productoDao.obtiene(new Long(request.getParameter("producto.id")));
             Entrada entrada = entradaDao.obtiene(new Long(request.getParameter("entrada.id")));
@@ -509,7 +510,9 @@ public class EntradaController {
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{""});
         } catch (ProductoNoSoportaFraccionException e) {
             log.error("No se pudo crear la entrada porque no se encontro el producto", e);
-            return "inventario/entrada/lote/" + request.getParameter("entrada.id");
+            modelo.addAttribute("message", "lote.sin.producto.message");
+            modelo.addAttribute("lote", lote);
+            return "inventario/entrada/lote";
         }
 
         redirectAttributes.addFlashAttribute("message", "lote.creado.message");

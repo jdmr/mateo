@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.*;
 
 /**
@@ -44,7 +45,7 @@ public class Cancelacion implements Serializable {
     private Integer version;
     @Column(nullable = false, length = 128)
     private String folio;
-    @Column(nullable = false, length = 200)
+    @Column(length = 200)
     private String comentarios;
     @ManyToOne
     private Entrada entrada;
@@ -52,6 +53,8 @@ public class Cancelacion implements Serializable {
     private Salida salida;
     @ManyToOne(optional = false)
     private Almacen almacen;
+    @ManyToMany
+    private Set<Producto> productos;
     @OneToMany
     private List<Entrada> entradas;
     @OneToMany
@@ -136,6 +139,7 @@ public class Cancelacion implements Serializable {
      */
     public void setEntrada(Entrada entrada) {
         this.entrada = entrada;
+        this.almacen = entrada.getAlmacen();
     }
 
     /**
@@ -150,6 +154,7 @@ public class Cancelacion implements Serializable {
      */
     public void setSalida(Salida salida) {
         this.salida = salida;
+        this.almacen = salida.getAlmacen();
     }
 
     /**
@@ -164,6 +169,20 @@ public class Cancelacion implements Serializable {
      */
     public void setAlmacen(Almacen almacen) {
         this.almacen = almacen;
+    }
+
+    /**
+     * @return the productos
+     */
+    public Set<Producto> getProductos() {
+        return productos;
+    }
+
+    /**
+     * @param productos the productos to set
+     */
+    public void setProductos(Set<Producto> productos) {
+        this.productos = productos;
     }
 
     /**

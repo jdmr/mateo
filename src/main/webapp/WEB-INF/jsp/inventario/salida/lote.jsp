@@ -22,6 +22,15 @@
 
         <div id="nuevo-salida" class="content scaffold-list" role="main">
             <h1><s:message code="lote.nuevo.label" /></h1>
+            <hr/>
+            
+            <c:if test="${not empty message}">
+                <div class="alert alert-block alert-error fade in" role="status">
+                    <a class="close" data-dismiss="alert">×</a>
+                    <s:message code="${message}" arguments="${messageAttrs}" />
+                </div>
+            </c:if>
+
             <c:url var="creaUrl" value="/inventario/salida/lote/crea" />
             <form:form commandName="lote" action="${creaUrl}" method="post">
                 <form:hidden path="salida.id" id="salidaId" />
@@ -67,7 +76,7 @@
                 </fieldset>
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/inventario/salida/edita/${lote.salida.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <a class="btn btn-large" href="<s:url value='/inventario/salida/ver/${lote.salida.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>

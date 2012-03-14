@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
-import java.util.logging.Level;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
@@ -44,6 +43,7 @@ import mx.edu.um.mateo.general.utils.LabelValueBean;
 import mx.edu.um.mateo.general.utils.ReporteUtil;
 import mx.edu.um.mateo.inventario.dao.ProductoDao;
 import mx.edu.um.mateo.inventario.dao.SalidaDao;
+import mx.edu.um.mateo.inventario.model.Cancelacion;
 import mx.edu.um.mateo.inventario.model.LoteSalida;
 import mx.edu.um.mateo.inventario.model.Producto;
 import mx.edu.um.mateo.inventario.model.Salida;
@@ -386,7 +386,27 @@ public class SalidaController {
             redirectAttributes.addFlashAttribute("message", "salida.no.cerrada.para.cancelar.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{e.getSalida().getFolio()});
             redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
-            return "redrect:/inventario/salida/ver/" + id;
+            return "redirect:/inventario/salida/ver/" + id;
+        }
+    }
+
+    @RequestMapping(value = "/cancelar", method = RequestMethod.POST)
+    public String cancelar(@RequestParam Long id, @RequestParam String comentarios, Model modelo, RedirectAttributes redirectAttributes) {
+        try {
+            log.debug("Cancelando salida {}", id);
+            Cancelacion cancelacion = salidaDao.cancelar(id, ambiente.obtieneUsuario(), comentarios);
+            modelo.addAttribute("cancelacion", cancelacion);
+
+            modelo.addAttribute("message", "salida.cancelada.message");
+            modelo.addAttribute("messageAttrs", new String[]{cancelacion.getSalida().getFolio()});
+            modelo.addAttribute("messageStyle", "alert-success");
+            return "/inventario/salida/cancelada";
+        } catch (NoEstaCerradaException e) {
+            log.error("No se puede cancela la salida", e);
+            redirectAttributes.addFlashAttribute("message", "salida.no.cerrada.para.cancelar.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{e.getSalida().getFolio()});
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+            return "redirect:/inventario/salida/ver/" + id;
         }
     }
 
@@ -457,10 +477,11 @@ public class SalidaController {
         }
 
         try {
-            if (request.getParameter("producto.id") == null) {
+            if (StringUtils.isBlank(request.getParameter("producto.id"))) {
                 log.warn("No se puede crear la salida si no ha seleccionado un cliente");
-                errors.rejectValue("producto", "lote.sin.producto.message");
-                return "inventario/salida/lote/" + request.getParameter("salida.id");
+                modelo.addAttribute("message", "lote.sin.producto.message");
+                modelo.addAttribute("lote", lote);
+                return "inventario/salida/lote";
             }
             Producto producto = productoDao.obtiene(new Long(request.getParameter("producto.id")));
             Salida salida = salidaDao.obtiene(new Long(request.getParameter("salida.id")));
@@ -475,7 +496,9 @@ public class SalidaController {
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{""});
         } catch (ProductoNoSoportaFraccionException e) {
             log.error("No se pudo crear la salida porque no se encontro el producto", e);
-            return "inventario/salida/lote/" + request.getParameter("salida.id");
+            modelo.addAttribute("message", "lote.sin.producto.message");
+            modelo.addAttribute("lote", lote);
+            return "inventario/salida/lote";
         }
 
         redirectAttributes.addFlashAttribute("message", "lote.creado.message");
