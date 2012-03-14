@@ -229,26 +229,39 @@ public class CuentaResultadoController {
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute CuentaResultado cuentaResultado, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        log.debug("Elimina cuentaResultado");
+//        log.debug("Elimina cuentaResultado");
+//        try {
+//            String nombre = cuentaResultadoDao.elimina(id);
+//
+//           // ambiente.actualizaSesion(request);
+//
+//            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaResultado.eliminada.message");
+//            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
+//            log.debug("massage");
+//        } catch (UltimoException e) {
+//            log.error("No se pudo eliminar el cuentaResultado " + id, e);
+//            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_RESULTADO, new String[]{"ultima.cuentaResultado.no.eliminada.message"}, null, null));
+//            return "rh/cuentaResultado/ver";
+//        } catch (Exception e) {
+//            log.error("No se pudo eliminar la cuentaResultado " + id, e);
+//            bindingResult.addError(new ObjectError("cuentaResultado", new String[]{"cuentaResultado.no.eliminada.message"}, null, null));
+//            return Constantes.PATH_CUENTA_RESULTADO_VER;
+//        }
+//
+//        return "redirect:"+ Constantes.PATH_CUENTA_RESULTADO;
+       log.debug("Elimina cuenta de resultado");
         try {
             String nombre = cuentaResultadoDao.elimina(id);
-
-           // ambiente.actualizaSesion(request);
-
+            
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaResultado.eliminada.message");
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
-            log.debug("massage");
-        } catch (UltimoException e) {
-            log.error("No se pudo eliminar el cuentaResultado " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_RESULTADO, new String[]{"ultima.cuentaResultado.no.eliminada.message"}, null, null));
-            return "rh/cuentaResultado/ver";
         } catch (Exception e) {
-            log.error("No se pudo eliminar la cuentaResultado " + id, e);
-            bindingResult.addError(new ObjectError("cuentaResultado", new String[]{"cuentaResultado.no.eliminada.message"}, null, null));
+            log.error("No se pudo eliminar la cuenta de resultado" + id, e);
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_RESULTADO, new String[]{"cuentaResultado.no.eliminada.message"}, null, null));
             return Constantes.PATH_CUENTA_RESULTADO_VER;
         }
-
-        return "redirect:"+ Constantes.PATH_CUENTA_RESULTADO;
+        
+        return "redirect:" + Constantes.PATH_CUENTA_RESULTADO;
     }
 
     private void generaReporte(String tipo, List<CuentaResultado> cuentaResultados, HttpServletResponse response) throws JRException, IOException {

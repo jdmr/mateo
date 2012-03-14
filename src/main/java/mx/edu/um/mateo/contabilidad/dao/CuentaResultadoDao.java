@@ -7,6 +7,7 @@ package mx.edu.um.mateo.contabilidad.dao;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
+import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.contabilidad.model.CuentaResultado;
 import mx.edu.um.mateo.general.dao.EmpresaDao;
 import mx.edu.um.mateo.general.utils.UltimoException;
@@ -16,6 +17,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -109,12 +111,22 @@ public class CuentaResultadoDao {
 
     public CuentaResultado actualiza(CuentaResultado cuentaResultado) {
         currentSession().saveOrUpdate(cuentaResultado);
+//       log.debug("Actualizando cuenta de resultado {}", cuentaResultado);
+//        
+//        //trae el objeto de la DB 
+        CuentaResultado nueva = (CuentaResultado)currentSession().get(CuentaResultado.class, cuentaResultado.getId());
+//        //actualiza el objeto
+//        BeanUtils.copyProperties(cuentaResultado, nueva);
+//        
+          currentSession().update(nueva);
+        currentSession().flush();
         return cuentaResultado;
     }
 
     public String elimina(Long id) throws UltimoException {
         CuentaResultado cuentaresultado = obtiene(id);
         currentSession().delete(cuentaresultado);
+         currentSession().flush();
         String nombre = cuentaresultado.getNombre();
         return nombre;
     }
