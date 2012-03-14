@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.contabilidad.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
@@ -49,7 +50,7 @@ public class CuentaMayorDaoTest extends BaseTest {
         log.debug("Debiera mostrar lista de cuentaMayor");
 
         for (int i = 0; i < 20; i++) {
-            CuentaMayor cuentaMayor = new CuentaMayor("test" + i, "test", "test",false,false,false,false,0.0);
+            CuentaMayor cuentaMayor = new CuentaMayor("test" + i, "test", "test", false, false, false, false, BigDecimal.ZERO);
             currentSession().save(cuentaMayor);
             assertNotNull(cuentaMayor);
         }
@@ -68,7 +69,7 @@ public class CuentaMayorDaoTest extends BaseTest {
         log.debug("Debiera obtener cuentaMayor");
 
         String nombre = "test";
-        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test",false,false,false,false,0.0);
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test", false, false, false, false, BigDecimal.ZERO);
         currentSession().save(cuentaMayor);
         assertNotNull(cuentaMayor.getId());
         Long id = cuentaMayor.getId();
@@ -84,7 +85,7 @@ public class CuentaMayorDaoTest extends BaseTest {
     public void deberiaCrearCuentaMayor() {
         log.debug("Deberia crear CuentaMayor");
 
-        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test",false,false,false,false,0.0);
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test", false, false, false, false, BigDecimal.ZERO);
         assertNotNull(cuentaMayor);
 
         CuentaMayor cuentaMayor2 = instance.crea(cuentaMayor);
@@ -98,7 +99,7 @@ public class CuentaMayorDaoTest extends BaseTest {
     public void deberiaActualizarCuentaMayor() {
         log.debug("Deberia actualizar CuentaMayor");
 
-        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test",false,false,false,false,0.0);
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test", false, false, false, false, BigDecimal.ZERO);
         assertNotNull(cuentaMayor);
         currentSession().save(cuentaMayor);
 
@@ -117,7 +118,7 @@ public class CuentaMayorDaoTest extends BaseTest {
         log.debug("Debiera eliminar CuentaMayor");
 
         String nom = "test";
-        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test",false,false,false,false,0.0);
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test", false, false, false, false, BigDecimal.ZERO);
         currentSession().save(cuentaMayor);
         assertNotNull(cuentaMayor);
 

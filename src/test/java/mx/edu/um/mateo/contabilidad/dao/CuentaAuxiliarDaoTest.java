@@ -4,10 +4,11 @@
  */
 package mx.edu.um.mateo.contabilidad.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.model.CuentaAuxiliar;
-import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import org.hibernate.Session;
@@ -24,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author semdariobarbaamaya
+ * @author nujev
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
@@ -41,73 +42,90 @@ public class CuentaAuxiliarDaoTest extends BaseTest {
         return sessionFactory.getCurrentSession();
     }
 
+    /**
+     * Test of lista method, of class CuentaAuxiliarDao.
+     */
     @Test
-    public void deberiaMostrarListaDeCtaAuxiliar() {
-        log.debug("Debiera mostrar lista de ctaAuxiliar");
+    public void deberiaMostrarListaDeCuentaAuxiliar() {
+        log.debug("Debiera mostrar lista de cuentaAuxiliar");
+
         for (int i = 0; i < 20; i++) {
-            CuentaAuxiliar ctaAuxiliar = new CuentaAuxiliar("test" + i, "test");
-            currentSession().save(ctaAuxiliar);
-            assertNotNull(ctaAuxiliar);
-            log.debug("ctaAuxiliar>>" + ctaAuxiliar);
+            CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test" + i, "test", "test",false,false,false,false,BigDecimal.ZERO);
+            currentSession().save(cuentaAuxiliar);
+            assertNotNull(cuentaAuxiliar);
         }
 
         Map<String, Object> params = null;
         Map result = instance.lista(params);
-        assertNotNull(result.get("auxiliares"));
-        assertNotNull(result.get("cantidad"));
+        assertNotNull(result.get(Constantes.CONTAINSKEY_AUXILIARES));
+        assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
 
-        assertEquals(10, ((List<CuentaAuxiliar>) result.get("auxiliares")).size());
-        assertEquals(20, ((Long) result.get("cantidad")).intValue());
+        assertEquals(10, ((List<CuentaAuxiliar>) result.get(Constantes.CONTAINSKEY_AUXILIARES)).size());
+        assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
 
     @Test
-    public void debieraObtenerCtaAuxiliar() {
-        log.debug("Debiera obtener ctaAuxiliar");
-        CuentaAuxiliar ctaAuxiliar = new CuentaAuxiliar("test", "test");
-        currentSession().save(ctaAuxiliar);
-        assertNotNull(ctaAuxiliar.getId());
-        Long id = ctaAuxiliar.getId();
+    public void debieraObtenerCuentaAuxiliar() {
+        log.debug("Debiera obtener cuentaAuxiliar");
+
+        String nombre = "test";
+        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,BigDecimal.ZERO);
+        currentSession().save(cuentaAuxiliar);
+        assertNotNull(cuentaAuxiliar.getId());
+        Long id = cuentaAuxiliar.getId();
 
         CuentaAuxiliar result = instance.obtiene(id);
         assertNotNull(result);
-        assertEquals("test", result.getNombre());
+        assertEquals(nombre, result.getNombre());
+
+        assertEquals(result, cuentaAuxiliar);
     }
 
     @Test
-    public void deberiaCrearCtaAuxiliar() {
-        log.debug("Deberia crear CtaAuxiliar");
-        CuentaAuxiliar ctaAuxiliar = new CuentaAuxiliar("test", "test");
-        assertNotNull(ctaAuxiliar);
-        log.debug("ctaAuxiliar >> " + ctaAuxiliar);
-        ctaAuxiliar = instance.crea(ctaAuxiliar);
-        assertNotNull(ctaAuxiliar.getId());
+    public void deberiaCrearCuentaAuxiliar() {
+        log.debug("Deberia crear CuentaAuxiliar");
+
+        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,BigDecimal.ZERO);
+        assertNotNull(cuentaAuxiliar);
+
+        CuentaAuxiliar cuentaAuxiliar2 = instance.crea(cuentaAuxiliar);
+        assertNotNull(cuentaAuxiliar2);
+        assertNotNull(cuentaAuxiliar2.getId());
+
+        assertEquals(cuentaAuxiliar, cuentaAuxiliar2);
     }
 
     @Test
-    public void deberiaActualizarCtaAuxiliar() {
-        log.debug("Deberia actualizar CtaAuxiliar");
-        CuentaAuxiliar ctaAuxiliar = new CuentaAuxiliar("test", "test");
-        assertNotNull(ctaAuxiliar);
-        currentSession().save(ctaAuxiliar);
+    public void deberiaActualizarCuentaAuxiliar() {
+        log.debug("Deberia actualizar CuentaAuxiliar");
 
-        ctaAuxiliar.setNombre("test1");
+        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,BigDecimal.ZERO);
+        assertNotNull(cuentaAuxiliar);
+        currentSession().save(cuentaAuxiliar);
 
-        ctaAuxiliar = instance.actualiza(ctaAuxiliar);
-        log.debug("ctaAuxiliar >>" + ctaAuxiliar);
-        assertEquals("test1", ctaAuxiliar.getNombre());
+        String nombre = "test1";
+        cuentaAuxiliar.setNombre(nombre);
+
+        CuentaAuxiliar cuentaAuxiliar2 = instance.actualiza(cuentaAuxiliar);
+        assertNotNull(cuentaAuxiliar2);
+        assertEquals(nombre, cuentaAuxiliar.getNombre());
+
+        assertEquals(cuentaAuxiliar, cuentaAuxiliar2);
     }
 
     @Test
-    public void deberiaEliminarCtaAuxiliar() throws UltimoException {
-        log.debug("Debiera eliminar Ejercicio");
+    public void deberiaEliminarCuentaAuxiliar() throws UltimoException {
+        log.debug("Debiera eliminar CuentaAuxiliar");
 
-        CuentaAuxiliar ctaAuxiliar = new CuentaAuxiliar("test", "A");
-        currentSession().save(ctaAuxiliar);
-        assertNotNull(ctaAuxiliar);
-        String nombre = instance.elimina(ctaAuxiliar.getId());
-        assertEquals("test", nombre);
+        String nom = "test";
+        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,BigDecimal.ZERO);
+        currentSession().save(cuentaAuxiliar);
+        assertNotNull(cuentaAuxiliar);
 
-        CuentaAuxiliar prueba = instance.obtiene(ctaAuxiliar.getId());
+        String nombre = instance.elimina(cuentaAuxiliar.getId());
+        assertEquals(nom, nombre);
+
+        CuentaAuxiliar prueba = instance.obtiene(cuentaAuxiliar.getId());
         assertNull(prueba);
     }
 }
