@@ -11,23 +11,23 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="cuentaMayor.edita.label" /></title>
+        <title><s:message code="cuentaAuxiliar.nueva.label" /></title>
     </head>
     <body>
+        <nav class="navbar navbar-fixed-top" role="navigation">
             <ul class="nav">
                 <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
                 <li><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
-                <li class="active"><a href="<s:url value='/contabilidad/mayor'/>" ><s:message code="cuentaMayor.label" /></a></li>
+                <li class="active"><a href="<s:url value='/contabilidad/auxiliar'/>" ><s:message code="cuentaAuxiliar.label" /></a></li>
             </ul>
         </nav>
 
-        <div id="edita-mayor" class="content scaffold-list" role="main">
-            <h1><s:message code="cuentaMayor.edita.label" /></h1>
+        <div id="nueva-auxiliar" class="content scaffold-list" role="main">
+            <h1><s:message code="cuentaAuxiliar.nueva.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/contabilidad/mayor'/>"><i class="icon-list icon-white"></i> <s:message code='cuentaMayor.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/auxiliar'/>"><i class="icon-list icon-white"></i> <s:message code='cuentaAuxiliar.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="/contabilidad/mayor/actualiza" />
-            <form:form commandName="mayor" method="post" action="${actualizaUrl}">
+            <form:form commandName="auxiliar" action="crea" method="post">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -36,11 +36,9 @@
                         </c:forEach>
                     </div>
                 </form:errors>
-                <form:hidden path="id" />
-                <form:hidden path="version" />
 
                 <fieldset>
-                    <s:bind path="mayor.nombre">
+                    <s:bind path="auxiliar.nombre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombre">
                                 <s:message code="nombre.label" />
@@ -50,7 +48,7 @@
                             <form:errors path="nombre" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="mayor.nombreFiscal">
+                    <s:bind path="auxiliar.nombreFiscal">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombreFiscal">
                                 <s:message code="nombreFiscal.label" />
@@ -60,7 +58,7 @@
                             <form:errors path="nombreFiscal" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="mayor.clave">
+                    <s:bind path="auxiliar.clave">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="clave">
                                 <s:message code="clave.label" />
@@ -70,7 +68,7 @@
                             <form:errors path="clave" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="mayor.detalle">
+                    <s:bind path="auxiliar.detalle">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="detalle">
                                 <s:message code="detalle.label" />
@@ -80,7 +78,7 @@
                             <form:errors path="detalle" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="mayor.aviso">
+                    <s:bind path="auxiliar.aviso">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="aviso">
                                 <s:message code="aviso.label" />
@@ -90,7 +88,7 @@
                             <form:errors path="aviso" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="mayor.auxiliar">
+                    <s:bind path="auxiliar.auxiliar">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="auxiliar">
                                 <s:message code="auxiliar.label" />
@@ -100,7 +98,7 @@
                             <form:errors path="auxiliar" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="mayor.iva">
+                    <s:bind path="auxiliar.iva">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="iva">
                                 <s:message code="iva.label" />
@@ -110,7 +108,7 @@
                             <form:errors path="iva" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="mayor.porcentajeIva">
+                    <s:bind path="auxiliar.porcentajeIva">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="porcentajeIva">
                                 <s:message code="porcentajeIva.label" />
@@ -123,8 +121,8 @@
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
-                    <button type="submit" name="actualizarBtn" class="btn btn-primary btn-large" id="actualizar" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='actualizar.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/admin/mayor/ver/${mayor.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
+                    <a class="btn btn-large" href="<s:url value='/contabilidad/auxiliar'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>
