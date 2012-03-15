@@ -25,29 +25,21 @@ package mx.edu.um.mateo.inventario.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
-import mx.edu.um.mateo.general.model.Cliente;
 
 /**
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
-@Table(name = "salidas", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"almacen_id", "folio"})
-})
-public class Salida implements Serializable {
+@Table(name = "xsalidas")
+public class XSalida implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Version
-    private Integer version;
     @Column(nullable = false, length = 64)
     private String folio;
     @Column(length = 64)
@@ -64,36 +56,19 @@ public class Salida implements Serializable {
     private BigDecimal iva = new BigDecimal("0");
     @Column(scale = 2, precision = 8, nullable = false)
     private BigDecimal total = new BigDecimal("0");
-    @ManyToOne(optional = false)
-    private Estatus estatus;
-    @ManyToOne(optional = false)
-    private Cliente cliente;
-    @ManyToOne(optional = false)
-    private Almacen almacen;
-    @OneToMany(mappedBy = "salida", cascade = CascadeType.REMOVE)
-    private List<LoteSalida> lotes = new ArrayList<>();
+    private Long salidaId;
+    private Long estatusId;
+    private Long clienteId;
+    private Long almacenId;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "date_created")
     private Date fechaCreacion;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, name = "last_updated")
-    private Date fechaModificacion;
+    @Column(nullable = false, length = 64)
+    private String creador;
+    @Column(nullable = false, length = 64)
+    private String actividad;
 
-    public Salida() {
-    }
-
-    public Salida(String atendio, String reporte, String empleado, String departamento, String comentarios, Estatus estatus, Cliente cliente, Almacen almacen) {
-        this.atendio = atendio;
-        this.reporte = reporte;
-        this.empleado = empleado;
-        this.departamento = departamento;
-        this.comentarios = comentarios;
-        this.estatus = estatus;
-        this.cliente = cliente;
-        this.almacen = almacen;
-        Date fecha = new Date();
-        this.fechaCreacion = fecha;
-        this.fechaModificacion = fecha;
+    public XSalida() {
     }
 
     /**
@@ -108,20 +83,6 @@ public class Salida implements Serializable {
      */
     public void setId(Long id) {
         this.id = id;
-    }
-
-    /**
-     * @return the version
-     */
-    public Integer getVersion() {
-        return version;
-    }
-
-    /**
-     * @param version the version to set
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
     }
 
     /**
@@ -237,64 +198,59 @@ public class Salida implements Serializable {
     }
 
     /**
-     * @return the estatus
+     * @return the salidaId
      */
-    public Estatus getEstatus() {
-        return estatus;
+    public Long getSalidaId() {
+        return salidaId;
     }
 
     /**
-     * @param estatus the estatus to set
+     * @param salidaId the salidaId to set
      */
-    public void setEstatus(Estatus estatus) {
-        this.estatus = estatus;
+    public void setSalidaId(Long salidaId) {
+        this.salidaId = salidaId;
     }
 
     /**
-     * @return the cliente
+     * @return the estatusId
      */
-    public Cliente getCliente() {
-        return cliente;
+    public Long getEstatusId() {
+        return estatusId;
     }
 
     /**
-     * @param cliente the cliente to set
+     * @param estatusId the estatusId to set
      */
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setEstatusId(Long estatusId) {
+        this.estatusId = estatusId;
     }
 
     /**
-     * @return the almacen
+     * @return the clienteId
      */
-    public Almacen getAlmacen() {
-        return almacen;
+    public Long getClienteId() {
+        return clienteId;
     }
 
     /**
-     * @param almacen the almacen to set
+     * @param clienteId the clienteId to set
      */
-    public void setAlmacen(Almacen almacen) {
-        this.almacen = almacen;
+    public void setClienteId(Long clienteId) {
+        this.clienteId = clienteId;
     }
 
     /**
-     * @return the lotes
+     * @return the almacenId
      */
-    public List<LoteSalida> getLotes() {
-        return lotes;
+    public Long getAlmacenId() {
+        return almacenId;
     }
 
     /**
-     * @param lotes the lotes to set
+     * @param almacenId the almacenId to set
      */
-    public void setLotes(List<LoteSalida> lotes) {
-        this.lotes = lotes;
-    }
-
-    public BigDecimal getSubtotal() {
-        BigDecimal subtotal = total.subtract(iva).setScale(2, RoundingMode.HALF_UP);
-        return subtotal;
+    public void setAlmacenId(Long almacenId) {
+        this.almacenId = almacenId;
     }
 
     /**
@@ -312,17 +268,31 @@ public class Salida implements Serializable {
     }
 
     /**
-     * @return the fechaModificacion
+     * @return the creador
      */
-    public Date getFechaModificacion() {
-        return fechaModificacion;
+    public String getCreador() {
+        return creador;
     }
 
     /**
-     * @param fechaModificacion the fechaModificacion to set
+     * @param creador the creador to set
      */
-    public void setFechaModificacion(Date fechaModificacion) {
-        this.fechaModificacion = fechaModificacion;
+    public void setCreador(String creador) {
+        this.creador = creador;
+    }
+
+    /**
+     * @return the actividad
+     */
+    public String getActividad() {
+        return actividad;
+    }
+
+    /**
+     * @param actividad the actividad to set
+     */
+    public void setActividad(String actividad) {
+        this.actividad = actividad;
     }
 
     @Override
@@ -333,7 +303,7 @@ public class Salida implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Salida other = (Salida) obj;
+        final XSalida other = (XSalida) obj;
         if (!Objects.equals(this.folio, other.folio)) {
             return false;
         }
@@ -343,14 +313,13 @@ public class Salida implements Serializable {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 67 * hash + Objects.hashCode(this.id);
-        hash = 67 * hash + Objects.hashCode(this.version);
-        hash = 67 * hash + Objects.hashCode(this.folio);
+        hash = 67 * hash + Objects.hashCode(this.getId());
+        hash = 67 * hash + Objects.hashCode(this.getFolio());
         return hash;
     }
 
     @Override
     public String toString() {
-        return "Salida{" + "folio=" + folio + ", atendio=" + atendio + ", reporte=" + reporte + ", empleado=" + empleado + ", departamento=" + departamento + ", iva=" + iva + ", total=" + total + ", estatus=" + estatus + ", cliente=" + cliente + ", almacen=" + almacen + '}';
+        return "XSalida{" + "folio=" + getFolio() + ", atendio=" + getAtendio() + ", reporte=" + getReporte() + ", empleado=" + getEmpleado() + ", departamento=" + getDepartamento() + ", iva=" + getIva() + ", total=" + getTotal() + ", estatus=" + estatusId + ", cliente=" + clienteId + ", almacen=" + almacenId + '}';
     }
 }

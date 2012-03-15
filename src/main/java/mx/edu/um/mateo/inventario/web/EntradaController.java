@@ -282,7 +282,7 @@ public class EntradaController extends BaseController {
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Entrada entrada, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina entrada");
         try {
-            String nombre = entradaDao.elimina(id);
+            String nombre = entradaDao.elimina(id, ambiente.obtieneUsuario());
 
             redirectAttributes.addFlashAttribute("message", "entrada.eliminada.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});

@@ -85,9 +85,9 @@ public class XProducto implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "date_created")
     private Date fechaCreacion;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 64)
     private String creador;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 64)
     private String actividad;
     @Column(name = "entrada_id")
     private Long entradaId;

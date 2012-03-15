@@ -145,6 +145,9 @@ public class EntradaDao {
         entrada.setFechaCreacion(fecha);
         entrada.setFechaModificacion(fecha);
         session.save(entrada);
+        
+        audita(entrada, usuario, Constantes.CREAR, fecha);
+        
         session.flush();
         return entrada;
     }
@@ -171,8 +174,12 @@ public class EntradaDao {
                 entrada.setIva(otraEntrada.getIva());
                 entrada.setTotal(otraEntrada.getTotal());
                 entrada.setProveedor(otraEntrada.getProveedor());
-                entrada.setFechaModificacion(new Date());
+                Date fecha = new Date();
+                entrada.setFechaModificacion(fecha);
                 session.update(entrada);
+                
+                audita(entrada, usuario, Constantes.ACTUALIZAR, fecha);
+                
                 session.flush();
                 return entrada;
             default:
@@ -188,15 +195,20 @@ public class EntradaDao {
                     entrada.setAlmacen(usuario.getAlmacen());
                 }
 
-                entrada = preparaParaCerrar(entrada, usuario);
+                Date fecha = new Date();
+                entrada = preparaParaCerrar(entrada, usuario, fecha);
 
                 Query query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
                 query.setString("nombre", Constantes.PENDIENTE);
                 Estatus estatus = (Estatus) query.uniqueResult();
                 entrada.setEstatus(estatus);
                 entrada.setFolio(getFolio(entrada.getAlmacen()));
+                entrada.setFechaModificacion(fecha);
 
                 currentSession().update(entrada);
+                
+                audita(entrada, usuario, Constantes.ACTUALIZAR, fecha);
+                
                 currentSession().flush();
                 return entrada.getFolio();
             } else {
@@ -221,14 +233,19 @@ public class EntradaDao {
                     entrada.setAlmacen(usuario.getAlmacen());
                 }
 
-                entrada = preparaParaCerrar(entrada, usuario);
+                Date fecha = new Date();
+                entrada = preparaParaCerrar(entrada, usuario, fecha);
                 Query query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
                 query.setString("nombre", Constantes.CERRADA);
                 Estatus estatus = (Estatus) query.uniqueResult();
                 entrada.setEstatus(estatus);
                 entrada.setFolio(getFolio(entrada.getAlmacen()));
+                entrada.setFechaModificacion(fecha);
 
                 currentSession().update(entrada);
+                
+                audita(entrada, usuario, Constantes.ACTUALIZAR, fecha);
+                
                 currentSession().flush();
                 return entrada;
             } else {
@@ -253,18 +270,28 @@ public class EntradaDao {
         query.setString("nombre", Constantes.CERRADA);
         Estatus estatus = (Estatus) query.uniqueResult();
         entrada.setEstatus(estatus);
-        entrada.setFechaModificacion(new Date());
+        Date fecha = new Date();
+        entrada.setFechaModificacion(fecha);
 
         currentSession().update(entrada);
+                
+        audita(entrada, usuario, Constantes.ACTUALIZAR, fecha);
+
         currentSession().flush();
         return entrada;
     }
 
     public String elimina(Long id) throws NoEstaAbiertaException {
+        return this.elimina(id, null);
+    }
+    
+    public String elimina(Long id, Usuario usuario) throws NoEstaAbiertaException {
         Entrada entrada = obtiene(id);
         if (entrada.getEstatus().getNombre().equals(Constantes.ABIERTA)) {
             String nombre = entrada.getFolio();
             currentSession().delete(entrada);
+            audita(entrada, usuario, Constantes.ELIMINAR, new Date());
+
             currentSession().flush();
             return nombre;
         } else {
@@ -372,12 +399,11 @@ public class EntradaDao {
         return balanceTotal.divide(articulos, 10, RoundingMode.HALF_UP).setScale(2, RoundingMode.HALF_UP);
     }
 
-    private Entrada preparaParaCerrar(Entrada entrada, Usuario usuario) throws NoCuadraException, NoSePuedeCerrarEnCeroException {
+    private Entrada preparaParaCerrar(Entrada entrada, Usuario usuario, Date fecha) throws NoCuadraException, NoSePuedeCerrarEnCeroException {
         BigDecimal iva = entrada.getIva();
         BigDecimal total = entrada.getTotal();
         entrada.setIva(BigDecimal.ZERO);
         entrada.setTotal(BigDecimal.ZERO);
-        Date fecha = new Date();
         for (LoteEntrada lote : entrada.getLotes()) {
             Producto producto = lote.getProducto();
             producto.setPrecioUnitario(costoPromedio(lote));
@@ -417,8 +443,6 @@ public class EntradaDao {
             }
         }
 
-        entrada.setFechaModificacion(fecha);
-
         return entrada;
     }
 
@@ -426,14 +450,41 @@ public class EntradaDao {
         XProducto xproducto = new XProducto();
         BeanUtils.copyProperties(producto, xproducto);
         xproducto.setId(null);
+        xproducto.setProductoId(producto.getId());
         xproducto.setEntradaId(entradaId);
         xproducto.setCancelacionId(cancelacionId);
-        xproducto.setProductoId(producto.getId());
         xproducto.setTipoProductoId(producto.getTipoProducto().getId());
         xproducto.setAlmacenId(producto.getAlmacen().getId());
         xproducto.setFechaCreacion(fecha);
         xproducto.setActividad(actividad);
         xproducto.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
         currentSession().save(xproducto);
+    }
+    
+    private void audita(Entrada entrada, Usuario usuario, String actividad, Date fecha) {
+        XEntrada xentrada = new XEntrada();
+        BeanUtils.copyProperties(entrada, xentrada);
+        xentrada.setId(null);
+        xentrada.setEntradaId(entrada.getId());
+        xentrada.setProveedorId(entrada.getProveedor().getId());
+        xentrada.setEstatusId(entrada.getEstatus().getId());
+        xentrada.setFechaCreacion(fecha);
+        xentrada.setActividad(actividad);
+        xentrada.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
+        currentSession().save(xentrada);
+    }
+    
+    private void auditaSalida(Salida salida, Usuario usuario, String actividad, Date fecha) {
+        XSalida xsalida = new XSalida();
+        BeanUtils.copyProperties(salida, xsalida);
+        xsalida.setId(null);
+        xsalida.setSalidaId(salida.getId());
+        xsalida.setAlmacenId(salida.getAlmacen().getId());
+        xsalida.setClienteId(salida.getCliente().getId());
+        xsalida.setEstatusId(salida.getEstatus().getId());
+        xsalida.setFechaCreacion(fecha);
+        xsalida.setActividad(actividad);
+        xsalida.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
+        currentSession().save(xsalida);
     }
 }
