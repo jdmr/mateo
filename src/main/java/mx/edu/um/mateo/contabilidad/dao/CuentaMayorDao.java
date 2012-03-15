@@ -110,11 +110,8 @@ public class CuentaMayorDao {
     public CuentaMayor actualiza(CuentaMayor cuentaMayor) {
         log.debug("Actualizando cuenta de mayor {}", cuentaMayor);
         
-        //trae el objeto de la DB 
         CuentaMayor nueva = (CuentaMayor)currentSession().get(CuentaMayor.class, cuentaMayor.getId());
-        //actualiza el objeto
         BeanUtils.copyProperties(cuentaMayor, nueva);
-        //lo guarda en la BD
         
         currentSession().update(nueva);
         currentSession().flush();

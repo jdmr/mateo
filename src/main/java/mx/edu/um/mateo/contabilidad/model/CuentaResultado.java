@@ -16,7 +16,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 
 @Entity
-@Table(name = "ctaresultado")
+@Table(name = "cuentaresultado")
 
 public class CuentaResultado implements Serializable{
     
@@ -58,18 +58,18 @@ public class CuentaResultado implements Serializable{
     private Double pctIva;
     @NotBlank
     @Column(nullable = false, length = 24)
-    private String idCtaResultado;
+    private String idCuentaResultado;
     */
     
     public CuentaResultado() {
     }
     
     /**
-     public CuentaResultado(Ejercicio ejercicio, String tipoCuenta, String nombre, String idCtaResultado) {
+     public CuentaResultado(Ejercicio ejercicio, String tipoCuenta, String nombre, String idCuentaResultado) {
          this.ejercicio = ejercicio;
          this.tipoCuenta = tipoCuenta;
          this.nombre = nombre;
-         this.idCtaResultado = idCtaResultado;
+         this.idCuentaResultado = idCuentaResultado;
     }
      */
     
@@ -132,7 +132,7 @@ public class CuentaResultado implements Serializable{
 
     @Override
     public String toString() {
-        return "CtaResultado{nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + '}';
+        return "CuentaResultado{nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + '}';
     }
     
 }
