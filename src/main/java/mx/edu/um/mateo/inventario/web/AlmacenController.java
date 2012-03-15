@@ -26,7 +26,6 @@ package mx.edu.um.mateo.inventario.web;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,13 +90,6 @@ public class AlmacenController extends BaseController {
         if (StringUtils.isNotBlank(filtro)) {
             params.put("filtro", filtro);
         }
-        if (pagina != null) {
-            params.put("pagina", pagina);
-            modelo.addAttribute("pagina", pagina);
-        } else {
-            pagina = 1L;
-            modelo.addAttribute("pagina", pagina);
-        }
         if (StringUtils.isNotBlank(order)) {
             params.put("order", order);
             params.put("sort", sort);
@@ -130,22 +122,7 @@ public class AlmacenController extends BaseController {
         params = almacenDao.lista(params);
         modelo.addAttribute("almacenes", params.get("almacenes"));
 
-        // inicia paginado
-        Long cantidad = (Long) params.get("cantidad");
-        Integer max = (Integer) params.get("max");
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<Almacen> almacenes = (List<Almacen>) params.get("almacenes");
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (almacenes.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute("paginacion", paginacion);
-        modelo.addAttribute("paginas", paginas);
-        // termina paginado
+        this.pagina(params, modelo, "almacenes", pagina);
 
         return "inventario/almacen/lista";
     }

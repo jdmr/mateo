@@ -23,6 +23,10 @@
  */
 package mx.edu.um.mateo.general.web;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.ReporteUtil;
 import org.slf4j.Logger;
@@ -30,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.ui.Model;
 
 /**
  *
@@ -45,5 +50,31 @@ public abstract class BaseController {
     protected Ambiente ambiente;
     @Autowired
     protected ReporteUtil reporteUtil;
+    
+    protected void pagina(Map<String, Object> params, Model modelo, String lista, Long pagina) {
+        if (pagina != null) {
+            params.put("pagina", pagina);
+            modelo.addAttribute("pagina", pagina);
+        } else {
+            pagina = 1L;
+            modelo.addAttribute("pagina", pagina);
+        }
+        // inicia paginado
+        Long cantidad = (Long) params.get("cantidad");
+        Integer max = (Integer) params.get("max");
+        Long cantidadDePaginas = cantidad / max;
+        List<Long> paginas = new ArrayList<>();
+        long i = 1;
+        do {
+            paginas.add(i);
+        } while (i++ < cantidadDePaginas);
+        List<Usuario> usuarios = (List<Usuario>) params.get(lista);
+        Long primero = ((pagina - 1) * max) + 1;
+        Long ultimo = primero + (usuarios.size() - 1);
+        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
+        modelo.addAttribute("paginacion", paginacion);
+        modelo.addAttribute("paginas", paginas);
+        // termina paginado
+    }
     
 }

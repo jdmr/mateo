@@ -26,7 +26,6 @@ package mx.edu.um.mateo.contabilidad.web;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,13 +87,6 @@ public class CuentaAuxiliarController extends BaseController {
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }
-        if (pagina != null) {
-            params.put(Constantes.CONTAINSKEY_PAGINA, pagina);
-            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
-        } else {
-            pagina = 1L;
-            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
-        }
         if (StringUtils.isNotBlank(order)) {
             params.put(Constantes.CONTAINSKEY_ORDER, order);
             params.put(Constantes.CONTAINSKEY_SORT, sort);
@@ -129,22 +121,7 @@ public class CuentaAuxiliarController extends BaseController {
         params = cuentaAuxiliarDao.lista(params);
         modelo.addAttribute(Constantes.CONTAINSKEY_AUXILIARES, params.get(Constantes.CONTAINSKEY_AUXILIARES));
 
-        // inicia paginado
-        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
-        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<CuentaAuxiliar> auxiliares = (List<CuentaAuxiliar>) params.get(Constantes.CONTAINSKEY_AUXILIARES);
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (auxiliares.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
-        // termina paginado
+        this.pagina(params, modelo, Constantes.CONTAINSKEY_AUXILIARES, pagina);
 
         return Constantes.PATH_CUENTA_AUXILIAR_LISTA;
     }
