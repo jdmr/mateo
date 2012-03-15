@@ -104,20 +104,12 @@ public class CuentaResultadoDao {
         currentSession().save(cuentaResultado);
         currentSession().flush();
         return cuentaResultado;
-//        cuentaResultado = new CuentaResultado();
-//        currentSession().save(cuentaResultado);
-//        return cuentaResultado;
+
     }
 
     public CuentaResultado actualiza(CuentaResultado cuentaResultado) {
         currentSession().saveOrUpdate(cuentaResultado);
-//       log.debug("Actualizando cuenta de resultado {}", cuentaResultado);
-//        
-//        //trae el objeto de la DB 
         CuentaResultado nueva = (CuentaResultado)currentSession().get(CuentaResultado.class, cuentaResultado.getId());
-//        //actualiza el objeto
-//        BeanUtils.copyProperties(cuentaResultado, nueva);
-//        
           currentSession().update(nueva);
         currentSession().flush();
         return cuentaResultado;
