@@ -42,6 +42,7 @@ import mx.edu.um.mateo.general.utils.LabelValueBean;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inventario.dao.EntradaDao;
 import mx.edu.um.mateo.inventario.dao.ProductoDao;
+import mx.edu.um.mateo.inventario.model.Cancelacion;
 import mx.edu.um.mateo.inventario.model.Entrada;
 import mx.edu.um.mateo.inventario.model.LoteEntrada;
 import mx.edu.um.mateo.inventario.model.Producto;
@@ -144,6 +145,9 @@ public class EntradaController extends BaseController {
                 break;
             case Constantes.PENDIENTE:
                 modelo.addAttribute("puedeEditarPendiente", true);
+                break;
+            case Constantes.CERRADA:
+                modelo.addAttribute("puedeCancelar", true);
                 break;
         }
 
@@ -382,6 +386,48 @@ public class EntradaController extends BaseController {
             return "redirect:/inventario/entrada/ver/" + id;
         }
 
+    }
+
+    @RequestMapping("/cancela/{id}")
+    public String cancela(@PathVariable Long id, Model modelo, RedirectAttributes redirectAttributes) {
+        try {
+            log.debug("Cancela entrada {}", id);
+            Map<String, Object> resultado = entradaDao.preCancelacion(id, ambiente.obtieneUsuario());
+            modelo.addAttribute("entrada", resultado.get("entrada"));
+            modelo.addAttribute("productos", resultado.get("productos"));
+            modelo.addAttribute("entradas", resultado.get("entradas"));
+            modelo.addAttribute("salidas", resultado.get("salidas"));
+            modelo.addAttribute("productosCancelados", resultado.get("productosCancelados"));
+            modelo.addAttribute("productosSinHistoria", resultado.get("productosSinHistoria"));
+
+            return "inventario/entrada/cancela";
+        } catch (NoEstaCerradaException e) {
+            log.error("No se puede cancelar la entrada", e);
+            redirectAttributes.addFlashAttribute("message", "entrada.no.cerrada.para.cancelar.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{e.getEntrada().getFolio()});
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+            return "redirect:/inventario/entrada/ver/" + id;
+        }
+    }
+
+    @RequestMapping(value = "/cancelar", method = RequestMethod.POST)
+    public String cancelar(@RequestParam Long id, @RequestParam String comentarios, Model modelo, RedirectAttributes redirectAttributes) {
+        try {
+            log.debug("Cancelando entrada {}", id);
+            Cancelacion cancelacion = entradaDao.cancelar(id, ambiente.obtieneUsuario(), comentarios);
+            modelo.addAttribute("cancelacion", cancelacion);
+
+            modelo.addAttribute("message", "entrada.cancelada.message");
+            modelo.addAttribute("messageAttrs", new String[]{cancelacion.getEntrada().getFolio()});
+            modelo.addAttribute("messageStyle", "alert-success");
+            return "/inventario/entrada/cancelada";
+        } catch (NoEstaCerradaException e) {
+            log.error("No se puede cancelar la entrada", e);
+            redirectAttributes.addFlashAttribute("message", "entrada.no.cerrada.para.cancelar.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{e.getSalida().getFolio()});
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+            return "redirect:/inventario/entrada/ver/" + id;
+        }
     }
 
     @RequestMapping(value = "/proveedores", params = "term", produces = "application/json")

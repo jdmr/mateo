@@ -25,9 +25,8 @@ package mx.edu.um.mateo.inventario.dao;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inventario.model.*;
@@ -52,6 +51,8 @@ public class EntradaDao {
     private static final Logger log = LoggerFactory.getLogger(EntradaDao.class);
     @Autowired
     private SessionFactory sessionFactory;
+    @Autowired
+    private CancelacionDao cancelacionDao;
 
     public EntradaDao() {
         log.info("Nueva instancia de EntradaDao");
@@ -444,6 +445,223 @@ public class EntradaDao {
         }
 
         return entrada;
+    }
+
+    public Map<String, Object> preCancelacion(Long id, Usuario usuario) throws NoEstaCerradaException {
+        log.info("{} mando llamar precancelacion de entrada {}", usuario, id);
+        Entrada entrada = (Entrada) currentSession().get(Entrada.class, id);
+        if (entrada.getEstatus().getNombre().equals(Constantes.CERRADA) || entrada.getEstatus().getNombre().equals(Constantes.FACTURADA)) {
+            Set<Producto> productos = new HashSet<>();
+            for (LoteEntrada lote : entrada.getLotes()) {
+                productos.add(lote.getProducto());
+            }
+
+            log.debug("Buscando entradas que contengan los productos {} despues de la fecha {}", productos, entrada.getFechaModificacion());
+            Query query = currentSession().createQuery(
+                    "select e from Entrada e inner join e.lotes le inner join e.estatus es "
+                    + "where(es.nombre = 'CERRADA' or es.nombre = 'PENDIENTE') "
+                    + "and le.producto in (:productos) "
+                    + "and e.fechaModificacion > :fecha");
+            query.setParameterList("productos", productos);
+            query.setTimestamp("fecha", entrada.getFechaModificacion());
+            List<Entrada> entradas = (List<Entrada>) query.list();
+            for (Entrada e : entradas) {
+                log.debug("ENTRADA: {}", e);
+                for (LoteEntrada lote : e.getLotes()) {
+                    productos.add(lote.getProducto());
+                }
+            }
+            entradas.add(entrada);
+
+            query = currentSession().createQuery(
+                    "select s from Salida s inner join s.lotes ls inner join s.estatus es "
+                    + "where es.nombre = 'CERRADA' "
+                    + "and ls.producto in (:productos) "
+                    + "and s.fechaModificacion > :fecha");
+            query.setParameterList("productos", productos);
+            query.setTimestamp("fecha", entrada.getFechaModificacion());
+            List<Salida> salidas = (List<Salida>) query.list();
+            for (Salida salida : salidas) {
+                log.debug("SALIDA: {}", salida);
+                for (LoteSalida lote : salida.getLotes()) {
+                    productos.add(lote.getProducto());
+                }
+            }
+
+            Map<Long, Producto> productosCancelados = new HashMap<>();
+            Map<Long, Producto> productosSinHistoria = new HashMap<>();
+            for (Producto producto : productos) {
+                log.debug("Buscando historial de {}", producto);
+                query = currentSession().createQuery(
+                        "select xp from XProducto xp "
+                        + "where xp.productoId = :productoId "
+                        + "and (xp.actividad = 'CREAR' or actividad = 'ACTUALIZAR') "
+                        + "and xp.fechaCreacion < :fecha "
+                        + "and (xp.entradaId is null or xp.entradaId != :entradaId) "
+                        + "order by xp.fechaCreacion desc");
+                query.setLong("productoId", producto.getId());
+                query.setTimestamp("fecha", entrada.getFechaModificacion());
+                query.setLong("entradaId", entrada.getId());
+                query.setMaxResults(1);
+                List<XProducto> xproductos = (List<XProducto>) query.list();
+                if (xproductos != null && xproductos.get(0) != null) {
+                    XProducto xproducto = xproductos.get(0);
+                    log.debug("Encontre historia del producto {}", xproducto);
+                    Producto p = new Producto();
+                    BeanUtils.copyProperties(xproducto, p);
+                    p.setTipoProducto(producto.getTipoProducto());
+                    p.setAlmacen(producto.getAlmacen());
+                    productosCancelados.put(producto.getId(), p);
+                } else {
+                    log.debug("No encontre historia del producto {}", producto);
+                    Producto p = new Producto();
+                    BeanUtils.copyProperties(producto, p);
+                    p.setPrecioUnitario(BigDecimal.ZERO);
+                    p.setUltimoPrecio(BigDecimal.ZERO);
+                    p.setExistencia(BigDecimal.ZERO);
+                    productosSinHistoria.put(producto.getId(), p);
+                }
+            }
+
+            Map<String, Object> resultado = new HashMap<>();
+            resultado.put("entrada", entrada);
+            resultado.put("productos", productos);
+            if (entradas != null && entradas.size() > 0) {
+                resultado.put("entradas", entradas);
+            }
+            if (salidas != null && salidas.size() > 0) {
+                resultado.put("salidas", salidas);
+            }
+            if (productosCancelados.size() > 0) {
+                resultado.put("productosCancelados", productosCancelados.values());
+            }
+            if (productosSinHistoria.size() > 0) {
+                resultado.put("productosSinHistoria", productosSinHistoria.values());
+            }
+            return resultado;
+        } else {
+            throw new NoEstaCerradaException("La entrada no se puede cancelar porque no esta cerrada o facturada", entrada);
+        }
+    }
+
+    public Cancelacion cancelar(Long id, Usuario usuario, String comentarios) throws NoEstaCerradaException {
+        log.info("{} esta cancelando entrada {}", usuario, id);
+        Entrada entrada = (Entrada) currentSession().get(Entrada.class, id);
+        if (entrada.getEstatus().getNombre().equals(Constantes.CERRADA) || entrada.getEstatus().getNombre().equals(Constantes.FACTURADA)) {
+            Set<Producto> productos = new HashSet<>();
+            for (LoteEntrada lote : entrada.getLotes()) {
+                productos.add(lote.getProducto());
+            }
+
+            log.debug("Buscando entradas que contengan los productos {} despues de la fecha {}", productos, entrada.getFechaModificacion());
+            Query query = currentSession().createQuery(
+                    "select e from Entrada e inner join e.lotes le inner join e.estatus es "
+                    + "where(es.nombre = 'CERRADA' or es.nombre = 'PENDIENTE') "
+                    + "and le.producto in (:productos) "
+                    + "and e.fechaModificacion > :fecha");
+            query.setParameterList("productos", productos);
+            query.setTimestamp("fecha", entrada.getFechaModificacion());
+            List<Entrada> entradas = (List<Entrada>) query.list();
+            for (Entrada e : entradas) {
+                log.debug("ENTRADA: {}", e);
+                for (LoteEntrada lote : e.getLotes()) {
+                    productos.add(lote.getProducto());
+                }
+            }
+            entradas.add(entrada);
+
+            query = currentSession().createQuery(
+                    "select s from Salida s inner join s.lotes ls inner join s.estatus es "
+                    + "where es.nombre = 'CERRADA' "
+                    + "and ls.producto in (:productos) "
+                    + "and s.fechaModificacion > :fecha");
+            query.setParameterList("productos", productos);
+            query.setTimestamp("fecha", entrada.getFechaModificacion());
+            List<Salida> salidas = (List<Salida>) query.list();
+            for (Salida s : salidas) {
+                log.debug("SALIDA: {}", s);
+                for (LoteSalida lote : s.getLotes()) {
+                    productos.add(lote.getProducto());
+                }
+            }
+
+            Date fecha = new Date();
+            for (Producto producto : productos) {
+                log.debug("Buscando historial de {}", producto);
+                query = currentSession().createQuery(
+                        "select xp from XProducto xp "
+                        + "where xp.productoId = :productoId "
+                        + "and (xp.actividad = 'CREAR' or actividad = 'ACTUALIZAR') "
+                        + "and xp.fechaCreacion < :fecha "
+                        + "and (xp.entradaId is null or xp.entradaId != :entradaId) "
+                        + "order by xp.fechaCreacion desc");
+                query.setLong("productoId", producto.getId());
+                query.setTimestamp("fecha", entrada.getFechaModificacion());
+                query.setLong("entradaId", entrada.getId());
+                query.setMaxResults(1);
+                List<XProducto> xproductos = (List<XProducto>) query.list();
+                if (xproductos != null && xproductos.get(0) != null) {
+                    XProducto xproducto = xproductos.get(0);
+                    log.debug("Encontre historia del producto {}", xproducto);
+                    producto.setPrecioUnitario(xproducto.getPrecioUnitario());
+                    producto.setUltimoPrecio(xproducto.getUltimoPrecio());
+                    producto.setExistencia(xproducto.getExistencia());
+                    producto.setFechaModificacion(fecha);
+                } else {
+                    log.debug("No encontre historia del producto {}", producto);
+                    producto.setPrecioUnitario(BigDecimal.ZERO);
+                    producto.setUltimoPrecio(BigDecimal.ZERO);
+                    producto.setExistencia(BigDecimal.ZERO);
+                    producto.setFechaModificacion(fecha);
+                }
+                currentSession().update(producto);
+            }
+            
+            query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
+            query.setString("nombre", Constantes.CANCELADA);
+            Estatus cancelada = (Estatus) query.uniqueResult();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            String fechaString = sdf.format(fecha);
+            for(Entrada e : entradas) {
+                e.setFactura(e.getFactura()+"C"+fechaString);
+                e.setEstatus(cancelada);
+                e.setFechaModificacion(fecha);
+                currentSession().update(e);
+                
+                audita(e, usuario, Constantes.CANCELAR, fecha);
+            }
+            
+            for(Salida s : salidas) {
+                s.setReporte(s.getReporte()+"C"+fechaString);
+                s.setEstatus(cancelada);
+                s.setFechaModificacion(fecha);
+                currentSession().update(s);
+                
+                auditaSalida(s, usuario, Constantes.CANCELAR, fecha);
+            }
+
+            // Crear cancelacion
+            Cancelacion cancelacion = new Cancelacion();
+            cancelacion.setFolio(cancelacionDao.getFolio(entrada.getAlmacen()));
+            cancelacion.setComentarios(comentarios);
+            cancelacion.setEntrada(entrada);
+            cancelacion.setProductos(productos);
+            if (entradas != null && entradas.size() > 0) {
+                cancelacion.setEntradas(entradas);
+            }
+            if (salidas != null && salidas.size() > 0) {
+                cancelacion.setSalidas(salidas);
+            }
+            cancelacion = cancelacionDao.crea(cancelacion, usuario);
+            currentSession().flush();
+            for (Producto producto : productos) {
+                auditaProducto(producto, usuario, Constantes.CANCELAR, null, cancelacion.getId(), fecha);
+            }
+            
+            return cancelacion;
+        } else {
+            throw new NoEstaCerradaException("La entrada no se puede cancelar porque no esta cerrada o facturada", entrada);
+        }
     }
 
     private void auditaProducto(Producto producto, Usuario usuario, String actividad, Long entradaId, Long cancelacionId, Date fecha) {

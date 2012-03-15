@@ -346,7 +346,7 @@ public class SalidaController extends BaseController {
 
             return "inventario/salida/cancela";
         } catch (NoEstaCerradaException e) {
-            log.error("No se puede cancela la salida", e);
+            log.error("No se puede cancelar la salida", e);
             redirectAttributes.addFlashAttribute("message", "salida.no.cerrada.para.cancelar.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{e.getSalida().getFolio()});
             redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
@@ -366,7 +366,7 @@ public class SalidaController extends BaseController {
             modelo.addAttribute("messageStyle", "alert-success");
             return "/inventario/salida/cancelada";
         } catch (NoEstaCerradaException e) {
-            log.error("No se puede cancela la salida", e);
+            log.error("No se puede cancelar la salida", e);
             redirectAttributes.addFlashAttribute("message", "salida.no.cerrada.para.cancelar.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{e.getSalida().getFolio()});
             redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
