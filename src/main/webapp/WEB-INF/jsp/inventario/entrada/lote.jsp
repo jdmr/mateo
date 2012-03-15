@@ -8,20 +8,21 @@
         <title><s:message code="lote.nuevo.label" /></title>
     </head>
     <body>
-        <nav class="navbar navbar-fixed-top" role="navigation">
-            <ul class="nav">
-                <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li><a href="<c:url value='/inventario' />"><s:message code="inventario.label" /></a></li>
-                <li><a href="<s:url value='/inventario/salida'/>" ><s:message code="salida.lista.label" /></a></li>
-                <li class="active"><a href="<s:url value='/inventario/entrada'/>" ><s:message code="entrada.lista.label" /></a></li>
-                <li><a href="<s:url value='/inventario/producto'/>" ><s:message code="producto.lista.label" /></a></li>
-                <li><a href="<s:url value='/inventario/tipoProducto'/>" ><s:message code="tipoProducto.lista.label" /></a></li>
-                <li><a href="<s:url value='/inventario/almacen'/>" ><s:message code="almacen.lista.label" /></a></li>
-            </ul>
-        </nav>
+        <jsp:include page="../menu.jsp" >
+            <jsp:param name="menu" value="entrada" />
+        </jsp:include>
 
         <div id="nuevo-lote" class="content scaffold-list" role="main">
             <h1><s:message code="lote.nuevo.label" /></h1>
+            <hr/>
+            
+            <c:if test="${not empty message}">
+                <div class="alert alert-block alert-error fade in" role="status">
+                    <a class="close" data-dismiss="alert">×</a>
+                    <s:message code="${message}" arguments="${messageAttrs}" />
+                </div>
+            </c:if>
+            
             <c:url var="creaUrl" value="/inventario/entrada/lote/crea" />
             <form:form commandName="lote" action="${creaUrl}" method="post">
                 <form:hidden path="entrada.id" id="entradaId" />
@@ -81,7 +82,7 @@
                 </fieldset>
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/inventario/entrada/edita/${lote.entrada.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <a class="btn btn-large" href="<s:url value='/inventario/entrada/ver/${lote.entrada.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>

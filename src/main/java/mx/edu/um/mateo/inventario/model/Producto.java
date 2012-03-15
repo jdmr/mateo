@@ -26,6 +26,7 @@ package mx.edu.um.mateo.inventario.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
@@ -94,6 +95,12 @@ public class Producto implements Serializable {
         @JoinColumn(name = "producto_id", unique = true)}, inverseJoinColumns = {
         @JoinColumn(name = "imagen_id")})
     private List<Imagen> imagenes = new ArrayList<>();
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, name = "date_created")
+    private Date fechaCreacion;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, name = "last_updated")
+    private Date fechaModificacion;
 
     public Producto() {
     }
@@ -105,6 +112,9 @@ public class Producto implements Serializable {
         this.descripcion = descripcion;
         this.tipoProducto = tipoProducto;
         this.almacen = almacen;
+        Date fecha = new Date();
+        this.fechaCreacion = fecha;
+        this.fechaModificacion = fecha;
     }
 
     /**
@@ -385,6 +395,34 @@ public class Producto implements Serializable {
      */
     public void setImagenes(List<Imagen> imagenes) {
         this.imagenes = imagenes;
+    }
+
+    /**
+     * @return the fechaCreacion
+     */
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    /**
+     * @param fechaCreacion the fechaCreacion to set
+     */
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    /**
+     * @return the fechaModificacion
+     */
+    public Date getFechaModificacion() {
+        return fechaModificacion;
+    }
+
+    /**
+     * @param fechaModificacion the fechaModificacion to set
+     */
+    public void setFechaModificacion(Date fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
     }
 
     @Override

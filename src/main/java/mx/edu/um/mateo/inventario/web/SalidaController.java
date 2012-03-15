@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
-import java.util.logging.Level;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
@@ -38,12 +37,12 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.ClienteDao;
 import mx.edu.um.mateo.general.model.Cliente;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.LabelValueBean;
-import mx.edu.um.mateo.general.utils.ReporteUtil;
+import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inventario.dao.ProductoDao;
 import mx.edu.um.mateo.inventario.dao.SalidaDao;
+import mx.edu.um.mateo.inventario.model.Cancelacion;
 import mx.edu.um.mateo.inventario.model.LoteSalida;
 import mx.edu.um.mateo.inventario.model.Producto;
 import mx.edu.um.mateo.inventario.model.Salida;
@@ -51,11 +50,7 @@ import mx.edu.um.mateo.inventario.utils.*;
 import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,23 +67,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping("/inventario/salida")
-public class SalidaController {
+public class SalidaController extends BaseController {
 
-    private static final Logger log = LoggerFactory.getLogger(SalidaController.class);
     @Autowired
     private SalidaDao salidaDao;
     @Autowired
     private ClienteDao clienteDao;
     @Autowired
     private ProductoDao productoDao;
-    @Autowired
-    private JavaMailSender mailSender;
-    @Autowired
-    private ResourceBundleMessageSource messageSource;
-    @Autowired
-    private Ambiente ambiente;
-    @Autowired
-    private ReporteUtil reporteUtil;
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -106,13 +92,6 @@ public class SalidaController {
         params.put("almacen", request.getSession().getAttribute("almacenId"));
         if (StringUtils.isNotBlank(filtro)) {
             params.put("filtro", filtro);
-        }
-        if (pagina != null) {
-            params.put("pagina", pagina);
-            modelo.addAttribute("pagina", pagina);
-        } else {
-            pagina = 1L;
-            modelo.addAttribute("pagina", pagina);
         }
         if (StringUtils.isNotBlank(order)) {
             params.put("order", order);
@@ -148,22 +127,7 @@ public class SalidaController {
         params = salidaDao.lista(params);
         modelo.addAttribute("salidas", params.get("salidas"));
 
-        // inicia paginado
-        Long cantidad = (Long) params.get("cantidad");
-        Integer max = (Integer) params.get("max");
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<Salida> salidas = (List<Salida>) params.get("salidas");
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (salidas.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute("paginacion", paginacion);
-        modelo.addAttribute("paginas", paginas);
-        // termina paginado
+        this.pagina(params, modelo, "salidas", pagina);
 
         return "inventario/salida/lista";
     }
@@ -386,7 +350,27 @@ public class SalidaController {
             redirectAttributes.addFlashAttribute("message", "salida.no.cerrada.para.cancelar.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{e.getSalida().getFolio()});
             redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
-            return "redrect:/inventario/salida/ver/" + id;
+            return "redirect:/inventario/salida/ver/" + id;
+        }
+    }
+
+    @RequestMapping(value = "/cancelar", method = RequestMethod.POST)
+    public String cancelar(@RequestParam Long id, @RequestParam String comentarios, Model modelo, RedirectAttributes redirectAttributes) {
+        try {
+            log.debug("Cancelando salida {}", id);
+            Cancelacion cancelacion = salidaDao.cancelar(id, ambiente.obtieneUsuario(), comentarios);
+            modelo.addAttribute("cancelacion", cancelacion);
+
+            modelo.addAttribute("message", "salida.cancelada.message");
+            modelo.addAttribute("messageAttrs", new String[]{cancelacion.getSalida().getFolio()});
+            modelo.addAttribute("messageStyle", "alert-success");
+            return "/inventario/salida/cancelada";
+        } catch (NoEstaCerradaException e) {
+            log.error("No se puede cancela la salida", e);
+            redirectAttributes.addFlashAttribute("message", "salida.no.cerrada.para.cancelar.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{e.getSalida().getFolio()});
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+            return "redirect:/inventario/salida/ver/" + id;
         }
     }
 
@@ -457,10 +441,11 @@ public class SalidaController {
         }
 
         try {
-            if (request.getParameter("producto.id") == null) {
+            if (StringUtils.isBlank(request.getParameter("producto.id"))) {
                 log.warn("No se puede crear la salida si no ha seleccionado un cliente");
-                errors.rejectValue("producto", "lote.sin.producto.message");
-                return "inventario/salida/lote/" + request.getParameter("salida.id");
+                modelo.addAttribute("message", "lote.sin.producto.message");
+                modelo.addAttribute("lote", lote);
+                return "inventario/salida/lote";
             }
             Producto producto = productoDao.obtiene(new Long(request.getParameter("producto.id")));
             Salida salida = salidaDao.obtiene(new Long(request.getParameter("salida.id")));
@@ -475,7 +460,9 @@ public class SalidaController {
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{""});
         } catch (ProductoNoSoportaFraccionException e) {
             log.error("No se pudo crear la salida porque no se encontro el producto", e);
-            return "inventario/salida/lote/" + request.getParameter("salida.id");
+            modelo.addAttribute("message", "lote.sin.producto.message");
+            modelo.addAttribute("lote", lote);
+            return "inventario/salida/lote";
         }
 
         redirectAttributes.addFlashAttribute("message", "lote.creado.message");

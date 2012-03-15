@@ -7,18 +7,9 @@
         <title><s:message code="empresa.lista.label" /></title>
     </head>
     <body>
-        <nav class="navbar navbar-fixed-top" role="navigation">
-            <ul class="nav">
-                <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>
-                <li><a href="<s:url value='/admin/cliente'/>" ><s:message code="cliente.label" /></a></li>
-                <li><a href="<s:url value='/admin/tipoCliente'/>" ><s:message code="tipoCliente.label" /></a></li>
-                <li><a href="<s:url value='/admin/proveedor'/>" ><s:message code="proveedor.label" /></a></li>
-                <li class="active"><a href="<s:url value='/admin/empresa'/>" ><s:message code="empresa.label" /></a></li>
-                <li><a href="<s:url value='/admin/organizacion'/>" ><s:message code="organizacion.label" /></a></li>
-                <li><a href="<s:url value='/admin/usuario'/>" ><s:message code="usuario.label" /></a></li>
-            </ul>
-        </nav>
+        <jsp:include page="../menu.jsp" >
+            <jsp:param name="menu" value="empresa" />
+        </jsp:include>
 
         <h1><s:message code="empresa.lista.label" /></h1>
         <hr/>
@@ -109,36 +100,7 @@
                     </c:forEach>
                 </tbody>
             </table>
-            <div class="row-fluid">
-                <div class="span8">
-                    <div class="pagination">
-                        <ul>
-                            <li class="disabled"><a href="#"><s:message code="mensaje.paginacion" arguments="${paginacion}" /></a></li>
-                            <c:forEach items="${paginas}" var="paginaId">
-                                <li <c:if test="${pagina == paginaId}" >class="active"</c:if>>
-                                    <a href="javascript:buscaPagina(${paginaId});" >${paginaId}</a>
-                                </li>
-                            </c:forEach>
-                        </ul>
-                    </div>
-                </div>
-                <div class="span4">
-                    <div class="btn-group pull-right" style="margin-top: 22px;margin-left: 10px;">
-                        <button id="enviaCorreoBtn" class="btn" data-loading-text="<s:message code='enviando.label'/>" onclick="javascript:enviaCorreo('XLS');" ><i class="icon-envelope"></i> <s:message code="envia.correo.label" /></button>
-                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="javascript:enviaCorreo('PDF');"><img src="<c:url value='/images/pdf.gif' />" /></a></li>
-                            <li><a href="javascript:enviaCorreo('CSV');"><img src="<c:url value='/images/csv.gif' />" /></a></li>
-                            <li><a href="javascript:enviaCorreo('XLS');"><img src="<c:url value='/images/xls.gif' />" /></a></li>
-                        </ul>
-                    </div>
-                    <p class="pull-right" style="margin-top: 20px;">
-                        <a href="javascript:imprime('PDF');"><img src="<c:url value='/images/pdf.gif' />" /></a>
-                        <a href="javascript:imprime('CSV');"><img src="<c:url value='/images/csv.gif' />" /></a>
-                        <a href="javascript:imprime('XLS');"><img src="<c:url value='/images/xls.gif' />" /></a>
-                    </p>
-                </div>
-            </div>
+            <jsp:include page="/WEB-INF/jsp/paginacion.jsp" />
         </form>        
         <content>
             <script src="<c:url value='/js/lista.js' />"></script>

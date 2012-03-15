@@ -25,12 +25,8 @@ package mx.edu.um.mateo.inventario.dao;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inventario.model.*;
@@ -55,6 +51,8 @@ public class SalidaDao {
     private static final Logger log = LoggerFactory.getLogger(SalidaDao.class);
     @Autowired
     private SessionFactory sessionFactory;
+    @Autowired
+    private CancelacionDao cancelacionDao;
 
     public SalidaDao() {
         log.info("Nueva instancia de SalidaDao");
@@ -116,6 +114,7 @@ public class SalidaDao {
         } else {
             criteria.createCriteria("estatus").addOrder(Order.asc("prioridad"));
         }
+        criteria.addOrder(Order.desc("fechaModificacion"));
 
         if (!params.containsKey("reporte")) {
             criteria.setFirstResult((Integer) params.get("offset"));
@@ -199,6 +198,7 @@ public class SalidaDao {
 
                 salida.setIva(BigDecimal.ZERO);
                 salida.setTotal(BigDecimal.ZERO);
+                Date fecha = new Date();
                 for (LoteSalida lote : salida.getLotes()) {
                     Producto producto = lote.getProducto();
                     if (producto.getExistencia().subtract(lote.getCantidad()).compareTo(BigDecimal.ZERO) < 0) {
@@ -207,18 +207,9 @@ public class SalidaDao {
                     lote.setPrecioUnitario(producto.getPrecioUnitario());
                     currentSession().update(lote);
                     producto.setExistencia(producto.getExistencia().subtract(lote.getCantidad()));
+                    producto.setFechaModificacion(fecha);
                     currentSession().update(producto);
-                    XProducto xproducto = new XProducto();
-                    BeanUtils.copyProperties(producto, xproducto);
-                    xproducto.setId(null);
-                    xproducto.setSalidaId(salida.getId());
-                    xproducto.setProductoId(producto.getId());
-                    xproducto.setTipoProductoId(producto.getTipoProducto().getId());
-                    xproducto.setAlmacenId(producto.getAlmacen().getId());
-                    xproducto.setFechaCreacion(new Date());
-                    xproducto.setActividad(Constantes.ACTUALIZAR);
-                    xproducto.setCreador((usuario != null) ? usuario.getUsername() : "admin");
-                    currentSession().save(xproducto);
+                    auditaProducto(producto, usuario, Constantes.ACTUALIZAR, salida.getId(), null, fecha);
 
                     BigDecimal subtotal = lote.getPrecioUnitario().multiply(lote.getCantidad());
                     salida.setIva(salida.getIva().add(lote.getIva()));
@@ -231,7 +222,7 @@ public class SalidaDao {
                 salida.setEstatus(estatus);
                 salida.setFolio(getFolio(salida.getAlmacen()));
                 salida.setAtendio(usuario.getApellido() + ", " + usuario.getNombre());
-                salida.setFechaModificacion(new Date());
+                salida.setFechaModificacion(fecha);
 
                 currentSession().update(salida);
                 currentSession().flush();
@@ -383,7 +374,7 @@ public class SalidaDao {
             }
 
             query = currentSession().createQuery(
-                    "select s.id from Salida s inner join s.lotes ls inner join s.estatus es "
+                    "select s from Salida s inner join s.lotes ls inner join s.estatus es "
                     + "where es.nombre = 'CERRADA' "
                     + "and ls.producto in (:productos) "
                     + "and s.fechaModificacion > :fecha");
@@ -426,10 +417,10 @@ public class SalidaDao {
                     log.debug("No encontre historia del producto {}", producto);
                     Producto p = new Producto();
                     BeanUtils.copyProperties(producto, p);
-                    producto.setPrecioUnitario(BigDecimal.ZERO);
-                    producto.setUltimoPrecio(BigDecimal.ZERO);
-                    producto.setExistencia(BigDecimal.ZERO);
-                    productosSinHistoria.put(producto.getId(), producto);
+                    p.setPrecioUnitario(BigDecimal.ZERO);
+                    p.setUltimoPrecio(BigDecimal.ZERO);
+                    p.setExistencia(BigDecimal.ZERO);
+                    productosSinHistoria.put(producto.getId(), p);
                 }
             }
 
@@ -452,5 +443,136 @@ public class SalidaDao {
         } else {
             throw new NoEstaCerradaException("La salida no se puede cancelar porque no esta cerrada o facturada", salida);
         }
+    }
+
+    public Cancelacion cancelar(Long id, Usuario usuario, String comentarios) throws NoEstaCerradaException {
+        log.info("{} esta cancelando salida {}", usuario, id);
+        Salida salida = (Salida) currentSession().get(Salida.class, id);
+        if (salida.getEstatus().getNombre().equals(Constantes.CERRADA) || salida.getEstatus().getNombre().equals(Constantes.FACTURADA)) {
+            Set<Producto> productos = new HashSet<>();
+            for (LoteSalida lote : salida.getLotes()) {
+                productos.add(lote.getProducto());
+            }
+
+            log.debug("Buscando entradas que contengan los productos {} despues de la fecha {}", productos, salida.getFechaModificacion());
+            Query query = currentSession().createQuery(
+                    "select e from Entrada e inner join e.lotes le inner join e.estatus es "
+                    + "where(es.nombre = 'CERRADA' or es.nombre = 'PENDIENTE') "
+                    + "and le.producto in (:productos) "
+                    + "and e.fechaModificacion > :fecha");
+            query.setParameterList("productos", productos);
+            query.setTimestamp("fecha", salida.getFechaModificacion());
+            List<Entrada> entradas = (List<Entrada>) query.list();
+            for (Entrada entrada : entradas) {
+                log.debug("ENTRADA: {}", entrada);
+                for (LoteEntrada lote : entrada.getLotes()) {
+                    productos.add(lote.getProducto());
+                }
+            }
+
+            query = currentSession().createQuery(
+                    "select s from Salida s inner join s.lotes ls inner join s.estatus es "
+                    + "where es.nombre = 'CERRADA' "
+                    + "and ls.producto in (:productos) "
+                    + "and s.fechaModificacion > :fecha");
+            query.setParameterList("productos", productos);
+            query.setTimestamp("fecha", salida.getFechaModificacion());
+            List<Salida> salidas = (List<Salida>) query.list();
+            for (Salida otra : salidas) {
+                log.debug("SALIDA: {}", otra);
+                for (LoteSalida lote : otra.getLotes()) {
+                    productos.add(lote.getProducto());
+                }
+            }
+            salidas.add(salida);
+
+            Date fecha = new Date();
+            for (Producto producto : productos) {
+                log.debug("Buscando historial de {}", producto);
+                query = currentSession().createQuery(
+                        "select xp from XProducto xp "
+                        + "where xp.productoId = :productoId "
+                        + "and (xp.actividad = 'CREAR' or actividad = 'ACTUALIZAR') "
+                        + "and xp.fechaCreacion < :fecha "
+                        + "and (xp.salidaId is null or xp.salidaId != :salidaId) "
+                        + "order by xp.fechaCreacion desc");
+                query.setLong("productoId", producto.getId());
+                query.setTimestamp("fecha", salida.getFechaModificacion());
+                query.setLong("salidaId", salida.getId());
+                query.setMaxResults(1);
+                List<XProducto> xproductos = (List<XProducto>) query.list();
+                if (xproductos != null && xproductos.get(0) != null) {
+                    XProducto xproducto = xproductos.get(0);
+                    log.debug("Encontre historia del producto {}", xproducto);
+                    producto.setPrecioUnitario(xproducto.getPrecioUnitario());
+                    producto.setUltimoPrecio(xproducto.getUltimoPrecio());
+                    producto.setExistencia(xproducto.getExistencia());
+                    producto.setFechaModificacion(fecha);
+                } else {
+                    log.debug("No encontre historia del producto {}", producto);
+                    producto.setPrecioUnitario(BigDecimal.ZERO);
+                    producto.setUltimoPrecio(BigDecimal.ZERO);
+                    producto.setExistencia(BigDecimal.ZERO);
+                    producto.setFechaModificacion(fecha);
+                }
+                currentSession().update(producto);
+            }
+            
+            query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
+            query.setString("nombre", Constantes.CANCELADA);
+            Estatus cancelada = (Estatus) query.uniqueResult();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            String fechaString = sdf.format(fecha);
+            for(Entrada entrada : entradas) {
+                entrada.setFactura(entrada.getFactura()+"C"+fechaString);
+                entrada.setEstatus(cancelada);
+                entrada.setFechaModificacion(fecha);
+                currentSession().update(entrada);
+            }
+            
+            for(Salida s : salidas) {
+                s.setReporte(s.getReporte()+"C"+fechaString);
+                s.setEstatus(cancelada);
+                s.setFechaModificacion(fecha);
+                currentSession().update(s);
+            }
+
+            // Crear cancelacion
+            Cancelacion cancelacion = new Cancelacion();
+            cancelacion.setFolio(cancelacionDao.getFolio(salida.getAlmacen()));
+            cancelacion.setComentarios(comentarios);
+            cancelacion.setSalida(salida);
+            cancelacion.setProductos(productos);
+            if (entradas != null && entradas.size() > 0) {
+                cancelacion.setEntradas(entradas);
+            }
+            if (salidas != null && salidas.size() > 0) {
+                cancelacion.setSalidas(salidas);
+            }
+            cancelacion = cancelacionDao.crea(cancelacion, usuario);
+            currentSession().flush();
+            for (Producto producto : productos) {
+                auditaProducto(producto, usuario, Constantes.CANCELAR, null, cancelacion.getId(), fecha);
+            }
+            
+            return cancelacion;
+        } else {
+            throw new NoEstaCerradaException("La salida no se puede cancelar porque no esta cerrada o facturada", salida);
+        }
+    }
+
+    private void auditaProducto(Producto producto, Usuario usuario, String actividad, Long salidaId, Long cancelacionId, Date fecha) {
+        XProducto xproducto = new XProducto();
+        BeanUtils.copyProperties(producto, xproducto);
+        xproducto.setId(null);
+        xproducto.setSalidaId(salidaId);
+        xproducto.setCancelacionId(cancelacionId);
+        xproducto.setProductoId(producto.getId());
+        xproducto.setTipoProductoId(producto.getTipoProducto().getId());
+        xproducto.setAlmacenId(producto.getAlmacen().getId());
+        xproducto.setFechaCreacion(fecha);
+        xproducto.setActividad(actividad);
+        xproducto.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
+        currentSession().save(xproducto);
     }
 }

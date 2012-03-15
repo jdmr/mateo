@@ -37,10 +37,9 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.ProveedorDao;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.LabelValueBean;
-import mx.edu.um.mateo.general.utils.ReporteUtil;
+import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inventario.dao.EntradaDao;
 import mx.edu.um.mateo.inventario.dao.ProductoDao;
 import mx.edu.um.mateo.inventario.model.Entrada;
@@ -50,11 +49,7 @@ import mx.edu.um.mateo.inventario.utils.*;
 import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,23 +66,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping("/inventario/entrada")
-public class EntradaController {
+public class EntradaController extends BaseController {
 
-    private static final Logger log = LoggerFactory.getLogger(EntradaController.class);
     @Autowired
     private EntradaDao entradaDao;
     @Autowired
     private ProveedorDao proveedorDao;
     @Autowired
     private ProductoDao productoDao;
-    @Autowired
-    private JavaMailSender mailSender;
-    @Autowired
-    private ResourceBundleMessageSource messageSource;
-    @Autowired
-    private Ambiente ambiente;
-    @Autowired
-    private ReporteUtil reporteUtil;
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -105,13 +91,6 @@ public class EntradaController {
         params.put("almacen", request.getSession().getAttribute("almacenId"));
         if (StringUtils.isNotBlank(filtro)) {
             params.put("filtro", filtro);
-        }
-        if (pagina != null) {
-            params.put("pagina", pagina);
-            modelo.addAttribute("pagina", pagina);
-        } else {
-            pagina = 1L;
-            modelo.addAttribute("pagina", pagina);
         }
         if (StringUtils.isNotBlank(order)) {
             params.put("order", order);
@@ -147,22 +126,7 @@ public class EntradaController {
         params = entradaDao.lista(params);
         modelo.addAttribute("entradas", params.get("entradas"));
 
-        // inicia paginado
-        Long cantidad = (Long) params.get("cantidad");
-        Integer max = (Integer) params.get("max");
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<Entrada> entradas = (List<Entrada>) params.get("entradas");
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (entradas.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute("paginacion", paginacion);
-        modelo.addAttribute("paginas", paginas);
-        // termina paginado
+        this.pagina(params, modelo, "entradas", pagina);
 
         return "inventario/entrada/lista";
     }
@@ -491,10 +455,11 @@ public class EntradaController {
         }
 
         try {
-            if (request.getParameter("producto.id") == null) {
+            if (StringUtils.isBlank(request.getParameter("producto.id"))) {
                 log.warn("No se puede crear la entrada si no ha seleccionado un proveedor");
-                errors.rejectValue("producto", "lote.sin.producto.message");
-                return "inventario/entrada/lote/" + request.getParameter("entrada.id");
+                modelo.addAttribute("lote", lote);
+                modelo.addAttribute("message", "lote.sin.producto.message");
+                return "inventario/entrada/lote";
             }
             Producto producto = productoDao.obtiene(new Long(request.getParameter("producto.id")));
             Entrada entrada = entradaDao.obtiene(new Long(request.getParameter("entrada.id")));
@@ -509,7 +474,9 @@ public class EntradaController {
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{""});
         } catch (ProductoNoSoportaFraccionException e) {
             log.error("No se pudo crear la entrada porque no se encontro el producto", e);
-            return "inventario/entrada/lote/" + request.getParameter("entrada.id");
+            modelo.addAttribute("message", "lote.sin.producto.message");
+            modelo.addAttribute("lote", lote);
+            return "inventario/entrada/lote";
         }
 
         redirectAttributes.addFlashAttribute("message", "lote.creado.message");

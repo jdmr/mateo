@@ -2,23 +2,16 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
     <head>
         <title><s:message code="salida.cancela.label" /></title>
     </head>
     <body>
-        <nav class="navbar navbar-fixed-top" role="navigation">
-            <ul class="nav">
-                <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li><a href="<c:url value='/inventario' />"><s:message code="inventario.label" /></a></li>
-                <li class="active"><a href="<s:url value='/inventario/salida'/>" ><s:message code="salida.lista.label" /></a></li>
-                <li><a href="<s:url value='/inventario/entrada'/>" ><s:message code="entrada.lista.label" /></a></li>
-                <li><a href="<s:url value='/inventario/producto'/>" ><s:message code="producto.lista.label" /></a></li>
-                <li><a href="<s:url value='/inventario/tipoProducto'/>" ><s:message code="tipoProducto.lista.label" /></a></li>
-                <li><a href="<s:url value='/inventario/almacen'/>" ><s:message code="almacen.lista.label" /></a></li>
-            </ul>
-        </nav>
+        <jsp:include page="../menu.jsp" >
+            <jsp:param name="menu" value="salida" />
+        </jsp:include>
 
         <h1><s:message code="salida.cancela.label" /></h1>
         <hr/>
@@ -180,5 +173,30 @@
                 </tbody>
             </table>
         </c:if>
+            
+        <c:url var="cancelarUrl" value="/inventario/salida/cancelar" />
+        <form:form action="${cancelarUrl}" commandName="salida" >
+            <fieldset>
+                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                    <label for="comentarios">
+                        <s:message code="comentarios.label" />
+                        <span class="required-indicator">*</span>
+                    </label>
+                    <textarea name="comentarios" id="comentarios" required="" class="span6" style="height:100px;"></textarea>
+                </div>
+            </fieldset>
+            <p class="well">
+                <form:hidden path="id" />
+                <button type="submit" name="cancelarBtn" class="btn btn-danger btn-large" id="cancelar"  onclick="return confirm('<s:message code="confirma.cancela2.message" />');" ><i class="icon-exclamation-sign icon-white"></i>&nbsp;<s:message code='guardar.button'/></button>
+                <a class="btn btn-large" href="<s:url value='/inventario/salida/ver/${salida.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+            </p>
+        </form:form>
+        <content>
+            <script>
+                $(document).ready(function() {
+                    $('#comentarios').focus();
+                });
+            </script>                    
+        </content>
     </body>
 </html>

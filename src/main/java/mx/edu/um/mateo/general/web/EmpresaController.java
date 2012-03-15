@@ -26,7 +26,6 @@ package mx.edu.um.mateo.general.web;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +38,6 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.EmpresaDao;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -50,11 +48,7 @@ import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,17 +65,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping("/admin/empresa")
-public class EmpresaController {
+public class EmpresaController extends BaseController {
 
-    private static final Logger log = LoggerFactory.getLogger(EmpresaController.class);
     @Autowired
     private EmpresaDao empresaDao;
-    @Autowired
-    private JavaMailSender mailSender;
-    @Autowired
-    private ResourceBundleMessageSource messageSource;
-    @Autowired
-    private Ambiente ambiente;
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -97,13 +84,6 @@ public class EmpresaController {
         params.put("organizacion", request.getSession().getAttribute("organizacionId"));
         if (StringUtils.isNotBlank(filtro)) {
             params.put("filtro", filtro);
-        }
-        if (pagina != null) {
-            params.put("pagina", pagina);
-            modelo.addAttribute("pagina", pagina);
-        } else {
-            pagina = 1L;
-            modelo.addAttribute("pagina", pagina);
         }
         if (StringUtils.isNotBlank(order)) {
             params.put("order", order);
@@ -137,22 +117,7 @@ public class EmpresaController {
         params = empresaDao.lista(params);
         modelo.addAttribute("empresas", params.get("empresas"));
 
-        // inicia paginado
-        Long cantidad = (Long) params.get("cantidad");
-        Integer max = (Integer) params.get("max");
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<Empresa> empresas = (List<Empresa>) params.get("empresas");
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (empresas.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute("paginacion", paginacion);
-        modelo.addAttribute("paginas", paginas);
-        // termina paginado
+        this.pagina(params, modelo, "empresas", pagina);
 
         return "admin/empresa/lista";
     }
