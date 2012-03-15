@@ -37,21 +37,21 @@
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span8">
-                        <h4><s:message code="usuario.username.label" /></h4>
+                        <h4><s:message code="username.label" /></h4>
                         <h3>${usuario.username}</h3>
                     </div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span8">
-                        <h4><s:message code="usuario.nombre.label" /></h4>
+                        <h4><s:message code="nombre.label" /></h4>
                         <h3>${usuario.nombre}</h3>
                     </div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span8">
-                        <h4><s:message code="usuario.apellido.label" /></h4>
+                        <h4><s:message code="apellido.label" /></h4>
                         <h3>${usuario.apellido}</h3>
                     </div>
                 </div>

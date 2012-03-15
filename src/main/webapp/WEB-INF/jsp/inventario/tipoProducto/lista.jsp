@@ -48,32 +48,12 @@
             <table id="lista" class="table table-striped">
                 <thead>
                     <tr>
-                        <th>
-                            <a href="javascript:ordena('nombre');">
-                                <s:message code="nombre.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'nombre' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'nombre' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="javascript:ordena('descripcion');">
-                                <s:message code="descripcion.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'descripcion' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'descripcion' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="nombre" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="descripcion" />
+                        </jsp:include>
                         <th><s:message code="almacen.label" /></th>
                     </tr>
                 </thead>

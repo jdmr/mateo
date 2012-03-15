@@ -47,45 +47,15 @@
             <table id="lista" class="table table-striped">
                 <thead>
                     <tr>
-                        <th>
-                            <a href="javascript:ordena('username');">
-                                <s:message code="usuario.username.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'username' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'username' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="javascript:ordena('nombre');">
-                                <s:message code="usuario.nombre.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'nombre' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'nombre' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="javascript:ordena('apellido');">
-                                <s:message code="usuario.apellido.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'apellido' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'apellido' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="username" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="nombre" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="apellido" />
+                        </jsp:include>
                         <th><s:message code="empresa.label" /></th>
                     </tr>
                 </thead>

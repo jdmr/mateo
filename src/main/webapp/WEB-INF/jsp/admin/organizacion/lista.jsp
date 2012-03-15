@@ -47,32 +47,12 @@
             <table id="lista" class="table table-striped">
                 <thead>
                     <tr>
-                        <th>
-                            <a href="javascript:ordena('nombre');">
-                                <s:message code="nombre.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'nombre' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'nombre' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="javascript:ordena('nombreCompleto');">
-                                <s:message code="nombreCompleto.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'nombreCompleto' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'nombreCompleto' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="nombre" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="nombreCompleto" />
+                        </jsp:include>
                     </tr>
                 </thead>
                 <tbody>
