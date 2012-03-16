@@ -12,10 +12,7 @@ import mx.edu.um.mateo.general.utils.UltimoException;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -69,10 +66,9 @@ public class CuentaMayorDao {
 
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
             String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);
-            filtro = "%" + filtro + "%";
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("nombre", filtro));
-            propiedades.add(Restrictions.ilike("nombreFiscal", filtro));
+            propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("nombreFiscal", filtro, MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }

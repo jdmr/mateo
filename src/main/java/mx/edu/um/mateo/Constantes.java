@@ -87,12 +87,12 @@ public class Constantes {
     public static final String PATH_CUENTA_MAYOR_ACTUALIZA = "/contabilidad/mayor/actualiza";
     public static final String PATH_CUENTA_MAYOR_ELIMINA = "/contabilidad/mayor/elimina";
     public static final String PATH_EMPLEADO = "/rh/empleado";
-    public static final String PATH_EMPLEADO_LISTA = "rh/empleado/lista";
-    public static final String PATH_EMPLEADO_VER = "rh/empleado/ver";
-    public static final String PATH_EMPLEADO_NUEVA = "rh/empleado/nueva"; 
-    public static final String PATH_EMPLEADO_NUEVO = "rh/empleado/nuevo";
-    public static final String PATH_EMPLEADO_EDITA = "rh/empleado/edita";
-    public static final String PATH_EMPLEADO_CREA = "rh/empleado/crea";
-    public static final String PATH_EMPLEADO_ACTUALIZA = "rh/empleado/actualiza";
-    public static final String PATH_EMPLEADO_ELIMINA = "rh/empleado/elimina";
+    public static final String PATH_EMPLEADO_LISTA = "/rh/empleado/lista";
+    public static final String PATH_EMPLEADO_VER = "/rh/empleado/ver";
+    public static final String PATH_EMPLEADO_NUEVA = "/rh/empleado/nuevo"; 
+    public static final String PATH_EMPLEADO_NUEVO = "/rh/empleado/nuevo";
+    public static final String PATH_EMPLEADO_EDITA = "/rh/empleado/edita";
+    public static final String PATH_EMPLEADO_CREA = "/rh/empleado/crea";
+    public static final String PATH_EMPLEADO_ACTUALIZA = "/rh/empleado/actualiza";
+    public static final String PATH_EMPLEADO_ELIMINA = "/rh/empleado/elimina";
 }

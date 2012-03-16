@@ -16,16 +16,13 @@
             </ul>
         </nav>
 
-        <div id="nuevo-cliente" class="content scaffold-list" role="main">
-            <h1><s:message code="empleado.nuevo.label" /></h1>
+       <div id="edita-mayor" class="content scaffold-list" role="main">
+            <h1><s:message code="empleado.edita.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/rh/empleado'/>"><i class="icon-list icon-white"></i> <s:message code='empleado.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/mayor'/>"><i class="icon-list icon-white"></i> <s:message code='empleado.lista.label' /></a>
             </p>
             <c:url var="actualizaUrl" value="/rh/empleado/actualiza" />
-            <form:form commandName="empleado" action="${actualizaUrl}" method="post">
-                <form:hidden path="id" />
-                <form:hidden path="version" />
-                <form:hidden path="base" />
+            <form:form commandName="mayor" method="post" action="${actualizaUrl}">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -34,137 +31,35 @@
                         </c:forEach>
                     </div>
                 </form:errors>
+                <form:hidden path="id" />
+                <form:hidden path="version" />
 
                 <fieldset>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="empleado.nombre">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="nombre">
-                                        <s:message code="nombre.label" />
-                                        <span class="required-indicator">*</span>
-                                    </label>
-                                    <form:input path="nombre" maxlength="128" required="true" cssClass="span10" />
-                                    <form:errors path="nombre" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
+                    <s:bind path="empleado.nombre">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="nombre">
+                                <s:message code="nombre.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="nombre" maxlength="128" required="true" />
+                            <form:errors path="nombre" cssClass="alert alert-error" />
                         </div>
-                        <div class="span4">
-                            <s:bind path="empleado.nombreCompleto">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="nombreCompleto">
-                                        <s:message code="nombreCompleto.label" />
-                                        <span class="required-indicator">*</span>
-                                    </label>
-                                    <form:input path="nombreCompleto" maxlength="128" required="true" cssClass="span10" />
-                                    <form:errors path="nombreCompleto" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
+                    </s:bind>
+                    <s:bind path="empleado.apPaterno">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="apPaterno">
+                                <s:message code="apPaterno.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="apPaterno" maxlength="128" required="true" />
+                            <form:errors path="apPaterno" cssClass="alert alert-error" />
                         </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="empleado.rfc">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="rfc">
-                                        <s:message code="rfc.label" />
-                                        <span class="required-indicator">*</span>
-                                    </label>
-                                    <form:input path="rfc" maxlength="13" required="true" cssClass="span10" />
-                                    <form:errors path="rfc" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                        <div class="span4">
-                            <s:bind path="empleado.curp">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="curp">
-                                        <s:message code="curp.label" />
-                                    </label>
-                                    <form:input path="curp" maxlength="18" cssClass="span10" />
-                                    <form:errors path="curp" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span8">
-                            <s:bind path="empleado.direccion">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="direccion">
-                                        <s:message code="direccion.label" />
-                                    </label>
-                                    <form:textarea path="direccion" cssClass="span11" cssStyle="height: 90px;" />
-                                    <form:errors path="direccion" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="empleado.telefono">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="telefono">
-                                        <s:message code="telefono.label" />
-                                    </label>
-                                    <form:input path="telefono" maxlength="25" cssClass="span10" />
-                                    <form:errors path="telefono" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                        <div class="span4">
-                            <s:bind path="empleado.fax">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="fax">
-                                        <s:message code="fax.label" />
-                                    </label>
-                                    <form:input path="fax" maxlength="25" cssClass="span10" />
-                                    <form:errors path="fax" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="empleado.contacto">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="contacto">
-                                        <s:message code="contacto.label" />
-                                    </label>
-                                    <form:input path="contacto" maxlength="64" cssClass="span10" />
-                                    <form:errors path="contacto" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                        <div class="span4">
-                            <s:bind path="empleado.correo">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="correo">
-                                        <s:message code="correo.label" />
-                                    </label>
-                                    <form:input path="correo" maxlength="128" cssClass="span10" />
-                                    <form:errors path="correo" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="empleado.tipoCliente">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="tipoEmpleado.id">
-                                        <s:message code="tipoEmpleado.label" />
-                                    </label>
-                                    <form:select id="tipoEmpleadoId" path="tipoEmpleado.id" items="${tiposDeEmpleado}" itemLabel="nombre" itemValue="id" cssClass="span10" />
-                                    <form:errors path="tipoEmpleado" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
+                    </s:bind>
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
-                    <input type="submit" name="actualiza" class="btn btn-primary btn-large span2" value="<s:message code='actualizar.button'/>" id="crea" />
+                    <button type="submit" name="actualizarBtn" class="btn btn-primary btn-large" id="actualizar" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='actualizar.button'/></button>
+                    <a class="btn btn-large" href="<s:url value='/rh/empleado/ver/${mayor.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>

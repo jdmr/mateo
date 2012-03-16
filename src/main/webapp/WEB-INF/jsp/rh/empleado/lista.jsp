@@ -4,39 +4,39 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="cliente.lista.label" /></title>
+        <title><s:message code="empleado.lista.label" /></title>
     </head>
     <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
             <ul class="nav">
                 <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
                 <li><a href="<c:url value='/rh' />"><s:message code="rh.label" /></a></li>
-                <li class="active"><a href="<s:url value='/admin/cliente'/>" ><s:message code="cliente.label" /></a></li>   
+                <li class="active"><a href="<s:url value='/rh/empleado'/>" ><s:message code="empleado.label" /></a></li>
             </ul>
         </nav>
 
-        <h1><s:message code="cliente.lista.label" /></h1>
+        <h1><s:message code="empleado.lista.label" /></h1>
         <hr/>
 
-        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/admin/cliente' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/rh/empleado' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/admin/cliente/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='cliente.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/rh/empleado/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='empleado.nueva.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
-                <button type="submit" class="btn"><s:message code="buscar.label" /></button>
+                <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
             <c:if test="${not empty message}">
-                <div class="alert alert-block alert-success fade in" role="status">
+                <div class="alert alert-block <c:choose><c:when test='${not empty messageStyle}'>${messageStyle}</c:when><c:otherwise>alert-success</c:otherwise></c:choose> fade in" role="status">
                     <a class="close" data-dismiss="alert">×</a>
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
-            <c:if test="${cliente != null}">
-                <s:bind path="cliente.*">
+            <c:if test="${mayor != null}">
+                <s:bind path="empleado.*">
                     <c:if test="${not empty status.errorMessages}">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -48,7 +48,7 @@
                 </s:bind>
             </c:if>
             
-            <table id="lista" class="table">
+            <table id="lista" class="table table-striped">
                 <thead>
                     <tr>
                         <th>
@@ -65,97 +65,25 @@
                             </a>
                         </th>
                         <th>
-                            <a href="javascript:ordena('nombreCompleto');">
-                                <s:message code="nombreCompleto.label" />
+                            <a href="javascript:ordena('apPaterno');">
+                                <s:message code="apPaterno.label" />
                                 <c:choose>
-                                    <c:when test="${param.order == 'nombreCompleto' && param.sort == 'asc'}">
+                                    <c:when test="${param.order == 'apPaterno' && param.sort == 'asc'}">
                                         <i class="icon-chevron-up"></i>
                                     </c:when>
-                                    <c:when test="${param.order == 'nombreCompleto' && param.sort == 'desc'}">
+                                    <c:when test="${param.order == 'apPaterno' && param.sort == 'desc'}">
                                         <i class="icon-chevron-down"></i>
                                     </c:when>
                                 </c:choose>
                             </a>
                         </th>
-                        <th>
-                            <a href="javascript:ordena('rfc');">
-                                <s:message code="rfc.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'rfc' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'rfc' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="javascript:ordena('telefono');">
-                                <s:message code="telefono.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'telefono' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'telefono' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="javascript:ordena('contacto');">
-                                <s:message code="contacto.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'contacto' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'contacto' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="javascript:ordena('correo');">
-                                <s:message code="correo.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'correo' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'correo' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
-                        <th>
-                            <a href="javascript:ordena('tipoCliente');">
-                                <s:message code="tipoCliente.label" />
-                                <c:choose>
-                                    <c:when test="${param.order == 'tipoCliente' && param.sort == 'asc'}">
-                                        <i class="icon-chevron-up"></i>
-                                    </c:when>
-                                    <c:when test="${param.order == 'tipoCliente' && param.sort == 'desc'}">
-                                        <i class="icon-chevron-down"></i>
-                                    </c:when>
-                                </c:choose>
-                            </a>
-                        </th>
-                        <th><s:message code="empresa.label" /></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${clientes}" var="cliente" varStatus="status">
+                    <c:forEach items="${mayores}" var="empleado" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/admin/cliente/ver/${cliente.id}' />">${cliente.nombre}</a></td>
-                            <td>${cliente.nombreCompleto}</td>
-                            <td>${cliente.rfc}</td>
-                            <td>${cliente.telefono}</td>
-                            <td>${cliente.contacto}</td>
-                            <td>${cliente.correo}</td>
-                            <td>${cliente.tipoCliente.nombre}</td>
-                            <td>${cliente.empresa.nombre}</td>
+                            <td><a href="<c:url value='/rh/empleado/ver/${mayor.id}' />">${empleado.nombre}</a></td>
+                            <td>${empleado.apPaterno}</td>
                         </tr>
                     </c:forEach>
                 </tbody>
@@ -175,7 +103,7 @@
                 </div>
                 <div class="span4">
                     <div class="btn-group pull-right" style="margin-top: 22px;margin-left: 10px;">
-                        <button id="enviaCorreoBtn" class="btn" data-loading-text="<s:message code='enviando.label'/>" onclick="javascript:enviaCorreo('XLS');" ><s:message code="envia.correo.label" /></button>
+                        <button id="enviaCorreoBtn" class="btn" data-loading-text="<s:message code='enviando.label'/>" onclick="javascript:enviaCorreo('XLS');" ><i class="icon-envelope" ></i> <s:message code="envia.correo.label" /></button>
                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="javascript:enviaCorreo('PDF');"><img src="<c:url value='/images/pdf.gif' />" /></a></li>
@@ -192,42 +120,6 @@
             </div>
         </form>        
         <content>
-
-            <script>
-                $(document).ready(function() {
-                    highlightTableRows("lista");
-
-                });
-
-                function buscaPagina(paginaId) {
-                    $('input#pagina').val(paginaId);
-                    document.forms["filtraLista"].submit();
-                }
-                
-                function imprime(tipo) {
-                    $('input#tipo').val(tipo);
-                    document.forms["filtraLista"].submit();
-                }
-                
-                function enviaCorreo(tipo) {
-                    $('#enviaCorreoBtn').button('loading');
-                    $('input#correo').val(tipo);
-                    document.forms["filtraLista"].submit();
-                }
-                
-                function ordena(campo) {
-                    if ($('input#order').val() == campo && $('input#sort').val() == 'asc') {
-                        $('input#sort').val('desc');
-                    } else {
-                        $('input#sort').val('asc');
-                    }
-                    $('input#order').val(campo);
-                    document.forms["filtraLista"].submit();
-                }
-            </script>
-
-            <script src="<c:url value='/js/lista.js' />"></script>
-
             <script src="<c:url value='/js/lista.js' />"></script>
         </content>
     </body>

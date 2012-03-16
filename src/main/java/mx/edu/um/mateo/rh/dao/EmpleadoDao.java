@@ -12,21 +12,19 @@ import mx.edu.um.mateo.rh.model.Empleado;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author develop
+ * @author nujev
  */
-@Repository("empleadoDao")
+@Repository
 @Transactional
 public class EmpleadoDao {
 
@@ -43,7 +41,7 @@ public class EmpleadoDao {
     }
 
     public Map<String, Object> lista(Map<String, Object> params) {
-        log.debug("Buscando lista de empleados con params {}", params);
+        log.debug("Buscando lista de empleado con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
@@ -68,10 +66,9 @@ public class EmpleadoDao {
 
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
             String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);
-            filtro = "%" + filtro + "%";
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("nombre", filtro));
-            propiedades.add(Restrictions.ilike("nombreFiscal", filtro));
+            propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("nombreFiscal", filtro, MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -98,27 +95,38 @@ public class EmpleadoDao {
     }
 
     public Empleado obtiene(Long id) {
+        log.debug("Obtiene empleado con id = {}", id);
         Empleado empleado = (Empleado) currentSession().get(Empleado.class, id);
         return empleado;
     }
 
     public Empleado crea(Empleado empleado) {
- 
+        log.debug("Creando empleado : {}", empleado);
         currentSession().save(empleado);
+        currentSession().flush();
         return empleado;
     }
 
-    public Empleado actualiza(Empleado Empleado) {
-        currentSession().saveOrUpdate(Empleado);
-        return Empleado;
+    public Empleado actualiza(Empleado empleado) {
+        log.debug("Actualizando empleado {}", empleado);
+        
+        //trae el objeto de la DB 
+        Empleado nueva = (Empleado)currentSession().get(Empleado.class, empleado.getId());
+        //actualiza el objeto
+        BeanUtils.copyProperties(empleado, nueva);
+        //lo guarda en la BD
+        
+        currentSession().update(nueva);
+        currentSession().flush();
+        return nueva;
     }
+
     public String elimina(Long id) throws UltimoException {
-        Empleado ctamayor = obtiene(id);
-        currentSession().delete(ctamayor);
-        String nombre = ctamayor.getNombre();
+        log.debug("Eliminando empleado con id {}", id);
+        Empleado empleado = obtiene(id);
+        currentSession().delete(empleado);
+        currentSession().flush();
+        String nombre = empleado.getNombre();
         return nombre;
     }
-//private EmpleadoLaborales empleadoLaborales;
-//private EmpleadoPersonales empleadoPersonales;
-//private Nacionalidades nacionalidad;
 }

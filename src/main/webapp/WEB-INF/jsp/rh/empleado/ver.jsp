@@ -5,28 +5,23 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="cliente.ver.label" /></title>
+        <title><s:message code="empleado.ver.label" /></title>
     </head>
     <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
             <ul class="nav">
                 <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
                 <li><a href="<c:url value='/rh' />"><s:message code="rh.label" /></a></li>
-                <li class="active"><a href="<s:url value='/admin/cliente'/>" ><s:message code="cliente.label" /></a></li>
-                <li><a href="<s:url value='/admin/tipoCliente'/>" ><s:message code="tipoCliente.label" /></a></li>
-                <li><a href="<s:url value='/admin/proveedor'/>" ><s:message code="proveedor.label" /></a></li>
-                <li><a href="<s:url value='/admin/empresa'/>" ><s:message code="empresa.label" /></a></li>
-                <li><a href="<s:url value='/admin/organizacion'/>" ><s:message code="organizacion.label" /></a></li>
-                <li><a href="<s:url value='/admin/usuario'/>" ><s:message code="usuario.label" /></a></li>
+                <li class="active"><a href="<s:url value='/rh/empleado'/>" ><s:message code="empleado.label" /></a></li>
             </ul>
         </nav>
 
-        <div id="ver-cliente" class="content scaffold-list" role="main">
-            <h1><s:message code="cliente.ver.label" /></h1>
+        <div id="ver-empleado" class="content scaffold-list" role="main">
+            <h1><s:message code="empleado.ver.label" /></h1>
 
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/admin/cliente'/>"><i class="icon-list icon-white"></i> <s:message code='cliente.lista.label' /></a>
-                <a class="btn btn-primary" href="<s:url value='/admin/cliente/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='cliente.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/rh/empleado'/>"><i class="icon-list icon-white"></i> <s:message code='empleado.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/rh/empleado/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='empleado.nuevo.label' /></a>
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
@@ -35,69 +30,26 @@
                 </div>
             </c:if>
 
-            <c:url var="eliminaUrl" value="/admin/cliente/elimina" />
-            <form:form commandName="cliente" action="${eliminaUrl}" >
+            <c:url var="eliminaUrl" value="/rh/empleado/elimina" />
+            <form:form commandName="empleado" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span8">
-                        <h4><s:message code="usuario.username.label" /></h4>
-                        <h3>${usuario.username}</h3>
-                    </div>
+                    <div class="span1"><s:message code="nombre.label" /></div>
+                    <div class="span11">${empleado.nombre}</div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span8">
-                        <h4><s:message code="usuario.nombre.label" /></h4>
-                        <h3>${usuario.nombre}</h3>
-                    </div>
-                </div>
-
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span8">
-                        <h4><s:message code="usuario.apellido.label" /></h4>
-                        <h3>${usuario.apellido}</h3>
-                    </div>
-                </div>
-
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span8">
-                        <h4><s:message code="empresa.label" /></h4>
-                        <h3>${usuario.empresa.nombre}</h3>
-                    </div>
-                </div>
-
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span8">
-                        <h4><s:message code="rol.list.label" /></h4>
-                        <h3>
-                            <c:forEach items="${roles}" var="rol">
-                                <form:checkbox path="roles" value="${rol.authority}" disabled="true" /> <s:message code="${rol.authority}" />&nbsp;
-                            </c:forEach>
-                        </h3>
-                    </div>
-                </div>
-
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="contacto.label" /></div>
-                    <div class="span11">${cliente.contacto}</div>
-                </div>
-
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="correo.label" /></div>
-                    <div class="span11">${cliente.correo}</div>
-                </div>
-
-                <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="tipoCliente.label" /></div>
-                    <div class="span11">${cliente.tipoCliente.nombre}</div>
+                    <div class="span1"><s:message code="apPaterno.label" /></div>
+                    <div class="span11">${empleado.apPaterno}</div>
                 </div>
 
                 <p class="well">
-                    <a href="<c:url value='/admin/cliente/edita/${cliente.id}' />" class="btn btn-primary"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
+                    <a href="<c:url value='/rh/empleado/edita/${empleado.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
                     <form:hidden path="id" />
-                    <input type="submit" name="elimina" value="<s:message code='eliminar.button'/>" class="btn btn-danger icon-remove" style="margin-bottom: 2px;" onclick="return confirm('<s:message code="confirma.elimina.message" />');" />
+                    <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="eliminar"  onclick="return confirm('<s:message code="confirma.elimina.message" />');" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='eliminar.button'/></button>
                 </p>
             </form:form>
         </div>
     </body>
 </html>
+

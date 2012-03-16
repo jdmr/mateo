@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
-import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.rh.model.Empleado;
 import org.hibernate.Session;
