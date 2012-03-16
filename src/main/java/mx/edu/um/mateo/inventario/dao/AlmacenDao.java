@@ -132,6 +132,7 @@ public class AlmacenDao {
         session.save(almacen);
         if (usuario != null) {
             usuario.setAlmacen(almacen);
+            session.save(usuario);
         }
         TipoProducto tipoProducto = new TipoProducto("TIPO1", "TIPO1", almacen);
         session.save(tipoProducto);

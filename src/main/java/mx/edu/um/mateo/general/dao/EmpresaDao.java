@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.utils.UltimoException;
+import mx.edu.um.mateo.inventario.dao.AlmacenDao;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.inventario.model.TipoProducto;
 import org.hibernate.*;
@@ -48,6 +49,10 @@ public class EmpresaDao {
     private static final Logger log = LoggerFactory.getLogger(EmpresaDao.class);
     @Autowired
     private SessionFactory sessionFactory;
+    @Autowired
+    private AlmacenDao almacenDao;
+    @Autowired
+    private ReporteDao reporteDao;
 
     public EmpresaDao() {
         log.info("Nueva instancia de EmpresaDao");
@@ -128,7 +133,7 @@ public class EmpresaDao {
         }
         session.save(empresa);
         Almacen almacen = new Almacen("CT","CENTRAL", empresa);
-        session.save(almacen);
+        almacen = almacenDao.crea(almacen, usuario);
         if (usuario != null) {
             usuario.setEmpresa(empresa);
             usuario.setAlmacen(almacen);
@@ -139,9 +144,8 @@ public class EmpresaDao {
         TipoCliente tipoCliente = new TipoCliente("TIPO1", "TIPO1", empresa);
         session.save(tipoCliente);
         Cliente cliente = new Cliente(empresa.getNombre(), empresa.getNombreCompleto(), empresa.getRfc(), tipoCliente, true, empresa);
-        TipoProducto tipoProducto = new TipoProducto("TIPO1", "TIPO1", almacen);
-        session.save(tipoProducto);
         session.save(cliente);
+        reporteDao.inicializaEmpresa(empresa);
         session.refresh(empresa);
         return empresa;
     }

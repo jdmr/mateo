@@ -23,35 +23,22 @@
  */
 package mx.edu.um.mateo.general.web;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.OrganizacionDao;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.utils.UltimoException;
-import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.export.JRCsvExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -93,9 +80,9 @@ public class OrganizacionController extends BaseController {
             params.put("reporte", true);
             params = organizacionDao.lista(params);
             try {
-                generaReporte(tipo, (List<Organizacion>) params.get("organizaciones"), response);
+                generaReporte(tipo, (List<Organizacion>) params.get("organizaciones"), response, "organizaciones", Constantes.ADMIN, null);
                 return null;
-            } catch (JRException | IOException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
             }
         }
@@ -106,10 +93,10 @@ public class OrganizacionController extends BaseController {
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<Organizacion>) params.get("organizaciones"), request);
+                enviaCorreo(correo, (List<Organizacion>) params.get("organizaciones"), request, "organizaciones", Constantes.ADMIN, null);
                 modelo.addAttribute("message", "lista.enviada.message");
                 modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("organizacion.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
-            } catch (JRException | MessagingException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
@@ -139,7 +126,6 @@ public class OrganizacionController extends BaseController {
         return "admin/organizacion/nueva";
     }
 
-    @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Organizacion organizacion, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
@@ -179,7 +165,6 @@ public class OrganizacionController extends BaseController {
         return "admin/organizacion/edita";
     }
 
-    @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid Organizacion organizacion, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -208,7 +193,6 @@ public class OrganizacionController extends BaseController {
         return "redirect:/admin/organizacion/ver/" + organizacion.getId();
     }
 
-    @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Organizacion organizacion, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina organizacion");
@@ -232,106 +216,4 @@ public class OrganizacionController extends BaseController {
         return "redirect:/admin/organizacion";
     }
 
-    private void generaReporte(String tipo, List<Organizacion> organizaciones, HttpServletResponse response) throws JRException, IOException {
-        log.debug("Generando reporte {}", tipo);
-        byte[] archivo = null;
-        switch (tipo) {
-            case "PDF":
-                archivo = generaPdf(organizaciones);
-                response.setContentType("application/pdf");
-                response.addHeader("Content-Disposition", "attachment; filename=organizaciones.pdf");
-                break;
-            case "CSV":
-                archivo = generaCsv(organizaciones);
-                response.setContentType("text/csv");
-                response.addHeader("Content-Disposition", "attachment; filename=organizaciones.csv");
-                break;
-            case "XLS":
-                archivo = generaXls(organizaciones);
-                response.setContentType("application/vnd.ms-excel");
-                response.addHeader("Content-Disposition", "attachment; filename=organizaciones.xls");
-        }
-        if (archivo != null) {
-            response.setContentLength(archivo.length);
-            try (BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream())) {
-                bos.write(archivo);
-                bos.flush();
-            }
-        }
-
-    }
-
-    private void enviaCorreo(String tipo, List<Organizacion> organizaciones, HttpServletRequest request) throws JRException, MessagingException {
-        log.debug("Enviando correo {}", tipo);
-        byte[] archivo = null;
-        String tipoContenido = null;
-        switch (tipo) {
-            case "PDF":
-                archivo = generaPdf(organizaciones);
-                tipoContenido = "application/pdf";
-                break;
-            case "CSV":
-                archivo = generaCsv(organizaciones);
-                tipoContenido = "text/csv";
-                break;
-            case "XLS":
-                archivo = generaXls(organizaciones);
-                tipoContenido = "application/vnd.ms-excel";
-        }
-
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(ambiente.obtieneUsuario().getUsername());
-        String titulo = messageSource.getMessage("organizacion.lista.label", null, request.getLocale());
-        helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
-        helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
-        helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
-        mailSender.send(message);
-    }
-
-    private byte[] generaPdf(List organizaciones) throws JRException {
-        Map<String, Object> params = new HashMap<>();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/organizaciones.jrxml"));
-        JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(organizaciones));
-        byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
-
-        return archivo;
-    }
-
-    private byte[] generaCsv(List organizaciones) throws JRException {
-        Map<String, Object> params = new HashMap<>();
-        JRCsvExporter exporter = new JRCsvExporter();
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/organizaciones.jrxml"));
-        JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(organizaciones));
-        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
-        exporter.exportReport();
-        byte[] archivo = byteArrayOutputStream.toByteArray();
-
-        return archivo;
-    }
-
-    private byte[] generaXls(List organizaciones) throws JRException {
-        Map<String, Object> params = new HashMap<>();
-        JRXlsExporter exporter = new JRXlsExporter();
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/organizaciones.jrxml"));
-        JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(organizaciones));
-        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
-        exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);
-        exporter.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
-        exporter.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS, Boolean.TRUE);
-        exporter.setParameter(JRXlsExporterParameter.IS_COLLAPSE_ROW_SPAN, Boolean.TRUE);
-        exporter.setParameter(JRXlsExporterParameter.IGNORE_PAGE_MARGINS, Boolean.TRUE);
-        exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
-        exporter.exportReport();
-        byte[] archivo = byteArrayOutputStream.toByteArray();
-
-        return archivo;
-    }
 }

@@ -129,6 +129,13 @@ public class OrganizacionControllerTest extends BaseTest {
 
         this.authenticate(usuario, usuario.getPassword(), new ArrayList(usuario.getAuthorities()));
         
-        this.mockMvc.perform(post("/admin/organizacion/crea").param("codigo", "tst-01").param("nombre", "TEST--01").param("nombreCompleto", "TEST--01")).andExpect(status().isOk()).andExpect(flash().attributeExists("message")).andExpect(flash().attribute("message", "organizacion.creada.message"));
+        this.mockMvc.perform(
+                post("/admin/organizacion/crea")
+                .param("codigo", "tst-05")
+                .param("nombre", "TEST--05")
+                .param("nombreCompleto", "TEST--05"))
+                .andExpect(status().isOk())
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(flash().attribute("message", "organizacion.creada.message"));
     }
 }

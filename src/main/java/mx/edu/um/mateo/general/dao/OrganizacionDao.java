@@ -51,6 +51,10 @@ public class OrganizacionDao {
     private static final Logger log = LoggerFactory.getLogger(OrganizacionDao.class);
     @Autowired
     private SessionFactory sessionFactory;
+    @Autowired
+    private ReporteDao reporteDao;
+    @Autowired
+    private EmpresaDao empresaDao;
 
     public OrganizacionDao() {
         log.info("Nueva instancia de OrganizacionDao");
@@ -123,23 +127,11 @@ public class OrganizacionDao {
         Session session = currentSession();
         session.save(organizacion);
         Empresa empresa = new Empresa("MTZ", "MATRIZ", "MATRIZ", "000000000001", organizacion);
-        session.save(empresa);
-        Almacen almacen = new Almacen("CT","CENTRAL", empresa);
-        session.save(almacen);
         if (usuario != null) {
             usuario.setEmpresa(empresa);
-            usuario.setAlmacen(almacen);
-            session.update(usuario);
         }
-        Proveedor proveedor = new Proveedor(empresa.getNombre(), empresa.getNombreCompleto(), empresa.getRfc(), true, empresa);
-        session.save(proveedor);
-        TipoCliente tipoCliente = new TipoCliente("TIPO1", "TIPO1", empresa);
-        session.save(tipoCliente);
-        Cliente cliente = new Cliente(empresa.getNombre(), empresa.getNombreCompleto(), empresa.getRfc(), tipoCliente, true, empresa);
-        session.save(cliente);
-        TipoProducto tipoProducto = new TipoProducto("TIPO1", "TIPO1", almacen);
-        session.save(tipoProducto);
-        session.refresh(empresa);
+        empresaDao.crea(empresa, usuario);
+        reporteDao.inicializaOrganizacion(organizacion);
         session.refresh(organizacion);
         session.flush();
         return organizacion;

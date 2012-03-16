@@ -70,6 +70,8 @@ public class Empresa implements Serializable {
     private List<TipoCliente> tiposDeCliente = new ArrayList<>();
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
     private List<Cliente> clientes = new ArrayList<>();
+    @ManyToMany
+    private List<Reporte> reportes = new ArrayList<>();
 
     public Empresa() {
     }
@@ -234,6 +236,20 @@ public class Empresa implements Serializable {
      */
     public void setClientes(List<Cliente> clientes) {
         this.clientes = clientes;
+    }
+
+    /**
+     * @return the reportes
+     */
+    public List<Reporte> getReportes() {
+        return reportes;
+    }
+
+    /**
+     * @param reportes the reportes to set
+     */
+    public void setReportes(List<Reporte> reportes) {
+        this.reportes = reportes;
     }
 
     @Override

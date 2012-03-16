@@ -27,19 +27,18 @@ package mx.edu.um.mateo.general.utils;
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
-public class Constantes {
+public class ReporteException extends Exception {
 
-    public static final String ABIERTA = "ABIERTA";
-    public static final String PENDIENTE = "PENDIENTE";
-    public static final String CERRADA = "CERRADA";
-    public static final String FACTURADA = "FACTURADA";
-    public static final String CANCELADA = "CANCELADA";
-    public static final String CREAR = "CREAR";
-    public static final String ACTUALIZAR = "ACTUALIZAR";
-    public static final String ELIMINAR = "ELIMINAR";
-    public static final String CANCELAR = "CANCELAR";
-    public static final String ADMIN = "ADMIN";
-    public static final String ORG = "ORG";
-    public static final String EMP = "EMP";
-    public static final String ALM = "ALM";
+    public ReporteException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ReporteException(String message) {
+        super(message);
+    }
+
+    public ReporteException() {
+        super();
+    }
+    
 }
