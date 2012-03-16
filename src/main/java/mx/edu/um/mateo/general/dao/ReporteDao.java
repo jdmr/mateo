@@ -23,16 +23,15 @@
  */
 package mx.edu.um.mateo.general.dao;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Reporte;
+import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -67,36 +66,55 @@ public class ReporteDao {
     public ReporteDao() {
     }
     
-    public JasperReport obtieneReporteAdministrativo(String nombre) {
+    private Reporte buscaReporteAdminstrativo(String nombre) {
         Query query = currentSession().createQuery("select r from Reporte r where r.nombre = :nombre");
         query.setString("nombre", nombre);
         Reporte reporte = (Reporte) query.uniqueResult();
-        return reporte.getReporte();
+        return reporte;
     }
-
-    public JasperReport obtieneReportePorOrganizacion(String nombre, Long organizacionId) {
+    
+    private Reporte buscaReportePorOrganizacion(String nombre, Long organizacionId) {
         Query query = currentSession().createQuery("select r from Organizacion o inner join o.reportes r where o.id = :id and r.nombre = :nombre");
         query.setLong("id", organizacionId);
         query.setString("nombre", nombre);
         Reporte reporte = (Reporte) query.uniqueResult();
+        return reporte;
+    }
         
+    private Reporte buscaReportePorEmpresa(String nombre, Long organizacionId) {
+        Query query = currentSession().createQuery("select r from Empresa e inner join e.reportes r where e.id = :id and r.nombre = :nombre");
+        query.setLong("id", organizacionId);
+        query.setString("nombre", nombre);
+        Reporte reporte = (Reporte) query.uniqueResult();
+        return reporte;
+    }
+        
+    private Reporte buscaReportePorAlmacen(String nombre, Long organizacionId) {
+        Query query = currentSession().createQuery("select r from Almacen a inner join a.reportes r where a.id = :id and r.nombre = :nombre");
+        query.setLong("id", organizacionId);
+        query.setString("nombre", nombre);
+        Reporte reporte = (Reporte) query.uniqueResult();
+        return reporte;
+    }
+        
+    public JasperReport obtieneReporteAdministrativo(String nombre) {
+        Reporte reporte = buscaReporteAdminstrativo(nombre);
+        return reporte.getReporte();
+    }
+
+    public JasperReport obtieneReportePorOrganizacion(String nombre, Long organizacionId) {
+        Reporte reporte = buscaReportePorOrganizacion(nombre, organizacionId);
         return reporte.getReporte();
     }
 
     public JasperReport obtieneReportePorEmpresa(String nombre, Long empresaId) {
-        Query query = currentSession().createQuery("select r from Empresa e inner join e.reportes r where e.id = :id and r.nombre = :nombre");
-        query.setLong("id", empresaId);
-        query.setString("nombre", nombre);
-        Reporte reporte = (Reporte) query.uniqueResult();
+        Reporte reporte = buscaReportePorEmpresa(nombre, empresaId);
         
         return reporte.getReporte();
     }
 
     public JasperReport obtieneReportePorAlmacen(String nombre, Long almacenId) {
-        Query query = currentSession().createQuery("select r from Almacen a inner join a.reportes r where a.id = :id and r.nombre = :nombre");
-        query.setLong("id", almacenId);
-        query.setString("nombre", nombre);
-        Reporte reporte = (Reporte) query.uniqueResult();
+        Reporte reporte = buscaReportePorAlmacen(nombre, almacenId);
         
         return reporte.getReporte();
     }
@@ -202,5 +220,62 @@ public class ReporteDao {
             byteData = baos.toByteArray();
         }
         return byteData;
+    }
+
+    public void compila(String nombre, String tipo, Usuario usuario) {
+        Reporte reporte = null;
+        switch(tipo) {
+            case Constantes.ADMIN : 
+                reporte = buscaReporteAdminstrativo(nombre);
+                break;
+            case Constantes.ORG : 
+                reporte = buscaReportePorOrganizacion(nombre, usuario.getEmpresa().getOrganizacion().getId());
+                break;
+            case Constantes.EMP : 
+                reporte = buscaReportePorEmpresa(nombre, usuario.getEmpresa().getId());
+                break;
+            case Constantes.ALM : 
+                reporte = buscaReportePorAlmacen(nombre, usuario.getAlmacen().getId());
+                break;
+        }
+        try{
+            JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/reportes/" + nombre + ".jrxml"));
+            JasperReport jr = JasperCompileManager.compileReport(jd);
+            byte[] fuente = obtainByteData(this.getClass().getResourceAsStream("/reportes/" + nombre + ".jrxml"));
+            byte[] compilado = obtainByteData(jr);
+            boolean nuevo = false;
+            if (reporte == null) {
+                nuevo = true;
+                reporte = new Reporte();
+            }
+            reporte.setNombre(nombre);
+            reporte.setFuente(fuente);
+            reporte.setCompilado(compilado);
+            Date fecha = new Date();
+            reporte.setFechaModificacion(fecha);
+            if (nuevo) {
+                reporte.setFechaCreacion(fecha);
+                currentSession().save(reporte);
+                switch(tipo) {
+                    case Constantes.ORG : 
+                        usuario.getEmpresa().getOrganizacion().getReportes().add(reporte);
+                        currentSession().update(usuario.getEmpresa().getOrganizacion());
+                        break;
+                    case Constantes.EMP : 
+                        usuario.getEmpresa().getReportes().add(reporte);
+                        currentSession().update(usuario.getEmpresa());
+                        break;
+                    case Constantes.ALM : 
+                        usuario.getAlmacen().getReportes().add(reporte);
+                        currentSession().update(usuario.getAlmacen());
+                        break;
+                }
+            } else {
+                currentSession().update(reporte);
+            }
+            currentSession().flush();
+        } catch(JRException | IOException e) {
+            log.error("No se pudo compilar el reporte", e);
+        }
     }
 }

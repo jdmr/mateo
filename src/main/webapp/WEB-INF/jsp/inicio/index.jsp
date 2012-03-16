@@ -12,7 +12,7 @@
         </jsp:include>
         <h1><s:message code="inicio.label" /></h1>
         <c:if test="${not empty message}">
-            <div class="alert alert-block alert-success fade in" role="status">
+            <div class="alert alert-block <c:choose><c:when test='${not empty messageStyle}'>${messageStyle}</c:when><c:otherwise>alert-success</c:otherwise></c:choose> fade in" role="status">
                 <a class="close" data-dismiss="alert">×</a>
                 <s:message code="${message}" arguments="${messageAttrs}" />
             </div>
