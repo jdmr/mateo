@@ -23,27 +23,21 @@
  */
 package mx.edu.um.mateo.general.web;
 
-import java.io.BufferedOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.TipoClienteDao;
 import mx.edu.um.mateo.general.model.TipoCliente;
 import mx.edu.um.mateo.general.model.Usuario;
-import net.sf.jasperreports.engine.JRException;
+import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.general.utils.ReporteException;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -75,7 +69,8 @@ public class TipoClienteController extends BaseController {
             Model modelo) {
         log.debug("Mostrando lista de tipos de clientes");
         Map<String, Object> params = new HashMap<>();
-        params.put("empresa", request.getSession().getAttribute("empresaId"));
+        Long empresaId = (Long) request.getSession().getAttribute("empresaId");
+        params.put("empresa", empresaId);
         if (StringUtils.isNotBlank(filtro)) {
             params.put("filtro", filtro);
         }
@@ -88,9 +83,9 @@ public class TipoClienteController extends BaseController {
             params.put("reporte", true);
             params = tipoClienteDao.lista(params);
             try {
-                generaReporte(tipo, (List<TipoCliente>) params.get("tiposDeCliente"), response);
+                generaReporte(tipo, (List<TipoCliente>) params.get("tiposDeCliente"), response, "tiposDeCliente", Constantes.EMP, empresaId);
                 return null;
-            } catch (JRException | IOException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
                 params.remove("reporte");
                 errors.reject("error.generar.reporte");
@@ -103,10 +98,10 @@ public class TipoClienteController extends BaseController {
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<TipoCliente>) params.get("tiposDeCliente"), request);
+                enviaCorreo(correo, (List<TipoCliente>) params.get("tiposDeCliente"), request, "tiposDeCliente", Constantes.EMP, empresaId);
                 modelo.addAttribute("message", "lista.enviado.message");
                 modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("tipoCliente.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
-            } catch (JRException | MessagingException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
@@ -136,7 +131,6 @@ public class TipoClienteController extends BaseController {
         return "admin/tipoCliente/nuevo";
     }
 
-    @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request, HttpServletResponse response, @Valid TipoCliente tipoCliente, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
@@ -170,7 +164,6 @@ public class TipoClienteController extends BaseController {
         return "admin/tipoCliente/edita";
     }
 
-    @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid TipoCliente tipoCliente, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -193,7 +186,6 @@ public class TipoClienteController extends BaseController {
         return "redirect:/admin/tipoCliente/ver/" + tipoCliente.getId();
     }
 
-    @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute TipoCliente tipoCliente, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina tipoCliente");
@@ -209,62 +201,5 @@ public class TipoClienteController extends BaseController {
         }
 
         return "redirect:/admin/tipoCliente";
-    }
-
-    private void generaReporte(String tipo, List<TipoCliente> tiposDeCliente, HttpServletResponse response) throws JRException, IOException {
-        log.debug("Generando reporte {}", tipo);
-        byte[] archivo = null;
-        switch (tipo) {
-            case "PDF":
-                archivo = reporteUtil.generaPdf(tiposDeCliente, "/mx/edu/um/mateo/general/reportes/tiposDeCliente.jrxml");
-                response.setContentType("application/pdf");
-                response.addHeader("Content-Disposition", "attachment; filename=tiposDeCliente.pdf");
-                break;
-            case "CSV":
-                archivo = reporteUtil.generaCsv(tiposDeCliente, "/mx/edu/um/mateo/general/reportes/tiposDeCliente.jrxml");
-                response.setContentType("text/csv");
-                response.addHeader("Content-Disposition", "attachment; filename=tiposDeCliente.csv");
-                break;
-            case "XLS":
-                archivo = reporteUtil.generaXls(tiposDeCliente, "/mx/edu/um/mateo/general/reportes/tiposDeCliente.jrxml");
-                response.setContentType("application/vnd.ms-excel");
-                response.addHeader("Content-Disposition", "attachment; filename=tiposDeCliente.xls");
-        }
-        if (archivo != null) {
-            response.setContentLength(archivo.length);
-            try (BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream())) {
-                bos.write(archivo);
-                bos.flush();
-            }
-        }
-
-    }
-
-    private void enviaCorreo(String tipo, List<TipoCliente> tiposDeCliente, HttpServletRequest request) throws JRException, MessagingException {
-        log.debug("Enviando correo {}", tipo);
-        byte[] archivo = null;
-        String tipoContenido = null;
-        switch (tipo) {
-            case "PDF":
-                archivo = reporteUtil.generaPdf(tiposDeCliente, "/mx/edu/um/mateo/general/reportes/tiposDeCliente.jrxml");
-                tipoContenido = "application/pdf";
-                break;
-            case "CSV":
-                archivo = reporteUtil.generaCsv(tiposDeCliente, "/mx/edu/um/mateo/general/reportes/tiposDeCliente.jrxml");
-                tipoContenido = "text/csv";
-                break;
-            case "XLS":
-                archivo = reporteUtil.generaXls(tiposDeCliente, "/mx/edu/um/mateo/general/reportes/tiposDeCliente.jrxml");
-                tipoContenido = "application/vnd.ms-excel";
-        }
-
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(ambiente.obtieneUsuario().getUsername());
-        String titulo = messageSource.getMessage("tipoCliente.lista.label", null, request.getLocale());
-        helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
-        helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
-        helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
-        mailSender.send(message);
     }
 }
