@@ -23,14 +23,9 @@
  */
 package mx.edu.um.mateo.inventario.web;
 
-import java.io.BufferedOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -39,6 +34,7 @@ import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.LabelValueBean;
+import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inventario.dao.EntradaDao;
 import mx.edu.um.mateo.inventario.dao.ProductoDao;
@@ -47,11 +43,9 @@ import mx.edu.um.mateo.inventario.model.Entrada;
 import mx.edu.um.mateo.inventario.model.LoteEntrada;
 import mx.edu.um.mateo.inventario.model.Producto;
 import mx.edu.um.mateo.inventario.utils.*;
-import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -89,7 +83,8 @@ public class EntradaController extends BaseController {
             Model modelo) {
         log.debug("Mostrando lista de tipos de entradas");
         Map<String, Object> params = new HashMap<>();
-        params.put("almacen", request.getSession().getAttribute("almacenId"));
+        Long almacenId = (Long) request.getSession().getAttribute("almacenId");
+        params.put("almacen", almacenId);
         if (StringUtils.isNotBlank(filtro)) {
             params.put("filtro", filtro);
         }
@@ -102,9 +97,9 @@ public class EntradaController extends BaseController {
             params.put("reporte", true);
             params = entradaDao.lista(params);
             try {
-                generaReporte(tipo, (List<Entrada>) params.get("entradas"), response);
+                generaReporte(tipo, (List<Entrada>) params.get("entradas"), response, "entradas", Constantes.ALM, almacenId);
                 return null;
-            } catch (JRException | IOException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
                 params.remove("reporte");
                 errors.reject("error.generar.reporte");
@@ -117,10 +112,10 @@ public class EntradaController extends BaseController {
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<Entrada>) params.get("entradas"), request);
+                enviaCorreo(correo, (List<Entrada>) params.get("entradas"), request, "entradas", Constantes.ALM, almacenId);
                 modelo.addAttribute("message", "lista.enviada.message");
                 modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("entrada.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
-            } catch (JRException | MessagingException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
@@ -545,62 +540,5 @@ public class EntradaController extends BaseController {
         }
 
         return "redirect:/inventario/entrada/ver/" + id;
-    }
-
-    private void generaReporte(String tipo, List<Entrada> entradas, HttpServletResponse response) throws JRException, IOException {
-        log.debug("Generando reporte {}", tipo);
-        byte[] archivo = null;
-        switch (tipo) {
-            case "PDF":
-                archivo = reporteUtil.generaPdf(entradas, "/mx/edu/um/mateo/inventario/reportes/entradas.jrxml");
-                response.setContentType("application/pdf");
-                response.addHeader("Content-Disposition", "attachment; filename=entradas.pdf");
-                break;
-            case "CSV":
-                archivo = reporteUtil.generaCsv(entradas, "/mx/edu/um/mateo/inventario/reportes/entradas.jrxml");
-                response.setContentType("text/csv");
-                response.addHeader("Content-Disposition", "attachment; filename=entradas.csv");
-                break;
-            case "XLS":
-                archivo = reporteUtil.generaXls(entradas, "/mx/edu/um/mateo/inventario/reportes/entradas.jrxml");
-                response.setContentType("application/vnd.ms-excel");
-                response.addHeader("Content-Disposition", "attachment; filename=entradas.xls");
-        }
-        if (archivo != null) {
-            response.setContentLength(archivo.length);
-            try (BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream())) {
-                bos.write(archivo);
-                bos.flush();
-            }
-        }
-
-    }
-
-    private void enviaCorreo(String tipo, List<Entrada> entradas, HttpServletRequest request) throws JRException, MessagingException {
-        log.debug("Enviando correo {}", tipo);
-        byte[] archivo = null;
-        String tipoContenido = null;
-        switch (tipo) {
-            case "PDF":
-                archivo = reporteUtil.generaPdf(entradas, "/mx/edu/um/mateo/inventario/reportes/entradas.jrxml");
-                tipoContenido = "application/pdf";
-                break;
-            case "CSV":
-                archivo = reporteUtil.generaCsv(entradas, "/mx/edu/um/mateo/inventario/reportes/entradas.jrxml");
-                tipoContenido = "text/csv";
-                break;
-            case "XLS":
-                archivo = reporteUtil.generaXls(entradas, "/mx/edu/um/mateo/inventario/reportes/entradas.jrxml");
-                tipoContenido = "application/vnd.ms-excel";
-        }
-
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(ambiente.obtieneUsuario().getUsername());
-        String titulo = messageSource.getMessage("entrada.lista.label", null, request.getLocale());
-        helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
-        helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
-        helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
-        mailSender.send(message);
     }
 }

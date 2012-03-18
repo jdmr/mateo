@@ -23,7 +23,10 @@
  */
 package mx.edu.um.mateo.general.dao;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -81,17 +84,17 @@ public class ReporteDao {
         return reporte;
     }
         
-    private Reporte buscaReportePorEmpresa(String nombre, Long organizacionId) {
+    private Reporte buscaReportePorEmpresa(String nombre, Long empresaId) {
         Query query = currentSession().createQuery("select r from Empresa e inner join e.reportes r where e.id = :id and r.nombre = :nombre");
-        query.setLong("id", organizacionId);
+        query.setLong("id", empresaId);
         query.setString("nombre", nombre);
         Reporte reporte = (Reporte) query.uniqueResult();
         return reporte;
     }
         
-    private Reporte buscaReportePorAlmacen(String nombre, Long organizacionId) {
+    private Reporte buscaReportePorAlmacen(String nombre, Long almacenId) {
         Query query = currentSession().createQuery("select r from Almacen a inner join a.reportes r where a.id = :id and r.nombre = :nombre");
-        query.setLong("id", organizacionId);
+        query.setLong("id", almacenId);
         query.setString("nombre", nombre);
         Reporte reporte = (Reporte) query.uniqueResult();
         return reporte;
@@ -189,8 +192,6 @@ public class ReporteDao {
         nombres.add("entradas");
         nombres.add("salidas");
         nombres.add("cancelaciones");
-        nombres.add("salida-lote");
-        nombres.add("salida");
         
         almacen.getReportes().clear();
         almacen.getReportes().addAll(inicializaReportes(nombres));
