@@ -26,7 +26,6 @@ package mx.edu.um.mateo.inventario.web;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -44,7 +43,6 @@ import mx.edu.um.mateo.inventario.model.LoteSalida;
 import mx.edu.um.mateo.inventario.model.Producto;
 import mx.edu.um.mateo.inventario.model.Salida;
 import mx.edu.um.mateo.inventario.utils.*;
-import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,14 +136,14 @@ public class SalidaController extends BaseController {
                 modelo.addAttribute("puedeEditar", true);
                 modelo.addAttribute("puedeEliminar", true);
                 modelo.addAttribute("puedeCerrar", true);
-                modelo.addAttribute("puedePendiente", true);
-                break;
-            case Constantes.PENDIENTE:
-                modelo.addAttribute("puedeEditarPendiente", true);
-                modelo.addAttribute("puedeCancelar", true);
                 break;
             case Constantes.CERRADA:
                 modelo.addAttribute("puedeCancelar", true);
+                modelo.addAttribute("puedeReporte", true);
+                break;
+            case Constantes.CANCELADA:
+                log.debug("Puede ver reporte");
+                modelo.addAttribute("puedeReporte", true);
                 break;
         }
 

@@ -192,6 +192,8 @@ public class ReporteDao {
         nombres.add("entradas");
         nombres.add("salidas");
         nombres.add("cancelaciones");
+        nombres.add("salida_lote");
+        nombres.add("salida");
         
         almacen.getReportes().clear();
         almacen.getReportes().addAll(inicializaReportes(nombres));
@@ -278,5 +280,5 @@ public class ReporteDao {
         } catch(JRException | IOException e) {
             log.error("No se pudo compilar el reporte", e);
         }
-    }
+    }    
 }
