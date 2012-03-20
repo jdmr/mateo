@@ -25,12 +25,8 @@ package mx.edu.um.mateo.activos.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
-import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
-import mx.edu.um.mateo.general.model.Empresa;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -38,10 +34,8 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
-@Table(name = "tipos_activo", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"nombre", "empresa_id"})
-})
-public class TipoActivo implements Serializable {
+@Table(name = "xtipos_activo")
+public class XTipoActivo implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,15 +51,14 @@ public class TipoActivo implements Serializable {
     private BigDecimal porciento;
     @Column(nullable = false)
     private Long vidaUtil;
-    @ManyToOne(optional = false)
-    private CuentaMayor cuenta;
-    @ManyToOne(optional = false)
-    private Empresa empresa;
-    @OneToMany(mappedBy = "tipoActivo")
-    private List<Activo> activos = new ArrayList<>();
-
-    public TipoActivo() {
-    }
+    @Column(nullable = false)
+    private Long cuentaId;
+    @Column(nullable = false)
+    private Long empresaId;
+    @Column(nullable = false)
+    private Long tipoActivoId;
+    
+    public XTipoActivo() {}
 
     /**
      * @return the id
@@ -152,45 +145,45 @@ public class TipoActivo implements Serializable {
     }
 
     /**
-     * @return the cuenta
+     * @return the cuentaId
      */
-    public CuentaMayor getCuenta() {
-        return cuenta;
+    public Long getCuentaId() {
+        return cuentaId;
     }
 
     /**
-     * @param cuenta the cuenta to set
+     * @param cuentaId the cuentaId to set
      */
-    public void setCuenta(CuentaMayor cuenta) {
-        this.cuenta = cuenta;
+    public void setCuentaId(Long cuentaId) {
+        this.cuentaId = cuentaId;
     }
 
     /**
-     * @return the empresa
+     * @return the empresaId
      */
-    public Empresa getEmpresa() {
-        return empresa;
+    public Long getEmpresaId() {
+        return empresaId;
     }
 
     /**
-     * @param empresa the empresa to set
+     * @param empresaId the empresaId to set
      */
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
+    public void setEmpresaId(Long empresaId) {
+        this.empresaId = empresaId;
     }
 
     /**
-     * @return the activos
+     * @return the tipoActivoId
      */
-    public List<Activo> getActivos() {
-        return activos;
+    public Long getTipoActivoId() {
+        return tipoActivoId;
     }
 
     /**
-     * @param activos the activos to set
+     * @param tipoActivoId the tipoActivoId to set
      */
-    public void setActivos(List<Activo> activos) {
-        this.activos = activos;
+    public void setTipoActivoId(Long tipoActivoId) {
+        this.tipoActivoId = tipoActivoId;
     }
 
     @Override
@@ -201,7 +194,7 @@ public class TipoActivo implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final TipoActivo other = (TipoActivo) obj;
+        final XTipoActivo other = (XTipoActivo) obj;
         if (!Objects.equals(this.nombre, other.nombre)) {
             return false;
         }
@@ -211,14 +204,15 @@ public class TipoActivo implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 61 * hash + Objects.hashCode(this.id);
-        hash = 61 * hash + Objects.hashCode(this.version);
-        hash = 61 * hash + Objects.hashCode(this.nombre);
+        hash = 61 * hash + Objects.hashCode(this.getId());
+        hash = 61 * hash + Objects.hashCode(this.getVersion());
+        hash = 61 * hash + Objects.hashCode(this.getNombre());
         return hash;
     }
 
     @Override
     public String toString() {
-        return "TipoActivo{" + "nombre=" + nombre + '}';
+        return "TipoActivo{" + "nombre=" + getNombre() + '}';
     }
+    
 }
