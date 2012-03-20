@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mx.edu.um.mateo.contabilidad.dao;
 
 import java.math.BigDecimal;
@@ -9,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
+import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import org.hibernate.Session;
@@ -49,8 +46,11 @@ public class CuentaMayorDaoTest extends BaseTest {
     public void deberiaMostrarListaDeCuentaMayor() {
         log.debug("Debiera mostrar lista de cuentaMayor");
 
+        Organizacion test = new Organizacion("TST-01", "TEST--01", "TEST--01");
+        currentSession().save(test);
         for (int i = 0; i < 20; i++) {
             CuentaMayor cuentaMayor = new CuentaMayor("test" + i, "test", "test", false, false, false, false, BigDecimal.ZERO);
+            cuentaMayor.setOrganizacion(test);
             currentSession().save(cuentaMayor);
             assertNotNull(cuentaMayor);
         }
@@ -69,7 +69,10 @@ public class CuentaMayorDaoTest extends BaseTest {
         log.debug("Debiera obtener cuentaMayor");
 
         String nombre = "test";
+        Organizacion test = new Organizacion("TST-01", "TEST--01", "TEST--01");
+        currentSession().save(test);
         CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test", false, false, false, false, BigDecimal.ZERO);
+        cuentaMayor.setOrganizacion(test);
         currentSession().save(cuentaMayor);
         assertNotNull(cuentaMayor.getId());
         Long id = cuentaMayor.getId();
@@ -85,7 +88,10 @@ public class CuentaMayorDaoTest extends BaseTest {
     public void deberiaCrearCuentaMayor() {
         log.debug("Deberia crear CuentaMayor");
 
+        Organizacion test = new Organizacion("TST-01", "TEST--01", "TEST--01");
+        currentSession().save(test);
         CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test", false, false, false, false, BigDecimal.ZERO);
+        cuentaMayor.setOrganizacion(test);
         assertNotNull(cuentaMayor);
 
         CuentaMayor cuentaMayor2 = instance.crea(cuentaMayor);
@@ -99,7 +105,10 @@ public class CuentaMayorDaoTest extends BaseTest {
     public void deberiaActualizarCuentaMayor() {
         log.debug("Deberia actualizar CuentaMayor");
 
+        Organizacion test = new Organizacion("TST-01", "TEST--01", "TEST--01");
+        currentSession().save(test);
         CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test", false, false, false, false, BigDecimal.ZERO);
+        cuentaMayor.setOrganizacion(test);
         assertNotNull(cuentaMayor);
         currentSession().save(cuentaMayor);
 
@@ -118,7 +127,10 @@ public class CuentaMayorDaoTest extends BaseTest {
         log.debug("Debiera eliminar CuentaMayor");
 
         String nom = "test";
+        Organizacion test = new Organizacion("TST-01", "TEST--01", "TEST--01");
+        currentSession().save(test);
         CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test", false, false, false, false, BigDecimal.ZERO);
+        cuentaMayor.setOrganizacion(test);
         currentSession().save(cuentaMayor);
         assertNotNull(cuentaMayor);
 

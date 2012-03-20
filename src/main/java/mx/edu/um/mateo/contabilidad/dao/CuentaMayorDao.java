@@ -1,13 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mx.edu.um.mateo.contabilidad.dao;
 
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -101,18 +98,32 @@ public class CuentaMayorDao {
     }
 
     public CuentaMayor crea(CuentaMayor cuentaMayor) {
+        return crea(cuentaMayor, null);
+    }
+
+    public CuentaMayor crea(CuentaMayor cuentaMayor, Usuario usuario) {
         log.debug("Creando cuenta de mayor : {}", cuentaMayor);
+        if (usuario != null) {
+            cuentaMayor.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+        }
         currentSession().save(cuentaMayor);
         currentSession().flush();
         return cuentaMayor;
     }
 
     public CuentaMayor actualiza(CuentaMayor cuentaMayor) {
+        return actualiza(cuentaMayor, null);
+    }
+
+    public CuentaMayor actualiza(CuentaMayor cuentaMayor, Usuario usuario) {
         log.debug("Actualizando cuenta de mayor {}", cuentaMayor);
         
         CuentaMayor nueva = (CuentaMayor)currentSession().get(CuentaMayor.class, cuentaMayor.getId());
         BeanUtils.copyProperties(cuentaMayor, nueva);
         
+        if (usuario != null) {
+            nueva.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+        }
         currentSession().update(nueva);
         currentSession().flush();
         return nueva;
