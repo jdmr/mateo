@@ -25,25 +25,16 @@ package mx.edu.um.mateo.activos.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Objects;
 import javax.persistence.*;
-import mx.edu.um.mateo.general.model.Departamento;
-import mx.edu.um.mateo.general.model.Empresa;
-import mx.edu.um.mateo.general.model.Imagen;
-import mx.edu.um.mateo.general.model.Proveedor;
 
 /**
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
-@Table(name = "activos", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"folio", "empresa_id"})
-})
-public class Activo implements Serializable {
+@Table(name = "xactivos")
+public class XActivo implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,14 +78,16 @@ public class Activo implements Serializable {
     private Boolean inactivo = false;
     @Temporal(TemporalType.DATE)
     private Date fechaInactivo;
-    @ManyToOne(optional = false)
-    private TipoActivo tipoActivo;
-    @ManyToOne(optional = false)
-    private Proveedor proveedor;
-    @ManyToOne(optional = false)
-    private Departamento departamento;
-    @ManyToOne(optional = false)
-    private Empresa empresa;
+    @Column(nullable = false)
+    private Long tipoActivoId;
+    @Column(nullable = false)
+    private Long proveedorId;
+    @Column(nullable = false)
+    private Long departamentoId;
+    @Column(nullable = false)
+    private Long empresaId;
+    @Column(nullable = false)
+    private Long activoId;
     @Column(length = 128)
     private String responsable;
     @Column(length = 32)
@@ -107,21 +100,18 @@ public class Activo implements Serializable {
     private Boolean seguro = false;
     @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal valorNeto = BigDecimal.ZERO;
-    @ManyToMany
-    @JoinTable(name = "activos_imagenes", joinColumns = {
-        @JoinColumn(name = "activo_id")}, inverseJoinColumns = {
-        @JoinColumn(name = "imagen_id")})
-    private List<Imagen> imagenes = new ArrayList<>();
-    @OneToMany(mappedBy="activo")
-    private List<ReubicacionActivo> reubicaciones = new ArrayList<>();
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date fechaCreacion;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date fechaModificacion;
+    @Column(nullable = false, length = 64)
+    private String creador;
+    @Column(nullable = false, length = 64)
+    private String actividad;
 
-    public Activo() {
+    public XActivo() {
     }
 
     /**
@@ -164,34 +154,6 @@ public class Activo implements Serializable {
      */
     public void setFolio(String folio) {
         this.folio = folio;
-    }
-
-    /**
-     * @return the fechaCreacion
-     */
-    public Date getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    /**
-     * @param fechaCreacion the fechaCreacion to set
-     */
-    public void setFechaCreacion(Date fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
-    /**
-     * @return the fechaModificacion
-     */
-    public Date getFechaModificacion() {
-        return fechaModificacion;
-    }
-
-    /**
-     * @param fechaModificacion the fechaModificacion to set
-     */
-    public void setFechaModificacion(Date fechaModificacion) {
-        this.fechaModificacion = fechaModificacion;
     }
 
     /**
@@ -447,59 +409,73 @@ public class Activo implements Serializable {
     }
 
     /**
-     * @return the tipoActivo
+     * @return the tipoActivoId
      */
-    public TipoActivo getTipoActivo() {
-        return tipoActivo;
+    public Long getTipoActivoId() {
+        return tipoActivoId;
     }
 
     /**
-     * @param tipoActivo the tipoActivo to set
+     * @param tipoActivoId the tipoActivoId to set
      */
-    public void setTipoActivo(TipoActivo tipoActivo) {
-        this.tipoActivo = tipoActivo;
+    public void setTipoActivoId(Long tipoActivoId) {
+        this.tipoActivoId = tipoActivoId;
     }
 
     /**
-     * @return the proveedor
+     * @return the proveedorId
      */
-    public Proveedor getProveedor() {
-        return proveedor;
+    public Long getProveedorId() {
+        return proveedorId;
     }
 
     /**
-     * @param proveedor the proveedor to set
+     * @param proveedorId the proveedorId to set
      */
-    public void setProveedor(Proveedor proveedor) {
-        this.proveedor = proveedor;
+    public void setProveedorId(Long proveedorId) {
+        this.proveedorId = proveedorId;
     }
 
     /**
-     * @return the departamento
+     * @return the departamentoId
      */
-    public Departamento getDepartamento() {
-        return departamento;
+    public Long getDepartamentoId() {
+        return departamentoId;
     }
 
     /**
-     * @param departamento the departamento to set
+     * @param departamentoId the departamentoId to set
      */
-    public void setDepartamento(Departamento departamento) {
-        this.departamento = departamento;
+    public void setDepartamentoId(Long departamentoId) {
+        this.departamentoId = departamentoId;
     }
 
     /**
-     * @return the empresa
+     * @return the empresaId
      */
-    public Empresa getEmpresa() {
-        return empresa;
+    public Long getEmpresaId() {
+        return empresaId;
     }
 
     /**
-     * @param empresa the empresa to set
+     * @param empresaId the empresaId to set
      */
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
+    public void setEmpresaId(Long empresaId) {
+        this.empresaId = empresaId;
+    }
+
+    /**
+     * @return the activoId
+     */
+    public Long getActivoId() {
+        return activoId;
+    }
+
+    /**
+     * @param activoId the activoId to set
+     */
+    public void setActivoId(Long activoId) {
+        this.activoId = activoId;
     }
 
     /**
@@ -587,59 +563,64 @@ public class Activo implements Serializable {
     }
 
     /**
-     * @return the imagenes
+     * @return the fechaCreacion
      */
-    public List<Imagen> getImagenes() {
-        return imagenes;
+    public Date getFechaCreacion() {
+        return fechaCreacion;
     }
 
     /**
-     * @param imagenes the imagenes to set
+     * @param fechaCreacion the fechaCreacion to set
      */
-    public void setImagenes(List<Imagen> imagenes) {
-        this.imagenes = imagenes;
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
     }
 
     /**
-     * @return the reubicaciones
+     * @return the fechaModificacion
      */
-    public List<ReubicacionActivo> getReubicaciones() {
-        return reubicaciones;
+    public Date getFechaModificacion() {
+        return fechaModificacion;
     }
 
     /**
-     * @param reubicaciones the reubicaciones to set
+     * @param fechaModificacion the fechaModificacion to set
      */
-    public void setReubicaciones(List<ReubicacionActivo> reubicaciones) {
-        this.reubicaciones = reubicaciones;
+    public void setFechaModificacion(Date fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Activo other = (Activo) obj;
-        if (!Objects.equals(this.folio, other.folio)) {
-            return false;
-        }
-        return true;
+    /**
+     * @return the creador
+     */
+    public String getCreador() {
+        return creador;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 47 * hash + Objects.hashCode(this.id);
-        hash = 47 * hash + Objects.hashCode(this.version);
-        hash = 47 * hash + Objects.hashCode(this.folio);
-        return hash;
+    /**
+     * @param creador the creador to set
+     */
+    public void setCreador(String creador) {
+        this.creador = creador;
+    }
+
+    /**
+     * @return the actividad
+     */
+    public String getActividad() {
+        return actividad;
+    }
+
+    /**
+     * @param actividad the actividad to set
+     */
+    public void setActividad(String actividad) {
+        this.actividad = actividad;
     }
 
     @Override
     public String toString() {
-        return "Activo{" + "folio=" + folio + '}';
+        return "XActivo{" + "folio=" + folio + ", activoId=" + activoId + ", creador=" + creador + ", actividad=" + actividad + '}';
     }
+
 }
