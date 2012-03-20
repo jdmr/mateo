@@ -68,7 +68,7 @@ public class EmpleadoDao {
             String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);
             Disjunction propiedades = Restrictions.disjunction();
             propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("nombreFiscal", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("apPaterno", filtro, MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }

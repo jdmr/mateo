@@ -192,7 +192,7 @@ public class EmpleadoController {
         try {
             empleado = empleadoDao.crea(empleado);
         } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear la cuenta de empleado", e);
+            log.error("No se pudo crear empleado", e);
             return Constantes.PATH_EMPLEADO_NUEVA;
         }
         
