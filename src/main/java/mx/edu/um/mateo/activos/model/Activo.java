@@ -25,7 +25,13 @@ package mx.edu.um.mateo.activos.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import mx.edu.um.mateo.general.model.Departamento;
+import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Imagen;
+import mx.edu.um.mateo.general.model.Proveedor;
 
 /**
  *
@@ -55,4 +61,16 @@ public class Activo implements Serializable {
     private String ubicacion;
     private Boolean inactivo = false;
     private Date fechaInactivo;
+    private TipoActivo tipoActivo;
+    private Proveedor proveedor;
+    private Departamento departamento;
+    private Empresa empresa;
+    private String responsable;
+    private String motivo = "COMPRA";
+    private Boolean garantia = false;
+    private Integer mesesGarantia = 0;
+    private Boolean seguro = false;
+    private BigDecimal valorNeto = BigDecimal.ZERO;
+    private List<Imagen> imagenes = new ArrayList<>();
+    private List<ReubicacionActivo> reubicaciones = new ArrayList<>();
 }
