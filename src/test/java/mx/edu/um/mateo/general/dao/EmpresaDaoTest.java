@@ -23,10 +23,9 @@
  */
 package mx.edu.um.mateo.general.dao;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.math.BigDecimal;
+import java.util.*;
+import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Session;
@@ -73,7 +72,8 @@ public class EmpresaDaoTest {
             currentSession().save(empresa);
         }
 
-        Map<String, Object> params = null;
+        Map<String, Object> params = new HashMap<>();
+        params.put("organizacion", organizacion.getId());
         Map result = instance.lista(params);
         assertNotNull(result.get("empresas"));
         assertNotNull(result.get("cantidad"));
@@ -208,5 +208,20 @@ public class EmpresaDaoTest {
 
         Empresa prueba = instance.obtiene(id);
         assertNull(prueba);
+    }
+    
+    @Test
+    public void debieraAsignarCuentaAEmpresa() {
+        log.debug("Debiera asignar cuenta a empresa");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        
+        CuentaMayor cuenta = new CuentaMayor("TEST", "TEST", "01.01.01", organizacion);
+        currentSession().save(cuenta);
+        
+        Empresa test = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
+        test.setCuenta(cuenta);
+        test = instance.crea(test);
+        assertNotNull(test.getId());
     }
 }

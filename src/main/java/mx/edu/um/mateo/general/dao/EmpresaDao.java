@@ -29,7 +29,6 @@ import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.dao.AlmacenDao;
 import mx.edu.um.mateo.inventario.model.Almacen;
-import mx.edu.um.mateo.inventario.model.TipoProducto;
 import org.hibernate.*;
 import org.hibernate.criterion.*;
 import org.slf4j.Logger;
