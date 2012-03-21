@@ -1,13 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mx.edu.um.mateo.contabilidad.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 import javax.persistence.*;
+import mx.edu.um.mateo.general.model.Organizacion;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -23,9 +20,6 @@ public class CuentaMayor implements Serializable {
     private Long id;
     @Version
     private Integer version;
-//    private Ejercicio ejercicio;
-//    private String idCtaMayor;
-//    private String tipoCuenta;
     @NotBlank
     @Column(nullable = false, length = 24)
     private String nombre;
@@ -36,20 +30,28 @@ public class CuentaMayor implements Serializable {
     @Column(nullable = false, length = 50)
     private String clave;
     @Column(nullable = false)
-    private Boolean detalle;
+    private Boolean detalle = false;
     @Column(nullable = false)
-    private Boolean aviso;
+    private Boolean aviso = false;
     @Column(nullable = false)
-    private Boolean auxiliar;
+    private Boolean auxiliar = false;
     @Column(nullable = false)
-    private Boolean iva;
+    private Boolean iva = false;
     @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal porcentajeIva = new BigDecimal("0");
-//    private Boolean detalleR;
+    @ManyToOne
+    private Organizacion organizacion;
 
     public CuentaMayor() {
     }
 
+    public CuentaMayor(String nombre, String nombreFiscal, String clave, Organizacion organizacion) {
+        this.nombre = nombre;
+        this.nombreFiscal = nombreFiscal;
+        this.clave = clave;
+        this.organizacion = organizacion;
+    }
+    
     public CuentaMayor(String nombre, String nombreFiscal, String clave, Boolean detalle, Boolean aviso, Boolean auxiliar, Boolean iva, BigDecimal porcentajeIva) {
         this.nombre = nombre;
         this.nombreFiscal = nombreFiscal;
@@ -139,6 +141,20 @@ public class CuentaMayor implements Serializable {
 
     public void setPorcentajeIva(BigDecimal porcentajeIva) {
         this.porcentajeIva = porcentajeIva;
+    }
+
+    /**
+     * @return the organizacion
+     */
+    public Organizacion getOrganizacion() {
+        return organizacion;
+    }
+
+    /**
+     * @param organizacion the organizacion to set
+     */
+    public void setOrganizacion(Organizacion organizacion) {
+        this.organizacion = organizacion;
     }
 
     @Override

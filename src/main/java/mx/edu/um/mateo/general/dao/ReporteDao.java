@@ -162,6 +162,7 @@ public class ReporteDao {
         log.debug("Inicializando reportes de la organizacion {}", organizacion);
         List<String> nombres = new ArrayList<>();
         nombres.add("empresas");
+        nombres.add("mayores");
         
         organizacion.getReportes().clear();
         organizacion.getReportes().addAll(inicializaReportes(nombres));

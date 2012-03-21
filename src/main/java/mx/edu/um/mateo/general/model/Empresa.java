@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -60,6 +61,8 @@ public class Empresa implements Serializable {
     @Size(min=12,max=13)
     @Column(nullable = false, length = 13, name = "rfc")
     private String rfc;
+    @ManyToOne
+    private CuentaMayor cuenta;
     @ManyToOne(optional = false)
     private Organizacion organizacion;
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
@@ -166,6 +169,20 @@ public class Empresa implements Serializable {
      */
     public void setRfc(String rfc) {
         this.rfc = rfc;
+    }
+
+    /**
+     * @return the cuenta
+     */
+    public CuentaMayor getCuenta() {
+        return cuenta;
+    }
+
+    /**
+     * @param cuenta the cuenta to set
+     */
+    public void setCuenta(CuentaMayor cuenta) {
+        this.cuenta = cuenta;
     }
 
     /**
