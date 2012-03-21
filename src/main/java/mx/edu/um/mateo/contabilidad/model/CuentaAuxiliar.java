@@ -43,7 +43,7 @@ public class CuentaAuxiliar implements Serializable {
     private Boolean auxiliar;
     @Column(nullable = false)
     private Boolean iva;
-    @Column(nullable = false)
+    @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal porcentajeIva = new BigDecimal("0");
 //    private Boolean detalleR;
 
