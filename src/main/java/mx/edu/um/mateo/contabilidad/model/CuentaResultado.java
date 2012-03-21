@@ -7,6 +7,7 @@ package mx.edu.um.mateo.contabilidad.model;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.*;
+import mx.edu.um.mateo.general.model.Organizacion;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -37,6 +38,8 @@ public class CuentaResultado implements Serializable{
     @NotBlank
     @Column(nullable = false, length = 24)
     private String nombreFiscal;
+    @ManyToOne
+    private Organizacion oraganizacion;
     /**
    @NotBlank
     @Column(nullable = false)
@@ -107,6 +110,20 @@ public class CuentaResultado implements Serializable{
     }
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    /**
+     * @return the oraganizacion
+     */
+    public Organizacion getOraganizacion() {
+        return oraganizacion;
+    }
+
+    /**
+     * @param oraganizacion the oraganizacion to set
+     */
+    public void setOraganizacion(Organizacion oraganizacion) {
+        this.oraganizacion = oraganizacion;
     }
 
     @Override

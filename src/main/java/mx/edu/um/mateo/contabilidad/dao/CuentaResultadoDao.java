@@ -10,6 +10,7 @@ import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.contabilidad.model.CuentaResultado;
 import mx.edu.um.mateo.general.dao.EmpresaDao;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -108,6 +109,14 @@ public class CuentaResultadoDao {
     }
 
     public CuentaResultado actualiza(CuentaResultado cuentaResultado) {
+        currentSession().saveOrUpdate(cuentaResultado);
+        CuentaResultado nueva = (CuentaResultado)currentSession().get(CuentaResultado.class, cuentaResultado.getId());
+          currentSession().update(nueva);
+        currentSession().flush();
+        return cuentaResultado;
+    }
+
+    public CuentaResultado actualiza(CuentaResultado cuentaResultado, Usuario usiario) {
         currentSession().saveOrUpdate(cuentaResultado);
         CuentaResultado nueva = (CuentaResultado)currentSession().get(CuentaResultado.class, cuentaResultado.getId());
           currentSession().update(nueva);
