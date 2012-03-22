@@ -51,7 +51,7 @@ public class XActivo implements Serializable {
     private String pedimento;
     @Column(length = 32)
     private String moneda;
-    @Column(scale = 2, precision = 8)
+    @Column(scale = 2, precision = 8, name = "tipo_cambio")
     private BigDecimal tipoCambio;
     @Column(length = 64)
     private String condicion;
@@ -69,7 +69,7 @@ public class XActivo implements Serializable {
     private String serial;
     @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal moi = BigDecimal.ZERO;
-    @Column(nullable = false, scale = 2, precision = 8)
+    @Column(nullable = false, scale = 2, precision = 8, name = "valor_rescate")
     private BigDecimal valorRescate = BigDecimal.ONE;
     @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal inpc = BigDecimal.ZERO;
@@ -77,34 +77,35 @@ public class XActivo implements Serializable {
     @Column(length = 64)
     private Boolean inactivo = false;
     @Temporal(TemporalType.DATE)
+    @Column(name = "fecha_inactivo")
     private Date fechaInactivo;
-    @Column(nullable = false)
-    private Long tipoActivoId;
-    @Column(nullable = false)
-    private Long proveedorId;
-    @Column(nullable = false)
-    private Long departamentoId;
-    @Column(nullable = false)
-    private Long empresaId;
-    @Column(nullable = false)
+    @Column(name="activo_id")
     private Long activoId;
+    @Column(name="tipo_activo_id")
+    private Long tipoActivoId;
+    @Column(name="proveedor_id")
+    private Long proveedorId;
+    @Column(name="centro_costo_id")
+    private Long cuentaId;
+    @Column(name="empresa_id")
+    private Long empresaId;
     @Column(length = 128)
     private String responsable;
     @Column(length = 32)
     private String motivo = "COMPRA";
     @Column(nullable = false)
     private Boolean garantia = false;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "meses_garantia")
     private Integer mesesGarantia = 0;
     @Column(nullable = false)
     private Boolean seguro = false;
-    @Column(nullable = false, scale = 2, precision = 8)
+    @Column(nullable = false, scale = 2, precision = 8, name = "valor_neto")
     private BigDecimal valorNeto = BigDecimal.ZERO;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
+    @Column(nullable = false, name="date_created")
     private Date fechaCreacion;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
+    @Column(nullable = false, name="last_updated")
     private Date fechaModificacion;
     @Column(nullable = false, length = 64)
     private String creador;
@@ -409,6 +410,20 @@ public class XActivo implements Serializable {
     }
 
     /**
+     * @return the activoId
+     */
+    public Long getActivoId() {
+        return activoId;
+    }
+
+    /**
+     * @param activoId the activoId to set
+     */
+    public void setActivoId(Long activoId) {
+        this.activoId = activoId;
+    }
+
+    /**
      * @return the tipoActivoId
      */
     public Long getTipoActivoId() {
@@ -437,17 +452,17 @@ public class XActivo implements Serializable {
     }
 
     /**
-     * @return the departamentoId
+     * @return the cuentaId
      */
-    public Long getDepartamentoId() {
-        return departamentoId;
+    public Long getCuentaId() {
+        return cuentaId;
     }
 
     /**
-     * @param departamentoId the departamentoId to set
+     * @param cuentaId the cuentaId to set
      */
-    public void setDepartamentoId(Long departamentoId) {
-        this.departamentoId = departamentoId;
+    public void setCuentaId(Long cuentaId) {
+        this.cuentaId = cuentaId;
     }
 
     /**
@@ -462,20 +477,6 @@ public class XActivo implements Serializable {
      */
     public void setEmpresaId(Long empresaId) {
         this.empresaId = empresaId;
-    }
-
-    /**
-     * @return the activoId
-     */
-    public Long getActivoId() {
-        return activoId;
-    }
-
-    /**
-     * @param activoId the activoId to set
-     */
-    public void setActivoId(Long activoId) {
-        this.activoId = activoId;
     }
 
     /**
@@ -618,9 +619,10 @@ public class XActivo implements Serializable {
         this.actividad = actividad;
     }
 
+
     @Override
     public String toString() {
-        return "XActivo{" + "folio=" + folio + ", activoId=" + activoId + ", creador=" + creador + ", actividad=" + actividad + '}';
+        return "XActivo{" + "folio=" + getFolio() + ", activoId=" + getActivoId() + ", creador=" + getCreador() + ", actividad=" + getActividad() + '}';
     }
 
 }

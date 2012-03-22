@@ -55,16 +55,20 @@ public class XEntrada implements Serializable {
     private Date fechaFactura;
     @Column(length = 128)
     private String comentarios;
-    @Column(scale = 2, precision = 8)
+    @Column(scale = 2, precision = 8, name = "tipo_cambio")
     private BigDecimal tipoCambio;
     @Column(scale = 2, precision = 8, nullable = false)
     private BigDecimal iva = new BigDecimal("0");
     @Column(scale = 2, precision = 8, nullable = false)
     private BigDecimal total = new BigDecimal("0");
     private Boolean devolucion = false;
+    @Column(name = "entrada_id", nullable = false)
     private Long entradaId;
+    @Column(name = "estatus_id", nullable = false)
     private Long estatusId;
+    @Column(name = "proveedor_id", nullable = false)
     private Long proveedorId;
+    @Column(name = "almacen_id", nullable = false)
     private Long almacenId;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "date_created")

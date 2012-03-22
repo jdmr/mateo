@@ -109,6 +109,7 @@ public class OrganizacionDaoTest extends BaseTest {
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
         currentSession().save(usuario);
+        currentSession().flush();
         Long id = usuario.getId();
         assertNotNull(id);
 
@@ -136,6 +137,7 @@ public class OrganizacionDaoTest extends BaseTest {
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
         currentSession().save(usuario);
+        currentSession().flush();
         Long id = usuario.getId();
         assertNotNull(id);
         id = organizacion.getId();

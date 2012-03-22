@@ -49,16 +49,17 @@ public class XTipoActivo implements Serializable {
     private String descripcion;
     @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal porciento;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "vida_util")
     private Long vidaUtil;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "cuenta_id")
     private Long cuentaId;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "empresa_id")
     private Long empresaId;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "tipo_activo_id")
     private Long tipoActivoId;
-    
-    public XTipoActivo() {}
+
+    public XTipoActivo() {
+    }
 
     /**
      * @return the id
@@ -214,5 +215,4 @@ public class XTipoActivo implements Serializable {
     public String toString() {
         return "TipoActivo{" + "nombre=" + getNombre() + '}';
     }
-    
 }

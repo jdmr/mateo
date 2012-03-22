@@ -70,6 +70,7 @@ public class Cliente implements Serializable {
     @Column(nullable = false)
     private Boolean base = false;
     @ManyToOne(optional = false)
+    @JoinColumn(name = "tipo_cliente_id")
     private TipoCliente tipoCliente;
     @ManyToOne(optional = false)
     private Empresa empresa;

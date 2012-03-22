@@ -27,7 +27,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.*;
-import mx.edu.um.mateo.general.model.Empresa;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -50,7 +49,7 @@ public class BajaActivo implements Serializable {
     @Column(nullable = false)
     private Date fecha;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
+    @Column(nullable = false, name="date_created")
     private Date fechaCreacion;
     @NotBlank
     @Column(nullable = false, length = 32)
@@ -59,8 +58,6 @@ public class BajaActivo implements Serializable {
     private String comentarios;
     @ManyToOne(optional = false)
     private Activo activo;
-    @ManyToOne(optional = false)
-    private Empresa empresa;
 
     public BajaActivo() {
     }
@@ -175,20 +172,6 @@ public class BajaActivo implements Serializable {
      */
     public void setActivo(Activo activo) {
         this.activo = activo;
-    }
-
-    /**
-     * @return the empresa
-     */
-    public Empresa getEmpresa() {
-        return empresa;
-    }
-
-    /**
-     * @param empresa the empresa to set
-     */
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
     }
 
     @Override

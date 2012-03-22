@@ -84,6 +84,8 @@ public class PruebaController {
     private ReporteDao reporteDao;
     @Autowired
     private SessionFactory sessionFactory;
+    @Autowired
+    private MigracionDao migracionDao;
 
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
@@ -212,6 +214,16 @@ public class PruebaController {
             throw new RuntimeException("No se pudieron cargar los datos de prueba", e);
         }
 
+        return "redirect:/";
+    }
+    
+    @RequestMapping("/migracion")
+    public String migracion() {
+        log.debug("Iniciando migracion");
+        
+        migracionDao.hazlo();
+        
+        log.debug("Regresando a home");
         return "redirect:/";
     }
     

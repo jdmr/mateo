@@ -23,10 +23,7 @@
  */
 package mx.edu.um.mateo.inventario.dao;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.inventario.model.TipoProducto;
@@ -96,7 +93,8 @@ public class TipoProductoDaoTest {
             TipoProducto tipoProducto = new TipoProducto("test" + i, "test" + i, almacen);
             currentSession().save(tipoProducto);
         }
-        Map<String, Object> params = null;
+        Map<String, Object> params = new HashMap<>();
+        params.put("almacen", almacen.getId());
         Map result = instance.lista(params);
         assertNotNull(result.get("tiposDeProducto"));
         assertNotNull(result.get("cantidad"));

@@ -23,10 +23,7 @@
  */
 package mx.edu.um.mateo.inventario.dao;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
@@ -96,13 +93,14 @@ public class ProductoDaoTest {
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TST", "tst-01", empresa);
         currentSession().save(almacen);
-        TipoProducto tipoProducto = new TipoProducto("TEST-01", null, almacen);
+        TipoProducto tipoProducto = new TipoProducto("TEST-01", "TEST-01", almacen);
         currentSession().save(tipoProducto);
         for (int i = 0; i < 20; i++) {
             Producto producto = new Producto("test" + i, "test" + i, "test" + i, "test" + i, tipoProducto, almacen);
             currentSession().save(producto);
         }
-        Map<String, Object> params = null;
+        Map<String, Object> params = new HashMap<>();
+        params.put("almacen", almacen.getId());
         Map result = instance.lista(params);
         assertNotNull(result.get("productos"));
         assertNotNull(result.get("cantidad"));
@@ -122,7 +120,7 @@ public class ProductoDaoTest {
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TST", "tst-01", empresa);
         currentSession().save(almacen);
-        TipoProducto tipoProducto = new TipoProducto("TEST-01", null, almacen);
+        TipoProducto tipoProducto = new TipoProducto("TEST-01", "TEST-01", almacen);
         currentSession().save(tipoProducto);
         Producto producto = new Producto("tst-01", "test-01", "tst-01", "tst-01", tipoProducto, almacen);
         currentSession().save(producto);
@@ -148,7 +146,7 @@ public class ProductoDaoTest {
         roles.add(rol);
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
-        TipoProducto tipoProducto = new TipoProducto("TEST-01", null, almacen);
+        TipoProducto tipoProducto = new TipoProducto("TEST-01", "TEST-01", almacen);
         currentSession().save(tipoProducto);
         Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
@@ -181,7 +179,7 @@ public class ProductoDaoTest {
         roles.add(rol);
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
-        TipoProducto tipoProducto = new TipoProducto("TEST-01", null, almacen);
+        TipoProducto tipoProducto = new TipoProducto("TEST-01", "TEST-01", almacen);
         currentSession().save(tipoProducto);
         Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
@@ -223,7 +221,7 @@ public class ProductoDaoTest {
         roles.add(rol);
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
-        TipoProducto tipoProducto = new TipoProducto("TEST-01", null, almacen);
+        TipoProducto tipoProducto = new TipoProducto("TEST-01", "TEST-01", almacen);
         currentSession().save(tipoProducto);
         Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
