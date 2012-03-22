@@ -26,7 +26,6 @@ package mx.edu.um.mateo.contabilidad.web;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -37,7 +36,6 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
-import net.sf.jasperreports.engine.*;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,7 +105,7 @@ public class CuentaMayorController extends BaseController {
             try {
                 enviaCorreo(correo, (List<CuentaMayor>) params.get(Constantes.CONTAINSKEY_MAYORES), request, Constantes.CONTAINSKEY_MAYORES, mx.edu.um.mateo.general.utils.Constantes.ORG, organizacionId);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
-                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("cuentaMayor.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("mayores.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
@@ -156,7 +154,7 @@ public class CuentaMayorController extends BaseController {
             return Constantes.PATH_CUENTA_MAYOR_NUEVA;
         }
         
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.creada.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "mayores.creada.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{mayor.getNombre()});
         
         return "redirect:" + Constantes.PATH_CUENTA_MAYOR_VER + "/" + mayor.getId();
@@ -184,7 +182,7 @@ public class CuentaMayorController extends BaseController {
             return Constantes.PATH_CUENTA_MAYOR_NUEVA;
         }
         
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.actualizada.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "mayores.actualizada.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{mayor.getNombre()});
         
         return "redirect:" + Constantes.PATH_CUENTA_MAYOR_VER + "/" + mayor.getId();
@@ -197,11 +195,11 @@ public class CuentaMayorController extends BaseController {
         try {
             String nombre = cuentaMayorDao.elimina(id);
             
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.eliminada.message");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "mayores.eliminada.message");
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
         } catch (Exception e) {
             log.error("No se pudo eliminar la cuenta de mayor " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_MAYOR, new String[]{"cuentaMayor.no.eliminada.message"}, null, null));
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_MAYOR, new String[]{"mayores.no.eliminada.message"}, null, null));
             return Constantes.PATH_CUENTA_MAYOR_VER;
         }
         

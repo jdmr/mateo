@@ -149,7 +149,7 @@ public class CuentaMayorControllerTest extends BaseTest {
                 .andExpect(status().isOk())
                 .andExpect(flash()
                 .attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.creada.message"));
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "mayores.creada.message"));
     }
 
     @Test
@@ -177,7 +177,22 @@ public class CuentaMayorControllerTest extends BaseTest {
         cuentaMayor = cuentaMayorDao.crea(cuentaMayor);
         assertNotNull(cuentaMayor);
 
-        this.mockMvc.perform(post(Constantes.PATH_CUENTA_MAYOR_ACTUALIZA).param("id", cuentaMayor.getId().toString()).param("version", cuentaMayor.getVersion().toString()).param("nombre", "test1").param("nombreFiscal", cuentaMayor.getNombreFiscal()).param("clave", cuentaMayor.getClave()).param("detalle", cuentaMayor.getDetalle().toString()).param("aviso", cuentaMayor.getAviso().toString()).param("auxiliar", cuentaMayor.getAuxiliar().toString()).param("iva", cuentaMayor.getIva().toString()).param("pctIva", cuentaMayor.getPorcentajeIva().toString())).andExpect(status().isOk()).andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE)).andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.actualizada.message"));
+        this.mockMvc.perform(post(
+                Constantes.PATH_CUENTA_MAYOR_ACTUALIZA)
+                .param("id", cuentaMayor.getId().toString())
+                .param("version", cuentaMayor.getVersion().toString())
+                .param("nombre", "test1")
+                .param("nombreFiscal", cuentaMayor.getNombreFiscal())
+                .param("clave", cuentaMayor.getClave())
+                .param("detalle", cuentaMayor.getDetalle().toString())
+                .param("aviso", cuentaMayor.getAviso().toString())
+                .param("auxiliar", cuentaMayor.getAuxiliar().toString())
+                .param("iva", cuentaMayor.getIva().toString())
+                .param("pctIva", cuentaMayor.getPorcentajeIva().toString()))
+                .andExpect(status().isOk())
+                .andExpect(flash()
+                .attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "mayores.actualizada.message"));
     }
 
     @Test
@@ -205,6 +220,13 @@ public class CuentaMayorControllerTest extends BaseTest {
         cuentaMayorDao.crea(cuentaMayor);
         assertNotNull(cuentaMayor);
 
-        this.mockMvc.perform(post(Constantes.PATH_CUENTA_MAYOR_ELIMINA).param("id", cuentaMayor.getId().toString())).andExpect(status().isOk()).andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE)).andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.eliminada.message"));
+        this.mockMvc.perform(post(
+                Constantes.PATH_CUENTA_MAYOR_ELIMINA)
+                .param("id", cuentaMayor.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(flash()
+                .attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash()
+                .attribute(Constantes.CONTAINSKEY_MESSAGE, "mayores.eliminada.message"));
     }
 }
