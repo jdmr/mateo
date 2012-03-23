@@ -104,7 +104,8 @@ public class SalidaDaoTest {
             salida.setFolio("TEST" + i);
             currentSession().save(salida);
         }
-        Map<String, Object> params = null;
+        Map<String, Object> params = new HashMap<>();
+        params.put("almacen", almacen.getId());
         Map result = instance.lista(params);
         assertNotNull(result.get("salidas"));
         assertNotNull(result.get("cantidad"));
@@ -243,7 +244,7 @@ public class SalidaDaoTest {
         currentSession().save(tipoCliente);
         Cliente cliente = new Cliente("tst-01", "test-01", "test-00000001", tipoCliente, empresa);
         currentSession().save(cliente);
-        TipoProducto tipoProducto = new TipoProducto("TEST-1", null, almacen);
+        TipoProducto tipoProducto = new TipoProducto("TEST-1", "TEST-1", almacen);
         currentSession().save(tipoProducto);
         Producto producto1 = new Producto("TEST1", "TEST1", "TEST1", "TEST1", tipoProducto, almacen);
         currentSession().save(producto1);
@@ -380,7 +381,7 @@ public class SalidaDaoTest {
         currentSession().save(tipoCliente);
         Cliente cliente = new Cliente("tst-01", "test-01", "test-00000001", tipoCliente, empresa);
         currentSession().save(cliente);
-        TipoProducto tipoProducto = new TipoProducto("TEST-1", null, almacen);
+        TipoProducto tipoProducto = new TipoProducto("TEST-1", "TEST-1", almacen);
         currentSession().save(tipoProducto);
         Producto producto1 = new Producto("TEST1", "TEST1", "TEST1", "TEST1", tipoProducto, almacen);
         currentSession().save(producto1);

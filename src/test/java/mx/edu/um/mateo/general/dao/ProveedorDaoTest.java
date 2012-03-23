@@ -23,10 +23,7 @@
  */
 package mx.edu.um.mateo.general.dao;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Session;
@@ -74,7 +71,8 @@ public class ProveedorDaoTest {
             Proveedor proveedor = new Proveedor("test" + i, "test" + i, "test0000000" + i, empresa);
             instance.crea(proveedor);
         }
-        Map<String, Object> params = null;
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", empresa.getId());
         Map result = instance.lista(params);
         assertNotNull(result.get("proveedores"));
         assertNotNull(result.get("cantidad"));

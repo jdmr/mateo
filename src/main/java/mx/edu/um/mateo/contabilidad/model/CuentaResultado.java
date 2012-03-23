@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mx.edu.um.mateo.contabilidad.model;
 
 import java.io.Serializable;
@@ -14,30 +10,22 @@ import org.hibernate.validator.constraints.NotBlank;
  *
  * @author semdariobarbaamaya
  */
-
-
 @Entity
-@Table(name = "cuentaresultado")
+@Table(name = "resultados")
+public class CuentaResultado implements Serializable {
 
-public class CuentaResultado implements Serializable{
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Version
     private Integer version;
-   // @ManyToOne(optional = false)
-    //private Ejercicio ejercicio;
-   //@NotBlank
-    //@Column(nullable = false, length = 24)
-    //private String tipoCuenta;
- 
     @NotBlank
     @Column(nullable = false, length = 24)
     private String nombre;
     @NotBlank
-    @Column(nullable = false, length = 24)
+    @Column(nullable = false, length = 24, name="nombre_fiscal")
     private String nombreFiscal;
+
     @ManyToOne
     private Organizacion oraganizacion;
     /**
@@ -64,23 +52,16 @@ public class CuentaResultado implements Serializable{
     private String idCuentaResultado;
     */
     
+
+
     public CuentaResultado() {
     }
-    
-    /**
-     public CuentaResultado(Ejercicio ejercicio, String tipoCuenta, String nombre, String idCuentaResultado) {
-         this.ejercicio = ejercicio;
-         this.tipoCuenta = tipoCuenta;
-         this.nombre = nombre;
-         this.idCuentaResultado = idCuentaResultado;
+
+    public CuentaResultado(String nombre, String nombreFiscal) {
+        this.nombre = nombre;
+        this.nombreFiscal = nombreFiscal;
     }
-     */
-    
-     public CuentaResultado(String nombre, String nombreFiscal) {
-         this.nombre = nombre;
-         this.nombreFiscal = nombreFiscal;
-    }
-     
+
     public Long getId() {
         return id;
     }
@@ -108,6 +89,7 @@ public class CuentaResultado implements Serializable{
     public Integer getVersion() {
         return version;
     }
+
     public void setVersion(Integer version) {
         this.version = version;
     }
@@ -151,5 +133,4 @@ public class CuentaResultado implements Serializable{
     public String toString() {
         return "CuentaResultado{nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + '}';
     }
-    
 }

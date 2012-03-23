@@ -54,10 +54,19 @@ public class Cancelacion implements Serializable {
     @ManyToOne(optional = false)
     private Almacen almacen;
     @ManyToMany
+    @JoinTable(name = "cancelaciones_almacen_productos", joinColumns = {
+        @JoinColumn(name = "cancelacion_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "producto_id")})
     private Set<Producto> productos;
     @OneToMany
+    @JoinTable(name = "cancelaciones_almacen_entradas", joinColumns = {
+        @JoinColumn(name = "cancelacion_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "entrada_id")})
     private List<Entrada> entradas;
     @OneToMany
+    @JoinTable(name = "cancelaciones_almacen_salidas", joinColumns = {
+        @JoinColumn(name = "cancelacion_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "salida_id")})
     private List<Salida> salidas;
     @Column(nullable = false, length = 64)
     private String creador;

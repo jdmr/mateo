@@ -56,9 +56,13 @@ public class XSalida implements Serializable {
     private BigDecimal iva = new BigDecimal("0");
     @Column(scale = 2, precision = 8, nullable = false)
     private BigDecimal total = new BigDecimal("0");
+    @Column(name = "salida_id", nullable = false)
     private Long salidaId;
+    @Column(name = "estatus_id", nullable = false)
     private Long estatusId;
+    @Column(name = "cliente_id", nullable = false)
     private Long clienteId;
+    @Column(name = "almacen_id", nullable = false)
     private Long almacenId;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "date_created")

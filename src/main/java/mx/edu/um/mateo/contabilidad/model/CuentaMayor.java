@@ -12,7 +12,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author nujev
  */
 @Entity
-@Table(name = "cuentamayor")
+@Table(name = "mayores")
 public class CuentaMayor implements Serializable {
 
     @Id
@@ -24,7 +24,7 @@ public class CuentaMayor implements Serializable {
     @Column(nullable = false, length = 24)
     private String nombre;
     @NotBlank
-    @Column(nullable = false, length = 24)
+    @Column(nullable = false, length = 24, name="nombre_fiscal")
     private String nombreFiscal;
     @NotBlank
     @Column(nullable = false, length = 50)
@@ -37,7 +37,7 @@ public class CuentaMayor implements Serializable {
     private Boolean auxiliar = false;
     @Column(nullable = false)
     private Boolean iva = false;
-    @Column(nullable = false)
+    @Column(nullable = false, name="porcentaje_iva")
     private BigDecimal porcentajeIva = new BigDecimal("0");
     @ManyToOne
     private Organizacion organizacion;

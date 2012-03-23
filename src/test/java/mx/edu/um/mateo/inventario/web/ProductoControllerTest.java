@@ -101,7 +101,7 @@ public class ProductoControllerTest extends BaseTest {
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TST", "test-01", empresa);
         currentSession().save(almacen);
-        TipoProducto tipoProducto = new TipoProducto("TEST-01", null, almacen);
+        TipoProducto tipoProducto = new TipoProducto("TEST-01", "TEST-01", almacen);
         currentSession().save(tipoProducto);
         Producto producto = new Producto("tst-01", "test-01", "tst-01", "tst-01", tipoProducto, almacen);
         currentSession().save(producto);
@@ -126,7 +126,7 @@ public class ProductoControllerTest extends BaseTest {
         roles.add(rol);
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
-        TipoProducto tipoProducto = new TipoProducto("TEST-01", null, almacen);
+        TipoProducto tipoProducto = new TipoProducto("TEST-01", "TEST-01", almacen);
         currentSession().save(tipoProducto);
         Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);

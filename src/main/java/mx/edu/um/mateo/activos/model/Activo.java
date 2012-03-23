@@ -30,7 +30,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
-import mx.edu.um.mateo.general.model.Departamento;
+import mx.edu.um.mateo.contabilidad.model.Cuenta;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Proveedor;
@@ -60,7 +60,7 @@ public class Activo implements Serializable {
     private String pedimento;
     @Column(length = 32)
     private String moneda;
-    @Column(scale = 2, precision = 8)
+    @Column(scale = 2, precision = 8, name = "tipo_cambio")
     private BigDecimal tipoCambio;
     @Column(length = 64)
     private String condicion;
@@ -78,7 +78,7 @@ public class Activo implements Serializable {
     private String serial;
     @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal moi = BigDecimal.ZERO;
-    @Column(nullable = false, scale = 2, precision = 8)
+    @Column(nullable = false, scale = 2, precision = 8, name = "valor_rescate")
     private BigDecimal valorRescate = BigDecimal.ONE;
     @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal inpc = BigDecimal.ZERO;
@@ -86,13 +86,16 @@ public class Activo implements Serializable {
     @Column(length = 64)
     private Boolean inactivo = false;
     @Temporal(TemporalType.DATE)
+    @Column(name = "fecha_inactivo")
     private Date fechaInactivo;
     @ManyToOne(optional = false)
+    @JoinColumn(name="tipo_activo_id")
     private TipoActivo tipoActivo;
     @ManyToOne(optional = false)
     private Proveedor proveedor;
     @ManyToOne(optional = false)
-    private Departamento departamento;
+    @JoinColumn(name="centro_costo_id")
+    private Cuenta cuenta;
     @ManyToOne(optional = false)
     private Empresa empresa;
     @Column(length = 128)
@@ -101,24 +104,24 @@ public class Activo implements Serializable {
     private String motivo = "COMPRA";
     @Column(nullable = false)
     private Boolean garantia = false;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "meses_garantia")
     private Integer mesesGarantia = 0;
     @Column(nullable = false)
     private Boolean seguro = false;
-    @Column(nullable = false, scale = 2, precision = 8)
+    @Column(nullable = false, scale = 2, precision = 8, name = "valor_neto")
     private BigDecimal valorNeto = BigDecimal.ZERO;
     @ManyToMany
     @JoinTable(name = "activos_imagenes", joinColumns = {
         @JoinColumn(name = "activo_id")}, inverseJoinColumns = {
         @JoinColumn(name = "imagen_id")})
     private List<Imagen> imagenes = new ArrayList<>();
-    @OneToMany(mappedBy="activo")
+    @OneToMany(mappedBy = "activo")
     private List<ReubicacionActivo> reubicaciones = new ArrayList<>();
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "date_created")
     private Date fechaCreacion;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "last_updated")
     private Date fechaModificacion;
 
     public Activo() {
@@ -475,17 +478,17 @@ public class Activo implements Serializable {
     }
 
     /**
-     * @return the departamento
+     * @return the cuenta
      */
-    public Departamento getDepartamento() {
-        return departamento;
+    public Cuenta getCuenta() {
+        return cuenta;
     }
 
     /**
-     * @param departamento the departamento to set
+     * @param cuenta the cuenta to set
      */
-    public void setDepartamento(Departamento departamento) {
-        this.departamento = departamento;
+    public void setCuenta(Cuenta cuenta) {
+        this.cuenta = cuenta;
     }
 
     /**

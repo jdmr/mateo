@@ -47,7 +47,7 @@
                                 <s:message code="descripcion.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:textarea path="descripcion" maxlength="128" cssClass="span3" />
+                            <form:textarea path="descripcion" maxlength="128" cssClass="span3" required="true" />
                             <form:errors path="descripcion" cssClass="alert alert-error" />
                         </div>
                     </s:bind>

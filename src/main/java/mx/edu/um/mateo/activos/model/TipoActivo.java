@@ -55,7 +55,7 @@ public class TipoActivo implements Serializable {
     private String descripcion;
     @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal porciento;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "vida_util")
     private Long vidaUtil;
     @ManyToOne(optional = false)
     private CuentaMayor cuenta;
