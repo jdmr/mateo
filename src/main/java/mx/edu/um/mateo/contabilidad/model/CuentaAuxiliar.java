@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 import javax.persistence.*;
+import mx.edu.um.mateo.general.model.Organizacion;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -46,8 +47,17 @@ public class CuentaAuxiliar implements Serializable {
     @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal porcentajeIva = new BigDecimal("0");
 //    private Boolean detalleR;
+    @ManyToOne
+    private Organizacion organizacion;
 
     public CuentaAuxiliar() {
+    }
+    
+    public CuentaAuxiliar(String nombre, String nombreFiscal, String clave, Organizacion organizacion) {
+        this.nombre = nombre;
+        this.nombreFiscal = nombreFiscal;
+        this.clave = clave;
+        this.organizacion = organizacion;
     }
 
     public CuentaAuxiliar(String nombre, String nombreFiscal, String clave, Boolean detalle, Boolean aviso, Boolean auxiliar, Boolean iva, BigDecimal porcentajeIva) {
@@ -141,6 +151,14 @@ public class CuentaAuxiliar implements Serializable {
         this.porcentajeIva = porcentajeIva;
     }
 
+    public Organizacion getOrganizacion() {
+        return organizacion;
+    }
+
+    public void setOrganizacion(Organizacion organizacion) {
+        this.organizacion = organizacion;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 7;

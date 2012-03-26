@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="cuentaAuxiliar.ver.label" /></title>
+        <title><s:message code="auxiliares.ver.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -19,11 +19,11 @@
         </jsp:include>
 
         <div id="ver-auxiliar" class="content scaffold-list" role="main">
-            <h1><s:message code="cuentaAuxiliar.ver.label" /></h1>
+            <h1><s:message code="auxiliares.ver.label" /></h1>
 
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/contabilidad/auxiliar'/>"><i class="icon-list icon-white"></i> <s:message code='cuentaAuxiliar.lista.label' /></a>
-                <a class="btn btn-primary" href="<s:url value='/contabilidad/auxiliar/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='cuentaAuxiliar.nueva.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/auxiliar'/>"><i class="icon-list icon-white"></i> <s:message code='auxiliares.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/auxiliar/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='auxiliares.nueva.label' /></a>
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">

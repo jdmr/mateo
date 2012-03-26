@@ -55,12 +55,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping(Constantes.PATH_CUENTA_MAYOR)
 public class CuentaMayorController extends BaseController {
-    
+
     @Autowired
     private CuentaMayorDao cuentaMayorDao;
     @Autowired
     private Ambiente ambiente;
-    
+
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -83,7 +83,7 @@ public class CuentaMayorController extends BaseController {
             params.put(Constantes.CONTAINSKEY_ORDER, order);
             params.put(Constantes.CONTAINSKEY_SORT, sort);
         }
-        
+
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = cuentaMayorDao.lista(params);
@@ -96,11 +96,11 @@ public class CuentaMayorController extends BaseController {
                 //errors.reject("error.generar.reporte");
             }
         }
-        
+
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = cuentaMayorDao.lista(params);
-            
+
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
                 enviaCorreo(correo, (List<CuentaMayor>) params.get(Constantes.CONTAINSKEY_MAYORES), request, Constantes.CONTAINSKEY_MAYORES, mx.edu.um.mateo.general.utils.Constantes.ORG, organizacionId);
@@ -117,17 +117,17 @@ public class CuentaMayorController extends BaseController {
 
         return Constantes.PATH_CUENTA_MAYOR_LISTA;
     }
-    
+
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando cuenta de mayor {}", id);
         CuentaMayor mayor = cuentaMayorDao.obtiene(id);
-        
+
         modelo.addAttribute(Constantes.ADDATTRIBUTE_MAYOR, mayor);
-        
+
         return Constantes.PATH_CUENTA_MAYOR_VER;
     }
-    
+
     @RequestMapping("/nueva")
     public String nueva(Model modelo) {
         log.debug("Nueva cuenta de mayor");
@@ -135,7 +135,7 @@ public class CuentaMayorController extends BaseController {
         modelo.addAttribute(Constantes.ADDATTRIBUTE_MAYOR, mayor);
         return Constantes.PATH_CUENTA_MAYOR_NUEVA;
     }
-    
+
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request, HttpServletResponse response, @Valid CuentaMayor mayor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
@@ -146,20 +146,20 @@ public class CuentaMayorController extends BaseController {
             log.debug("Hubo algun error en la forma, regresando");
             return Constantes.PATH_CUENTA_MAYOR_NUEVA;
         }
-        
+
         try {
             mayor = cuentaMayorDao.crea(mayor, ambiente.obtieneUsuario());
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la cuenta de mayor", e);
             return Constantes.PATH_CUENTA_MAYOR_NUEVA;
         }
-        
+
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "mayores.creada.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{mayor.getNombre()});
-        
+
         return "redirect:" + Constantes.PATH_CUENTA_MAYOR_VER + "/" + mayor.getId();
     }
-    
+
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Editar cuenta de mayor {}", id);
@@ -167,7 +167,7 @@ public class CuentaMayorController extends BaseController {
         modelo.addAttribute(Constantes.ADDATTRIBUTE_MAYOR, mayor);
         return Constantes.PATH_CUENTA_MAYOR_EDITA;
     }
-    
+
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid CuentaMayor mayor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
@@ -181,20 +181,20 @@ public class CuentaMayorController extends BaseController {
             log.error("No se pudo crear la cuenta de mayor", e);
             return Constantes.PATH_CUENTA_MAYOR_NUEVA;
         }
-        
+
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "mayores.actualizada.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{mayor.getNombre()});
-        
+
         return "redirect:" + Constantes.PATH_CUENTA_MAYOR_VER + "/" + mayor.getId();
     }
-    
+
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute CuentaMayor mayor, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina cuenta de mayor");
         try {
             String nombre = cuentaMayorDao.elimina(id);
-            
+
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "mayores.eliminada.message");
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
         } catch (Exception e) {
@@ -202,8 +202,7 @@ public class CuentaMayorController extends BaseController {
             bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_MAYOR, new String[]{"mayores.no.eliminada.message"}, null, null));
             return Constantes.PATH_CUENTA_MAYOR_VER;
         }
-        
+
         return "redirect:" + Constantes.PATH_CUENTA_MAYOR;
     }
-        
 }

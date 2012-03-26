@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="cuentaAuxiliar.nueva.label" /></title>
+        <title><s:message code="auxiliares.nueva.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -19,9 +19,9 @@
         </jsp:include>
 
         <div id="nueva-auxiliar" class="content scaffold-list" role="main">
-            <h1><s:message code="cuentaAuxiliar.nueva.label" /></h1>
+            <h1><s:message code="auxiliares.nueva.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/contabilidad/auxiliar'/>"><i class="icon-list icon-white"></i> <s:message code='cuentaAuxiliar.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/auxiliar'/>"><i class="icon-list icon-white"></i> <s:message code='auxiliares.lista.label' /></a>
             </p>
             <form:form commandName="auxiliar" action="crea" method="post">
                 <form:errors path="*">
