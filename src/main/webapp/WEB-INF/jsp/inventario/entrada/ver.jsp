@@ -9,17 +9,9 @@
         <title><s:message code="entrada.ver.label" /></title>
     </head>
     <body>
-        <nav class="navbar navbar-fixed-top" role="navigation">
-            <ul class="nav">
-                <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li><a href="<c:url value='/inventario' />"><s:message code="inventario.label" /></a></li>
-                <li><a href="<s:url value='/inventario/salida'/>" ><s:message code="salida.lista.label" /></a></li>
-                <li class="active"><a href="<s:url value='/inventario/entrada'/>" ><s:message code="entrada.lista.label" /></a></li>
-                <li><a href="<s:url value='/inventario/producto'/>" ><s:message code="producto.lista.label" /></a></li>
-                <li><a href="<s:url value='/inventario/tipoProducto'/>" ><s:message code="tipoProducto.lista.label" /></a></li>
-                <li><a href="<s:url value='/inventario/almacen'/>" ><s:message code="almacen.lista.label" /></a></li>
-            </ul>
-        </nav>
+        <jsp:include page="../menu.jsp" >
+            <jsp:param name="menu" value="entrada" />
+        </jsp:include>
 
         <div id="ver-entrada" class="content scaffold-list" role="main">
             <h1><s:message code="entrada.ver.label" /></h1>
@@ -165,7 +157,7 @@
                     </div>
                 </div>
 
-                <c:if test="${puedeEditar || puedeCerrar || puedePendiente || puedeEliminar || puedeEditarPendiente}">
+                <c:if test="${puedeEditar || puedeCerrar || puedePendiente || puedeEliminar || puedeEditarPendiente || puedeCancelar}">
                     <p class="well">
                         <c:if test="${puedeEditar}">
                             <a href="<c:url value='/inventario/entrada/edita/${entrada.id}' />" class="btn btn-large"><i class="icon-edit"></i> <s:message code="editar.button" /></a>
@@ -183,6 +175,9 @@
                         <c:if test="${puedeEliminar}">
                             <form:hidden path="id" />
                             <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="eliminar"  onclick="return confirm('<s:message code="confirma.elimina.message" />');" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='eliminar.button'/></button>
+                        </c:if>
+                        <c:if test="${puedeCancelar}">
+                            <a href="<c:url value='/inventario/entrada/cancela/${entrada.id}' />" class="btn btn-warning btn-large" ><i class="icon-exclamation-sign icon-white"></i> <s:message code="cancelar.button" /></a>
                         </c:if>
                     </p>
                 </c:if>

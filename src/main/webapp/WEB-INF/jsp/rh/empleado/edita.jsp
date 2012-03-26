@@ -8,13 +8,9 @@
         <title><s:message code="empleado.nuevo.label" /></title>
     </head>
     <body>
-        <nav class="navbar navbar-fixed-top" role="navigation">
-            <ul class="nav">
-                <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li><a href="<c:url value='/rh' />"><s:message code="rh.label" /></a></li>
-                <li class="active"><a href="<s:url value='/rh/empleado'/>" ><s:message code="rh.label" /></a></li>
-            </ul>
-        </nav>
+        <jsp:include page="../menu.jsp" >
+            <jsp:param name="menu" value="empleado" />
+        </jsp:include>
 
        <div id="edita-mayor" class="content scaffold-list" role="main">
             <h1><s:message code="empleado.edita.label" /></h1>

@@ -4,13 +4,13 @@
  */
 package mx.edu.um.mateo.contabilidad.web;
 
+import java.math.BigDecimal;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.dao.CuentaMayorDao;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import static org.junit.Assert.assertNotNull;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -25,7 +25,6 @@ import static org.springframework.test.web.server.result.MockMvcResultMatchers.*
 import org.springframework.test.web.server.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -69,7 +68,7 @@ public class CuentaMayorControllerTest extends BaseTest {
         log.debug("Debiera monstrar lista de cuentas de mayor");
         
         for (int i = 0; i < 20; i++) {
-            CuentaMayor cuentaMayor = new CuentaMayor("test" + i, "test", "test",false,false,false,false,0.0);
+            CuentaMayor cuentaMayor = new CuentaMayor("test" + i, "test", "test",false,false,false,false,BigDecimal.ZERO);
             cuentaMayorDao.crea(cuentaMayor);
             assertNotNull(cuentaMayor);
         }
@@ -86,7 +85,7 @@ public class CuentaMayorControllerTest extends BaseTest {
     @Test
     public void debieraMostrarCuentaMayor() throws Exception {
         log.debug("Debiera mostrar cuenta de mayor");
-        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test",false,false,false,false,0.0);
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test",false,false,false,false,BigDecimal.ZERO);
         cuentaMayor = cuentaMayorDao.crea(cuentaMayor);
         assertNotNull(cuentaMayor);
 
@@ -118,7 +117,7 @@ public class CuentaMayorControllerTest extends BaseTest {
     @Test
     public void debieraActualizarCuentaMayor() throws Exception {
         log.debug("Debiera actualizar cuenta de mayor");
-        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test",false,false,false,false,0.0);
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test",false,false,false,false,BigDecimal.ZERO);
         cuentaMayor = cuentaMayorDao.crea(cuentaMayor);
         assertNotNull(cuentaMayor);
 
@@ -132,7 +131,7 @@ public class CuentaMayorControllerTest extends BaseTest {
                 .param("aviso", cuentaMayor.getAviso().toString())
                 .param("auxiliar", cuentaMayor.getAuxiliar().toString())
                 .param("iva", cuentaMayor.getIva().toString())
-                .param("pctIva", cuentaMayor.getPctIva().toString()))
+                .param("pctIva", cuentaMayor.getPorcentajeIva().toString()))
                 .andExpect(status().isOk())
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
                 .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.actualizada.message"));
@@ -141,7 +140,7 @@ public class CuentaMayorControllerTest extends BaseTest {
     @Test
     public void debieraEliminarCtaMayor() throws Exception {
         log.debug("Debiera eliminar cuenta de mayor");
-        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test",false,false,false,false,0.0);
+        CuentaMayor cuentaMayor = new CuentaMayor("test", "test", "test",false,false,false,false,BigDecimal.ZERO);
         cuentaMayorDao.crea(cuentaMayor);
         assertNotNull(cuentaMayor);
 

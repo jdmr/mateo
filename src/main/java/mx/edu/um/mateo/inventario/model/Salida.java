@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
@@ -37,7 +38,7 @@ import mx.edu.um.mateo.general.model.Cliente;
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
-@Table(name = "salida", uniqueConstraints = {
+@Table(name = "salidas", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"almacen_id", "folio"})
 })
 public class Salida implements Serializable {
@@ -71,6 +72,12 @@ public class Salida implements Serializable {
     private Almacen almacen;
     @OneToMany(mappedBy = "salida", cascade = CascadeType.REMOVE)
     private List<LoteSalida> lotes = new ArrayList<>();
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, name = "date_created")
+    private Date fechaCreacion;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, name = "last_updated")
+    private Date fechaModificacion;
 
     public Salida() {
     }
@@ -84,6 +91,9 @@ public class Salida implements Serializable {
         this.estatus = estatus;
         this.cliente = cliente;
         this.almacen = almacen;
+        Date fecha = new Date();
+        this.fechaCreacion = fecha;
+        this.fechaModificacion = fecha;
     }
 
     /**
@@ -285,6 +295,34 @@ public class Salida implements Serializable {
     public BigDecimal getSubtotal() {
         BigDecimal subtotal = total.subtract(iva).setScale(2, RoundingMode.HALF_UP);
         return subtotal;
+    }
+
+    /**
+     * @return the fechaCreacion
+     */
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    /**
+     * @param fechaCreacion the fechaCreacion to set
+     */
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    /**
+     * @return the fechaModificacion
+     */
+    public Date getFechaModificacion() {
+        return fechaModificacion;
+    }
+
+    /**
+     * @param fechaModificacion the fechaModificacion to set
+     */
+    public void setFechaModificacion(Date fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
     }
 
     @Override

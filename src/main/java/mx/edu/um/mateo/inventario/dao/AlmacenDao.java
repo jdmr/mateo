@@ -25,6 +25,7 @@ package mx.edu.um.mateo.inventario.dao;
 
 import java.util.HashMap;
 import java.util.Map;
+import mx.edu.um.mateo.general.dao.ReporteDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
@@ -51,6 +52,8 @@ public class AlmacenDao {
     private static final Logger log = LoggerFactory.getLogger(AlmacenDao.class);
     @Autowired
     private SessionFactory sessionFactory;
+    @Autowired
+    private ReporteDao reporteDao;
 
     public AlmacenDao() {
         log.info("Nueva instancia de AlmacenDao");
@@ -132,9 +135,13 @@ public class AlmacenDao {
         session.save(almacen);
         if (usuario != null) {
             usuario.setAlmacen(almacen);
+            session.save(usuario);
         }
         TipoProducto tipoProducto = new TipoProducto("TIPO1", "TIPO1", almacen);
         session.save(tipoProducto);
+        
+        reporteDao.inicializaAlmacen(almacen);
+        
         session.flush();
         return almacen;
     }

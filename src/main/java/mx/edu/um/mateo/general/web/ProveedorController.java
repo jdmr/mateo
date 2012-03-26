@@ -23,34 +23,21 @@
  */
 package mx.edu.um.mateo.general.web;
 
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.ProveedorDao;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.Ambiente;
-import mx.edu.um.mateo.general.utils.ReporteUtil;
-import net.sf.jasperreports.engine.JRException;
+import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.general.utils.ReporteException;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -64,19 +51,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping("/admin/proveedor")
-public class ProveedorController {
+public class ProveedorController extends BaseController {
 
-    private static final Logger log = LoggerFactory.getLogger(ProveedorController.class);
     @Autowired
     private ProveedorDao proveedorDao;
-    @Autowired
-    private JavaMailSender mailSender;
-    @Autowired
-    private ResourceBundleMessageSource messageSource;
-    @Autowired
-    private Ambiente ambiente;
-    @Autowired
-    private ReporteUtil reporteUtil;
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -89,16 +67,10 @@ public class ProveedorController {
             Model modelo) {
         log.debug("Mostrando lista de proveedores");
         Map<String, Object> params = new HashMap<>();
-        params.put("empresa", request.getSession().getAttribute("empresaId"));
+        Long empresaId = (Long) request.getSession().getAttribute("empresaId");
+        params.put("empresa", empresaId);
         if (StringUtils.isNotBlank(filtro)) {
             params.put("filtro", filtro);
-        }
-        if (pagina != null) {
-            params.put("pagina", pagina);
-            modelo.addAttribute("pagina", pagina);
-        } else {
-            pagina = 1L;
-            modelo.addAttribute("pagina", pagina);
         }
         if (StringUtils.isNotBlank(order)) {
             params.put("order", order);
@@ -109,9 +81,9 @@ public class ProveedorController {
             params.put("reporte", true);
             params = proveedorDao.lista(params);
             try {
-                generaReporte(tipo, (List<Proveedor>) params.get("proveedores"), response);
+                generaReporte(tipo, (List<Proveedor>) params.get("proveedores"), response, "proveedores", Constantes.EMP, empresaId);
                 return null;
-            } catch (JRException | IOException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
             }
         }
@@ -122,32 +94,17 @@ public class ProveedorController {
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<Proveedor>) params.get("proveedores"), request);
-                modelo.addAttribute("message", "lista.enviado.message");
+                enviaCorreo(correo, (List<Proveedor>) params.get("proveedores"), request, "proveedores", Constantes.EMP, empresaId);
+                modelo.addAttribute("message", "lista.enviada.message");
                 modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("proveedor.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
-            } catch (JRException | MessagingException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
         params = proveedorDao.lista(params);
         modelo.addAttribute("proveedores", params.get("proveedores"));
 
-        // inicia paginado
-        Long cantidad = (Long) params.get("cantidad");
-        Integer max = (Integer) params.get("max");
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<Proveedor> proveedores = (List<Proveedor>) params.get("proveedores");
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (proveedores.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute("paginacion", paginacion);
-        modelo.addAttribute("paginas", paginas);
-        // termina paginado
+        this.pagina(params, modelo, "proveedores", pagina);
 
         return "admin/proveedor/lista";
     }
@@ -170,7 +127,6 @@ public class ProveedorController {
         return "admin/proveedor/nuevo";
     }
 
-    @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Proveedor proveedor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
@@ -204,7 +160,6 @@ public class ProveedorController {
         return "admin/proveedor/edita";
     }
 
-    @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid Proveedor proveedor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
@@ -227,7 +182,6 @@ public class ProveedorController {
         return "redirect:/admin/proveedor/ver/" + proveedor.getId();
     }
 
-    @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Proveedor proveedor, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina proveedor");
@@ -244,62 +198,4 @@ public class ProveedorController {
 
         return "redirect:/admin/proveedor";
     }
-
-    private void generaReporte(String tipo, List<Proveedor> proveedores, HttpServletResponse response) throws JRException, IOException {
-        log.debug("Generando reporte {}", tipo);
-        byte[] archivo = null;
-        switch (tipo) {
-            case "PDF":
-                archivo = reporteUtil.generaPdf(proveedores, "/mx/edu/um/mateo/general/reportes/proveedores.jrxml");
-                response.setContentType("application/pdf");
-                response.addHeader("Content-Disposition", "attachment; filename=proveedores.pdf");
-                break;
-            case "CSV":
-                archivo = reporteUtil.generaCsv(proveedores, "/mx/edu/um/mateo/general/reportes/proveedores.jrxml");
-                response.setContentType("text/csv");
-                response.addHeader("Content-Disposition", "attachment; filename=proveedores.csv");
-                break;
-            case "XLS":
-                archivo = reporteUtil.generaXls(proveedores, "/mx/edu/um/mateo/general/reportes/proveedores.jrxml");
-                response.setContentType("application/vnd.ms-excel");
-                response.addHeader("Content-Disposition", "attachment; filename=proveedores.xls");
-        }
-        if (archivo != null) {
-            response.setContentLength(archivo.length);
-            try (BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream())) {
-                bos.write(archivo);
-                bos.flush();
-            }
-        }
-
-    }
-
-    private void enviaCorreo(String tipo, List<Proveedor> proveedores, HttpServletRequest request) throws JRException, MessagingException {
-        log.debug("Enviando correo {}", tipo);
-        byte[] archivo = null;
-        String tipoContenido = null;
-        switch (tipo) {
-            case "PDF":
-                archivo = reporteUtil.generaPdf(proveedores, "/mx/edu/um/mateo/general/reportes/proveedores.jrxml");
-                tipoContenido = "application/pdf";
-                break;
-            case "CSV":
-                archivo = reporteUtil.generaCsv(proveedores, "/mx/edu/um/mateo/general/reportes/proveedores.jrxml");
-                tipoContenido = "text/csv";
-                break;
-            case "XLS":
-                archivo = reporteUtil.generaXls(proveedores, "/mx/edu/um/mateo/general/reportes/proveedores.jrxml");
-                tipoContenido = "application/vnd.ms-excel";
-        }
-
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(ambiente.obtieneUsuario().getUsername());
-        String titulo = messageSource.getMessage("proveedor.lista.label", null, request.getLocale());
-        helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
-        helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
-        helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
-        mailSender.send(message);
-    }
-
 }

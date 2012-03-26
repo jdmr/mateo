@@ -23,39 +23,29 @@
  */
 package mx.edu.um.mateo.inventario.web;
 
-import java.io.BufferedOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.ProveedorDao;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.LabelValueBean;
-import mx.edu.um.mateo.general.utils.ReporteUtil;
+import mx.edu.um.mateo.general.utils.ReporteException;
+import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inventario.dao.EntradaDao;
 import mx.edu.um.mateo.inventario.dao.ProductoDao;
+import mx.edu.um.mateo.inventario.model.Cancelacion;
 import mx.edu.um.mateo.inventario.model.Entrada;
 import mx.edu.um.mateo.inventario.model.LoteEntrada;
 import mx.edu.um.mateo.inventario.model.Producto;
 import mx.edu.um.mateo.inventario.utils.*;
-import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -71,23 +61,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping("/inventario/entrada")
-public class EntradaController {
+public class EntradaController extends BaseController {
 
-    private static final Logger log = LoggerFactory.getLogger(EntradaController.class);
     @Autowired
     private EntradaDao entradaDao;
     @Autowired
     private ProveedorDao proveedorDao;
     @Autowired
     private ProductoDao productoDao;
-    @Autowired
-    private JavaMailSender mailSender;
-    @Autowired
-    private ResourceBundleMessageSource messageSource;
-    @Autowired
-    private Ambiente ambiente;
-    @Autowired
-    private ReporteUtil reporteUtil;
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -102,16 +83,10 @@ public class EntradaController {
             Model modelo) {
         log.debug("Mostrando lista de tipos de entradas");
         Map<String, Object> params = new HashMap<>();
-        params.put("almacen", request.getSession().getAttribute("almacenId"));
+        Long almacenId = (Long) request.getSession().getAttribute("almacenId");
+        params.put("almacen", almacenId);
         if (StringUtils.isNotBlank(filtro)) {
             params.put("filtro", filtro);
-        }
-        if (pagina != null) {
-            params.put("pagina", pagina);
-            modelo.addAttribute("pagina", pagina);
-        } else {
-            pagina = 1L;
-            modelo.addAttribute("pagina", pagina);
         }
         if (StringUtils.isNotBlank(order)) {
             params.put("order", order);
@@ -122,9 +97,9 @@ public class EntradaController {
             params.put("reporte", true);
             params = entradaDao.lista(params);
             try {
-                generaReporte(tipo, (List<Entrada>) params.get("entradas"), response);
+                generaReporte(tipo, (List<Entrada>) params.get("entradas"), response, "entradas", Constantes.ALM, almacenId);
                 return null;
-            } catch (JRException | IOException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
                 params.remove("reporte");
                 errors.reject("error.generar.reporte");
@@ -137,32 +112,17 @@ public class EntradaController {
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<Entrada>) params.get("entradas"), request);
+                enviaCorreo(correo, (List<Entrada>) params.get("entradas"), request, "entradas", Constantes.ALM, almacenId);
                 modelo.addAttribute("message", "lista.enviada.message");
                 modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("entrada.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
-            } catch (JRException | MessagingException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
         params = entradaDao.lista(params);
         modelo.addAttribute("entradas", params.get("entradas"));
 
-        // inicia paginado
-        Long cantidad = (Long) params.get("cantidad");
-        Integer max = (Integer) params.get("max");
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<Entrada> entradas = (List<Entrada>) params.get("entradas");
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (entradas.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute("paginacion", paginacion);
-        modelo.addAttribute("paginas", paginas);
-        // termina paginado
+        this.pagina(params, modelo, "entradas", pagina);
 
         return "inventario/entrada/lista";
     }
@@ -180,6 +140,9 @@ public class EntradaController {
                 break;
             case Constantes.PENDIENTE:
                 modelo.addAttribute("puedeEditarPendiente", true);
+                break;
+            case Constantes.CERRADA:
+                modelo.addAttribute("puedeCancelar", true);
                 break;
         }
 
@@ -318,7 +281,7 @@ public class EntradaController {
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Entrada entrada, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina entrada");
         try {
-            String nombre = entradaDao.elimina(id);
+            String nombre = entradaDao.elimina(id, ambiente.obtieneUsuario());
 
             redirectAttributes.addFlashAttribute("message", "entrada.eliminada.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
@@ -420,6 +383,48 @@ public class EntradaController {
 
     }
 
+    @RequestMapping("/cancela/{id}")
+    public String cancela(@PathVariable Long id, Model modelo, RedirectAttributes redirectAttributes) {
+        try {
+            log.debug("Cancela entrada {}", id);
+            Map<String, Object> resultado = entradaDao.preCancelacion(id, ambiente.obtieneUsuario());
+            modelo.addAttribute("entrada", resultado.get("entrada"));
+            modelo.addAttribute("productos", resultado.get("productos"));
+            modelo.addAttribute("entradas", resultado.get("entradas"));
+            modelo.addAttribute("salidas", resultado.get("salidas"));
+            modelo.addAttribute("productosCancelados", resultado.get("productosCancelados"));
+            modelo.addAttribute("productosSinHistoria", resultado.get("productosSinHistoria"));
+
+            return "inventario/entrada/cancela";
+        } catch (NoEstaCerradaException e) {
+            log.error("No se puede cancelar la entrada", e);
+            redirectAttributes.addFlashAttribute("message", "entrada.no.cerrada.para.cancelar.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{e.getEntrada().getFolio()});
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+            return "redirect:/inventario/entrada/ver/" + id;
+        }
+    }
+
+    @RequestMapping(value = "/cancelar", method = RequestMethod.POST)
+    public String cancelar(@RequestParam Long id, @RequestParam String comentarios, Model modelo, RedirectAttributes redirectAttributes) {
+        try {
+            log.debug("Cancelando entrada {}", id);
+            Cancelacion cancelacion = entradaDao.cancelar(id, ambiente.obtieneUsuario(), comentarios);
+            modelo.addAttribute("cancelacion", cancelacion);
+
+            modelo.addAttribute("message", "entrada.cancelada.message");
+            modelo.addAttribute("messageAttrs", new String[]{cancelacion.getEntrada().getFolio()});
+            modelo.addAttribute("messageStyle", "alert-success");
+            return "/inventario/entrada/cancelada";
+        } catch (NoEstaCerradaException e) {
+            log.error("No se puede cancelar la entrada", e);
+            redirectAttributes.addFlashAttribute("message", "entrada.no.cerrada.para.cancelar.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{e.getSalida().getFolio()});
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+            return "redirect:/inventario/entrada/ver/" + id;
+        }
+    }
+
     @RequestMapping(value = "/proveedores", params = "term", produces = "application/json")
     public @ResponseBody
     List<LabelValueBean> proveedores(HttpServletRequest request, @RequestParam("term") String filtro) {
@@ -491,10 +496,11 @@ public class EntradaController {
         }
 
         try {
-            if (request.getParameter("producto.id") == null) {
+            if (StringUtils.isBlank(request.getParameter("producto.id"))) {
                 log.warn("No se puede crear la entrada si no ha seleccionado un proveedor");
-                errors.rejectValue("producto", "lote.sin.producto.message");
-                return "inventario/entrada/lote/" + request.getParameter("entrada.id");
+                modelo.addAttribute("lote", lote);
+                modelo.addAttribute("message", "lote.sin.producto.message");
+                return "inventario/entrada/lote";
             }
             Producto producto = productoDao.obtiene(new Long(request.getParameter("producto.id")));
             Entrada entrada = entradaDao.obtiene(new Long(request.getParameter("entrada.id")));
@@ -509,7 +515,9 @@ public class EntradaController {
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{""});
         } catch (ProductoNoSoportaFraccionException e) {
             log.error("No se pudo crear la entrada porque no se encontro el producto", e);
-            return "inventario/entrada/lote/" + request.getParameter("entrada.id");
+            modelo.addAttribute("message", "lote.sin.producto.message");
+            modelo.addAttribute("lote", lote);
+            return "inventario/entrada/lote";
         }
 
         redirectAttributes.addFlashAttribute("message", "lote.creado.message");
@@ -532,62 +540,5 @@ public class EntradaController {
         }
 
         return "redirect:/inventario/entrada/ver/" + id;
-    }
-
-    private void generaReporte(String tipo, List<Entrada> entradas, HttpServletResponse response) throws JRException, IOException {
-        log.debug("Generando reporte {}", tipo);
-        byte[] archivo = null;
-        switch (tipo) {
-            case "PDF":
-                archivo = reporteUtil.generaPdf(entradas, "/mx/edu/um/mateo/inventario/reportes/entradas.jrxml");
-                response.setContentType("application/pdf");
-                response.addHeader("Content-Disposition", "attachment; filename=entradas.pdf");
-                break;
-            case "CSV":
-                archivo = reporteUtil.generaCsv(entradas, "/mx/edu/um/mateo/inventario/reportes/entradas.jrxml");
-                response.setContentType("text/csv");
-                response.addHeader("Content-Disposition", "attachment; filename=entradas.csv");
-                break;
-            case "XLS":
-                archivo = reporteUtil.generaXls(entradas, "/mx/edu/um/mateo/inventario/reportes/entradas.jrxml");
-                response.setContentType("application/vnd.ms-excel");
-                response.addHeader("Content-Disposition", "attachment; filename=entradas.xls");
-        }
-        if (archivo != null) {
-            response.setContentLength(archivo.length);
-            try (BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream())) {
-                bos.write(archivo);
-                bos.flush();
-            }
-        }
-
-    }
-
-    private void enviaCorreo(String tipo, List<Entrada> entradas, HttpServletRequest request) throws JRException, MessagingException {
-        log.debug("Enviando correo {}", tipo);
-        byte[] archivo = null;
-        String tipoContenido = null;
-        switch (tipo) {
-            case "PDF":
-                archivo = reporteUtil.generaPdf(entradas, "/mx/edu/um/mateo/inventario/reportes/entradas.jrxml");
-                tipoContenido = "application/pdf";
-                break;
-            case "CSV":
-                archivo = reporteUtil.generaCsv(entradas, "/mx/edu/um/mateo/inventario/reportes/entradas.jrxml");
-                tipoContenido = "text/csv";
-                break;
-            case "XLS":
-                archivo = reporteUtil.generaXls(entradas, "/mx/edu/um/mateo/inventario/reportes/entradas.jrxml");
-                tipoContenido = "application/vnd.ms-excel";
-        }
-
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(ambiente.obtieneUsuario().getUsername());
-        String titulo = messageSource.getMessage("entrada.lista.label", null, request.getLocale());
-        helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
-        helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
-        helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
-        mailSender.send(message);
     }
 }

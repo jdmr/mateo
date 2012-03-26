@@ -9,17 +9,9 @@
         <title><s:message code="producto.ver.label" /></title>
     </head>
     <body>
-        <nav class="navbar navbar-fixed-top" role="navigation">
-            <ul class="nav">
-                <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li><a href="<c:url value='/inventario' />"><s:message code="inventario.label" /></a></li>
-                <li><a href="<s:url value='/inventario/salida'/>" ><s:message code="salida.lista.label" /></a></li>
-                <li><a href="<s:url value='/inventario/entrada'/>" ><s:message code="entrada.lista.label" /></a></li>
-                <li class="active"><a href="<s:url value='/inventario/producto'/>" ><s:message code="producto.lista.label" /></a></li>
-                <li><a href="<s:url value='/inventario/tipoProducto'/>" ><s:message code="tipoProducto.lista.label" /></a></li>
-                <li><a href="<s:url value='/inventario/almacen'/>" ><s:message code="almacen.lista.label" /></a></li>
-            </ul>
-        </nav>
+        <jsp:include page="../menu.jsp" >
+            <jsp:param name="menu" value="producto" />
+        </jsp:include>
 
         <div id="ver-producto" class="content scaffold-list" role="main">
             <h1><s:message code="producto.ver.label" /></h1>
@@ -134,6 +126,7 @@
 
                 <p class="well">
                     <a href="<c:url value='/inventario/producto/edita/${producto.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
+                    <a href="<c:url value='/inventario/producto/historial/${producto.id}' />" class="btn btn-primary btn-large"><i class="icon-book icon-white"></i> <s:message code="historial.button" /></a>
                     <form:hidden path="id" />
                     <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="eliminar"  onclick="return confirm('<s:message code="confirma.elimina.message" />');" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='eliminar.button'/></button>
                 </p>

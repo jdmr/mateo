@@ -14,18 +14,9 @@
         <title><s:message code="usuario.nuevo.label" /></title>
     </head>
     <body>
-        <nav class="navbar navbar-fixed-top" role="navigation">
-            <ul class="nav">
-                <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>
-                <li><a href="<s:url value='/admin/cliente'/>" ><s:message code="cliente.label" /></a></li>
-                <li><a href="<s:url value='/admin/tipoCliente'/>" ><s:message code="tipoCliente.label" /></a></li>
-                <li><a href="<s:url value='/admin/proveedor'/>" ><s:message code="proveedor.label" /></a></li>
-                <li><a href="<s:url value='/admin/empresa'/>" ><s:message code="empresa.label" /></a></li>
-                <li><a href="<s:url value='/admin/organizacion'/>" ><s:message code="organizacion.label" /></a></li>
-                <li class="active"><a href="<s:url value='/admin/usuario'/>" ><s:message code="usuario.label" /></a></li>
-            </ul>
-        </nav>
+        <jsp:include page="../menu.jsp" >
+            <jsp:param name="menu" value="usuario" />
+        </jsp:include>
 
         <div id="nuevo-usuario" class="content scaffold-list" role="main">
             <h1><s:message code="usuario.nuevo.label" /></h1>
@@ -46,7 +37,7 @@
                     <s:bind path="usuario.username">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="username">
-                                <s:message code="usuario.username.label" />
+                                <s:message code="username.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="username" maxlength="128" required="true" />
@@ -56,7 +47,7 @@
                     <s:bind path="usuario.nombre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombre">
-                                <s:message code="usuario.nombre.label" />
+                                <s:message code="nombre.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="nombre" maxlength="128" required="true" />
@@ -66,7 +57,7 @@
                     <s:bind path="usuario.apellido">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="apellido">
-                                <s:message code="usuario.apellido.label" />
+                                <s:message code="apellido.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="apellido" maxlength="128" required="true" />
@@ -76,7 +67,7 @@
                     <s:bind path="usuario.roles">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="roles">
-                                <s:message code="usuario.authorities.label" />
+                                <s:message code="authorities.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <c:forEach items="${roles}" var="rol">

@@ -26,7 +26,6 @@ package mx.edu.um.mateo.contabilidad.web;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +39,7 @@ import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.dao.CuentaMayorDao;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.web.BaseController;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -50,11 +49,7 @@ import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,17 +66,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping(Constantes.PATH_CUENTA_MAYOR)
-public class CuentaMayorController {
+public class CuentaMayorController extends BaseController {
     
-    private static final Logger log = LoggerFactory.getLogger(CuentaMayorController.class);
     @Autowired
     private CuentaMayorDao cuentaMayorDao;
-    @Autowired
-    private JavaMailSender mailSender;
-    @Autowired
-    private ResourceBundleMessageSource messageSource;
-    @Autowired
-    private Ambiente ambiente;
     
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -98,13 +86,6 @@ public class CuentaMayorController {
         Map<String, Object> params = new HashMap<>();
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
-        }
-        if (pagina != null) {
-            params.put(Constantes.CONTAINSKEY_PAGINA, pagina);
-            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
-        } else {
-            pagina = 1L;
-            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
         }
         if (StringUtils.isNotBlank(order)) {
             params.put(Constantes.CONTAINSKEY_ORDER, order);
@@ -140,22 +121,7 @@ public class CuentaMayorController {
         params = cuentaMayorDao.lista(params);
         modelo.addAttribute(Constantes.CONTAINSKEY_MAYORES, params.get(Constantes.CONTAINSKEY_MAYORES));
 
-        // inicia paginado
-        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
-        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<CuentaMayor> mayores = (List<CuentaMayor>) params.get(Constantes.CONTAINSKEY_MAYORES);
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (mayores.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
-        // termina paginado
+        this.pagina(params, modelo, Constantes.CONTAINSKEY_MAYORES, pagina);
 
         return Constantes.PATH_CUENTA_MAYOR_LISTA;
     }

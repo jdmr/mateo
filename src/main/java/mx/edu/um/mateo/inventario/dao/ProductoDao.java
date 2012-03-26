@@ -35,6 +35,7 @@ import mx.edu.um.mateo.inventario.model.Producto;
 import mx.edu.um.mateo.inventario.model.TipoProducto;
 import mx.edu.um.mateo.inventario.model.XProducto;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.*;
@@ -129,12 +130,12 @@ public class ProductoDao {
         criteria.createCriteria("almacen").add(Restrictions.idEq(almacenId));
         filtro = "%" + filtro + "%";
         Disjunction propiedades = Restrictions.disjunction();
-        propiedades.add(Restrictions.ilike("sku", filtro));
-        propiedades.add(Restrictions.ilike("nombre", filtro));
-        propiedades.add(Restrictions.ilike("descripcion", filtro));
-        propiedades.add(Restrictions.ilike("marca", filtro));
-        propiedades.add(Restrictions.ilike("modelo", filtro));
-        propiedades.add(Restrictions.ilike("ubicacion", filtro));
+        propiedades.add(Restrictions.ilike("sku", filtro, MatchMode.ANYWHERE));
+        propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
+        propiedades.add(Restrictions.ilike("descripcion", filtro, MatchMode.ANYWHERE));
+        propiedades.add(Restrictions.ilike("marca", filtro, MatchMode.ANYWHERE));
+        propiedades.add(Restrictions.ilike("modelo", filtro, MatchMode.ANYWHERE));
+        propiedades.add(Restrictions.ilike("ubicacion", filtro, MatchMode.ANYWHERE));
         criteria.add(propiedades);
 
         criteria.add(Restrictions.gt("existencia", BigDecimal.ZERO));
@@ -152,17 +153,11 @@ public class ProductoDao {
             producto.setAlmacen(usuario.getAlmacen());
         }
         producto.setTipoProducto((TipoProducto) session.get(TipoProducto.class, producto.getTipoProducto().getId()));
+        Date fecha = new Date();
+        producto.setFechaCreacion(fecha);
+        producto.setFechaModificacion(fecha);
         session.save(producto);
-        XProducto xproducto = new XProducto();
-        BeanUtils.copyProperties(producto, xproducto);
-        xproducto.setId(null);
-        xproducto.setProductoId(producto.getId());
-        xproducto.setTipoProductoId(producto.getTipoProducto().getId());
-        xproducto.setAlmacenId(producto.getAlmacen().getId());
-        xproducto.setFechaCreacion(new Date());
-        xproducto.setActividad(Constantes.CREAR);
-        xproducto.setCreador((usuario != null) ? usuario.getUsername() : "admin");
-        session.save(xproducto);
+        audita(producto, usuario, Constantes.CREAR, fecha);
         session.flush();
         return producto;
     }
@@ -175,46 +170,103 @@ public class ProductoDao {
         return this.actualiza(producto, null);
     }
 
-    public Producto actualiza(Producto producto, Usuario usuario) {
+    public Producto actualiza(Producto otro, Usuario usuario) {
         Session session = currentSession();
-        Producto nuevo = (Producto) session.get(Producto.class, producto.getId());
-        nuevo.setVersion(producto.getVersion());
-        nuevo.setCodigo(producto.getCodigo());
-        nuevo.setDescripcion(producto.getDescripcion());
-        nuevo.setFraccion(producto.getFraccion());
-        nuevo.setIva(producto.getIva());
-        nuevo.setMarca(producto.getMarca());
-        nuevo.setNombre(producto.getNombre());
-        nuevo.setSku(producto.getSku());
-        nuevo.setTiempoEntrega(producto.getTiempoEntrega());
-        nuevo.setUnidadMedida(producto.getUnidadMedida());
-        nuevo.setTipoProducto((TipoProducto) session.get(TipoProducto.class, producto.getTipoProducto().getId()));
+        Producto producto = (Producto) session.get(Producto.class, otro.getId());
+        producto.setVersion(otro.getVersion());
+        producto.setCodigo(otro.getCodigo());
+        producto.setDescripcion(otro.getDescripcion());
+        producto.setFraccion(otro.getFraccion());
+        producto.setIva(otro.getIva());
+        producto.setMarca(otro.getMarca());
+        producto.setNombre(otro.getNombre());
+        producto.setSku(otro.getSku());
+        producto.setTiempoEntrega(otro.getTiempoEntrega());
+        producto.setUnidadMedida(otro.getUnidadMedida());
+        producto.setTipoProducto((TipoProducto) session.get(TipoProducto.class, otro.getTipoProducto().getId()));
+        Date fecha = new Date();
+        producto.setFechaModificacion(fecha);
         if (producto.getImagenes().size() > 0) {
-            Imagen imagen = nuevo.getImagenes().get(0);
-            nuevo.getImagenes().clear();
-            nuevo.getImagenes().add(producto.getImagenes().get(0));
+            Imagen imagen = producto.getImagenes().get(0);
+            producto.getImagenes().clear();
+            producto.getImagenes().add(otro.getImagenes().get(0));
             session.delete(imagen);
         }
-        session.update(nuevo);
-        XProducto xproducto = new XProducto();
-        BeanUtils.copyProperties(nuevo, xproducto);
-        xproducto.setId(null);
-        xproducto.setProductoId(producto.getId());
-        xproducto.setTipoProductoId(producto.getTipoProducto().getId());
-        xproducto.setAlmacenId(producto.getAlmacen().getId());
-        xproducto.setFechaCreacion(new Date());
-        xproducto.setActividad(Constantes.ACTUALIZAR);
-        xproducto.setCreador((usuario != null) ? usuario.getUsername() : "admin");
-        session.save(xproducto);
+        session.update(producto);
+        audita(producto, usuario, Constantes.ACTUALIZAR, fecha);
         session.flush();
         return producto;
     }
 
     public String elimina(Long id) {
+        return elimina(id, null);
+    }
+
+    public String elimina(Long id, Usuario usuario) {
         Producto producto = obtiene(id);
         String nombre = producto.getNombre();
+        audita(producto, usuario, Constantes.ELIMINAR, new Date());
+
         currentSession().delete(producto);
         currentSession().flush();
         return nombre;
     }
+
+    @Transactional(readOnly = true)
+    public Map<String, Object> historial(Long id, Map<String, Object> params) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select new map(");
+        sb.append("p.actividad as actividad, p.creador as creador ");
+        sb.append(", p.precioUnitario as precioUnitario, p.ultimoPrecio as ultimoPrecio ");
+        sb.append(", p.existencia as existencia ");
+        sb.append(", p.fechaCreacion as fecha ");
+        sb.append(", p.entradaId as entradaId ");
+        sb.append(", p.salidaId as salidaId ");
+        sb.append(", p.cancelacionId as cancelacionId ");
+        sb.append(", (select e.folio from Entrada e where e.id = p.entradaId) as folioEntrada ");
+        sb.append(", (select s.folio from Salida s where s.id = p.salidaId) as folioSalida ");
+        sb.append(", (select c.folio from Cancelacion c where c.id = p.cancelacionId) as folioCancelacion ");
+        sb.append(") from XProducto p where p.productoId = :productoId order by p.id desc");
+        Query query = currentSession().createQuery(sb.toString());
+        query.setLong("productoId", id);
+        if (params.containsKey("max")) {
+            Integer max = (Integer) params.get("max");
+            query.setMaxResults(max);
+            params.put("max", max);
+        } else {
+            query.setMaxResults(10);
+            params.put("max", 10);
+        }
+        if (params.containsKey("offset")) {
+            Integer offset = (Integer) params.get("offset");
+            query.setFirstResult(offset);
+            params.put("offset", offset);
+        } else {
+            query.setFirstResult(0);
+            params.put("offset", 0);
+        }
+        params.put("historial", query.list());
+
+        sb = new StringBuilder();
+        sb.append("select count(*) as cantidad from XProducto p where p.productoId = :productoId");
+        query = currentSession().createQuery(sb.toString());
+        query.setLong("productoId", id);
+        params.put("cantidad", query.uniqueResult());
+
+        return params;
+    }
+    
+    public void audita(Producto producto, Usuario usuario, String actividad, Date fecha) {
+        XProducto xproducto = new XProducto();
+        BeanUtils.copyProperties(producto, xproducto);
+        xproducto.setId(null);
+        xproducto.setProductoId(producto.getId());
+        xproducto.setTipoProductoId(producto.getTipoProducto().getId());
+        xproducto.setAlmacenId(producto.getAlmacen().getId());
+        xproducto.setFechaCreacion(fecha);
+        xproducto.setActividad(actividad);
+        xproducto.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
+        currentSession().save(xproducto);
+    }
+    
 }

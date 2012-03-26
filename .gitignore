@@ -2,6 +2,8 @@
 target
 mateo.log*
 *.jasper
+*.java~
+*.*~
 /src/main/resources/rebel.xml
 /nb-configuration.xml
 /nbactions.xml

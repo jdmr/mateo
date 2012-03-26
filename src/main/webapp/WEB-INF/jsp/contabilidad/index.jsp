@@ -12,8 +12,12 @@
                 <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
                 <li class="active"><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
                 <li><a href="<s:url value='/contabilidad/mayor'/>" ><s:message code="cuentaMayor.label" /></a></li>
+                <li><a href="<s:url value='/contabilidad/resultado'/>" ><s:message code="cuentaResultado.label" /></a></li>
             </ul>
         </nav>
+        <jsp:include page="menu.jsp" >
+            <jsp:param name="menu" value="principal" />
+        </jsp:include>
         <h1><s:message code="contabilidad.label" /></h1>
         <c:if test="${not empty message}">
             <div class="alert alert-block alert-success fade in" role="status">
@@ -22,5 +26,5 @@
             </div>
         </c:if>
 
-    </body>
+    </body>as
 </html>

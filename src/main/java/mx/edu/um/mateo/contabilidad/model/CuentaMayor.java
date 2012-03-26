@@ -5,6 +5,7 @@
 package mx.edu.um.mateo.contabilidad.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 import javax.persistence.*;
 import org.hibernate.validator.constraints.NotBlank;
@@ -43,13 +44,13 @@ public class CuentaMayor implements Serializable {
     @Column(nullable = false)
     private Boolean iva;
     @Column(nullable = false)
-    private Double pctIva;
+    private BigDecimal porcentajeIva = new BigDecimal("0");
 //    private Boolean detalleR;
 
     public CuentaMayor() {
     }
 
-    public CuentaMayor(String nombre, String nombreFiscal, String clave, Boolean detalle, Boolean aviso, Boolean auxiliar, Boolean iva, Double pctIva) {
+    public CuentaMayor(String nombre, String nombreFiscal, String clave, Boolean detalle, Boolean aviso, Boolean auxiliar, Boolean iva, BigDecimal porcentajeIva) {
         this.nombre = nombre;
         this.nombreFiscal = nombreFiscal;
         this.clave = clave;
@@ -57,7 +58,7 @@ public class CuentaMayor implements Serializable {
         this.aviso = aviso;
         this.auxiliar = auxiliar;
         this.iva = iva;
-        this.pctIva = pctIva;
+        this.porcentajeIva = porcentajeIva;
     }
 
     public Long getId() {
@@ -132,18 +133,18 @@ public class CuentaMayor implements Serializable {
         this.iva = iva;
     }
 
-    public Double getPctIva() {
-        return pctIva;
+    public BigDecimal getPorcentajeIva() {
+        return porcentajeIva;
     }
 
-    public void setPctIva(Double pctIva) {
-        this.pctIva = pctIva;
+    public void setPorcentajeIva(BigDecimal porcentajeIva) {
+        this.porcentajeIva = porcentajeIva;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 17 * hash + Objects.hashCode(this.nombreFiscal);
+        hash = 37 * hash + Objects.hashCode(this.clave);
         return hash;
     }
 
@@ -156,7 +157,7 @@ public class CuentaMayor implements Serializable {
             return false;
         }
         final CuentaMayor other = (CuentaMayor) obj;
-        if (!Objects.equals(this.nombreFiscal, other.nombreFiscal)) {
+        if (!Objects.equals(this.clave, other.clave)) {
             return false;
         }
         return true;
@@ -164,6 +165,6 @@ public class CuentaMayor implements Serializable {
 
     @Override
     public String toString() {
-        return "CuentaMayor{" + "nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + ", clave=" + clave + ", detalle=" + detalle + ", aviso=" + aviso + ", auxiliar=" + auxiliar + ", iva=" + iva + ", pctIva=" + pctIva + '}';
+        return "CuentaMayor{" + "nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + ", clave=" + clave + ", detalle=" + detalle + ", aviso=" + aviso + ", auxiliar=" + auxiliar + ", iva=" + iva + ", porcentajeIva=" + porcentajeIva + '}';
     }
 }

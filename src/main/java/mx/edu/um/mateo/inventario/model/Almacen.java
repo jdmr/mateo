@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
 import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Reporte;
 import mx.edu.um.mateo.general.model.Usuario;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -60,6 +61,8 @@ public class Almacen implements Serializable {
     private List<Usuario> usuarios = new ArrayList<>();
     @OneToMany(mappedBy = "almacen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TipoProducto> tiposDeProducto = new ArrayList<>();
+    @ManyToMany
+    private List<Reporte> reportes = new ArrayList<>();
 
     public Almacen() {
     }
@@ -190,6 +193,20 @@ public class Almacen implements Serializable {
      */
     public void setNombreCompleto(String nombreCompleto) {
         // no hace nada
+    }
+
+    /**
+     * @return the reportes
+     */
+    public List<Reporte> getReportes() {
+        return reportes;
+    }
+
+    /**
+     * @param reportes the reportes to set
+     */
+    public void setReportes(List<Reporte> reportes) {
+        this.reportes = reportes;
     }
 
     @Override

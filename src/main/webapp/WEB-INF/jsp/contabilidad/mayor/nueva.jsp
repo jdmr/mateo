@@ -14,13 +14,9 @@
         <title><s:message code="cuentaMayor.nueva.label" /></title>
     </head>
     <body>
-        <nav class="navbar navbar-fixed-top" role="navigation">
-            <ul class="nav">
-                <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
-                <li class="active"><a href="<s:url value='/contabilidad/mayor'/>" ><s:message code="cuentaMayor.label" /></a></li>
-            </ul>
-        </nav>
+        <jsp:include page="../menu.jsp" >
+            <jsp:param name="menu" value="mayor" />
+        </jsp:include>
 
         <div id="nueva-mayor" class="content scaffold-list" role="main">
             <h1><s:message code="cuentaMayor.nueva.label" /></h1>
@@ -56,6 +52,66 @@
                             </label>
                             <form:input path="nombreFiscal" maxlength="128" required="true" />
                             <form:errors path="nombreFiscal" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="mayor.clave">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="clave">
+                                <s:message code="clave.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="clave" maxlength="128" required="true" />
+                            <form:errors path="clave" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="mayor.detalle">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="detalle">
+                                <s:message code="detalle.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:checkbox path="detalle" cssClass="span3" />
+                            <form:errors path="detalle" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="mayor.aviso">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="aviso">
+                                <s:message code="aviso.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:checkbox path="aviso" cssClass="span3" />
+                            <form:errors path="aviso" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="mayor.auxiliar">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="auxiliar">
+                                <s:message code="auxiliar.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:checkbox path="auxiliar" cssClass="span3" />
+                            <form:errors path="auxiliar" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="mayor.iva">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="iva">
+                                <s:message code="iva.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:checkbox path="iva" cssClass="span3" />
+                            <form:errors path="iva" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="mayor.porcentajeIva">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="porcentajeIva">
+                                <s:message code="porcentajeIva.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="porcentajeIva" maxlength="128" required="true" />
+                            <form:errors path="porcentajeIva" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                 </fieldset>

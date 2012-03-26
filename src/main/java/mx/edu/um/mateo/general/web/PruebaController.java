@@ -81,6 +81,8 @@ public class PruebaController {
     @Autowired
     private EntradaDao entradaDao;
     @Autowired
+    private ReporteDao reporteDao;
+    @Autowired
     private SessionFactory sessionFactory;
 
     private Session currentSession() {
@@ -100,6 +102,7 @@ public class PruebaController {
         Transaction transaction = null;
         try {
             transaction = currentSession().beginTransaction();
+            reporteDao.inicializa();
             Organizacion organizacion = new Organizacion("UM", "UM", "Universidad de Montemorelos");
             organizacion = organizacionDao.crea(organizacion);
             Rol rol = new Rol("ROLE_ADMIN");
@@ -211,47 +214,5 @@ public class PruebaController {
 
         return "redirect:/";
     }
-
-    @RequestMapping("/carga")
-    public String carga() {
-        log.debug("Cargando datos");
-
-        Organizacion organizacion = new Organizacion("UM", "UM", "Universidad de Montemorelos");
-        organizacion = organizacionDao.crea(organizacion);
-        Rol rol = new Rol("ROLE_ADMIN");
-        rol = rolDao.crea(rol);
-        Usuario usuario = new Usuario(
-                "jdmendoza@um.edu.mx",
-                "admin2k1",
-                "Admin",
-                "User");
-        Long almacenId = 0l;
-        actualizaUsuario:
-        for (Empresa empresa : organizacion.getEmpresas()) {
-            for (Almacen almacen : empresa.getAlmacenes()) {
-                almacenId = almacen.getId();
-                break actualizaUsuario;
-            }
-        }
-        usuarioDao.crea(usuario, almacenId, new String[]{rol.getAuthority()});
-        rol = new Rol("ROLE_ORG");
-        rolDao.crea(rol);
-        rol = new Rol("ROLE_EMP");
-        rolDao.crea(rol);
-        rol = new Rol("ROLE_USER");
-        rolDao.crea(rol);
-
-        Estatus estatus = new Estatus(Constantes.ABIERTA, 100);
-        currentSession().save(estatus);
-        Estatus estatus2 = new Estatus(Constantes.PENDIENTE, 200);
-        currentSession().save(estatus2);
-        estatus2 = new Estatus(Constantes.CERRADA, 300);
-        currentSession().save(estatus2);
-        estatus2 = new Estatus(Constantes.FACTURADA, 400);
-        currentSession().save(estatus2);
-        estatus2 = new Estatus(Constantes.CANCELADA, 500);
-        currentSession().save(estatus2);
-
-        return "redirect:/";
-    }
+    
 }

@@ -7,13 +7,9 @@
         <title><s:message code="empleado.lista.label" /></title>
     </head>
     <body>
-        <nav class="navbar navbar-fixed-top" role="navigation">
-            <ul class="nav">
-                <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li><a href="<c:url value='/rh' />"><s:message code="rh.label" /></a></li>
-                <li class="active"><a href="<s:url value='/rh/empleado'/>" ><s:message code="empleado.label" /></a></li>
-            </ul>
-        </nav>
+        <jsp:include page="../menu.jsp" >
+            <jsp:param name="menu" value="empleado" />
+        </jsp:include>
 
         <h1><s:message code="empleado.lista.label" /></h1>
         <hr/>
@@ -51,6 +47,7 @@
             <table id="lista" class="table table-striped">
                 <thead>
                     <tr>
+<<<<<<< HEAD
                         <th>
                             <a href="javascript:ordena('nombre');">
                                 <s:message code="nombre.label" />
@@ -77,6 +74,30 @@
                                 </c:choose>
                             </a>
                         </th>
+=======
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="nombre" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="nombreCompleto" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="rfc" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="telefono" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="contacto" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="correo" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="tipoCliente" />
+                        </jsp:include>
+                        <th><s:message code="empresa.label" /></th>
+>>>>>>> 32e03c6df5a9511b35062ae854bdf455e7f2f46b
                     </tr>
                 </thead>
                 <tbody>
@@ -88,6 +109,7 @@
                     </c:forEach>
                 </tbody>
             </table>
+<<<<<<< HEAD
             <div class="row-fluid">
                 <div class="span8">
                     <div class="pagination">
@@ -118,6 +140,9 @@
                     </p>
                 </div>
             </div>
+=======
+            <jsp:include page="/WEB-INF/jsp/paginacion.jsp" />
+>>>>>>> 32e03c6df5a9511b35062ae854bdf455e7f2f46b
         </form>        
         <content>
             <script src="<c:url value='/js/lista.js' />"></script>

@@ -14,13 +14,9 @@
         <title><s:message code="cuentaMayor.ver.label" /></title>
     </head>
     <body>
-        <nav class="navbar navbar-fixed-top" role="navigation">
-            <ul class="nav">
-                <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
-                <li class="active"><a href="<s:url value='/contabilidad/mayor'/>" ><s:message code="cuentaMayor.label" /></a></li>
-            </ul>
-        </nav>
+        <jsp:include page="../menu.jsp" >
+            <jsp:param name="menu" value="mayor" />
+        </jsp:include>
 
         <div id="ver-mayor" class="content scaffold-list" role="main">
             <h1><s:message code="cuentaMayor.ver.label" /></h1>
@@ -43,10 +39,33 @@
                     <div class="span1"><s:message code="nombre.label" /></div>
                     <div class="span11">${mayor.nombre}</div>
                 </div>
-
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="nombreFiscal.label" /></div>
                     <div class="span11">${mayor.nombreFiscal}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="clave.label" /></div>
+                    <div class="span11">${mayor.clave}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="detalle.label" /></div>
+                    <div class="span11"><form:checkbox path="detalle" disabled="true" /></div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="aviso.label" /></div>
+                    <div class="span11"><form:checkbox path="aviso" disabled="true" /></div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="auxiliar.label" /></div>
+                    <div class="span11"><form:checkbox path="auxiliar" disabled="true" /></div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="iva.label" /></div>
+                    <div class="span11"><form:checkbox path="iva" disabled="true" /></div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="porcentajeIva.label" /></div>
+                    <div class="span11">${mayor.porcentajeIva}</div>
                 </div>
 
                 <p class="well">

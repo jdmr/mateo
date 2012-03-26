@@ -23,39 +23,29 @@
  */
 package mx.edu.um.mateo.inventario.web;
 
-import java.io.BufferedOutputStream;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.ClienteDao;
 import mx.edu.um.mateo.general.model.Cliente;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.LabelValueBean;
-import mx.edu.um.mateo.general.utils.ReporteUtil;
+import mx.edu.um.mateo.general.utils.ReporteException;
+import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inventario.dao.ProductoDao;
 import mx.edu.um.mateo.inventario.dao.SalidaDao;
+import mx.edu.um.mateo.inventario.model.Cancelacion;
 import mx.edu.um.mateo.inventario.model.LoteSalida;
 import mx.edu.um.mateo.inventario.model.Producto;
 import mx.edu.um.mateo.inventario.model.Salida;
 import mx.edu.um.mateo.inventario.utils.*;
-import net.sf.jasperreports.engine.JRException;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -71,23 +61,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping("/inventario/salida")
-public class SalidaController {
+public class SalidaController extends BaseController {
 
-    private static final Logger log = LoggerFactory.getLogger(SalidaController.class);
     @Autowired
     private SalidaDao salidaDao;
     @Autowired
     private ClienteDao clienteDao;
     @Autowired
     private ProductoDao productoDao;
-    @Autowired
-    private JavaMailSender mailSender;
-    @Autowired
-    private ResourceBundleMessageSource messageSource;
-    @Autowired
-    private Ambiente ambiente;
-    @Autowired
-    private ReporteUtil reporteUtil;
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -102,16 +83,10 @@ public class SalidaController {
             Model modelo) {
         log.debug("Mostrando lista de tipos de salidas");
         Map<String, Object> params = new HashMap<>();
-        params.put("almacen", request.getSession().getAttribute("almacenId"));
+        Long almacenId = (Long) request.getSession().getAttribute("almacenId");
+        params.put("almacen", almacenId);
         if (StringUtils.isNotBlank(filtro)) {
             params.put("filtro", filtro);
-        }
-        if (pagina != null) {
-            params.put("pagina", pagina);
-            modelo.addAttribute("pagina", pagina);
-        } else {
-            pagina = 1L;
-            modelo.addAttribute("pagina", pagina);
         }
         if (StringUtils.isNotBlank(order)) {
             params.put("order", order);
@@ -122,9 +97,9 @@ public class SalidaController {
             params.put("reporte", true);
             params = salidaDao.lista(params);
             try {
-                generaReporte(tipo, (List<Salida>) params.get("salidas"), response);
+                generaReporte(tipo, (List<Salida>) params.get("salidas"), response, "salidas", Constantes.ALM, almacenId);
                 return null;
-            } catch (JRException | IOException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
                 params.remove("reporte");
                 errors.reject("error.generar.reporte");
@@ -137,32 +112,17 @@ public class SalidaController {
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<Salida>) params.get("salidas"), request);
+                enviaCorreo(correo, (List<Salida>) params.get("salidas"), request, "salidas", Constantes.ALM, almacenId);
                 modelo.addAttribute("message", "lista.enviada.message");
                 modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("salida.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
-            } catch (JRException | MessagingException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
         params = salidaDao.lista(params);
         modelo.addAttribute("salidas", params.get("salidas"));
 
-        // inicia paginado
-        Long cantidad = (Long) params.get("cantidad");
-        Integer max = (Integer) params.get("max");
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<Salida> salidas = (List<Salida>) params.get("salidas");
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (salidas.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute("paginacion", paginacion);
-        modelo.addAttribute("paginas", paginas);
-        // termina paginado
+        this.pagina(params, modelo, "salidas", pagina);
 
         return "inventario/salida/lista";
     }
@@ -176,10 +136,14 @@ public class SalidaController {
                 modelo.addAttribute("puedeEditar", true);
                 modelo.addAttribute("puedeEliminar", true);
                 modelo.addAttribute("puedeCerrar", true);
-                modelo.addAttribute("puedePendiente", true);
                 break;
-            case Constantes.PENDIENTE:
-                modelo.addAttribute("puedeEditarPendiente", true);
+            case Constantes.CERRADA:
+                modelo.addAttribute("puedeCancelar", true);
+                modelo.addAttribute("puedeReporte", true);
+                break;
+            case Constantes.CANCELADA:
+                log.debug("Puede ver reporte");
+                modelo.addAttribute("puedeReporte", true);
                 break;
         }
 
@@ -253,7 +217,7 @@ public class SalidaController {
             }
             Cliente cliente = clienteDao.obtiene(new Long(request.getParameter("cliente.id")));
             salida.setCliente(cliente);
-            salida.setAtendio(usuario.getApellido()+", "+usuario.getNombre());
+            salida.setAtendio(usuario.getApellido() + ", " + usuario.getNombre());
             salida = salidaDao.crea(salida, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la salida", e);
@@ -294,7 +258,7 @@ public class SalidaController {
             }
             Cliente cliente = clienteDao.obtiene(new Long(request.getParameter("cliente.id")));
             salida.setCliente(cliente);
-            salida.setAtendio(usuario.getApellido()+", "+usuario.getNombre());
+            salida.setAtendio(usuario.getApellido() + ", " + usuario.getNombre());
             salida = salidaDao.actualiza(salida, usuario);
         } catch (NoEstaAbiertaException e) {
             log.error("No se pudo actualizar la salida", e);
@@ -363,6 +327,48 @@ public class SalidaController {
         return "redirect:/inventario/salida/ver/" + id;
     }
 
+    @RequestMapping("/cancela/{id}")
+    public String cancela(@PathVariable Long id, Model modelo, RedirectAttributes redirectAttributes) {
+        try {
+            log.debug("Cancela salida {}", id);
+            Map<String, Object> resultado = salidaDao.preCancelacion(id, ambiente.obtieneUsuario());
+            modelo.addAttribute("salida", resultado.get("salida"));
+            modelo.addAttribute("productos", resultado.get("productos"));
+            modelo.addAttribute("entradas", resultado.get("entradas"));
+            modelo.addAttribute("salidas", resultado.get("salidas"));
+            modelo.addAttribute("productosCancelados", resultado.get("productosCancelados"));
+            modelo.addAttribute("productosSinHistoria", resultado.get("productosSinHistoria"));
+
+            return "inventario/salida/cancela";
+        } catch (NoEstaCerradaException e) {
+            log.error("No se puede cancelar la salida", e);
+            redirectAttributes.addFlashAttribute("message", "salida.no.cerrada.para.cancelar.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{e.getSalida().getFolio()});
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+            return "redirect:/inventario/salida/ver/" + id;
+        }
+    }
+
+    @RequestMapping(value = "/cancelar", method = RequestMethod.POST)
+    public String cancelar(@RequestParam Long id, @RequestParam String comentarios, Model modelo, RedirectAttributes redirectAttributes) {
+        try {
+            log.debug("Cancelando salida {}", id);
+            Cancelacion cancelacion = salidaDao.cancelar(id, ambiente.obtieneUsuario(), comentarios);
+            modelo.addAttribute("cancelacion", cancelacion);
+
+            modelo.addAttribute("message", "salida.cancelada.message");
+            modelo.addAttribute("messageAttrs", new String[]{cancelacion.getSalida().getFolio()});
+            modelo.addAttribute("messageStyle", "alert-success");
+            return "/inventario/salida/cancelada";
+        } catch (NoEstaCerradaException e) {
+            log.error("No se puede cancelar la salida", e);
+            redirectAttributes.addFlashAttribute("message", "salida.no.cerrada.para.cancelar.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{e.getSalida().getFolio()});
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+            return "redirect:/inventario/salida/ver/" + id;
+        }
+    }
+
     @RequestMapping(value = "/clientes", params = "term", produces = "application/json")
     public @ResponseBody
     List<LabelValueBean> clientes(HttpServletRequest request, @RequestParam("term") String filtro) {
@@ -393,7 +399,7 @@ public class SalidaController {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
-        List<Producto> productos = productoDao.listaParaSalida(filtro, (Long)request.getSession().getAttribute("almacenId"));
+        List<Producto> productos = productoDao.listaParaSalida(filtro, (Long) request.getSession().getAttribute("almacenId"));
         List<LabelValueBean> valores = new ArrayList<>();
         for (Producto producto : productos) {
             StringBuilder sb = new StringBuilder();
@@ -430,10 +436,11 @@ public class SalidaController {
         }
 
         try {
-            if (request.getParameter("producto.id") == null) {
+            if (StringUtils.isBlank(request.getParameter("producto.id"))) {
                 log.warn("No se puede crear la salida si no ha seleccionado un cliente");
-                errors.rejectValue("producto", "lote.sin.producto.message");
-                return "inventario/salida/lote/" + request.getParameter("salida.id");
+                modelo.addAttribute("message", "lote.sin.producto.message");
+                modelo.addAttribute("lote", lote);
+                return "inventario/salida/lote";
             }
             Producto producto = productoDao.obtiene(new Long(request.getParameter("producto.id")));
             Salida salida = salidaDao.obtiene(new Long(request.getParameter("salida.id")));
@@ -448,7 +455,9 @@ public class SalidaController {
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{""});
         } catch (ProductoNoSoportaFraccionException e) {
             log.error("No se pudo crear la salida porque no se encontro el producto", e);
-            return "inventario/salida/lote/" + request.getParameter("salida.id");
+            modelo.addAttribute("message", "lote.sin.producto.message");
+            modelo.addAttribute("lote", lote);
+            return "inventario/salida/lote";
         }
 
         redirectAttributes.addFlashAttribute("message", "lote.creado.message");
@@ -471,62 +480,5 @@ public class SalidaController {
         }
 
         return "redirect:/inventario/salida/ver/" + id;
-    }
-
-    private void generaReporte(String tipo, List<Salida> salidas, HttpServletResponse response) throws JRException, IOException {
-        log.debug("Generando reporte {}", tipo);
-        byte[] archivo = null;
-        switch (tipo) {
-            case "PDF":
-                archivo = reporteUtil.generaPdf(salidas, "/mx/edu/um/mateo/inventario/reportes/salidas.jrxml");
-                response.setContentType("application/pdf");
-                response.addHeader("Content-Disposition", "attachment; filename=salidas.pdf");
-                break;
-            case "CSV":
-                archivo = reporteUtil.generaCsv(salidas, "/mx/edu/um/mateo/inventario/reportes/salidas.jrxml");
-                response.setContentType("text/csv");
-                response.addHeader("Content-Disposition", "attachment; filename=salidas.csv");
-                break;
-            case "XLS":
-                archivo = reporteUtil.generaXls(salidas, "/mx/edu/um/mateo/inventario/reportes/salidas.jrxml");
-                response.setContentType("application/vnd.ms-excel");
-                response.addHeader("Content-Disposition", "attachment; filename=salidas.xls");
-        }
-        if (archivo != null) {
-            response.setContentLength(archivo.length);
-            try (BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream())) {
-                bos.write(archivo);
-                bos.flush();
-            }
-        }
-
-    }
-
-    private void enviaCorreo(String tipo, List<Salida> salidas, HttpServletRequest request) throws JRException, MessagingException {
-        log.debug("Enviando correo {}", tipo);
-        byte[] archivo = null;
-        String tipoContenido = null;
-        switch (tipo) {
-            case "PDF":
-                archivo = reporteUtil.generaPdf(salidas, "/mx/edu/um/mateo/inventario/reportes/salidas.jrxml");
-                tipoContenido = "application/pdf";
-                break;
-            case "CSV":
-                archivo = reporteUtil.generaCsv(salidas, "/mx/edu/um/mateo/inventario/reportes/salidas.jrxml");
-                tipoContenido = "text/csv";
-                break;
-            case "XLS":
-                archivo = reporteUtil.generaXls(salidas, "/mx/edu/um/mateo/inventario/reportes/salidas.jrxml");
-                tipoContenido = "application/vnd.ms-excel";
-        }
-
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(ambiente.obtieneUsuario().getUsername());
-        String titulo = messageSource.getMessage("salida.lista.label", null, request.getLocale());
-        helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
-        helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
-        helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
-        mailSender.send(message);
     }
 }
