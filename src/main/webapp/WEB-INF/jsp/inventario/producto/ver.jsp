@@ -119,7 +119,7 @@
                     </div>
                     <div class="span4">
                         <div class="row-fluid" class="span4">
-                            <p><img src="<c:url value='/imagen/producto/${producto.id}' />" </p>
+                            <p><img src="<c:url value='/imagen/producto/${producto.id}' />" /></p>
                         </div>
                     </div>
                 </div>

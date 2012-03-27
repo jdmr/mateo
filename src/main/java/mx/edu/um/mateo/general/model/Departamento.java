@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package mx.edu.um.mateo.inventario.model;
+package mx.edu.um.mateo.general.model;
 
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.*;
+import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -33,9 +34,10 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
-@Table(name="tipos_producto", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"almacen_id", "nombre"})})
-public class TipoProducto implements Serializable {
+@Table(name = "departamentos", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"empresa_id", "nombre"})
+})
+public class Departamento implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,21 +45,14 @@ public class TipoProducto implements Serializable {
     @Version
     private Integer version;
     @NotBlank
-    @Column(nullable = false, length = 32)
+    @Column(nullable = false, length = 64)
     private String nombre;
-    @NotBlank
-    @Column(nullable = false, length = 128)
-    private String descripcion;
     @ManyToOne(optional = false)
-    private Almacen almacen;
+    private CuentaMayor cuenta;
+    @ManyToOne(optional = false)
+    private Empresa empresa;
 
-    public TipoProducto() {
-    }
-
-    public TipoProducto(String nombre, String descripcion, Almacen almacen) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.almacen = almacen;
+    public Departamento() {
     }
 
     /**
@@ -103,31 +98,31 @@ public class TipoProducto implements Serializable {
     }
 
     /**
-     * @return the descripcion
+     * @return the cuenta
      */
-    public String getDescripcion() {
-        return descripcion;
+    public CuentaMayor getCuenta() {
+        return cuenta;
     }
 
     /**
-     * @param descripcion the descripcion to set
+     * @param cuenta the cuenta to set
      */
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setCuenta(CuentaMayor cuenta) {
+        this.cuenta = cuenta;
     }
 
     /**
-     * @return the almacen
+     * @return the empresa
      */
-    public Almacen getAlmacen() {
-        return almacen;
+    public Empresa getEmpresa() {
+        return empresa;
     }
 
     /**
-     * @param almacen the almacen to set
+     * @param empresa the empresa to set
      */
-    public void setAlmacen(Almacen almacen) {
-        this.almacen = almacen;
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
     }
 
     @Override
@@ -138,7 +133,7 @@ public class TipoProducto implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final TipoProducto other = (TipoProducto) obj;
+        final Departamento other = (Departamento) obj;
         if (!Objects.equals(this.nombre, other.nombre)) {
             return false;
         }
@@ -147,15 +142,10 @@ public class TipoProducto implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 37 * hash + Objects.hashCode(this.id);
-        hash = 37 * hash + Objects.hashCode(this.version);
-        hash = 37 * hash + Objects.hashCode(this.nombre);
+        int hash = 7;
+        hash = 23 * hash + Objects.hashCode(this.id);
+        hash = 23 * hash + Objects.hashCode(this.version);
+        hash = 23 * hash + Objects.hashCode(this.nombre);
         return hash;
-    }
-
-    @Override
-    public String toString() {
-        return "TipoProducto{" + "id=" + id + ", nombre=" + nombre + '}';
     }
 }

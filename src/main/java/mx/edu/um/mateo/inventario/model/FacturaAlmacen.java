@@ -24,57 +24,67 @@
 package mx.edu.um.mateo.inventario.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import mx.edu.um.mateo.general.model.Cliente;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
-@Table(name = "cancelaciones_almacen")
-public class Cancelacion implements Serializable {
+@Table(name = "facturas_almacen", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"almacen_id", "folio"})
+})
+public class FacturaAlmacen implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Version
     private Integer version;
-    @Column(nullable = false, length = 128)
+    @Column(nullable = false, length = 64)
     private String folio;
-    @Column(length = 200)
+    @Column(length = 128)
     private String comentarios;
-    @ManyToOne
-    private Entrada entrada;
-    @ManyToOne
-    private Salida salida;
+    @NotNull
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Temporal(TemporalType.DATE)
+    private Date fecha;
+    @Column(scale = 2, precision = 8, nullable = false)
+    private BigDecimal iva = BigDecimal.ZERO;
+    @Column(scale = 2, precision = 8, nullable = false)
+    private BigDecimal total = BigDecimal.ZERO;
+    @ManyToOne(optional = false)
+    private Estatus estatus;
+    @ManyToOne(optional = false)
+    private Cliente cliente;
     @ManyToOne(optional = false)
     private Almacen almacen;
-    @ManyToMany
-    @JoinTable(name = "cancelaciones_almacen_productos", joinColumns = {
-        @JoinColumn(name = "cancelacion_id")}, inverseJoinColumns = {
-        @JoinColumn(name = "producto_id")})
-    private Set<Producto> productos;
-    @OneToMany
-    @JoinTable(name = "cancelaciones_almacen_entradas", joinColumns = {
-        @JoinColumn(name = "cancelacion_id")}, inverseJoinColumns = {
-        @JoinColumn(name = "entrada_id")})
-    private List<Entrada> entradas;
-    @OneToMany
-    @JoinTable(name = "cancelaciones_almacen_salidas", joinColumns = {
-        @JoinColumn(name = "cancelacion_id")}, inverseJoinColumns = {
-        @JoinColumn(name = "salida_id")})
-    private List<Salida> salidas;
-    @Column(nullable = false, length = 64)
-    private String creador;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "date_created")
     private Date fechaCreacion;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, name = "last_updated")
+    private Date fechaModificacion;
+    @OneToMany
+    @JoinTable(name = "facturas_almacen_entradas", joinColumns = {
+        @JoinColumn(name = "factura_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "entrada_id")})
+    private List<Entrada> entradas = new ArrayList<>();
+    @OneToMany
+    @JoinTable(name = "facturas_almacen_salidas", joinColumns = {
+        @JoinColumn(name = "factura_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "salida_id")})
+    private List<Salida> salidas = new ArrayList<>();
 
-    public Cancelacion() {
+    public FacturaAlmacen() {
     }
 
     /**
@@ -134,33 +144,73 @@ public class Cancelacion implements Serializable {
     }
 
     /**
-     * @return the entrada
+     * @return the fecha
      */
-    public Entrada getEntrada() {
-        return entrada;
+    public Date getFecha() {
+        return fecha;
     }
 
     /**
-     * @param entrada the entrada to set
+     * @param fecha the fecha to set
      */
-    public void setEntrada(Entrada entrada) {
-        this.entrada = entrada;
-        this.almacen = entrada.getAlmacen();
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
     }
 
     /**
-     * @return the salida
+     * @return the iva
      */
-    public Salida getSalida() {
-        return salida;
+    public BigDecimal getIva() {
+        return iva;
     }
 
     /**
-     * @param salida the salida to set
+     * @param iva the iva to set
      */
-    public void setSalida(Salida salida) {
-        this.salida = salida;
-        this.almacen = salida.getAlmacen();
+    public void setIva(BigDecimal iva) {
+        this.iva = iva;
+    }
+
+    /**
+     * @return the total
+     */
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    /**
+     * @param total the total to set
+     */
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
+    /**
+     * @return the estatus
+     */
+    public Estatus getEstatus() {
+        return estatus;
+    }
+
+    /**
+     * @param estatus the estatus to set
+     */
+    public void setEstatus(Estatus estatus) {
+        this.estatus = estatus;
+    }
+
+    /**
+     * @return the cliente
+     */
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    /**
+     * @param cliente the cliente to set
+     */
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     /**
@@ -178,17 +228,31 @@ public class Cancelacion implements Serializable {
     }
 
     /**
-     * @return the productos
+     * @return the fechaCreacion
      */
-    public Set<Producto> getProductos() {
-        return productos;
+    public Date getFechaCreacion() {
+        return fechaCreacion;
     }
 
     /**
-     * @param productos the productos to set
+     * @param fechaCreacion the fechaCreacion to set
      */
-    public void setProductos(Set<Producto> productos) {
-        this.productos = productos;
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    /**
+     * @return the fechaModificacion
+     */
+    public Date getFechaModificacion() {
+        return fechaModificacion;
+    }
+
+    /**
+     * @param fechaModificacion the fechaModificacion to set
+     */
+    public void setFechaModificacion(Date fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
     }
 
     /**
@@ -219,34 +283,6 @@ public class Cancelacion implements Serializable {
         this.salidas = salidas;
     }
 
-    /**
-     * @return the creador
-     */
-    public String getCreador() {
-        return creador;
-    }
-
-    /**
-     * @param creador the creador to set
-     */
-    public void setCreador(String creador) {
-        this.creador = creador;
-    }
-
-    /**
-     * @return the fechaCreacion
-     */
-    public Date getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    /**
-     * @param fechaCreacion the fechaCreacion to set
-     */
-    public void setFechaCreacion(Date fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -255,7 +291,7 @@ public class Cancelacion implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Cancelacion other = (Cancelacion) obj;
+        final FacturaAlmacen other = (FacturaAlmacen) obj;
         if (!Objects.equals(this.folio, other.folio)) {
             return false;
         }
@@ -265,14 +301,14 @@ public class Cancelacion implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 89 * hash + Objects.hashCode(this.id);
-        hash = 89 * hash + Objects.hashCode(this.version);
-        hash = 89 * hash + Objects.hashCode(this.folio);
+        hash = 67 * hash + Objects.hashCode(this.id);
+        hash = 67 * hash + Objects.hashCode(this.version);
+        hash = 67 * hash + Objects.hashCode(this.folio);
         return hash;
     }
 
     @Override
     public String toString() {
-        return "Cancelacion{" + "folio=" + folio + '}';
+        return "FacturaAlmacen{" + "folio=" + folio + '}';
     }
 }

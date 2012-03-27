@@ -23,15 +23,10 @@
  */
 package mx.edu.um.mateo.contabilidad.web;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -39,18 +34,13 @@ import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.dao.CuentaMayorDao;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.export.JRCsvExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -70,6 +60,8 @@ public class CuentaMayorController extends BaseController {
     
     @Autowired
     private CuentaMayorDao cuentaMayorDao;
+    @Autowired
+    private Ambiente ambiente;
     
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -84,6 +76,8 @@ public class CuentaMayorController extends BaseController {
             Model modelo) {
         log.debug("Mostrando lista de cuentas de mayores");
         Map<String, Object> params = new HashMap<>();
+        Long organizacionId = (Long) request.getSession().getAttribute("organizacionId");
+        params.put("organizacion", organizacionId);
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }
@@ -96,9 +90,9 @@ public class CuentaMayorController extends BaseController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = cuentaMayorDao.lista(params);
             try {
-                generaReporte(tipo, (List<CuentaMayor>) params.get(Constantes.CONTAINSKEY_MAYORES), response);
+                generaReporte(tipo, (List<CuentaMayor>) params.get(Constantes.CONTAINSKEY_MAYORES), response, Constantes.CONTAINSKEY_MAYORES, mx.edu.um.mateo.general.utils.Constantes.ORG, organizacionId);
                 return null;
-            } catch (JRException | IOException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
                 params.remove(Constantes.CONTAINSKEY_REPORTE);
                 //errors.reject("error.generar.reporte");
@@ -111,10 +105,10 @@ public class CuentaMayorController extends BaseController {
             
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<CuentaMayor>) params.get(Constantes.CONTAINSKEY_MAYORES), request);
+                enviaCorreo(correo, (List<CuentaMayor>) params.get(Constantes.CONTAINSKEY_MAYORES), request, Constantes.CONTAINSKEY_MAYORES, mx.edu.um.mateo.general.utils.Constantes.ORG, organizacionId);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("cuentaMayor.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
-            } catch (JRException | MessagingException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
@@ -156,7 +150,7 @@ public class CuentaMayorController extends BaseController {
         }
         
         try {
-            mayor = cuentaMayorDao.crea(mayor);
+            mayor = cuentaMayorDao.crea(mayor, ambiente.obtieneUsuario());
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la cuenta de mayor", e);
             return Constantes.PATH_CUENTA_MAYOR_NUEVA;
@@ -184,7 +178,7 @@ public class CuentaMayorController extends BaseController {
             return Constantes.PATH_CUENTA_MAYOR_EDITA;
         }
         try {
-            mayor = cuentaMayorDao.actualiza(mayor);
+            mayor = cuentaMayorDao.actualiza(mayor, ambiente.obtieneUsuario());
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la cuenta de mayor", e);
             return Constantes.PATH_CUENTA_MAYOR_NUEVA;
@@ -213,107 +207,5 @@ public class CuentaMayorController extends BaseController {
         
         return "redirect:" + Constantes.PATH_CUENTA_MAYOR;
     }
-    
-    private void generaReporte(String tipo, List<CuentaMayor> mayores, HttpServletResponse response) throws JRException, IOException {
-        log.debug("Generando reporte {}", tipo);
-        byte[] archivo = null;
-        switch (tipo) {
-            case "PDF":
-                archivo = generaPdf(mayores);
-                response.setContentType("application/pdf");
-                response.addHeader("Content-Disposition", "attachment; filename=CuentaMayores.pdf");
-                break;
-            case "CSV":
-                archivo = generaCsv(mayores);
-                response.setContentType("text/csv");
-                response.addHeader("Content-Disposition", "attachment; filename=CuentaMayores.csv");
-                break;
-            case "XLS":
-                archivo = generaXls(mayores);
-                response.setContentType("application/vnd.ms-excel");
-                response.addHeader("Content-Disposition", "attachment; filename=CuentaMayores.xls");
-        }
-        if (archivo != null) {
-            response.setContentLength(archivo.length);
-            try (BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream())) {
-                bos.write(archivo);
-                bos.flush();
-            }
-        }
         
-    }
-    
-    private void enviaCorreo(String tipo, List<CuentaMayor> mayores, HttpServletRequest request) throws JRException, MessagingException {
-        log.debug("Enviando correo {}", tipo);
-        byte[] archivo = null;
-        String tipoContenido = null;
-        switch (tipo) {
-            case "PDF":
-                archivo = generaPdf(mayores);
-                tipoContenido = "application/pdf";
-                break;
-            case "CSV":
-                archivo = generaCsv(mayores);
-                tipoContenido = "text/csv";
-                break;
-            case "XLS":
-                archivo = generaXls(mayores);
-                tipoContenido = "application/vnd.ms-excel";
-        }
-        
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(ambiente.obtieneUsuario().getUsername());
-        String titulo = messageSource.getMessage("cuentaMayor.lista.label", null, request.getLocale());
-        helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
-        helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
-        helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
-        mailSender.send(message);
-    }
-    
-    private byte[] generaPdf(List mayores) throws JRException {
-        Map<String, Object> params = new HashMap<>();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/mayores.jrxml"));
-        JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(mayores));
-        byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
-        
-        return archivo;
-    }
-    
-    private byte[] generaCsv(List mayores) throws JRException {
-        Map<String, Object> params = new HashMap<>();
-        JRCsvExporter exporter = new JRCsvExporter();
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/mayores.jrxml"));
-        JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(mayores));
-        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
-        exporter.exportReport();
-        byte[] archivo = byteArrayOutputStream.toByteArray();
-        
-        return archivo;
-    }
-    
-    private byte[] generaXls(List mayores) throws JRException {
-        Map<String, Object> params = new HashMap<>();
-        JRXlsExporter exporter = new JRXlsExporter();
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/mayores.jrxml"));
-        JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(mayores));
-        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
-        exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);
-        exporter.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
-        exporter.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS, Boolean.TRUE);
-        exporter.setParameter(JRXlsExporterParameter.IS_COLLAPSE_ROW_SPAN, Boolean.TRUE);
-        exporter.setParameter(JRXlsExporterParameter.IGNORE_PAGE_MARGINS, Boolean.TRUE);
-        exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
-        exporter.exportReport();
-        byte[] archivo = byteArrayOutputStream.toByteArray();
-        
-        return archivo;
-    }
 }

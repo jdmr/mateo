@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import org.hibernate.annotations.IndexColumn;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
@@ -45,6 +46,7 @@ public class Rol implements Serializable, GrantedAuthority {
     private Integer version;
     @NotNull
     @Column(unique = true, nullable = false, length = 128)
+    @IndexColumn(name="rol_authority_idx")
     private String authority;
 
     public Rol() {

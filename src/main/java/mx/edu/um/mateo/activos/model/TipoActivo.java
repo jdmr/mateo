@@ -21,11 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package mx.edu.um.mateo.inventario.model;
+package mx.edu.um.mateo.activos.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
+import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
+import mx.edu.um.mateo.general.model.Empresa;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -33,9 +38,10 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
-@Table(name="tipos_producto", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"almacen_id", "nombre"})})
-public class TipoProducto implements Serializable {
+@Table(name = "tipos_activo", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"nombre", "empresa_id"})
+})
+public class TipoActivo implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,21 +49,22 @@ public class TipoProducto implements Serializable {
     @Version
     private Integer version;
     @NotBlank
-    @Column(nullable = false, length = 32)
+    @Column(nullable = false, length = 64)
     private String nombre;
-    @NotBlank
-    @Column(nullable = false, length = 128)
+    @Column(length = 128)
     private String descripcion;
+    @Column(nullable = false, scale = 2, precision = 8)
+    private BigDecimal porciento;
+    @Column(nullable = false, name = "vida_util")
+    private Long vidaUtil;
     @ManyToOne(optional = false)
-    private Almacen almacen;
+    private CuentaMayor cuenta;
+    @ManyToOne(optional = false)
+    private Empresa empresa;
+    @OneToMany(mappedBy = "tipoActivo")
+    private List<Activo> activos = new ArrayList<>();
 
-    public TipoProducto() {
-    }
-
-    public TipoProducto(String nombre, String descripcion, Almacen almacen) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.almacen = almacen;
+    public TipoActivo() {
     }
 
     /**
@@ -117,17 +124,73 @@ public class TipoProducto implements Serializable {
     }
 
     /**
-     * @return the almacen
+     * @return the porciento
      */
-    public Almacen getAlmacen() {
-        return almacen;
+    public BigDecimal getPorciento() {
+        return porciento;
     }
 
     /**
-     * @param almacen the almacen to set
+     * @param porciento the porciento to set
      */
-    public void setAlmacen(Almacen almacen) {
-        this.almacen = almacen;
+    public void setPorciento(BigDecimal porciento) {
+        this.porciento = porciento;
+    }
+
+    /**
+     * @return the vidaUtil
+     */
+    public Long getVidaUtil() {
+        return vidaUtil;
+    }
+
+    /**
+     * @param vidaUtil the vidaUtil to set
+     */
+    public void setVidaUtil(Long vidaUtil) {
+        this.vidaUtil = vidaUtil;
+    }
+
+    /**
+     * @return the cuenta
+     */
+    public CuentaMayor getCuenta() {
+        return cuenta;
+    }
+
+    /**
+     * @param cuenta the cuenta to set
+     */
+    public void setCuenta(CuentaMayor cuenta) {
+        this.cuenta = cuenta;
+    }
+
+    /**
+     * @return the empresa
+     */
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    /**
+     * @param empresa the empresa to set
+     */
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
+    }
+
+    /**
+     * @return the activos
+     */
+    public List<Activo> getActivos() {
+        return activos;
+    }
+
+    /**
+     * @param activos the activos to set
+     */
+    public void setActivos(List<Activo> activos) {
+        this.activos = activos;
     }
 
     @Override
@@ -138,7 +201,7 @@ public class TipoProducto implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final TipoProducto other = (TipoProducto) obj;
+        final TipoActivo other = (TipoActivo) obj;
         if (!Objects.equals(this.nombre, other.nombre)) {
             return false;
         }
@@ -147,15 +210,15 @@ public class TipoProducto implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 37 * hash + Objects.hashCode(this.id);
-        hash = 37 * hash + Objects.hashCode(this.version);
-        hash = 37 * hash + Objects.hashCode(this.nombre);
+        int hash = 7;
+        hash = 61 * hash + Objects.hashCode(this.id);
+        hash = 61 * hash + Objects.hashCode(this.version);
+        hash = 61 * hash + Objects.hashCode(this.nombre);
         return hash;
     }
 
     @Override
     public String toString() {
-        return "TipoProducto{" + "id=" + id + ", nombre=" + nombre + '}';
+        return "TipoActivo{" + "nombre=" + nombre + '}';
     }
 }

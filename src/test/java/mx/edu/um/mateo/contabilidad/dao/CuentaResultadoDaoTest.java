@@ -4,15 +4,12 @@
  */
 package mx.edu.um.mateo.contabilidad.dao;
 
-import mx.edu.um.mateo.contabilidad.dao.CuentaResultadoDao;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
-import mx.edu.um.mateo.contabilidad.model.CuentaResultado;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.contabilidad.model.CuentaResultado;
-import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import org.slf4j.Logger;
 import org.hibernate.Session;
@@ -53,10 +50,6 @@ public class CuentaResultadoDaoTest extends BaseTest{
     @Test
     public void deberiaMostrarListaDeCuentaResultado() {
         log.debug("Debiera mostrar lista de cuentaResultado");
-        Ejercicio ejercicio = new Ejercicio("test", "A");
-        currentSession().save(ejercicio);
-        assertNotNull(ejercicio);
-        log.debug("ejercicio >>" + ejercicio);
         for (int i = 0; i < 20; i++) {
             CuentaResultado cuentaResultado = new CuentaResultado("test" + i, "test");
             currentSession().save(cuentaResultado);

@@ -275,13 +275,14 @@ public class SalidaDao {
             BigDecimal iva = subtotal.multiply(lote.getProducto().getIva()).setScale(2, RoundingMode.HALF_UP);
             lote.setIva(iva);
             BigDecimal total = subtotal.add(iva).setScale(2, RoundingMode.HALF_UP);
+            lote.setFechaCreacion(new Date());
+            currentSession().save(lote);
 
             Salida salida = lote.getSalida();
             salida.setIva(salida.getIva().add(iva));
             salida.setTotal(salida.getTotal().add(total));
-
             currentSession().save(salida);
-            currentSession().save(lote);
+            
             currentSession().flush();
 
             return lote;

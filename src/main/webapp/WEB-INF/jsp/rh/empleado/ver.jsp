@@ -38,6 +38,31 @@
                     <div class="span1"><s:message code="apPaterno.label" /></div>
                     <div class="span11">${empleado.apPaterno}</div>
                 </div>
+                
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="apMaterno.label" /></div>
+                    <div class="span11">${empleado.apMaterno}</div>
+                </div>
+                
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="clave.label" /></div>
+                    <div class="span11">${empleado.clave}</div>
+                </div>
+                
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="genero.label" /></div>
+                    <div class="span11">${empleado.genero}</div>
+                </div>
+                
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="direccion.label" /></div>
+                    <div class="span11">${empleado.direccion}</div>
+                </div>
+                
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="status.label" /></div>
+                    <div class="span11">${empleado.status}</div>
+                </div>
 
                 <p class="well">
                     <a href="<c:url value='/rh/empleado/edita/${empleado.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>

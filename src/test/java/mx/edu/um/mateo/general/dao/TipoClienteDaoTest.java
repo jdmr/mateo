@@ -23,10 +23,7 @@
  */
 package mx.edu.um.mateo.general.dao;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Session;
@@ -93,7 +90,8 @@ public class TipoClienteDaoTest {
             TipoCliente tipoCliente = new TipoCliente("test" + i, "test" + i, empresa);
             currentSession().save(tipoCliente);
         }
-        Map<String, Object> params = null;
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", empresa.getId());
         Map result = instance.lista(params);
         assertNotNull(result.get("tiposDeCliente"));
         assertNotNull(result.get("cantidad"));

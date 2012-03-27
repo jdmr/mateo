@@ -171,12 +171,12 @@ public class EmpleadoController {
         return Constantes.PATH_EMPLEADO_VER;
     }
     
-    @RequestMapping("/nueva")
+    @RequestMapping("/nuevo")
     public String nueva(Model modelo) {
         log.debug("Nuevo empleado");
         Empleado empleado = new Empleado();
         modelo.addAttribute(Constantes.ADDATTRIBUTE_EMPLEADO, empleado);
-        return Constantes.PATH_EMPLEADO_NUEVA;
+        return Constantes.PATH_EMPLEADO_NUEVO;
     }
     
     @Transactional
@@ -187,14 +187,14 @@ public class EmpleadoController {
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
-            return Constantes.PATH_EMPLEADO_NUEVA;
+            return Constantes.PATH_EMPLEADO_NUEVO;
         }
         
         try {
             empleado = empleadoDao.crea(empleado);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear empleado", e);
-            return Constantes.PATH_EMPLEADO_NUEVA;
+            return Constantes.PATH_EMPLEADO_NUEVO;
         }
         
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "empleado.creado.message");
@@ -222,7 +222,7 @@ public class EmpleadoController {
             empleado = empleadoDao.actualiza(empleado);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la cuenta de empleado", e);
-            return Constantes.PATH_EMPLEADO_NUEVA;
+            return Constantes.PATH_EMPLEADO_NUEVO;
         }
         
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "empleado.actualizado.message");

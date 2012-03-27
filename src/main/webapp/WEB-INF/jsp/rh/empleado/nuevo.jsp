@@ -48,6 +48,56 @@
                             <form:errors path="apPaterno" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
+                     <s:bind path="empleado.apMaterno">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="apMaterno">
+                                <s:message code="apMaterno.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="apMaterno" maxlength="128" required="true" />
+                            <form:errors path="apMaterno" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="empleado.clave">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="clave">
+                                <s:message code="clave.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="clave" maxlength="128" required="true" />
+                            <form:errors path="clave" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="empleado.genero">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="genero">
+                                <s:message code="genero.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="genero" maxlength="128" required="true" />
+                            <form:errors path="genero" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="empleado.direccion">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="direccion">
+                                <s:message code="direccion.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="direccion" maxlength="128" required="true" />
+                            <form:errors path="direccion" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="empleado.status">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="status">
+                                <s:message code="status.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="status" maxlength="128" required="true" />
+                            <form:errors path="status" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
