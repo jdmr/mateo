@@ -181,6 +181,6 @@ public class CuentaAuxiliar implements Serializable {
 
     @Override
     public String toString() {
-        return "CuentaMayor{" + "nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + ", clave=" + clave + ", detalle=" + detalle + ", aviso=" + aviso + ", auxiliar=" + auxiliar + ", iva=" + iva + ", porcentajeIva=" + porcentajeIva + '}';
+        return "CuentaAuxiliar{" + "nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + ", clave=" + clave + ", detalle=" + detalle + ", aviso=" + aviso + ", auxiliar=" + auxiliar + ", iva=" + iva + ", porcentajeIva=" + porcentajeIva + '}';
     }
 }
