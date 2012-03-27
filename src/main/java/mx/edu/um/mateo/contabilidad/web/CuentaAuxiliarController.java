@@ -105,7 +105,7 @@ public class CuentaAuxiliarController extends BaseController {
             try {
                 enviaCorreo(correo, (List<CuentaAuxiliar>) params.get(Constantes.CONTAINSKEY_AUXILIARES), request, Constantes.CONTAINSKEY_AUXILIARES, mx.edu.um.mateo.general.utils.Constantes.ORG, organizacionId);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
-                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("cuentaAuxiliar.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("auxiliares.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }

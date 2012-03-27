@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mx.edu.um.mateo.contabilidad.dao;
 
 import java.util.HashMap;
@@ -121,15 +117,13 @@ public class CuentaAuxiliarDao {
 
     public CuentaAuxiliar actualiza(CuentaAuxiliar cuentaAuxiliar, Usuario usuario) {
         log.debug("Actualizando cuenta de auxiliar {}", cuentaAuxiliar);
-
-        //trae el objeto de la DB 
-        CuentaAuxiliar nueva = (CuentaAuxiliar) currentSession().get(CuentaAuxiliar.class, cuentaAuxiliar.getId());
-        //actualiza el objeto
+        
+        CuentaAuxiliar nueva = (CuentaAuxiliar)currentSession().get(CuentaAuxiliar.class, cuentaAuxiliar.getId());
         BeanUtils.copyProperties(cuentaAuxiliar, nueva);
+        
         if (usuario != null) {
             nueva.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         }
-        //lo guarda en la BD
         currentSession().update(nueva);
         currentSession().flush();
         return nueva;

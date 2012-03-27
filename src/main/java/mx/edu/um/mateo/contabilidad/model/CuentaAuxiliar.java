@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mx.edu.um.mateo.contabilidad.model;
 
 import java.io.Serializable;
@@ -13,7 +9,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *
- * @author semdariobarbaamaya
+ * @author nujev
  */
 @Entity
 @Table(name = "auxiliares")
@@ -28,35 +24,34 @@ public class CuentaAuxiliar implements Serializable {
     @Column(nullable = false, length = 24)
     private String nombre;
     @NotBlank
-    @Column(nullable = false, length = 24, name = "nombre_fiscal")
+    @Column(nullable = false, length = 24, name="nombre_fiscal")
     private String nombreFiscal;
     @NotBlank
     @Column(nullable = false, length = 50)
     private String clave;
     @Column(nullable = false)
-    private Boolean detalle;
+    private Boolean detalle = false;
     @Column(nullable = false)
-    private Boolean aviso;
+    private Boolean aviso = false;
     @Column(nullable = false)
-    private Boolean auxiliar;
+    private Boolean auxiliar = false;
     @Column(nullable = false)
-    private Boolean iva;
+    private Boolean iva = false;
     @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal porcentajeIva = new BigDecimal("0");
-//    private Boolean detalleR;
     @ManyToOne
     private Organizacion organizacion;
 
     public CuentaAuxiliar() {
     }
-    
+
     public CuentaAuxiliar(String nombre, String nombreFiscal, String clave, Organizacion organizacion) {
         this.nombre = nombre;
         this.nombreFiscal = nombreFiscal;
         this.clave = clave;
         this.organizacion = organizacion;
     }
-
+    
     public CuentaAuxiliar(String nombre, String nombreFiscal, String clave, Boolean detalle, Boolean aviso, Boolean auxiliar, Boolean iva, BigDecimal porcentajeIva) {
         this.nombre = nombre;
         this.nombreFiscal = nombreFiscal;
@@ -148,18 +143,24 @@ public class CuentaAuxiliar implements Serializable {
         this.porcentajeIva = porcentajeIva;
     }
 
+    /**
+     * @return the organizacion
+     */
     public Organizacion getOrganizacion() {
         return organizacion;
     }
 
+    /**
+     * @param organizacion the organizacion to set
+     */
     public void setOrganizacion(Organizacion organizacion) {
         this.organizacion = organizacion;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.clave);
+        hash = 37 * hash + Objects.hashCode(this.clave);
         return hash;
     }
 
@@ -180,6 +181,6 @@ public class CuentaAuxiliar implements Serializable {
 
     @Override
     public String toString() {
-        return "CuentaAuxiliar{" + "nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + ", clave=" + clave + ", detalle=" + detalle + ", aviso=" + aviso + ", auxiliar=" + auxiliar + ", iva=" + iva + ", porcentajeIva=" + porcentajeIva + '}';
+        return "CuentaMayor{" + "nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + ", clave=" + clave + ", detalle=" + detalle + ", aviso=" + aviso + ", auxiliar=" + auxiliar + ", iva=" + iva + ", porcentajeIva=" + porcentajeIva + '}';
     }
 }
