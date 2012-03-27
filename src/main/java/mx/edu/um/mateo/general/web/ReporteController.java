@@ -31,9 +31,13 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import mx.edu.um.mateo.general.dao.OrganizacionDao;
 import mx.edu.um.mateo.general.dao.ReporteDao;
+import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Reporte;
 import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.inventario.model.Salida;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -63,6 +67,8 @@ public class ReporteController {
     private Ambiente ambiente;
     @Autowired
     private SessionFactory sessionFactory;
+    @Autowired
+    private OrganizacionDao organizacionDao;
 
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
@@ -76,6 +82,26 @@ public class ReporteController {
         redirectAttributes.addFlashAttribute("message", "reporte.compilado.message");
         redirectAttributes.addFlashAttribute("messageAttrs", new String[]{reporte});
 
+        return "redirect:/";
+    }
+    
+    @RequestMapping("/inicializa")
+    public String inicializa(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        log.debug("Inicializando reportes para organizacion "+request.getSession().getAttribute("organizacionId"));
+        reporteDao.inicializa();
+        Long organizacionId = (Long) request.getSession().getAttribute("organizacionId");
+        Organizacion organizacion = organizacionDao.obtiene(organizacionId);
+        reporteDao.inicializaOrganizacion(organizacion);
+        for(Empresa empresa : organizacion.getEmpresas()) {
+            reporteDao.inicializaEmpresa(empresa);
+            for(Almacen almacen : empresa.getAlmacenes()) {
+                reporteDao.inicializaAlmacen(almacen);
+            }
+        }
+        
+        redirectAttributes.addFlashAttribute("message", "reporte.inicializado.message");
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[] {organizacion.getNombre()});
+        
         return "redirect:/";
     }
 
