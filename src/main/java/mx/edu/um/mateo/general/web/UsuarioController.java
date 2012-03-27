@@ -92,6 +92,9 @@ public class UsuarioController extends BaseController {
             params.put("order", order);
             params.put("sort", sort);
         }
+        if (pagina != null) {
+            params.put("pagina", pagina);
+        }
 
         params.put("empresa", request.getSession().getAttribute("empresaId"));
 
