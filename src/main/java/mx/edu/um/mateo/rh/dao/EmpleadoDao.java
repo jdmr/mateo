@@ -4,23 +4,18 @@
  */
 package mx.edu.um.mateo.rh.dao;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import mx.edu.um.mateo.general.utils.UltimoException;
-import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
-import mx.edu.um.mateo.contabilidad.model.Ejercicio;
+import mx.edu.um.mateo.rh.model.Empleado;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import mx.edu.um.mateo.rh.model.Empleado;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.*;
 
 /**
  *

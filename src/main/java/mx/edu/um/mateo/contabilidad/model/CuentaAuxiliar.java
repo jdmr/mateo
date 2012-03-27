@@ -16,7 +16,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author semdariobarbaamaya
  */
 @Entity
-@Table(name = "ctaauxiliar")
+@Table(name = "auxiliares")
 public class CuentaAuxiliar implements Serializable {
 
     @Id
@@ -24,14 +24,11 @@ public class CuentaAuxiliar implements Serializable {
     private Long id;
     @Version
     private Integer version;
-//    private Ejercicio ejercicio;
-//    private String idCtaMayor;
-//    private String tipoCuenta;
     @NotBlank
     @Column(nullable = false, length = 24)
     private String nombre;
     @NotBlank
-    @Column(nullable = false, length = 24)
+    @Column(nullable = false, length = 24, name = "nombre_fiscal")
     private String nombreFiscal;
     @NotBlank
     @Column(nullable = false, length = 50)

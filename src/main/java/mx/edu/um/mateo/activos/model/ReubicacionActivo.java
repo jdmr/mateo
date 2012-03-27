@@ -59,7 +59,7 @@ public class ReubicacionActivo implements Serializable {
     @Column(nullable = false)
     private Date fecha;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
+    @Column(nullable = false, name="date_created")
     private Date fechaCreacion;
 
     public ReubicacionActivo() {

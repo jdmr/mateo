@@ -5,8 +5,6 @@
 package mx.edu.um.mateo.rh.model;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
 import javax.persistence.*;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -15,7 +13,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author develop
  */
 @Entity
-@Table(name = "empleado")
+@Table(name = "empleados")
 public class Empleado implements Serializable {
 
     @Id

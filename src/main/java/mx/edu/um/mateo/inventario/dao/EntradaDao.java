@@ -146,9 +146,9 @@ public class EntradaDao {
         entrada.setFechaCreacion(fecha);
         entrada.setFechaModificacion(fecha);
         session.save(entrada);
-        
+
         audita(entrada, usuario, Constantes.CREAR, fecha);
-        
+
         session.flush();
         return entrada;
     }
@@ -178,9 +178,9 @@ public class EntradaDao {
                 Date fecha = new Date();
                 entrada.setFechaModificacion(fecha);
                 session.update(entrada);
-                
+
                 audita(entrada, usuario, Constantes.ACTUALIZAR, fecha);
-                
+
                 session.flush();
                 return entrada;
             default:
@@ -207,9 +207,9 @@ public class EntradaDao {
                 entrada.setFechaModificacion(fecha);
 
                 currentSession().update(entrada);
-                
+
                 audita(entrada, usuario, Constantes.ACTUALIZAR, fecha);
-                
+
                 currentSession().flush();
                 return entrada.getFolio();
             } else {
@@ -244,9 +244,9 @@ public class EntradaDao {
                 entrada.setFechaModificacion(fecha);
 
                 currentSession().update(entrada);
-                
+
                 audita(entrada, usuario, Constantes.ACTUALIZAR, fecha);
-                
+
                 currentSession().flush();
                 return entrada;
             } else {
@@ -275,7 +275,7 @@ public class EntradaDao {
         entrada.setFechaModificacion(fecha);
 
         currentSession().update(entrada);
-                
+
         audita(entrada, usuario, Constantes.ACTUALIZAR, fecha);
 
         currentSession().flush();
@@ -285,7 +285,7 @@ public class EntradaDao {
     public String elimina(Long id) throws NoEstaAbiertaException {
         return this.elimina(id, null);
     }
-    
+
     public String elimina(Long id, Usuario usuario) throws NoEstaAbiertaException {
         Entrada entrada = obtiene(id);
         if (entrada.getEstatus().getNombre().equals(Constantes.ABIERTA)) {
@@ -312,6 +312,7 @@ public class EntradaDao {
             BigDecimal subtotal = lote.getPrecioUnitario().multiply(lote.getCantidad());
             BigDecimal iva = subtotal.multiply(lote.getProducto().getIva()).setScale(2, RoundingMode.HALF_UP);
             lote.setIva(iva);
+            lote.setFechaCreacion(new Date());
 
             currentSession().save(lote);
 
@@ -616,27 +617,27 @@ public class EntradaDao {
                 }
                 currentSession().update(producto);
             }
-            
+
             query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
             query.setString("nombre", Constantes.CANCELADA);
             Estatus cancelada = (Estatus) query.uniqueResult();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             String fechaString = sdf.format(fecha);
-            for(Entrada e : entradas) {
-                e.setFactura(e.getFactura()+"C"+fechaString);
+            for (Entrada e : entradas) {
+                e.setFactura(e.getFactura() + "C" + fechaString);
                 e.setEstatus(cancelada);
                 e.setFechaModificacion(fecha);
                 currentSession().update(e);
-                
+
                 audita(e, usuario, Constantes.CANCELAR, fecha);
             }
-            
-            for(Salida s : salidas) {
-                s.setReporte(s.getReporte()+"C"+fechaString);
+
+            for (Salida s : salidas) {
+                s.setReporte(s.getReporte() + "C" + fechaString);
                 s.setEstatus(cancelada);
                 s.setFechaModificacion(fecha);
                 currentSession().update(s);
-                
+
                 auditaSalida(s, usuario, Constantes.CANCELAR, fecha);
             }
 
@@ -657,7 +658,7 @@ public class EntradaDao {
             for (Producto producto : productos) {
                 auditaProducto(producto, usuario, Constantes.CANCELAR, null, cancelacion.getId(), fecha);
             }
-            
+
             return cancelacion;
         } else {
             throw new NoEstaCerradaException("La entrada no se puede cancelar porque no esta cerrada o facturada", entrada);
@@ -678,12 +679,13 @@ public class EntradaDao {
         xproducto.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
         currentSession().save(xproducto);
     }
-    
+
     private void audita(Entrada entrada, Usuario usuario, String actividad, Date fecha) {
         XEntrada xentrada = new XEntrada();
         BeanUtils.copyProperties(entrada, xentrada);
         xentrada.setId(null);
         xentrada.setEntradaId(entrada.getId());
+        xentrada.setAlmacenId(entrada.getAlmacen().getId());
         xentrada.setProveedorId(entrada.getProveedor().getId());
         xentrada.setEstatusId(entrada.getEstatus().getId());
         xentrada.setFechaCreacion(fecha);
@@ -691,7 +693,7 @@ public class EntradaDao {
         xentrada.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
         currentSession().save(xentrada);
     }
-    
+
     private void auditaSalida(Salida salida, Usuario usuario, String actividad, Date fecha) {
         XSalida xsalida = new XSalida();
         BeanUtils.copyProperties(salida, xsalida);

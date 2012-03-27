@@ -62,6 +62,9 @@ public class Almacen implements Serializable {
     @OneToMany(mappedBy = "almacen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TipoProducto> tiposDeProducto = new ArrayList<>();
     @ManyToMany
+    @JoinTable(name = "almacenes_reportes", joinColumns = {
+        @JoinColumn(name = "almacen_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "reporte_id")})
     private List<Reporte> reportes = new ArrayList<>();
 
     public Almacen() {

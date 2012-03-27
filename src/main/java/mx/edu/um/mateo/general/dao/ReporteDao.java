@@ -107,6 +107,7 @@ public class ReporteDao {
 
     public JasperReport obtieneReportePorOrganizacion(String nombre, Long organizacionId) {
         Reporte reporte = buscaReportePorOrganizacion(nombre, organizacionId);
+        
         return reporte.getReporte();
     }
 

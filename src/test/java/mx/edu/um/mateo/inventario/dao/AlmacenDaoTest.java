@@ -23,10 +23,7 @@
  */
 package mx.edu.um.mateo.inventario.dao;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
@@ -79,7 +76,8 @@ public class AlmacenDaoTest {
             currentSession().save(almacen);
         }
 
-        Map<String, Object> params = null;
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", empresa.getId());
         Map result = instance.lista(params);
         assertNotNull(result.get("almacenes"));
         assertNotNull(result.get("cantidad"));

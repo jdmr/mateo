@@ -88,9 +88,6 @@ public class CuentaAuxiliarController extends BaseController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = cuentaAuxiliarDao.lista(params);
             try {
-                log.debug("tipo>" + tipo);
-                log.debug("organización >" + organizacionId);
-                
                 generaReporte(tipo, (List<CuentaAuxiliar>) params.get(Constantes.CONTAINSKEY_AUXILIARES), response, Constantes.CONTAINSKEY_AUXILIARES, mx.edu.um.mateo.general.utils.Constantes.ORG, organizacionId);
                 return null;
             } catch (ReporteException e) {

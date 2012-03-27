@@ -68,10 +68,10 @@ public class FacturaAlmacen implements Serializable {
     @ManyToOne(optional = false)
     private Almacen almacen;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "date_created")
     private Date fechaCreacion;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "last_updated")
     private Date fechaModificacion;
     @OneToMany
     @JoinTable(name = "facturas_almacen_entradas", joinColumns = {

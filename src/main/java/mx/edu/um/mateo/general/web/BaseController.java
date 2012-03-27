@@ -192,7 +192,6 @@ public abstract class BaseController {
             byte[] archivo = null;
             switch (tipo) {
                 case "PDF":
-                    System.out.println("genera pdf");
                     archivo = generaPdf(lista, nombre, tipoReporte, id);
                     response.setContentType("application/pdf");
                     response.addHeader("Content-Disposition", "attachment; filename=" + nombre + ".pdf");

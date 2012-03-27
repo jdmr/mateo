@@ -21,43 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package mx.edu.um.mateo.inventario.model;
+package mx.edu.um.mateo.contabilidad.model;
 
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.*;
-import org.hibernate.validator.constraints.NotBlank;
+import mx.edu.um.mateo.general.model.Organizacion;
 
 /**
+ * NO UTILIZAR
+ * 
+ * Clase utilizada SOLO para migrar los activos, luego sera necesario hacer una
+ * reingenieria en donde se actualice este objeto por un departamento que este
+ * ligado a una CuentaMayor. Pero por ahora, migraremos con esta.
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
-@Table(name="tipos_producto", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"almacen_id", "nombre"})})
-public class TipoProducto implements Serializable {
+@Table(name = "cuentas")
+public class Cuenta implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Version
+    @Column(nullable = false)
     private Integer version;
-    @NotBlank
-    @Column(nullable = false, length = 32)
-    private String nombre;
-    @NotBlank
     @Column(nullable = false, length = 128)
+    private String nombre;
+    @Column(length = 128)
+    private String nombre2;
+    @Column(nullable = false, length = 200)
     private String descripcion;
+    @Column(nullable = false, name="nivel_id")
+    private Long nivel;
+    @Column(nullable = false)
+    private Boolean base = false;
+    @Column(nullable = false, name="centro_costo")
+    private Boolean centroCosto = false;
+    @Column(nullable = false, name="tiene_auxiliares")
+    private Boolean tieneAuxiliares = false;
     @ManyToOne(optional = false)
-    private Almacen almacen;
+    private Organizacion organizacion;
 
-    public TipoProducto() {
-    }
-
-    public TipoProducto(String nombre, String descripcion, Almacen almacen) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.almacen = almacen;
+    public Cuenta() {
     }
 
     /**
@@ -103,6 +110,20 @@ public class TipoProducto implements Serializable {
     }
 
     /**
+     * @return the nombre2
+     */
+    public String getNombre2() {
+        return nombre2;
+    }
+
+    /**
+     * @param nombre2 the nombre2 to set
+     */
+    public void setNombre2(String nombre2) {
+        this.nombre2 = nombre2;
+    }
+
+    /**
      * @return the descripcion
      */
     public String getDescripcion() {
@@ -117,17 +138,73 @@ public class TipoProducto implements Serializable {
     }
 
     /**
-     * @return the almacen
+     * @return the nivel
      */
-    public Almacen getAlmacen() {
-        return almacen;
+    public Long getNivel() {
+        return nivel;
     }
 
     /**
-     * @param almacen the almacen to set
+     * @param nivel the nivel to set
      */
-    public void setAlmacen(Almacen almacen) {
-        this.almacen = almacen;
+    public void setNivel(Long nivel) {
+        this.nivel = nivel;
+    }
+
+    /**
+     * @return the base
+     */
+    public Boolean getBase() {
+        return base;
+    }
+
+    /**
+     * @param base the base to set
+     */
+    public void setBase(Boolean base) {
+        this.base = base;
+    }
+
+    /**
+     * @return the centroCosto
+     */
+    public Boolean getCentroCosto() {
+        return centroCosto;
+    }
+
+    /**
+     * @param centroCosto the centroCosto to set
+     */
+    public void setCentroCosto(Boolean centroCosto) {
+        this.centroCosto = centroCosto;
+    }
+
+    /**
+     * @return the tieneAuxiliares
+     */
+    public Boolean getTieneAuxiliares() {
+        return tieneAuxiliares;
+    }
+
+    /**
+     * @param tieneAuxiliares the tieneAuxiliares to set
+     */
+    public void setTieneAuxiliares(Boolean tieneAuxiliares) {
+        this.tieneAuxiliares = tieneAuxiliares;
+    }
+
+    /**
+     * @return the organizacion
+     */
+    public Organizacion getOrganizacion() {
+        return organizacion;
+    }
+
+    /**
+     * @param organizacion the organizacion to set
+     */
+    public void setOrganizacion(Organizacion organizacion) {
+        this.organizacion = organizacion;
     }
 
     @Override
@@ -138,7 +215,7 @@ public class TipoProducto implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final TipoProducto other = (TipoProducto) obj;
+        final Cuenta other = (Cuenta) obj;
         if (!Objects.equals(this.nombre, other.nombre)) {
             return false;
         }
@@ -147,15 +224,15 @@ public class TipoProducto implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 37 * hash + Objects.hashCode(this.id);
-        hash = 37 * hash + Objects.hashCode(this.version);
-        hash = 37 * hash + Objects.hashCode(this.nombre);
+        int hash = 5;
+        hash = 53 * hash + Objects.hashCode(this.id);
+        hash = 53 * hash + Objects.hashCode(this.version);
+        hash = 53 * hash + Objects.hashCode(this.nombre);
         return hash;
     }
 
     @Override
     public String toString() {
-        return "TipoProducto{" + "id=" + id + ", nombre=" + nombre + '}';
+        return "Cuenta{" + "nombre=" + nombre + '}';
     }
 }
