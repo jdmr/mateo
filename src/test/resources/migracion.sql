@@ -235,5 +235,10 @@ begin;
 -- drop table usuarios_usuarios cascade;
 -- drop table rol cascade;
 -- drop table usuario cascade;
+update estatus set nombre = 'ABIERTA', prioridad = 100 where nombre='estatus.abierta';
+update estatus set nombre = 'PENDIENTE', prioridad = 200 where nombre='estatus.pendiente';
+update estatus set nombre = 'CERRADA', prioridad = 300 where nombre='estatus.cerrada';
+update estatus set nombre = 'FACTURADA', prioridad = 400 where nombre='estatus.facturada';
+update estatus set nombre = 'CANCELADA', prioridad = 500 where nombre='estatus.cancelada';
 
 commit;

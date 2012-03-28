@@ -88,6 +88,9 @@ public abstract class BaseController {
         long i = 1;
         do {
             paginas.add(i);
+            if (i >= 10) {
+                break;
+            }
         } while (i++ < cantidadDePaginas);
         List<Usuario> usuarios = (List<Usuario>) params.get(lista);
         Long primero = ((pagina - 1) * max) + 1;
@@ -241,7 +244,7 @@ public abstract class BaseController {
 
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setTo(ambiente.obtieneUsuario().getUsername());
+            helper.setTo(ambiente.obtieneUsuario().getCorreo());
             String titulo = messageSource.getMessage(nombre +".reporte.label", null, request.getLocale());
             helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
             helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);

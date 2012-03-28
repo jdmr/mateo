@@ -75,6 +75,9 @@ public class OrganizacionController extends BaseController {
             params.put("order", order);
             params.put("sort", sort);
         }
+        if (pagina != null) {
+            params.put("pagina", pagina);
+        }
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put("reporte", true);

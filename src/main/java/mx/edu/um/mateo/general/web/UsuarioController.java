@@ -92,6 +92,9 @@ public class UsuarioController extends BaseController {
             params.put("order", order);
             params.put("sort", sort);
         }
+        if (pagina != null) {
+            params.put("pagina", pagina);
+        }
 
         params.put("empresa", request.getSession().getAttribute("empresaId"));
 
@@ -177,7 +180,7 @@ public class UsuarioController extends BaseController {
 
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setTo(usuario.getUsername());
+            helper.setTo(usuario.getCorreo());
             helper.setSubject(messageSource.getMessage("envia.correo.password.titulo.message", new String[]{}, request.getLocale()));
             helper.setText(messageSource.getMessage("envia.correo.password.contenido.message", new String[]{usuario.getNombre(), usuario.getUsername(), password}, request.getLocale()), true);
             mailSender.send(message);
