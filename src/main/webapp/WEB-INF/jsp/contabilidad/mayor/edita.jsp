@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="cuentaMayor.edita.label" /></title>
+        <title><s:message code="mayores.edita.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -19,9 +19,9 @@
         </jsp:include>
 
         <div id="edita-mayor" class="content scaffold-list" role="main">
-            <h1><s:message code="cuentaMayor.edita.label" /></h1>
+            <h1><s:message code="mayores.edita.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/contabilidad/mayor'/>"><i class="icon-list icon-white"></i> <s:message code='cuentaMayor.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/mayor'/>"><i class="icon-list icon-white"></i> <s:message code='mayores.lista.label' /></a>
             </p>
             <c:url var="actualizaUrl" value="/contabilidad/mayor/actualiza" />
             <form:form commandName="mayor" method="post" action="${actualizaUrl}">

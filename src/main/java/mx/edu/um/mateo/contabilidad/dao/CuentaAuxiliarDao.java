@@ -1,13 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mx.edu.um.mateo.contabilidad.dao;
 
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.model.CuentaAuxiliar;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -101,21 +98,32 @@ public class CuentaAuxiliarDao {
     }
 
     public CuentaAuxiliar crea(CuentaAuxiliar cuentaAuxiliar) {
+        return crea(cuentaAuxiliar, null);
+    }
+
+    public CuentaAuxiliar crea(CuentaAuxiliar cuentaAuxiliar, Usuario usuario) {
         log.debug("Creando cuenta de auxiliar : {}", cuentaAuxiliar);
+        if (usuario != null) {
+            cuentaAuxiliar.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+        }
         currentSession().save(cuentaAuxiliar);
         currentSession().flush();
         return cuentaAuxiliar;
     }
 
     public CuentaAuxiliar actualiza(CuentaAuxiliar cuentaAuxiliar) {
+        return actualiza(cuentaAuxiliar, null);
+    }
+
+    public CuentaAuxiliar actualiza(CuentaAuxiliar cuentaAuxiliar, Usuario usuario) {
         log.debug("Actualizando cuenta de auxiliar {}", cuentaAuxiliar);
         
-        //trae el objeto de la DB 
         CuentaAuxiliar nueva = (CuentaAuxiliar)currentSession().get(CuentaAuxiliar.class, cuentaAuxiliar.getId());
-        //actualiza el objeto
         BeanUtils.copyProperties(cuentaAuxiliar, nueva);
-        //lo guarda en la BD
         
+        if (usuario != null) {
+            nueva.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+        }
         currentSession().update(nueva);
         currentSession().flush();
         return nueva;

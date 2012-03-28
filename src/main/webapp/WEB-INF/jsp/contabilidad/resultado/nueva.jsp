@@ -1,7 +1,7 @@
 <%-- 
-    Document   : nueva
-    Created on : Mar 12, 2012, 9:16:33 AM
-    Author     : develop
+    Document   : nuevo
+    Created on : Jan 27, 2012, 10:37:52 AM
+    Author     : jdmr
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -11,21 +11,17 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="cuentaResultado.nueva.label" /></title>
+        <title><s:message code="resultados.nueva.label" /></title>
     </head>
     <body>
-        <nav class="navbar navbar-fixed-top" role="navigation">
-            <ul class="nav">
-                <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
-                <li class="active"><a href="<s:url value='/contabilidad/resultado'/>" ><s:message code="cuentaResultado.label" /></a></li>
-            </ul>
-        </nav>
+        <jsp:include page="../menu.jsp" >
+            <jsp:param name="menu" value="resultado" />
+        </jsp:include>
 
         <div id="nueva-resultado" class="content scaffold-list" role="main">
-            <h1><s:message code="cuentaResultado.nueva.label" /></h1>
+            <h1><s:message code="resultados.nueva.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/contabilidad/resultado'/>"><i class="icon-list icon-white"></i> <s:message code='cuentaResultado.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/resultado'/>"><i class="icon-list icon-white"></i> <s:message code='resultados.lista.label' /></a>
             </p>
             <form:form commandName="resultado" action="crea" method="post">
                 <form:errors path="*">
@@ -58,6 +54,66 @@
                             <form:errors path="nombreFiscal" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
+                    <s:bind path="resultado.clave">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="clave">
+                                <s:message code="clave.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="clave" maxlength="128" required="true" />
+                            <form:errors path="clave" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="resultado.detalle">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="detalle">
+                                <s:message code="detalle.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:checkbox path="detalle" cssClass="span3" />
+                            <form:errors path="detalle" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="resultado.aviso">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="aviso">
+                                <s:message code="aviso.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:checkbox path="aviso" cssClass="span3" />
+                            <form:errors path="aviso" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="resultado.auxiliar">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="auxiliar">
+                                <s:message code="auxiliar.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:checkbox path="auxiliar" cssClass="span3" />
+                            <form:errors path="auxiliar" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="resultado.iva">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="iva">
+                                <s:message code="iva.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:checkbox path="iva" cssClass="span3" />
+                            <form:errors path="iva" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="resultado.porcentajeIva">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="porcentajeIva">
+                                <s:message code="porcentajeIva.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="porcentajeIva" maxlength="128" required="true" />
+                            <form:errors path="porcentajeIva" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
@@ -75,4 +131,3 @@
         </content>
     </body>
 </html>
-

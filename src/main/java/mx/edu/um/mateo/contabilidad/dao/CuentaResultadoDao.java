@@ -1,15 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mx.edu.um.mateo.contabilidad.dao;
 
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
-import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.contabilidad.model.CuentaResultado;
-import mx.edu.um.mateo.general.dao.EmpresaDao;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -24,18 +19,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author semdariobarbaamaya
+ * @author nujev
  */
 @Repository
 @Transactional
 public class CuentaResultadoDao {
 
-    private static final Logger log = LoggerFactory.getLogger(EmpresaDao.class);
+    private static final Logger log = LoggerFactory.getLogger(CuentaResultadoDao.class);
     @Autowired
     private SessionFactory sessionFactory;
 
     public CuentaResultadoDao() {
-        log.info("Nueva instancia de CtaResultadoDao");
+        log.info("Nueva instancia de CuentaResultadoDao");
     }
 
     private Session currentSession() {
@@ -43,7 +38,7 @@ public class CuentaResultadoDao {
     }
 
     public Map<String, Object> lista(Map<String, Object> params) {
-        log.debug("Buscando lista de cuentaResultado con params {}", params);
+        log.debug("Buscando lista de cuenta de resultado con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
@@ -83,6 +78,7 @@ public class CuentaResultadoDao {
                 criteria.addOrder(Order.asc(campo));
             }
         }
+
         if (!params.containsKey(Constantes.CONTAINSKEY_REPORTE)) {
             criteria.setFirstResult((Integer) params.get(Constantes.CONTAINSKEY_OFFSET));
             criteria.setMaxResults((Integer) params.get(Constantes.CONTAINSKEY_MAX));
@@ -96,30 +92,49 @@ public class CuentaResultadoDao {
     }
 
     public CuentaResultado obtiene(Long id) {
+        log.debug("Obtiene cuenta de resultado con id = {}", id);
         CuentaResultado cuentaResultado = (CuentaResultado) currentSession().get(CuentaResultado.class, id);
         return cuentaResultado;
     }
 
     public CuentaResultado crea(CuentaResultado cuentaResultado) {
+        return crea(cuentaResultado, null);
+    }
+
+    public CuentaResultado crea(CuentaResultado cuentaResultado, Usuario usuario) {
+        log.debug("Creando cuenta de resultado : {}", cuentaResultado);
+        if (usuario != null) {
+            cuentaResultado.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+        }
         currentSession().save(cuentaResultado);
         currentSession().flush();
         return cuentaResultado;
-
     }
 
     public CuentaResultado actualiza(CuentaResultado cuentaResultado) {
-        currentSession().saveOrUpdate(cuentaResultado);
+        return actualiza(cuentaResultado, null);
+    }
+
+    public CuentaResultado actualiza(CuentaResultado cuentaResultado, Usuario usuario) {
+        log.debug("Actualizando cuenta de resultado {}", cuentaResultado);
+        
         CuentaResultado nueva = (CuentaResultado)currentSession().get(CuentaResultado.class, cuentaResultado.getId());
-          currentSession().update(nueva);
+        BeanUtils.copyProperties(cuentaResultado, nueva);
+        
+        if (usuario != null) {
+            nueva.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+        }
+        currentSession().update(nueva);
         currentSession().flush();
-        return cuentaResultado;
+        return nueva;
     }
 
     public String elimina(Long id) throws UltimoException {
-        CuentaResultado cuentaresultado = obtiene(id);
-        currentSession().delete(cuentaresultado);
-         currentSession().flush();
-        String nombre = cuentaresultado.getNombre();
+        log.debug("Eliminando cuenta de resultado con id {}", id);
+        CuentaResultado cuentaResultado = obtiene(id);
+        currentSession().delete(cuentaResultado);
+        currentSession().flush();
+        String nombre = cuentaResultado.getNombre();
         return nombre;
     }
 }

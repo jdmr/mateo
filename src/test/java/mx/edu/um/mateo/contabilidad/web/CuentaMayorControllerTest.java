@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package mx.edu.um.mateo.contabilidad.web;
 
 import java.math.BigDecimal;
@@ -112,12 +116,14 @@ public class CuentaMayorControllerTest extends BaseTest {
                 get(Constantes.PATH_CUENTA_MAYOR_VER + "/" + cuentaMayor.getId()))
                 .andExpect(status().isOk())
                 .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_CUENTA_MAYOR_VER + ".jsp"))
-                .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_MAYOR));
+                .andExpect(model()
+                .attributeExists(Constantes.ADDATTRIBUTE_MAYOR));
     }
 
     @Test
     public void debieraCrearCuentaMayor() throws Exception {
         log.debug("Debiera crear cuenta de mayor");
+        
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
         currentSession().save(organizacion);
         Empresa otraEmpresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
@@ -149,12 +155,14 @@ public class CuentaMayorControllerTest extends BaseTest {
                 .andExpect(status().isOk())
                 .andExpect(flash()
                 .attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.creada.message"));
+                .andExpect(flash()
+                .attribute(Constantes.CONTAINSKEY_MESSAGE, "mayores.creada.message"));
     }
 
     @Test
     public void debieraActualizarCuentaMayor() throws Exception {
         log.debug("Debiera actualizar cuenta de mayor");
+        
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
         currentSession().save(organizacion);
         Empresa otraEmpresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
@@ -177,12 +185,27 @@ public class CuentaMayorControllerTest extends BaseTest {
         cuentaMayor = cuentaMayorDao.crea(cuentaMayor);
         assertNotNull(cuentaMayor);
 
-        this.mockMvc.perform(post(Constantes.PATH_CUENTA_MAYOR_ACTUALIZA).param("id", cuentaMayor.getId().toString()).param("version", cuentaMayor.getVersion().toString()).param("nombre", "test1").param("nombreFiscal", cuentaMayor.getNombreFiscal()).param("clave", cuentaMayor.getClave()).param("detalle", cuentaMayor.getDetalle().toString()).param("aviso", cuentaMayor.getAviso().toString()).param("auxiliar", cuentaMayor.getAuxiliar().toString()).param("iva", cuentaMayor.getIva().toString()).param("pctIva", cuentaMayor.getPorcentajeIva().toString())).andExpect(status().isOk()).andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE)).andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.actualizada.message"));
+        this.mockMvc.perform(
+                post(Constantes.PATH_CUENTA_MAYOR_ACTUALIZA)
+                .param("id", cuentaMayor.getId().toString())
+                .param("version", cuentaMayor.getVersion().toString())
+                .param("nombre", "test1")
+                .param("nombreFiscal", cuentaMayor.getNombreFiscal())
+                .param("clave", cuentaMayor.getClave())
+                .param("detalle", cuentaMayor.getDetalle().toString())
+                .param("aviso", cuentaMayor.getAviso().toString())
+                .param("auxiliar", cuentaMayor.getAuxiliar().toString())
+                .param("iva", cuentaMayor.getIva().toString())
+                .param("pctIva", cuentaMayor.getPorcentajeIva().toString()))
+                .andExpect(status().isOk())
+                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "mayores.actualizada.message"));
     }
 
     @Test
     public void debieraEliminarCtaMayor() throws Exception {
         log.debug("Debiera eliminar cuenta de mayor");
+        
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
         currentSession().save(organizacion);
         Empresa otraEmpresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
@@ -205,6 +228,13 @@ public class CuentaMayorControllerTest extends BaseTest {
         cuentaMayorDao.crea(cuentaMayor);
         assertNotNull(cuentaMayor);
 
-        this.mockMvc.perform(post(Constantes.PATH_CUENTA_MAYOR_ELIMINA).param("id", cuentaMayor.getId().toString())).andExpect(status().isOk()).andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE)).andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaMayor.eliminada.message"));
+        this.mockMvc.perform(post(
+                Constantes.PATH_CUENTA_MAYOR_ELIMINA)
+                .param("id", cuentaMayor.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(flash()
+                .attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash()
+                .attribute(Constantes.CONTAINSKEY_MESSAGE, "mayores.eliminada.message"));
     }
 }

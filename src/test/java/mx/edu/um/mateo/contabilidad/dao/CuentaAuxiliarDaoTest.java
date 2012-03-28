@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.model.CuentaAuxiliar;
+import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import org.hibernate.Session;
@@ -49,8 +50,11 @@ public class CuentaAuxiliarDaoTest extends BaseTest {
     public void deberiaMostrarListaDeCuentaAuxiliar() {
         log.debug("Debiera mostrar lista de cuentaAuxiliar");
 
+        Organizacion test = new Organizacion("TST-01", "TEST--01", "TEST--01");
+        currentSession().save(test);
         for (int i = 0; i < 20; i++) {
-            CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test" + i, "test", "test",false,false,false,false,BigDecimal.ZERO);
+            CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test" + i, "test", "test", false, false, false, false, BigDecimal.ZERO);
+            cuentaAuxiliar.setOrganizacion(test);
             currentSession().save(cuentaAuxiliar);
             assertNotNull(cuentaAuxiliar);
         }
@@ -69,7 +73,10 @@ public class CuentaAuxiliarDaoTest extends BaseTest {
         log.debug("Debiera obtener cuentaAuxiliar");
 
         String nombre = "test";
-        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,BigDecimal.ZERO);
+        Organizacion test = new Organizacion("TST-01", "TEST--01", "TEST--01");
+        currentSession().save(test);
+        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test", false, false, false, false, BigDecimal.ZERO);
+        cuentaAuxiliar.setOrganizacion(test);
         currentSession().save(cuentaAuxiliar);
         assertNotNull(cuentaAuxiliar.getId());
         Long id = cuentaAuxiliar.getId();
@@ -85,7 +92,10 @@ public class CuentaAuxiliarDaoTest extends BaseTest {
     public void deberiaCrearCuentaAuxiliar() {
         log.debug("Deberia crear CuentaAuxiliar");
 
-        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,BigDecimal.ZERO);
+        Organizacion test = new Organizacion("TST-01", "TEST--01", "TEST--01");
+        currentSession().save(test);
+        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test", false, false, false, false, BigDecimal.ZERO);
+        cuentaAuxiliar.setOrganizacion(test);
         assertNotNull(cuentaAuxiliar);
 
         CuentaAuxiliar cuentaAuxiliar2 = instance.crea(cuentaAuxiliar);
@@ -99,7 +109,10 @@ public class CuentaAuxiliarDaoTest extends BaseTest {
     public void deberiaActualizarCuentaAuxiliar() {
         log.debug("Deberia actualizar CuentaAuxiliar");
 
-        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,BigDecimal.ZERO);
+        Organizacion test = new Organizacion("TST-01", "TEST--01", "TEST--01");
+        currentSession().save(test);
+        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test", false, false, false, false, BigDecimal.ZERO);
+        cuentaAuxiliar.setOrganizacion(test);
         assertNotNull(cuentaAuxiliar);
         currentSession().save(cuentaAuxiliar);
 
@@ -118,7 +131,10 @@ public class CuentaAuxiliarDaoTest extends BaseTest {
         log.debug("Debiera eliminar CuentaAuxiliar");
 
         String nom = "test";
-        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test",false,false,false,false,BigDecimal.ZERO);
+        Organizacion test = new Organizacion("TST-01", "TEST--01", "TEST--01");
+        currentSession().save(test);
+        CuentaAuxiliar cuentaAuxiliar = new CuentaAuxiliar("test", "test", "test", false, false, false, false, BigDecimal.ZERO);
+        cuentaAuxiliar.setOrganizacion(test);
         currentSession().save(cuentaAuxiliar);
         assertNotNull(cuentaAuxiliar);
 
