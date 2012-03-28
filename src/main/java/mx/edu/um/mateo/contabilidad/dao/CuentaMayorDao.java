@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class CuentaMayorDao {
+public class CuentaMayorDao {   
 
     private static final Logger log = LoggerFactory.getLogger(CuentaMayorDao.class);
     @Autowired

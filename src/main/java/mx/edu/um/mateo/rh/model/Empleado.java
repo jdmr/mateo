@@ -19,6 +19,8 @@ public class Empleado implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Version
+    private Integer version;
     @NotBlank
     @Column(nullable = false, length = 10)
     private String clave;
@@ -40,17 +42,19 @@ public class Empleado implements Serializable {
     @NotBlank
     @Column(nullable = false, length = 2)
     private String status;
-    @Version
-    private Integer version;
+   
 
     public Empleado() {
     }
 
-    public Empleado(String clave, String nombre, String apPaterno, String apMaterno) {
+    public Empleado(String clave, String nombre, String apPaterno, String apMaterno, String genero, String direccion, String status) {
         this.clave = clave;
         this.nombre = nombre;
         this.apPaterno = apPaterno;
         this.apMaterno = apMaterno;
+        this.genero = genero;
+        this.direccion = direccion;
+        this.status = status;
     }
 
     public String getApMaterno() {
@@ -149,10 +153,3 @@ public class Empleado implements Serializable {
         return "Empleado{ id= " + id + ", nombre=" + nombre + ", status=" + status + '}';
     }
 }
-//    private Set comunicaciones;
-//    private Set puestos;
-//    private Set dependientes;
-//    private Set perDeds;
-//    private Set regsPatronales;
-//    private Set vacaciones;
-//    private Set estudios;

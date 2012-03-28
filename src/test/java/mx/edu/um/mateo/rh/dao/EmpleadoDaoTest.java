@@ -4,11 +4,16 @@
  */
 package mx.edu.um.mateo.rh.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import mx.edu.um.mateo.Constantes;
+import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.rh.model.Empleado;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.junit.*;
 import static org.junit.Assert.*;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import mx.edu.um.mateo.general.model.Empresa;
 
 /**
  *
@@ -54,12 +55,12 @@ public class EmpleadoDaoTest {
 
         Map<String, Object> params = null;
         Map result = instance.lista(params);
-        assertNotNull(result.get("empleado"));
-        assertNotNull(result.get("cantidad"));
+        assertNotNull(result.get(Constantes.CONTAINSKEY_EMPLEADOS));
+        assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
 
-        assertEquals(1, ((List<Empresa>) result.get("empleado")).size());
-        assertEquals(1, ((Long) result.get("cantidad")).intValue());
-
+        assertEquals(1, ((List<Empresa>) result.get(Constantes.CONTAINSKEY_EMPLEADOS)).size());
+        assertEquals(1, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
+        
     }
 
     /**
@@ -71,11 +72,11 @@ public class EmpleadoDaoTest {
         List<Empleado> lista = insertaEmpleados(1);
         Map<String, Object> params = null;
         Map result = instance.lista(params);
-        assertNotNull(result.get("empleado"));
-        assertNotNull(result.get("cantidad"));
+        assertNotNull(result.get(Constantes.CONTAINSKEY_EMPLEADOS));
+        assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
 
-        assertEquals(1, ((List<Empresa>) result.get("empleado")).size());
-        assertEquals(1, ((Long) result.get("cantidad")).intValue());
+        assertEquals(1, ((List<Empresa>) result.get(Constantes.CONTAINSKEY_EMPLEADOS)).size());
+        assertEquals(1, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
 
     /**
@@ -83,7 +84,7 @@ public class EmpleadoDaoTest {
      */
     @Test
     public void testActualiza() {
-        log.debug("Deberia actualizar empleado");
+        log.debug("Deberia actualizar empleados");
         List<Empleado> lista = insertaEmpleados(1);
         log.debug("lista"+lista.size());
         Empleado empleado = lista.get(0);
@@ -91,7 +92,7 @@ public class EmpleadoDaoTest {
         empleado.setNombre("Juan1");
 
         empleado = instance.actualiza(empleado);
-        log.debug("empleado >>" + empleado);
+        log.debug("empleados >>" + empleado);
         assertEquals("Juan1", empleado.getNombre());
     }
 
