@@ -71,7 +71,9 @@ public class PerfilController {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
         Long almacenId = new Long(request.getParameter("almacen.id"));
+        String password = request.getParameter("password");
         Usuario usuario = ambiente.obtieneUsuario();
+        usuario.setPassword(password);
         usuarioDao.asignaAlmacen(usuario, almacenId);
         ambiente.actualizaSesion(request);
 

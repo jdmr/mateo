@@ -26,6 +26,8 @@ package mx.edu.um.mateo.general.service;
 import java.util.List;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Usuario;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,10 +75,12 @@ public class UserDetailsServiceImpl implements UserDetailsService, Authenticatio
                 }
             }
             log.debug("Buscando por email {}", email);
-            usuario = usuarioDao.obtiene(email);
+            usuario = usuarioDao.obtienePorCorreo(email);
             if (usuario == null) {
                 throw new UsernameNotFoundException("No se encontro al usuario " + username);
             }
+            usuario.setOpenId(username);
+            usuarioDao.actualiza(usuario);
         }
         log.debug("Regresando usuario: {}", usuario);
         return (UserDetails) usuario;

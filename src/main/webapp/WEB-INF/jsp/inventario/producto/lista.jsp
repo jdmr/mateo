@@ -117,7 +117,17 @@
                             <td>${producto.marca}</td>
                             <td>${producto.modelo}</td>
                             <td>${producto.ubicacion}</td>
-                            <td style="text-align:right;">${producto.existencia} ${producto.unidadMedida}</td>
+                            <td style="text-align:right;">
+                                <c:choose>
+                                    <c:when test="${producto.fraccion}">
+                                        ${producto.existencia}
+                                    </c:when>
+                                    <c:otherwise>
+                                        <fmt:formatNumber value="${producto.existencia}" minFractionDigits="0" maxFractionDigits="0" />
+                                    </c:otherwise>
+                                </c:choose>
+                                &nbsp;${producto.unidadMedida}
+                            </td>
                             <td style="text-align:right;">${producto.precioUnitario}</td>
                             <td style="text-align:center;"><input type="checkbox" value="" disabled="true" <c:if test="${producto.fraccion}">checked="checked"</c:if> /></td>
                             <td>${producto.almacen.nombre}</td>

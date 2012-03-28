@@ -64,6 +64,16 @@
                             <form:errors path="apellido" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
+                    <s:bind path="usuario.correo">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="correo">
+                                <s:message code="correo.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="correo" required="true" type="email" />
+                            <form:errors path="correo" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
                     <s:bind path="usuario.roles">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="roles">
