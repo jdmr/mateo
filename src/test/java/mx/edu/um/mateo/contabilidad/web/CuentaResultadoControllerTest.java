@@ -156,7 +156,7 @@ public class CuentaResultadoControllerTest extends BaseTest {
                 .andExpect(flash()
                 .attributeExists(Constantes.CONTAINSKEY_MESSAGE))
                 .andExpect(flash()
-                .attribute(Constantes.CONTAINSKEY_MESSAGE, "resultadoes.creada.message"));
+                .attribute(Constantes.CONTAINSKEY_MESSAGE, "resultados.creada.message"));
     }
 
     @Test
@@ -199,7 +199,7 @@ public class CuentaResultadoControllerTest extends BaseTest {
                 .param("pctIva", cuentaResultado.getPorcentajeIva().toString()))
                 .andExpect(status().isOk())
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "resultadoes.actualizada.message"));
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "resultados.actualizada.message"));
     }
 
     @Test
@@ -235,6 +235,6 @@ public class CuentaResultadoControllerTest extends BaseTest {
                 .andExpect(flash()
                 .attributeExists(Constantes.CONTAINSKEY_MESSAGE))
                 .andExpect(flash()
-                .attribute(Constantes.CONTAINSKEY_MESSAGE, "resultadoes.eliminada.message"));
+                .attribute(Constantes.CONTAINSKEY_MESSAGE, "resultados.eliminada.message"));
     }
 }

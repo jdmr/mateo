@@ -53,7 +53,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author jdmr
  */
 @Controller
-@RequestMapping(Constantes.PATH_CUENTA_MAYOR)
+@RequestMapping(Constantes.PATH_CUENTA_RESULTADO)
 public class CuentaResultadoController extends BaseController {
 
     @Autowired
@@ -115,7 +115,7 @@ public class CuentaResultadoController extends BaseController {
 
         this.pagina(params, modelo, Constantes.CONTAINSKEY_RESULTADOS, pagina);
 
-        return Constantes.PATH_CUENTA_MAYOR_LISTA;
+        return Constantes.PATH_CUENTA_RESULTADO_LISTA;
     }
 
     @RequestMapping("/ver/{id}")
@@ -123,17 +123,17 @@ public class CuentaResultadoController extends BaseController {
         log.debug("Mostrando cuenta de resultado {}", id);
         CuentaResultado resultado = cuentaResultadoDao.obtiene(id);
 
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_MAYOR, resultado);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_RESULTADO, resultado);
 
-        return Constantes.PATH_CUENTA_MAYOR_VER;
+        return Constantes.PATH_CUENTA_RESULTADO_VER;
     }
 
     @RequestMapping("/nueva")
     public String nueva(Model modelo) {
         log.debug("Nueva cuenta de resultado");
         CuentaResultado resultado = new CuentaResultado();
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_MAYOR, resultado);
-        return Constantes.PATH_CUENTA_MAYOR_NUEVA;
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_RESULTADO, resultado);
+        return Constantes.PATH_CUENTA_RESULTADO_NUEVA;
     }
 
     @Transactional
@@ -144,28 +144,28 @@ public class CuentaResultadoController extends BaseController {
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
-            return Constantes.PATH_CUENTA_MAYOR_NUEVA;
+            return Constantes.PATH_CUENTA_RESULTADO_NUEVA;
         }
 
         try {
             resultado = cuentaResultadoDao.crea(resultado, ambiente.obtieneUsuario());
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la cuenta de resultado", e);
-            return Constantes.PATH_CUENTA_MAYOR_NUEVA;
+            return Constantes.PATH_CUENTA_RESULTADO_NUEVA;
         }
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "resultados.creada.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{resultado.getNombre()});
 
-        return "redirect:" + Constantes.PATH_CUENTA_MAYOR_VER + "/" + resultado.getId();
+        return "redirect:" + Constantes.PATH_CUENTA_RESULTADO_VER + "/" + resultado.getId();
     }
 
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Editar cuenta de resultado {}", id);
         CuentaResultado resultado = cuentaResultadoDao.obtiene(id);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_MAYOR, resultado);
-        return Constantes.PATH_CUENTA_MAYOR_EDITA;
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_RESULTADO, resultado);
+        return Constantes.PATH_CUENTA_RESULTADO_EDITA;
     }
 
     @Transactional
@@ -173,19 +173,19 @@ public class CuentaResultadoController extends BaseController {
     public String actualiza(HttpServletRequest request, @Valid CuentaResultado resultado, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
-            return Constantes.PATH_CUENTA_MAYOR_EDITA;
+            return Constantes.PATH_CUENTA_RESULTADO_EDITA;
         }
         try {
             resultado = cuentaResultadoDao.actualiza(resultado, ambiente.obtieneUsuario());
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la cuenta de resultado", e);
-            return Constantes.PATH_CUENTA_MAYOR_NUEVA;
+            return Constantes.PATH_CUENTA_RESULTADO_NUEVA;
         }
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "resultados.actualizada.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{resultado.getNombre()});
 
-        return "redirect:" + Constantes.PATH_CUENTA_MAYOR_VER + "/" + resultado.getId();
+        return "redirect:" + Constantes.PATH_CUENTA_RESULTADO_VER + "/" + resultado.getId();
     }
 
     @Transactional
@@ -199,10 +199,10 @@ public class CuentaResultadoController extends BaseController {
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
         } catch (Exception e) {
             log.error("No se pudo eliminar la cuenta de resultado " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_MAYOR, new String[]{"resultados.no.eliminada.message"}, null, null));
-            return Constantes.PATH_CUENTA_MAYOR_VER;
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_RESULTADO, new String[]{"resultados.no.eliminada.message"}, null, null));
+            return Constantes.PATH_CUENTA_RESULTADO_VER;
         }
 
-        return "redirect:" + Constantes.PATH_CUENTA_MAYOR;
+        return "redirect:" + Constantes.PATH_CUENTA_RESULTADO;
     }
 }
