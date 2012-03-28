@@ -45,7 +45,6 @@ public class Usuario implements Serializable, UserDetails {
     private Long id;
     @Version
     private Integer version;
-    @Email
     @NotEmpty
     @Column(unique = true, nullable = false, length = 128)
     private String username;
@@ -67,6 +66,10 @@ public class Usuario implements Serializable, UserDetails {
     @NotEmpty
     @Column(nullable = false, length = 128)
     private String apellido;
+    @Email
+    @NotEmpty
+    @Column(nullable = false, name = "correo")
+    private String correo;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usuarios_roles", joinColumns = {
         @JoinColumn(name = "usuario_id")}, inverseJoinColumns =
@@ -85,6 +88,15 @@ public class Usuario implements Serializable, UserDetails {
         this.password = password;
         this.nombre = nombre;
         this.apellido = apellido;
+        this.correo = "test@test.com";
+    }
+
+    public Usuario(String username, String password, String nombre, String apellido, String correo) {
+        this.username = username;
+        this.password = password;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.correo = correo;
     }
 
     /**
@@ -202,9 +214,23 @@ public class Usuario implements Serializable, UserDetails {
     }
 
     /**
+     * @return the correo
+     */
+    public String getCorreo() {
+        return correo;
+    }
+
+    /**
+     * @param correo the correo to set
+     */
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    /**
      * Agrega un rol a la lista de roles
-     * 
-     * @param rol 
+     *
+     * @param rol
      */
     public void addRol(Rol rol) {
         this.getRoles().add(rol);

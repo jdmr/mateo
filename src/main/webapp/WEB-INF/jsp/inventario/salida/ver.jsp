@@ -109,7 +109,17 @@
                                 <c:forEach items="${salida.lotes}" var="lote" varStatus="status">
                                     <tr>
                                         <td>${lote.producto.nombre}</td>
-                                        <td style="text-align: right;">${lote.cantidad}</td>
+                                        <td style="text-align: right;">
+                                            <c:choose>
+                                                <c:when test="${!lote.producto.fraccion}">
+                                                    <fmt:formatNumber value="${lote.cantidad}" minFractionDigits="0" maxFractionDigits="0" groupingUsed="true" />
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${lote.cantidad} 
+                                                </c:otherwise>
+                                            </c:choose>
+                                            &nbsp;${lote.producto.unidadMedida}
+                                        </td>
                                         <td style="text-align: right;">${lote.precioUnitario}</td>
                                         <td style="text-align: right;">${lote.iva}</td>
                                         <td style="text-align: right;">${lote.total}</td>

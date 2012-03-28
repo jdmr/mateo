@@ -47,6 +47,16 @@
                             <form:errors path="almacen" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
+                    <s:bind path="usuario.password">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="password">
+                                <s:message code="password.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:password path="password" required="true" showPassword="true" />
+                            <form:errors path="password" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">

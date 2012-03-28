@@ -130,10 +130,17 @@ public class UsuarioDao {
         return (Usuario) query.uniqueResult();
     }
 
-    public Usuario obtienePorOpenId(String username) {
-        log.debug("Buscando usuario por openId {}", username);
-        Query query = currentSession().createQuery("select u from Usuario u where u.openId = :username");
-        query.setString("username", username);
+    public Usuario obtienePorOpenId(String openId) {
+        log.debug("Buscando usuario por openId {}", openId);
+        Query query = currentSession().createQuery("select u from Usuario u where u.openId = :openId");
+        query.setString("openId", openId);
+        return (Usuario) query.uniqueResult();
+    }
+
+    public Usuario obtienePorCorreo(String correo) {
+        log.debug("Buscando usuario por correo {}", correo);
+        Query query = currentSession().createQuery("select u from Usuario u where u.correo = :correo");
+        query.setString("correo", correo);
         return (Usuario) query.uniqueResult();
     }
 
@@ -187,6 +194,11 @@ public class UsuarioDao {
         return nuevoUsuario;
     }
 
+    public void actualiza(Usuario usuario) {
+        currentSession().update(usuario);
+        currentSession().flush();
+    }
+    
     public String elimina(Long id) throws UltimoException {
         Usuario usuario = obtiene(id);
         Criteria criteria = currentSession().createCriteria(Usuario.class);
@@ -235,11 +247,16 @@ public class UsuarioDao {
         Almacen almacen = (Almacen) currentSession().get(Almacen.class, almacenId);
         if (almacen != null) {
             log.debug("Asignando {} a usuario {}", almacen, usuario);
+            String password = usuario.getPassword();
             currentSession().refresh(usuario);
+            if (!password.equals(usuario.getPassword())) {
+                usuario.setPassword(passwordEncoder.encodePassword(password, usuario.getUsername()));
+            }
             usuario.setAlmacen(almacen);
             usuario.setEmpresa(almacen.getEmpresa());
             currentSession().update(usuario);
             currentSession().flush();
         }
     }
+
 }

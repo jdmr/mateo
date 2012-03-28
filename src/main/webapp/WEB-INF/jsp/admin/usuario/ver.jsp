@@ -58,6 +58,13 @@
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span8">
+                        <h4><s:message code="correo.label" /></h4>
+                        <h3>${usuario.correo}</h3>
+                    </div>
+                </div>
+
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span8">
                         <h4><s:message code="empresa.label" /></h4>
                         <h3>${usuario.empresa.nombre}</h3>
                     </div>
