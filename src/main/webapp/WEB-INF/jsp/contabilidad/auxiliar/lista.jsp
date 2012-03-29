@@ -4,14 +4,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="cuentaAuxiliar.lista.label" /></title>
+        <title><s:message code="auxiliares.lista.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
             <jsp:param name="menu" value="auxiliar" />
         </jsp:include>
 
-        <h1><s:message code="cuentaAuxiliar.lista.label" /></h1>
+        <h1><s:message code="auxiliares.lista.label" /></h1>
         <hr/>
 
         <form name="filtraLista" class="form-search" method="post" action="<c:url value='/contabilidad/auxiliar' />">
@@ -21,7 +21,7 @@
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/contabilidad/auxiliar/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='cuentaAuxiliar.nueva.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/auxiliar/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='auxiliares.nueva.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
@@ -34,16 +34,16 @@
             <c:if test="${auxiliar != null}">
                 <s:bind path="auxiliar.*">
                     <c:if test="${not empty status.errorMessages}">
-                    <div class="alert alert-block alert-error fade in" role="status">
-                        <a class="close" data-dismiss="alert">×</a>
-                        <c:forEach var="error" items="${status.errorMessages}">
-                            <c:out value="${error}" escapeXml="false"/><br />
-                        </c:forEach>
-                    </div>
+                        <div class="alert alert-block alert-error fade in" role="status">
+                            <a class="close" data-dismiss="alert">×</a>
+                            <c:forEach var="error" items="${status.errorMessages}">
+                                <c:out value="${error}" escapeXml="false"/><br />
+                            </c:forEach>
+                        </div>
                     </c:if>
                 </s:bind>
             </c:if>
-            
+
             <table id="lista" class="table table-striped">
                 <thead>
                     <tr>
