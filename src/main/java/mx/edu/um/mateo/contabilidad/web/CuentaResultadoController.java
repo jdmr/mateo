@@ -7,7 +7,6 @@ package mx.edu.um.mateo.contabilidad.web;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,11 +16,13 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.dao.CuentaResultadoDao;
 import mx.edu.um.mateo.contabilidad.model.CuentaResultado;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
-import mx.edu.um.mateo.general.utils.UltimoException;
+import mx.edu.um.mateo.general.utils.ReporteException;
+import mx.edu.um.mateo.general.web.BaseController;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -31,11 +32,7 @@ import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,9 +42,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import mx.edu.um.mateo.Constantes;
-import mx.edu.um.mateo.general.utils.ReporteException;
-import mx.edu.um.mateo.general.web.BaseController;
 
 /**
  *
@@ -70,6 +64,8 @@ public class CuentaResultadoController extends BaseController {
             @RequestParam(required = false) String correo,
             @RequestParam(required = false) String order,
             @RequestParam(required = false) String sort,
+            Usuario usuario,
+            Errors errors,
             Model modelo) {
         log.debug("Mostrando lista de cuentaResultados");
         Map<String, Object> params = new HashMap<>();
@@ -78,7 +74,7 @@ public class CuentaResultadoController extends BaseController {
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }
-       
+
         if (StringUtils.isNotBlank(order)) {
             params.put(Constantes.CONTAINSKEY_ORDER, order);
             params.put(Constantes.CONTAINSKEY_SORT, sort);
@@ -93,9 +89,9 @@ public class CuentaResultadoController extends BaseController {
             } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
                 params.remove(Constantes.CONTAINSKEY_REPORTE);
+                //errors.reject("error.generar.reporte");
             }
         }
-
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = cuentaResultadoDao.lista(params);
@@ -113,7 +109,7 @@ public class CuentaResultadoController extends BaseController {
         modelo.addAttribute(Constantes.CONTAINSKEY_RESULTADOS, params.get(Constantes.CONTAINSKEY_RESULTADOS));
 
         // inicia paginado
-    this.pagina(params, modelo, Constantes.CONTAINSKEY_RESULTADOS, pagina);
+        this.pagina(params, modelo, Constantes.CONTAINSKEY_RESULTADOS, pagina);
         // termina paginado
 
         return Constantes.PATH_CUENTA_RESULTADO_LISTA;
@@ -186,7 +182,7 @@ public class CuentaResultadoController extends BaseController {
         }
 
         try {
-           // cuentaResultado = cuentaResultadoDao.actualiza(cuentaResultado, ambiente.obtieneUsuario());
+            // cuentaResultado = cuentaResultadoDao.actualiza(cuentaResultado, ambiente.obtieneUsuario());
             cuentaResultado = cuentaResultadoDao.actualiza(cuentaResultado);
 
         } catch (ConstraintViolationException e) {
@@ -218,6 +214,5 @@ public class CuentaResultadoController extends BaseController {
 
         return "redirect:" + Constantes.PATH_CUENTA_RESULTADO;
     }
-
-    
+   
 }
