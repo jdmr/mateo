@@ -1,18 +1,15 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package mx.edu.um.mateo.contabilidad.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 import javax.persistence.*;
+import mx.edu.um.mateo.general.model.Organizacion;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *
- * @author semdariobarbaamaya
+ * @author nujev
  */
 @Entity
 @Table(name = "auxiliares")
@@ -27,25 +24,34 @@ public class CuentaAuxiliar implements Serializable {
     @Column(nullable = false, length = 24)
     private String nombre;
     @NotBlank
-    @Column(nullable = false, length = 24, name = "nombre_fiscal")
+    @Column(nullable = false, length = 24, name="nombre_fiscal")
     private String nombreFiscal;
     @NotBlank
     @Column(nullable = false, length = 50)
     private String clave;
     @Column(nullable = false)
-    private Boolean detalle;
+    private Boolean detalle = false;
     @Column(nullable = false)
-    private Boolean aviso;
+    private Boolean aviso = false;
     @Column(nullable = false)
-    private Boolean auxiliar;
+    private Boolean auxiliar = false;
     @Column(nullable = false)
-    private Boolean iva;
-    @Column(nullable = false, name="porcentaje_iva")
+    private Boolean iva = false;
+    @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal porcentajeIva = new BigDecimal("0");
+    @ManyToOne
+    private Organizacion organizacion;
 
     public CuentaAuxiliar() {
     }
 
+    public CuentaAuxiliar(String nombre, String nombreFiscal, String clave, Organizacion organizacion) {
+        this.nombre = nombre;
+        this.nombreFiscal = nombreFiscal;
+        this.clave = clave;
+        this.organizacion = organizacion;
+    }
+    
     public CuentaAuxiliar(String nombre, String nombreFiscal, String clave, Boolean detalle, Boolean aviso, Boolean auxiliar, Boolean iva, BigDecimal porcentajeIva) {
         this.nombre = nombre;
         this.nombreFiscal = nombreFiscal;
@@ -137,10 +143,24 @@ public class CuentaAuxiliar implements Serializable {
         this.porcentajeIva = porcentajeIva;
     }
 
+    /**
+     * @return the organizacion
+     */
+    public Organizacion getOrganizacion() {
+        return organizacion;
+    }
+
+    /**
+     * @param organizacion the organizacion to set
+     */
+    public void setOrganizacion(Organizacion organizacion) {
+        this.organizacion = organizacion;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.clave);
+        hash = 37 * hash + Objects.hashCode(this.clave);
         return hash;
     }
 

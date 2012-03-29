@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="cuentaMayor.ver.label" /></title>
+        <title><s:message code="mayores.ver.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -19,11 +19,11 @@
         </jsp:include>
 
         <div id="ver-mayor" class="content scaffold-list" role="main">
-            <h1><s:message code="cuentaMayor.ver.label" /></h1>
+            <h1><s:message code="mayores.ver.label" /></h1>
 
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/contabilidad/mayor'/>"><i class="icon-list icon-white"></i> <s:message code='cuentaMayor.lista.label' /></a>
-                <a class="btn btn-primary" href="<s:url value='/contabilidad/mayor/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='cuentaMayor.nueva.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/mayor'/>"><i class="icon-list icon-white"></i> <s:message code='mayores.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/mayor/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='mayores.nueva.label' /></a>
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">

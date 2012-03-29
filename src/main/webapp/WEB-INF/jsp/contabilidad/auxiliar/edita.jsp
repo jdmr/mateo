@@ -11,7 +11,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="cuentaAuxiliar.edita.label" /></title>
+        <title><s:message code="auxiliares.edita.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -19,9 +19,9 @@
         </jsp:include>
 
         <div id="edita-auxiliar" class="content scaffold-list" role="main">
-            <h1><s:message code="cuentaAuxiliar.edita.label" /></h1>
+            <h1><s:message code="auxiliares.edita.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/contabilidad/auxiliar'/>"><i class="icon-list icon-white"></i> <s:message code='cuentaAuxiliar.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/auxiliar'/>"><i class="icon-list icon-white"></i> <s:message code='auxiliares.lista.label' /></a>
             </p>
             <c:url var="actualizaUrl" value="/contabilidad/auxiliar/actualiza" />
             <form:form commandName="auxiliar" method="post" action="${actualizaUrl}">

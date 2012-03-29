@@ -1,7 +1,7 @@
 <%-- 
     Document   : ver
-    Created on : Mar 12, 2012, 9:17:41 AM
-    Author     : develop
+    Created on : Jan 27, 2012, 6:52:45 AM
+    Author     : jdmr
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -11,23 +11,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="cuentaResultado.ver.label" /></title>
+        <title><s:message code="resultados.ver.label" /></title>
     </head>
     <body>
-        <nav class="navbar navbar-fixed-top" role="navigation">
-            <ul class="nav">
-                <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
-                <li><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
-                <li class="active"><a href="<s:url value='/contabilidad/resultado'/>" ><s:message code="cuentaResultado.label" /></a></li>
-            </ul>
-        </nav>
+        <jsp:include page="../menu.jsp" >
+            <jsp:param name="menu" value="resultado" />
+        </jsp:include>
 
         <div id="ver-resultado" class="content scaffold-list" role="main">
-            <h1><s:message code="cuentaResultado.ver.label" /></h1>
+            <h1><s:message code="resultados.ver.label" /></h1>
 
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/contabilidad/resultado'/>"><i class="icon-list icon-white"></i> <s:message code='cuentaResultado.lista.label' /></a>
-                <a class="btn btn-primary" href="<s:url value='/contabilidad/resultado/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='cuentaResultado.nueva.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/resultado'/>"><i class="icon-list icon-white"></i> <s:message code='resultados.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/resultado/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='resultados.nueva.label' /></a>
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
@@ -43,10 +39,33 @@
                     <div class="span1"><s:message code="nombre.label" /></div>
                     <div class="span11">${resultado.nombre}</div>
                 </div>
-
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="nombreFiscal.label" /></div>
                     <div class="span11">${resultado.nombreFiscal}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="clave.label" /></div>
+                    <div class="span11">${resultado.clave}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="detalle.label" /></div>
+                    <div class="span11"><form:checkbox path="detalle" disabled="true" /></div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="aviso.label" /></div>
+                    <div class="span11"><form:checkbox path="aviso" disabled="true" /></div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="auxiliar.label" /></div>
+                    <div class="span11"><form:checkbox path="auxiliar" disabled="true" /></div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="iva.label" /></div>
+                    <div class="span11"><form:checkbox path="iva" disabled="true" /></div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="porcentajeIva.label" /></div>
+                    <div class="span11">${resultado.porcentajeIva}</div>
                 </div>
 
                 <p class="well">
