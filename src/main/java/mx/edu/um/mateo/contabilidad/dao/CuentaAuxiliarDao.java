@@ -60,7 +60,13 @@ public class CuentaAuxiliarDao {
         }
         Criteria criteria = currentSession().createCriteria(CuentaAuxiliar.class);
         Criteria countCriteria = currentSession().createCriteria(CuentaAuxiliar.class);
-
+        
+        if (params.containsKey(Constantes.CONTAINSKEY_ORGANIZACION)) {
+            criteria.createCriteria(Constantes.CONTAINSKEY_ORGANIZACION).add(Restrictions.idEq(params.get(Constantes.CONTAINSKEY_ORGANIZACION)));
+            countCriteria.createCriteria(Constantes.CONTAINSKEY_ORGANIZACION).add(Restrictions.idEq(params.get(Constantes.CONTAINSKEY_ORGANIZACION)));
+        }
+        
+        
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
             String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);
             Disjunction propiedades = Restrictions.disjunction();
