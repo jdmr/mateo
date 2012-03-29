@@ -39,6 +39,7 @@ public class Libro implements Serializable {
         this.clave = clave;
         this.status = status;
         this.codigo = codigo;
+
     }
 
     public int getCodigo() {

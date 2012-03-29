@@ -108,7 +108,7 @@ public class Constantes {
     public static final String PATH_CUENTA_AUXILIAR_CREA = "/contabilidad/auxiliar/crea";
     public static final String PATH_CUENTA_AUXILIAR_ACTUALIZA = "/contabilidad/auxiliar/actualiza";
     public static final String PATH_CUENTA_AUXILIAR_ELIMINA = "/contabilidad/auxiliar/elimina";
-    public static final String PATH_CUENTA_LIBRO = "/contabilidad/auxiliar";
+    public static final String PATH_CUENTA_LIBRO = "/contabilidad/libro";
     public static final String PATH_CUENTA_LIBRO_LISTA = "/contabilidad/libro/lista";
     public static final String PATH_CUENTA_LIBRO_VER = "/contabilidad/libro/ver";
     public static final String PATH_CUENTA_LIBRO_NUEVA = "/contabilidad/libro/nueva";

@@ -106,7 +106,7 @@ public class LibroDao {
 //        currentSession().flush();
 //        return libro;
 //    }
-    
+
     public Libro crea(Libro libro) {
         return crea(libro, null);
     }
@@ -122,14 +122,18 @@ public class LibroDao {
     }
 
     public Libro actualiza(Libro libro) {
-        log.debug("Actualizando  libro {}", libro);
-        
-        //trae el objeto de la DB 
-        Libro nueva = (Libro)currentSession().get(Libro.class, libro.getId());
-        //actualiza el objeto
+        return actualiza(libro, null);
+    }
+
+    public Libro actualiza(Libro libro, Usuario usuario) {
+        log.debug("Actualizando cuenta de mayor {}", libro);
+
+        Libro nueva = (Libro) currentSession().get(Libro.class, libro.getId());
         BeanUtils.copyProperties(libro, nueva);
-        //lo guarda en la BD
-        
+
+        if (usuario != null) {
+            nueva.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+        }
         currentSession().update(nueva);
         currentSession().flush();
         return nueva;
