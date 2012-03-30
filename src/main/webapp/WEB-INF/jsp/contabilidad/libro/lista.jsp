@@ -63,16 +63,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${libroes}" var="libro" varStatus="status">
+                    <c:forEach items="${libro}" var="libro" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/contabilidad/libro/ver/${libro.id}' />">${libro.nombre}</a></td>
-                            <td>${libro.nombreFiscal}</td>
+                            <td>${libro.nombre}</td>
                             <td>${libro.clave}</td>
-                            <td><input type="checkbox" value="" disabled="true" <c:if test="${libro.detalle}">checked="checked"</c:if> /></td>
-                            <td><input type="checkbox" value="" disabled="true" <c:if test="${libro.aviso}">checked="checked"</c:if> /></td>
-                            <td><input type="checkbox" value="" disabled="true" <c:if test="${libro.auxiliar}">checked="checked"</c:if> /></td>
-                            <td ><input type="checkbox" value="" disabled="true" <c:if test="${libro.iva}">checked="checked"</c:if> /></td>
-                            <td>${libro.porcentajeIva}</td>
+                            <td>${libro.status}</td>
+                            <td>${libro.codigo}</td>
                         </tr>
                     </c:forEach>
                 </tbody>

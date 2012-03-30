@@ -49,7 +49,7 @@ public class LibroController extends BaseController {
             Usuario usuario,
             Errors errors,
             Model modelo) {
-        log.debug("Mostrando lista de s de libroes");
+        log.debug("Mostrando lista de  de libros");
         Map<String, Object> params = new HashMap<>();
         Long organizacionId = (Long) request.getSession().getAttribute("organizacionId");
         params.put("organizacion", organizacionId);
@@ -97,7 +97,7 @@ public class LibroController extends BaseController {
 
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
-        log.debug("Mostrando  de libro {}", id);
+        log.debug("Mostrando   libro {}", id);
         Libro libro = LibroDao.obtiene(id);
 
         modelo.addAttribute(Constantes.ADDATTRIBUTE_LIBRO, libro);
@@ -107,7 +107,7 @@ public class LibroController extends BaseController {
 
     @RequestMapping("/nueva")
     public String nueva(Model modelo) {
-        log.debug("Nueva  de libro");
+        log.debug("Nuevo   libro");
         Libro libro = new Libro();
         modelo.addAttribute(Constantes.ADDATTRIBUTE_LIBRO, libro);
         return Constantes.PATH_CUENTA_LIBRO_NUEVA;
@@ -127,11 +127,11 @@ public class LibroController extends BaseController {
         try {
             libro = LibroDao.crea(libro, ambiente.obtieneUsuario());
         } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear la  de libro", e);
+            log.error("No se pudo crear libro", e);
             return Constantes.PATH_CUENTA_LIBRO_NUEVA;
         }
 
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "Libro.creada.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "libro.creado.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{libro.getNombre()});
 
         return "redirect:" + Constantes.PATH_CUENTA_LIBRO_VER + "/" + libro.getId();
@@ -160,7 +160,7 @@ public class LibroController extends BaseController {
             return Constantes.PATH_CUENTA_LIBRO_NUEVA;
         }
 
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "Libro.actualizada.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "libro.actualizado.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{libro.getNombre()});
 
         return "redirect:" + Constantes.PATH_CUENTA_LIBRO_VER + "/" + libro.getId();
@@ -173,11 +173,11 @@ public class LibroController extends BaseController {
         try {
             String nombre = LibroDao.elimina(id);
 
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "Libro.eliminada.message");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "libro.eliminado.message");
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
         } catch (Exception e) {
             log.error("No se pudo eliminar la  de libro " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_LIBRO, new String[]{"Libro.no.eliminada.message"}, null, null));
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_LIBRO, new String[]{"libro.no.eliminado.message"}, null, null));
             return Constantes.PATH_CUENTA_LIBRO_VER;
         }
 

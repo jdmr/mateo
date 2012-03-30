@@ -136,7 +136,7 @@ public class LibroControllerTest extends BaseTest {
                 .param("codigo","0000"))
                 .andExpect(status().isOk())
                  .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE)).
-                andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "Libro.creada.message"));
+                andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "libro.creado.message"));
     }
 
     @Test
@@ -172,7 +172,7 @@ public class LibroControllerTest extends BaseTest {
                 .param("codigo","0000"))
                 .andExpect(status().isOk())
                  .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE)).
-                andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "Libro.actualizada.message"));
+                andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "libro.actualizado.message"));
     }
 
   
@@ -187,6 +187,6 @@ public class LibroControllerTest extends BaseTest {
         this.mockMvc.perform(post(Constantes.PATH_CUENTA_LIBRO_ELIMINA).param("id", libro.getId().toString())).
                 andExpect(status().isOk()).
                 andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE)).
-                andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "Libro.eliminada.message"));
+                andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "libro.eliminado.message"));
     }
 }
