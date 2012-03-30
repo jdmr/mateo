@@ -37,7 +37,7 @@ public class CuentaMayor implements Serializable {
     private Boolean auxiliar = false;
     @Column(nullable = false)
     private Boolean iva = false;
-    @Column(nullable = false, name="porcentaje_iva")
+    @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal porcentajeIva = new BigDecimal("0");
     @ManyToOne
     private Organizacion organizacion;

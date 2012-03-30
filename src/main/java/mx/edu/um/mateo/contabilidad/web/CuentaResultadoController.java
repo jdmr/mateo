@@ -1,18 +1,31 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * The MIT License
+ *
+ * Copyright 2012 Universidad de Montemorelos A. C.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 package mx.edu.um.mateo.contabilidad.web;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -23,17 +36,9 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
-import net.sf.jasperreports.engine.*;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.export.JRCsvExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -45,7 +50,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
- * @author develop
+ * @author jdmr
  */
 @Controller
 @RequestMapping(Constantes.PATH_CUENTA_RESULTADO)
@@ -67,14 +72,13 @@ public class CuentaResultadoController extends BaseController {
             Usuario usuario,
             Errors errors,
             Model modelo) {
-        log.debug("Mostrando lista de cuentaResultados");
+        log.debug("Mostrando lista de cuentas de resultados");
         Map<String, Object> params = new HashMap<>();
         Long organizacionId = (Long) request.getSession().getAttribute("organizacionId");
         params.put("organizacion", organizacionId);
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }
-
         if (StringUtils.isNotBlank(order)) {
             params.put(Constantes.CONTAINSKEY_ORDER, order);
             params.put(Constantes.CONTAINSKEY_SORT, sort);
@@ -100,7 +104,7 @@ public class CuentaResultadoController extends BaseController {
             try {
                 enviaCorreo(correo, (List<CuentaResultado>) params.get(Constantes.CONTAINSKEY_RESULTADOS), request, Constantes.CONTAINSKEY_RESULTADOS, mx.edu.um.mateo.general.utils.Constantes.ORG, organizacionId);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
-                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("cuentaResultado.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("resultados.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
@@ -108,107 +112,94 @@ public class CuentaResultadoController extends BaseController {
         params = cuentaResultadoDao.lista(params);
         modelo.addAttribute(Constantes.CONTAINSKEY_RESULTADOS, params.get(Constantes.CONTAINSKEY_RESULTADOS));
 
-        // inicia paginado
         this.pagina(params, modelo, Constantes.CONTAINSKEY_RESULTADOS, pagina);
-        // termina paginado
 
         return Constantes.PATH_CUENTA_RESULTADO_LISTA;
     }
 
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
-        log.debug("Mostrando cuentaResultado {}", id);
-        CuentaResultado cuentaResultado = cuentaResultadoDao.obtiene(id);
+        log.debug("Mostrando cuenta de resultado {}", id);
+        CuentaResultado resultado = cuentaResultadoDao.obtiene(id);
 
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_RESULTADO, cuentaResultado);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_RESULTADO, resultado);
 
         return Constantes.PATH_CUENTA_RESULTADO_VER;
     }
 
     @RequestMapping("/nueva")
     public String nueva(Model modelo) {
-        log.debug("Nueva cuentaResultado");
-        CuentaResultado cuentaResultado = new CuentaResultado();
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_RESULTADO, cuentaResultado);
+        log.debug("Nueva cuenta de resultado");
+        CuentaResultado resultado = new CuentaResultado();
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_RESULTADO, resultado);
         return Constantes.PATH_CUENTA_RESULTADO_NUEVA;
     }
 
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid CuentaResultado cuentaResultado, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid CuentaResultado resultado, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
-            for (ObjectError error : bindingResult.getAllErrors()) {
-                log.debug("Error: {}", error);
-            }
             return Constantes.PATH_CUENTA_RESULTADO_NUEVA;
         }
 
         try {
-            //Usuario usuario = ambiente.obtieneUsuario();
-            cuentaResultado = cuentaResultadoDao.crea(cuentaResultado);
-
-            //ambiente.actualizaSesion(request, usuario);
+            resultado = cuentaResultadoDao.crea(resultado, ambiente.obtieneUsuario());
         } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear al cuentaResultado", e);
-            errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
-            errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
+            log.error("No se pudo crear la cuenta de resultado", e);
             return Constantes.PATH_CUENTA_RESULTADO_NUEVA;
         }
 
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaResultado.creada.message");
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{cuentaResultado.getNombre()});
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "resultados.creada.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{resultado.getNombre()});
 
-        return "redirect:" + Constantes.PATH_CUENTA_RESULTADO_VER + "/" + cuentaResultado.getId();
+        return "redirect:" + Constantes.PATH_CUENTA_RESULTADO_VER + "/" + resultado.getId();
     }
 
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
-        log.debug("Edita cuentaResultado {}", id);
-        CuentaResultado cuentaResultado = cuentaResultadoDao.obtiene(id);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_RESULTADO, cuentaResultado);
+        log.debug("Editar cuenta de resultado {}", id);
+        CuentaResultado resultado = cuentaResultadoDao.obtiene(id);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_RESULTADO, resultado);
         return Constantes.PATH_CUENTA_RESULTADO_EDITA;
     }
 
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, @Valid CuentaResultado cuentaResultado, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String actualiza(HttpServletRequest request, @Valid CuentaResultado resultado, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
             return Constantes.PATH_CUENTA_RESULTADO_EDITA;
         }
-
         try {
-            // cuentaResultado = cuentaResultadoDao.actualiza(cuentaResultado, ambiente.obtieneUsuario());
-            cuentaResultado = cuentaResultadoDao.actualiza(cuentaResultado);
-
+            resultado = cuentaResultadoDao.actualiza(resultado, ambiente.obtieneUsuario());
         } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear la cuentaResultado", e);
+            log.error("No se pudo crear la cuenta de resultado", e);
             return Constantes.PATH_CUENTA_RESULTADO_NUEVA;
         }
 
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaResultado.actualizada.message");
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{cuentaResultado.getNombre()});
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "resultados.actualizada.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{resultado.getNombre()});
 
-        return "redirect:" + Constantes.PATH_CUENTA_RESULTADO_VER + "/" + cuentaResultado.getId();
+        return "redirect:" + Constantes.PATH_CUENTA_RESULTADO_VER + "/" + resultado.getId();
     }
 
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute CuentaResultado cuentaResultado, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
+    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute CuentaResultado resultado, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina cuenta de resultado");
         try {
             String nombre = cuentaResultadoDao.elimina(id);
 
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuentaResultado.eliminada.message");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "resultados.eliminada.message");
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
         } catch (Exception e) {
-            log.error("No se pudo eliminar la cuenta de resultado" + id, e);
-            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_RESULTADO, new String[]{"cuentaResultado.no.eliminada.message"}, null, null));
+            log.error("No se pudo eliminar la cuenta de resultado " + id, e);
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_RESULTADO, new String[]{"resultados.no.eliminada.message"}, null, null));
             return Constantes.PATH_CUENTA_RESULTADO_VER;
         }
 

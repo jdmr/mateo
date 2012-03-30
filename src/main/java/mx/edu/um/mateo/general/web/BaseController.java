@@ -198,6 +198,7 @@ public abstract class BaseController {
                     archivo = generaPdf(lista, nombre, tipoReporte, id);
                     response.setContentType("application/pdf");
                     response.addHeader("Content-Disposition", "attachment; filename=" + nombre + ".pdf");
+                    System.out.println("termina de generar pdf");
                     break;
                 case "CSV":
                     archivo = generaCsv(lista, nombre, tipoReporte, id);
