@@ -5,35 +5,35 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="entrada.lista.label" /></title>
+        <title><s:message code="facturaAlmacen.lista.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="entrada" />
+            <jsp:param name="menu" value="factura" />
         </jsp:include>
 
-        <h1><s:message code="entrada.lista.label" /></h1>
+        <h1><s:message code="facturaAlmacen.lista.label" /></h1>
         <hr/>
 
-        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/inventario/entrada' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/inventario/factura' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/inventario/entrada/nueva'/>"><i class="icon-shopping-cart icon-white"></i> <s:message code='entrada.nueva.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/inventario/factura/nueva'/>"><i class="icon-shopping-cart icon-white"></i> <s:message code='facturaAlmacen.nueva.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
             <c:if test="${not empty message}">
-                <div class="alert alert-block alert-success fade in" role="status">
+                <div class="alert alert-block <c:choose><c:when test='${not empty messageStyle}'>${messageStyle}</c:when><c:otherwise>alert-success</c:otherwise></c:choose> fade in" role="status">
                     <a class="close" data-dismiss="alert">×</a>
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
-            <c:if test="${entrada != null}">
-                <s:bind path="entrada.*">
+            <c:if test="${factura != null}">
+                <s:bind path="factura.*">
                     <c:if test="${not empty status.errorMessages}">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -52,16 +52,22 @@
                             <jsp:param name="columna" value="folio" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="factura" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="fechaFactura" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="estatus" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="proveedor" />
+                            <jsp:param name="columna" value="reporte" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="atendio" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="empleado" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="departamento" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="cliente" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="iva" />
@@ -69,24 +75,22 @@
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="total" />
                         </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="devolucion" />
-                        </jsp:include>
                         <th><s:message code="almacen.label" /></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${entradas}" var="entrada" varStatus="status">
+                    <c:forEach items="${salidas}" var="salida" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/inventario/entrada/ver/${entrada.id}' />">${entrada.folio}</a></td>
-                            <td>${entrada.factura}</td>
-                            <td>${entrada.fechaFactura}</td>
-                            <td>${entrada.estatus.nombre}</td>
-                            <td>${entrada.proveedor.nombre}</td>
-                            <td>${entrada.iva}</td>
-                            <td>${entrada.total}</td>
-                            <td><input type="checkbox" disabled="true" <c:if test="${entrada.devolucion}">checked="checked"</c:if> /></td>
-                            <td>${entrada.almacen.nombre}</td>
+                            <td><a href="<c:url value='/inventario/salida/ver/${salida.id}' />">${salida.folio}</a></td>
+                            <td>${salida.estatus.nombre}</td>
+                            <td>${salida.reporte}</td>
+                            <td>${salida.atendio}</td>
+                            <td>${salida.empleado}</td>
+                            <td>${salida.departamento}</td>
+                            <td>${salida.cliente.nombre}</td>
+                            <td>${salida.iva}</td>
+                            <td>${salida.total}</td>
+                            <td>${salida.almacen.nombre}</td>
                         </tr>
                     </c:forEach>
                 </tbody>

@@ -30,10 +30,7 @@ import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inventario.model.*;
-import mx.edu.um.mateo.inventario.utils.NoCuadraException;
-import mx.edu.um.mateo.inventario.utils.NoEstaAbiertaException;
-import mx.edu.um.mateo.inventario.utils.NoSePuedeCerrarEnCeroException;
-import mx.edu.um.mateo.inventario.utils.NoSePuedeCerrarException;
+import mx.edu.um.mateo.inventario.utils.*;
 import org.hibernate.*;
 import org.hibernate.criterion.*;
 import org.slf4j.Logger;
@@ -184,13 +181,13 @@ public class FacturaAlmacenDao {
         }
     }
 
-    public String cierra(Long facturaId, Usuario usuario) throws NoSePuedeCerrarException, NoCuadraException, NoSePuedeCerrarEnCeroException, NoEstaAbiertaException {
+    public String cierra(Long facturaId, Usuario usuario) throws NoSePuedeCerrarException, NoSePuedeCerrarEnCeroException, NoEstaAbiertaException {
         FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(FacturaAlmacen.class, facturaId);
         factura = cierra(factura, usuario);
         return factura.getFolio();
     }
 
-    public FacturaAlmacen cierra(FacturaAlmacen factura, Usuario usuario) throws NoSePuedeCerrarException, NoCuadraException, NoSePuedeCerrarEnCeroException, NoEstaAbiertaException {
+    public FacturaAlmacen cierra(FacturaAlmacen factura, Usuario usuario) throws NoSePuedeCerrarException, NoSePuedeCerrarEnCeroException, NoEstaAbiertaException {
         if (factura != null) {
             if (factura.getEstatus().getNombre().equals(Constantes.ABIERTA)) {
                 if (usuario != null) {
@@ -211,7 +208,7 @@ public class FacturaAlmacenDao {
                     factura.setIva(factura.getIva().add(salida.getIva()));
                     factura.setTotal(factura.getTotal().add(salida.getTotal()));
                 }
-                
+
                 for (Entrada entrada : factura.getEntradas()) {
                     entrada.setEstatus(facturada);
                     entrada.setFechaModificacion(fecha);
@@ -238,6 +235,46 @@ public class FacturaAlmacenDao {
             }
         } else {
             throw new NoSePuedeCerrarException("No se puede cerrar la factura pues no existe");
+        }
+    }
+
+    public FacturaAlmacen cancelar(Long id, Usuario usuario) throws NoEstaCerradaException, NoSePuedeCancelarException {
+        FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(FacturaAlmacen.class, id);
+        if (factura != null) {
+            if (factura.getEstatus().getNombre().equals(Constantes.ABIERTA)) {
+                Query query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
+                query.setString("nombre", Constantes.CERRADA);
+                Estatus cerrada = (Estatus) query.uniqueResult();
+
+                Date fecha = new Date();
+                for (Entrada entrada : factura.getEntradas()) {
+                    entrada.setEstatus(cerrada);
+                    entrada.setFechaModificacion(fecha);
+                    currentSession().update(entrada);
+                    
+                    audita(entrada, usuario, Constantes.ACTUALIZAR, fecha);
+                }
+                
+                for (Salida salida : factura.getSalidas()) {
+                    salida.setEstatus(cerrada);
+                    salida.setFechaModificacion(fecha);
+                    currentSession().update(salida);
+                    
+                    audita(salida, usuario, Constantes.ACTUALIZAR, fecha);
+                }
+
+                query.setString("nombre", Constantes.CANCELADA);
+                Estatus cancelada = (Estatus) query.uniqueResult();
+                factura.setFechaModificacion(new Date());
+                factura.setEstatus(cancelada);
+                currentSession().update(factura);
+                currentSession().flush();
+                return factura;
+            } else {
+                throw new NoEstaCerradaException("No se puede actualizar una factura que no este cerrada", factura);
+            }
+        } else {
+            throw new NoSePuedeCancelarException("No se puede cancelar la factura porque no existe", factura);
         }
     }
 
@@ -340,7 +377,7 @@ public class FacturaAlmacenDao {
         xsalida.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
         currentSession().save(xsalida);
     }
-    
+
     private void audita(Entrada entrada, Usuario usuario, String actividad, Date fecha) {
         XEntrada xentrada = new XEntrada();
         BeanUtils.copyProperties(entrada, xentrada);
@@ -353,5 +390,4 @@ public class FacturaAlmacenDao {
         xentrada.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
         currentSession().save(xentrada);
     }
-    
 }

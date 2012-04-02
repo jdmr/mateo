@@ -31,53 +31,53 @@ import mx.edu.um.mateo.inventario.model.Salida;
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
-public class NoEstaCerradaException extends Exception {
+public class NoSePuedeCancelarException extends Exception {
 
     private Entrada entrada;
     private Salida salida;
     private FacturaAlmacen factura;
     
-    public NoEstaCerradaException(String message, Throwable cause, Entrada entrada) {
+    public NoSePuedeCancelarException(String message, Throwable cause, Entrada entrada) {
         super(message, cause);
         this.entrada = entrada;
     }
 
-    public NoEstaCerradaException(String message, Throwable cause, Salida salida) {
+    public NoSePuedeCancelarException(String message, Throwable cause, Salida salida) {
         super(message, cause);
         this.salida = salida;
     }
 
-    public NoEstaCerradaException(String message, Throwable cause, FacturaAlmacen factura) {
+    public NoSePuedeCancelarException(String message, Throwable cause, FacturaAlmacen factura) {
         super(message, cause);
         this.factura = factura;
     }
 
-    public NoEstaCerradaException(String message, Entrada entrada) {
+    public NoSePuedeCancelarException(String message, Entrada entrada) {
         super(message);
         this.entrada = entrada;
     }
 
-    public NoEstaCerradaException(String message, Salida salida) {
+    public NoSePuedeCancelarException(String message, Salida salida) {
         super(message);
         this.salida = salida;
     }
 
-    public NoEstaCerradaException(String message, FacturaAlmacen factura) {
+    public NoSePuedeCancelarException(String message, FacturaAlmacen factura) {
         super(message);
         this.factura = factura;
     }
 
-    public NoEstaCerradaException(Entrada entrada) {
+    public NoSePuedeCancelarException(Entrada entrada) {
         super();
         this.entrada = entrada;
     }
 
-    public NoEstaCerradaException(Salida salida) {
+    public NoSePuedeCancelarException(Salida salida) {
         super();
         this.salida = salida;
     }
 
-    public NoEstaCerradaException(FacturaAlmacen factura) {
+    public NoSePuedeCancelarException(FacturaAlmacen factura) {
         super();
         this.factura = factura;
     }
