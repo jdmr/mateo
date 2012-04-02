@@ -24,7 +24,7 @@ public class CuentaMayor implements Serializable {
     @Column(nullable = false, length = 24)
     private String nombre;
     @NotBlank
-    @Column(nullable = false, length = 24, name="nombre_fiscal")
+    @Column(nullable = false, length = 24, name = "nombre_fiscal")
     private String nombreFiscal;
     @NotBlank
     @Column(nullable = false, length = 50)
@@ -37,7 +37,7 @@ public class CuentaMayor implements Serializable {
     private Boolean auxiliar = false;
     @Column(nullable = false)
     private Boolean iva = false;
-    @Column(nullable = false, scale = 2, precision = 8)
+    @Column(nullable = false, scale = 2, precision = 8, name = "porcentaje_iva")
     private BigDecimal porcentajeIva = new BigDecimal("0");
     @ManyToOne
     private Organizacion organizacion;
@@ -51,7 +51,7 @@ public class CuentaMayor implements Serializable {
         this.clave = clave;
         this.organizacion = organizacion;
     }
-    
+
     public CuentaMayor(String nombre, String nombreFiscal, String clave, Boolean detalle, Boolean aviso, Boolean auxiliar, Boolean iva, BigDecimal porcentajeIva) {
         this.nombre = nombre;
         this.nombreFiscal = nombreFiscal;
