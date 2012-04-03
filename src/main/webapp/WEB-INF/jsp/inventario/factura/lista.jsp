@@ -55,16 +55,7 @@
                             <jsp:param name="columna" value="estatus" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="reporte" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="atendio" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="empleado" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="departamento" />
+                            <jsp:param name="columna" value="fecha" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="cliente" />
@@ -79,18 +70,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${salidas}" var="salida" varStatus="status">
+                    <c:forEach items="${facturas}" var="factura" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/inventario/salida/ver/${salida.id}' />">${salida.folio}</a></td>
-                            <td>${salida.estatus.nombre}</td>
-                            <td>${salida.reporte}</td>
-                            <td>${salida.atendio}</td>
-                            <td>${salida.empleado}</td>
-                            <td>${salida.departamento}</td>
-                            <td>${salida.cliente.nombre}</td>
-                            <td>${salida.iva}</td>
-                            <td>${salida.total}</td>
-                            <td>${salida.almacen.nombre}</td>
+                            <td><a href="<c:url value='/inventario/factura/ver/${factura.id}' />">${factura.folio}</a></td>
+                            <td>${factura.estatus.nombre}</td>
+                            <td>${factura.fecha}</td>
+                            <td>${factura.cliente.nombre}</td>
+                            <td>${factura.iva}</td>
+                            <td>${factura.total}</td>
+                            <td>${factura.almacen.nombre}</td>
                         </tr>
                     </c:forEach>
                 </tbody>

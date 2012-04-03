@@ -123,7 +123,7 @@ public class FacturaAlmacenController extends BaseController {
         params = facturaDao.lista(params);
         modelo.addAttribute("facturas", params.get("facturas"));
 
-        this.pagina(params, modelo, "facturasAlmacen", pagina);
+        this.pagina(params, modelo, "facturas", pagina);
 
         return "inventario/factura/lista";
     }

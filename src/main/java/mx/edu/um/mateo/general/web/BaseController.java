@@ -36,7 +36,6 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import mx.edu.um.mateo.general.dao.ReporteDao;
-import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ReporteException;
@@ -92,9 +91,9 @@ public abstract class BaseController {
                 break;
             }
         } while (i++ < cantidadDePaginas);
-        List<Usuario> usuarios = (List<Usuario>) params.get(lista);
+        List listado = (List) params.get(lista);
         Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (usuarios.size() - 1);
+        Long ultimo = primero + (listado.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
         modelo.addAttribute("paginacion", paginacion);
         modelo.addAttribute("paginas", paginas);

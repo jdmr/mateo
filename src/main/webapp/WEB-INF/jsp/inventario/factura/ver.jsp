@@ -6,19 +6,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="salida.ver.label" /></title>
+        <title><s:message code="facturaAlmacen.ver.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="salida" />
+            <jsp:param name="menu" value="factura" />
         </jsp:include>
 
-        <div id="ver-salida" class="content scaffold-list" role="main">
-            <h1><s:message code="salida.ver.label" /></h1>
+        <div id="ver-factura" class="content scaffold-list" role="main">
+            <h1><s:message code="facturaAlmacen.ver.label" /></h1>
 
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/inventario/salida'/>"><i class="icon-list icon-white"></i> <s:message code='salida.lista.label' /></a>
-                <a class="btn btn-primary" href="<s:url value='/inventario/salida/nueva'/>"><i class="icon-shopping-cart icon-white"></i> <s:message code='salida.nueva.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/inventario/factura'/>"><i class="icon-list icon-white"></i> <s:message code='facturaAlmacen.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/inventario/factura/nueva'/>"><i class="icon-shopping-cart icon-white"></i> <s:message code='facturaAlmacen.nueva.label' /></a>
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block <c:choose><c:when test='${not empty messageStyle}'>${messageStyle}</c:when><c:otherwise>alert-success</c:otherwise></c:choose> fade in" role="status">
@@ -27,77 +27,55 @@
                 </div>
             </c:if>
 
-            <c:url var="eliminaUrl" value="/inventario/salida/elimina" />
-            <form:form commandName="salida" action="${eliminaUrl}" >
+            <c:url var="eliminaUrl" value="/inventario/factura/elimina" />
+            <form:form commandName="factura" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="margin-bottom: 10px;">
                     <div class="span4">
                         <h4><s:message code="folio.label" /></h4>
-                        <h3>${salida.folio}</h3>
+                        <h3>${factura.folio}</h3>
                     </div>
                     <div class="span4">
                         <h4><s:message code="estatus.label" /></h4>
-                        <h2>${salida.estatus.nombre}</h2>
+                        <h2>${factura.estatus.nombre}</h2>
                     </div>
                 </div>
-                <div class="row-fluid" style="margin-bottom: 10px;">
-                    <div class="span4">
-                        <h4><s:message code="reporte.label" /></h4>
-                        <h3>${salida.reporte}</h3>
-                    </div>
-                    <div class="span4">
-                        <h4><s:message code="atendio.label" /></h4>
-                        <h3>${salida.atendio}</h3>
-                    </div>
-                </div>
-                <c:if test="${not empty salida.empleado || not empty salida.departamento}">
-                    <div class="row-fluid" style="margin-bottom: 10px;">
-                        <div class="span4">
-                            <h4><s:message code="empleado.label" /></h4>
-                            <h3>${salida.empleado}</h3>
-                        </div>
-                        <div class="span4">
-                            <h4><s:message code="departamento.label" /></h4>
-                            <h3>${salida.departamento}</h3>
-                        </div>
-                    </div>
-                </c:if>
-                <c:if test="${not empty salida.comentarios}">
+                <c:if test="${not empty factura.comentarios}">
                     <div class="row-fluid" style="margin-bottom: 10px;">
                         <div class="span8">
                             <h4><s:message code="comentarios.label" /></h4>
-                            <h3>${salida.comentarios}</h3>
+                            <h3>${factura.comentarios}</h3>
                         </div>
                     </div>
                 </c:if>
                 <div class="row-fluid" style="margin-bottom: 10px;">
                     <div class="span4">
                         <h4><s:message code="iva.label" /></h4>
-                        <h3>${salida.iva}</h3>
+                        <h3>${factura.iva}</h3>
                     </div>
                     <div class="span4">
                         <h4><s:message code="total.label" /></h4>
-                        <h3>${salida.total}</h3>
+                        <h3>${factura.total}</h3>
                     </div>
                 </div>
                 <div class="row-fluid" style="margin-bottom: 10px;">
                     <div class="span4">
                         <h4><s:message code="cliente.label" /></h4>
-                        <h3>${salida.cliente.nombre}</h3>
+                        <h3>${factura.cliente.nombre}</h3>
                     </div>
                     <div class="span4">
                         <h4><s:message code="almacen.label" /></h4>
-                        <h3>${salida.almacen.nombre}</h3>
+                        <h3>${factura.almacen.nombre}</h3>
                     </div>
                 </div>
                 <div class="row-fluid">
                     <div class="span12">
+                        <h2><s:message code="salida.lista.label" /></h2>
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th><s:message code="producto.label" /></th>
-                                    <th style="text-align: right;"><s:message code="cantidad.label" /></th>
-                                    <th style="text-align: right;"><s:message code="precioUnitario.label" /></th>
+                                    <th><s:message code="folio.label" /></th>
+                                    <th><s:message code="fecha.label" /></th>
                                     <th style="text-align: right;"><s:message code="iva.label" /></th>
                                     <th style="text-align: right;"><s:message code="total.label" /></th>
                                     <c:if test="${puedeEditar}">
@@ -106,26 +84,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <c:forEach items="${salida.lotes}" var="lote" varStatus="status">
+                                <c:forEach items="${factura.salidas}" var="salida" varStatus="status">
                                     <tr>
-                                        <td>${lote.producto.nombre}</td>
-                                        <td style="text-align: right;">
-                                            <c:choose>
-                                                <c:when test="${!lote.producto.fraccion}">
-                                                    <fmt:formatNumber value="${lote.cantidad}" minFractionDigits="0" maxFractionDigits="0" groupingUsed="true" />
-                                                </c:when>
-                                                <c:otherwise>
-                                                    ${lote.cantidad} 
-                                                </c:otherwise>
-                                            </c:choose>
-                                            &nbsp;${lote.producto.unidadMedida}
-                                        </td>
-                                        <td style="text-align: right;">${lote.precioUnitario}</td>
-                                        <td style="text-align: right;">${lote.iva}</td>
-                                        <td style="text-align: right;">${lote.total}</td>
+                                        <td>${salida.folio}</td>
+                                        <td>${salida.fechaCreacion}</td>
+                                        <td style="text-align: right;">${salida.iva}</td>
+                                        <td style="text-align: right;">${salida.total}</td>
                                         <c:if test="${puedeEditar}">
                                             <td>
-                                                <a href="<c:url value='/inventario/salida/lote/elimina/${lote.id}' />" class="btn btn-mini btn-danger"><i class="icon-remove icon-white"></i></a>
+                                                <a href="<c:url value='/inventario/factura/salida/elimina/${salida.id}' />" class="btn btn-mini btn-danger"><i class="icon-remove icon-white"></i></a>
                                             </td>
                                         </c:if>
                                     </tr>
@@ -137,30 +104,24 @@
                                     <th></th>
                                     <th></th>
                                     <th style="text-align: right;"><s:message code="subtotal.label" /></th>
-                                    <th style="text-align: right;"><span class="${estiloTotales}">${subtotal}</span></th>
-                                    <c:if test="${puedeEditar}">
-                                        <th>${salida.subtotal}</th>
-                                    </c:if>
+                                    <th style="text-align: right;">${salidasSubtotal}</th>
+                                    <th></th>
                                 </tr>
                                 <tr>
                                     <th></th>
                                     <th></th>
                                     <th></th>
                                     <th style="text-align: right;"><s:message code="iva.label" /></th>
-                                    <th style="text-align: right;"><span class="${estiloTotales}">${iva}</span></th>
-                                    <c:if test="${puedeEditar}">
-                                        <th>${salida.iva}</th>
-                                    </c:if>
+                                    <th style="text-align: right;">${salidasIva}</th>
+                                    <th></th>
                                 </tr>
                                 <tr>
                                     <th></th>
                                     <th></th>
                                     <th></th>
                                     <th style="text-align: right;"><s:message code="total.label" /></th>
-                                    <th style="text-align: right;"><span class="${estiloTotales}">${total}</span></th>
-                                    <c:if test="${puedeEditar}">
-                                        <th>${salida.total}</th>
-                                    </c:if>
+                                    <th style="text-align: right;">${salidasTotal}</th>
+                                    <th></th>
                                 </tr>
                             </tfoot>
                         </table>
@@ -170,21 +131,20 @@
                 <c:if test="${puedeEditar || puedeCerrar || puedePendiente || puedeEliminar || puedeEditarPendiente || puedeCancelar || puedeReporte}">
                     <p class="well">
                         <c:if test="${puedeEditar}">
-                            <a href="<c:url value='/inventario/salida/edita/${salida.id}' />" class="btn btn-large"><i class="icon-edit"></i> <s:message code="editar.button" /></a>
-                            <a href="<c:url value='/inventario/salida/lote/${salida.id}' />" class="btn btn-primary btn-large"><i class="icon-shopping-cart icon-white"></i> <s:message code="lote.nuevo.button" /></a>
+                            <a href="<c:url value='/inventario/factura/edita/${factura.id}' />" class="btn btn-large"><i class="icon-edit"></i> <s:message code="editar.button" /></a>
                         </c:if>
                         <c:if test="${puedeCerrar}">
-                            <a href="<c:url value='/inventario/salida/cerrar/${salida.id}' />" class="btn btn-warning btn-large" onclick="return confirm('<s:message code="confirma.cerrar2.message" />');"><i class="icon-lock icon-white"></i> <s:message code="cerrar.button" /></a>
+                            <a href="<c:url value='/inventario/factura/cerrar/${factura.id}' />" class="btn btn-warning btn-large" onclick="return confirm('<s:message code="confirma.cerrar2.message" />');"><i class="icon-lock icon-white"></i> <s:message code="cerrar.button" /></a>
                         </c:if>
                         <c:if test="${puedeEliminar}">
                             <form:hidden path="id" />
                             <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="eliminar"  onclick="return confirm('<s:message code="confirma.elimina2.message" />');" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='eliminar.button'/></button>
                         </c:if>
                         <c:if test="${puedeReporte}">
-                            <a href="<c:url value='/reporte/salida/${salida.id}' />" class="btn btn-primary btn-large" ><i class="icon-print icon-white"></i> <s:message code="reporte.button" /></a>
+                            <a href="<c:url value='/reporte/factura/${factura.id}' />" class="btn btn-primary btn-large" ><i class="icon-print icon-white"></i> <s:message code="reporte.button" /></a>
                         </c:if>
                         <c:if test="${puedeCancelar}">
-                            <a href="<c:url value='/inventario/salida/cancela/${salida.id}' />" class="btn btn-warning btn-large" ><i class="icon-exclamation-sign icon-white"></i> <s:message code="cancelar.button" /></a>
+                            <a href="<c:url value='/inventario/factura/cancela/${factura.id}' />" class="btn btn-warning btn-large" ><i class="icon-exclamation-sign icon-white"></i> <s:message code="cancelar.button" /></a>
                         </c:if>
                     </p>
                 </c:if>
