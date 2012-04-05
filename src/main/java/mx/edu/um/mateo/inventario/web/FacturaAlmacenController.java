@@ -23,6 +23,7 @@
  */
 package mx.edu.um.mateo.inventario.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,12 +34,14 @@ import mx.edu.um.mateo.general.dao.ClienteDao;
 import mx.edu.um.mateo.general.model.Cliente;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.general.utils.LabelValueBean;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inventario.dao.EntradaDao;
 import mx.edu.um.mateo.inventario.dao.FacturaAlmacenDao;
 import mx.edu.um.mateo.inventario.dao.SalidaDao;
 import mx.edu.um.mateo.inventario.model.FacturaAlmacen;
+import mx.edu.um.mateo.inventario.model.Salida;
 import mx.edu.um.mateo.inventario.utils.*;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
@@ -47,7 +50,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -167,10 +169,6 @@ public class FacturaAlmacenController extends BaseController {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
-        if (bindingResult.hasErrors()) {
-            log.debug("Hubo algun error en la forma, regresando");
-            return "inventario/factura/nueva";
-        }
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
@@ -223,7 +221,7 @@ public class FacturaAlmacenController extends BaseController {
             factura = facturaDao.actualiza(factura, usuario);
         } catch (NoEstaAbiertaException e) {
             log.error("No se pudo actualizar la factura", e);
-            modelo.addAttribute("message", "facturaAlmace .intento.modificar.cerrada.message");
+            modelo.addAttribute("message", "facturaAlmacen.intento.modificar.cerrada.message");
             modelo.addAttribute("messageStyle", "alert-error");
             modelo.addAttribute("messageAttrs", new String[]{factura.getFolio()});
             return "inventario/factura/nueva";
@@ -250,8 +248,10 @@ public class FacturaAlmacenController extends BaseController {
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
         } catch (Exception e) {
             log.error("No se pudo eliminar la factura " + id, e);
-            bindingResult.addError(new ObjectError("factura", new String[]{"facturaAlmacen.no.eliminada.message"}, null, null));
-            return "inventario/factura/ver";
+            redirectAttributes.addFlashAttribute("message", "facturaAlmacen.no.eliminada.message");
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{id.toString()});
+            return "redirect:/inventario/factura/ver/" + id;
         }
 
         return "redirect:/inventario/factura";
@@ -288,7 +288,7 @@ public class FacturaAlmacenController extends BaseController {
             log.debug("Cancelando factura {}", id);
             FacturaAlmacen factura = facturaDao.cancelar(id, ambiente.obtieneUsuario());
 
-            modelo.addAttribute("message", "factura.cancelada.message");
+            modelo.addAttribute("message", "facturaAlmacen.cancelada.message");
             modelo.addAttribute("messageAttrs", new String[]{factura.getFolio()});
             modelo.addAttribute("messageStyle", "alert-success");
             return "redirect:/inventario/factura/ver/" + id;
@@ -305,6 +305,74 @@ public class FacturaAlmacenController extends BaseController {
             redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
             return "redirect:/inventario/factura/ver/" + id;
         }
+    }
+
+    @RequestMapping(value = "/clientes", params = "term", produces = "application/json")
+    public @ResponseBody
+    List<LabelValueBean> clientes(HttpServletRequest request, @RequestParam("term") String filtro) {
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", request.getSession().getAttribute("empresaId"));
+        params.put("filtro", filtro);
+        params = clienteDao.lista(params);
+        List<LabelValueBean> valores = new ArrayList<>();
+        List<Cliente> clientes = (List<Cliente>) params.get("clientes");
+        for (Cliente cliente : clientes) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(cliente.getNombre());
+            sb.append(" | ");
+            sb.append(cliente.getRfc());
+            sb.append(" | ");
+            sb.append(cliente.getNombreCompleto());
+            valores.add(new LabelValueBean(cliente.getId(), sb.toString(), cliente.getNombre()));
+        }
+        return valores;
+    }
+
+    @RequestMapping(value = "/buscaSalida", params = "term", produces = "application/json")
+    public @ResponseBody
+    List<LabelValueBean> buscaSalida(HttpServletRequest request, @RequestParam("term") String filtro) {
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("almacen", request.getSession().getAttribute("almacenId"));
+        params.put("filtro", filtro);
+        params = salidaDao.lista(params);
+        List<LabelValueBean> valores = new ArrayList<>();
+        List<Salida> salidas = (List<Salida>) params.get("salidas");
+        for (Salida salida : salidas) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(salida.getFolio());
+            sb.append(" | ");
+            sb.append(salida.getCliente());
+            valores.add(new LabelValueBean(salida.getId(), sb.toString()));
+        }
+        return valores;
+    }
+
+    @RequestMapping(value = "/salida/nueva", method = RequestMethod.POST)
+    public String nuevaSalida(@RequestParam Long id, @RequestParam Long salidaId, Model modelo, RedirectAttributes redirectAttributes) {
+            log.debug("Nueva salida para factura {}", id);
+            FacturaAlmacen factura = facturaDao.agregaSalida(id, salidaId);
+
+            modelo.addAttribute("message", "facturaAlmacen.agrega.salida.message");
+            modelo.addAttribute("messageAttrs", new String[]{factura.getFolio()});
+            modelo.addAttribute("messageStyle", "alert-success");
+            return "redirect:/inventario/factura/ver/" + id;
+    }
+    
+    @RequestMapping(value = "/salida/elimina/{id}/{salidaId}")
+    public String eliminaSalida(@PathVariable Long id, @PathVariable Long salidaId, Model modelo, RedirectAttributes redirectAttributes) {
+            log.debug("Eliminando salida {} de factura {}", salidaId, id);
+            FacturaAlmacen factura = facturaDao.eliminaSalida(id, salidaId);
+
+            redirectAttributes.addFlashAttribute("message", "facturaAlmacen.elimina.salida.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{factura.getFolio()});
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-success");
+            return "redirect:/inventario/factura/ver/" + id;
     }
 
 }

@@ -5,19 +5,20 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="salida.nueva.label" /></title>
+        <title><s:message code="facturaAlmacen.nueva.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="salida" />
+            <jsp:param name="menu" value="factura" />
         </jsp:include>
 
-        <div id="edita-salida" class="content scaffold-list" role="main">
-            <h1><s:message code="salida.nueva.label" /></h1>
+        <div id="edita-factura" class="content scaffold-list" role="main">
+            <h1><s:message code="facturaAlmacen.nueva.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/inventario/salida'/>"><i class="icon-list icon-white"></i> <s:message code='salida.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/inventario/factura'/>"><i class="icon-list icon-white"></i> <s:message code='facturaAlmacen.lista.label' /></a>
             </p>
-            <form:form commandName="salida" action="crea" method="post">
+            <c:url var="creaUrl" value='/inventario/factura/crea' />
+            <form:form commandName="factura" action="${creaUrl}" method="post">
                 <form:hidden path="cliente.id" id="clienteId" />
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
@@ -31,7 +32,7 @@
                 <fieldset>
                     <div class="row-fluid">
                         <div class="span12">
-                            <s:bind path="salida.cliente">
+                            <s:bind path="factura.cliente">
                                 <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                     <label for="clienteNombre">
                                         <s:message code="cliente.label" />
@@ -45,46 +46,21 @@
                     </div>
                     <div class="row-fluid">
                         <div class="span12">
-                            <s:bind path="salida.reporte">
+                            <s:bind path="factura.fecha">
                                 <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="reporte">
-                                        <s:message code="reporte.label" />
+                                    <label for="fecha">
+                                        <s:message code="fecha.label" />
+                                        <span class="required-indicator">*</span>
                                     </label>
-                                    <form:input path="reporte" cssClass="span6" />
-                                    <form:errors path="reporte" cssClass="alert alert-error" />
+                                    <form:input path="fecha" required="true" maxlength="64" cssClass="span6" />
+                                    <form:errors path="fecha" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
                         </div>
                     </div>
                     <div class="row-fluid">
                         <div class="span12">
-                            <s:bind path="salida.empleado">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="empleado">
-                                        <s:message code="empleado.label" />
-                                    </label>
-                                    <form:input path="empleado" maxlength="64" cssClass="span6" />
-                                    <form:errors path="empleado" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span12">
-                            <s:bind path="salida.departamento">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="departamento">
-                                        <s:message code="departamento.label" />
-                                    </label>
-                                    <form:input path="departamento" maxlength="64" cssClass="span6" />
-                                    <form:errors path="departamento" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span12">
-                            <s:bind path="salida.comentarios">
+                            <s:bind path="factura.comentarios">
                                 <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                     <label for="comentarios">
                                         <s:message code="comentarios.label" />
@@ -98,7 +74,7 @@
                 </fieldset>
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/inventario/salida'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <a class="btn btn-large" href="<s:url value='/inventario/factura'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>
@@ -107,14 +83,17 @@
                 $(document).ready(function() {
                     $('input#clienteNombre')
                         .autocomplete({
-                            source: "<c:url value='/inventario/salida/clientes' />",
+                            source: "<c:url value='/inventario/factura/clientes' />",
                             select: function(event, ui) {
                                 $("input#clienteId").val(ui.item.id);
-                                $("input#reporte").focus();
+                                $("#fecha").focus();
                                 return false;
                             }
                         })
                         .focus();
+                        
+                    $("input#fecha").datepicker($.datepicker.regional['es']);
+                    $("input#fecha").datepicker("option","firstDay",0);
                 });
             </script>                    
         </content>

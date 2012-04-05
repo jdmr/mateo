@@ -356,6 +356,7 @@ public class FacturaAlmacenDao {
         BeanUtils.copyProperties(factura, xfactura);
         xfactura.setId(null);
         xfactura.setFacturaAlmacenId(factura.getId());
+        xfactura.setAlmacenId(factura.getAlmacen().getId());
         xfactura.setClienteId(factura.getCliente().getId());
         xfactura.setEstatusId(factura.getEstatus().getId());
         xfactura.setFechaCreacion(fecha);
@@ -385,9 +386,34 @@ public class FacturaAlmacenDao {
         xentrada.setEntradaId(entrada.getId());
         xentrada.setProveedorId(entrada.getProveedor().getId());
         xentrada.setEstatusId(entrada.getEstatus().getId());
+        xentrada.setAlmacenId(entrada.getAlmacen().getId());
         xentrada.setFechaCreacion(fecha);
         xentrada.setActividad(actividad);
         xentrada.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
         currentSession().save(xentrada);
     }
+    
+    public FacturaAlmacen agregaSalida(Long facturaId, Long salidaId) {
+        FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(FacturaAlmacen.class, facturaId);
+        Salida salida = (Salida) currentSession().load(Salida.class, salidaId);
+        factura.getSalidas().add(salida);
+        factura.setFechaModificacion(new Date());
+        currentSession().save(factura);
+        currentSession().flush();
+        return factura;
+    }
+    
+    public FacturaAlmacen eliminaSalida(Long facturaId, Long salidaId) {
+        log.debug("Eliminando salida {} de factura {}", salidaId, facturaId);
+        FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(FacturaAlmacen.class, facturaId);
+        Salida salida = (Salida) currentSession().load(Salida.class, salidaId);
+        log.debug("SalidasA: {}", factura.getSalidas());
+        factura.getSalidas().remove(salida);
+        log.debug("SalidasB: {}", factura.getSalidas());
+        factura.setFechaModificacion(new Date());
+        currentSession().save(factura);
+        currentSession().flush();
+        return factura;
+    }
+    
 }

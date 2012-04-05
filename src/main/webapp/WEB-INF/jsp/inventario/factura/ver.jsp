@@ -27,108 +27,115 @@
                 </div>
             </c:if>
 
-            <c:url var="eliminaUrl" value="/inventario/factura/elimina" />
-            <form:form commandName="factura" action="${eliminaUrl}" >
-                <form:errors path="*" cssClass="alert alert-error" element="ul" />
+            <div class="row-fluid" style="margin-bottom: 10px;">
+                <div class="span4">
+                    <h4><s:message code="folio.label" /></h4>
+                    <h3>${factura.folio}</h3>
+                </div>
+                <div class="span4">
+                    <h4><s:message code="estatus.label" /></h4>
+                    <h2>${factura.estatus.nombre}</h2>
+                </div>
+            </div>
+            <c:if test="${not empty factura.comentarios}">
                 <div class="row-fluid" style="margin-bottom: 10px;">
-                    <div class="span4">
-                        <h4><s:message code="folio.label" /></h4>
-                        <h3>${factura.folio}</h3>
-                    </div>
-                    <div class="span4">
-                        <h4><s:message code="estatus.label" /></h4>
-                        <h2>${factura.estatus.nombre}</h2>
+                    <div class="span8">
+                        <h4><s:message code="comentarios.label" /></h4>
+                        <h3>${factura.comentarios}</h3>
                     </div>
                 </div>
-                <c:if test="${not empty factura.comentarios}">
-                    <div class="row-fluid" style="margin-bottom: 10px;">
-                        <div class="span8">
-                            <h4><s:message code="comentarios.label" /></h4>
-                            <h3>${factura.comentarios}</h3>
+            </c:if>
+            <div class="row-fluid" style="margin-bottom: 10px;">
+                <div class="span4">
+                    <h4><s:message code="iva.label" /></h4>
+                    <h3>${factura.iva}</h3>
+                </div>
+                <div class="span4">
+                    <h4><s:message code="total.label" /></h4>
+                    <h3>${factura.total}</h3>
+                </div>
+            </div>
+            <div class="row-fluid" style="margin-bottom: 10px;">
+                <div class="span4">
+                    <h4><s:message code="cliente.label" /></h4>
+                    <h3>${factura.cliente.nombre}</h3>
+                </div>
+                <div class="span4">
+                    <h4><s:message code="almacen.label" /></h4>
+                    <h3>${factura.almacen.nombre}</h3>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span12">
+                    <h2><s:message code="salida.lista.label" /></h2>
+                    <form action="<c:url value='/inventario/factura/salida/nueva' />" method="post" class="form-search">
+                        <div class="well">
+                            <input type="hidden" id="id" name="id" value="${factura.id}" />
+                            <input type="hidden" id="salidaId" name="salidaId" value="" />
+                            <input id="nuevaSalida" name="nuevaSalida" type="text" class="input-large search-query" value="" />
+                            <button id="nuevaSalidaBtn" name="nuevaSalidaBtn" type="submit" class="btn btn-primary"><i class="icon-shopping-cart icon-white"></i> <s:message code="salida.nueva.label" /></button>
                         </div>
-                    </div>
-                </c:if>
-                <div class="row-fluid" style="margin-bottom: 10px;">
-                    <div class="span4">
-                        <h4><s:message code="iva.label" /></h4>
-                        <h3>${factura.iva}</h3>
-                    </div>
-                    <div class="span4">
-                        <h4><s:message code="total.label" /></h4>
-                        <h3>${factura.total}</h3>
-                    </div>
-                </div>
-                <div class="row-fluid" style="margin-bottom: 10px;">
-                    <div class="span4">
-                        <h4><s:message code="cliente.label" /></h4>
-                        <h3>${factura.cliente.nombre}</h3>
-                    </div>
-                    <div class="span4">
-                        <h4><s:message code="almacen.label" /></h4>
-                        <h3>${factura.almacen.nombre}</h3>
-                    </div>
-                </div>
-                <div class="row-fluid">
-                    <div class="span12">
-                        <h2><s:message code="salida.lista.label" /></h2>
-                        <table class="table table-striped">
-                            <thead>
+                    </form>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th><s:message code="folio.label" /></th>
+                                <th><s:message code="fecha.label" /></th>
+                                <th style="text-align: right;"><s:message code="iva.label" /></th>
+                                <th style="text-align: right;"><s:message code="total.label" /></th>
+                                <c:if test="${puedeEditar}">
+                                    <th><s:message code="acciones.label" /></th>
+                                </c:if>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach items="${factura.salidas}" var="salida" varStatus="status">
                                 <tr>
-                                    <th><s:message code="folio.label" /></th>
-                                    <th><s:message code="fecha.label" /></th>
-                                    <th style="text-align: right;"><s:message code="iva.label" /></th>
-                                    <th style="text-align: right;"><s:message code="total.label" /></th>
+                                    <td>${salida.folio}</td>
+                                    <td>${salida.fechaCreacion}</td>
+                                    <td style="text-align: right;">${salida.iva}</td>
+                                    <td style="text-align: right;">${salida.total}</td>
                                     <c:if test="${puedeEditar}">
-                                        <th><s:message code="acciones.label" /></th>
+                                        <td>
+                                            <a href="<c:url value='/inventario/factura/salida/elimina/${factura.id}/${salida.id}' />" class="btn btn-mini btn-danger"><i class="icon-remove icon-white"></i></a>
+                                        </td>
                                     </c:if>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach items="${factura.salidas}" var="salida" varStatus="status">
-                                    <tr>
-                                        <td>${salida.folio}</td>
-                                        <td>${salida.fechaCreacion}</td>
-                                        <td style="text-align: right;">${salida.iva}</td>
-                                        <td style="text-align: right;">${salida.total}</td>
-                                        <c:if test="${puedeEditar}">
-                                            <td>
-                                                <a href="<c:url value='/inventario/factura/salida/elimina/${salida.id}' />" class="btn btn-mini btn-danger"><i class="icon-remove icon-white"></i></a>
-                                            </td>
-                                        </c:if>
-                                    </tr>
-                                </c:forEach>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th style="text-align: right;"><s:message code="subtotal.label" /></th>
-                                    <th style="text-align: right;">${salidasSubtotal}</th>
-                                    <th></th>
-                                </tr>
-                                <tr>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th style="text-align: right;"><s:message code="iva.label" /></th>
-                                    <th style="text-align: right;">${salidasIva}</th>
-                                    <th></th>
-                                </tr>
-                                <tr>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th style="text-align: right;"><s:message code="total.label" /></th>
-                                    <th style="text-align: right;">${salidasTotal}</th>
-                                    <th></th>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
+                            </c:forEach>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th style="text-align: right;"><s:message code="subtotal.label" /></th>
+                                <th style="text-align: right;">${salidasSubtotal}</th>
+                                <th></th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th style="text-align: right;"><s:message code="iva.label" /></th>
+                                <th style="text-align: right;">${salidasIva}</th>
+                                <th></th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th style="text-align: right;"><s:message code="total.label" /></th>
+                                <th style="text-align: right;">${salidasTotal}</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
+            </div>
 
-                <c:if test="${puedeEditar || puedeCerrar || puedePendiente || puedeEliminar || puedeEditarPendiente || puedeCancelar || puedeReporte}">
+            <c:if test="${puedeEditar || puedeCerrar || puedePendiente || puedeEliminar || puedeEditarPendiente || puedeCancelar || puedeReporte}">
+                <c:url var="eliminaUrl" value="/inventario/factura/elimina" />
+                <form:form commandName="factura" action="${eliminaUrl}" cssClass="form-inline form-horizontal" >
                     <p class="well">
                         <c:if test="${puedeEditar}">
                             <a href="<c:url value='/inventario/factura/edita/${factura.id}' />" class="btn btn-large"><i class="icon-edit"></i> <s:message code="editar.button" /></a>
@@ -147,8 +154,23 @@
                             <a href="<c:url value='/inventario/factura/cancela/${factura.id}' />" class="btn btn-warning btn-large" ><i class="icon-exclamation-sign icon-white"></i> <s:message code="cancelar.button" /></a>
                         </c:if>
                     </p>
-                </c:if>
-            </form:form>
+                </form:form>
+            </c:if>
         </div>
+        <content>
+            <script>
+                $(document).ready(function() {
+                    $('input#nuevaSalida')
+                        .autocomplete({
+                            source: "<c:url value='/inventario/factura/buscaSalida' />",
+                            select: function(event, ui) {
+                                $("input#salidaId").val(ui.item.id);
+                                $("#nuevaSalidaBtn").focus();
+                                return false;
+                            }
+                        });
+                });
+            </script>                    
+        </content>
     </body>
 </html>

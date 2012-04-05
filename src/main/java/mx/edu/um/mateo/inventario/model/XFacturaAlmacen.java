@@ -34,6 +34,8 @@ import org.springframework.format.annotation.DateTimeFormat;
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
+@Entity
+@Table(name = "xfacturas_almacen")
 public class XFacturaAlmacen {
 
     @Id
@@ -63,14 +65,14 @@ public class XFacturaAlmacen {
     @Column(name = "almacen_id", nullable = false)
     private Long almacenId;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
+    @Column(name = "date_created")
     private Date fechaCreacion;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "last_updated")
     private Date fechaModificacion;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 64)
     private String creador;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 64)
     private String actividad;
 
     public XFacturaAlmacen() {
@@ -318,5 +320,4 @@ public class XFacturaAlmacen {
     public String toString() {
         return "XFacturaAlmacen{" + "folio=" + folio + ", facturaAlmacenId=" + facturaAlmacenId + '}';
     }
-
 }

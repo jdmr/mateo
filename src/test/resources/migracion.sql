@@ -244,23 +244,27 @@ begin;
 -- ALTER TABLE auxiliares ADD CONSTRAINT auxiliares_organizaciones_fk FOREIGN KEY (organizacion_id)
 --         REFERENCES organizaciones(id) MATCH SIMPLE
 --         ON UPDATE NO ACTION ON DELETE NO ACTION;
-drop table if exists resultados;
-CREATE TABLE resultados
-(
-  id bigserial NOT NULL,
-  auxiliar boolean NOT NULL,
-  aviso boolean NOT NULL,
-  clave character varying(50) NOT NULL,
-  detalle boolean NOT NULL,
-  iva boolean NOT NULL,
-  nombre character varying(24) NOT NULL,
-  nombre_fiscal character varying(24) NOT NULL,
-  porcentaje_iva numeric(19,2) NOT NULL,
-  version integer,
-  organizacion_id bigint,
-  CONSTRAINT resultados_pkey PRIMARY KEY (id ),
-  CONSTRAINT resultados_organizaciones_fk FOREIGN KEY (organizacion_id)
-      REFERENCES organizaciones (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-);
+-- drop table if exists resultados;
+-- CREATE TABLE resultados
+-- (
+--   id bigserial NOT NULL,
+--   auxiliar boolean NOT NULL,
+--   aviso boolean NOT NULL,
+--   clave character varying(50) NOT NULL,
+--   detalle boolean NOT NULL,
+--   iva boolean NOT NULL,
+--   nombre character varying(24) NOT NULL,
+--   nombre_fiscal character varying(24) NOT NULL,
+--   porcentaje_iva numeric(19,2) NOT NULL,
+--   version integer,
+--   organizacion_id bigint,
+--   CONSTRAINT resultados_pkey PRIMARY KEY (id ),
+--   CONSTRAINT resultados_organizaciones_fk FOREIGN KEY (organizacion_id)
+--       REFERENCES organizaciones (id) MATCH SIMPLE
+--       ON UPDATE NO ACTION ON DELETE NO ACTION
+-- );
+-- ALTER TABLE xfacturas_almacen ALTER COLUMN fecha TYPE date;
+-- ALTER TABLE xfacturas_almacen ADD COLUMN date_created timestamp;
+ALTER TABLE xfacturas_almacen ALTER COLUMN version TYPE integer;
+
 commit;

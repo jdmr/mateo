@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
 import mx.edu.um.mateo.general.model.Cliente;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -43,6 +45,7 @@ import mx.edu.um.mateo.general.model.Cliente;
 })
 public class Salida implements Serializable {
 
+    private static final Logger log = LoggerFactory.getLogger(Salida.class);
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -327,16 +330,21 @@ public class Salida implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
+        log.debug("Llamando equals {}", obj);
         if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        log.debug("Clase {}", (obj instanceof Salida));
+        if (!(obj instanceof Salida)) {
             return false;
         }
         final Salida other = (Salida) obj;
-        if (!Objects.equals(this.folio, other.folio)) {
+        log.debug("Other : {}", other);
+        log.debug("Salida {} igual a {}", this.folio, other.getFolio());
+        if (!this.folio.equals(other.getFolio())) {
             return false;
         }
+        log.debug("ES IGUAL!!!");
         return true;
     }
 
