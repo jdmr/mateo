@@ -124,6 +124,46 @@ public class EntradaDao {
         return params;
     }
 
+    public List<Entrada> buscaEntradasPorFactura(Map<String, Object> params) {
+        log.debug("Buscando lista de entradas con params {}", params);
+        if (params == null) {
+            params = new HashMap<>();
+        }
+
+        if (!params.containsKey("max")) {
+            params.put("max", 10);
+        } else {
+            params.put("max", Math.min((Integer) params.get("max"), 100));
+        }
+
+        if (!params.containsKey("offset")) {
+            params.put("offset", 0);
+        }
+        Criteria criteria = currentSession().createCriteria(Entrada.class);
+
+        if (params.containsKey("almacen")) {
+            criteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
+        }
+
+        if (params.containsKey("filtro")) {
+            String filtro = (String) params.get("filtro");
+            Disjunction propiedades = Restrictions.disjunction();
+            propiedades.add(Restrictions.ilike("folio", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("factura", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("comentarios", filtro, MatchMode.ANYWHERE));
+            criteria.add(propiedades);
+        }
+
+        criteria.add(Restrictions.eq("devolucion", Boolean.TRUE));
+        criteria.createCriteria("estatus").add(Restrictions.eq("nombre", Constantes.CERRADA));
+        criteria.addOrder(Order.desc("fechaModificacion"));
+        
+        criteria.setFirstResult((Integer) params.get("offset"));
+        criteria.setMaxResults((Integer) params.get("max"));
+
+        return criteria.list();
+    }
+
     public Entrada obtiene(Long id) {
         return (Entrada) currentSession().get(Entrada.class, id);
     }

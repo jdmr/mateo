@@ -128,6 +128,48 @@ public class SalidaDao {
         return params;
     }
 
+    public List<Salida> buscaSalidasParaFactura(Map<String, Object> params) {
+        log.debug("Buscando lista de salidas con params {}", params);
+        if (params == null) {
+            params = new HashMap<>();
+        }
+
+        if (!params.containsKey("max")) {
+            params.put("max", 10);
+        } else {
+            params.put("max", Math.min((Integer) params.get("max"), 100));
+        }
+
+        if (!params.containsKey("offset")) {
+            params.put("offset", 0);
+        }
+        Criteria criteria = currentSession().createCriteria(Salida.class);
+
+        if (params.containsKey("almacen")) {
+            criteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
+        }
+
+        if (params.containsKey("filtro")) {
+            String filtro = (String) params.get("filtro");
+            Disjunction propiedades = Restrictions.disjunction();
+            propiedades.add(Restrictions.ilike("folio", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("reporte", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("empleado", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("departamento", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("atendio", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("comentarios", filtro, MatchMode.ANYWHERE));
+            criteria.add(propiedades);
+        }
+
+        criteria.createCriteria("estatus").add(Restrictions.eq("nombre", Constantes.CERRADA));
+        criteria.addOrder(Order.desc("fechaModificacion"));
+
+        criteria.setFirstResult((Integer) params.get("offset"));
+        criteria.setMaxResults((Integer) params.get("max"));
+
+        return criteria.list();
+    }
+
     public Salida obtiene(Long id) {
         return (Salida) currentSession().get(Salida.class, id);
     }

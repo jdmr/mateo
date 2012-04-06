@@ -107,13 +107,11 @@
                             <tr>
                                 <th></th>
                                 <th></th>
-                                <th></th>
                                 <th style="text-align: right;"><s:message code="subtotal.label" /></th>
                                 <th style="text-align: right;">${salidasSubtotal}</th>
                                 <th></th>
                             </tr>
                             <tr>
-                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th style="text-align: right;"><s:message code="iva.label" /></th>
@@ -123,9 +121,73 @@
                             <tr>
                                 <th></th>
                                 <th></th>
-                                <th></th>
                                 <th style="text-align: right;"><s:message code="total.label" /></th>
                                 <th style="text-align: right;">${salidasTotal}</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <h2><s:message code="entrada.lista.label" /></h2>
+                    <form action="<c:url value='/inventario/factura/entrada/nueva' />" method="post" class="form-search">
+                        <div class="well">
+                            <input type="hidden" id="id" name="id" value="${factura.id}" />
+                            <input type="hidden" id="entradaId" name="entradaId" value="" />
+                            <input id="nuevaEntrada" name="nuevaEntrada" type="text" class="input-large search-query" value="" />
+                            <button id="nuevaEntradaBtn" name="nuevaEntradaBtn" type="submit" class="btn btn-primary"><i class="icon-shopping-cart icon-white"></i> <s:message code="entrada.nueva.label" /></button>
+                        </div>
+                    </form>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th><s:message code="folio.label" /></th>
+                                <th><s:message code="fechaFactura.label" /></th>
+                                <th style="text-align: right;"><s:message code="iva.label" /></th>
+                                <th style="text-align: right;"><s:message code="total.label" /></th>
+                                <c:if test="${puedeEditar}">
+                                    <th><s:message code="acciones.label" /></th>
+                                </c:if>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach items="${factura.entradas}" var="entrada" varStatus="status">
+                                <tr>
+                                    <td>${entrada.folio}</td>
+                                    <td>${entrada.fechaFactura}</td>
+                                    <td style="text-align: right;">${entrada.iva}</td>
+                                    <td style="text-align: right;">${entrada.total}</td>
+                                    <c:if test="${puedeEditar}">
+                                        <td>
+                                            <a href="<c:url value='/inventario/factura/entrada/elimina/${factura.id}/${entrada.id}' />" class="btn btn-mini btn-danger"><i class="icon-remove icon-white"></i></a>
+                                        </td>
+                                    </c:if>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th style="text-align: right;"><s:message code="subtotal.label" /></th>
+                                <th style="text-align: right;">${entradasSubtotal}</th>
+                                <th></th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th style="text-align: right;"><s:message code="iva.label" /></th>
+                                <th style="text-align: right;">${entradasIva}</th>
+                                <th></th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th style="text-align: right;"><s:message code="total.label" /></th>
+                                <th style="text-align: right;">${entradasTotal}</th>
                                 <th></th>
                             </tr>
                         </tfoot>
@@ -165,7 +227,19 @@
                             source: "<c:url value='/inventario/factura/buscaSalida' />",
                             select: function(event, ui) {
                                 $("input#salidaId").val(ui.item.id);
+                                $("input#nuevaSalida").val(ui.item.nombre);
                                 $("#nuevaSalidaBtn").focus();
+                                return false;
+                            }
+                        });
+                        
+                    $('input#nuevaEntrada')
+                        .autocomplete({
+                            source: "<c:url value='/inventario/factura/buscaEntrada' />",
+                            select: function(event, ui) {
+                                $("input#entradaId").val(ui.item.id);
+                                $("input#nuevaEntrada").val(ui.item.nombre);
+                                $("#nuevaEntradaBtn").focus();
                                 return false;
                             }
                         });

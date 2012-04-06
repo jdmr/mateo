@@ -403,6 +403,16 @@ public class FacturaAlmacenDao {
         return factura;
     }
     
+    public FacturaAlmacen agregaEntrada(Long facturaId, Long entradaId) {
+        FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(FacturaAlmacen.class, facturaId);
+        Entrada entrada = (Entrada) currentSession().load(Entrada.class, entradaId);
+        factura.getEntradas().add(entrada);
+        factura.setFechaModificacion(new Date());
+        currentSession().save(factura);
+        currentSession().flush();
+        return factura;
+    }
+    
     public FacturaAlmacen eliminaSalida(Long facturaId, Long salidaId) {
         log.debug("Eliminando salida {} de factura {}", salidaId, facturaId);
         FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(FacturaAlmacen.class, facturaId);
@@ -410,6 +420,17 @@ public class FacturaAlmacenDao {
         log.debug("SalidasA: {}", factura.getSalidas());
         factura.getSalidas().remove(salida);
         log.debug("SalidasB: {}", factura.getSalidas());
+        factura.setFechaModificacion(new Date());
+        currentSession().save(factura);
+        currentSession().flush();
+        return factura;
+    }
+    
+    public FacturaAlmacen eliminaEntrada(Long facturaId, Long entradaId) {
+        log.debug("Eliminando entrada {} de factura {}", entradaId, facturaId);
+        FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(FacturaAlmacen.class, facturaId);
+        Entrada entrada = (Entrada) currentSession().load(Entrada.class, entradaId);
+        factura.getEntradas().remove(entrada);
         factura.setFechaModificacion(new Date());
         currentSession().save(factura);
         currentSession().flush();

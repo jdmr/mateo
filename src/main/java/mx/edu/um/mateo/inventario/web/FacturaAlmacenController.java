@@ -40,6 +40,7 @@ import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inventario.dao.EntradaDao;
 import mx.edu.um.mateo.inventario.dao.FacturaAlmacenDao;
 import mx.edu.um.mateo.inventario.dao.SalidaDao;
+import mx.edu.um.mateo.inventario.model.Entrada;
 import mx.edu.um.mateo.inventario.model.FacturaAlmacen;
 import mx.edu.um.mateo.inventario.model.Salida;
 import mx.edu.um.mateo.inventario.utils.*;
@@ -340,15 +341,35 @@ public class FacturaAlmacenController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         params.put("almacen", request.getSession().getAttribute("almacenId"));
         params.put("filtro", filtro);
-        params = salidaDao.lista(params);
+        List<Salida> salidas = salidaDao.buscaSalidasParaFactura(params);
         List<LabelValueBean> valores = new ArrayList<>();
-        List<Salida> salidas = (List<Salida>) params.get("salidas");
         for (Salida salida : salidas) {
             StringBuilder sb = new StringBuilder();
             sb.append(salida.getFolio());
             sb.append(" | ");
-            sb.append(salida.getCliente());
-            valores.add(new LabelValueBean(salida.getId(), sb.toString()));
+            sb.append(salida.getCliente().getNombre());
+            valores.add(new LabelValueBean(salida.getId(), sb.toString(), salida.getFolio()));
+        }
+        return valores;
+    }
+
+    @RequestMapping(value = "/buscaEntrada", params = "term", produces = "application/json")
+    public @ResponseBody
+    List<LabelValueBean> buscaEntrada(HttpServletRequest request, @RequestParam("term") String filtro) {
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("almacen", request.getSession().getAttribute("almacenId"));
+        params.put("filtro", filtro);
+        List<Entrada> entradas = entradaDao.buscaEntradasPorFactura(params);
+        List<LabelValueBean> valores = new ArrayList<>();
+        for (Entrada entrada : entradas) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(entrada.getFolio());
+            sb.append(" | ");
+            sb.append(entrada.getProveedor().getNombre());
+            valores.add(new LabelValueBean(entrada.getId(), sb.toString(), entrada.getFolio()));
         }
         return valores;
     }
@@ -364,12 +385,34 @@ public class FacturaAlmacenController extends BaseController {
             return "redirect:/inventario/factura/ver/" + id;
     }
     
+    @RequestMapping(value = "/entrada/nueva", method = RequestMethod.POST)
+    public String nuevaEntrada(@RequestParam Long id, @RequestParam Long entradaId, Model modelo, RedirectAttributes redirectAttributes) {
+            log.debug("Nueva entrada para factura {}", id);
+            FacturaAlmacen factura = facturaDao.agregaEntrada(id, entradaId);
+
+            modelo.addAttribute("message", "facturaAlmacen.agrega.entrada.message");
+            modelo.addAttribute("messageAttrs", new String[]{factura.getFolio()});
+            modelo.addAttribute("messageStyle", "alert-success");
+            return "redirect:/inventario/factura/ver/" + id;
+    }
+    
     @RequestMapping(value = "/salida/elimina/{id}/{salidaId}")
     public String eliminaSalida(@PathVariable Long id, @PathVariable Long salidaId, Model modelo, RedirectAttributes redirectAttributes) {
             log.debug("Eliminando salida {} de factura {}", salidaId, id);
             FacturaAlmacen factura = facturaDao.eliminaSalida(id, salidaId);
 
             redirectAttributes.addFlashAttribute("message", "facturaAlmacen.elimina.salida.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{factura.getFolio()});
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-success");
+            return "redirect:/inventario/factura/ver/" + id;
+    }
+
+    @RequestMapping(value = "/entrada/elimina/{id}/{entradaId}")
+    public String eliminaEntrada(@PathVariable Long id, @PathVariable Long entradaId, Model modelo, RedirectAttributes redirectAttributes) {
+            log.debug("Eliminando entrada {} de factura {}", entradaId, id);
+            FacturaAlmacen factura = facturaDao.eliminaEntrada(id, entradaId);
+
+            redirectAttributes.addFlashAttribute("message", "facturaAlmacen.elimina.entrada.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{factura.getFolio()});
             redirectAttributes.addFlashAttribute("messageStyle", "alert-success");
             return "redirect:/inventario/factura/ver/" + id;
