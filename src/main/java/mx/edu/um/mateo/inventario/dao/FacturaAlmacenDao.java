@@ -107,6 +107,7 @@ public class FacturaAlmacenDao {
         } else {
             criteria.createCriteria("estatus").addOrder(Order.asc("prioridad"));
         }
+        criteria.addOrder(Order.desc("fechaModificacion"));
 
         if (!params.containsKey("reporte")) {
             criteria.setFirstResult((Integer) params.get("offset"));

@@ -197,6 +197,9 @@ public class ReporteDao {
         nombres.add("cancelaciones");
         nombres.add("salida_lote");
         nombres.add("salida");
+        nombres.add("facturaAlmacen_salida");
+        nombres.add("facturaAlmacen_entrada");
+        nombres.add("facturaAlmacen");
         
         almacen.getReportes().clear();
         almacen.getReportes().addAll(inicializaReportes(nombres));
