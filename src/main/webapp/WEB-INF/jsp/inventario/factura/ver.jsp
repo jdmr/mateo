@@ -68,14 +68,16 @@
             <div class="row-fluid">
                 <div class="span12">
                     <h2><s:message code="salida.lista.label" /></h2>
-                    <form action="<c:url value='/inventario/factura/salida/nueva' />" method="post" class="form-search">
-                        <div class="well">
-                            <input type="hidden" id="id" name="id" value="${factura.id}" />
-                            <input type="hidden" id="salidaId" name="salidaId" value="" />
-                            <input id="nuevaSalida" name="nuevaSalida" type="text" class="input-large search-query" value="" />
-                            <button id="nuevaSalidaBtn" name="nuevaSalidaBtn" type="submit" class="btn btn-primary"><i class="icon-shopping-cart icon-white"></i> <s:message code="salida.nueva.label" /></button>
-                        </div>
-                    </form>
+                    <c:if test="${puedeEditar}">
+                        <form action="<c:url value='/inventario/factura/salida/nueva' />" method="post" class="form-search">
+                            <div class="well">
+                                <input type="hidden" id="id" name="id" value="${factura.id}" />
+                                <input type="hidden" id="salidaId" name="salidaId" value="" />
+                                <input id="nuevaSalida" name="nuevaSalida" type="text" class="input-large search-query" value="" />
+                                <button id="nuevaSalidaBtn" name="nuevaSalidaBtn" type="submit" class="btn btn-primary"><i class="icon-shopping-cart icon-white"></i> <s:message code="salida.nueva.label" /></button>
+                            </div>
+                        </form>
+                    </c:if>
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -133,14 +135,16 @@
             <div class="row-fluid">
                 <div class="span12">
                     <h2><s:message code="entrada.lista.label" /></h2>
-                    <form action="<c:url value='/inventario/factura/entrada/nueva' />" method="post" class="form-search">
-                        <div class="well">
-                            <input type="hidden" id="id" name="id" value="${factura.id}" />
-                            <input type="hidden" id="entradaId" name="entradaId" value="" />
-                            <input id="nuevaEntrada" name="nuevaEntrada" type="text" class="input-large search-query" value="" />
-                            <button id="nuevaEntradaBtn" name="nuevaEntradaBtn" type="submit" class="btn btn-primary"><i class="icon-shopping-cart icon-white"></i> <s:message code="entrada.nueva.label" /></button>
-                        </div>
-                    </form>
+                    <c:if test="${puedeEditar}">
+                        <form action="<c:url value='/inventario/factura/entrada/nueva' />" method="post" class="form-search">
+                            <div class="well">
+                                <input type="hidden" id="id" name="id" value="${factura.id}" />
+                                <input type="hidden" id="entradaId" name="entradaId" value="" />
+                                <input id="nuevaEntrada" name="nuevaEntrada" type="text" class="input-large search-query" value="" />
+                                <button id="nuevaEntradaBtn" name="nuevaEntradaBtn" type="submit" class="btn btn-primary"><i class="icon-shopping-cart icon-white"></i> <s:message code="entrada.nueva.label" /></button>
+                            </div>
+                        </form>
+                    </c:if>
                     <table class="table table-striped">
                         <thead>
                             <tr>

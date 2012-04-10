@@ -23,6 +23,7 @@
  */
 package mx.edu.um.mateo.inventario.web;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -152,6 +153,26 @@ public class FacturaAlmacenController extends BaseController {
         }
 
         modelo.addAttribute("factura", factura);
+        
+        BigDecimal salidasTotal = BigDecimal.ZERO;
+        BigDecimal salidasIva = BigDecimal.ZERO;
+        for(Salida salida : factura.getSalidas()) {
+            salidasTotal = salidasTotal.add(salida.getTotal());
+            salidasIva = salidasIva.add(salida.getIva());
+        }
+        modelo.addAttribute("salidasTotal", salidasTotal);
+        modelo.addAttribute("salidasIva", salidasIva);
+        modelo.addAttribute("salidasSubtotal", salidasTotal.subtract(salidasIva));
+        
+        BigDecimal entradasTotal = BigDecimal.ZERO;
+        BigDecimal entradasIva = BigDecimal.ZERO;
+        for(Entrada entrada : factura.getEntradas()) {
+            entradasTotal = entradasTotal.add(entrada.getTotal());
+            entradasIva = entradasIva.add(entrada.getIva());
+        }
+        modelo.addAttribute("entradasTotal", entradasTotal);
+        modelo.addAttribute("entradasIva", entradasIva);
+        modelo.addAttribute("entradasSubtotal", entradasTotal.subtract(entradasIva));
 
         return "inventario/factura/ver";
     }
