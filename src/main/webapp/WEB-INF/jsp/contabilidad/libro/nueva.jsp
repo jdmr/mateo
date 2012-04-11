@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="libro.nueva.label" /></title>
+        <title><s:message code="libros.nueva.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -13,9 +13,9 @@
         </jsp:include>
 
         <div id="nueva-libro" class="content scaffold-list" role="main">
-            <h1><s:message code="libro.nueva.label" /></h1>
+            <h1><s:message code="libros.nueva.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/contabilidad/libro'/>"><i class="icon-list icon-white"></i> <s:message code='libro.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/libro'/>"><i class="icon-list icon-white"></i> <s:message code='libros.lista.label' /></a>
             </p>
             <form:form commandName="libro" action="crea" method="post">
                 <form:errors path="*">
@@ -34,7 +34,7 @@
                                 <s:message code="nombre.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="nombre" maxlength="128" required="true" />
+                            <form:input path="nombre" maxlength="24" required="true" />
                             <form:errors path="nombre" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -68,12 +68,12 @@
                             <form:errors path="codigo" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                 
+                    
                 </fieldset>
 
-                <p class="well" style="margin-top: 10px;">
+            <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/contabilidad/libro'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <a class="btn btn-large" href="<s:url value='/contabilidad/mayor'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>

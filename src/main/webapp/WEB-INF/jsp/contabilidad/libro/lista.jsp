@@ -4,14 +4,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="libro.lista.label" /></title>
+        <title><s:message code="libros.lista.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
             <jsp:param name="menu" value="libro" />
         </jsp:include>
 
-        <h1><s:message code="libro.lista.label" /></h1>
+        <h1><s:message code="libros.lista.label" /></h1>
         <hr/>
 
         <form name="filtraLista" class="form-search" method="post" action="<c:url value='/contabilidad/libro' />">
@@ -21,7 +21,7 @@
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/contabilidad/libro/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='libro.nueva.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/libro/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='libros.nueva.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
@@ -60,13 +60,12 @@
                             <jsp:param name="columna" value="codigo" />
                         </jsp:include>
 
-                    </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${libro}" var="libro" varStatus="status">
+                    <c:forEach items="${libros}" var="libro" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/contabilidad/libro/ver/${libro.id}' />">${libro.nombre}</a></td>
-                            <td>${libro.nombre}</td>
+
                             <td>${libro.clave}</td>
                             <td>${libro.status}</td>
                             <td>${libro.codigo}</td>

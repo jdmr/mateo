@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="libro.edita.label" /></title>
+        <title><s:message code="libros.edita.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -13,9 +13,9 @@
         </jsp:include>
 
         <div id="edita-libro" class="content scaffold-list" role="main">
-            <h1><s:message code="libro.edita.label" /></h1>
+            <h1><s:message code="libros.edita.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/contabilidad/libro'/>"><i class="icon-list icon-white"></i> <s:message code='libro.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/libro'/>"><i class="icon-list icon-white"></i> <s:message code='libros.lista.label' /></a>
             </p>
             <c:url var="actualizaUrl" value="/contabilidad/libro/actualiza" />
             <form:form commandName="libro" method="post" action="${actualizaUrl}">
@@ -28,7 +28,7 @@
                     </div>
                 </form:errors>
                 <form:hidden path="id" />
-                
+               
 
                 <fieldset>
                     <s:bind path="libro.nombre">
@@ -37,7 +37,7 @@
                                 <s:message code="nombre.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="nombre" maxlength="128" required="true" />
+                            <form:input path="nombre" maxlength="24" required="true" />
                             <form:errors path="nombre" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -67,11 +67,10 @@
                                 <s:message code="codigo.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="codigo" maxlength="3" required="true" />
+                            <form:input path="codigo" maxlength="2" required="true" />
                             <form:errors path="codigo" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                   
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">

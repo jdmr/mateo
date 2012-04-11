@@ -18,7 +18,7 @@ public class Libro implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank
-    @Column(nullable = false, length = 5)
+    @Column(nullable = false, length = 24)
     String nombre;
     @NotBlank
     @Column(nullable = false, length = 3)

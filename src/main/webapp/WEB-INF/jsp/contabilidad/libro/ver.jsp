@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="libro.ver.label" /></title>
+        <title><s:message code="libros.ver.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -13,11 +13,11 @@
         </jsp:include>
 
         <div id="ver-libro" class="content scaffold-list" role="main">
-            <h1><s:message code="libro.ver.label" /></h1>
+            <h1><s:message code="libros.ver.label" /></h1>
 
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/contabilidad/libro'/>"><i class="icon-list icon-white"></i> <s:message code='libro.lista.label' /></a>
-                <a class="btn btn-primary" href="<s:url value='/contabilidad/libro/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='libro.nueva.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/libro'/>"><i class="icon-list icon-white"></i> <s:message code='libros.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/libro/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='libros.nueva.label' /></a>
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
@@ -41,12 +41,10 @@
                     <div class="span1"><s:message code="status.label" /></div>
                     <div class="span11">${libro.status}</div>
                 </div>
-                <div class="row-fluid" style="padding-bottom: 10px;">
+                  <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="codigo.label" /></div>
                     <div class="span11">${libro.codigo}</div>
                 </div>
-                
-
                 <p class="well">
                     <a href="<c:url value='/contabilidad/libro/edita/${libro.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
                     <form:hidden path="id" />
