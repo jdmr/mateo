@@ -217,7 +217,7 @@
                             <a href="<c:url value='/reporte/factura/almacen/${factura.id}' />" class="btn btn-primary btn-large" ><i class="icon-print icon-white"></i> <s:message code="reporte.button" /></a>
                         </c:if>
                         <c:if test="${puedeCancelar}">
-                            <a href="<c:url value='/inventario/factura/cancela/${factura.id}' />" class="btn btn-warning btn-large" ><i class="icon-exclamation-sign icon-white"></i> <s:message code="cancelar.button" /></a>
+                            <a href="<c:url value='/inventario/factura/cancela/${factura.id}' />" class="btn btn-warning btn-large" onclick="return confirm('<s:message code="confirma.cancela2.message" />');" ><i class="icon-exclamation-sign icon-white"></i> <s:message code="cancelar.button" /></a>
                         </c:if>
                     </p>
                 </form:form>

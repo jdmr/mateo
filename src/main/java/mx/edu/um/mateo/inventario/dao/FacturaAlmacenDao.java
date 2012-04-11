@@ -242,7 +242,7 @@ public class FacturaAlmacenDao {
     public FacturaAlmacen cancelar(Long id, Usuario usuario) throws NoEstaCerradaException, NoSePuedeCancelarException {
         FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(FacturaAlmacen.class, id);
         if (factura != null) {
-            if (factura.getEstatus().getNombre().equals(Constantes.ABIERTA)) {
+            if (factura.getEstatus().getNombre().equals(Constantes.CERRADA)) {
                 Query query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
                 query.setString("nombre", Constantes.CERRADA);
                 Estatus cerrada = (Estatus) query.uniqueResult();

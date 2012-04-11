@@ -146,10 +146,6 @@ public class FacturaAlmacenController extends BaseController {
                 modelo.addAttribute("puedeCancelar", true);
                 modelo.addAttribute("puedeReporte", true);
                 break;
-            case Constantes.CANCELADA:
-                log.debug("Puede ver reporte");
-                modelo.addAttribute("puedeReporte", true);
-                break;
         }
 
         modelo.addAttribute("factura", factura);
@@ -304,15 +300,15 @@ public class FacturaAlmacenController extends BaseController {
         return "redirect:/inventario/factura/ver/" + id;
     }
 
-    @RequestMapping(value = "/cancelar", method = RequestMethod.POST)
-    public String cancelar(@RequestParam Long id, @RequestParam String comentarios, Model modelo, RedirectAttributes redirectAttributes) {
+    @RequestMapping(value = "/cancela/{id}")
+    public String cancela(@PathVariable Long id, Model modelo, RedirectAttributes redirectAttributes) {
         try {
             log.debug("Cancelando factura {}", id);
             FacturaAlmacen factura = facturaDao.cancelar(id, ambiente.obtieneUsuario());
 
-            modelo.addAttribute("message", "facturaAlmacen.cancelada.message");
-            modelo.addAttribute("messageAttrs", new String[]{factura.getFolio()});
-            modelo.addAttribute("messageStyle", "alert-success");
+            redirectAttributes.addFlashAttribute("message", "facturaAlmacen.cancelada.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{factura.getFolio()});
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-success");
             return "redirect:/inventario/factura/ver/" + id;
         } catch (NoEstaCerradaException e) {
             log.error("No se puede cancelar la factura", e);
