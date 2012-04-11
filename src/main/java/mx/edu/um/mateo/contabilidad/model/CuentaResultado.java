@@ -42,6 +42,34 @@ public class CuentaResultado implements Serializable {
     @ManyToOne
     private Organizacion organizacion;
 
+    @ManyToOne
+    private Organizacion oraganizacion;
+    /**
+   @NotBlank
+    @Column(nullable = false)
+    private Boolean detalle;
+    @NotBlank
+    @Column(nullable = false)
+    private Boolean aviso;
+    @NotBlank
+    @Column(nullable = false)
+    private Boolean auxiliar;
+    @NotBlank
+    @Column(nullable = false)
+    private Boolean iva;
+    @NotBlank
+    @Column(nullable = false)
+    private Boolean detalleR;
+    @NotBlank
+    @Column(nullable = false, length = 24)
+    private Double pctIva;
+    @NotBlank
+    @Column(nullable = false, length = 24)
+    private String idCuentaResultado;
+    */
+    
+
+
     public CuentaResultado() {
     }
 
@@ -162,6 +190,20 @@ public class CuentaResultado implements Serializable {
         int hash = 7;
         hash = 37 * hash + Objects.hashCode(this.clave);
         return hash;
+    }
+
+    /**
+     * @return the oraganizacion
+     */
+    public Organizacion getOraganizacion() {
+        return oraganizacion;
+    }
+
+    /**
+     * @param oraganizacion the oraganizacion to set
+     */
+    public void setOraganizacion(Organizacion oraganizacion) {
+        this.oraganizacion = oraganizacion;
     }
 
     @Override

@@ -1,10 +1,13 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package mx.edu.um.mateo.contabilidad.dao;
 
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
-import mx.edu.um.mateo.contabilidad.model.CuentaResultado;
-import mx.edu.um.mateo.general.dao.EmpresaDao;
+import mx.edu.um.mateo.contabilidad.model.Libro;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import org.hibernate.Criteria;
@@ -20,18 +23,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author nujev
+ * @author develop
  */
 @Repository
 @Transactional
-public class CuentaResultadoDao {
+public class LibroDao {
 
-    private static final Logger log = LoggerFactory.getLogger(CuentaResultadoDao.class);
+    private static final Logger log = LoggerFactory.getLogger(LibroDao.class);
     @Autowired
     private SessionFactory sessionFactory;
 
-    public CuentaResultadoDao() {
-        log.info("Nueva instancia de CuentaResultadoDao");
+    public LibroDao() {
+        log.info("Nueva instancia de LibroDao");
     }
 
     private Session currentSession() {
@@ -39,7 +42,7 @@ public class CuentaResultadoDao {
     }
 
     public Map<String, Object> lista(Map<String, Object> params) {
-        log.debug("Buscando lista de cuenta de resultado con params {}", params);
+        log.debug("Buscando lista de libro con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
@@ -59,20 +62,13 @@ public class CuentaResultadoDao {
         if (!params.containsKey(Constantes.CONTAINSKEY_OFFSET)) {
             params.put(Constantes.CONTAINSKEY_OFFSET, 0);
         }
-        Criteria criteria = currentSession().createCriteria(CuentaResultado.class);
-        Criteria countCriteria = currentSession().createCriteria(CuentaResultado.class);
-        
-        if (params.containsKey(Constantes.CONTAINSKEY_ORGANIZACION)) {
-            criteria.createCriteria(Constantes.CONTAINSKEY_ORGANIZACION).add(Restrictions.idEq(params.get(Constantes.CONTAINSKEY_ORGANIZACION)));
-            countCriteria.createCriteria(Constantes.CONTAINSKEY_ORGANIZACION).add(Restrictions.idEq(params.get(Constantes.CONTAINSKEY_ORGANIZACION)));
-        }
-        
+        Criteria criteria = currentSession().createCriteria(Libro.class);
+        Criteria countCriteria = currentSession().createCriteria(Libro.class);
 
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
             String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);
             Disjunction propiedades = Restrictions.disjunction();
             propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("nombreFiscal", filtro, MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -90,7 +86,7 @@ public class CuentaResultadoDao {
             criteria.setFirstResult((Integer) params.get(Constantes.CONTAINSKEY_OFFSET));
             criteria.setMaxResults((Integer) params.get(Constantes.CONTAINSKEY_MAX));
         }
-        params.put(Constantes.CONTAINSKEY_RESULTADOS, criteria.list());
+        params.put(Constantes.CONTAINSKEY_LIBROS, criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));
@@ -98,36 +94,43 @@ public class CuentaResultadoDao {
         return params;
     }
 
-    public CuentaResultado obtiene(Long id) {
-        log.debug("Obtiene cuenta de resultado con id = {}", id);
-        CuentaResultado cuentaResultado = (CuentaResultado) currentSession().get(CuentaResultado.class, id);
-        return cuentaResultado;
+    public Libro obtiene(Long id) {
+        log.debug("Obtiene  libro con id = {}", id);
+        Libro libro = (Libro) currentSession().get(Libro.class, id);
+        return libro;
+    }
+//
+//    public Libro crea(Libro libro) {
+//        log.debug("Creando  libro : {}", libro);
+//        currentSession().save(libro);
+//        currentSession().flush();
+//        return libro;
+//    }
+
+    public Libro crea(Libro libro) {
+        return crea(libro, null);
     }
 
-    public CuentaResultado crea(CuentaResultado cuentaResultado) {
-        return crea(cuentaResultado, null);
-    }
-
-    public CuentaResultado crea(CuentaResultado cuentaResultado, Usuario usuario) {
-        log.debug("Creando cuenta de resultado : {}", cuentaResultado);
+    public Libro crea(Libro libro, Usuario usuario) {
+        log.debug("Creando cuenta de mayor : {}", libro);
         if (usuario != null) {
-            cuentaResultado.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+            libro.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         }
-        currentSession().save(cuentaResultado);
+        currentSession().save(libro);
         currentSession().flush();
-        return cuentaResultado;
+        return libro;
     }
 
-    public CuentaResultado actualiza(CuentaResultado cuentaResultado) {
-        return actualiza(cuentaResultado, null);
+    public Libro actualiza(Libro libro) {
+        return actualiza(libro, null);
     }
 
-    public CuentaResultado actualiza(CuentaResultado cuentaResultado, Usuario usuario) {
-        log.debug("Actualizando cuenta de resultado {}", cuentaResultado);
-        
-        CuentaResultado nueva = (CuentaResultado)currentSession().get(CuentaResultado.class, cuentaResultado.getId());
-        BeanUtils.copyProperties(cuentaResultado, nueva);
-        
+    public Libro actualiza(Libro libro, Usuario usuario) {
+        log.debug("Actualizando cuenta de mayor {}", libro);
+
+        Libro nueva = (Libro) currentSession().get(Libro.class, libro.getId());
+        BeanUtils.copyProperties(libro, nueva);
+
         if (usuario != null) {
             nueva.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         }
@@ -136,13 +139,12 @@ public class CuentaResultadoDao {
         return nueva;
     }
 
-
     public String elimina(Long id) throws UltimoException {
-        log.debug("Eliminando cuenta de resultado con id {}", id);
-        CuentaResultado cuentaResultado = obtiene(id);
-        currentSession().delete(cuentaResultado);
+        log.debug("Eliminando  libro con id {}", id);
+        Libro libro = obtiene(id);
+        currentSession().delete(libro);
         currentSession().flush();
-        String nombre = cuentaResultado.getNombre();
+        String nombre = libro.getNombre();
         return nombre;
     }
 }
