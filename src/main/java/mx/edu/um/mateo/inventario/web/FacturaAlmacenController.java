@@ -102,7 +102,7 @@ public class FacturaAlmacenController extends BaseController {
             params.put("reporte", true);
             params = facturaDao.lista(params);
             try {
-                generaReporte(tipo, (List<FacturaAlmacen>) params.get("facturas"), response, "facturas", Constantes.ALM, almacenId);
+                generaReporte(tipo, (List<FacturaAlmacen>) params.get("facturas"), response, "facturasAlmacen", Constantes.ALM, almacenId);
                 return null;
             } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -117,7 +117,7 @@ public class FacturaAlmacenController extends BaseController {
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<FacturaAlmacen>) params.get("facturas"), request, "facturas", Constantes.ALM, almacenId);
+                enviaCorreo(correo, (List<FacturaAlmacen>) params.get("facturas"), request, "facturasAlmacen", Constantes.ALM, almacenId);
                 modelo.addAttribute("message", "lista.enviada.message");
                 modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("facturaAlmacen.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
