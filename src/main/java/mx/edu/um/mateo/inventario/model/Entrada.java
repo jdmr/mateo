@@ -335,11 +335,11 @@ public class Entrada implements Serializable {
         if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if (!(obj instanceof Entrada)) {
             return false;
         }
         final Entrada other = (Entrada) obj;
-        if (!Objects.equals(this.folio, other.folio)) {
+        if (!folio.equals(other.getFolio())) {
             return false;
         }
         return true;

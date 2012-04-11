@@ -81,7 +81,7 @@ public class SalidaController extends BaseController {
             Usuario usuario,
             Errors errors,
             Model modelo) {
-        log.debug("Mostrando lista de tipos de salidas");
+        log.debug("Mostrando lista de salidas");
         Map<String, Object> params = new HashMap<>();
         Long almacenId = (Long) request.getSession().getAttribute("almacenId");
         params.put("almacen", almacenId);

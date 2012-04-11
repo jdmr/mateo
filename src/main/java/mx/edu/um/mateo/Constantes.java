@@ -65,6 +65,7 @@ public class Constantes {
     public static final String CONTAINSKEY_CANTIDAD = "cantidad";
     public static final String CONTAINSKEY_MESSAGE = "message";
     public static final String CONTAINSKEY_MESSAGE_ATTRS = "messageAttrs";
+    public static final String CONTAINSKEY_ORGANIZACION = "organizacion";
     /**
      * Valores para el los containsKey para las clases
      */

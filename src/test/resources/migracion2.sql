@@ -1,0 +1,5 @@
+begin;
+ALTER TABLE entradas DROP CONSTRAINT fk832a64fcf0a79b66;
+ALTER TABLE salidas DROP CONSTRAINT fk6f15db6bf0a79b66;
+
+commit;

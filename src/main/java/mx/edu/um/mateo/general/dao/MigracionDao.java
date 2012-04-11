@@ -25,7 +25,6 @@ package mx.edu.um.mateo.general.dao;
 
 import java.sql.*;
 import javax.sql.DataSource;
-import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,69 +45,42 @@ public class MigracionDao {
         
     public void hazlo() {
         Connection conn = null;
-        Connection conn2 = null;
         Statement stmt = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            Class.forName("org.postgresql.Driver");
-            conn = DriverManager.getConnection("jdbc:postgresql:old_mateo","tomcat","tomcat00");
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            ps = conn.prepareStatement("insert into facturas_almacen_entradas(factura_id, entrada_id) values(?,?)");
             stmt = conn.createStatement();
-            conn2 = dataSource.getConnection();
-            conn2.setAutoCommit(false);
-            
-            log.debug("Migrando organizaciones");
-            int max = 0;
-            ps = conn2.prepareStatement("insert into organizaciones(id,version,codigo,nombre,nombre_completo) values(?,?,?,?,?)");
-            rs = stmt.executeQuery("select * from organizaciones");
-            while(rs.next()) {
-                ps.setLong(1, rs.getLong("id"));
-                ps.setInt(2, rs.getInt("version"));
-                ps.setString(3, rs.getString("codigo"));
-                ps.setString(4, rs.getString("nombre"));
-                ps.setString(5, rs.getString("nombre_completo"));
-                max = rs.getInt("id");
-                ps.addBatch();
-            }
-            ps.executeBatch();
-            ps = conn2.prepareStatement("select setval('organizaciones_id_seq',?)");
-            ps.setLong(1, max);
-            ps.executeQuery();
-            
-            log.debug("Migrando empresas");
-            max = 0;
-            ps = conn2.prepareStatement("insert into empresas(id,version,codigo,nombre,nombre_completo,rfc,organizacion_id) values(?,?,?,?,?,?,?)");
-            rs = stmt.executeQuery("select * from empresas");
-            while(rs.next()) {
-                ps.setLong(1, rs.getLong("id"));
-                ps.setInt(2, rs.getInt("version"));
-                ps.setString(3, rs.getString("codigo"));
-                ps.setString(4, rs.getString("nombre"));
-                ps.setString(5, rs.getString("nombre_completo"));
-                ps.setString(6, rs.getString("rfc"));
-                ps.setLong(7, rs.getLong("organizacion_id"));
-                max = rs.getInt("id");
-                ps.addBatch();
-            }
-            ps.executeBatch();
-            ps = conn2.prepareStatement("select setval('empresas_id_seq',?)");
-            ps.setLong(1, max);
-            ps.executeQuery();
-            
-            log.debug("Migrando proveedores");
-            max = 0;
-            ps = conn2.prepareStatement("insert into proveedores(id,version,nombre,nombre_completo,rfc,curp,direccion,telefoo,fax,contacto,correo,base,empresa_id");
-            rs = stmt.executeQuery("select * from proveedores");
-            while(rs.next()) {
-                ps.setLong(1, rs.getLong("id"));
-                ps.setInt(2, rs.getInt("version"));
+            rs = stmt.executeQuery("select id, factura_almacen_id from entradas");
+            while (rs.next()) {
+                Long entradaId = rs.getLong("id");
+                Long facturaId = rs.getLong("factura_almacen_id");
+                if (facturaId > 0) {
+                    ps.setLong(1, facturaId);
+                    ps.setLong(2, entradaId);
+                    ps.executeUpdate();
+                }
             }
             
-            conn2.commit();
-        } catch(ClassNotFoundException | SQLException | HibernateException e) {
+            ps = conn.prepareStatement("insert into facturas_almacen_salidas(factura_id, salida_id) values(?,?)");
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("select id, factura_almacen_id from salidas");
+            while (rs.next()) {
+                Long salidaId = rs.getLong("id");
+                Long facturaId = rs.getLong("factura_almacen_id");
+                if (facturaId > 0) {
+                    ps.setLong(1, facturaId);
+                    ps.setLong(2, salidaId);
+                    ps.executeUpdate();
+                }
+            }
+            conn.commit();
+        } catch(SQLException e) {
             log.error("Errores en la migracion", e );
             try {
-                conn2.rollback();
+                conn.rollback();
             } catch (SQLException ex) {
                 log.error("No se pudo hacer rollback", e);
             }
@@ -118,7 +90,6 @@ public class MigracionDao {
                 if (stmt != null) stmt.close();
                 if (conn != null) conn.close();
                 if (ps != null) ps.close();
-                if (conn2 != null) conn2.close();
             } catch(SQLException e) {
                 log.error("Problema al cerrar conexiones", e);
             }

@@ -132,10 +132,12 @@ public class ReporteDao {
     public List<Reporte> inicializaReportes(List<String> nombres) {
         List<Reporte> reportes = new ArrayList<>();
         for (String nombre : nombres) {
+            log.debug("Inicializando reporte {}", nombre);
             Query query = currentSession().createQuery("select r from Reporte r where r.nombre = :nombre");
             query.setString("nombre", nombre);
             Reporte reporte = (Reporte) query.uniqueResult();
             if (reporte == null) {
+                log.debug("Compilando reporte {}", nombre);
                 try {
                     JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/reportes/" + nombre + ".jrxml"));
                     JasperReport jr = JasperCompileManager.compileReport(jd);
@@ -197,6 +199,10 @@ public class ReporteDao {
         nombres.add("cancelaciones");
         nombres.add("salida_lote");
         nombres.add("salida");
+        nombres.add("facturasAlmacen");
+        nombres.add("facturaAlmacen_salida");
+        nombres.add("facturaAlmacen_entrada");
+        nombres.add("facturaAlmacen");
         
         almacen.getReportes().clear();
         almacen.getReportes().addAll(inicializaReportes(nombres));

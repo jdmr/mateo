@@ -37,8 +37,7 @@ import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Reporte;
 import mx.edu.um.mateo.general.utils.Ambiente;
-import mx.edu.um.mateo.inventario.model.Almacen;
-import mx.edu.um.mateo.inventario.model.Salida;
+import mx.edu.um.mateo.inventario.model.*;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.hibernate.Query;
@@ -143,5 +142,63 @@ public class ReporteController {
             log.error("No se pudo crear el reporte de la salida " + id, e);
         }
         return "redirect:/inventario/salida/ver/" + id;
+    }
+    
+    @RequestMapping("/factura/almacen/{id}")
+    public String facturaAlmacen(HttpServletRequest request, HttpServletResponse response, @PathVariable Long id) {
+        try {
+            log.debug("Generando reporte de factura {}", id);
+            FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(FacturaAlmacen.class, id);
+            Long almacenId = (Long) request.getSession().getAttribute("almacenId");
+            Query query = currentSession().createQuery("select r from Almacen a inner join a.reportes r where a.id = :id and r.nombre = :nombre");
+            query.setLong("id", almacenId);
+            query.setString("nombre", "facturaAlmacen_salida");
+            Reporte reporte = (Reporte) query.uniqueResult();
+            JasperReport subreporte1 = reporte.getReporte();
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("ORGANIZACION", factura.getAlmacen().getEmpresa().getOrganizacion().getNombreCompleto());
+            params.put("EMPRESA", factura.getAlmacen().getEmpresa().getNombreCompleto());
+            params.put("ALMACEN", factura.getAlmacen().getNombre());
+            List<LoteSalida> salidas = new ArrayList<>();
+            for(Salida salida : factura.getSalidas()) {
+                salidas.addAll(salida.getLotes());
+            }
+            params.put("datasource1", new JRBeanCollectionDataSource(salidas));
+            params.put("subreporte1", subreporte1);
+
+            query.setLong("id", almacenId);
+            query.setString("nombre", "facturaAlmacen_entrada");
+            reporte = (Reporte) query.uniqueResult();
+            JasperReport subreporte2 = reporte.getReporte();
+            List<LoteEntrada> entradas = new ArrayList<>();
+            for(Entrada entrada : factura.getEntradas()) {
+                entradas.addAll(entrada.getLotes());
+            }
+            params.put("datasource2", new JRBeanCollectionDataSource(entradas));
+            params.put("subreporte2", subreporte2);
+            
+            query.setLong("id", almacenId);
+            query.setString("nombre", "facturaAlmacen");
+            reporte = (Reporte) query.uniqueResult();
+
+            List<FacturaAlmacen> facturas = new ArrayList<>();
+            facturas.add(factura);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(reporte.getReporte(), params, new JRBeanCollectionDataSource(facturas));
+            byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
+            String nombre = factura.getFolio();
+            response.setContentType("application/pdf");
+            response.addHeader("Content-Disposition", "attachment; filename=" + nombre + ".pdf");
+            if (archivo != null) {
+                response.setContentLength(archivo.length);
+                try (BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream())) {
+                    bos.write(archivo);
+                    bos.flush();
+                }
+            }
+        } catch (JRException | IOException e) {
+            log.error("No se pudo crear el reporte de la factura " + id, e);
+        }
+        return "redirect:/inventario/factura/ver/" + id;
     }
 }

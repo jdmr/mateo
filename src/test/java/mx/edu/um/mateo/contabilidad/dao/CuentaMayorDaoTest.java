@@ -63,6 +63,28 @@ public class CuentaMayorDaoTest extends BaseTest {
         assertEquals(10, ((List<CuentaMayor>) result.get(Constantes.CONTAINSKEY_MAYORES)).size());
         assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
+    
+    @Test
+    public void deberiaMostrarListaDeCuentaMayorPorOrgananizacion() {
+        log.debug("Debiera mostrar lista de cuentaMayor");
+
+        Organizacion test = new Organizacion("TST-01", "TEST--01", "TEST--01");
+        currentSession().save(test);
+        for (int i = 0; i < 20; i++) {
+            CuentaMayor cuentaMayor = new CuentaMayor("test" + i, "test", "test", false, false, false, false, BigDecimal.ZERO);
+            cuentaMayor.setOrganizacion(test);
+            currentSession().save(cuentaMayor);
+            assertNotNull(cuentaMayor);
+        }
+
+        Map<String, Object> params = null;
+        Map result = instance.lista(params);
+        assertNotNull(result.get(Constantes.CONTAINSKEY_MAYORES));
+        assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
+
+        assertEquals(10, ((List<CuentaMayor>) result.get(Constantes.CONTAINSKEY_MAYORES)).size());
+        assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
+    }
 
     @Test
     public void debieraObtenerCuentaMayor() {
