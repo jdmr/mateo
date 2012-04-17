@@ -126,6 +126,7 @@ public class TipoActivoDao {
         if (usuario != null) {
             tipoActivo.setEmpresa(usuario.getEmpresa());
         }
+        tipoActivo.setCuenta((Cuenta) currentSession().load(Cuenta.class, tipoActivo.getCuenta().getId()));
         session.save(tipoActivo);
         session.flush();
         return tipoActivo;

@@ -22,7 +22,7 @@
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block <c:choose><c:when test='${not empty messageStyle}'>${messageStyle}</c:when><c:otherwise>alert-success</c:otherwise></c:choose> fade in" role="status">
-                    <a class="close" data-dismiss="alert">×</a>
+                            <a class="close" data-dismiss="alert">×</a>
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
@@ -31,45 +31,33 @@
             <form:form commandName="tipoActivo" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span4">
-                        <h4><s:message code="nombre.label" /></h4>
-                        <h3>${tipoActivo.nombre}</h3>
-                    </div>
+                    <h4><s:message code="nombre.label" /></h4>
+                    <h3>${tipoActivo.nombre}</h3>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span4">
-                        <h4><s:message code="descripcion.label" /></h4>
-                        <h3>${tipoActivo.descripcion}</h3>
-                    </div>
+                    <h4><s:message code="descripcion.label" /></h4>
+                    <h3>${tipoActivo.descripcion}</h3>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span4">
-                        <h4><s:message code="porciento.label" /></h4>
-                        <h3><fmt:formatNumber type="percent" value="${tipoActivo.porciento}" /></h3>
-                    </div>
+                    <h4><s:message code="porciento.label" /></h4>
+                    <h3><fmt:formatNumber type="percent" value="${tipoActivo.porciento}" /></h3>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span4">
-                        <h4><s:message code="vidaUtil.label" /></h4>
-                        <h3><s:message code="vidaUtil.message" arguments="${tipoActivo.vidaUtil}" /></h3>
-                    </div>
+                    <h4><s:message code="vidaUtil.label" /></h4>
+                    <h3><s:message code="vidaUtil.message" arguments="${tipoActivo.vidaUtil}" /></h3>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span4">
-                        <h4><s:message code="cuenta.label" /></h4>
-                        <h3>${tipoActivo.cuenta.nombre}</h3>
-                    </div>
+                    <h4><s:message code="cuenta.label" /></h4>
+                    <h3>${tipoActivo.cuenta.nombreCompleto}</h3>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span4">
-                        <h4><s:message code="empresa.label" /></h4>
-                        <h3>${tipoActivo.empresa.nombre}</h3>
-                    </div>
+                    <h4><s:message code="empresa.label" /></h4>
+                    <h3>${tipoActivo.empresa.nombre}</h3>
                 </div>
 
                 <p class="well">

@@ -6,6 +6,7 @@
 <html>
     <head>
         <title><s:message code="tipoActivo.nuevo.label" /></title>
+        <link rel="stylesheet" href="<c:url value='/css/chosen.css' />" type="text/css">
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -31,7 +32,6 @@
                 </form:errors>
 
                 <fieldset>
-                    <form:hidden path="cuenta.id" />
                     <s:bind path="tipoActivo.nombre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombre">
@@ -72,6 +72,18 @@
                             <form:errors path="vidaUtil" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
+                    <s:bind path="tipoActivo.cuenta">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="cuentaId">
+                                <s:message code="cuenta.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:select path="cuenta.id" id="cuentaId" required="true" cssClass="span3" >
+                                <form:options items="${cuentas}" itemValue="id" itemLabel="nombreCompleto" />
+                            </form:select>
+                            <form:errors path="cuenta" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
@@ -81,8 +93,10 @@
             </form:form>
         </div>
         <content>
+            <script src="<c:url value='/js/chosen.jquery.min.js' />"></script>
             <script>
                 $(document).ready(function() {
+                    $('select#cuentaId').chosen();
                     $('input#nombre').focus();
                 });
             </script>                    

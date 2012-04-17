@@ -28,9 +28,12 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import mx.edu.um.mateo.activos.dao.TipoActivoDao;
 import mx.edu.um.mateo.activos.model.TipoActivo;
+import mx.edu.um.mateo.contabilidad.dao.CuentaDao;
+import mx.edu.um.mateo.contabilidad.model.Cuenta;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ReporteException;
@@ -56,6 +59,8 @@ public class TipoActivoController extends BaseController {
 
     @Autowired
     private TipoActivoDao tipoActivoDao;
+    @Autowired
+    private CuentaDao cuentaDao;
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -128,10 +133,12 @@ public class TipoActivoController extends BaseController {
     }
 
     @RequestMapping("/nuevo")
-    public String nuevo(Model modelo) {
+    public String nuevo(HttpSession session, Model modelo) {
         log.debug("Nuevo tipoActivo");
         TipoActivo tipoActivo = new TipoActivo();
+        List<Cuenta> cuentas = cuentaDao.tiposDeActivo((Long) session.getAttribute("organizacionId"));
         modelo.addAttribute("tipoActivo", tipoActivo);
+        modelo.addAttribute("cuentas", cuentas);
         return "activoFijo/tipoActivo/nuevo";
     }
 
@@ -161,10 +168,12 @@ public class TipoActivoController extends BaseController {
     }
 
     @RequestMapping("/edita/{id}")
-    public String edita(@PathVariable Long id, Model modelo) {
+    public String edita(HttpSession session, @PathVariable Long id, Model modelo) {
         log.debug("Edita tipoActivo {}", id);
         TipoActivo tipoActivo = tipoActivoDao.obtiene(id);
+        List<Cuenta> cuentas = cuentaDao.tiposDeActivo((Long) session.getAttribute("organizacionId"));
         modelo.addAttribute("tipoActivo", tipoActivo);
+        modelo.addAttribute("cuentas", cuentas);
         return "activoFijo/tipoActivo/edita";
     }
 

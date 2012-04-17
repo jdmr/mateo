@@ -206,6 +206,14 @@ public class Cuenta implements Serializable {
     public void setOrganizacion(Organizacion organizacion) {
         this.organizacion = organizacion;
     }
+    
+    public String getNombreCompleto() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(nombre);
+        sb.append(" | ");
+        sb.append(descripcion);
+        return sb.toString();
+    }
 
     @Override
     public boolean equals(Object obj) {
