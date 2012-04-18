@@ -22,7 +22,7 @@
     </filter>
     <filter>
         <filter-name>encodingFilter</filter-name>
-        <filter-class>org.springframework.web.filter.CharacterEncodingFilter </filter-class>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
         <init-param>
             <param-name>encoding</param-name>
             <param-value>UTF-8</param-value>

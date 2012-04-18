@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
+import mx.edu.um.mateo.contabilidad.model.Cuenta;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.Empresa;
 import org.hibernate.validator.constraints.NotBlank;
@@ -58,7 +59,7 @@ public class TipoActivo implements Serializable {
     @Column(nullable = false, name = "vida_util")
     private Long vidaUtil;
     @ManyToOne(optional = false)
-    private CuentaMayor cuenta;
+    private Cuenta cuenta;
     @ManyToOne(optional = false)
     private Empresa empresa;
     @OneToMany(mappedBy = "tipoActivo")
@@ -154,14 +155,14 @@ public class TipoActivo implements Serializable {
     /**
      * @return the cuenta
      */
-    public CuentaMayor getCuenta() {
+    public Cuenta getCuenta() {
         return cuenta;
     }
 
     /**
      * @param cuenta the cuenta to set
      */
-    public void setCuenta(CuentaMayor cuenta) {
+    public void setCuenta(Cuenta cuenta) {
         this.cuenta = cuenta;
     }
 

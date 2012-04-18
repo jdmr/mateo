@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="proveedor.nuevo.label" /></title>
+        <title><s:message code="tipoCliente.nuevo.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
