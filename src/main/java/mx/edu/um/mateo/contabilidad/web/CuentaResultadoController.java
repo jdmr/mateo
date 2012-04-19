@@ -96,7 +96,6 @@ public class CuentaResultadoController extends BaseController {
                 //errors.reject("error.generar.reporte");
             }
         }
-
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = cuentaResultadoDao.lista(params);
@@ -190,6 +189,7 @@ public class CuentaResultadoController extends BaseController {
 
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
+
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute CuentaResultado resultado, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina cuenta de resultado");
         try {
@@ -205,4 +205,5 @@ public class CuentaResultadoController extends BaseController {
 
         return "redirect:" + Constantes.PATH_CUENTA_RESULTADO;
     }
+   
 }

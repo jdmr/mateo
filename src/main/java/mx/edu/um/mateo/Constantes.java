@@ -73,6 +73,11 @@ public class Constantes {
      public static final String CONTAINSKEY_EMPLEADOS = "empleados";
     public static final String CONTAINSKEY_RESULTADOS = "resultados";
     public static final String CONTAINSKEY_AUXILIARES = "auxiliares";
+    public static final String CONTAINSKEY_LIBROS = "libros";
+   
+    /**
+     * Valores para el los addAttribute para las clases
+     */
 
 //      Valores para el los addAttribute para las clases
      
@@ -80,6 +85,8 @@ public class Constantes {
     public static final String ADDATTRIBUTE_EMPLEADO = "empleado";
     public static final String ADDATTRIBUTE_RESULTADO = "resultado";
     public static final String ADDATTRIBUTE_AUXILIAR = "auxiliar";
+    public static final String ADDATTRIBUTE_LIBRO = "libro";
+   
 
     /**
      * Valores para el los path's para las clases
@@ -116,4 +123,12 @@ public class Constantes {
     public static final String PATH_CUENTA_AUXILIAR_CREA = "/contabilidad/auxiliar/crea";
     public static final String PATH_CUENTA_AUXILIAR_ACTUALIZA = "/contabilidad/auxiliar/actualiza";
     public static final String PATH_CUENTA_AUXILIAR_ELIMINA = "/contabilidad/auxiliar/elimina";
+    public static final String PATH_CUENTA_LIBRO = "/contabilidad/libro";
+    public static final String PATH_CUENTA_LIBRO_LISTA = "/contabilidad/libro/lista";
+    public static final String PATH_CUENTA_LIBRO_VER = "/contabilidad/libro/ver";
+    public static final String PATH_CUENTA_LIBRO_NUEVA = "/contabilidad/libro/nueva";
+    public static final String PATH_CUENTA_LIBRO_EDITA = "/contabilidad/libro/edita";
+    public static final String PATH_CUENTA_LIBRO_CREA = "/contabilidad/libro/crea";
+    public static final String PATH_CUENTA_LIBRO_ACTUALIZA = "/contabilidad/libro/actualiza";
+    public static final String PATH_CUENTA_LIBRO_ELIMINA = "/contabilidad/libro/elimina";
 }
