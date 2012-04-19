@@ -28,7 +28,7 @@
                     </div>
                 </form:errors>
                 <form:hidden path="id" />
-               
+                     <form:hidden path="version" />
 
                 <fieldset>
                     <s:bind path="libro.nombre">

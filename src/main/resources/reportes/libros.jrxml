@@ -9,7 +9,7 @@
 	<property name="ireport.x" value="16"/>
 	<property name="ireport.y" value="0"/>
 	<field name="nombre" class="java.lang.String"/>
-	<field name="empresa.nombre" class="java.lang.String"/>
+	<field name="clave" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -20,7 +20,7 @@
 				<textElement textAlignment="Left">
 					<font size="24" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Reporte de Almacenes]]></text>
+				<text><![CDATA[Reporte de Libros]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -37,7 +37,7 @@
 			<staticText>
 				<reportElement x="150" y="0" width="150" height="15"/>
 				<textElement/>
-				<text><![CDATA[Empresa]]></text>
+				<text><![CDATA[Clave]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -55,7 +55,7 @@
 				<textElement verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{empresa.nombre}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{clave}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

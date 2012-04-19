@@ -34,11 +34,12 @@ public class Libro implements Serializable {
     public Libro() {
     }
 
-    public Libro(String nombre, String clave, String status, int codigo) {
+    public Libro(String nombre, String clave, String status, int codigo, Organizacion organizacion) {
         this.nombre = nombre;
         this.clave = clave;
         this.status = status;
         this.codigo = codigo;
+        this.organizacion=organizacion;
 
     }
 

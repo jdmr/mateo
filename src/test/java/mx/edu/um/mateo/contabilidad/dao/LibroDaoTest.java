@@ -10,6 +10,7 @@ import java.util.Map;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.model.Libro;
 import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import org.hibernate.Session;
@@ -50,12 +51,13 @@ public class LibroDaoTest extends BaseTest {
     @Test
     public void deberiaMostrarListaDeLibro() {
         log.debug("Debiera mostrar lista de libro");
+            Organizacion test = new Organizacion("TST-01", "TEST--01", "TEST--01");
+        currentSession().save(test);
         for (int i = 0; i < 20; i++) {
-            int test = 000;
-            Libro libro = new Libro("tes" + i, "tes", "te", test + i);
+            Libro libro = new Libro("test" + i, "tes", "te", 000, test);
+            libro.setOrganizacion(test);
             currentSession().save(libro);
             assertNotNull(libro);
-            log.debug("libro>>" + libro);
         }
 
         Map<String, Object> params = null;
@@ -63,7 +65,7 @@ public class LibroDaoTest extends BaseTest {
         assertNotNull(result.get(Constantes.CONTAINSKEY_LIBROS));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
 
-        assertEquals(10, ((List<Empresa>) result.get(Constantes.CONTAINSKEY_LIBROS)).size());
+        assertEquals(10, ((List<Libro>) result.get(Constantes.CONTAINSKEY_LIBROS)).size());
         assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
 
@@ -71,7 +73,8 @@ public class LibroDaoTest extends BaseTest {
     public void debieraObtenerLibro() {
         log.debug("Debiera obtener libro");
         String nombre = "test";
-        Libro libro = new Libro("test", "tes", "te", 000);
+        Organizacion test = new Organizacion("TST-01", "TEST--01", "TEST--01");
+        Libro libro = new Libro("test", "tes", "te", 000, test);
         currentSession().save(libro);
         assertNotNull(libro.getId());
         Long id = libro.getId();
@@ -82,12 +85,16 @@ public class LibroDaoTest extends BaseTest {
 
         assertEquals(result, libro);
     }
-
     @Test
     public void deberiaCrearLibro() {
         log.debug("Deberia crear Libro");
+        log.debug("Deberia crear CuentaMayor");
 
-        Libro libro = new Libro("test", "tes", "te", 0000);
+        Organizacion test = new Organizacion("TST-01", "TEST--01", "TEST--01");
+        currentSession().save(test);
+        Libro libro= new Libro("test", "tes", "te",000, test);
+        libro.setOrganizacion(test);
+        assertNotNull(libro);
 
         Libro libro2 = instance.crea(libro);
         assertNotNull(libro2);
@@ -99,8 +106,10 @@ public class LibroDaoTest extends BaseTest {
     @Test
     public void deberiaActualizarLibro() {
         log.debug("Deberia actualizar Libro");
-
-        Libro libro = new Libro("test", "tes", "te", 0000);
+          Organizacion test = new Organizacion("TST-01", "TEST--01", "TEST--01");
+        currentSession().save(test);
+        Libro libro = new Libro("test", "tes", "te",000,test);
+        libro.setOrganizacion(test);
         assertNotNull(libro);
         currentSession().save(libro);
 
@@ -117,9 +126,9 @@ public class LibroDaoTest extends BaseTest {
     @Test
     public void deberiaEliminarLibro() throws UltimoException {
         log.debug("Debiera eliminar Libro");
-
+        Organizacion test = new Organizacion("TST-01", "TEST--01", "TEST--01");
         String nom = "test";
-        Libro libro = new Libro("test", "tes", "te", 0000);
+        Libro libro = new Libro("test", "tes", "te", 0000, test);
         currentSession().save(libro);
         assertNotNull(libro);
 
