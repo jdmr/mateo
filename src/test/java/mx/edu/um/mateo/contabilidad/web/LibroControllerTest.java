@@ -126,9 +126,20 @@ public class LibroControllerTest extends BaseTest {
         usuario.setRoles(roles);
         currentSession().save(usuario);
 
-        this.authenticate(usuario, usuario.getPassword(), new ArrayList(usuario.getAuthorities()));
-        this.mockMvc.perform(post(Constantes.PATH_CUENTA_LIBRO_CREA).param("nombre", "test").param("clave", "tes").param("status", "ts").param("codigo", "0000")).andExpect(status().isOk()).andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE)).
-                andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "libro.creado.message"));
+       this.authenticate(usuario, usuario.getPassword(), new ArrayList(usuario.getAuthorities()));
+        Libro libro = new Libro("test", "tes", "te",000, organizacion);
+        libro.setOrganizacion(organizacion);
+        libroDao.crea(libro);
+        assertNotNull(libro);
+
+        this.mockMvc.perform(post(
+                Constantes.PATH_CUENTA_LIBRO_ELIMINA)
+                .param("id", libro.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(flash()
+                .attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash()
+                .attribute(Constantes.CONTAINSKEY_MESSAGE, "libro.eliminado.message"));
     }
 
     @Test
@@ -150,15 +161,22 @@ public class LibroControllerTest extends BaseTest {
         usuario.setRoles(roles);
         currentSession().save(usuario);
 
-        this.authenticate(usuario, usuario.getPassword(), new ArrayList(usuario.getAuthorities()));
-        Organizacion test = new Organizacion("TST-01", "TEST--01", "TEST--01");
-        Libro libro = new Libro("test", "tes", "te", 0000, test);
+     
+
+       this.authenticate(usuario, usuario.getPassword(), new ArrayList(usuario.getAuthorities()));
+        Libro libro = new Libro("test", "tes", "te",000, organizacion);
         libro.setOrganizacion(organizacion);
-        libro = libroDao.crea(libro);
+        libroDao.crea(libro);
         assertNotNull(libro);
 
-        this.mockMvc.perform(post(Constantes.PATH_CUENTA_LIBRO_ACTUALIZA).param("id", libro.getId().toString()).param("nombre", "test").param("clave", "tes").param("status", "ts").param("codigo", "0000")).andExpect(status().isOk()).andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE)).
-                andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "libro.actualizado.message"));
+        this.mockMvc.perform(post(
+                Constantes.PATH_CUENTA_LIBRO_ELIMINA)
+                .param("id", libro.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(flash()
+                .attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash()
+                .attribute(Constantes.CONTAINSKEY_MESSAGE, "libro.eliminado.message"));
     }
 
     @Test
