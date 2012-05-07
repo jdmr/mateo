@@ -34,17 +34,17 @@
             <c:if test="${empleado != null}">
                 <s:bind path="empleado.*">
                     <c:if test="${not empty status.errorMessages}">
-                    <div class="alert alert-block alert-error fade in" role="status">
-                        <a class="close" data-dismiss="alert">×</a>
-                        <c:forEach var="error" items="${status.errorMessages}">
-                            <c:out value="${error}" escapeXml="false"/><br />
-                        </c:forEach>
-                    </div>
+                        <div class="alert alert-block alert-error fade in" role="status">
+                            <a class="close" data-dismiss="alert">×</a>
+                            <c:forEach var="error" items="${status.errorMessages}">
+                                <c:out value="${error}" escapeXml="false"/><br />
+                            </c:forEach>
+                        </div>
                     </c:if>
                 </s:bind>
             </c:if>
-            
-             <table id="lista" class="table table-striped">
+
+            <table id="lista" class="table table-striped">
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
@@ -68,6 +68,63 @@
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="status" />
                         </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="curp" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="modalidad" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="rfc" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="cuenta" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="imms" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="ife" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="rango" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="padre" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="madre" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="estadoCivil" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="conyuge" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="iglesia" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="responsabilidad" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="finadoMadre" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="finadoPadre" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="adventista" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="escalafon" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="turno" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="experienciaFueraUm" />
+                        </jsp:include>
                     </tr>
                 </thead>
                 <tbody>
@@ -80,14 +137,33 @@
                             <td>${empleado.genero}</td>
                             <td>${empleado.direccion}</td>
                             <td>${empleado.status}</td>
+                            <td>${empleado.curp}</td>
+                            <td>${empleado.modalidad}</td>
+                            <td>${empleado.rfc}</td>
+                            <td>${empleado.cuenta}</td>
+                            <td>${empleado.imms}</td>
+                            <td>${empleado.ife}</td>
+                            <td>${empleado.rango}</td>
+                            <td>${empleado.padre}</td>
+                            <td>${empleado.madre}</td>
+                            <td>${empleado.estadoCivil}</td>
+                            <td>${empleado.conyuge}</td>
+                            <td>${empleado.iglesia}</td>
+                            <td>${empleado.responsabilidad}</td>
+                            <td><input type="checkbox" value="" disabled="true" <c:if test="${empleado.finadoMadre}">checked="checked"</c:if> /></td>
+                            <td><input type="checkbox" value="" disabled="true" <c:if test="${empleado.finadoPadre}">checked="checked"</c:if> /></td>
+                            <td><input type="checkbox" value="" disabled="true" <c:if test="${empleado.adventista}">checked="checked"</c:if> /></td>
+                            <td>${empleado.escalafon}</td>
+                            <td>${empleado.turno}</td>
+                            <td>${empleado.experienciaFueraUm}</td>
                         </tr>
                     </c:forEach>
                 </tbody>
             </table>
             <jsp:include page="/WEB-INF/jsp/paginacion.jsp" />
         </form>        
-        <content>
-            <script src="<c:url value='/js/lista.js' />"></script>
-        </content>
-    </body>
+    <content>
+        <script src="<c:url value='/js/lista.js' />"></script>
+    </content>
+</body>
 </html>

@@ -10,6 +10,9 @@ import org.hibernate.validator.constraints.NotBlank;
  *
  * @author develop
  */
+//@Inheritance(strategy=InheritanceType.SINGLE_TABLE )
+//@DiscriminatorColumn(name="Padre")
+
 @Entity
 @Table(name = "libro")
 public class Libro implements Serializable {
@@ -67,11 +70,11 @@ public class Libro implements Serializable {
         this.id = id;
     }
 
-    public String getClave() {
+    public String getClave1() {
         return clave;
     }
 
-    public void setClave(String clave) {
+    public void setClave1(String clave) {
         this.clave = clave;
     }
 
@@ -83,11 +86,11 @@ public class Libro implements Serializable {
         this.nombre = nombre;
     }
 
-    public String getStatus() {
+    public String getStatus1() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus1(String status) {
         this.status = status;
     }
 
