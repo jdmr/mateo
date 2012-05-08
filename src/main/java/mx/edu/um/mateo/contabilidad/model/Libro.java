@@ -12,7 +12,6 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 //@Inheritance(strategy=InheritanceType.SINGLE_TABLE )
 //@DiscriminatorColumn(name="Padre")
-
 @Entity
 @Table(name = "libro")
 public class Libro implements Serializable {
@@ -42,8 +41,24 @@ public class Libro implements Serializable {
         this.clave = clave;
         this.status = status;
         this.codigo = codigo;
-        this.organizacion=organizacion;
+        this.organizacion = organizacion;
 
+    }
+
+    public String getClave() {
+        return clave;
+    }
+
+    public void setClave(String clave) {
+        this.clave = clave;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public int getCodigo() {
@@ -70,28 +85,12 @@ public class Libro implements Serializable {
         this.id = id;
     }
 
-    public String getClave1() {
-        return clave;
-    }
-
-    public void setClave1(String clave) {
-        this.clave = clave;
-    }
-
     public String getNombre() {
         return nombre;
     }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getStatus1() {
-        return status;
-    }
-
-    public void setStatus1(String status) {
-        this.status = status;
     }
 
     @Override
