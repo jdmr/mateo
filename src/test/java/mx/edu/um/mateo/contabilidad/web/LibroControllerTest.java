@@ -1,13 +1,10 @@
 package mx.edu.um.mateo.contabilidad.web;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.contabilidad.dao.LibroDao;
-import mx.edu.um.mateo.contabilidad.dao.LibroDao;
-import mx.edu.um.mateo.contabilidad.model.Libro;
 import mx.edu.um.mateo.contabilidad.model.Libro;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
@@ -18,6 +15,7 @@ import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import static org.junit.Assert.assertNotNull;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -32,7 +30,6 @@ import static org.springframework.test.web.server.result.MockMvcResultMatchers.*
 import org.springframework.test.web.server.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-import static org.junit.Assert.assertNotNull;
 
 /**
  *

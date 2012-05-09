@@ -23,6 +23,8 @@
  */
 package mx.edu.um.mateo.general.web;
 
+import mx.edu.um.mateo.contabilidad.dao.LibroDao;
+import mx.edu.um.mateo.contabilidad.model.Libro;
 import mx.edu.um.mateo.general.dao.OrganizacionDao;
 import mx.edu.um.mateo.general.dao.ReporteDao;
 import mx.edu.um.mateo.general.dao.RolDao;
@@ -65,6 +67,8 @@ public class InicializaController {
     private SessionFactory sessionFactory;
     @Autowired
     private ReporteDao reporteDao;
+    @Autowired
+    private LibroDao libroDao;
 
     @RequestMapping
     public String inicia() {
@@ -117,12 +121,24 @@ public class InicializaController {
             estatus = new Estatus(Constantes.CANCELADA, 500);
             currentSession().save(estatus);
 
+            Libro libroCaja = new Libro("Caja", "20", "AC", 20, organizacion);
+            libroDao.crea(libroCaja, usuario);
+            currentSession().save(libroCaja);
+            Libro libroChequera = new Libro("Chequera", "30", "AC", 30, organizacion);
+            libroDao.crea(libroChequera, usuario);
+            currentSession().save(libroChequera);
+            Libro libroSaldosIniciales = new Libro("Saldos Iniciales", "40", "AC", 40, organizacion);
+            libroDao.crea(libroSaldosIniciales, usuario);
+            currentSession().save(libroSaldosIniciales);
+
             transaction.commit();
-        } catch(Exception e) {
-            log.error("No se pudo inicializar la aplicacion",e);
+
+
+        } catch (Exception e) {
+            log.error("No se pudo inicializar la aplicacion", e);
             transaction.rollback();
         }
-        
+
         return "redirect:/";
     }
 
