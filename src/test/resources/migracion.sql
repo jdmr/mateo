@@ -265,6 +265,6 @@ begin;
 -- );
 -- ALTER TABLE xfacturas_almacen ALTER COLUMN fecha TYPE date;
 -- ALTER TABLE xfacturas_almacen ADD COLUMN date_created timestamp;
-ALTER TABLE xfacturas_almacen ALTER COLUMN version TYPE integer;
-
+-- ALTER TABLE xfacturas_almacen ALTER COLUMN version TYPE integer;
+ALTER TABLE folio_activos ALTER COLUMN version TYPE integer;
 commit;
