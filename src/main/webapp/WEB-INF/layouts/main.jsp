@@ -75,6 +75,7 @@
 
         <!-- end scripts -->        
         <script src="<c:url value='/js/jquery-ui-1.8.17.custom.min.js' />"></script>
+        <script src="<c:url value='/js/i18n/jquery.ui.datepicker-es.min.js' />"></script>
         <script src="<c:url value='/js/bootstrap.min.js' />"></script>
         <script src="<c:url value='/js/app.js' />"></script>
         <sitemesh:write property="content"/>

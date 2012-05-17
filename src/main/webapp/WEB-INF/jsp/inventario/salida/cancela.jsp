@@ -188,7 +188,7 @@
             <p class="well">
                 <form:hidden path="id" />
                 <button type="submit" name="cancelarBtn" class="btn btn-danger btn-large" id="cancelar"  onclick="return confirm('<s:message code="confirma.cancela2.message" />');" ><i class="icon-exclamation-sign icon-white"></i>&nbsp;<s:message code='guardar.button'/></button>
-                <a class="btn btn-large" href="<s:url value='/inventario/salida/ver/${salida.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                <a class="btn btn-large" href="<s:url value='/inventario/salida/ver/${salida.id}'/>"><i class="icon-remove"></i> <s:message code='regresar.button' /></a>
             </p>
         </form:form>
         <content>

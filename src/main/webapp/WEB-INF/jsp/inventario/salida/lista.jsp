@@ -21,30 +21,43 @@
             <input type="hidden" name="correo" id="correo" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
-            <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/inventario/salida/nueva'/>"><i class="icon-shopping-cart icon-white"></i> <s:message code='salida.nueva.label' /></a>
-                <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
-                <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
-            </p>
+            <div class="well">
+                <div class="row-fluid">
+                    <a class="btn btn-primary" href="<s:url value='/inventario/salida/nueva'/>"><i class="icon-shopping-cart icon-white"></i> <s:message code='salida.nueva.label' /></a>
+                    <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
+                    <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
+                    <a id="buscarFechaAnchor" class="btn" href="#"><s:message code="buscar.fecha.button" /></a>
+                </div>
+                <div id="buscarFechaDiv" class="row-fluid" style="<c:if test='${empty param.fechaIniciado and empty param.fechaTerminado}'>display: none; </c:if>margin-top: 10px;">
+                    <label>
+                        <s:message code="fecha.iniciado" /><br/>
+                        <input type="text" name="fechaIniciado" id="fechaIniciado" value="${param.fechaIniciado}" />
+                    </label><br/>
+                    <label>
+                        <s:message code="fecha.terminado" /><br/>
+                        <input type="text" name="fechaTerminado" id="fechaTerminado" value="${param.fechaTerminado}" />
+                    </label>
+                </div>
+            </div>
             <c:if test="${not empty message}">
                 <div class="alert alert-block <c:choose><c:when test='${not empty messageStyle}'>${messageStyle}</c:when><c:otherwise>alert-success</c:otherwise></c:choose> fade in" role="status">
-                    <a class="close" data-dismiss="alert">×</a>
+                            <a class="close" data-dismiss="alert">×</a>
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
             <c:if test="${salida != null}">
                 <s:bind path="salida.*">
                     <c:if test="${not empty status.errorMessages}">
-                    <div class="alert alert-block alert-error fade in" role="status">
-                        <a class="close" data-dismiss="alert">×</a>
-                        <c:forEach var="error" items="${status.errorMessages}">
-                            <c:out value="${error}" escapeXml="false"/><br />
-                        </c:forEach>
-                    </div>
+                        <div class="alert alert-block alert-error fade in" role="status">
+                            <a class="close" data-dismiss="alert">×</a>
+                            <c:forEach var="error" items="${status.errorMessages}">
+                                <c:out value="${error}" escapeXml="false"/><br />
+                            </c:forEach>
+                        </div>
                     </c:if>
                 </s:bind>
             </c:if>
-            
+
             <table id="lista" class="table table-striped">
                 <thead>
                     <tr>
@@ -99,6 +112,20 @@
         </form>        
         <content>
             <script src="<c:url value='/js/lista.js' />"></script>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $("input#fechaTerminado").datepicker();
+                        
+                    $("input#fechaIniciado").datepicker();
+                            
+                    $("a#buscarFechaAnchor").click(function(e) {
+                        e.preventDefault();
+                        $("div#buscarFechaDiv").show('slide', {direction:'up'}, 500, function() {
+                            $("input#fechaIniciado").focus();
+                        });
+                    });
+                });
+            </script>
         </content>
     </body>
 </html>

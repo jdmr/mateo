@@ -45,6 +45,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -252,5 +253,25 @@ public abstract class BaseController {
         } catch (JRException | MessagingException e) {
             throw new ReporteException("No se pudo generar el reporte", e);
         }
+    }
+    
+    protected Map<String, Object> convierteParams(Map<String, String[]> mapa) {
+        Map<String, Object> params = new HashMap<>();
+        for(String key : mapa.keySet()) {
+            String[] values = mapa.get(key);
+            log.debug("Convirtiendo {} : {}", key, values);
+            if (values.length == 1) {
+                if (StringUtils.isNotBlank(values[0])) {
+                    if (key.equals("pagina")) {
+                        params.put(key, new Long(values[0]));
+                    } else {
+                        params.put(key, values[0]);
+                    }
+                }
+            } else if (values.length > 1) {
+                params.put(key, values);
+            }
+        }
+        return params;
     }
 }

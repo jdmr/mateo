@@ -25,6 +25,8 @@ package mx.edu.um.mateo.inventario.web;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,12 +48,14 @@ import mx.edu.um.mateo.inventario.utils.*;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -70,37 +74,36 @@ public class SalidaController extends BaseController {
     @Autowired
     private ProductoDao productoDao;
 
+    @InitBinder
+    public void inicializar(WebDataBinder binder) {
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("dd/MM/yyyy"), false));
+    }
+
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
-            @RequestParam(required = false) String filtro,
-            @RequestParam(required = false) Long pagina,
-            @RequestParam(required = false) String tipo,
-            @RequestParam(required = false) String correo,
-            @RequestParam(required = false) String order,
-            @RequestParam(required = false) String sort,
             Usuario usuario,
             Errors errors,
-            Model modelo) {
+            Model modelo) throws ParseException {
         log.debug("Mostrando lista de salidas");
-        Map<String, Object> params = new HashMap<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Map<String, Object> params = this.convierteParams(request.getParameterMap());
         Long almacenId = (Long) request.getSession().getAttribute("almacenId");
         params.put("almacen", almacenId);
-        if (StringUtils.isNotBlank(filtro)) {
-            params.put("filtro", filtro);
-        }
-        if (StringUtils.isNotBlank(order)) {
-            params.put("order", order);
-            params.put("sort", sort);
-        }
-        if (pagina != null) {
-            params.put("pagina", pagina);
+
+        if (params.containsKey("fechaIniciado")) {
+            log.debug("FechaIniciado: {}", params.get("fechaIniciado"));
+            params.put("fechaIniciado", sdf.parse((String) params.get("fechaIniciado")));
         }
 
-        if (StringUtils.isNotBlank(tipo)) {
+        if (params.containsKey("fechaTerminado")) {
+            params.put("fechaTerminado", sdf.parse((String) params.get("fechaTerminado")));
+        }
+
+        if (params.containsKey("tipo") && StringUtils.isNotBlank((String) params.get("tipo"))) {
             params.put("reporte", true);
             params = salidaDao.lista(params);
             try {
-                generaReporte(tipo, (List<Salida>) params.get("salidas"), response, "salidas", Constantes.ALM, almacenId);
+                generaReporte((String) params.get("tipo"), (List<Salida>) params.get("salidas"), response, "salidas", Constantes.ALM, almacenId);
                 return null;
             } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -109,13 +112,13 @@ public class SalidaController extends BaseController {
             }
         }
 
-        if (StringUtils.isNotBlank(correo)) {
+        if (params.containsKey("correo") && StringUtils.isNotBlank((String) params.get("correo"))) {
             params.put("reporte", true);
             params = salidaDao.lista(params);
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<Salida>) params.get("salidas"), request, "salidas", Constantes.ALM, almacenId);
+                enviaCorreo((String) params.get("correo"), (List<Salida>) params.get("salidas"), request, "salidas", Constantes.ALM, almacenId);
                 modelo.addAttribute("message", "lista.enviada.message");
                 modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("salida.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
@@ -125,6 +128,10 @@ public class SalidaController extends BaseController {
         params = salidaDao.lista(params);
         modelo.addAttribute("salidas", params.get("salidas"));
 
+        Long pagina = 1l;
+        if (params.containsKey("pagina")) {
+            pagina = (Long) params.get("pagina");
+        }
         this.pagina(params, modelo, "salidas", pagina);
 
         return "inventario/salida/lista";
