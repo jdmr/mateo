@@ -24,6 +24,7 @@
 package mx.edu.um.mateo.inventario.dao;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -87,6 +88,28 @@ public class FacturaAlmacenDao {
         if (params.containsKey("almacen")) {
             criteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
             countCriteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
+        }
+
+        if (params.containsKey("fechaIniciado")) {
+            log.debug("Buscando desde {}", params.get("fechaIniciado"));
+            criteria.add(Restrictions.ge("fechaCreacion", params.get("fechaIniciado")));
+            countCriteria.add(Restrictions.ge("fechaCreacion", params.get("fechaIniciado")));
+        } else {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE,0);
+            calendar.set(Calendar.SECOND,0);
+            calendar.set(Calendar.MILLISECOND,1);
+            log.debug("Asignando busqueda desde {}", calendar.getTime());
+            criteria.add(Restrictions.ge("fechaCreacion", calendar.getTime()));
+            countCriteria.add(Restrictions.ge("fechaCreacion", calendar.getTime()));
+        }
+        
+        if (params.containsKey("fechaTerminado")) {
+            log.debug("Buscando hasta {}", params.get("fechaTerminado"));
+            criteria.add(Restrictions.le("fechaCreacion", params.get("fechaTerminado")));
+            countCriteria.add(Restrictions.le("fechaCreacion", params.get("fechaTerminado")));
         }
 
         if (params.containsKey("filtro")) {
