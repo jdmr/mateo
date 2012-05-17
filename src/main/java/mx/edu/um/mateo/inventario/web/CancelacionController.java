@@ -23,7 +23,8 @@
  */
 package mx.edu.um.mateo.inventario.web;
 
-import java.util.HashMap;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +41,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -55,35 +55,29 @@ public class CancelacionController extends BaseController {
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
-            @RequestParam(required = false) String filtro,
-            @RequestParam(required = false) Long pagina,
-            @RequestParam(required = false) String tipo,
-            @RequestParam(required = false) String correo,
-            @RequestParam(required = false) String order,
-            @RequestParam(required = false) String sort,
             Cancelacion cancelacion,
             Errors errors,
-            Model modelo) {
-        log.debug("Mostrando lista de tipos de salidas");
-        Map<String, Object> params = new HashMap<>();
+            Model modelo) throws ParseException {
+        log.debug("Mostrando lista de cancelaciones");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Map<String, Object> params = this.convierteParams(request.getParameterMap());
         Long almacenId = (Long) request.getSession().getAttribute("almacenId");
         params.put("almacen", almacenId);
-        if (StringUtils.isNotBlank(filtro)) {
-            params.put("filtro", filtro);
-        }
-        if (StringUtils.isNotBlank(order)) {
-            params.put("order", order);
-            params.put("sort", sort);
-        }
-        if (pagina != null) {
-            params.put("pagina", pagina);
+
+        if (params.containsKey("fechaIniciado")) {
+            log.debug("FechaIniciado: {}", params.get("fechaIniciado"));
+            params.put("fechaIniciado", sdf.parse((String) params.get("fechaIniciado")));
         }
 
-        if (StringUtils.isNotBlank(tipo)) {
+        if (params.containsKey("fechaTerminado")) {
+            params.put("fechaTerminado", sdf.parse((String) params.get("fechaTerminado")));
+        }
+
+        if (params.containsKey("tipo") && StringUtils.isNotBlank((String) params.get("tipo"))) {
             params.put("reporte", true);
             params = cancelacionDao.lista(params);
             try {
-                generaReporte(tipo, (List<Cancelacion>) params.get("cancelaciones"), response, "cancelaciones", Constantes.ALM, almacenId);
+                generaReporte((String) params.get("tipo"), (List<Cancelacion>) params.get("cancelaciones"), response, "cancelaciones", Constantes.ALM, almacenId);
                 return null;
             } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -92,13 +86,13 @@ public class CancelacionController extends BaseController {
             }
         }
 
-        if (StringUtils.isNotBlank(correo)) {
+        if (params.containsKey("correo") && StringUtils.isNotBlank((String) params.get("correo"))) {
             params.put("reporte", true);
             params = cancelacionDao.lista(params);
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<Cancelacion>) params.get("cancelaciones"), request, "cancelaciones", Constantes.ALM, almacenId);
+                enviaCorreo((String) params.get("correo"), (List<Cancelacion>) params.get("cancelaciones"), request, "cancelaciones", Constantes.ALM, almacenId);
                 modelo.addAttribute("message", "lista.enviada.message");
                 modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("cancelacion.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
@@ -108,6 +102,10 @@ public class CancelacionController extends BaseController {
         params = cancelacionDao.lista(params);
         modelo.addAttribute("cancelaciones", params.get("cancelaciones"));
 
+        Long pagina = 1l;
+        if (params.containsKey("pagina")) {
+            pagina = (Long) params.get("pagina");
+        }
         this.pagina(params, modelo, "cancelaciones", pagina);
 
         return "inventario/cancelacion/lista";
