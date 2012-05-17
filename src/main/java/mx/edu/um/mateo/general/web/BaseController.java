@@ -91,7 +91,7 @@ public abstract class BaseController {
             if (i >= 10) {
                 break;
             }
-        } while (i++ < cantidadDePaginas);
+        } while (i++ <= cantidadDePaginas);
         List listado = (List) params.get(lista);
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (listado.size() - 1);

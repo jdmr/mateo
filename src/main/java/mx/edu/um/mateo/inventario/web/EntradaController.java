@@ -25,6 +25,8 @@ package mx.edu.um.mateo.inventario.web;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,10 +40,7 @@ import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inventario.dao.EntradaDao;
 import mx.edu.um.mateo.inventario.dao.ProductoDao;
-import mx.edu.um.mateo.inventario.model.Cancelacion;
-import mx.edu.um.mateo.inventario.model.Entrada;
-import mx.edu.um.mateo.inventario.model.LoteEntrada;
-import mx.edu.um.mateo.inventario.model.Producto;
+import mx.edu.um.mateo.inventario.model.*;
 import mx.edu.um.mateo.inventario.utils.*;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
@@ -72,35 +71,29 @@ public class EntradaController extends BaseController {
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
-            @RequestParam(required = false) String filtro,
-            @RequestParam(required = false) Long pagina,
-            @RequestParam(required = false) String tipo,
-            @RequestParam(required = false) String correo,
-            @RequestParam(required = false) String order,
-            @RequestParam(required = false) String sort,
             Usuario usuario,
             Errors errors,
-            Model modelo) {
+            Model modelo) throws ParseException {
         log.debug("Mostrando lista de tipos de entradas");
-        Map<String, Object> params = new HashMap<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Map<String, Object> params = this.convierteParams(request.getParameterMap());
         Long almacenId = (Long) request.getSession().getAttribute("almacenId");
         params.put("almacen", almacenId);
-        if (StringUtils.isNotBlank(filtro)) {
-            params.put("filtro", filtro);
-        }
-        if (StringUtils.isNotBlank(order)) {
-            params.put("order", order);
-            params.put("sort", sort);
-        }
-        if (pagina != null) {
-            params.put("pagina", pagina);
+
+        if (params.containsKey("fechaIniciado")) {
+            log.debug("FechaIniciado: {}", params.get("fechaIniciado"));
+            params.put("fechaIniciado", sdf.parse((String) params.get("fechaIniciado")));
         }
 
-        if (StringUtils.isNotBlank(tipo)) {
+        if (params.containsKey("fechaTerminado")) {
+            params.put("fechaTerminado", sdf.parse((String) params.get("fechaTerminado")));
+        }
+
+        if (params.containsKey("tipo") && StringUtils.isNotBlank((String) params.get("tipo"))) {
             params.put("reporte", true);
             params = entradaDao.lista(params);
             try {
-                generaReporte(tipo, (List<Entrada>) params.get("entradas"), response, "entradas", Constantes.ALM, almacenId);
+                generaReporte((String) params.get("tipo"), (List<Entrada>) params.get("entradas"), response, "entradas", Constantes.ALM, almacenId);
                 return null;
             } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -109,13 +102,13 @@ public class EntradaController extends BaseController {
             }
         }
 
-        if (StringUtils.isNotBlank(correo)) {
+        if (params.containsKey("correo") && StringUtils.isNotBlank((String) params.get("correo"))) {
             params.put("reporte", true);
             params = entradaDao.lista(params);
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<Entrada>) params.get("entradas"), request, "entradas", Constantes.ALM, almacenId);
+                enviaCorreo((String) params.get("correo"), (List<Salida>) params.get("entradas"), request, "entradas", Constantes.ALM, almacenId);
                 modelo.addAttribute("message", "lista.enviada.message");
                 modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("entrada.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
@@ -125,6 +118,10 @@ public class EntradaController extends BaseController {
         params = entradaDao.lista(params);
         modelo.addAttribute("entradas", params.get("entradas"));
 
+        Long pagina = 1l;
+        if (params.containsKey("pagina")) {
+            pagina = (Long) params.get("pagina");
+        }
         this.pagina(params, modelo, "entradas", pagina);
 
         return "inventario/entrada/lista";
