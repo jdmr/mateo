@@ -24,6 +24,8 @@
 package mx.edu.um.mateo.inventario.web;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +40,9 @@ import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inventario.dao.ProductoDao;
 import mx.edu.um.mateo.inventario.dao.TipoProductoDao;
+import mx.edu.um.mateo.inventario.model.Entrada;
 import mx.edu.um.mateo.inventario.model.Producto;
+import mx.edu.um.mateo.inventario.model.Salida;
 import mx.edu.um.mateo.inventario.model.XProducto;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
@@ -68,35 +72,31 @@ public class ProductoController extends BaseController {
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
-            @RequestParam(required = false) String filtro,
-            @RequestParam(required = false) Long pagina,
-            @RequestParam(required = false) String tipo,
-            @RequestParam(required = false) String correo,
-            @RequestParam(required = false) String order,
-            @RequestParam(required = false) String sort,
             Usuario usuario,
             Errors errors,
-            Model modelo) {
+            Model modelo) throws ParseException {
         log.debug("Mostrando lista de tipos de productos");
-        Map<String, Object> params = new HashMap<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Map<String, Object> params = this.convierteParams(request.getParameterMap());
         Long almacenId = (Long) request.getSession().getAttribute("almacenId");
         params.put("almacen", almacenId);
-        if (StringUtils.isNotBlank(filtro)) {
-            params.put("filtro", filtro);
-        }
-        if (StringUtils.isNotBlank(order)) {
-            params.put("order", order);
-            params.put("sort", sort);
-        }
-        if (pagina != null) {
-            params.put("pagina", pagina);
+
+        boolean buscarPorFecha = false;
+        if (params.containsKey("fecha")) {
+            log.debug("Fecha: {}", params.get("fecha"));
+            params.put("fecha", sdf.parse((String) params.get("fecha")));
+            buscarPorFecha = true;
         }
 
-        if (StringUtils.isNotBlank(tipo)) {
+        if (params.containsKey("tipo") && StringUtils.isNotBlank((String) params.get("tipo"))) {
             params.put("reporte", true);
-            params = productoDao.lista(params);
+            if (!buscarPorFecha) {
+                params = productoDao.lista(params);
+            } else {
+                params = productoDao.historialTodos(params);
+            }
             try {
-                generaReporte(tipo, (List<Producto>) params.get("productos"), response, "productos", Constantes.ALM, almacenId);
+                generaReporte((String) params.get("tipo"), (List<Producto>) params.get("productos"), response, "productos", Constantes.ALM, almacenId);
                 return null;
             } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -105,22 +105,34 @@ public class ProductoController extends BaseController {
             }
         }
 
-        if (StringUtils.isNotBlank(correo)) {
+        if (params.containsKey("correo") && StringUtils.isNotBlank((String) params.get("correo"))) {
             params.put("reporte", true);
-            params = productoDao.lista(params);
+            if (!buscarPorFecha) {
+                params = productoDao.lista(params);
+            } else {
+                params = productoDao.historialTodos(params);
+            }
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<Producto>) params.get("productos"), request, "productos", Constantes.ALM, almacenId);
+                enviaCorreo((String) params.get("correo"), (List<Producto>) params.get("productos"), request, "productos", Constantes.ALM, almacenId);
                 modelo.addAttribute("message", "lista.enviada.message");
                 modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("producto.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-        params = productoDao.lista(params);
+        if (!buscarPorFecha) {
+            params = productoDao.lista(params);
+        } else {
+            params = productoDao.historialTodos(params);
+        }
         modelo.addAttribute("productos", params.get("productos"));
 
+        Long pagina = 1l;
+        if (params.containsKey("pagina")) {
+            pagina = (Long) params.get("pagina");
+        }
         this.pagina(params, modelo, "productos", pagina);
 
         return "inventario/producto/lista";

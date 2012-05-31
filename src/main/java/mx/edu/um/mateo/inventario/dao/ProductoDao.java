@@ -24,6 +24,7 @@
 package mx.edu.um.mateo.inventario.dao;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.Map;
 import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.inventario.model.HistorialProducto;
 import mx.edu.um.mateo.inventario.model.Producto;
 import mx.edu.um.mateo.inventario.model.TipoProducto;
 import mx.edu.um.mateo.inventario.model.XProducto;
@@ -255,7 +257,58 @@ public class ProductoDao {
 
         return params;
     }
+
+    public void guardaHistorial(Date fecha) {
+        log.debug("Buscando historial de productos de la fecha {}", fecha);
+        StringBuilder sb = new StringBuilder();
+        sb.append("select new HistorialProducto(p.id, p.almacen) from Producto p order by p.codigo");
+        log.debug("Cargando lista de productos");
+        List<HistorialProducto> productos = currentSession().createQuery(sb.toString()).list();
+        List<HistorialProducto> resultado = new ArrayList<>();
+        log.debug("Buscando historial por producto ({})", productos.size());
+        int cont = 0;
+        for (HistorialProducto hp : productos) {
+            if (cont++ % 10 == 0) {
+                log.debug("Leyendo {} / {} Productos", cont, productos.size());
+            }
+            sb = new StringBuilder();
+            sb.append("select new map(p.existencia as existencia) from XProducto p where p.productoId = :productoId and p.fechaCreacion <= :fecha order by p.fechaCreacion desc");
+            Query query = currentSession().createQuery(sb.toString());
+            query.setLong("productoId", hp.getProductoId());
+            query.setTimestamp("fecha", fecha);
+            query.setMaxResults(1);
+            Map<String, Object> existencia = (Map<String, Object>) query.uniqueResult();
+            if (existencia != null && !existencia.isEmpty()) {
+                sb = new StringBuilder();
+                sb.append("select hp from HistorialProducto hp where fecha = :fecha and productoId = :productoId");
+                Query query2 = currentSession().createQuery(sb.toString());
+                query2.setDate("fecha", fecha);
+                query2.setLong("productoId", hp.getProductoId());
+                HistorialProducto otro = (HistorialProducto) query2.uniqueResult();
+                if (otro != null) {
+                    hp = otro;
+                }
+                hp.setExistencia((BigDecimal) existencia.get("existencia"));
+                hp.setFecha(fecha);
+                resultado.add(hp);
+            }
+        }
+        log.debug("{} / {} Productos", cont, productos.size());
+        log.debug("Guardando historial de productos ({})", resultado.size());
+        cont = 0;
+        for (HistorialProducto hp : resultado) {
+            if (cont++ % 10 == 0) {
+                log.debug("Guardando {} / {} Productos", cont, resultado.size());
+            }
+            currentSession().saveOrUpdate(hp);
+        }
+    }
     
+    public Map<String, Object> historialTodos(Map<String, Object> params) {
+        
+        return params;
+    }
+
     public void audita(Producto producto, Usuario usuario, String actividad, Date fecha) {
         XProducto xproducto = new XProducto();
         BeanUtils.copyProperties(producto, xproducto);
@@ -268,5 +321,4 @@ public class ProductoDao {
         xproducto.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
         currentSession().save(xproducto);
     }
-    
 }

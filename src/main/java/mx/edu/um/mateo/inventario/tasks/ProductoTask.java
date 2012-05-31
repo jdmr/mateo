@@ -21,38 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package mx.edu.um.mateo.inventario.web;
+package mx.edu.um.mateo.inventario.tasks;
 
 import java.util.Date;
 import mx.edu.um.mateo.inventario.dao.ProductoDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
-@Controller
-@RequestMapping("/inventario")
-public class InventarioController {
+@Component
+public class ProductoTask {
 
-    private static final Logger log = LoggerFactory.getLogger(InventarioController.class);
+    private static final Logger log = LoggerFactory.getLogger(ProductoTask.class);
     @Autowired
     private ProductoDao productoDao;
 
-    @RequestMapping
-    public String index() {
-        log.debug("Mostrando indice de inventarios");
-        return "inventario/index";
+    public ProductoTask() {
+        log.info("Se ha creado una nueva instancia del cron de productos");
     }
     
-    @RequestMapping("/historial")
-    public String historial() {
-        log.debug("Buscando historial de hoy");
-        productoDao.guardaHistorial(new Date());
-        return "redirect:/inventario";
+    @Scheduled(cron="1 * * * * *")
+    public void buscaHistorial() {
+        Date fecha = new Date();
+        log.debug("Buscando historial {}", fecha);
+        productoDao.guardaHistorial(fecha);
     }
+    
 }

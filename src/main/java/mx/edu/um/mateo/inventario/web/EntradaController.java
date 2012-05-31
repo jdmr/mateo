@@ -108,7 +108,7 @@ public class EntradaController extends BaseController {
 
             params.remove("reporte");
             try {
-                enviaCorreo((String) params.get("correo"), (List<Salida>) params.get("entradas"), request, "entradas", Constantes.ALM, almacenId);
+                enviaCorreo((String) params.get("correo"), (List<Entrada>) params.get("entradas"), request, "entradas", Constantes.ALM, almacenId);
                 modelo.addAttribute("message", "lista.enviada.message");
                 modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("entrada.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {

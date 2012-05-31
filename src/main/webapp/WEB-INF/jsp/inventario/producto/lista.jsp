@@ -21,11 +21,20 @@
             <input type="hidden" name="correo" id="correo" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
-            <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/inventario/producto/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='producto.nuevo.label' /></a>
-                <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
-                <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
-            </p>
+            <div class="well">
+                <div class="row-fluid">
+                    <a class="btn btn-primary" href="<s:url value='/inventario/producto/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='producto.nuevo.label' /></a>
+                    <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
+                    <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
+                    <a id="buscarFechaAnchor" class="btn" href="#"><s:message code="buscar.fecha.button" /></a>
+                </div>
+                <div id="buscarFechaDiv" class="row-fluid" style="<c:if test='${empty param.fecha}'>display: none; </c:if>margin-top: 10px;">
+                    <label>
+                        <s:message code="fecha" /><br/>
+                        <input type="text" name="fecha" id="fechaIniciado" value="${param.fecha}" />
+                    </label><br/>
+                </div>
+            </div>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
                     <a class="close" data-dismiss="alert">×</a>
@@ -139,6 +148,18 @@
         </form>        
         <content>
             <script src="<c:url value='/js/lista.js' />"></script>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $("input#fecha").datepicker();
+                        
+                    $("a#buscarFechaAnchor").click(function(e) {
+                        e.preventDefault();
+                        $("div#buscarFechaDiv").show('slide', {direction:'up'}, 500, function() {
+                            $("input#fecha").focus();
+                        });
+                    });
+                });
+            </script>
         </content>
     </body>
 </html>

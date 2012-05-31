@@ -104,7 +104,7 @@ public class Producto implements Serializable {
 
     public Producto() {
     }
-
+    
     public Producto(String codigo, String sku, String nombre, String descripcion, TipoProducto tipoProducto, Almacen almacen) {
         this.codigo = codigo;
         this.sku = sku;
