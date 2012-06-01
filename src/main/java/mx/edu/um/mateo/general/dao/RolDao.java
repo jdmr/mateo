@@ -24,45 +24,16 @@
 package mx.edu.um.mateo.general.dao;
 
 import mx.edu.um.mateo.general.model.Rol;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author jdmr
  */
-@Repository
-@Transactional
-public class RolDao {
+public interface RolDao {
 
-    private static final Logger log = LoggerFactory.getLogger(RolDao.class);
-    @Autowired
-    private SessionFactory sessionFactory;
+    public Rol obtiene(Long id);
 
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
-    
-    public Rol obtiene(Long id) {
-        Rol rol = (Rol) currentSession().get(Rol.class, id);
-        return rol;
-    }
-    
-    public Rol obtiene(String nombre) {
-        Query query = currentSession().createQuery("select r from Rol r where authority = ?");
-        Rol rol = (Rol) query.uniqueResult();
-        return rol;
-    }
-    
-    public Rol crea(Rol rol) {
-        currentSession().save(rol);
-        return rol;
-    }
-    
+    public Rol obtiene(String nombre);
+
+    public Rol crea(Rol rol);
 }

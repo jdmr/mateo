@@ -23,148 +23,27 @@
  */
 package mx.edu.um.mateo.general.dao;
 
-import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Cliente;
-import mx.edu.um.mateo.general.model.TipoCliente;
 import mx.edu.um.mateo.general.model.Usuario;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.criterion.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
-@Repository
-@Transactional
-public class ClienteDao {
+public interface ClienteDao {
 
-    private static final Logger log = LoggerFactory.getLogger(ClienteDao.class);
-    @Autowired
-    private SessionFactory sessionFactory;
+    public Map<String, Object> lista(Map<String, Object> params);
 
-    public ClienteDao() {
-        log.info("Se ha creado una nueva instancia de ClienteDao");
-    }
+    public Cliente obtiene(Long id);
 
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
+    public Cliente crea(Cliente cliente, Usuario usuario);
 
-    public Map<String, Object> lista(Map<String, Object> params) {
-        log.debug("Buscando lista de clientes con params {}", params);
-        if (params == null) {
-            params = new HashMap<>();
-        }
+    public Cliente crea(Cliente cliente);
 
-        if (!params.containsKey("max")) {
-            params.put("max", 10);
-        } else {
-            params.put("max", Math.min((Integer) params.get("max"), 100));
-        }
+    public Cliente actualiza(Cliente cliente);
 
-        if (params.containsKey("pagina")) {
-            Long pagina = (Long) params.get("pagina");
-            Long offset = (pagina - 1) * (Integer) params.get("max");
-            params.put("offset", offset.intValue());
-        }
+    public Cliente actualiza(Cliente cliente, Usuario usuario);
 
-        if (!params.containsKey("offset")) {
-            params.put("offset", 0);
-        }
-        Criteria criteria = currentSession().createCriteria(Cliente.class);
-        Criteria countCriteria = currentSession().createCriteria(Cliente.class);
-
-        if (params.containsKey("empresa")) {
-            criteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
-            countCriteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
-        }
-
-        if (params.containsKey("tipoCliente")) {
-            criteria.createCriteria("tipoCliente").add(Restrictions.idEq(params.get("tipoCliente")));
-            countCriteria.createCriteria("tipoCliente").add(Restrictions.idEq(params.get("tipoCliente")));
-        }
-
-        if (params.containsKey("filtro")) {
-            String filtro = (String) params.get("filtro");
-            Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("nombreCompleto", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("rfc", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("correo", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("contacto", filtro, MatchMode.ANYWHERE));
-            criteria.add(propiedades);
-            countCriteria.add(propiedades);
-        }
-
-        if (params.containsKey("order")) {
-            String campo = (String) params.get("order");
-            if (params.get("sort").equals("desc")) {
-                criteria.addOrder(Order.desc(campo));
-            } else {
-                criteria.addOrder(Order.asc(campo));
-            }
-        }
-
-        if (!params.containsKey("reporte")) {
-            criteria.setFirstResult((Integer) params.get("offset"));
-            criteria.setMaxResults((Integer) params.get("max"));
-        }
-        params.put("clientes", criteria.list());
-
-        countCriteria.setProjection(Projections.rowCount());
-        params.put("cantidad", (Long) countCriteria.list().get(0));
-
-        return params;
-    }
-
-    public Cliente obtiene(Long id) {
-        Cliente cliente = (Cliente) currentSession().get(Cliente.class, id);
-        return cliente;
-    }
-
-    public Cliente crea(Cliente cliente, Usuario usuario) {
-        Session session = currentSession();
-        if (usuario != null) {
-            cliente.setEmpresa(usuario.getEmpresa());
-        }
-        cliente.setTipoCliente((TipoCliente)session.get(TipoCliente.class, cliente.getTipoCliente().getId()));
-        session.save(cliente);
-        session.flush();
-        return cliente;
-    }
-
-    public Cliente crea(Cliente cliente) {
-        return this.crea(cliente, null);
-    }
-
-    public Cliente actualiza(Cliente cliente) {
-        return this.actualiza(cliente, null);
-    }
-
-    public Cliente actualiza(Cliente cliente, Usuario usuario) {
-        Session session = currentSession();
-        if (usuario != null) {
-            cliente.setEmpresa(usuario.getEmpresa());
-        }
-        cliente.setTipoCliente((TipoCliente)session.get(TipoCliente.class, cliente.getTipoCliente().getId()));
-        session.update(cliente);
-        session.flush();
-        return cliente;
-    }
-
-    public String elimina(Long id) {
-        Cliente cliente = obtiene(id);
-        String nombre = cliente.getNombre();
-        currentSession().delete(cliente);
-        currentSession().flush();
-        return nombre;
-    }
+    public String elimina(Long id);
 }

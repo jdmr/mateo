@@ -46,7 +46,7 @@ public class ProductoTask {
         log.info("Se ha creado una nueva instancia del cron de productos");
     }
     
-    @Scheduled(cron="1 * * * * *")
+    @Scheduled(cron="0 0 * * * *")
     public void buscaHistorial() {
         Date fecha = new Date();
         log.debug("Buscando historial {}", fecha);

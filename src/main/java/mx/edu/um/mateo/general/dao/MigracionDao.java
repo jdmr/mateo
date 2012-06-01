@@ -23,76 +23,11 @@
  */
 package mx.edu.um.mateo.general.dao;
 
-import java.sql.*;
-import javax.sql.DataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 /**
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
-@Repository
-@Transactional
-public class MigracionDao {
+public interface MigracionDao {
 
-    private static final Logger log = LoggerFactory.getLogger(MigracionDao.class);
-    @Autowired
-    private DataSource dataSource;
-        
-    public void hazlo() {
-        Connection conn = null;
-        Statement stmt = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = dataSource.getConnection();
-            conn.setAutoCommit(false);
-            ps = conn.prepareStatement("insert into facturas_almacen_entradas(factura_id, entrada_id) values(?,?)");
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery("select id, factura_almacen_id from entradas");
-            while (rs.next()) {
-                Long entradaId = rs.getLong("id");
-                Long facturaId = rs.getLong("factura_almacen_id");
-                if (facturaId > 0) {
-                    ps.setLong(1, facturaId);
-                    ps.setLong(2, entradaId);
-                    ps.executeUpdate();
-                }
-            }
-            
-            ps = conn.prepareStatement("insert into facturas_almacen_salidas(factura_id, salida_id) values(?,?)");
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery("select id, factura_almacen_id from salidas");
-            while (rs.next()) {
-                Long salidaId = rs.getLong("id");
-                Long facturaId = rs.getLong("factura_almacen_id");
-                if (facturaId > 0) {
-                    ps.setLong(1, facturaId);
-                    ps.setLong(2, salidaId);
-                    ps.executeUpdate();
-                }
-            }
-            conn.commit();
-        } catch(SQLException e) {
-            log.error("Errores en la migracion", e );
-            try {
-                conn.rollback();
-            } catch (SQLException ex) {
-                log.error("No se pudo hacer rollback", e);
-            }
-        } finally {
-            try {
-                if (rs != null) rs.close();
-                if (stmt != null) stmt.close();
-                if (conn != null) conn.close();
-                if (ps != null) ps.close();
-            } catch(SQLException e) {
-                log.error("Problema al cerrar conexiones", e);
-            }
-        }
-    }
+    public void hazlo();
 }

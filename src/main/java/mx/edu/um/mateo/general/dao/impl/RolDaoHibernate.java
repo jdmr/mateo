@@ -21,42 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package mx.edu.um.mateo.inventario.dao;
+package mx.edu.um.mateo.general.dao.impl;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.inventario.model.Producto;
+import mx.edu.um.mateo.general.dao.BaseDao;
+import mx.edu.um.mateo.general.dao.RolDao;
+import mx.edu.um.mateo.general.model.Rol;
+import org.hibernate.Query;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
-public interface ProductoDao {
+@Repository
+@Transactional
+public class RolDaoHibernate extends BaseDao implements RolDao {
+    
+    public RolDaoHibernate() {
+        log.info("Nueva instancia de RolDao");
+    }
 
-    public Map<String, Object> lista(Map<String, Object> params);
-
-    public List<Producto> listaParaSalida(String filtro, Long almacenId);
-
-    public Producto obtiene(Long id);
-
-    public Producto crea(Producto producto, Usuario usuario);
-
-    public Producto crea(Producto producto);
-
-    public Producto actualiza(Producto producto);
-
-    public Producto actualiza(Producto otro, Usuario usuario);
-
-    public String elimina(Long id);
-
-    public String elimina(Long id, Usuario usuario);
-
-    public Map<String, Object> historial(Long id, Map<String, Object> params);
-
-    public void guardaHistorial(Date fecha);
-
-    public Map<String, Object> historialTodos(Map<String, Object> params);
-
+    @Override
+    public Rol obtiene(Long id) {
+        Rol rol = (Rol) currentSession().get(Rol.class, id);
+        return rol;
+    }
+    
+    @Override
+    public Rol obtiene(String nombre) {
+        Query query = currentSession().createQuery("select r from Rol r where authority = ?");
+        Rol rol = (Rol) query.uniqueResult();
+        return rol;
+    }
+    
+    @Override
+    public Rol crea(Rol rol) {
+        currentSession().save(rol);
+        return rol;
+    }
+    
 }
