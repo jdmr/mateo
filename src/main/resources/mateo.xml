@@ -20,28 +20,6 @@
     
     <task:annotation-driven/>
     
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-        <property name="driverClassName" value="${jdbc.driverClassName}" />
-        <property name="url" value="${jdbc.url}" />
-        <property name="username" value="${jdbc.username}" />
-        <property name="password" value="${jdbc.password}" />
-        <property name="initialSize" value="5" />
-        <property name="maxActive" value="10" />
-    </bean>
-    
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
-        <property name="dataSource" ref="dataSource" />
-        <property name="packagesToScan" value="mx.edu.um.mateo.**.model" />
-        <property name="hibernateProperties">
-            <props>
-                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
-                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
-                <prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop>
-                <prop key="hibernate.cache.provider_class">${hibernate.cache.provider_class}</prop>
-            </props>
-        </property>
-    </bean>
-        
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl" >
         <property name="host" value="${mail.smtp.host}" />
         <property name="port" value="${mail.smtp.port}" />
@@ -70,5 +48,53 @@
     </bean>
     
     <bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" />
+        
+    <beans profile="produccion">
+        <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+            <property name="driverClassName" value="${jdbc.driverClassName}" />
+            <property name="url" value="${jdbc.url}" />
+            <property name="username" value="${jdbc.username}" />
+            <property name="password" value="${jdbc.password}" />
+            <property name="initialSize" value="5" />
+            <property name="maxActive" value="10" />
+        </bean>
+        
+        <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+            <property name="dataSource" ref="dataSource" />
+            <property name="packagesToScan" value="mx.edu.um.mateo.**.model" />
+            <property name="hibernateProperties">
+                <props>
+                    <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                    <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                    <prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop>
+                    <prop key="hibernate.cache.provider_class">${hibernate.cache.provider_class}</prop>
+                </props>
+            </property>
+        </bean>
+    </beans>
+    
+    <beans profile="pruebas">
+        <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+            <property name="driverClassName" value="${test.jdbc.driverClassName}" />
+            <property name="url" value="${test.jdbc.url}" />
+            <property name="username" value="${test.jdbc.username}" />
+            <property name="password" value="${test.jdbc.password}" />
+            <property name="initialSize" value="5" />
+            <property name="maxActive" value="10" />
+        </bean>
+        
+        <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+            <property name="dataSource" ref="dataSource" />
+            <property name="packagesToScan" value="mx.edu.um.mateo.**.model" />
+            <property name="hibernateProperties">
+                <props>
+                    <prop key="hibernate.show_sql">${test.hibernate.show_sql}</prop>
+                    <prop key="hibernate.hbm2ddl.auto">${test.hibernate.hbm2ddl.auto}</prop>
+                    <prop key="hibernate.cache.use_second_level_cache">${test.hibernate.cache.use_second_level_cache}</prop>
+                    <prop key="hibernate.cache.provider_class">${test.hibernate.cache.provider_class}</prop>
+                </props>
+            </property>
+        </bean>
+    </beans>    
         
 </beans>
