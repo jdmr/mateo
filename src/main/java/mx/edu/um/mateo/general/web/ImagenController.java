@@ -54,7 +54,7 @@ public class ImagenController {
     private SessionFactory sessionFactory;
 
     @RequestMapping("/mostrar/{id}")
-    public String mostrar(HttpServletResponse response, @PathVariable Long id) {
+    public String mostrar(HttpServletRequest request, HttpServletResponse response, @PathVariable Long id) {
         log.debug("Mostrando imagen {}",id);
         Imagen imagen = (Imagen)currentSession().get(Imagen.class, id);
         if (imagen != null) {
@@ -65,6 +65,20 @@ public class ImagenController {
             } catch (IOException e) {
                 log.error("No se pudo escribir el archivo",e);
                 throw new RuntimeException("No se pudo escribir el archivo en el outputstream");
+            }
+        } else {
+            ServletContext servletContext = request.getServletContext();
+            File file = new File(servletContext.getRealPath("/images/sin-foto.jpg"));
+            try {
+                BufferedInputStream bif = new BufferedInputStream(new FileInputStream(file));
+                response.setContentType("image/jpeg");
+                response.setContentLength(new Long(file.length()).intValue());
+                int readBytes;
+                while((readBytes = bif.read()) != -1) {
+                    response.getOutputStream().write(readBytes);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("No se encontro la imagen", e);
             }
         }
         throw new RuntimeException("No se encontro la imagen");

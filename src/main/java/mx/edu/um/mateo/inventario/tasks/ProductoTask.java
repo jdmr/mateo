@@ -51,6 +51,7 @@ public class ProductoTask {
         Date fecha = new Date();
         log.debug("Buscando historial {}", fecha);
         productoDao.guardaHistorial(fecha);
+        log.debug("TERMINO DE BUSCAR EL HISTORIAL {}", new Date());
     }
     
 }

@@ -56,6 +56,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         log.info("Nueva instancia de Activo Dao creada.");
     }
     
+    @Override
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de activos con params {}", params);
         if (params == null) {
@@ -144,7 +145,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         if (usuario != null) {
             activo.setEmpresa(usuario.getEmpresa());
         }
-        activo.setTipoActivo((TipoActivo)session.get(TipoActivo.class, activo.getTipoActivo().getId()));
+        activo.setTipoActivo((TipoActivo)session.load(TipoActivo.class, activo.getTipoActivo().getId()));
         activo.setFolio(this.getFolio(activo.getEmpresa()));
         session.save(activo);
         session.flush();
@@ -164,7 +165,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         if (usuario != null) {
             activo.setEmpresa(usuario.getEmpresa());
         }
-        activo.setTipoActivo((TipoActivo)session.get(TipoActivo.class, activo.getTipoActivo().getId()));
+        activo.setTipoActivo((TipoActivo)session.load(TipoActivo.class, activo.getTipoActivo().getId()));
         session.update(activo);
         session.flush();
         return activo;

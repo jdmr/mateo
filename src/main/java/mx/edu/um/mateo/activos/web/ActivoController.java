@@ -36,11 +36,7 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
-import mx.edu.um.mateo.inventario.model.Almacen;
-import mx.edu.um.mateo.inventario.model.Folio;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.LockOptions;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
@@ -125,7 +121,7 @@ public class ActivoController extends BaseController {
 
         this.pagina(params, modelo, "activos", pagina);
 
-        return "admin/activo/lista";
+        return "activoFijo/activo/lista";
     }
 
     @RequestMapping("/ver/{id}")
@@ -135,7 +131,7 @@ public class ActivoController extends BaseController {
 
         modelo.addAttribute("activo", activo);
 
-        return "admin/activo/ver";
+        return "activoFijo/activo/ver";
     }
 
     @RequestMapping("/nuevo")
@@ -150,7 +146,7 @@ public class ActivoController extends BaseController {
         params = tipoActivoDao.lista(params);
         modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
 
-        return "admin/activo/nuevo";
+        return "activoFijo/activo/nuevo";
     }
 
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
@@ -167,7 +163,7 @@ public class ActivoController extends BaseController {
             params = tipoActivoDao.lista(params);
             modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
 
-            return "admin/activo/nuevo";
+            return "activoFijo/activo/nuevo";
         }
 
         try {
@@ -184,13 +180,13 @@ public class ActivoController extends BaseController {
             params = tipoActivoDao.lista(params);
             modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
 
-            return "admin/activo/nuevo";
+            return "activoFijo/activo/nuevo";
         }
 
         redirectAttributes.addFlashAttribute("message", "activo.creado.message");
         redirectAttributes.addFlashAttribute("messageAttrs", new String[]{activo.getFolio()});
 
-        return "redirect:/admin/activo/ver/" + activo.getId();
+        return "redirect:/activoFijo/activo/ver/" + activo.getId();
     }
 
     @RequestMapping("/edita/{id}")
@@ -205,7 +201,7 @@ public class ActivoController extends BaseController {
         params = tipoActivoDao.lista(params);
         modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
 
-        return "admin/activo/edita";
+        return "activoFijo/activo/edita";
     }
 
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
@@ -219,7 +215,7 @@ public class ActivoController extends BaseController {
             params = tipoActivoDao.lista(params);
             modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
 
-            return "admin/activo/edita";
+            return "activoFijo/activo/edita";
         }
 
         try {
@@ -235,13 +231,13 @@ public class ActivoController extends BaseController {
             params = tipoActivoDao.lista(params);
             modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
 
-            return "admin/activo/nuevo";
+            return "activoFijo/activo/nuevo";
         }
 
         redirectAttributes.addFlashAttribute("message", "activo.actualizado.message");
         redirectAttributes.addFlashAttribute("messageAttrs", new String[]{activo.getFolio()});
 
-        return "redirect:/admin/activo/ver/" + activo.getId();
+        return "redirect:/activoFijo/activo/ver/" + activo.getId();
     }
 
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
@@ -255,9 +251,9 @@ public class ActivoController extends BaseController {
         } catch (Exception e) {
             log.error("No se pudo eliminar la activo " + id, e);
             bindingResult.addError(new ObjectError("activo", new String[]{"activo.no.eliminado.message"}, null, null));
-            return "admin/activo/ver";
+            return "activoFijo/activo/ver";
         }
 
-        return "redirect:/admin/activo";
+        return "redirect:/activoFijo/activo";
     }
 }
