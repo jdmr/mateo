@@ -23,6 +23,7 @@
  */
 package mx.edu.um.mateo.inventario.dao;
 
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inventario.model.*;
@@ -65,4 +66,8 @@ public interface FacturaAlmacenDao {
     public FacturaAlmacen eliminaSalida(Long facturaId, Long salidaId);
 
     public FacturaAlmacen eliminaEntrada(Long facturaId, Long entradaId);
+    
+    public List<Salida> salidas(Long facturaId);
+    
+    public List<Entrada> entradas(Long facturaId);
 }

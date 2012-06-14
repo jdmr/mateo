@@ -43,6 +43,7 @@ import mx.edu.um.mateo.general.model.Proveedor;
 @Table(name = "activos", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"folio", "empresa_id"})
 })
+@org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 public class Activo implements Serializable {
 
     @Id
@@ -83,18 +84,21 @@ public class Activo implements Serializable {
     @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal inpc = BigDecimal.ZERO;
     private String ubicacion;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "fecha_compra")
+    private Date fechaCompra;
     @Column(length = 64)
     private Boolean inactivo = false;
     @Temporal(TemporalType.DATE)
     @Column(name = "fecha_inactivo")
     private Date fechaInactivo;
     @ManyToOne(optional = false)
-    @JoinColumn(name="tipo_activo_id")
+    @JoinColumn(name = "tipo_activo_id")
     private TipoActivo tipoActivo;
     @ManyToOne(optional = false)
     private Proveedor proveedor;
     @ManyToOne(optional = false)
-    @JoinColumn(name="centro_costo_id")
+    @JoinColumn(name = "centro_costo_id")
     private Cuenta cuenta;
     @ManyToOne(optional = false)
     private Empresa empresa;
@@ -123,8 +127,32 @@ public class Activo implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "last_updated")
     private Date fechaModificacion;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "fecha_depreciacion")
+    private Date fechaDepreciacion;
+    @Column(name = "depreciacion_anual", scale = 2, precision = 8)
+    private BigDecimal depreciacionAnual;
+    @Column(name = "depreciacion_mensual", scale = 2, precision = 8)
+    private BigDecimal depreciacionMensual;
+    @Column(name = "depreciacion_acumulada", scale = 2, precision = 8)
+    private BigDecimal depreciacionAcumulada;
+    @Transient
+    private BigDecimal porciento;
+    @Transient
+    private Long vidaUtil;
 
     public Activo() {
+    }
+
+    public Activo(Long id, Integer version, BigDecimal moi, Date fechaCompra, BigDecimal porciento, Long vidaUtil, Boolean inactivo, Date fechaInactivo) {
+        this.id = id;
+        this.version = version;
+        this.moi = moi;
+        this.fechaCompra = fechaCompra;
+        this.porciento = porciento;
+        this.vidaUtil = vidaUtil;
+        this.inactivo = inactivo;
+        this.fechaInactivo = fechaInactivo;
     }
 
     /**
@@ -422,6 +450,20 @@ public class Activo implements Serializable {
     }
 
     /**
+     * @return the fechaCompra
+     */
+    public Date getFechaCompra() {
+        return fechaCompra;
+    }
+
+    /**
+     * @param fechaCompra the fechaCompra to set
+     */
+    public void setFechaCompra(Date fechaCompra) {
+        this.fechaCompra = fechaCompra;
+    }
+
+    /**
      * @return the inactivo
      */
     public Boolean getInactivo() {
@@ -615,6 +657,90 @@ public class Activo implements Serializable {
      */
     public void setReubicaciones(List<ReubicacionActivo> reubicaciones) {
         this.reubicaciones = reubicaciones;
+    }
+
+    /**
+     * @return the fechaDepreciacion
+     */
+    public Date getFechaDepreciacion() {
+        return fechaDepreciacion;
+    }
+
+    /**
+     * @param fechaDepreciacion the fechaDepreciacion to set
+     */
+    public void setFechaDepreciacion(Date fechaDepreciacion) {
+        this.fechaDepreciacion = fechaDepreciacion;
+    }
+
+    /**
+     * @return the depreciacionAnual
+     */
+    public BigDecimal getDepreciacionAnual() {
+        return depreciacionAnual;
+    }
+
+    /**
+     * @param depreciacionAnual the depreciacionAnual to set
+     */
+    public void setDepreciacionAnual(BigDecimal depreciacionAnual) {
+        this.depreciacionAnual = depreciacionAnual;
+    }
+
+    /**
+     * @return the depreciacionMensual
+     */
+    public BigDecimal getDepreciacionMensual() {
+        return depreciacionMensual;
+    }
+
+    /**
+     * @param depreciacionMensual the depreciacionMensual to set
+     */
+    public void setDepreciacionMensual(BigDecimal depreciacionMensual) {
+        this.depreciacionMensual = depreciacionMensual;
+    }
+
+    /**
+     * @return the depreciacionAcumulada
+     */
+    public BigDecimal getDepreciacionAcumulada() {
+        return depreciacionAcumulada;
+    }
+
+    /**
+     * @param depreciacionAcumulada the depreciacionAcumulada to set
+     */
+    public void setDepreciacionAcumulada(BigDecimal depreciacionAcumulada) {
+        this.depreciacionAcumulada = depreciacionAcumulada;
+    }
+
+    /**
+     * @return the porciento
+     */
+    public BigDecimal getPorciento() {
+        return porciento;
+    }
+
+    /**
+     * @param porciento the porciento to set
+     */
+    public void setPorciento(BigDecimal porciento) {
+        this.porciento = porciento;
+    }
+
+    /**
+     * @return the vidaUtil
+     */
+    public Long getVidaUtil() {
+        return vidaUtil;
+    }
+
+    /**
+     * @param vidaUtil the vidaUtil to set
+     */
+    public void setVidaUtil(Long vidaUtil) {
+        this.vidaUtil = vidaUtil;
     }
 
     @Override

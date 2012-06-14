@@ -16,10 +16,11 @@
     <body>
         <h2><s:message code="login.title" /></h2>
         <c:if test="${not empty param.error}">
-            <p style="color:red;padding: 0 10px 10px;">
+            <h2 style="color:blue;">Favor de comunicarse a las extensiones 1054 o 1050 para que le demos acceso</h2>
+            <p style="color:red;padding: 0 10px 10px 0;">
                 <s:message code="login.invalido" />
             </p>
-            <p style="color:red;padding: 0 10px 10px;">
+            <p style="color:red;padding: 0 10px 10px 0;">
                 <c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/>.
             </p>
         </c:if>

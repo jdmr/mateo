@@ -118,9 +118,10 @@ public class ActivoController extends BaseController {
         }
         params = activoDao.lista(params);
         modelo.addAttribute("activos", params.get("activos"));
+        modelo.addAttribute("resumen", params.get("resumen"));
 
         this.pagina(params, modelo, "activos", pagina);
-
+        
         return "activoFijo/activo/lista";
     }
 
@@ -244,10 +245,10 @@ public class ActivoController extends BaseController {
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Activo activo, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina activo");
         try {
-            String nombre = activoDao.elimina(id);
-
-            redirectAttributes.addFlashAttribute("message", "activo.eliminado.message");
-            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
+//            String nombre = activoDao.baja(id);
+//
+//            redirectAttributes.addFlashAttribute("message", "activo.eliminado.message");
+//            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
         } catch (Exception e) {
             log.error("No se pudo eliminar la activo " + id, e);
             bindingResult.addError(new ObjectError("activo", new String[]{"activo.no.eliminado.message"}, null, null));

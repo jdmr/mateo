@@ -188,6 +188,7 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
         nuevoUsuario.setUsername(usuario.getUsername());
         nuevoUsuario.setNombre(usuario.getNombre());
         nuevoUsuario.setApellido(usuario.getApellido());
+        nuevoUsuario.setCorreo(usuario.getCorreo());
 
         nuevoUsuario.getRoles().clear();
         Query query = currentSession().createQuery("select r from Rol r where r.authority = :nombre");

@@ -97,6 +97,36 @@
 
                         <div class="row-fluid" style="margin-top: 10px;">
                             <div class="span4">
+                                <h4><s:message code="fechaCompra.label" /></h4>
+                                <h3>${activo.fechaCompra}</h3>
+                            </div>
+                            <div class="span4">
+                                <h4><s:message code="fechaDepreciacion.label" /></h4>
+                                <h3>${activo.fechaDepreciacion}</h3>
+                            </div>
+                            <div class="span4">
+                                <h4><s:message code="valorNeto.label" /></h4>
+                                <h3>${activo.valorNeto}</h3>
+                            </div>
+                        </div>
+
+                        <div class="row-fluid" style="margin-top: 10px;">
+                            <div class="span4">
+                                <h4><s:message code="depreciacionAnual.label" /></h4>
+                                <h3>${activo.depreciacionAnual}</h3>
+                            </div>
+                            <div class="span4">
+                                <h4><s:message code="depreciacionMensual.label" /></h4>
+                                <h3>${activo.depreciacionMensual}</h3>
+                            </div>
+                            <div class="span4">
+                                <h4><s:message code="depreciacionAcumulada.label" /></h4>
+                                <h3>${activo.depreciacionAcumulada}</h3>
+                            </div>
+                        </div>
+
+                        <div class="row-fluid" style="margin-top: 10px;">
+                            <div class="span4">
                                 <h4><s:message code="moi.label" /></h4>
                                 <h3>${activo.moi}</h3>
                             </div>
@@ -176,24 +206,15 @@
                                 <h3>${activo.motivo}</h3>
                             </div>
                             <div class="span4">
-                                <h4><s:message code="valorNeto.label" /></h4>
-                                <h3>${activo.valorNeto}</h3>
-                            </div>
-                            <div class="span4">
                                 <h4><s:message code="fechaCreacion.label" /></h4>
                                 <h3>${activo.fechaCreacion}</h3>
                             </div>
+                            <div class="span4">
+                                <h4><s:message code="fechaModificacion.label" /></h4>
+                                <h3>${activo.fechaModificacion}</h3>
+                            </div>
                         </div>
 
-                        <c:if test="${activo.fechaModificacion != null}">
-                            <div class="row-fluid" style="margin-top: 10px;">
-                                <div class="span4">
-                                    <h4><s:message code="fechaModificacion.label" /></h4>
-                                    <h3>${activo.fechaModificacion}</h3>
-                                </div>
-                            </div>
-                        </c:if>
-                            
                     </div>
                     <div class="span3">
                         <c:forEach items="${activo.imagenes}" var="imagen">

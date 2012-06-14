@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -485,5 +486,16 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements FacturaAlmace
         currentSession().save(factura);
         currentSession().flush();
         return factura;
+    }
+
+    @Override
+    public List<Salida> salidas(Long facturaId) {
+        Query query = currentSession().createQuery("select new Salida() from Salida s inner join s.facturaAlmacen fa where fa.id = :facturaId");
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<Entrada> entradas(Long facturaId) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

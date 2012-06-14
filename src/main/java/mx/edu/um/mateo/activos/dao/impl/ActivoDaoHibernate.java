@@ -23,7 +23,15 @@
  */
 package mx.edu.um.mateo.activos.dao.impl;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.activos.dao.ActivoDao;
 import mx.edu.um.mateo.activos.model.Activo;
@@ -39,6 +47,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -51,18 +60,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
-    
+
     public ActivoDaoHibernate() {
         log.info("Nueva instancia de Activo Dao creada.");
     }
-    
+
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de activos con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
-        
+
         if (!params.containsKey("max")) {
             params.put("max", 10);
         } else {
@@ -132,45 +141,74 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
 
+        ProjectionList list = Projections.projectionList();
+        list.add(Projections.sum("depreciacionAnual"), "depreciacionAnual");
+        list.add(Projections.sum("depreciacionMensual"), "depreciacionMensual");
+        list.add(Projections.sum("depreciacionAcumulada"), "depreciacionAcumulada");
+        list.add(Projections.sum("moi"), "moi");
+        list.add(Projections.groupProperty("fechaDepreciacion"), "fechaDepreciacion");
+        countCriteria.setProjection(list);
+
+        List proyecciones = countCriteria.list();
+        Iterator iterator = proyecciones.iterator();
+        if (iterator.hasNext()) {
+            Object[] obj = (Object[]) iterator.next();
+            NumberFormat nf = DecimalFormat.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+            Date fecha;
+            if (obj[4] != null) {
+                fecha = (Date) obj[4];
+            } else {
+                fecha = new Date();
+            }
+            params.put("resumen", new String[]{nf.format(obj[0]), nf.format(obj[1]), nf.format(obj[2]), nf.format(obj[3]), sdf.format(fecha)});
+        }
+
         return params;
     }
 
+    @Override
     public Activo obtiene(Long id) {
         Activo activo = (Activo) currentSession().get(Activo.class, id);
         return activo;
     }
 
+    @Override
     public Activo crea(Activo activo, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
             activo.setEmpresa(usuario.getEmpresa());
         }
-        activo.setTipoActivo((TipoActivo)session.load(TipoActivo.class, activo.getTipoActivo().getId()));
+        activo.setTipoActivo((TipoActivo) session.load(TipoActivo.class, activo.getTipoActivo().getId()));
         activo.setFolio(this.getFolio(activo.getEmpresa()));
         session.save(activo);
         session.flush();
         return activo;
     }
 
+    @Override
     public Activo crea(Activo activo) {
         return this.crea(activo, null);
     }
 
+    @Override
     public Activo actualiza(Activo activo) {
         return this.actualiza(activo, null);
     }
 
+    @Override
     public Activo actualiza(Activo activo, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
             activo.setEmpresa(usuario.getEmpresa());
         }
-        activo.setTipoActivo((TipoActivo)session.load(TipoActivo.class, activo.getTipoActivo().getId()));
+        activo.setTipoActivo((TipoActivo) session.load(TipoActivo.class, activo.getTipoActivo().getId()));
         session.update(activo);
         session.flush();
         return activo;
     }
 
+    @Override
     public String elimina(Long id) {
         Activo activo = obtiene(id);
         String nombre = activo.getFolio();
@@ -178,7 +216,98 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         currentSession().flush();
         return nombre;
     }
-    
+
+    public void depreciar(Date fecha, Empresa empresa) {
+        Query query = currentSession().createQuery("select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCreacion <= :fecha");
+        query.setLong("empresaId", empresa.getId());
+        query.setDate("fecha", fecha);
+        List<Activo> activos = query.list();
+        for (Activo activo : activos) {
+            // depreciacion anual
+            BigDecimal porciento = activo.getPorciento();
+            BigDecimal depreciacionAnual = activo.getMoi().multiply(porciento);
+
+            // depreciacion mensual
+            BigDecimal depreciacionMensual = BigDecimal.ZERO;
+            Date fechaCompra = activo.getFechaCompra();
+            if (fechaCompra.before(fecha) && days360(fechaCompra, fecha) / 30 < activo.getVidaUtil()) {
+                depreciacionMensual = depreciacionAnual.divide(new BigDecimal("12"));
+            }
+            
+            // depreciacion acumulada
+            BigDecimal depreciacionAcumulada = BigDecimal.ZERO;
+            Long meses = 0L;
+            if ((fechaCompra.before(fecha) && !activo.getInactivo()) 
+                    || (fechaCompra.before(fecha) && activo.getInactivo() && activo.getFechaInactivo().after(fecha))) {
+                meses = days360(fechaCompra, fecha) / 30;
+            } else if (fechaCompra.before(fecha) && activo.getInactivo() && activo.getFechaInactivo().before(fecha)) {
+                meses = days360(fechaCompra, activo.getFechaInactivo()) / 30;
+            }
+            if (meses < activo.getVidaUtil()) {
+                depreciacionAcumulada = depreciacionMensual.multiply(new BigDecimal(meses));
+            }
+            
+            // valor neto
+            BigDecimal valorNeto = activo.getMoi().subtract(depreciacionAcumulada);
+            
+            query = currentSession().createQuery("update Activo a set a.fechaDepreciacion = :fecha, a.depreciacionAnual = :depreciacionAnual, a.depreciacionMensual = :depreciacionMensual, a.depreciacionAcumulada = :depreciacionAcumulada, a.valorNeto = :valorNeto where a.id = :activoId");
+            query.setDate("fecha", fecha);
+            query.setBigDecimal("depreciacionAnual", depreciacionAnual);
+            query.setBigDecimal("depreciacionMensual", depreciacionMensual);
+            query.setBigDecimal("depreciacionAcumulada", depreciacionAcumulada);
+            query.setBigDecimal("valorNeto", valorNeto);
+            query.setLong("activoId", activo.getId());
+            query.executeUpdate();
+        }
+    }
+
+    /**
+     * Calcula el número de días entre dos fechas basándose en un año de 360
+     * días (doce meses de 30 días) que se utiliza en algunos cálculos
+     * contables. Esta función facilita el cálculo de pagos si su sistema de
+     * contabilidad se basa en 12 meses de 30 días.
+     *
+     * @param dateBegin	The purchase date
+     * @param dateEnd	The depreciation date
+     */
+    private Long days360(Date inicio, Date fin) {
+        Calendar dateBegin = Calendar.getInstance();
+        Calendar dateEnd = Calendar.getInstance();
+        dateBegin.setTime(inicio);
+        dateEnd.setTime(fin);
+        long dference;
+        long yearsBetwen;
+        long daysInMonths;
+        long daysLastMonth;
+        long serialBegin;
+        long serialEnd;
+        yearsBetwen = dateBegin.get(Calendar.YEAR) - 1900;
+        daysInMonths = (dateBegin.get(Calendar.MONTH) + 1) * 30;
+        daysLastMonth = dateBegin.get(Calendar.DAY_OF_MONTH);
+        if (daysLastMonth == 31) {
+            daysLastMonth = 30;
+        }
+
+        serialBegin = yearsBetwen * 360 + daysInMonths + daysLastMonth;
+
+        yearsBetwen = dateEnd.get(Calendar.YEAR) - 1900;
+        daysInMonths = (dateEnd.get(Calendar.MONTH) + 1) * 30;
+        daysLastMonth = dateEnd.get(Calendar.DAY_OF_MONTH);
+        if (daysLastMonth == 31) {
+            if (dateBegin.get(Calendar.DAY_OF_MONTH) < 30) {
+                daysInMonths += 30;
+                daysLastMonth = 1;
+            } else {
+                daysLastMonth = 30;
+            }
+        }
+
+        serialEnd = yearsBetwen * 360 + daysInMonths + daysLastMonth;
+
+        dference = serialEnd - serialBegin;
+        return dference;
+    }
+
     private String getFolio(Empresa empresa) {
         Query query = currentSession().createQuery("select f from FolioActivo f where f.nombre = :nombre and f.organizacion.id = :almacenId");
         query.setString("nombre", "ACTIVO");

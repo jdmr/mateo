@@ -216,15 +216,14 @@ public class PruebaController {
 
         return "redirect:/";
     }
-    
+
     @RequestMapping("/migracion")
     public String migracion() {
         log.debug("Iniciando migracion");
-        
+
         migracionDao.hazlo();
         
         log.debug("Regresando a home");
         return "redirect:/";
     }
-    
 }

@@ -32,6 +32,7 @@
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
+            <h4><s:message code="activo.resumen.message" arguments="${resumen}" /></h4>
             <table id="lista" class="table table-striped">
                 <thead>
                     <tr>
