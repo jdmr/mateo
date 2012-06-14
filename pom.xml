@@ -189,7 +189,7 @@
     </dependencies>
 
     <build>
-        <finalName>exodus</finalName>
+        <finalName>mateo</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
