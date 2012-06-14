@@ -65,6 +65,9 @@
                             <jsp:param name="columna" value="folio" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="fechaModificacion" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="estatus" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
@@ -95,14 +98,15 @@
                     <c:forEach items="${salidas}" var="salida" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/inventario/salida/ver/${salida.id}' />">${salida.folio}</a></td>
-                            <td>${salida.estatus.nombre}</td>
+                            <td><fmt:formatDate pattern="yyyy/MMM/dd HH:mm:ss" value="${salida.fechaModificacion}" /></td>
+                            <td><s:message code="${salida.estatus.nombre}" /></td>
                             <td>${salida.reporte}</td>
                             <td>${salida.atendio}</td>
                             <td>${salida.empleado}</td>
                             <td>${salida.departamento}</td>
                             <td>${salida.cliente.nombre}</td>
-                            <td>${salida.iva}</td>
-                            <td>${salida.total}</td>
+                            <td style="text-align:right;"><fmt:formatNumber value="${salida.iva}" type="currency" currencySymbol="$" /></td>
+                            <td style="text-align:right;"><fmt:formatNumber value="${salida.total}" type="currency" currencySymbol="$" /></td>
                             <td>${salida.almacen.nombre}</td>
                         </tr>
                     </c:forEach>

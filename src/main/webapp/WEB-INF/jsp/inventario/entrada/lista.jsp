@@ -71,6 +71,9 @@
                             <jsp:param name="columna" value="fechaFactura" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="fechaModificacion" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="estatus" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
@@ -93,12 +96,13 @@
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/inventario/entrada/ver/${entrada.id}' />">${entrada.folio}</a></td>
                             <td>${entrada.factura}</td>
-                            <td>${entrada.fechaFactura}</td>
-                            <td>${entrada.estatus.nombre}</td>
+                            <td><fmt:formatDate pattern="yyyy/MMM/dd" value="${entrada.fechaFactura}" /></td>
+                            <td><fmt:formatDate pattern="yyyy/MMM/dd HH:mm:ss" value="${entrada.fechaModificacion}" /></td>
+                            <td><s:message code="${entrada.estatus.nombre}" /></td>
                             <td>${entrada.proveedor.nombre}</td>
-                            <td>${entrada.iva}</td>
-                            <td>${entrada.total}</td>
-                            <td><input type="checkbox" disabled="true" <c:if test="${entrada.devolucion}">checked="checked"</c:if> /></td>
+                            <td style="text-align:right;"><fmt:formatNumber value="${entrada.iva}" type="currency" currencySymbol="$" /></td>
+                            <td style="text-align:right;"><fmt:formatNumber value="${entrada.total}" type="currency" currencySymbol="$" /></td>
+                            <td style="text-align:center;"><input type="checkbox" disabled="true" <c:if test="${entrada.devolucion}">checked="checked"</c:if> /></td>
                             <td>${entrada.almacen.nombre}</td>
                         </tr>
                     </c:forEach>

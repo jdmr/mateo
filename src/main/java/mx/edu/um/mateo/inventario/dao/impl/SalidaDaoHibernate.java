@@ -231,6 +231,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
         Session session = currentSession();
         if (usuario != null) {
             salida.setAlmacen(usuario.getAlmacen());
+            salida.setAtendio(usuario.getUsername());
         }
         Query query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
         query.setString("nombre", Constantes.ABIERTA);
@@ -268,7 +269,11 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
                 salida.setReporte(otraSalida.getReporte());
                 salida.setEmpleado(otraSalida.getEmpleado());
                 salida.setComentarios(otraSalida.getComentarios());
-                salida.setAtendio(otraSalida.getAtendio());
+                if (usuario != null) {
+                    salida.setAtendio(usuario.getUsername());
+                } else {
+                    salida.setAtendio(otraSalida.getAtendio());
+                }
                 salida.setDepartamento(otraSalida.getDepartamento());
                 salida.setCliente(otraSalida.getCliente());
                 Date fecha = new Date();
