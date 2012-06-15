@@ -25,8 +25,16 @@
                 <div class="row-fluid">
                     <a class="btn btn-primary" href="<s:url value='/inventario/salida/nueva'/>"><i class="icon-shopping-cart icon-white"></i> <s:message code='salida.nueva.label' /></a>
                     <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
-                    <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
-                    <a id="buscarFechaAnchor" class="btn" href="#"><s:message code="buscar.fecha.button" /></a>
+                    <div class="btn-group" style="display: inline-block; position: absolute; margin-left: 5px;">
+                        <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
+                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <a id="buscarFechaAnchor" href="#"><s:message code="buscar.fecha.button" /></a>
+                            <a id="buscarClienteAnchor" href="#"><s:message code="buscar.cliente.button" /></a>
+                        </ul>
+                    </div>
                 </div>
                 <div id="buscarFechaDiv" class="row-fluid" style="<c:if test='${empty param.fechaIniciado and empty param.fechaTerminado}'>display: none; </c:if>margin-top: 10px;">
                     <label>
@@ -36,6 +44,13 @@
                     <label>
                         <s:message code="fecha.terminado" /><br/>
                         <input type="text" name="fechaTerminado" id="fechaTerminado" value="${param.fechaTerminado}" />
+                    </label>
+                </div>
+                <div id="buscarClienteDiv" class="row-fluid" style="<c:if test='${empty param.clienteNombre}'>display: none;</c:if> margin-top: 10px;">
+                    <label>
+                        <s:message code="cliente.label" /><br/>
+                        <input type="hidden" name="clienteId" id="clienteId" value="${param.clienteId}" />
+                        <input type="text" name="clienteNombre" id="clienteNombre" value="${param.clienteNombre}" class="input-xxlarge" />
                     </label>
                 </div>
             </div>
@@ -122,10 +137,25 @@
                         
                     $("input#fechaIniciado").datepicker();
                             
+                    $('input#clienteNombre').autocomplete({
+                        source: "<c:url value='/inventario/salida/clientes' />",
+                        select: function(event, ui) {
+                            $("input#clienteId").val(ui.item.id);
+                            return false;
+                        }
+                    });
+                            
                     $("a#buscarFechaAnchor").click(function(e) {
                         e.preventDefault();
                         $("div#buscarFechaDiv").show('slide', {direction:'up'}, 500, function() {
                             $("input#fechaIniciado").focus();
+                        });
+                    });
+                
+                    $("a#buscarClienteAnchor").click(function(e) {
+                        e.preventDefault();
+                        $("div#buscarClienteDiv").show('slide', {direction:'up'}, 500, function() {
+                            $("input#clienteNombre").focus();
                         });
                     });
                 });

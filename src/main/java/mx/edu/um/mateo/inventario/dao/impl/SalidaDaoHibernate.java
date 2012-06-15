@@ -114,6 +114,11 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
             countCriteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
         }
 
+        if (params.containsKey("clienteId")) {
+            criteria.createCriteria("cliente").add(Restrictions.idEq(params.get("clienteId")));
+            countCriteria.createCriteria("cliente").add(Restrictions.idEq(params.get("clienteId")));
+        }
+
         if (params.containsKey("fechaIniciado")) {
             log.debug("Buscando desde {}", params.get("fechaIniciado"));
             criteria.add(Restrictions.ge("fechaCreacion", params.get("fechaIniciado")));
