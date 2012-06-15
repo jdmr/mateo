@@ -245,7 +245,7 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
             almacenes = query.list();
         } else if (springSecurityUtils.ifAnyGranted("ROLE_ORG")) {
             Usuario usuario = springSecurityUtils.obtieneUsuario();
-            Query query = currentSession().createQuery("select a from Almacen a where a.organizacion.id = :organizacionId order by a.empresa, a.nombre");
+            Query query = currentSession().createQuery("select a from Almacen a where a.empresa.organizacion.id = :organizacionId order by a.empresa, a.nombre");
             query.setLong("organizacionId", usuario.getEmpresa().getOrganizacion().getId());
             almacenes = query.list();
         } else {
