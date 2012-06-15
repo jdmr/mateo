@@ -95,9 +95,9 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th><s:message code="codigo.label" /></th>
                                     <th><s:message code="sku.label" /></th>
                                     <th><s:message code="producto.label" /></th>
+                                    <th><s:message code="descripcion.label" /></th>
                                     <th style="text-align: right;"><s:message code="existencia.label" /></th>
                                     <th style="text-align: right;"><s:message code="cantidad.label" /></th>
                                     <th style="text-align: right;"><s:message code="precioUnitario.label" /></th>
@@ -111,9 +111,9 @@
                             <tbody>
                                 <c:forEach items="${salida.lotes}" var="lote" varStatus="status">
                                     <tr>
-                                        <td>${lote.producto.codigo}</td>
                                         <td>${lote.producto.sku}</td>
                                         <td>${lote.producto.nombre}</td>
+                                        <td>${lote.producto.descripcion}</td>
                                         <td style="text-align: right;">
                                             <c:choose>
                                                 <c:when test="${!lote.producto.fraccion}">
