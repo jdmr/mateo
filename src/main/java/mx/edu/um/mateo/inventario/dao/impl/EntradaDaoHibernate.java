@@ -114,6 +114,11 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
             criteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
             countCriteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
         }
+        
+        if (params.containsKey("proveedorId")) {
+            criteria.createCriteria("proveedor").add(Restrictions.idEq(new Long((String)params.get("proveedorId"))));
+            countCriteria.createCriteria("proveedor").add(Restrictions.idEq(new Long((String)params.get("proveedorId"))));
+        }
 
         if (params.containsKey("fechaIniciado")) {
             log.debug("Buscando desde {}", params.get("fechaIniciado"));
