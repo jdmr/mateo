@@ -95,7 +95,10 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
+                                    <th><s:message code="codigo.label" /></th>
+                                    <th><s:message code="sku.label" /></th>
                                     <th><s:message code="producto.label" /></th>
+                                    <th style="text-align: right;"><s:message code="existencia.label" /></th>
                                     <th style="text-align: right;"><s:message code="cantidad.label" /></th>
                                     <th style="text-align: right;"><s:message code="precioUnitario.label" /></th>
                                     <th style="text-align: right;"><s:message code="iva.label" /></th>
@@ -108,11 +111,34 @@
                             <tbody>
                                 <c:forEach items="${entrada.lotes}" var="lote" varStatus="status">
                                     <tr>
+                                        <td>${lote.producto.codigo}</td>
+                                        <td>${lote.producto.sku}</td>
                                         <td>${lote.producto.nombre}</td>
-                                        <td style="text-align: right;">${lote.cantidad}</td>
-                                        <td style="text-align: right;">${lote.precioUnitario}</td>
-                                        <td style="text-align: right;">${lote.iva}</td>
-                                        <td style="text-align: right;">${lote.total}</td>
+                                        <td style="text-align: right;">
+                                            <c:choose>
+                                                <c:when test="${!lote.producto.fraccion}">
+                                                    <fmt:formatNumber value="${lote.producto.existencia}" minFractionDigits="0" maxFractionDigits="0" groupingUsed="true" />
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${lote.producto.existencia} 
+                                                </c:otherwise>
+                                            </c:choose>
+                                            &nbsp;${lote.producto.unidadMedida}
+                                        </td>
+                                        <td style="text-align: right; font-size: 1.2em; font-weight: bold;">
+                                            <c:choose>
+                                                <c:when test="${!lote.producto.fraccion}">
+                                                    <fmt:formatNumber value="${lote.cantidad}" minFractionDigits="0" maxFractionDigits="0" groupingUsed="true" />
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${lote.cantidad} 
+                                                </c:otherwise>
+                                            </c:choose>
+                                            &nbsp;${lote.producto.unidadMedida}
+                                        </td>
+                                        <td style="text-align: right; font-size: 1.2em;"><fmt:formatNumber value="${lote.precioUnitario}" type="currency" currencySymbol="$" /></td>
+                                        <td style="text-align: right; font-size: 1.2em;"><fmt:formatNumber value="${lote.iva}" type="currency" currencySymbol="$" /></td>
+                                        <td style="text-align: right; font-size: 1.2em; font-weight: bold;"><fmt:formatNumber value="${lote.total}" type="currency" currencySymbol="$" /></td>
                                         <c:if test="${puedeEditar}">
                                             <td>
                                                 <a href="<c:url value='/inventario/entrada/lote/elimina/${lote.id}' />" class="btn btn-mini btn-danger"><i class="icon-remove icon-white"></i></a>
@@ -126,30 +152,39 @@
                                     <th></th>
                                     <th></th>
                                     <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                     <th style="text-align: right;"><s:message code="subtotal.label" /></th>
-                                    <th style="text-align: right;"><span class="${estiloTotales}">${subtotal}</span></th>
+                                    <th style="text-align: right;"><span class="${estiloTotales}"><fmt:formatNumber value="${subtotal}" type="currency" currencySymbol="$" /></span></th>
                                     <c:if test="${puedeEditar}">
-                                        <th>${entrada.subtotal}</th>
+                                        <th><fmt:formatNumber value="${entrada.subtotal}" type="currency" currencySymbol="$" /></th>
                                     </c:if>
                                 </tr>
                                 <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
                                     <th style="text-align: right;"><s:message code="iva.label" /></th>
-                                    <th style="text-align: right;"><span class="${estiloTotales}">${iva}</span></th>
+                                    <th style="text-align: right;"><span class="${estiloTotales}"><fmt:formatNumber value="${iva}" type="currency" currencySymbol="$" /></span></th>
                                     <c:if test="${puedeEditar}">
-                                        <th>${entrada.iva}</th>
+                                        <th><fmt:formatNumber value="${entrada.iva}" type="currency" currencySymbol="$" /></th>
                                     </c:if>
                                 </tr>
                                 <tr>
                                     <th></th>
                                     <th></th>
                                     <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
                                     <th style="text-align: right;"><s:message code="total.label" /></th>
-                                    <th style="text-align: right;"><span class="${estiloTotales}">${total}</span></th>
+                                    <th style="text-align: right;"><span class="${estiloTotales}" style="font-size: 1.5em; font-weight: bold;"><fmt:formatNumber value="${total}" type="currency" currencySymbol="$" /></span></th>
                                     <c:if test="${puedeEditar}">
-                                        <th>${entrada.total}</th>
+                                        <th><fmt:formatNumber value="${entrada.total}" type="currency" currencySymbol="$" /></th>
                                     </c:if>
                                 </tr>
                             </tfoot>
