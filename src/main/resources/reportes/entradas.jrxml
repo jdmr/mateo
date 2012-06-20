@@ -5,6 +5,12 @@
     xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
     name="Entradas" 
     pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+        <property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="columnHeader"/>
+        <property name="net.sf.jasperreports.export.xls.exclude.origin.band.1" value="pageHeader"/>
+        <property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
+        <property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.1" value="columnHeader"/>
+        <property name="net.sf.jasperreports.export.csv.exclude.origin.band.1" value="pageHeader"/>
+        <property name="net.sf.jasperreports.export.csv.exclude.origin.band.2" value="pageFooter"/>
 	<property name="ireport.zoom" value="1.7715610000000082"/>
 	<property name="ireport.x" value="16"/>
 	<property name="ireport.y" value="0"/>
@@ -50,16 +56,16 @@
 			</staticText>
 			<staticText>
 				<reportElement x="400" y="0" width="50" height="15"/>
-				<textElement/>
+				<textElement textAlignment="Right" />
 				<text><![CDATA[IVA]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="450" y="0" width="50" height="15"/>
-				<textElement/>
+				<textElement textAlignment="Right" />
 				<text><![CDATA[TOTAL]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="500" y="0" width="150" height="15"/>
+				<reportElement x="510" y="0" width="140" height="15"/>
 				<textElement/>
 				<text><![CDATA[Almacén]]></text>
 			</staticText>
@@ -90,21 +96,21 @@
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement x="400" y="0" width="50" height="15"/>
-				<textElement verticalAlignment="Middle">
+				<textElement verticalAlignment="Middle" textAlignment="Right" >
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{iva}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement x="450" y="0" width="50" height="15"/>
-				<textElement verticalAlignment="Middle">
+				<textElement verticalAlignment="Middle" textAlignment="Right" >
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="500" y="0" width="150" height="15"/>
-				<textElement verticalAlignment="Middle">
+				<reportElement x="510" y="0" width="140" height="15"/>
+				<textElement verticalAlignment="Middle" >
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{almacen.nombre}]]></textFieldExpression>

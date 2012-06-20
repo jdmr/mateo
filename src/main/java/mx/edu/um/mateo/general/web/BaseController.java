@@ -183,6 +183,9 @@ public abstract class BaseController {
         exporter.setParameter(JRXlsExporterParameter.IS_COLLAPSE_ROW_SPAN, Boolean.TRUE);
         exporter.setParameter(JRXlsExporterParameter.IGNORE_PAGE_MARGINS, Boolean.TRUE);
         exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
+        exporter.setParameter(JRXlsExporterParameter.PARAMETERS_OVERRIDE_REPORT_HINTS, Boolean.FALSE);
+        exporter.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE, Boolean.TRUE);
+        
         exporter.exportReport();
         byte[] archivo = byteArrayOutputStream.toByteArray();
 
