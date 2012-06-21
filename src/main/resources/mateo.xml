@@ -55,8 +55,8 @@
             <property name="url" value="${jdbc.url}" />
             <property name="username" value="${jdbc.username}" />
             <property name="password" value="${jdbc.password}" />
-            <property name="initialSize" value="5" />
-            <property name="maxActive" value="10" />
+            <property name="initialSize" value="${jdbc.initialSize}" />
+            <property name="maxActive" value="${jdbc.maxActive}" />
         </bean>
         
         <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
