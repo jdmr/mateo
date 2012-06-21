@@ -95,6 +95,10 @@ public class XProducto implements Serializable {
     private Long salidaId;
     @Column(name = "cancelacion_id")
     private Long cancelacionId;
+    private Boolean inactivo;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "fecha_inactivo")
+    private Date fechaInactivo;
 
     public XProducto() {
     }
@@ -447,6 +451,34 @@ public class XProducto implements Serializable {
      */
     public void setCancelacionId(Long cancelacionId) {
         this.cancelacionId = cancelacionId;
+    }
+
+    /**
+     * @return the inactivo
+     */
+    public Boolean getInactivo() {
+        return inactivo;
+    }
+
+    /**
+     * @param inactivo the inactivo to set
+     */
+    public void setInactivo(Boolean inactivo) {
+        this.inactivo = inactivo;
+    }
+
+    /**
+     * @return the fechaInactivo
+     */
+    public Date getFechaInactivo() {
+        return fechaInactivo;
+    }
+
+    /**
+     * @param fechaInactivo the fechaInactivo to set
+     */
+    public void setFechaInactivo(Date fechaInactivo) {
+        this.fechaInactivo = fechaInactivo;
     }
 
     @Override

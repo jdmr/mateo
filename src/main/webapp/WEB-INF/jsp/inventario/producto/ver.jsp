@@ -116,6 +116,18 @@
                                 <h3>${producto.almacen.nombre}</h3>
                             </div>
                         </div>
+                        <c:if test="${producto.inactivo}">
+                            <div class="row-fluid" style="padding-bottom: 10px;">
+                                <div class="span6">
+                                    <h4><s:message code="inactivo.label" /></h4>
+                                    <h3><form:checkbox path="inactivo" disabled="true" /></h3>
+                                </div>
+                                <div class="span6">
+                                    <h4><s:message code="fechaInactivo.label" /></h4>
+                                    <h3>${producto.fechaInactivo}</h3>
+                                </div>
+                            </div>
+                        </c:if>
                     </div>
                     <div class="span4">
                         <div class="row-fluid" class="span4">

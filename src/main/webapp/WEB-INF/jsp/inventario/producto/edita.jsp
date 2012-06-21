@@ -194,6 +194,17 @@
                                         <input name="imagen" type="file" />
                                     </div>
                                 </div>
+                                <div class="span6">
+                                    <s:bind path="producto.inactivo">
+                                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                            <label for="inactivo">
+                                                <s:message code="inactivo.label" />
+                                            </label>
+                                            <form:checkbox path="inactivo" cssClass="span3" />
+                                            <form:errors path="inactivo" cssClass="alert alert-error" />
+                                        </div>
+                                    </s:bind>
+                                </div>
                             </div>
                         </div>
                         <div class="span4">

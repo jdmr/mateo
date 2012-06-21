@@ -91,6 +91,17 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
             criteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
             countCriteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
         }
+        
+        if (params.containsKey("inactivo")) {
+            criteria.add(Restrictions.eq("inactivo", true));
+            countCriteria.add(Restrictions.eq("inactivo", true));
+        } else {
+            Disjunction propiedades = Restrictions.disjunction();
+            propiedades.add(Restrictions.eq("inactivo", Boolean.FALSE));
+            propiedades.add(Restrictions.isNull("inactivo"));
+            criteria.add(propiedades);
+            countCriteria.add(propiedades);
+        }
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
@@ -139,6 +150,11 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
         propiedades.add(Restrictions.ilike("modelo", filtro, MatchMode.ANYWHERE));
         propiedades.add(Restrictions.ilike("ubicacion", filtro, MatchMode.ANYWHERE));
         criteria.add(propiedades);
+        
+        propiedades = Restrictions.disjunction();
+        propiedades.add(Restrictions.eq("inactivo", Boolean.FALSE));
+        propiedades.add(Restrictions.isNull("inactivo"));
+        criteria.add(propiedades);
 
         criteria.add(Restrictions.gt("existencia", BigDecimal.ZERO));
         criteria.setMaxResults(10);
@@ -178,6 +194,7 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
 
     @Override
     public Producto actualiza(Producto otro, Usuario usuario) {
+        Date fecha = new Date();
         Session session = currentSession();
         Producto producto = (Producto) session.get(Producto.class, otro.getId());
         producto.setVersion(otro.getVersion());
@@ -191,7 +208,13 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
         producto.setTiempoEntrega(otro.getTiempoEntrega());
         producto.setUnidadMedida(otro.getUnidadMedida());
         producto.setTipoProducto((TipoProducto) session.get(TipoProducto.class, otro.getTipoProducto().getId()));
-        Date fecha = new Date();
+        if (otro.getInactivo() && (producto.getInactivo() == null || !producto.getInactivo())) {
+            producto.setInactivo(true);
+            producto.setFechaInactivo(fecha);
+        } else if (!otro.getInactivo() && producto.getInactivo() != null && producto.getInactivo()) {
+            producto.setInactivo(false);
+            producto.setFechaInactivo(null);
+        }
         producto.setFechaModificacion(fecha);
         if (producto.getImagenes().size() > 0) {
             Imagen imagen = producto.getImagenes().get(0);

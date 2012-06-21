@@ -101,6 +101,10 @@ public class Producto implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "last_updated")
     private Date fechaModificacion;
+    private Boolean inactivo = false;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "fecha_inactivo")
+    private Date fechaInactivo;
 
     public Producto() {
     }
@@ -423,6 +427,34 @@ public class Producto implements Serializable {
      */
     public void setFechaModificacion(Date fechaModificacion) {
         this.fechaModificacion = fechaModificacion;
+    }
+
+    /**
+     * @return the inactivo
+     */
+    public Boolean getInactivo() {
+        return inactivo;
+    }
+
+    /**
+     * @param inactivo the inactivo to set
+     */
+    public void setInactivo(Boolean inactivo) {
+        this.inactivo = inactivo;
+    }
+
+    /**
+     * @return the fechaInactivo
+     */
+    public Date getFechaInactivo() {
+        return fechaInactivo;
+    }
+
+    /**
+     * @param fechaInactivo the fechaInactivo to set
+     */
+    public void setFechaInactivo(Date fechaInactivo) {
+        this.fechaInactivo = fechaInactivo;
     }
 
     @Override

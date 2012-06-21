@@ -87,6 +87,10 @@ public class ProductoController extends BaseController {
             params.put("fecha", sdf.parse((String) params.get("fecha")));
             buscarPorFecha = true;
         }
+        
+        if (params.containsKey("inactivo")) {
+            params.put("inactivo", Boolean.valueOf((String) params.get("inactivo")));
+        }
 
         if (params.containsKey("tipo") && StringUtils.isNotBlank((String) params.get("tipo"))) {
             params.put("reporte", true);

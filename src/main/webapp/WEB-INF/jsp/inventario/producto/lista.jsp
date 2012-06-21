@@ -27,6 +27,7 @@
                     <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                     <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
                     <a id="buscarFechaAnchor" class="btn" href="#"><s:message code="buscar.fecha.button" /></a>
+                    <input type="checkbox" name="inactivo" id="inactivo" value="1" <c:if test="${not empty param.inactivo}">checked="checked"</c:if> /> <s:message code="buscar.inactivos.check" />
                 </div>
                 <div id="buscarFechaDiv" class="row-fluid" style="<c:if test='${empty param.fecha}'>display: none; </c:if>margin-top: 10px;">
                     <label>
