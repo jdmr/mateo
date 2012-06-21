@@ -11,6 +11,12 @@
     rightMargin="0"
     topMargin="0"
     bottomMargin="0">
+        <property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="columnHeader"/>
+        <property name="net.sf.jasperreports.export.xls.exclude.origin.band.1" value="pageHeader"/>
+        <property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
+        <property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.1" value="columnHeader"/>
+        <property name="net.sf.jasperreports.export.csv.exclude.origin.band.1" value="pageHeader"/>
+        <property name="net.sf.jasperreports.export.csv.exclude.origin.band.2" value="pageFooter"/>
 	<field name="id" class="java.lang.Long">
 	</field>
 	<field name="version" class="java.lang.Long">

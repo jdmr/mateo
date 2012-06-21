@@ -12,6 +12,12 @@
     rightMargin="20"
     topMargin="20"
     bottomMargin="20">
+        <property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="columnHeader"/>
+        <property name="net.sf.jasperreports.export.xls.exclude.origin.band.1" value="pageHeader"/>
+        <property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
+        <property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.1" value="columnHeader"/>
+        <property name="net.sf.jasperreports.export.csv.exclude.origin.band.1" value="pageHeader"/>
+        <property name="net.sf.jasperreports.export.csv.exclude.origin.band.2" value="pageFooter"/>
 	<parameter name="datasource" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource" isForPrompting="false"/>
 	<parameter name="subreporte" class="net.sf.jasperreports.engine.JasperReport"/>
 	<field name="id" class="java.lang.Long">
