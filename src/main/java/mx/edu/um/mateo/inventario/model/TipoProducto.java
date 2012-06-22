@@ -59,6 +59,10 @@ public class TipoProducto implements Serializable {
         this.descripcion = descripcion;
         this.almacen = almacen;
     }
+    
+    public TipoProducto(String nombre) {
+        this.nombre = nombre;
+    }
 
     /**
      * @return the id

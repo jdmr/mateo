@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.inventario.model.HistorialProducto;
 import mx.edu.um.mateo.inventario.model.Producto;
 
 /**
@@ -56,6 +57,8 @@ public interface ProductoDao {
     public Map<String, Object> historial(Long id, Map<String, Object> params);
 
     public void guardaHistorial(Date fecha);
+    
+    public Map<String, Object> obtieneHistorial(Map<String, Object> params);
 
     public Map<String, Object> historialTodos(Map<String, Object> params);
 

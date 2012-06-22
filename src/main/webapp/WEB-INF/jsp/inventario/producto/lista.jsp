@@ -32,7 +32,7 @@
                 <div id="buscarFechaDiv" class="row-fluid" style="<c:if test='${empty param.fecha}'>display: none; </c:if>margin-top: 10px;">
                     <label>
                         <s:message code="fecha.label" /><br/>
-                        <input type="text" name="fecha" id="fechaIniciado" value="${param.fecha}" />
+                        <input type="text" name="fecha" id="fecha" value="${param.fecha}" />
                     </label><br/>
                 </div>
             </div>

@@ -121,6 +121,22 @@ public class Producto implements Serializable {
         this.fechaModificacion = fecha;
     }
 
+    public Producto(Long id, String sku, String nombre, String descripcion, String marca, String modelo, String ubicacion, BigDecimal existencia, String unidadMedida, BigDecimal precioUnitario, Boolean fraccion, String nombreTipoProducto, String nombreAlmacen) {
+        this.id = id;
+        this.sku = sku;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.marca = marca;
+        this.modelo = modelo;
+        this.ubicacion = ubicacion;
+        this.existencia = existencia;
+        this.unidadMedida = unidadMedida;
+        this.precioUnitario = precioUnitario;
+        this.fraccion = fraccion;
+        this.tipoProducto = new TipoProducto(nombreTipoProducto);
+        this.almacen = new Almacen(nombreAlmacen);
+    }
+
     /**
      * @return the id
      */

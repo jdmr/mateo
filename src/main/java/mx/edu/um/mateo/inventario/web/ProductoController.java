@@ -75,7 +75,7 @@ public class ProductoController extends BaseController {
             Usuario usuario,
             Errors errors,
             Model modelo) throws ParseException {
-        log.debug("Mostrando lista de tipos de productos");
+        log.debug("Mostrando lista de productos");
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Map<String, Object> params = this.convierteParams(request.getParameterMap());
         Long almacenId = (Long) request.getSession().getAttribute("almacenId");
@@ -97,7 +97,8 @@ public class ProductoController extends BaseController {
             if (!buscarPorFecha) {
                 params = productoDao.lista(params);
             } else {
-                params = productoDao.historialTodos(params);
+                log.debug("Buscando por fecha {}", params.get("fecha"));
+                params = productoDao.obtieneHistorial(params);
             }
             try {
                 generaReporte((String) params.get("tipo"), (List<Producto>) params.get("productos"), response, "productos", Constantes.ALM, almacenId);
@@ -114,7 +115,8 @@ public class ProductoController extends BaseController {
             if (!buscarPorFecha) {
                 params = productoDao.lista(params);
             } else {
-                params = productoDao.historialTodos(params);
+                log.debug("Buscando por fecha {}", params.get("fecha"));
+                params = productoDao.obtieneHistorial(params);
             }
 
             params.remove("reporte");
@@ -129,7 +131,8 @@ public class ProductoController extends BaseController {
         if (!buscarPorFecha) {
             params = productoDao.lista(params);
         } else {
-            params = productoDao.historialTodos(params);
+            log.debug("Buscando por fecha {}", params.get("fecha"));
+            params = productoDao.obtieneHistorial(params);
         }
         modelo.addAttribute("productos", params.get("productos"));
 

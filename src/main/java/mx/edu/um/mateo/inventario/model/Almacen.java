@@ -75,6 +75,10 @@ public class Almacen implements Serializable {
         this.nombre = nombre;
         this.empresa = empresa;
     }
+    
+    public Almacen(String nombre) {
+        this.nombre = nombre;
+    }
 
     /**
      * @return the id

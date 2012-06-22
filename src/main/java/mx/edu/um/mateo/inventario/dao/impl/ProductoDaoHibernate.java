@@ -337,6 +337,46 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
     }
 
     @Override
+    public Map<String, Object> obtieneHistorial(Map<String, Object> params) {
+        List<Producto> resultado = new ArrayList<>();
+        if (params.containsKey("fecha") && params.containsKey("almacen")) {
+            Date fecha = (Date) params.get("fecha");
+            Long almacenId = (Long) params.get("almacen");
+            log.debug("Buscando historial de productos de la fecha {}", fecha);
+            StringBuilder sb = new StringBuilder();
+            sb.append("select new HistorialProducto(p.id, p.almacen) from Producto p where p.almacen.id = :almacenId order by p.codigo");
+            log.debug("Cargando lista de productos");
+            Query query1 = currentSession().createQuery(sb.toString());
+            query1.setLong("almacenId", almacenId);
+            List<HistorialProducto> productos = query1.list();
+            log.debug("Buscando historial por producto ({})", productos.size());
+            int cont = 0;
+            for (HistorialProducto hp : productos) {
+                if (cont++ % 10 == 0) {
+                    log.debug("Leyendo {} / {} Productos", cont, productos.size());
+                }
+                sb = new StringBuilder();
+                sb.append("select new Producto(p.productoId, p.sku, p.nombre, p.descripcion, p.marca, p.modelo, p.ubicacion, p.existencia, p.unidadMedida, p.precioUnitario, p.fraccion, tp.nombre, a.nombre) from XProducto p, TipoProducto tp, Almacen a where p.tipoProductoId = tp.id and p.almacenId = a.id and p.productoId = :productoId and p.fechaCreacion <= :fecha order by p.fechaCreacion desc");
+                Query query = currentSession().createQuery(sb.toString());
+                query.setLong("productoId", hp.getProductoId());
+                query.setTimestamp("fecha", fecha);
+                query.setMaxResults(1);
+                Producto producto = (Producto) query.uniqueResult();
+                if (producto != null) {
+                    resultado.add(producto);
+                }
+            }
+            log.debug("{} / {} Productos", cont, productos.size());
+            log.debug("Se encontro el historial de productos ({})", resultado.size());
+            
+            params.put("productos", resultado);
+            params.put("cantidad", 1L);
+            params.put("max", 1);
+        }
+        return params;
+    }
+
+    @Override
     public Map<String, Object> historialTodos(Map<String, Object> params) {
 
         return params;
