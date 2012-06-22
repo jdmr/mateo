@@ -43,8 +43,9 @@
                     inhabilitarlo, pero esta vez para habilitarlo nuevamente, y aparecerá nuevamente en las listas y demás lugares.
                 </li>
                 <li>
-                    Estamos trabajando para darles la posibilidad de imprimir la lista de productos por fecha (funcionalidad con la que ya
-                    contaban en la versión anterior). En cuanto la tengamos, les avisaremos por este medio.
+                    El listado de productos por fecha ya funciona, solo que se toma alrededor de 5 min en generarse para el almacén más grande. Así
+                    que tenganle paciencia. Esto se debe a que va y busca el historial más reciente producto por producto y esto toma tiempo. En 
+                    cuanto tengamos una mejor solución, la publicaremos pero por lo pronto esta funciona.
                 </li>
             </ul>
             <h3 class="alert-heading">Gracias.</h3>

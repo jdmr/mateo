@@ -206,6 +206,12 @@ public class EntradaController extends BaseController {
             log.debug("Hubo algun error en la forma, regresando");
             return "inventario/entrada/nueva";
         }
+        
+        if (entrada.getProveedor() == null || entrada.getProveedor().getId() == null) {
+            log.warn("No introdujo un proveedor correcto, regresando");
+            errors.rejectValue("proveedor","entrada.no.eligio.proveedor.message", null, null);
+            return "inventario/entrada/nueva";
+        }
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
@@ -244,6 +250,12 @@ public class EntradaController extends BaseController {
     public String actualiza(HttpServletRequest request, @Valid Entrada entrada, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
+            return "inventario/entrada/edita";
+        }
+
+        if (entrada.getProveedor() == null || entrada.getProveedor().getId() == null) {
+            log.warn("No introdujo un proveedor correcto, regresando");
+            errors.rejectValue("proveedor","entrada.no.eligio.proveedor.message", null, null);
             return "inventario/entrada/edita";
         }
 

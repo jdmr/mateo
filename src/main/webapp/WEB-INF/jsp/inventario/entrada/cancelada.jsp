@@ -9,7 +9,7 @@
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="salida" />
+            <jsp:param name="menu" value="entrada" />
         </jsp:include>
 
         <h1><s:message code="entrada.cancelada.label" /></h1>

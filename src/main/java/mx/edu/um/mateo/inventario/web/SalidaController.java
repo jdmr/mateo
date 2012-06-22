@@ -218,6 +218,12 @@ public class SalidaController extends BaseController {
             return "inventario/salida/nueva";
         }
 
+        if (salida.getCliente() == null || salida.getCliente().getId() == null) {
+            log.warn("No introdujo un cliente correcto, regresando");
+            errors.rejectValue("cliente","salida.no.eligio.cliente.message", null, null);
+            return "inventario/salida/nueva";
+        }
+
         try {
             Usuario usuario = ambiente.obtieneUsuario();
             if (request.getParameter("cliente.id") == null) {
@@ -256,6 +262,12 @@ public class SalidaController extends BaseController {
     public String actualiza(HttpServletRequest request, @Valid Salida salida, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
+            return "inventario/salida/edita";
+        }
+
+        if (salida.getCliente() == null || salida.getCliente().getId() == null) {
+            log.warn("No introdujo un cliente correcto, regresando");
+            errors.rejectValue("cliente","salida.no.eligio.cliente.message", null, null);
             return "inventario/salida/edita";
         }
 

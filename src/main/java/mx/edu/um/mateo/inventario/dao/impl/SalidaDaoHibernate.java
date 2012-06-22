@@ -48,6 +48,8 @@ import mx.edu.um.mateo.inventario.model.LoteSalida;
 import mx.edu.um.mateo.inventario.model.Producto;
 import mx.edu.um.mateo.inventario.model.Salida;
 import mx.edu.um.mateo.inventario.model.XEntrada;
+import mx.edu.um.mateo.inventario.model.XLoteEntrada;
+import mx.edu.um.mateo.inventario.model.XLoteSalida;
 import mx.edu.um.mateo.inventario.model.XProducto;
 import mx.edu.um.mateo.inventario.model.XSalida;
 import mx.edu.um.mateo.inventario.utils.NoEstaAbiertaException;
@@ -248,7 +250,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
         salida.setFechaModificacion(fecha);
         session.save(salida);
 
-        audita(salida, usuario, Constantes.CREAR, fecha);
+        audita(salida, usuario, Constantes.CREAR, fecha, false);
 
         session.flush();
         return salida;
@@ -285,7 +287,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
                 salida.setFechaModificacion(fecha);
                 session.update(salida);
 
-                audita(salida, usuario, Constantes.ACTUALIZAR, fecha);
+                audita(salida, usuario, Constantes.ACTUALIZAR, fecha, false);
 
                 session.flush();
                 return salida;
@@ -339,7 +341,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
 
                 currentSession().update(salida);
 
-                audita(salida, usuario, Constantes.ACTUALIZAR, fecha);
+                audita(salida, usuario, Constantes.ACTUALIZAR, fecha, true);
 
                 currentSession().flush();
                 return salida;
@@ -358,7 +360,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
             String nombre = salida.getFolio();
             currentSession().delete(salida);
 
-            audita(salida, null, Constantes.ELIMINAR, new Date());
+            audita(salida, null, Constantes.ELIMINAR, new Date(), false);
 
             currentSession().flush();
             return nombre;
@@ -654,7 +656,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
                 entrada.setFechaModificacion(fecha);
                 currentSession().update(entrada);
 
-                auditaEntrada(entrada, usuario, Constantes.CANCELAR, fecha);
+                auditaEntrada(entrada, usuario, Constantes.CANCELAR, fecha, true);
             }
 
             for (Salida s : salidas) {
@@ -663,7 +665,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
                 s.setFechaModificacion(fecha);
                 currentSession().update(s);
 
-                audita(s, usuario, Constantes.CANCELAR, fecha);
+                audita(s, usuario, Constantes.CANCELAR, fecha, true);
             }
 
             // Crear cancelacion
@@ -705,7 +707,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
         currentSession().save(xproducto);
     }
 
-    private void auditaEntrada(Entrada entrada, Usuario usuario, String actividad, Date fecha) {
+    private void auditaEntrada(Entrada entrada, Usuario usuario, String actividad, Date fecha, boolean conLotes) {
         XEntrada xentrada = new XEntrada();
         BeanUtils.copyProperties(entrada, xentrada);
         xentrada.setId(null);
@@ -716,9 +718,22 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
         xentrada.setActividad(actividad);
         xentrada.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
         currentSession().save(xentrada);
+        if (conLotes) {
+            for (LoteEntrada lote : entrada.getLotes()) {
+                XLoteEntrada xlote = new XLoteEntrada();
+                BeanUtils.copyProperties(lote, xlote, new String[]{"id", "version"});
+                xlote.setLoteEntradaId(lote.getId());
+                xlote.setEntradaId(entrada.getId());
+                xlote.setProductoId(lote.getProducto().getId());
+                xlote.setActividad(actividad);
+                xlote.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
+                xlote.setFechaCreacion(fecha);
+                currentSession().save(xlote);
+            }
+        }
     }
 
-    private void audita(Salida salida, Usuario usuario, String actividad, Date fecha) {
+    private void audita(Salida salida, Usuario usuario, String actividad, Date fecha, boolean conLotes) {
         XSalida xsalida = new XSalida();
         BeanUtils.copyProperties(salida, xsalida);
         xsalida.setId(null);
@@ -730,5 +745,18 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
         xsalida.setActividad(actividad);
         xsalida.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
         currentSession().save(xsalida);
+        if (conLotes) {
+            for (LoteSalida lote : salida.getLotes()) {
+                XLoteSalida xlote = new XLoteSalida();
+                BeanUtils.copyProperties(lote, xlote, new String[]{"id", "version"});
+                xlote.setLoteSalidaId(lote.getId());
+                xlote.setSalidaId(salida.getId());
+                xlote.setProductoId(lote.getProducto().getId());
+                xlote.setActividad(actividad);
+                xlote.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
+                xlote.setFechaCreacion(fecha);
+                currentSession().save(xlote);
+            }
+        }
     }
 }
