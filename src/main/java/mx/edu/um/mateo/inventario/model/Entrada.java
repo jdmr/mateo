@@ -64,7 +64,7 @@ public class Entrada implements Serializable {
     private Date fechaFactura;
     @Column(length = 128)
     private String comentarios;
-    @Column(scale = 2, precision = 8, name="tipo_cambio")
+    @Column(scale = 2, precision = 8, name = "tipo_cambio")
     private BigDecimal tipoCambio;
     @Column(scale = 2, precision = 8, nullable = false)
     private BigDecimal iva = new BigDecimal("0");

@@ -6,6 +6,7 @@
 <html>
     <head>
         <title><s:message code="salida.lista.label" /></title>
+        <link rel="stylesheet" href="<c:url value='/css/chosen.css' />" type="text/css">
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -33,6 +34,7 @@
                         <ul class="dropdown-menu">
                             <a id="buscarFechaAnchor" href="#"><s:message code="buscar.fecha.button" /></a>
                             <a id="buscarClienteAnchor" href="#"><s:message code="buscar.cliente.button" /></a>
+                            <a id="buscarEstatusAnchor" href="#"><s:message code="buscar.estatus.button" /></a>
                         </ul>
                     </div>
                 </div>
@@ -51,6 +53,17 @@
                         <s:message code="cliente.label" /><br/>
                         <input type="hidden" name="clienteId" id="clienteId" value="${param.clienteId}" />
                         <input type="text" name="clienteNombre" id="clienteNombre" value="${param.clienteNombre}" class="input-xxlarge" />
+                    </label>
+                </div>
+                <div id="buscarEstatusDiv" class="row-fluid" style="<c:if test='${empty param.estatusId}'>display: none;</c:if> margin-top: 10px;">
+                    <label>
+                        <s:message code="estatus.label" /><br/>
+                        <select name="estatusId" id="estatusId">
+                            <option value=""><s:message code="estatus.elija.message" /></option>
+                            <c:forEach items="${estados}" var="estatus">
+                                <option value="${estatus.id}" <c:if test="${param.estatusId == estatus.id}">selected="selected"</c:if>><s:message code="${estatus.nombre}" /></option>
+                            </c:forEach>
+                        </select>
                     </label>
                 </div>
             </div>
@@ -131,6 +144,7 @@
             <jsp:include page="/WEB-INF/jsp/paginacion.jsp" />
         </form>        
         <content>
+            <script src="<c:url value='/js/chosen.jquery.min.js' />"></script>
             <script src="<c:url value='/js/lista.js' />"></script>
             <script type="text/javascript">
                 $(document).ready(function() {
@@ -157,6 +171,15 @@
                         e.preventDefault();
                         $("div#buscarClienteDiv").show('slide', {direction:'up'}, 500, function() {
                             $("input#clienteNombre").focus();
+                        });
+                    });
+                    
+                    $("select#estatusId").chosen();
+                    
+                    $("a#buscarEstatusAnchor").click(function(e) {
+                        e.preventDefault();
+                        $("div#buscarEstatusDiv").show('slide', {direction:'up'}, 500, function() {
+                            $("select#estatusId").focus();
                         });
                     });
                 });

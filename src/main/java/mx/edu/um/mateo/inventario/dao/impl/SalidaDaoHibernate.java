@@ -120,6 +120,11 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
             criteria.createCriteria("cliente").add(Restrictions.idEq(params.get("clienteId")));
             countCriteria.createCriteria("cliente").add(Restrictions.idEq(params.get("clienteId")));
         }
+        
+        if (params.containsKey("estatusId")) {
+            criteria.createCriteria("estatus").add(Restrictions.idEq(params.get("estatusId")));
+            countCriteria.createCriteria("estatus").add(Restrictions.idEq(params.get("estatusId")));
+        }
 
         if (params.containsKey("fechaIniciado")) {
             log.debug("Buscando desde {}", params.get("fechaIniciado"));
@@ -163,7 +168,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
             } else {
                 criteria.addOrder(Order.asc(campo));
             }
-        } else {
+        } else if (!params.containsKey("estatusId")) {
             criteria.createCriteria("estatus").addOrder(Order.asc("prioridad"));
         }
         criteria.addOrder(Order.desc("fechaModificacion"));

@@ -41,11 +41,15 @@ import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inventario.dao.ProductoDao;
 import mx.edu.um.mateo.inventario.dao.SalidaDao;
 import mx.edu.um.mateo.inventario.model.Cancelacion;
+import mx.edu.um.mateo.inventario.model.Estatus;
 import mx.edu.um.mateo.inventario.model.LoteSalida;
 import mx.edu.um.mateo.inventario.model.Producto;
 import mx.edu.um.mateo.inventario.model.Salida;
 import mx.edu.um.mateo.inventario.utils.*;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -73,10 +77,35 @@ public class SalidaController extends BaseController {
     private ClienteDao clienteDao;
     @Autowired
     private ProductoDao productoDao;
+    @Autowired
+    private SessionFactory sessionFactory;
+    private List<Estatus> estados;
+    
+    private Session currentSession() {
+        return sessionFactory.getCurrentSession();
+    }
 
     @InitBinder
     public void inicializar(WebDataBinder binder) {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("dd/MM/yyyy"), false));
+        Query query = currentSession().createQuery("from Estatus e where e.nombre = :nombre");
+        query.setString("nombre", Constantes.ABIERTA);
+        Estatus abierta = (Estatus) query.uniqueResult();
+        
+        query.setString("nombre", Constantes.CERRADA);
+        Estatus cerrada = (Estatus) query.uniqueResult();
+        
+        query.setString("nombre", Constantes.CANCELADA);
+        Estatus cancelada = (Estatus) query.uniqueResult();
+        
+        query.setString("nombre", Constantes.FACTURADA);
+        Estatus facturada = (Estatus) query.uniqueResult();
+        
+        estados = new ArrayList<>();
+        estados.add(abierta);
+        estados.add(cerrada);
+        estados.add(cancelada);
+        estados.add(facturada);
     }
 
     @RequestMapping
@@ -133,6 +162,8 @@ public class SalidaController extends BaseController {
             pagina = (Long) params.get("pagina");
         }
         this.pagina(params, modelo, "salidas", pagina);
+        
+        modelo.addAttribute("estados", estados);
 
         return "inventario/salida/lista";
     }

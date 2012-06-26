@@ -28,8 +28,8 @@
         <link rel="stylesheet" href="<c:url value='/css/bootstrap.min.css' />" type="text/css">
         <link rel="stylesheet" href="<c:url value='/css/bootstrap-responsive.min.css' />" type="text/css">
         <link rel="stylesheet" href="<c:url value='/css/custom-theme/jquery-ui-1.8.17.custom.css' />" type="text/css">
-        <link rel="stylesheet" href="<c:url value='/css/app.css' />" type="text/css">
         <sitemesh:write property='head'/>
+        <link rel="stylesheet" href="<c:url value='/css/app.css' />" type="text/css">
     </head>
     <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
