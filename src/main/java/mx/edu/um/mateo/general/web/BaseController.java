@@ -28,8 +28,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
@@ -83,15 +85,7 @@ public abstract class BaseController {
         // inicia paginado
         Long cantidad = (Long) params.get("cantidad");
         Integer max = (Integer) params.get("max");
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-            if (i >= 10) {
-                break;
-            }
-        } while (i++ <= cantidadDePaginas);
+        List<Long> paginas = paginacion(pagina, cantidad, max);
         List listado = (List) params.get(lista);
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (listado.size() - 1);
@@ -99,6 +93,83 @@ public abstract class BaseController {
         modelo.addAttribute("paginacion", paginacion);
         modelo.addAttribute("paginas", paginas);
         // termina paginado
+    }
+
+    private List<Long> paginacion(Long pagina, Long cantidad, Integer max) {
+        Long cantidadDePaginas = cantidad / max;
+        log.debug("Paginacion: {} {} {} {}", new Object[] {pagina, cantidad, max, cantidadDePaginas});
+        Set<Long> paginas = new LinkedHashSet<>();
+        long h = pagina - 1;
+        long i = pagina;
+        long j = pagina + 1;
+        boolean esCientos = false;
+        boolean esCincuentas = false;
+        boolean esDecenas = false;
+        boolean iniciado = false;
+        if (h > 0 && h > 100) {
+            for (long y = 0; y < h; y += 100) {
+                if (y == 0) {
+                    iniciado = true;
+                    paginas.add(1l);
+                } else {
+                    paginas.add(y);
+                }
+            }
+        } else if (h > 0 && h > 50) {
+            for (long y = 0; y < h; y += 50) {
+                if (y == 0) {
+                    iniciado = true;
+                    paginas.add(1l);
+                } else {
+                    paginas.add(y);
+                }
+            }
+        } else if (h > 0 && h > 10) {
+            for (long y = 0; y < h; y += 10) {
+                if (y == 0) {
+                    iniciado = true;
+                    paginas.add(1l);
+                } else {
+                    paginas.add(y);
+                }
+            }
+        }
+        if (i > 1 && i < 4) {
+            for (long x = 1; x < i; x++) {
+                paginas.add(x);
+            }
+        } else if (h > 0) {
+            if (!iniciado) {
+                paginas.add(1L);
+            }
+            for (long x = h; x < i; x++) {
+                paginas.add(x);
+            }
+        }
+        do {
+            paginas.add(i);
+            if (i > j) {
+                if (esCientos || (i + 100) < cantidadDePaginas) {
+                    esCientos = true;
+                    i -= i % 100;
+                    i += 99;
+                } else if (esCincuentas || (i + 50) < cantidadDePaginas) {
+                    esCincuentas = true;
+                    i -= i % 50;
+                    i += 49;
+                } else if (esDecenas || (i + 10) < cantidadDePaginas) {
+                    esDecenas = true;
+                    i -= i % 10;
+                    i += 9;
+                }
+            }
+        } while (i++ < cantidadDePaginas);
+        if (cantidadDePaginas > 0) {
+            paginas.add(cantidadDePaginas);
+        }
+
+        log.debug("Paginas {}: {}", pagina, paginas);
+        return new ArrayList<>(paginas);
     }
 
     protected byte[] generaPdf(List lista, String nombre, String tipo, Long id) throws JRException {
@@ -185,7 +256,7 @@ public abstract class BaseController {
         exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
         exporter.setParameter(JRXlsExporterParameter.PARAMETERS_OVERRIDE_REPORT_HINTS, Boolean.FALSE);
         exporter.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE, Boolean.TRUE);
-        
+
         exporter.exportReport();
         byte[] archivo = byteArrayOutputStream.toByteArray();
 
