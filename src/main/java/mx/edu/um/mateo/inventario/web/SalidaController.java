@@ -80,7 +80,7 @@ public class SalidaController extends BaseController {
     @Autowired
     private SessionFactory sessionFactory;
     private List<Estatus> estados;
-    
+
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
@@ -88,24 +88,6 @@ public class SalidaController extends BaseController {
     @InitBinder
     public void inicializar(WebDataBinder binder) {
         binder.registerCustomEditor(Date.class, new CustomDateEditor(new SimpleDateFormat("dd/MM/yyyy"), false));
-        Query query = currentSession().createQuery("from Estatus e where e.nombre = :nombre");
-        query.setString("nombre", Constantes.ABIERTA);
-        Estatus abierta = (Estatus) query.uniqueResult();
-        
-        query.setString("nombre", Constantes.CERRADA);
-        Estatus cerrada = (Estatus) query.uniqueResult();
-        
-        query.setString("nombre", Constantes.CANCELADA);
-        Estatus cancelada = (Estatus) query.uniqueResult();
-        
-        query.setString("nombre", Constantes.FACTURADA);
-        Estatus facturada = (Estatus) query.uniqueResult();
-        
-        estados = new ArrayList<>();
-        estados.add(abierta);
-        estados.add(cerrada);
-        estados.add(cancelada);
-        estados.add(facturada);
     }
 
     @RequestMapping
@@ -162,7 +144,27 @@ public class SalidaController extends BaseController {
             pagina = (Long) params.get("pagina");
         }
         this.pagina(params, modelo, "salidas", pagina);
-        
+
+        if (estados == null) {
+            Query query = currentSession().createQuery("from Estatus e where e.nombre = :nombre");
+            query.setString("nombre", Constantes.ABIERTA);
+            Estatus abierta = (Estatus) query.uniqueResult();
+
+            query.setString("nombre", Constantes.CERRADA);
+            Estatus cerrada = (Estatus) query.uniqueResult();
+
+            query.setString("nombre", Constantes.CANCELADA);
+            Estatus cancelada = (Estatus) query.uniqueResult();
+
+            query.setString("nombre", Constantes.FACTURADA);
+            Estatus facturada = (Estatus) query.uniqueResult();
+
+            estados = new ArrayList<>();
+            estados.add(abierta);
+            estados.add(cerrada);
+            estados.add(cancelada);
+            estados.add(facturada);
+        }
         modelo.addAttribute("estados", estados);
 
         return "inventario/salida/lista";
@@ -251,7 +253,7 @@ public class SalidaController extends BaseController {
 
         if (salida.getCliente() == null || salida.getCliente().getId() == null) {
             log.warn("No introdujo un cliente correcto, regresando");
-            errors.rejectValue("cliente","salida.no.eligio.cliente.message", null, null);
+            errors.rejectValue("cliente", "salida.no.eligio.cliente.message", null, null);
             return "inventario/salida/nueva";
         }
 
@@ -298,7 +300,7 @@ public class SalidaController extends BaseController {
 
         if (salida.getCliente() == null || salida.getCliente().getId() == null) {
             log.warn("No introdujo un cliente correcto, regresando");
-            errors.rejectValue("cliente","salida.no.eligio.cliente.message", null, null);
+            errors.rejectValue("cliente", "salida.no.eligio.cliente.message", null, null);
             return "inventario/salida/edita";
         }
 

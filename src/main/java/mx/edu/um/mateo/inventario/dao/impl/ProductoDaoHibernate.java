@@ -38,6 +38,7 @@ import mx.edu.um.mateo.inventario.model.HistorialProducto;
 import mx.edu.um.mateo.inventario.model.Producto;
 import mx.edu.um.mateo.inventario.model.TipoProducto;
 import mx.edu.um.mateo.inventario.model.XProducto;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -384,8 +385,7 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
 
     private void audita(Producto producto, Usuario usuario, String actividad, Date fecha) {
         XProducto xproducto = new XProducto();
-        BeanUtils.copyProperties(producto, xproducto);
-        xproducto.setId(null);
+        BeanUtils.copyProperties(producto, xproducto, new String[] {"id", "version"});
         xproducto.setProductoId(producto.getId());
         xproducto.setTipoProductoId(producto.getTipoProducto().getId());
         xproducto.setAlmacenId(producto.getAlmacen().getId());
@@ -393,5 +393,25 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
         xproducto.setActividad(actividad);
         xproducto.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
         currentSession().save(xproducto);
+    }
+
+    @Override
+    public void arreglaDescripciones() {
+        log.debug("Arreglando descripciones");
+        Date fecha = new Date();
+        Query query = currentSession().createQuery("from Producto");
+        List<Producto> productos = query.list();
+        int cont = 0;
+        for(Producto producto : productos) {
+            if (StringUtils.isBlank(producto.getDescripcion())) {
+                log.debug("Actualizando {}", producto);
+                producto.setDescripcion(producto.getNombre());
+                currentSession().update(producto);
+                this.audita(producto, null, Constantes.ACTUALIZAR, fecha);
+                cont++;
+            }
+        }
+        currentSession().flush();
+        log.debug("Se arreglaron {} de {}", cont, productos.size());
     }
 }

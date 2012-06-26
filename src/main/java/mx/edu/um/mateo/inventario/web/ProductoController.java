@@ -335,4 +335,11 @@ public class ProductoController extends BaseController {
 
         return "inventario/producto/historial";
     }
+    
+    @RequestMapping("/arreglaDescripciones")
+    public String arreglaDescripciones() {
+        log.debug("Arreglando descripciones");
+        productoDao.arreglaDescripciones();
+        return "redirect:/inventario/producto";
+    }
 }
