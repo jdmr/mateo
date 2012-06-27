@@ -102,11 +102,31 @@ public abstract class BaseController {
         long h = pagina - 1;
         long i = pagina;
         long j = pagina + 1;
+        boolean esMiles = false;
+        boolean esQuinientos = false;
         boolean esCientos = false;
         boolean esCincuentas = false;
         boolean esDecenas = false;
         boolean iniciado = false;
-        if (h > 0 && h > 100) {
+        if (h > 0 && h > 1000) {
+            for (long y = 0; y < h; y += 1000) {
+                if (y == 0) {
+                    iniciado = true;
+                    paginas.add(1l);
+                } else {
+                    paginas.add(y);
+                }
+            }
+        } else if (h > 0 && h > 500) {
+            for (long y = 0; y < h; y += 500) {
+                if (y == 0) {
+                    iniciado = true;
+                    paginas.add(1l);
+                } else {
+                    paginas.add(y);
+                }
+            }
+        } else if (h > 0 && h > 100) {
             for (long y = 0; y < h; y += 100) {
                 if (y == 0) {
                     iniciado = true;
@@ -149,7 +169,15 @@ public abstract class BaseController {
         do {
             paginas.add(i);
             if (i > j) {
-                if (esCientos || (i + 100) < cantidadDePaginas) {
+                if (esMiles || (i + 1000) < cantidadDePaginas) {
+                    esMiles = true;
+                    i -= i % 1000;
+                    i += 999;
+                } else if (esQuinientos || (i + 500) < cantidadDePaginas) {
+                    esQuinientos = true;
+                    i -= i % 500;
+                    i += 499;
+                } else if (esCientos || (i + 100) < cantidadDePaginas) {
                     esCientos = true;
                     i -= i % 100;
                     i += 99;
