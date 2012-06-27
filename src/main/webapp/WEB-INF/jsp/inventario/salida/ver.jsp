@@ -195,8 +195,8 @@
                 <c:if test="${puedeEditar || puedeCerrar || puedePendiente || puedeEliminar || puedeEditarPendiente || puedeCancelar || puedeReporte}">
                     <p class="well">
                         <c:if test="${puedeEditar}">
-                            <a href="<c:url value='/inventario/salida/edita/${salida.id}' />" class="btn btn-large"><i class="icon-edit"></i> <s:message code="editar.button" /></a>
-                            <a href="<c:url value='/inventario/salida/lote/${salida.id}' />" class="btn btn-primary btn-large"><i class="icon-shopping-cart icon-white"></i> <s:message code="lote.nuevo.button" /></a>
+                            <a id="editaBtn" href="<c:url value='/inventario/salida/edita/${salida.id}' />" class="btn btn-large"><i class="icon-edit"></i> <s:message code="editar.button" /></a>
+                            <a id="nuevoBtn" href="<c:url value='/inventario/salida/lote/${salida.id}' />" class="btn btn-primary btn-large"><i class="icon-shopping-cart icon-white"></i> <s:message code="lote.nuevo.button" /></a>
                         </c:if>
                         <c:if test="${puedeCerrar}">
                             <a href="<c:url value='/inventario/salida/cerrar/${salida.id}' />" class="btn btn-warning btn-large" onclick="return confirm('<s:message code="confirma.cerrar2.message" />');"><i class="icon-lock icon-white"></i> <s:message code="cerrar.button" /></a>
@@ -215,5 +215,14 @@
                 </c:if>
             </form:form>
         </div>
+        <content>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    <c:if test="${puedeEditar}">
+                            $("a#nuevoBtn").focus();
+                    </c:if>
+                });
+            </script>
+        </content>
     </body>
 </html>
