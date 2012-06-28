@@ -32,7 +32,7 @@
                         </button>
                         <ul class="dropdown-menu">
                             <a id="buscarFechaAnchor" href="#"><s:message code="buscar.fecha.button" /></a>
-                            <a id="buscarCentroCostoAnchor" href="#"><s:message code="buscar.centroCosto.button" /></a>
+                            <a id="buscarCuentaAnchor" href="#"><s:message code="buscar.centroCosto.button" /></a>
                             <a id="buscarProveedorAnchor" href="#"><s:message code="buscar.proveedor.button" /></a>
                             <a id="buscarTipoActivoAnchor" href="#"><s:message code="buscar.tipoActivo.button" /></a>
                             <a id="buscarResponsableAnchor" href="#"><s:message code="buscar.responsable.button" /></a>
@@ -51,11 +51,11 @@
                         <input type="text" name="fechaTerminado" id="fechaTerminado" value="${param.fechaTerminado}" />
                     </label>
                 </div>
-                <div id="buscarCentroCostoDiv" class="row-fluid" style="<c:if test='${empty param.centroCostoNombre}'>display: none;</c:if> margin-top: 10px;">
+                <div id="buscarCuentaDiv" class="row-fluid" style="<c:if test='${empty param.cuentaNombre}'>display: none;</c:if> margin-top: 10px;">
                     <label>
                         <s:message code="centroCosto.label" /><br/>
-                        <input type="hidden" name="centroCostoId" id="centroCostoId" value="${param.centroCostoId}" />
-                        <input type="text" name="centroCostoNombre" id="centroCostoNombre" value="${param.centroCostoNombre}" class="input-xxlarge" />
+                        <input type="hidden" name="cuentaId" id="cuentaId" value="${param.cuentaId}" />
+                        <input type="text" name="cuentaNombre" id="cuentaNombre" value="${param.cuentaNombre}" class="input-xxlarge" />
                     </label>
                 </div>
                 <div id="buscarProveedorDiv" class="row-fluid" style="<c:if test='${empty param.proveedorNombre}'>display: none;</c:if> margin-top: 10px;">
@@ -211,10 +211,10 @@
                         });
                     });                
                             
-                    $("a#buscarCentroCostoAnchor").click(function(e) {
+                    $("a#buscarCuentaAnchor").click(function(e) {
                         e.preventDefault();
-                        $("div#buscarCentroCostoDiv").show('slide', {direction:'up'}, 500, function() {
-                            $("input#centroCostoNombre").focus();
+                        $("div#buscarCuentaDiv").show('slide', {direction:'up'}, 500, function() {
+                            $("input#cuentaNombre").focus();
                         });
                     });                
                             

@@ -23,6 +23,8 @@
  */
 package mx.edu.um.mateo.activos.web;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,12 +63,6 @@ public class ActivoController extends BaseController {
     private ActivoDao activoDao;
     @Autowired
     private TipoActivoDao tipoActivoDao;
-    @Autowired
-    private SessionFactory sessionFactory;
-
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -76,20 +72,20 @@ public class ActivoController extends BaseController {
             @RequestParam(required = false) String correo,
             @RequestParam(required = false) String order,
             @RequestParam(required = false) String sort,
-            Model modelo) {
+            Model modelo) throws ParseException {
         log.debug("Mostrando lista de activos");
-        Map<String, Object> params = new HashMap<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Map<String, Object> params = this.convierteParams(request.getParameterMap());
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
-        if (StringUtils.isNotBlank(filtro)) {
-            params.put("filtro", filtro);
+
+        if (params.containsKey("fechaIniciado")) {
+            log.debug("FechaIniciado: {}", params.get("fechaIniciado"));
+            params.put("fechaIniciado", sdf.parse((String) params.get("fechaIniciado")));
         }
-        if (StringUtils.isNotBlank(order)) {
-            params.put("order", order);
-            params.put("sort", sort);
-        }
-        if (pagina != null) {
-            params.put("pagina", pagina);
+
+        if (params.containsKey("fechaTerminado")) {
+            params.put("fechaTerminado", sdf.parse((String) params.get("fechaTerminado")));
         }
 
         if (StringUtils.isNotBlank(tipo)) {
@@ -121,7 +117,7 @@ public class ActivoController extends BaseController {
         modelo.addAttribute("resumen", params.get("resumen"));
 
         this.pagina(params, modelo, "activos", pagina);
-        
+
         return "activoFijo/activo/lista";
     }
 

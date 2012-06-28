@@ -95,14 +95,49 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             countCriteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
         }
 
-        if (params.containsKey("tipoActivo")) {
-            criteria.createCriteria("tipoActivo").add(Restrictions.idEq(params.get("tipoActivo")));
-            countCriteria.createCriteria("tipoActivo").add(Restrictions.idEq(params.get("tipoActivo")));
+        if (params.containsKey("tipoActivoId")) {
+            criteria.createCriteria("tipoActivo").add(Restrictions.idEq(params.get("tipoActivoId")));
+            countCriteria.createCriteria("tipoActivo").add(Restrictions.idEq(params.get("tipoActivoId")));
         }
 
-        if (params.containsKey("cuenta")) {
-            criteria.createCriteria("cuenta").add(Restrictions.idEq(params.get("cuenta")));
-            countCriteria.createCriteria("cuenta").add(Restrictions.idEq(params.get("cuenta")));
+        if (params.containsKey("cuentaId")) {
+            criteria.createCriteria("cuenta").add(Restrictions.idEq(params.get("cuentaId")));
+            countCriteria.createCriteria("cuenta").add(Restrictions.idEq(params.get("cuentaId")));
+        }
+        
+        if (params.containsKey("proveedorId")) {
+            criteria.createCriteria("proveedor").add(Restrictions.idEq(params.get("proveedorId")));
+            countCriteria.createCriteria("proveedor").add(Restrictions.idEq(params.get("proveedorId")));
+        }
+        
+        if (params.containsKey("fechaIniciado")) {
+            criteria.add(Restrictions.ge("fechaCompra", params.get("fechaIniciado")));
+            countCriteria.add(Restrictions.ge("fechaCompra", params.get("fechaIniciado")));
+        }
+        
+        if (params.containsKey("bajas")) {
+            criteria.add(Restrictions.eq("inactivo", true));
+        }
+        
+        if (params.containsKey("reubicaciones")) {
+            criteria.createCriteria("reubicaciones").add(Restrictions.isNotNull("id"));
+            countCriteria.createCriteria("reubicaciones").add(Restrictions.isNotNull("id"));
+        }
+        
+        if (params.containsKey("fechaTerminado")) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime((Date) params.get("fechaTerminado"));
+            cal.set(Calendar.HOUR_OF_DAY, 23);
+            cal.set(Calendar.MINUTE, 59);
+            cal.set(Calendar.SECOND, 59);
+            cal.set(Calendar.MILLISECOND, 999);
+            criteria.add(Restrictions.le("fechaCompra", cal.getTime()));
+            countCriteria.add(Restrictions.le("fechaCompra", cal.getTime()));
+        }
+        
+        if (params.containsKey("responsableNombre")) {
+            criteria.add(Restrictions.ilike("responsable", (String)params.get("responsable"), MatchMode.ANYWHERE));
+            countCriteria.add(Restrictions.ilike("responsable", (String)params.get("responsable"), MatchMode.ANYWHERE));
         }
 
         if (params.containsKey("filtro")) {
@@ -118,6 +153,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             propiedades.add(Restrictions.ilike("marca", filtro, MatchMode.ANYWHERE));
             propiedades.add(Restrictions.ilike("modelo", filtro, MatchMode.ANYWHERE));
             propiedades.add(Restrictions.ilike("ubicacion", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("responsable", filtro, MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
