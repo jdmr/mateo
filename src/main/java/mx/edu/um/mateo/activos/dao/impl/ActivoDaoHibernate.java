@@ -369,4 +369,31 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         sb.append(nf.format(folio.getValor()));
         return sb.toString();
     }
+
+    @Override
+    public void arreglaFechas() {
+        Query query = currentSession().createQuery("from Activo order by fechaCompra");
+        List<Activo> activos = query.list();
+        int cont = 0;
+        for(Activo activo : activos) {
+            Calendar cal1 = Calendar.getInstance();
+            cal1.setTime(activo.getFechaCompra());
+            if (cal1.get(Calendar.YEAR) < 10) {
+                log.debug("Pasando al año 2000 {}", activo);
+                cal1.add(Calendar.YEAR, 2000);
+                activo.setFechaCompra(cal1.getTime());
+                currentSession().update(activo);
+            } else if (cal1.get(Calendar.YEAR) < 100) {
+                log.debug("Pasando al año 1900 {}", activo);
+                cal1.add(Calendar.YEAR, 1900);
+                activo.setFechaCompra(cal1.getTime());
+                currentSession().update(activo);
+            } else if (cal1.get(Calendar.YEAR) > 1900) {
+                currentSession().flush();
+                break;
+            }
+            cont++;
+        }
+        log.debug("Termino actualizando {} de {}", cont, activos.size());
+    }
 }

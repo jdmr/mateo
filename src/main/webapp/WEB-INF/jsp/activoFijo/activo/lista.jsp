@@ -185,7 +185,7 @@
                             <td>${activo.proveedor.nombre}</td>
                             <td>${activo.tipoActivo.nombre}</td>
                             <td>${activo.cuenta.nombre}</td>
-                            <td><fmt:formatDate pattern="dd/MMM/yyyy" value="${activo.fechaCompra}" /></td>
+                            <td><fmt:formatDate pattern="dd/MMM/yyyy" value="${activo.fechaDepreciacion}" /></td>
                             <td style="text-align:right;"><fmt:formatNumber value="${activo.depreciacionAnual}" type="currency" currencySymbol="$" /></td>
                             <td style="text-align:right;"><fmt:formatNumber value="${activo.depreciacionMensual}" type="currency" currencySymbol="$" /></td>
                             <td style="text-align:right;"><fmt:formatNumber value="${activo.depreciacionAcumulada}" type="currency" currencySymbol="$" /></td>

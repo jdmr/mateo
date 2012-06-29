@@ -46,4 +46,6 @@ public interface ActivoDao {
     public Activo actualiza(Activo activo, Usuario usuario);
 
     public String elimina(Long id);
+    
+    public void arreglaFechas();
 }

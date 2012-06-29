@@ -253,4 +253,13 @@ public class ActivoController extends BaseController {
 
         return "redirect:/activoFijo/activo";
     }
+    
+    @RequestMapping("/arreglaFechas")
+    public String arreglaFechas(RedirectAttributes redirectAttributes) {
+        log.debug("Arreglando fechas");
+        activoDao.arreglaFechas();
+        redirectAttributes.addFlashAttribute("message", "activo.arregla.fechas");
+        redirectAttributes.addFlashAttribute("messageStyle","alert-success");
+        return "redirect:/activoFijo/activo";
+    }
 }
