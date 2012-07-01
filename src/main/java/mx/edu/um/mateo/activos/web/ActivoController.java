@@ -25,11 +25,14 @@ package mx.edu.um.mateo.activos.web;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import mx.edu.um.mateo.activos.dao.ActivoDao;
 import mx.edu.um.mateo.activos.dao.TipoActivoDao;
@@ -39,8 +42,6 @@ import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -259,6 +260,37 @@ public class ActivoController extends BaseController {
         log.debug("Arreglando fechas");
         activoDao.arreglaFechas();
         redirectAttributes.addFlashAttribute("message", "activo.arregla.fechas");
+        redirectAttributes.addFlashAttribute("messageStyle","alert-success");
+        return "redirect:/activoFijo/activo";
+    }
+    
+    @RequestMapping("/depreciar")
+    public String depreciar(HttpSession session,  RedirectAttributes redirectAttributes) {
+        log.debug("Depreciando activos");
+        Long empresaId = (Long) session.getAttribute("empresaId");
+        Date fecha = new Date();
+        activoDao.depreciar(fecha, empresaId);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM/yyyy");
+        redirectAttributes.addFlashAttribute("message", "activo.depreciar.message");
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[] {sdf.format(fecha)});
+        redirectAttributes.addFlashAttribute("messageStyle","alert-success");
+        return "redirect:/activoFijo/activo";
+    }
+    
+    @RequestMapping("/depreciar/{anio}/{mes}/{dia}")
+    public String depreciarPorFecha(HttpSession session, @PathVariable Integer anio, @PathVariable Integer mes, @PathVariable Integer dia, RedirectAttributes redirectAttributes) {
+        Long empresaId = (Long) session.getAttribute("empresaId");
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, anio);
+        cal.set(Calendar.MONTH, mes - 1);
+        cal.set(Calendar.DAY_OF_MONTH, dia);
+        Date fecha = cal.getTime();
+        
+        log.debug("Depreciando activos para la fecha {}", fecha);
+        activoDao.depreciar(fecha, empresaId);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM/yyyy");
+        redirectAttributes.addFlashAttribute("message", "activo.depreciar.message");
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[] {sdf.format(fecha)});
         redirectAttributes.addFlashAttribute("messageStyle","alert-success");
         return "redirect:/activoFijo/activo";
     }

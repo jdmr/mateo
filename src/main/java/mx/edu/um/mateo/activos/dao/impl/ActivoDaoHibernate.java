@@ -24,6 +24,7 @@
 package mx.edu.um.mateo.activos.dao.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -253,22 +254,38 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         return nombre;
     }
 
-    public void depreciar(Date fecha, Empresa empresa) {
+    @Override
+    public void depreciar(Date fecha, Long empresaId) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(fecha);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MILLISECOND, 999);
+        fecha = cal.getTime();
         Query query = currentSession().createQuery("select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCreacion <= :fecha");
-        query.setLong("empresaId", empresa.getId());
+        query.setLong("empresaId", empresaId);
         query.setDate("fecha", fecha);
         List<Activo> activos = query.list();
+        int cont = 0;
+        int total = activos.size();
         for (Activo activo : activos) {
+            if (++cont % 1000 == 0) {
+                log.debug("Depreciando activo {} ({} / {})", new Object[] {activo.getId(), cont, total});
+            }
+            
             // depreciacion anual
             BigDecimal porciento = activo.getPorciento();
             BigDecimal depreciacionAnual = activo.getMoi().multiply(porciento);
-
+            log.trace("DepreciacionAnual: {}", depreciacionAnual);
+            
             // depreciacion mensual
             BigDecimal depreciacionMensual = BigDecimal.ZERO;
             Date fechaCompra = activo.getFechaCompra();
             if (fechaCompra.before(fecha) && days360(fechaCompra, fecha) / 30 < activo.getVidaUtil()) {
-                depreciacionMensual = depreciacionAnual.divide(new BigDecimal("12"));
+                depreciacionMensual = depreciacionAnual.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
             }
+            log.trace("DepreciacionMensual: {}", depreciacionMensual);
             
             // depreciacion acumulada
             BigDecimal depreciacionAcumulada = BigDecimal.ZERO;
@@ -282,10 +299,12 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             if (meses < activo.getVidaUtil()) {
                 depreciacionAcumulada = depreciacionMensual.multiply(new BigDecimal(meses));
             }
-            
+            log.trace("DepreciacionAcumulada: {}", depreciacionAcumulada);
+
             // valor neto
             BigDecimal valorNeto = activo.getMoi().subtract(depreciacionAcumulada);
-            
+            log.trace("ValorNeto: {}", valorNeto);
+
             query = currentSession().createQuery("update Activo a set a.fechaDepreciacion = :fecha, a.depreciacionAnual = :depreciacionAnual, a.depreciacionMensual = :depreciacionMensual, a.depreciacionAcumulada = :depreciacionAcumulada, a.valorNeto = :valorNeto where a.id = :activoId");
             query.setDate("fecha", fecha);
             query.setBigDecimal("depreciacionAnual", depreciacionAnual);
@@ -295,6 +314,8 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             query.setLong("activoId", activo.getId());
             query.executeUpdate();
         }
+        currentSession().flush();
+        log.info("Se han depreciado los activos de la empresa {} para la fecha de {}", empresaId, fecha);
     }
 
     /**
@@ -396,4 +417,5 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         }
         log.debug("Termino actualizando {} de {}", cont, activos.size());
     }
+
 }

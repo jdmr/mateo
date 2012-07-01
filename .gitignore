@@ -7,3 +7,6 @@ target
 /src/main/resources/rebel.xml
 /nb-configuration.xml
 /nbactions.xml
+.settings
+.classpath
+.project

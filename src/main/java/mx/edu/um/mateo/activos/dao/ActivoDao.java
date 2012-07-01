@@ -23,6 +23,7 @@
  */
 package mx.edu.um.mateo.activos.dao;
 
+import java.util.Date;
 import java.util.Map;
 import mx.edu.um.mateo.activos.model.Activo;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -48,4 +49,6 @@ public interface ActivoDao {
     public String elimina(Long id);
     
     public void arreglaFechas();
+    
+    public void depreciar(Date fecha, Long empresaId);
 }

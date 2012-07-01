@@ -110,10 +110,6 @@
                         </jsp:include>
                         
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="fechaCompra" />
-                        </jsp:include>
-                        
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="descripcion" />
                         </jsp:include>
                         
@@ -148,6 +144,15 @@
                         <th><s:message code="cuenta.label" /></th>
                         
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="fechaCompra" />
+                        </jsp:include>
+                        
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="moi" />
+                            <jsp:param name="style" value="text-align:right;" />
+                        </jsp:include>
+                        
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="fechaDepreciacion" />
                         </jsp:include>
                         
@@ -166,6 +171,11 @@
                             <jsp:param name="style" value="text-align:right;" />
                         </jsp:include>
                         
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="valorNeto" />
+                            <jsp:param name="style" value="text-align:right;" />
+                        </jsp:include>
+                        
                         <th><s:message code="empresa.label" /></th>
                     </tr>
                 </thead>
@@ -174,7 +184,6 @@
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/activoFijo/activo/ver/${activo.id}' />">${activo.folio}</a></td>
                             <td>${activo.codigo}</td>
-                            <td><fmt:formatDate pattern="dd/MMM/yyyy" value="${activo.fechaCompra}" /></td>
                             <td>${activo.descripcion}</td>
                             <td>${activo.factura}</td>
                             <td>${activo.poliza}</td>
@@ -185,10 +194,13 @@
                             <td>${activo.proveedor.nombre}</td>
                             <td>${activo.tipoActivo.nombre}</td>
                             <td>${activo.cuenta.nombre}</td>
+                            <td><fmt:formatDate pattern="dd/MMM/yyyy" value="${activo.fechaCompra}" /></td>
+                            <td style="text-align:right;"><fmt:formatNumber value="${activo.moi}" type="currency" currencySymbol="$" /></td>
                             <td><fmt:formatDate pattern="dd/MMM/yyyy" value="${activo.fechaDepreciacion}" /></td>
                             <td style="text-align:right;"><fmt:formatNumber value="${activo.depreciacionAnual}" type="currency" currencySymbol="$" /></td>
                             <td style="text-align:right;"><fmt:formatNumber value="${activo.depreciacionMensual}" type="currency" currencySymbol="$" /></td>
                             <td style="text-align:right;"><fmt:formatNumber value="${activo.depreciacionAcumulada}" type="currency" currencySymbol="$" /></td>
+                            <td style="text-align:right;"><fmt:formatNumber value="${activo.valorNeto}" type="currency" currencySymbol="$" /></td>
                             <td>${activo.empresa.nombre}</td>
                         </tr>
                     </c:forEach>
