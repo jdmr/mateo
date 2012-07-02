@@ -241,6 +241,7 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
 
     @Override
     public void compila(String nombre, String tipo, Usuario usuario) {
+        log.debug("Compilando {} de {}", nombre, tipo);
         Reporte reporte = null;
         switch (tipo) {
             case Constantes.ADMIN:
@@ -256,6 +257,7 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
                 reporte = buscaReportePorAlmacen(nombre, usuario.getAlmacen().getId());
                 break;
         }
+        log.debug("Encontre el reporte {}", reporte.getId());
         try {
             JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/reportes/" + nombre + ".jrxml"));
             JasperReport jr = JasperCompileManager.compileReport(jd);

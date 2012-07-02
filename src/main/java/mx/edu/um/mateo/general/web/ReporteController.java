@@ -76,7 +76,16 @@ public class ReporteController {
     @RequestMapping("/compila/{tipo}/{reporte}")
     public String compila(@PathVariable String tipo, @PathVariable String reporte, RedirectAttributes redirectAttributes) {
         log.debug("Compilando reporte {}", reporte);
-        reporteDao.compila(reporte, tipo, ambiente.obtieneUsuario());
+        try {
+            reporteDao.compila(reporte, tipo, ambiente.obtieneUsuario());
+        } catch(Exception e) {
+            log.error("Hubo un problema al compilar el reporte", e);
+            redirectAttributes.addFlashAttribute("message", "reporte.no.compilado.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{reporte});
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-error");
+
+            return "redirect:/";
+        }
 
         redirectAttributes.addFlashAttribute("message", "reporte.compilado.message");
         redirectAttributes.addFlashAttribute("messageAttrs", new String[]{reporte});

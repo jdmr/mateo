@@ -126,9 +126,8 @@ public class ActivoController extends BaseController {
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando activo {}", id);
         Activo activo = activoDao.obtiene(id);
-
         modelo.addAttribute("activo", activo);
-
+        
         return "activoFijo/activo/ver";
     }
 
