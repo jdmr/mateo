@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.contabilidad.model.Cuenta;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Imagen;
@@ -84,8 +85,9 @@ public class Activo implements Serializable {
     @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal inpc = BigDecimal.ZERO;
     private String ubicacion;
+    @NotNull
     @Temporal(TemporalType.DATE)
-    @Column(name = "fecha_compra")
+    @Column(name = "fecha_compra", nullable = false)
     private Date fechaCompra;
     @Column(length = 64)
     private Boolean inactivo = false;
@@ -128,7 +130,7 @@ public class Activo implements Serializable {
     @Column(nullable = false, name = "last_updated")
     private Date fechaModificacion;
     @Temporal(TemporalType.DATE)
-    @Column(name = "fecha_depreciacion")
+    @Column(name = "depreciacion_fecha")
     private Date fechaDepreciacion;
     @Column(name = "depreciacion_anual", scale = 2, precision = 8)
     private BigDecimal depreciacionAnual;

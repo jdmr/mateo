@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.Objects;
 import javax.persistence.*;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *
@@ -45,6 +46,7 @@ public class BajaActivo implements Serializable {
     @NotBlank
     @Column(nullable = false, length = 64)
     private String creador;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     @Column(nullable = false)
     private Date fecha;
@@ -62,6 +64,11 @@ public class BajaActivo implements Serializable {
     public BajaActivo() {
     }
 
+    public BajaActivo(Activo activo, Date fecha) {
+        this.activo = activo;
+        this.fecha = fecha;
+    }
+    
     /**
      * @return the id
      */

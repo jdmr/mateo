@@ -25,6 +25,7 @@ package mx.edu.um.mateo.activos.web;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,6 +38,7 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.activos.dao.ActivoDao;
 import mx.edu.um.mateo.activos.dao.TipoActivoDao;
 import mx.edu.um.mateo.activos.model.Activo;
+import mx.edu.um.mateo.activos.model.BajaActivo;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ReporteException;
@@ -79,7 +81,7 @@ public class ActivoController extends BaseController {
         Map<String, Object> params = this.convierteParams(request.getParameterMap());
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
-
+        
         if (params.containsKey("fechaIniciado")) {
             log.debug("FechaIniciado: {}", params.get("fechaIniciado"));
             params.put("fechaIniciado", sdf.parse((String) params.get("fechaIniciado")));
@@ -237,17 +239,34 @@ public class ActivoController extends BaseController {
         return "redirect:/activoFijo/activo/ver/" + activo.getId();
     }
 
-    @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Activo activo, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        log.debug("Elimina activo");
+    @RequestMapping(value = "/preparaBaja", method = RequestMethod.POST)
+    public String preparaBaja(HttpServletRequest request, @RequestParam Long id, Model modelo) {
+        log.debug("Preparando para de baja al activo {}", id);
+        Activo activo = activoDao.obtiene(id);
+        BajaActivo bajaActivo = new BajaActivo(activo, new Date());
+        modelo.addAttribute("bajaActivo", bajaActivo);
+        List<String> motivos = new ArrayList<>();
+        motivos.add("OBSOLETO");
+        motivos.add("PERDIDA");
+        motivos.add("DONACION");
+        motivos.add("VENTA");
+        modelo.addAttribute("motivos", motivos);
+
+        return "activoFijo/activo/baja";
+    }
+    
+    @RequestMapping(value = "/baja", method = RequestMethod.POST)
+    public String baja(Model modelo, @ModelAttribute BajaActivo bajaActivo, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        log.debug("Dando de baja al activo {}", bajaActivo.getActivo().getId());
         try {
-//            String nombre = activoDao.baja(id);
-//
-//            redirectAttributes.addFlashAttribute("message", "activo.eliminado.message");
-//            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
+            Usuario usuario = ambiente.obtieneUsuario();
+            String nombre = activoDao.baja(bajaActivo, usuario);
+
+            redirectAttributes.addFlashAttribute("message", "activo.baja.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
         } catch (Exception e) {
-            log.error("No se pudo eliminar la activo " + id, e);
-            bindingResult.addError(new ObjectError("activo", new String[]{"activo.no.eliminado.message"}, null, null));
+            log.error("No se pudo dar de baja al activo", e);
+            bindingResult.addError(new ObjectError("activo", new String[]{"activo.no.baja.message"}, null, null));
             return "activoFijo/activo/ver";
         }
 

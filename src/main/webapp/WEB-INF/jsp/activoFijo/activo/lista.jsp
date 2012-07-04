@@ -14,7 +14,6 @@
 
         <h1><s:message code="activo.lista.label" /></h1>
         <hr/>
-
         <form name="filtraLista" class="form-search" method="post" action="<c:url value='/activoFijo/activo' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
@@ -78,15 +77,15 @@
                         <input type="text" name="responsableNombre" id="responsableNombre" value="${param.responsableNombre}" class="input-xxlarge" />
                     </label>
                 </div>
-                <div id="buscarBajasDiv" class="row-fluid" style="<c:if test='${not param.bajas}'>display: none;</c:if> margin-top: 10px;">
+                <div id="buscarBajasDiv" class="row-fluid" style="<c:if test='${param.bajas != 1}'>display: none;</c:if> margin-top: 10px;">
                     <label>
-                        <input type="checkbox" name="bajas" id="bajas" value="1" <c:if test="${param.bajas}">checked="checked"</c:if> />
+                        <input type="checkbox" name="bajas" id="bajas" value="1" <c:if test="${param.bajas == 1}">checked="checked"</c:if> />
                         <s:message code="buscar.bajas.button" />
                     </label>
                 </div>
-                <div id="buscarReubicacionesDiv" class="row-fluid" style="<c:if test='${not param.reubicaciones}'>display: none;</c:if> margin-top: 10px;">
+                <div id="buscarReubicacionesDiv" class="row-fluid" style="<c:if test='${param.reubicaciones != 1}'>display: none;</c:if> margin-top: 10px;">
                     <label>
-                        <input type="checkbox" name="reubicaciones" id="reubicaciones" value="1" <c:if test="${param.reubicaciones}">checked="checked"</c:if> />
+                        <input type="checkbox" name="reubicaciones" id="reubicaciones" value="1" <c:if test="${param.reubicaciones == 1}">checked="checked"</c:if> />
                         <s:message code="buscar.reubicaciones.button" />
                     </label>
                 </div>

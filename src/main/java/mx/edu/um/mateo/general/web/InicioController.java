@@ -43,4 +43,9 @@ public class InicioController {
         log.debug("Cargando pagina de inicio");
         return "inicio/index";
     }
+    
+    @RequestMapping("/login/auth")
+    public String otraEntrada() {
+        return "redirect:/inicio";
+    }
 }

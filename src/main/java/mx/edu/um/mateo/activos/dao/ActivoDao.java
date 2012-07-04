@@ -26,6 +26,7 @@ package mx.edu.um.mateo.activos.dao;
 import java.util.Date;
 import java.util.Map;
 import mx.edu.um.mateo.activos.model.Activo;
+import mx.edu.um.mateo.activos.model.BajaActivo;
 import mx.edu.um.mateo.general.model.Usuario;
 
 /**
@@ -45,8 +46,12 @@ public interface ActivoDao {
     public Activo actualiza(Activo activo);
 
     public Activo actualiza(Activo activo, Usuario usuario);
+    
+    public Activo carga(Long id);
 
     public String elimina(Long id);
+    
+    public String baja(BajaActivo bajaActivo, Usuario usuario);
     
     public void arreglaFechas();
     

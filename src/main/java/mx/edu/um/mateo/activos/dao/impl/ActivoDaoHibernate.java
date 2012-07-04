@@ -36,11 +36,14 @@ import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.activos.dao.ActivoDao;
 import mx.edu.um.mateo.activos.model.Activo;
+import mx.edu.um.mateo.activos.model.BajaActivo;
 import mx.edu.um.mateo.activos.model.FolioActivo;
 import mx.edu.um.mateo.activos.model.TipoActivo;
+import mx.edu.um.mateo.activos.model.XActivo;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
 import org.hibernate.LockOptions;
 import org.hibernate.Query;
@@ -51,6 +54,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -105,26 +109,26 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             criteria.createCriteria("cuenta").add(Restrictions.idEq(params.get("cuentaId")));
             countCriteria.createCriteria("cuenta").add(Restrictions.idEq(params.get("cuentaId")));
         }
-        
+
         if (params.containsKey("proveedorId")) {
             criteria.createCriteria("proveedor").add(Restrictions.idEq(params.get("proveedorId")));
             countCriteria.createCriteria("proveedor").add(Restrictions.idEq(params.get("proveedorId")));
         }
-        
+
         if (params.containsKey("fechaIniciado")) {
             criteria.add(Restrictions.ge("fechaCompra", params.get("fechaIniciado")));
             countCriteria.add(Restrictions.ge("fechaCompra", params.get("fechaIniciado")));
         }
-        
+
         if (params.containsKey("bajas")) {
             criteria.add(Restrictions.eq("inactivo", true));
         }
-        
+
         if (params.containsKey("reubicaciones")) {
             criteria.createCriteria("reubicaciones").add(Restrictions.isNotNull("id"));
             countCriteria.createCriteria("reubicaciones").add(Restrictions.isNotNull("id"));
         }
-        
+
         if (params.containsKey("fechaTerminado")) {
             Calendar cal = Calendar.getInstance();
             cal.setTime((Date) params.get("fechaTerminado"));
@@ -135,10 +139,10 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             criteria.add(Restrictions.le("fechaCompra", cal.getTime()));
             countCriteria.add(Restrictions.le("fechaCompra", cal.getTime()));
         }
-        
+
         if (params.containsKey("responsableNombre")) {
-            criteria.add(Restrictions.ilike("responsable", (String)params.get("responsable"), MatchMode.ANYWHERE));
-            countCriteria.add(Restrictions.ilike("responsable", (String)params.get("responsable"), MatchMode.ANYWHERE));
+            criteria.add(Restrictions.ilike("responsable", (String) params.get("responsable"), MatchMode.ANYWHERE));
+            countCriteria.add(Restrictions.ilike("responsable", (String) params.get("responsable"), MatchMode.ANYWHERE));
         }
 
         if (params.containsKey("filtro")) {
@@ -213,12 +217,16 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
     @Override
     public Activo crea(Activo activo, Usuario usuario) {
         Session session = currentSession();
+        Date fecha = new Date();
         if (usuario != null) {
             activo.setEmpresa(usuario.getEmpresa());
         }
         activo.setTipoActivo((TipoActivo) session.load(TipoActivo.class, activo.getTipoActivo().getId()));
         activo.setFolio(this.getFolio(activo.getEmpresa()));
+        activo.setFechaCreacion(fecha);
+        activo.setFechaModificacion(fecha);
         session.save(activo);
+        audita(activo, usuario, Constantes.CREAR, fecha);
         session.flush();
         return activo;
     }
@@ -236,11 +244,14 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
     @Override
     public Activo actualiza(Activo activo, Usuario usuario) {
         Session session = currentSession();
+        Date fecha = new Date();
         if (usuario != null) {
             activo.setEmpresa(usuario.getEmpresa());
         }
         activo.setTipoActivo((TipoActivo) session.load(TipoActivo.class, activo.getTipoActivo().getId()));
+        activo.setFechaModificacion(fecha);
         session.update(activo);
+        audita(activo, usuario, Constantes.ACTUALIZAR, fecha);
         session.flush();
         return activo;
     }
@@ -271,51 +282,63 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         int total = activos.size();
         for (Activo activo : activos) {
             if (++cont % 1000 == 0) {
-                log.debug("Depreciando activo {} ({} / {})", new Object[] {activo.getId(), cont, total});
+                log.debug("Depreciando activo {} ({} / {})", new Object[]{activo.getId(), cont, total});
             }
-            
-            // depreciacion anual
-            BigDecimal porciento = activo.getPorciento();
-            BigDecimal depreciacionAnual = activo.getMoi().multiply(porciento);
-            log.trace("DepreciacionAnual: {}", depreciacionAnual);
-            
-            // depreciacion mensual
-            BigDecimal depreciacionMensual = BigDecimal.ZERO;
-            Date fechaCompra = activo.getFechaCompra();
-            if (fechaCompra.before(fecha) && days360(fechaCompra, fecha) / 30 < activo.getVidaUtil()) {
-                depreciacionMensual = depreciacionAnual.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
-            }
-            log.trace("DepreciacionMensual: {}", depreciacionMensual);
-            
-            // depreciacion acumulada
-            BigDecimal depreciacionAcumulada = BigDecimal.ZERO;
-            Long meses = 0L;
-            if ((fechaCompra.before(fecha) && !activo.getInactivo()) 
-                    || (fechaCompra.before(fecha) && activo.getInactivo() && activo.getFechaInactivo().after(fecha))) {
-                meses = days360(fechaCompra, fecha) / 30;
-            } else if (fechaCompra.before(fecha) && activo.getInactivo() && activo.getFechaInactivo().before(fecha)) {
-                meses = days360(fechaCompra, activo.getFechaInactivo()) / 30;
-            }
-            if (meses < activo.getVidaUtil()) {
-                depreciacionAcumulada = depreciacionMensual.multiply(new BigDecimal(meses));
-            }
-            log.trace("DepreciacionAcumulada: {}", depreciacionAcumulada);
 
-            // valor neto
-            BigDecimal valorNeto = activo.getMoi().subtract(depreciacionAcumulada);
-            log.trace("ValorNeto: {}", valorNeto);
-
+            activo = deprecia(activo, fecha);
+            
             query = currentSession().createQuery("update Activo a set a.fechaDepreciacion = :fecha, a.depreciacionAnual = :depreciacionAnual, a.depreciacionMensual = :depreciacionMensual, a.depreciacionAcumulada = :depreciacionAcumulada, a.valorNeto = :valorNeto where a.id = :activoId");
             query.setDate("fecha", fecha);
-            query.setBigDecimal("depreciacionAnual", depreciacionAnual);
-            query.setBigDecimal("depreciacionMensual", depreciacionMensual);
-            query.setBigDecimal("depreciacionAcumulada", depreciacionAcumulada);
-            query.setBigDecimal("valorNeto", valorNeto);
+            query.setBigDecimal("depreciacionAnual", activo.getDepreciacionAnual());
+            query.setBigDecimal("depreciacionMensual", activo.getDepreciacionMensual());
+            query.setBigDecimal("depreciacionAcumulada", activo.getDepreciacionAcumulada());
+            query.setBigDecimal("valorNeto", activo.getValorNeto());
             query.setLong("activoId", activo.getId());
             query.executeUpdate();
         }
         currentSession().flush();
         log.info("Se han depreciado los activos de la empresa {} para la fecha de {}", empresaId, fecha);
+    }
+
+    private Activo deprecia(Activo activo, Date fecha) {
+        // depreciacion anual
+        BigDecimal porciento = activo.getPorciento();
+        BigDecimal depreciacionAnual = activo.getMoi().multiply(porciento);
+        log.trace("DepreciacionAnual: {}", depreciacionAnual);
+
+        // depreciacion mensual
+        BigDecimal depreciacionMensual = BigDecimal.ZERO;
+        Date fechaCompra = activo.getFechaCompra();
+        if (fechaCompra.before(fecha) && days360(fechaCompra, fecha) / 30 < activo.getVidaUtil()) {
+            depreciacionMensual = depreciacionAnual.divide(new BigDecimal("12"), 2, RoundingMode.HALF_UP);
+        }
+        log.trace("DepreciacionMensual: {}", depreciacionMensual);
+
+        // depreciacion acumulada
+        BigDecimal depreciacionAcumulada = BigDecimal.ZERO;
+        Long meses = 0L;
+        if ((fechaCompra.before(fecha) && !activo.getInactivo())
+                || (fechaCompra.before(fecha) && activo.getInactivo() && activo.getFechaInactivo().after(fecha))) {
+            meses = days360(fechaCompra, fecha) / 30;
+        } else if (fechaCompra.before(fecha) && activo.getInactivo() && activo.getFechaInactivo().before(fecha)) {
+            meses = days360(fechaCompra, activo.getFechaInactivo()) / 30;
+        }
+        if (meses < activo.getVidaUtil()) {
+            depreciacionAcumulada = depreciacionMensual.multiply(new BigDecimal(meses));
+        }
+        log.trace("DepreciacionAcumulada: {}", depreciacionAcumulada);
+
+        // valor neto
+        BigDecimal valorNeto = activo.getMoi().subtract(depreciacionAcumulada);
+        log.trace("ValorNeto: {}", valorNeto);
+        
+        activo.setFechaDepreciacion(fecha);
+        activo.setDepreciacionAnual(depreciacionAnual);
+        activo.setDepreciacionMensual(depreciacionMensual);
+        activo.setDepreciacionAcumulada(depreciacionAcumulada);
+        activo.setValorNeto(valorNeto);
+
+        return activo;
     }
 
     /**
@@ -396,7 +419,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         Query query = currentSession().createQuery("from Activo order by fechaCompra");
         List<Activo> activos = query.list();
         int cont = 0;
-        for(Activo activo : activos) {
+        for (Activo activo : activos) {
             Calendar cal1 = Calendar.getInstance();
             cal1.setTime(activo.getFechaCompra());
             if (cal1.get(Calendar.YEAR) < 10) {
@@ -418,4 +441,45 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         log.debug("Termino actualizando {} de {}", cont, activos.size());
     }
 
+    @Override
+    public String baja(BajaActivo bajaActivo, Usuario usuario) {
+        log.debug("Dando de baja a {}", bajaActivo);
+        Date fecha = new Date();
+        Activo activo = bajaActivo.getActivo();
+        currentSession().refresh(activo);
+        if (usuario != null) {
+            bajaActivo.setCreador(usuario.getUsername());
+        } else {
+            bajaActivo.setCreador("sistema");
+        }
+        bajaActivo.setFechaCreacion(fecha);
+        currentSession().save(bajaActivo);
+        activo.setInactivo(Boolean.TRUE);
+        activo.setFechaInactivo(bajaActivo.getFecha());
+        activo.setFechaModificacion(fecha);
+        currentSession().update(activo);
+        audita(activo, usuario, Constantes.BAJA, fecha);
+        currentSession().flush();
+        return activo.getFolio();
+    }
+
+    @Override
+    public Activo carga(Long id) {
+        return (Activo) currentSession().load(Activo.class, id);
+    }
+
+    private void audita(Activo activo, Usuario usuario, String actividad, Date fecha) {
+        XActivo xactivo = new XActivo();
+        BeanUtils.copyProperties(activo, xactivo, new String[]{"id", "version"});
+        xactivo.setActivoId(activo.getId());
+        xactivo.setCuentaId(activo.getCuenta().getId());
+        xactivo.setEmpresaId(activo.getEmpresa().getId());
+        xactivo.setProveedorId(activo.getProveedor().getId());
+        xactivo.setTipoActivoId(activo.getTipoActivo().getId());
+        xactivo.setFechaCreacion(fecha);
+        xactivo.setActividad(actividad);
+        xactivo.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
+        log.debug("Depreciacion fecha: {} - {}", activo.getFechaCompra(), xactivo.getFechaCompra());
+        currentSession().save(xactivo);
+    }
 }

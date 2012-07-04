@@ -42,4 +42,5 @@ public class Constantes {
     public static final String ORG = "ORG";
     public static final String EMP = "EMP";
     public static final String ALM = "ALM";
+    public static final String BAJA = "BAJA";
 }

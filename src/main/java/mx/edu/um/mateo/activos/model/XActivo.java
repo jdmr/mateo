@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -74,20 +75,24 @@ public class XActivo implements Serializable {
     @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal inpc = BigDecimal.ZERO;
     private String ubicacion;
+    @NotNull
+    @Temporal(TemporalType.DATE)
+    @Column(name = "fecha_compra", nullable = false)
+    private Date fechaCompra;
     @Column(length = 64)
     private Boolean inactivo = false;
     @Temporal(TemporalType.DATE)
     @Column(name = "fecha_inactivo")
     private Date fechaInactivo;
-    @Column(name="activo_id")
+    @Column(name = "activo_id")
     private Long activoId;
-    @Column(name="tipo_activo_id")
+    @Column(name = "tipo_activo_id")
     private Long tipoActivoId;
-    @Column(name="proveedor_id")
+    @Column(name = "proveedor_id")
     private Long proveedorId;
-    @Column(name="centro_costo_id")
+    @Column(name = "centro_costo_id")
     private Long cuentaId;
-    @Column(name="empresa_id")
+    @Column(name = "empresa_id")
     private Long empresaId;
     @Column(length = 128)
     private String responsable;
@@ -102,15 +107,24 @@ public class XActivo implements Serializable {
     @Column(nullable = false, scale = 2, precision = 8, name = "valor_neto")
     private BigDecimal valorNeto = BigDecimal.ZERO;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, name="date_created")
+    @Column(nullable = false, name = "date_created")
     private Date fechaCreacion;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, name="last_updated")
+    @Column(nullable = false, name = "last_updated")
     private Date fechaModificacion;
     @Column(nullable = false, length = 64)
     private String creador;
     @Column(nullable = false, length = 64)
     private String actividad;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "depreciacion_fecha")
+    private Date fechaDepreciacion;
+    @Column(name = "depreciacion_anual", scale = 2, precision = 8)
+    private BigDecimal depreciacionAnual;
+    @Column(name = "depreciacion_mensual", scale = 2, precision = 8)
+    private BigDecimal depreciacionMensual;
+    @Column(name = "depreciacion_acumulada", scale = 2, precision = 8)
+    private BigDecimal depreciacionAcumulada;
 
     public XActivo() {
     }
@@ -381,6 +395,14 @@ public class XActivo implements Serializable {
         this.ubicacion = ubicacion;
     }
 
+    public Date getFechaCompra() {
+        return fechaCompra;
+    }
+
+    public void setFechaCompra(Date fechaCompra) {
+        this.fechaCompra = fechaCompra;
+    }
+
     /**
      * @return the inactivo
      */
@@ -619,10 +641,64 @@ public class XActivo implements Serializable {
         this.actividad = actividad;
     }
 
+    /**
+     * @return the fechaDepreciacion
+     */
+    public Date getFechaDepreciacion() {
+        return fechaDepreciacion;
+    }
+
+    /**
+     * @param fechaDepreciacion the fechaDepreciacion to set
+     */
+    public void setFechaDepreciacion(Date fechaDepreciacion) {
+        this.fechaDepreciacion = fechaDepreciacion;
+    }
+
+    /**
+     * @return the depreciacionAnual
+     */
+    public BigDecimal getDepreciacionAnual() {
+        return depreciacionAnual;
+    }
+
+    /**
+     * @param depreciacionAnual the depreciacionAnual to set
+     */
+    public void setDepreciacionAnual(BigDecimal depreciacionAnual) {
+        this.depreciacionAnual = depreciacionAnual;
+    }
+
+    /**
+     * @return the depreciacionMensual
+     */
+    public BigDecimal getDepreciacionMensual() {
+        return depreciacionMensual;
+    }
+
+    /**
+     * @param depreciacionMensual the depreciacionMensual to set
+     */
+    public void setDepreciacionMensual(BigDecimal depreciacionMensual) {
+        this.depreciacionMensual = depreciacionMensual;
+    }
+
+    /**
+     * @return the depreciacionAcumulada
+     */
+    public BigDecimal getDepreciacionAcumulada() {
+        return depreciacionAcumulada;
+    }
+
+    /**
+     * @param depreciacionAcumulada the depreciacionAcumulada to set
+     */
+    public void setDepreciacionAcumulada(BigDecimal depreciacionAcumulada) {
+        this.depreciacionAcumulada = depreciacionAcumulada;
+    }
 
     @Override
     public String toString() {
         return "XActivo{" + "folio=" + getFolio() + ", activoId=" + getActivoId() + ", creador=" + getCreador() + ", actividad=" + getActividad() + '}';
     }
-
 }
