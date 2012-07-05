@@ -100,21 +100,13 @@ public class ImagenController {
                 throw new RuntimeException("No se pudo escribir el archivo en el outputstream");
             }
         } else {
-            ServletContext servletContext = request.getServletContext();
-            File file = new File(servletContext.getRealPath("/images/sin-foto.jpg"));
             try {
-                BufferedInputStream bif = new BufferedInputStream(new FileInputStream(file));
-                response.setContentType("image/jpeg");
-                response.setContentLength(new Long(file.length()).intValue());
-                int readBytes;
-                while((readBytes = bif.read()) != -1) {
-                    response.getOutputStream().write(readBytes);
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("No se encontro la imagen", e);
+                response.sendRedirect(request.getContextPath()+"/images/sin-foto.jpg");
+            } catch(IOException e) {
+                log.error("No se pudo obtener la imagen", e);
             }
         }
-        throw new RuntimeException("No se encontro la imagen");
+        return null;
     }
     
     private Session currentSession() {
