@@ -23,7 +23,6 @@
  */
 package mx.edu.um.mateo.general.dao;
 
-import java.math.BigDecimal;
 import java.util.*;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.*;

@@ -7,6 +7,7 @@
 <html>
     <head>
         <title><s:message code="salida.ver.label" /></title>
+        <link rel="stylesheet" href="<c:url value='/css/jquery.lightbox.min.css' />" type="text/css">
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -99,6 +100,7 @@
                                     <th><s:message code="producto.label" /></th>
                                     <th><s:message code="descripcion.label" /></th>
                                     <th style="text-align: right;"><s:message code="existencia.label" /></th>
+                                    <th style="text-align: center;"><s:message code="imagen.label" /></th>
                                     <th style="text-align: right;"><s:message code="cantidad.label" /></th>
                                     <th style="text-align: right;"><s:message code="precioUnitario.label" /></th>
                                     <th style="text-align: right;"><s:message code="iva.label" /></th>
@@ -111,10 +113,10 @@
                             <tbody>
                                 <c:forEach items="${salida.lotes}" var="lote" varStatus="status">
                                     <tr>
-                                        <td>${lote.producto.sku}</td>
-                                        <td>${lote.producto.nombre}</td>
-                                        <td>${lote.producto.descripcion}</td>
-                                        <td style="text-align: right;">
+                                        <td style="vertical-align: middle;">${lote.producto.sku}</td>
+                                        <td style="vertical-align: middle;">${lote.producto.nombre}</td>
+                                        <td style="vertical-align: middle;">${lote.producto.descripcion}</td>
+                                        <td style="text-align: right; vertical-align: middle;">
                                             <c:choose>
                                                 <c:when test="${!lote.producto.fraccion}">
                                                     <fmt:formatNumber value="${lote.producto.existencia}" minFractionDigits="0" maxFractionDigits="0" groupingUsed="true" />
@@ -125,7 +127,9 @@
                                             </c:choose>
                                             &nbsp;${lote.producto.unidadMedida}
                                         </td>
-                                        <td style="text-align: right; font-size: 1.2em; font-weight: bold;">
+                                        <c:url var="imagenUrl" value='/imagen/producto/${lote.producto.id}' />
+                                        <td style="text-align: center; vertical-align: middle;"><a class="lightbox" href="${imagenUrl}"><img src="${imagenUrl}" style="height: 50px;" /></a></td>
+                                        <td style="text-align: right; vertical-align: middle; font-size: 1.2em; font-weight: bold;">
                                             <c:choose>
                                                 <c:when test="${!lote.producto.fraccion}">
                                                     <fmt:formatNumber value="${lote.cantidad}" minFractionDigits="0" maxFractionDigits="0" groupingUsed="true" />
@@ -136,11 +140,11 @@
                                             </c:choose>
                                             &nbsp;${lote.producto.unidadMedida}
                                         </td>
-                                        <td style="text-align: right; font-size: 1.2em;"><fmt:formatNumber value="${lote.precioUnitario}" type="currency" currencySymbol="$" /></td>
-                                        <td style="text-align: right; font-size: 1.2em;"><fmt:formatNumber value="${lote.iva}" type="currency" currencySymbol="$" /></td>
-                                        <td style="text-align: right; font-size: 1.2em; font-weight: bold;"><fmt:formatNumber value="${lote.total}" type="currency" currencySymbol="$" /></td>
+                                        <td style="text-align: right; vertical-align: middle; font-size: 1.2em;"><fmt:formatNumber value="${lote.precioUnitario}" type="currency" currencySymbol="$" /></td>
+                                        <td style="text-align: right; vertical-align: middle; font-size: 1.2em;"><fmt:formatNumber value="${lote.iva}" type="currency" currencySymbol="$" /></td>
+                                        <td style="text-align: right; vertical-align: middle; font-size: 1.2em; font-weight: bold;"><fmt:formatNumber value="${lote.total}" type="currency" currencySymbol="$" /></td>
                                         <c:if test="${puedeEditar}">
-                                            <td>
+                                            <td style="vertical-align: middle;">
                                                 <a href="<c:url value='/inventario/salida/lote/elimina/${lote.id}' />" class="btn btn-mini btn-danger"><i class="icon-remove icon-white"></i></a>
                                             </td>
                                         </c:if>
@@ -149,6 +153,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
+                                    <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
@@ -168,6 +173,7 @@
                                     <th></th>
                                     <th></th>
                                     <th></th>
+                                    <th></th>
                                     <th style="text-align: right;"><s:message code="iva.label" /></th>
                                     <th style="text-align: right;"><span class="${estiloTotales}"><fmt:formatNumber value="${iva}" type="currency" currencySymbol="$" /></span></th>
                                     <c:if test="${puedeEditar}">
@@ -175,6 +181,7 @@
                                     </c:if>
                                 </tr>
                                 <tr>
+                                    <th></th>
                                     <th></th>
                                     <th></th>
                                     <th></th>
@@ -216,8 +223,16 @@
             </form:form>
         </div>
         <content>
+            <script src="<c:url value='/js/jquery.lightbox.min.js' />"></script>
             <script type="text/javascript">
                 $(document).ready(function() {
+                    $("a.lightbox").lightBox({
+                        imageLoading:'<c:url value="/images/lightbox-ico-loading.gif" />',
+			imageBtnPrev:'<c:url value="/images/lightbox-btn-prev.gif" />',
+			imageBtnNext:'<c:url value="/images/lightbox-btn-next.gif" />',
+			imageBtnClose:'<c:url value="/images/lightbox-btn-close.gif" />',
+			imageBlank:'<c:url value="/images/lightbox-blank.gif" />'
+                    });
                     <c:if test="${puedeEditar}">
                             $("a#nuevoBtn").focus();
                     </c:if>

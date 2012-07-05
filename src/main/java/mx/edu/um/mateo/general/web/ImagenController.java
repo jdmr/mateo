@@ -86,6 +86,7 @@ public class ImagenController {
     
     @RequestMapping("/producto/{id}")
     public String producto(HttpServletRequest request, HttpServletResponse response, @PathVariable Long id) {
+        log.debug("Buscando imagen del producto {}", id);
         Query query = currentSession().createQuery("select imagen from Producto p left outer join p.imagenes as imagen where p.id = :productoId");
         query.setLong("productoId", id);
         Imagen imagen = (Imagen) query.uniqueResult();
