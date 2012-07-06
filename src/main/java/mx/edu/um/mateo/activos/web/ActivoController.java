@@ -129,6 +129,9 @@ public class ActivoController extends BaseController {
         log.debug("Mostrando activo {}", id);
         Activo activo = activoDao.obtiene(id);
         modelo.addAttribute("activo", activo);
+        if (activo.getImagenes() != null & activo.getImagenes().size() > 0) {
+            modelo.addAttribute("tieneImagenes", Boolean.TRUE);
+        }
         
         return "activoFijo/activo/ver";
     }

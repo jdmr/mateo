@@ -217,9 +217,16 @@
 
                     </div>
                     <div class="span3">
-                        <c:forEach items="${activo.imagenes}" var="imagen">
-                            <p><img src="<c:url value='/imagen/mostrar/${imagen.id}' />" /></p>
-                        </c:forEach>
+                        <c:choose>
+                            <c:when test="${tieneImagenes}">
+                                <c:forEach items="${activo.imagenes}" var="imagen">
+                                    <p><img src="<c:url value='/imagen/mostrar/${imagen.id}' />" /></p>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <p><img src="<c:url value='/imagen/mostrar/0' />" /></p>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                 </div>
 
