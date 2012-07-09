@@ -40,8 +40,10 @@ import mx.edu.um.mateo.activos.model.BajaActivo;
 import mx.edu.um.mateo.activos.model.FolioActivo;
 import mx.edu.um.mateo.activos.model.TipoActivo;
 import mx.edu.um.mateo.activos.model.XActivo;
+import mx.edu.um.mateo.contabilidad.model.Cuenta;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
@@ -222,6 +224,8 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             activo.setEmpresa(usuario.getEmpresa());
         }
         activo.setTipoActivo((TipoActivo) session.load(TipoActivo.class, activo.getTipoActivo().getId()));
+        activo.setProveedor((Proveedor) session.load(Proveedor.class, activo.getProveedor().getId()));
+        activo.setCuenta((Cuenta) session.load(Cuenta.class, activo.getCuenta().getId()));
         activo.setFolio(this.getFolio(activo.getEmpresa()));
         activo.setFechaCreacion(fecha);
         activo.setFechaModificacion(fecha);
@@ -389,8 +393,8 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
     }
 
     private String getFolio(Empresa empresa) {
-        Query query = currentSession().createQuery("select f from FolioActivo f where f.nombre = :nombre and f.organizacion.id = :almacenId");
-        query.setString("nombre", "ACTIVO");
+        Query query = currentSession().createQuery("select f from FolioActivo f where f.nombre = :nombre and f.organizacion.id = :organizacionId");
+        query.setString("nombre", "ACTIVOS");
         query.setLong("organizacionId", empresa.getOrganizacion().getId());
         query.setLockOptions(LockOptions.UPGRADE);
         FolioActivo folio = (FolioActivo) query.uniqueResult();
@@ -481,5 +485,13 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         xactivo.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
         log.debug("Depreciacion fecha: {} - {}", activo.getFechaCompra(), xactivo.getFechaCompra());
         currentSession().save(xactivo);
+    }
+    
+    @Override
+    public List<Cuenta> cuentas(Long organizacionId) {
+        Criteria criteria = currentSession().createCriteria(Cuenta.class);
+        criteria.createCriteria("organizacion").add(Restrictions.idEq(organizacionId));
+        criteria.addOrder(Order.asc("nombre"));
+        return criteria.list();
     }
 }

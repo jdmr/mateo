@@ -116,7 +116,7 @@ public class Activo implements Serializable {
     private Boolean seguro = false;
     @Column(nullable = false, scale = 2, precision = 8, name = "valor_neto")
     private BigDecimal valorNeto = BigDecimal.ZERO;
-    @ManyToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "activos_imagenes", joinColumns = {
         @JoinColumn(name = "activo_id")}, inverseJoinColumns = {
         @JoinColumn(name = "imagen_id")})
@@ -132,12 +132,12 @@ public class Activo implements Serializable {
     @Temporal(TemporalType.DATE)
     @Column(name = "depreciacion_fecha")
     private Date fechaDepreciacion;
-    @Column(name = "depreciacion_anual", scale = 2, precision = 8)
-    private BigDecimal depreciacionAnual;
-    @Column(name = "depreciacion_mensual", scale = 2, precision = 8)
-    private BigDecimal depreciacionMensual;
-    @Column(name = "depreciacion_acumulada", scale = 2, precision = 8)
-    private BigDecimal depreciacionAcumulada;
+    @Column(name = "depreciacion_anual", scale = 2, precision = 8, nullable=false)
+    private BigDecimal depreciacionAnual = BigDecimal.ZERO;
+    @Column(name = "depreciacion_mensual", scale = 2, precision = 8, nullable = false)
+    private BigDecimal depreciacionMensual = BigDecimal.ZERO;
+    @Column(name = "depreciacion_acumulada", scale = 2, precision = 8, nullable = false)
+    private BigDecimal depreciacionAcumulada = BigDecimal.ZERO;
     @Transient
     private BigDecimal porciento;
     @Transient

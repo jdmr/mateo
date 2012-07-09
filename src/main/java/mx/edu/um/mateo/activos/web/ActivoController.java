@@ -23,6 +23,7 @@
  */
 package mx.edu.um.mateo.activos.web;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +40,8 @@ import mx.edu.um.mateo.activos.dao.ActivoDao;
 import mx.edu.um.mateo.activos.dao.TipoActivoDao;
 import mx.edu.um.mateo.activos.model.Activo;
 import mx.edu.um.mateo.activos.model.BajaActivo;
+import mx.edu.um.mateo.contabilidad.model.Cuenta;
+import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ReporteException;
@@ -52,6 +55,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -81,7 +85,7 @@ public class ActivoController extends BaseController {
         Map<String, Object> params = this.convierteParams(request.getParameterMap());
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
-        
+
         if (params.containsKey("fechaIniciado")) {
             log.debug("FechaIniciado: {}", params.get("fechaIniciado"));
             params.put("fechaIniciado", sdf.parse((String) params.get("fechaIniciado")));
@@ -132,55 +136,96 @@ public class ActivoController extends BaseController {
         if (activo.getImagenes() != null & activo.getImagenes().size() > 0) {
             modelo.addAttribute("tieneImagenes", Boolean.TRUE);
         }
-        
+
         return "activoFijo/activo/ver";
     }
 
     @RequestMapping("/nuevo")
-    public String nuevo(HttpServletRequest request, Model modelo) {
+    public String nuevo(HttpSession session, Model modelo) {
         log.debug("Nuevo activo");
+        Long empresaId = (Long) session.getAttribute("empresaId");
+        Long organizacionId = (Long) session.getAttribute("organizacionId");
+
         Activo activo = new Activo();
         modelo.addAttribute("activo", activo);
 
+        List<String> motivos = new ArrayList<>();
+        motivos.add("COMPRA");
+        motivos.add("DONACION");
+        modelo.addAttribute("motivos", motivos);
+
         Map<String, Object> params = new HashMap<>();
-        params.put("empresa", request.getSession().getAttribute("empresaId"));
+        params.put("empresa", empresaId);
         params.put("reporte", true);
         params = tipoActivoDao.lista(params);
         modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
+
+        List<Cuenta> cuentas = activoDao.cuentas(organizacionId);
+        modelo.addAttribute("cuentas", cuentas);
 
         return "activoFijo/activo/nuevo";
     }
 
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Activo activo, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Activo activo, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes, @RequestParam(value = "imagen", required = false) MultipartFile archivo) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
 
+            Long empresaId = (Long) request.getSession().getAttribute("empresaId");
+            Long organizacionId = (Long) request.getSession().getAttribute("organizacionId");
+            
+            List<String> motivos = new ArrayList<>();
+            motivos.add("COMPRA");
+            motivos.add("DONACION");
+            modelo.addAttribute("motivos", motivos);
+
             Map<String, Object> params = new HashMap<>();
-            params.put("empresa", request.getSession().getAttribute("empresaId"));
+            params.put("empresa", empresaId);
             params.put("reporte", true);
             params = tipoActivoDao.lista(params);
             modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
+
+            List<Cuenta> cuentas = activoDao.cuentas(organizacionId);
+            modelo.addAttribute("cuentas", cuentas);
 
             return "activoFijo/activo/nuevo";
         }
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
+            if (archivo != null && !archivo.isEmpty()) {
+                Imagen imagen = new Imagen(
+                        archivo.getOriginalFilename(),
+                        archivo.getContentType(),
+                        archivo.getSize(),
+                        archivo.getBytes());
+                activo.getImagenes().add(imagen);
+            }
             log.debug("TipoActivo: {}", activo.getTipoActivo().getId());
             activo = activoDao.crea(activo, usuario);
-        } catch (ConstraintViolationException e) {
+        } catch (ConstraintViolationException | IOException e) {
             log.error("No se pudo crear al activo", e);
-            errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
+            errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
+
+            Long empresaId = (Long) request.getSession().getAttribute("empresaId");
+            Long organizacionId = (Long) request.getSession().getAttribute("organizacionId");
+            
+            List<String> motivos = new ArrayList<>();
+            motivos.add("COMPRA");
+            motivos.add("DONACION");
+            modelo.addAttribute("motivos", motivos);
 
             Map<String, Object> params = new HashMap<>();
-            params.put("empresa", request.getSession().getAttribute("empresaId"));
+            params.put("empresa", empresaId);
             params.put("reporte", true);
             params = tipoActivoDao.lista(params);
             modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
+
+            List<Cuenta> cuentas = activoDao.cuentas(organizacionId);
+            modelo.addAttribute("cuentas", cuentas);
 
             return "activoFijo/activo/nuevo";
         }
@@ -257,7 +302,7 @@ public class ActivoController extends BaseController {
 
         return "activoFijo/activo/baja";
     }
-    
+
     @RequestMapping(value = "/baja", method = RequestMethod.POST)
     public String baja(Model modelo, @ModelAttribute BajaActivo bajaActivo, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Dando de baja al activo {}", bajaActivo.getActivo().getId());
@@ -275,29 +320,29 @@ public class ActivoController extends BaseController {
 
         return "redirect:/activoFijo/activo";
     }
-    
+
     @RequestMapping("/arreglaFechas")
     public String arreglaFechas(RedirectAttributes redirectAttributes) {
         log.debug("Arreglando fechas");
         activoDao.arreglaFechas();
         redirectAttributes.addFlashAttribute("message", "activo.arregla.fechas");
-        redirectAttributes.addFlashAttribute("messageStyle","alert-success");
+        redirectAttributes.addFlashAttribute("messageStyle", "alert-success");
         return "redirect:/activoFijo/activo";
     }
-    
+
     @RequestMapping("/depreciar")
-    public String depreciar(HttpSession session,  RedirectAttributes redirectAttributes) {
+    public String depreciar(HttpSession session, RedirectAttributes redirectAttributes) {
         log.debug("Depreciando activos");
         Long empresaId = (Long) session.getAttribute("empresaId");
         Date fecha = new Date();
         activoDao.depreciar(fecha, empresaId);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM/yyyy");
         redirectAttributes.addFlashAttribute("message", "activo.depreciar.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[] {sdf.format(fecha)});
-        redirectAttributes.addFlashAttribute("messageStyle","alert-success");
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{sdf.format(fecha)});
+        redirectAttributes.addFlashAttribute("messageStyle", "alert-success");
         return "redirect:/activoFijo/activo";
     }
-    
+
     @RequestMapping("/depreciar/{anio}/{mes}/{dia}")
     public String depreciarPorFecha(HttpSession session, @PathVariable Integer anio, @PathVariable Integer mes, @PathVariable Integer dia, RedirectAttributes redirectAttributes) {
         Long empresaId = (Long) session.getAttribute("empresaId");
@@ -306,13 +351,13 @@ public class ActivoController extends BaseController {
         cal.set(Calendar.MONTH, mes - 1);
         cal.set(Calendar.DAY_OF_MONTH, dia);
         Date fecha = cal.getTime();
-        
+
         log.debug("Depreciando activos para la fecha {}", fecha);
         activoDao.depreciar(fecha, empresaId);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM/yyyy");
         redirectAttributes.addFlashAttribute("message", "activo.depreciar.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[] {sdf.format(fecha)});
-        redirectAttributes.addFlashAttribute("messageStyle","alert-success");
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{sdf.format(fecha)});
+        redirectAttributes.addFlashAttribute("messageStyle", "alert-success");
         return "redirect:/activoFijo/activo";
     }
 }
