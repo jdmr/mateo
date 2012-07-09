@@ -32,6 +32,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -330,15 +332,26 @@ public class ActivoController extends BaseController {
         return "redirect:/activoFijo/activo";
     }
 
-    @RequestMapping("/depreciar")
-    public String depreciar(HttpSession session, RedirectAttributes redirectAttributes) {
+    @RequestMapping(value = "/depreciar", method = RequestMethod.GET)
+    public String preparaParaDepreciar() {
+        return "activoFijo/activo/depreciar";
+    }
+
+    @RequestMapping(value = "/depreciar", method = RequestMethod.POST)
+    public String depreciar(HttpSession session, @RequestParam String fecha, RedirectAttributes redirectAttributes) {
         log.debug("Depreciando activos");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
         Long empresaId = (Long) session.getAttribute("empresaId");
-        Date fecha = new Date();
-        activoDao.depreciar(fecha, empresaId);
+        Date fechaDepreciacion = new Date();
+        try {
+            fechaDepreciacion = sdf2.parse(fecha);
+        } catch (ParseException e) {
+            log.error("No se pudo convertir la fecha", e);
+        }
+        activoDao.depreciar(fechaDepreciacion, empresaId);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM/yyyy");
         redirectAttributes.addFlashAttribute("message", "activo.depreciar.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{sdf.format(fecha)});
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{sdf.format(fechaDepreciacion)});
         redirectAttributes.addFlashAttribute("messageStyle", "alert-success");
         return "redirect:/activoFijo/activo";
     }
@@ -385,7 +398,7 @@ public class ActivoController extends BaseController {
             }
             redirectAttributes.addFlashAttribute("message", "activo.sube.imagen.message");
             redirectAttributes.addFlashAttribute("messageStyle", "alert-success");
-        } catch(IOException e) {
+        } catch (IOException e) {
             log.error("Hubo un problema al intentar subir la imagen del activo", e);
         }
         return "redirect:/activoFijo/activo/ver/" + activoId;

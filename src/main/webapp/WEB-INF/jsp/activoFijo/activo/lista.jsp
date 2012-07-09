@@ -23,6 +23,7 @@
             <div class="well">
                 <div class="row-fluid">
                     <a class="btn btn-primary" href="<s:url value='/activoFijo/activo/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='activo.nuevo.label' /></a>
+                    <a class="btn btn-warning" href="<s:url value='/activoFijo/activo/depreciar'/>"><i class="icon-time icon-white"></i> <s:message code='activo.depreciar.label' /></a>
                     <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                     <div class="btn-group" style="display: inline-block; position: absolute; margin-left: 5px;">
                         <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
