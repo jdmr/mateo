@@ -60,4 +60,6 @@ public interface ActivoDao {
     public void depreciar(Date fecha, Long empresaId);
     
     public List<Cuenta> cuentas(Long organizacionId);
+    
+    public void subeImagen(Activo activo, Usuario usuario);
 }

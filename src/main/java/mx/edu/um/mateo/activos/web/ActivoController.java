@@ -176,7 +176,7 @@ public class ActivoController extends BaseController {
 
             Long empresaId = (Long) request.getSession().getAttribute("empresaId");
             Long organizacionId = (Long) request.getSession().getAttribute("organizacionId");
-            
+
             List<String> motivos = new ArrayList<>();
             motivos.add("COMPRA");
             motivos.add("DONACION");
@@ -212,7 +212,7 @@ public class ActivoController extends BaseController {
 
             Long empresaId = (Long) request.getSession().getAttribute("empresaId");
             Long organizacionId = (Long) request.getSession().getAttribute("organizacionId");
-            
+
             List<String> motivos = new ArrayList<>();
             motivos.add("COMPRA");
             motivos.add("DONACION");
@@ -359,5 +359,35 @@ public class ActivoController extends BaseController {
         redirectAttributes.addFlashAttribute("messageAttrs", new String[]{sdf.format(fecha)});
         redirectAttributes.addFlashAttribute("messageStyle", "alert-success");
         return "redirect:/activoFijo/activo";
+    }
+
+    @RequestMapping("/sube/{id}")
+    public String sube(@PathVariable Long id, Model modelo) {
+        Activo activo = activoDao.obtiene(id);
+        modelo.addAttribute("activo", activo);
+        return "activoFijo/activo/sube";
+    }
+
+    @RequestMapping("/subeImagen")
+    public String subeImagen(@RequestParam Long activoId, @RequestParam(value = "imagen", required = false) MultipartFile archivo, RedirectAttributes redirectAttributes) {
+        log.debug("Subiendo imagen para activo {}", activoId);
+        try {
+            if (archivo != null && !archivo.isEmpty()) {
+                Usuario usuario = ambiente.obtieneUsuario();
+                Activo activo = activoDao.obtiene(activoId);
+                Imagen imagen = new Imagen(
+                        archivo.getOriginalFilename(),
+                        archivo.getContentType(),
+                        archivo.getSize(),
+                        archivo.getBytes());
+                activo.getImagenes().add(imagen);
+                activoDao.subeImagen(activo, usuario);
+            }
+            redirectAttributes.addFlashAttribute("message", "activo.sube.imagen.message");
+            redirectAttributes.addFlashAttribute("messageStyle", "alert-success");
+        } catch(IOException e) {
+            log.error("Hubo un problema al intentar subir la imagen del activo", e);
+        }
+        return "redirect:/activoFijo/activo/ver/" + activoId;
     }
 }

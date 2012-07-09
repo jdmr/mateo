@@ -494,4 +494,14 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         criteria.addOrder(Order.asc("nombre"));
         return criteria.list();
     }
+
+    @Override
+    public void subeImagen(Activo activo, Usuario usuario) {
+        log.debug("Subiendo imagen");
+        Date fecha = new Date();
+        activo.setFechaModificacion(fecha);
+        currentSession().update(activo);
+        this.audita(activo, usuario, Constantes.IMAGEN, fecha);
+        currentSession().flush();
+    }
 }

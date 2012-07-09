@@ -227,6 +227,7 @@
                                 <p><img src="<c:url value='/imagen/mostrar/0' />" /></p>
                             </c:otherwise>
                         </c:choose>
+                        <a class="btn" href="<c:url value='/activoFijo/activo/sube/${activo.id}'/>"><i class="icon-upload"></i> <s:message code="activo.sube.imagen.button" /></a>
                     </div>
                 </div>
 
