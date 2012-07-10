@@ -38,6 +38,7 @@ import mx.edu.um.mateo.activos.dao.ActivoDao;
 import mx.edu.um.mateo.activos.model.Activo;
 import mx.edu.um.mateo.activos.model.BajaActivo;
 import mx.edu.um.mateo.activos.model.FolioActivo;
+import mx.edu.um.mateo.activos.model.ReubicacionActivo;
 import mx.edu.um.mateo.activos.model.TipoActivo;
 import mx.edu.um.mateo.activos.model.XActivo;
 import mx.edu.um.mateo.contabilidad.model.Cuenta;
@@ -271,6 +272,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
 
     @Override
     public void depreciar(Date fecha, Long empresaId) {
+        Date fechaModificacion = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(fecha);
         cal.set(Calendar.HOUR_OF_DAY, 23);
@@ -291,12 +293,13 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
 
             activo = deprecia(activo, fecha);
             
-            query = currentSession().createQuery("update Activo a set a.fechaDepreciacion = :fecha, a.depreciacionAnual = :depreciacionAnual, a.depreciacionMensual = :depreciacionMensual, a.depreciacionAcumulada = :depreciacionAcumulada, a.valorNeto = :valorNeto where a.id = :activoId");
+            query = currentSession().createQuery("update Activo a set a.fechaDepreciacion = :fecha, a.depreciacionAnual = :depreciacionAnual, a.depreciacionMensual = :depreciacionMensual, a.depreciacionAcumulada = :depreciacionAcumulada, a.valorNeto = :valorNeto, a.fechaModificacion = :fechaModificacion where a.id = :activoId");
             query.setDate("fecha", fecha);
             query.setBigDecimal("depreciacionAnual", activo.getDepreciacionAnual());
             query.setBigDecimal("depreciacionMensual", activo.getDepreciacionMensual());
             query.setBigDecimal("depreciacionAcumulada", activo.getDepreciacionAcumulada());
             query.setBigDecimal("valorNeto", activo.getValorNeto());
+            query.setTimestamp("fechaModificacion", fechaModificacion);
             query.setLong("activoId", activo.getId());
             query.executeUpdate();
         }
@@ -503,5 +506,25 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         currentSession().update(activo);
         this.audita(activo, usuario, Constantes.IMAGEN, fecha);
         currentSession().flush();
+    }
+
+    @Override
+    public String reubica(ReubicacionActivo reubicacion, Usuario usuario) {
+        log.debug("Reubicando activo {}", reubicacion.getActivo());
+        Date fecha = new Date();
+        Activo activo = reubicacion.getActivo();
+        activo.setFechaModificacion(fecha);
+        activo.setCuenta((Cuenta) currentSession().load(Cuenta.class, reubicacion.getDepartamento().getCuenta().getId()));
+        currentSession().update(activo);
+        if (usuario != null) {
+            reubicacion.setCreador(usuario.getUsername());
+        } else {
+            reubicacion.setCreador("sistema");
+        }
+        reubicacion.setFechaCreacion(fecha);
+        currentSession().save(reubicacion);
+        this.audita(activo, usuario, Constantes.REUBICACION, fecha);
+        currentSession().flush();
+        return activo.getFolio();
     }
 }

@@ -64,6 +64,11 @@ public class ReubicacionActivo implements Serializable {
 
     public ReubicacionActivo() {
     }
+    
+    public ReubicacionActivo(Activo activo, Date fecha) {
+        this.activo = activo;
+        this.fecha = fecha;
+    }
 
     /**
      * @return the id

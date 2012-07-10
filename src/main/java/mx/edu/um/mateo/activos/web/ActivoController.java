@@ -32,8 +32,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -42,6 +40,7 @@ import mx.edu.um.mateo.activos.dao.ActivoDao;
 import mx.edu.um.mateo.activos.dao.TipoActivoDao;
 import mx.edu.um.mateo.activos.model.Activo;
 import mx.edu.um.mateo.activos.model.BajaActivo;
+import mx.edu.um.mateo.activos.model.ReubicacionActivo;
 import mx.edu.um.mateo.contabilidad.model.Cuenta;
 import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -402,5 +401,27 @@ public class ActivoController extends BaseController {
             log.error("Hubo un problema al intentar subir la imagen del activo", e);
         }
         return "redirect:/activoFijo/activo/ver/" + activoId;
+    }
+
+    @RequestMapping(value = "/reubica/{id}", method = RequestMethod.GET)
+    public String preparaReubicacion(@PathVariable Long id, Model modelo) {
+        Activo activo = activoDao.obtiene(id);
+        ReubicacionActivo reubicacion = new ReubicacionActivo(activo, new Date());
+        modelo.addAttribute("reubicacion", reubicacion);
+        return "activoFijo/activo/reubica";
+    }
+
+    @RequestMapping(value = "/reubica", method = RequestMethod.POST)
+    public String reubica(Model modelo, @ModelAttribute ReubicacionActivo reubicacion, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "activoFijo/activo/reubica/" + reubicacion.getActivo().getId();
+        }
+
+        Usuario usuario = ambiente.obtieneUsuario();
+        String nombre = activoDao.reubica(reubicacion, usuario);
+        redirectAttributes.addFlashAttribute("message", "activo.reubica.message");
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
+
+        return "redirect:/activoFijo/activo/ver/" + reubicacion.getActivo().getId();
     }
 }
