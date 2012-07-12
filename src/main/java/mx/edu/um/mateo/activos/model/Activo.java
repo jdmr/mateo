@@ -44,7 +44,6 @@ import mx.edu.um.mateo.general.model.Proveedor;
 @Table(name = "activos", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"folio", "empresa_id"})
 })
-@org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 public class Activo implements Serializable {
 
     @Id
@@ -100,7 +99,6 @@ public class Activo implements Serializable {
     @ManyToOne(optional = false)
     private Proveedor proveedor;
     @ManyToOne(optional = false)
-    @JoinColumn(name = "centro_costo_id")
     private Cuenta cuenta;
     @ManyToOne(optional = false)
     private Empresa empresa;

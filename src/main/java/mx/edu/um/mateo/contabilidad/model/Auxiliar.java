@@ -25,50 +25,45 @@ package mx.edu.um.mateo.contabilidad.model;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.*;
-import org.hibernate.validator.constraints.NotBlank;
+import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Version;
 
 /**
- * NO UTILIZAR
- *
- * Clase utilizada SOLO para migrar los activos, luego sera necesario hacer una
- * reingenieria en donde se actualice este objeto por un departamento que este
- * ligado a una CuentaMayor. Pero por ahora, migraremos con esta.
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
-@Table(name = "cont_relacion")
-public class Cuenta implements Serializable {
+@Table(name = "cont_auxiliar")
+public class Auxiliar implements Serializable {
 
     @Id
-    private CuentaPK id;
+    private AuxiliarPK id;
     @Version
     private Integer version;
-    @NotBlank
-    @Column(nullable = false)
+    @Column(length = 60, nullable = false)
     private String nombre;
-    @NotBlank
-    @Column(nullable = false)
-    private String status;
-    @NotBlank
-    @Column(nullable = false)
-    private String naturaleza;
+    @Column(length = 1, nullable = false)
+    private String detalle;
 
-    public Cuenta() {
+    public Auxiliar() {
     }
 
     /**
      * @return the id
      */
-    public CuentaPK getId() {
+    public AuxiliarPK getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(CuentaPK id) {
+    public void setId(AuxiliarPK id) {
         this.id = id;
     }
 
@@ -101,39 +96,25 @@ public class Cuenta implements Serializable {
     }
 
     /**
-     * @return the status
+     * @return the detalle
      */
-    public String getStatus() {
-        return status;
+    public String getDetalle() {
+        return detalle;
     }
 
     /**
-     * @param status the status to set
+     * @param detalle the detalle to set
      */
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    /**
-     * @return the naturaleza
-     */
-    public String getNaturaleza() {
-        return naturaleza;
-    }
-
-    /**
-     * @param naturaleza the naturaleza to set
-     */
-    public void setNaturaleza(String naturaleza) {
-        this.naturaleza = naturaleza;
+    public void setDetalle(String detalle) {
+        this.detalle = detalle;
     }
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 67 * hash + Objects.hashCode(this.id);
-        hash = 67 * hash + Objects.hashCode(this.version);
-        hash = 67 * hash + Objects.hashCode(this.nombre);
+        int hash = 7;
+        hash = 47 * hash + Objects.hashCode(this.id);
+        hash = 47 * hash + Objects.hashCode(this.version);
+        hash = 47 * hash + Objects.hashCode(this.nombre);
         return hash;
     }
 
@@ -145,15 +126,10 @@ public class Cuenta implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Cuenta other = (Cuenta) obj;
+        final Auxiliar other = (Auxiliar) obj;
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return "Cuenta{" + "id=" + id + ", version=" + version + ", nombre=" + nombre + ", status=" + status + ", naturaleza=" + naturaleza + '}';
     }
 }

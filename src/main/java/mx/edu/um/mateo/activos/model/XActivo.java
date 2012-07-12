@@ -90,8 +90,6 @@ public class XActivo implements Serializable {
     private Long tipoActivoId;
     @Column(name = "proveedor_id")
     private Long proveedorId;
-    @Column(name = "centro_costo_id")
-    private Long cuentaId;
     @Column(name = "empresa_id")
     private Long empresaId;
     @Column(length = 128)
@@ -471,20 +469,6 @@ public class XActivo implements Serializable {
      */
     public void setProveedorId(Long proveedorId) {
         this.proveedorId = proveedorId;
-    }
-
-    /**
-     * @return the cuentaId
-     */
-    public Long getCuentaId() {
-        return cuentaId;
-    }
-
-    /**
-     * @param cuentaId the cuentaId to set
-     */
-    public void setCuentaId(Long cuentaId) {
-        this.cuentaId = cuentaId;
     }
 
     /**

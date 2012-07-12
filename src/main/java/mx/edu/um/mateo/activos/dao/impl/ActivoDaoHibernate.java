@@ -479,7 +479,6 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         XActivo xactivo = new XActivo();
         BeanUtils.copyProperties(activo, xactivo, new String[]{"id", "version"});
         xactivo.setActivoId(activo.getId());
-        xactivo.setCuentaId(activo.getCuenta().getId());
         xactivo.setEmpresaId(activo.getEmpresa().getId());
         xactivo.setProveedorId(activo.getProveedor().getId());
         xactivo.setTipoActivoId(activo.getTipoActivo().getId());

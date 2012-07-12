@@ -1,123 +1,66 @@
 package mx.edu.um.mateo.contabilidad.model;
 
 import java.io.Serializable;
-import java.util.Objects;
 import javax.persistence.*;
-import mx.edu.um.mateo.general.model.Organizacion;
-import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *
  * @author develop
  */
-//@Inheritance(strategy=InheritanceType.SINGLE_TABLE )
-//@DiscriminatorColumn(name="Padre")
-
 @Entity
 @Table(name = "libro")
 public class Libro implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @NotBlank
-    @Column(nullable = false, length = 24)
-    String nombre;
-    @NotBlank
-    @Column(nullable = false, length = 3)
-    String clave;
-    @NotBlank
-    @Column(nullable = false, length = 2)
-    String status;
-    @Column
-    int codigo;
-    @ManyToOne
-    private Organizacion organizacion;
+    private LibroPK id;
+    @Version
+    private Integer version;
+    @Column(length = 60, nullable = false)
+    private String nombre;
 
     public Libro() {
     }
 
-    public Libro(String nombre, String clave, String status, int codigo, Organizacion organizacion) {
-        this.nombre = nombre;
-        this.clave = clave;
-        this.status = status;
-        this.codigo = codigo;
-        this.organizacion=organizacion;
-
-    }
-
-    public int getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(int codigo) {
-        this.codigo = codigo;
-    }
-
-    public Organizacion getOrganizacion() {
-        return organizacion;
-    }
-
-    public void setOrganizacion(Organizacion organizacion) {
-        this.organizacion = organizacion;
-    }
-
-    public Long getId() {
+    /**
+     * @return the id
+     */
+    public LibroPK getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    /**
+     * @param id the id to set
+     */
+    public void setId(LibroPK id) {
         this.id = id;
     }
 
-    public String getClave1() {
-        return clave;
+    /**
+     * @return the version
+     */
+    public Integer getVersion() {
+        return version;
     }
 
-    public void setClave1(String clave) {
-        this.clave = clave;
+    /**
+     * @param version the version to set
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
+    /**
+     * @return the nombre
+     */
     public String getNombre() {
         return nombre;
     }
 
+    /**
+     * @param nombre the nombre to set
+     */
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getStatus1() {
-        return status;
-    }
-
-    public void setStatus1(String status) {
-        this.status = status;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Libro other = (Libro) obj;
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 79 * hash + Objects.hashCode(this.id);
-        hash = 79 * hash + Objects.hashCode(this.clave);
-        hash = 79 * hash + Objects.hashCode(this.nombre);
-        hash = 79 * hash + Objects.hashCode(this.status);
-        return hash;
-    }
-
-    @Override
-    public String toString() {
-        return "Libro{nombre=" + nombre + ", clave=" + clave + ", status" + status + '}';
-    }
+    }    
+    
 }
