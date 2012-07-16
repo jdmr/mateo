@@ -29,6 +29,7 @@ import java.util.Map;
 import mx.edu.um.mateo.activos.model.Activo;
 import mx.edu.um.mateo.activos.model.BajaActivo;
 import mx.edu.um.mateo.activos.model.ReubicacionActivo;
+import mx.edu.um.mateo.activos.utils.ActivoNoCreadoException;
 import mx.edu.um.mateo.contabilidad.model.Cuenta;
 import mx.edu.um.mateo.general.model.Usuario;
 
@@ -65,4 +66,6 @@ public interface ActivoDao {
     public void subeImagen(Activo activo, Usuario usuario);
     
     public String reubica(ReubicacionActivo reubicacion, Usuario usuario);
+    
+    public byte[] sube(byte[] datos, Usuario usuario) throws ActivoNoCreadoException;
 }

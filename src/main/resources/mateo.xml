@@ -57,7 +57,8 @@
         <property name="initialSize" value="5" />
         <property name="maxActive" value="10" />
     </bean>
-        
+
+    <!-- No puede ir ningun bean debajo de esta configuracion de beans -->        
     <beans profile="produccion">
         <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
             <property name="driverClassName" value="${jdbc.driverClassName}" />
@@ -66,6 +67,8 @@
             <property name="password" value="${jdbc.password}" />
             <property name="initialSize" value="${jdbc.initialSize}" />
             <property name="maxActive" value="${jdbc.maxActive}" />
+            <property name="removeAbandoned" value="true" />
+            <property name="logAbandoned" value="true" />
         </bean>
         
         <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">

@@ -92,14 +92,12 @@ public class XActivo implements Serializable {
     private Long proveedorId;
     @Column(name = "empresa_id")
     private Long empresaId;
-    @Column(name = "id_ejercicio")
-    private Long ejercicioId;
-    @Column(name = "id_organizacion")
+    @Column(name = "id_ejercicio", nullable = false, length = 8)
+    private String ejercicioId;
+    @Column(name = "id_organizacion", nullable = false)
     private Long organizacionId;
-    @Column(name = "id_ctamayor", length = 20)
-    private String idCtaMayor;
-    @Column(name = "tipo_cuenta", length = 1)
-    private String tipoCuenta;
+    @Column(name = "id_costo", length = 20, nullable = false)
+    private String idCosto;
     @Column(length = 128)
     private String responsable;
     @Column(length = 32)
@@ -502,14 +500,14 @@ public class XActivo implements Serializable {
     /**
      * @return the ejercicioId
      */
-    public Long getEjercicioId() {
+    public String getEjercicioId() {
         return ejercicioId;
     }
 
     /**
      * @param ejercicioId the ejercicioId to set
      */
-    public void setEjercicioId(Long ejercicioId) {
+    public void setEjercicioId(String ejercicioId) {
         this.ejercicioId = ejercicioId;
     }
 
@@ -528,31 +526,17 @@ public class XActivo implements Serializable {
     }
 
     /**
-     * @return the idCtaMayor
+     * @return the idCosto
      */
-    public String getIdCtaMayor() {
-        return idCtaMayor;
+    public String getIdCosto() {
+        return idCosto;
     }
 
     /**
-     * @param idCtaMayor the idCtaMayor to set
+     * @param idCosto the idCosto to set
      */
-    public void setIdCtaMayor(String idCtaMayor) {
-        this.idCtaMayor = idCtaMayor;
-    }
-
-    /**
-     * @return the tipoCuenta
-     */
-    public String getTipoCuenta() {
-        return tipoCuenta;
-    }
-
-    /**
-     * @param tipoCuenta the tipoCuenta to set
-     */
-    public void setTipoCuenta(String tipoCuenta) {
-        this.tipoCuenta = tipoCuenta;
+    public void setIdCosto(String idCosto) {
+        this.idCosto = idCosto;
     }
 
     /**

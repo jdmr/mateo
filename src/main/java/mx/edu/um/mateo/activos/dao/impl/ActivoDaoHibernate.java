@@ -23,6 +23,7 @@
  */
 package mx.edu.um.mateo.activos.dao.impl;
 
+import java.io.ByteArrayInputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -34,6 +35,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.sql.DataSource;
 import mx.edu.um.mateo.activos.dao.ActivoDao;
 import mx.edu.um.mateo.activos.model.Activo;
 import mx.edu.um.mateo.activos.model.BajaActivo;
@@ -41,13 +43,23 @@ import mx.edu.um.mateo.activos.model.FolioActivo;
 import mx.edu.um.mateo.activos.model.ReubicacionActivo;
 import mx.edu.um.mateo.activos.model.TipoActivo;
 import mx.edu.um.mateo.activos.model.XActivo;
+import mx.edu.um.mateo.activos.utils.ActivoNoCreadoException;
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.contabilidad.model.Cuenta;
-import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
+import mx.edu.um.mateo.contabilidad.model.EjercicioPK;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
+import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.hibernate.Criteria;
 import org.hibernate.LockOptions;
 import org.hibernate.Query;
@@ -59,6 +71,8 @@ import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,6 +83,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
+
+    @Autowired
+    @Qualifier("dataSource2")
+    private DataSource dataSource2;
 
     public ActivoDaoHibernate() {
         log.info("Nueva instancia de Activo Dao creada.");
@@ -227,7 +245,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         }
         activo.setTipoActivo((TipoActivo) session.load(TipoActivo.class, activo.getTipoActivo().getId()));
         activo.setProveedor((Proveedor) session.load(Proveedor.class, activo.getProveedor().getId()));
-        activo.setCuenta((CuentaMayor) session.load(Cuenta.class, activo.getCuenta().getId()));
+        activo.setCentroCosto((CentroCosto) session.load(CentroCosto.class, activo.getCentroCosto().getId()));
         activo.setFolio(this.getFolio(activo.getEmpresa()));
         activo.setFechaCreacion(fecha);
         activo.setFechaModificacion(fecha);
@@ -293,7 +311,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             }
 
             activo = deprecia(activo, fecha);
-            
+
             query = currentSession().createQuery("update Activo a set a.fechaDepreciacion = :fecha, a.depreciacionAnual = :depreciacionAnual, a.depreciacionMensual = :depreciacionMensual, a.depreciacionAcumulada = :depreciacionAcumulada, a.valorNeto = :valorNeto, a.fechaModificacion = :fechaModificacion where a.id = :activoId");
             query.setDate("fecha", fecha);
             query.setBigDecimal("depreciacionAnual", activo.getDepreciacionAnual());
@@ -339,7 +357,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         // valor neto
         BigDecimal valorNeto = activo.getMoi().subtract(depreciacionAcumulada);
         log.trace("ValorNeto: {}", valorNeto);
-        
+
         activo.setFechaDepreciacion(fecha);
         activo.setDepreciacionAnual(depreciacionAnual);
         activo.setDepreciacionMensual(depreciacionMensual);
@@ -403,7 +421,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         query.setLockOptions(LockOptions.UPGRADE);
         FolioActivo folio = (FolioActivo) query.uniqueResult();
         if (folio == null) {
-            folio = new FolioActivo("ACTIVO");
+            folio = new FolioActivo("ACTIVOS");
             folio.setOrganizacion(empresa.getOrganizacion());
             currentSession().save(folio);
             return getFolio(empresa);
@@ -483,13 +501,16 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         xactivo.setEmpresaId(activo.getEmpresa().getId());
         xactivo.setProveedorId(activo.getProveedor().getId());
         xactivo.setTipoActivoId(activo.getTipoActivo().getId());
+        xactivo.setEjercicioId(activo.getCentroCosto().getId().getEjercicio().getId().getIdEjercicio());
+        xactivo.setOrganizacionId(activo.getEmpresa().getOrganizacion().getId());
+        xactivo.setIdCosto(activo.getCentroCosto().getId().getIdCosto());
         xactivo.setFechaCreacion(fecha);
         xactivo.setActividad(actividad);
         xactivo.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
         log.debug("Depreciacion fecha: {} - {}", activo.getFechaCompra(), xactivo.getFechaCompra());
         currentSession().save(xactivo);
     }
-    
+
     @Override
     public List<Cuenta> cuentas(Long organizacionId) {
         Criteria criteria = currentSession().createCriteria(Cuenta.class);
@@ -514,7 +535,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         Date fecha = new Date();
         Activo activo = reubicacion.getActivo();
         activo.setFechaModificacion(fecha);
-        activo.setCuenta((CuentaMayor) currentSession().load(Cuenta.class, reubicacion.getDepartamento().getCuenta().getId()));
+        activo.setCentroCosto((CentroCosto) currentSession().load(CentroCosto.class, activo.getCentroCosto().getId()));
         currentSession().update(activo);
         if (usuario != null) {
             reubicacion.setCreador(usuario.getUsername());
@@ -526,5 +547,122 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         this.audita(activo, usuario, Constantes.REUBICACION, fecha);
         currentSession().flush();
         return activo.getFolio();
+    }
+
+    @Override
+    @Transactional(rollbackFor = ActivoNoCreadoException.class)
+    public byte[] sube(byte[] datos, Usuario usuario) throws ActivoNoCreadoException {
+        int idx = 5;
+        int i = 0;
+        try {
+            String ejercicioId = "001-2012";
+            EjercicioPK ejercicioPK = new EjercicioPK(ejercicioId, usuario.getEmpresa().getOrganizacion());
+            Ejercicio ejercicio = (Ejercicio) currentSession().load(Ejercicio.class, ejercicioPK);
+            Map<String, CentroCosto> centrosDeCosto = new HashMap<>();
+            Map<String, TipoActivo> tipos = new HashMap<>();
+            Query tipoActivoQuery = currentSession().createQuery("select ta from TipoActivo ta "
+                    + "where ta.empresa.id = :empresaId "
+                    + "and ta.cuenta.id.ejercicio.id.idEjercicio = :ejercicioId "
+                    + "and ta.cuenta.id.ejercicio.id.organizacion.id = :organizacionId");
+            tipoActivoQuery.setLong("empresaId", usuario.getEmpresa().getId());
+            tipoActivoQuery.setString("ejercicioId", ejercicioId);
+            tipoActivoQuery.setLong("organizacionId", usuario.getEmpresa().getOrganizacion().getId());
+            List<TipoActivo> listaTipos = tipoActivoQuery.list();
+            for (TipoActivo tipoActivo : listaTipos) {
+                tipos.put(tipoActivo.getCuenta().getId().getIdCtaMayor(), tipoActivo);
+            }
+
+            Query proveedorQuery = currentSession().createQuery("select p from Proveedor p where p.empresa.id = :empresaId and p.nombre = :nombreEmpresa");
+            proveedorQuery.setLong("empresaId", usuario.getEmpresa().getId());
+            proveedorQuery.setString("nombreEmpresa", usuario.getEmpresa().getNombre());
+            Proveedor proveedor = (Proveedor) proveedorQuery.uniqueResult();
+
+            POIFSFileSystem fs = new POIFSFileSystem(new ByteArrayInputStream(datos));
+            HSSFWorkbook workbook = new HSSFWorkbook(fs);
+            FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+            int numeroDePaginas = workbook.getNumberOfSheets();
+            // inicia for para distintas paginas
+            HSSFSheet sheet = workbook.getSheetAt(idx);
+            int rows = sheet.getPhysicalNumberOfRows();
+            for (i = 2; i < rows; i++) {
+                log.debug("Leyendo pagina {} renglon {}", idx, i);
+                HSSFRow row = sheet.getRow(i);
+                String nombreGrupo = row.getCell(0).getStringCellValue().trim();
+                TipoActivo tipoActivo = tipos.get(nombreGrupo);
+                if (tipoActivo != null) {
+                    String cuentaCCosto = row.getCell(2).getStringCellValue().trim();
+                    if (cuentaCCosto != null) {
+                        CentroCosto centroCosto = centrosDeCosto.get(cuentaCCosto);
+                        if (centroCosto == null) {
+                            Query ccostoQuery = currentSession().createQuery("select cc from CentroCosto cc "
+                                    + "where cc.id.ejercicio.id.idEjercicio = :ejercicioId "
+                                    + "and cc.id.ejercicio.id.organizacion.id = :organizacionId "
+                                    + "and cc.id.idCosto like :idCosto");
+                            ccostoQuery.setString("ejercicioId", ejercicioId);
+                            ccostoQuery.setLong("organizacionId", usuario.getEmpresa().getOrganizacion().getId());
+                            ccostoQuery.setString("idCosto", "%" + cuentaCCosto);
+                            List<CentroCosto> listaCCosto = ccostoQuery.list();
+                            log.debug("Regreso: {}", listaCCosto);
+                            if (listaCCosto != null && listaCCosto.size() > 0) {
+                                centroCosto = listaCCosto.get(0);
+                            }
+                            if (centroCosto == null) {
+                                throw new RuntimeException("(" + idx + ":" + i + ") No se encontro el centro de costo " + cuentaCCosto);
+                            }
+                            centrosDeCosto.put(cuentaCCosto, centroCosto);
+                        }
+                        Date fechaCompra = row.getCell(4) != null ? row.getCell(4).getDateCellValue() : null;
+                        Boolean seguro = false;
+                        if (row.getCell(6) != null && StringUtils.isNotBlank(row.getCell(6).getStringCellValue())) {
+                            seguro = true;
+                        }
+                        String poliza = null;
+                        switch (row.getCell(4).getCellType()) {
+                            case HSSFCell.CELL_TYPE_NUMERIC:
+                                poliza = row.getCell(4).toString();
+                                break;
+                            case HSSFCell.CELL_TYPE_STRING:
+                                poliza = row.getCell(4).getStringCellValue().trim();
+                                break;
+                        }
+                        String codigo = row.getCell(8) != null ? row.getCell(8).getStringCellValue().trim() : null;
+                        String descripcion = row.getCell(9) != null ? row.getCell(9).getStringCellValue().trim() : null;
+                        String marca = row.getCell(10) != null ? row.getCell(10).getStringCellValue().trim() : null;
+                        String modelo = null;
+                        switch (row.getCell(11).getCellType()) {
+                            case HSSFCell.CELL_TYPE_NUMERIC:
+                                modelo = row.getCell(11).toString();
+                                break;
+                            case HSSFCell.CELL_TYPE_STRING:
+                                modelo = row.getCell(11).getStringCellValue().trim();
+                                break;
+                        }
+                        String serie = row.getCell(12) != null ? row.getCell(12).getStringCellValue().trim() : null;
+                        String responsable = row.getCell(13) != null ? row.getCell(13).getStringCellValue().trim() : null;
+                        String ubicacion = row.getCell(14) != null ? row.getCell(14).getStringCellValue().trim() : null;
+                        BigDecimal costo = null;
+                        switch (row.getCell(12).getCellType()) {
+                            case HSSFCell.CELL_TYPE_NUMERIC:
+                                costo = new BigDecimal(row.getCell(15).getNumericCellValue());
+                                break;
+                            case HSSFCell.CELL_TYPE_STRING:
+                                costo = new BigDecimal(row.getCell(15).toString());
+                                break;
+                        }
+
+                        Activo activo = new Activo(fechaCompra, seguro, poliza, codigo, descripcion, marca, modelo, serie, responsable, ubicacion, costo, tipoActivo, centroCosto, proveedor, usuario.getEmpresa());
+                        this.crea(activo, usuario);
+                    } else {
+                        throw new ActivoNoCreadoException("La cuenta viene vacia (" + idx + ":" + i + ")");
+                    }
+                } else {
+                    throw new ActivoNoCreadoException("No se encontro el tipo de activo (" + idx + ":" + i + ")");
+                }
+            }
+            return workbook.getBytes();
+        } catch (Exception e) {
+            log.error("Hubo problemas al intentar pasar datos de archivo excel a BD (" + idx + ":" + i + ")", e);
+            throw new ActivoNoCreadoException("Hubo problemas al intentar pasar datos de archivo excel a BD (" + idx + ":" + i + ")", e);
+        }
     }
 }

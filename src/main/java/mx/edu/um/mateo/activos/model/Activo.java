@@ -31,8 +31,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import mx.edu.um.mateo.contabilidad.model.Cuenta;
-import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Proveedor;
@@ -100,7 +99,7 @@ public class Activo implements Serializable {
     @ManyToOne(optional = false)
     private Proveedor proveedor;
     @ManyToOne(optional = false)
-    private CuentaMayor cuenta;
+    private CentroCosto centroCosto;
     @ManyToOne(optional = false)
     private Empresa empresa;
     @Column(length = 128)
@@ -154,6 +153,22 @@ public class Activo implements Serializable {
         this.vidaUtil = vidaUtil;
         this.inactivo = inactivo;
         this.fechaInactivo = fechaInactivo;
+    }
+    
+    public Activo(Date fechaCompra, Boolean seguro, String poliza, String codigo, String descripcion, String marca, String modelo, String serial, String responsable, String ubicacion, BigDecimal costo, TipoActivo tipoActivo, CentroCosto centroCosto, Proveedor proveedor, Empresa empresa) {
+        this.poliza = poliza;
+        this.codigo = codigo;
+        this.descripcion = descripcion;
+        this.marca = marca;
+        this.modelo = modelo;
+        this.serial = serial;
+        this.ubicacion = ubicacion;
+        this.fechaCompra = fechaCompra;
+        this.responsable = responsable;
+        this.tipoActivo = tipoActivo;
+        this.centroCosto = centroCosto;
+        this.proveedor = proveedor;
+        this.empresa = empresa;
     }
 
     /**
@@ -521,17 +536,17 @@ public class Activo implements Serializable {
     }
 
     /**
-     * @return the cuenta
+     * @return the centroCosto
      */
-    public CuentaMayor getCuenta() {
-        return cuenta;
+    public CentroCosto getCentroCosto() {
+        return centroCosto;
     }
 
     /**
-     * @param cuenta the cuenta to set
+     * @param centroCosto the centroCosto to set
      */
-    public void setCuenta(CuentaMayor cuenta) {
-        this.cuenta = cuenta;
+    public void setCentroCosto(CentroCosto centroCosto) {
+        this.centroCosto = centroCosto;
     }
 
     /**

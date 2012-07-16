@@ -24,6 +24,7 @@
 package mx.edu.um.mateo.activos.web;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ import mx.edu.um.mateo.activos.dao.TipoActivoDao;
 import mx.edu.um.mateo.activos.model.Activo;
 import mx.edu.um.mateo.activos.model.BajaActivo;
 import mx.edu.um.mateo.activos.model.ReubicacionActivo;
+import mx.edu.um.mateo.activos.utils.ActivoNoCreadoException;
 import mx.edu.um.mateo.contabilidad.model.Cuenta;
 import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -423,5 +425,23 @@ public class ActivoController extends BaseController {
         redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
 
         return "redirect:/activoFijo/activo/ver/" + reubicacion.getActivo().getId();
+    }
+
+    @RequestMapping(value = "/subeActivos", method = RequestMethod.GET)
+    public String preparaParaSubir() {
+        return "/activoFijo/activo/subeActivos";
+    }
+
+    @RequestMapping(value = "/subeActivos", method = RequestMethod.POST)
+    public String sube(HttpServletResponse response, RedirectAttributes redirectAttributes, MultipartFile archivo) throws IOException, ActivoNoCreadoException {
+        byte[] resultado = activoDao.sube(archivo.getBytes(), ambiente.obtieneUsuario());
+        redirectAttributes.addFlashAttribute("message", "activo.sube.archivo.message");
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-disposition","attachment; filename='"+archivo.getOriginalFilename()+"'");
+        OutputStream out = response.getOutputStream();
+        out.write(resultado);
+        out.flush();
+
+        return "redirect:/activoFijo/activo";
     }
 }
