@@ -215,4 +215,16 @@ public class TipoActivoController extends BaseController {
 
         return "redirect:/activoFijo/tipoActivo";
     }
+    
+    @RequestMapping("/migrar")
+    public String migrar(RedirectAttributes redirectAttributes) {
+        log.debug("###################################");
+        log.debug("#*********************************#");
+        log.debug("#Migrando datos de tipos de activo#");
+        log.debug("#*********************************#");
+        log.debug("###################################");
+        tipoActivoDao.migrar(ambiente.obtieneUsuario());
+        redirectAttributes.addFlashAttribute("message", "tipoActivo.migracion.exitosa");
+        return "redirect:/activoFijo/tipoActivo";
+    }
 }
