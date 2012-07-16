@@ -43,7 +43,7 @@ public class CCostoPK implements Serializable {
         @JoinColumn(name = "id_ejercicio"),
         @JoinColumn(name = "id_organizacion")})
     private Ejercicio ejercicio;
-    @Column(name = "id_costo", length = 20, nullable = false)
+    @Column(name = "id_ccosto", length = 20, nullable = false)
     private String idCosto;
 
     public CCostoPK() {

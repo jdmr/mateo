@@ -43,7 +43,7 @@ public class AuxiliarPK implements Serializable {
         @JoinColumn(name = "id_ejercicio"),
         @JoinColumn(name = "id_organizacion")})
     private Ejercicio ejercicio;
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 20, name = "id_auxiliar")
     private String auxiliar;
 
     public AuxiliarPK() {
