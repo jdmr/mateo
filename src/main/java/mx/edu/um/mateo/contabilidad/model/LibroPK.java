@@ -39,6 +39,9 @@ import javax.persistence.ManyToOne;
 public class LibroPK implements Serializable {
 
     @ManyToOne(optional = false)
+    @JoinColumns({
+        @JoinColumn(name = "id_ejercicio"),
+        @JoinColumn(name = "id_organizacion")})
     private Ejercicio ejercicio;
     @Column(name = "id_libro", length = 2, nullable = false)
     private String idLibro;

@@ -30,6 +30,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -38,7 +39,7 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Entity
 @Table(name = "cont_ctamayor")
-public class CtaMayor implements Serializable {
+public class CuentaMayor implements Serializable {
 
     @Id
     private CtaMayorPK id;
@@ -51,7 +52,7 @@ public class CtaMayor implements Serializable {
     @Column(name = "nombrefiscal", length = 60, nullable = false)
     private String nombreFiscal;
     @Column(length = 2, nullable = false)
-    private Boolean detalle;
+    private String detalle;
     @NotBlank
     @Column(length = 1, nullable = false)
     private String aviso;
@@ -60,14 +61,15 @@ public class CtaMayor implements Serializable {
     private String auxiliar;
     @NotBlank
     @Column(length = 2, nullable = false)
-    private Boolean iva;
-    @NotBlank
+    private String iva;
+    @NotNull
     @Column(name = "pctiva", nullable = false)
     private Long pctIVA;
+    @NotBlank
     @Column(length = 2, nullable = false)
-    private Boolean detaller;
+    private String detaller;
 
-    public CtaMayor() {
+    public CuentaMayor() {
     }
 
     /**
@@ -129,14 +131,14 @@ public class CtaMayor implements Serializable {
     /**
      * @return the detalle
      */
-    public Boolean getDetalle() {
+    public String getDetalle() {
         return detalle;
     }
 
     /**
      * @param detalle the detalle to set
      */
-    public void setDetalle(Boolean detalle) {
+    public void setDetalle(String detalle) {
         this.detalle = detalle;
     }
 
@@ -171,14 +173,14 @@ public class CtaMayor implements Serializable {
     /**
      * @return the iva
      */
-    public Boolean getIva() {
+    public String getIva() {
         return iva;
     }
 
     /**
      * @param iva the iva to set
      */
-    public void setIva(Boolean iva) {
+    public void setIva(String iva) {
         this.iva = iva;
     }
 
@@ -199,14 +201,14 @@ public class CtaMayor implements Serializable {
     /**
      * @return the detaller
      */
-    public Boolean getDetaller() {
+    public String getDetaller() {
         return detaller;
     }
 
     /**
      * @param detaller the detaller to set
      */
-    public void setDetaller(Boolean detaller) {
+    public void setDetaller(String detaller) {
         this.detaller = detaller;
     }
 
@@ -227,7 +229,7 @@ public class CtaMayor implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final CtaMayor other = (CtaMayor) obj;
+        final CuentaMayor other = (CuentaMayor) obj;
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }

@@ -25,7 +25,10 @@ package mx.edu.um.mateo.contabilidad.model;
 
 import java.io.Serializable;
 import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 
 /**
@@ -36,22 +39,28 @@ import javax.persistence.ManyToOne;
 public class CuentaPK implements Serializable {
 
     @ManyToOne(optional = false)
+    @JoinColumns({
+        @JoinColumn(name = "id_ejercicio"),
+        @JoinColumn(name = "id_organizacion")})
     private Ejercicio ejercicio;
-    @ManyToOne(optional = false)
-    private CtaMayor ctaMayor;
-    @ManyToOne(optional = false)
-    private CentroCosto ccosto;
-    @ManyToOne(optional = false)
-    private Auxiliar auxiliar;
+    @Column(name = "id_ctamayor", length = 20, nullable = false)
+    private String idCtaMayor;
+    @Column(name = "tipo_cuenta", length = 1, nullable = false)
+    private String tipoCuenta;
+    @Column(name = "id_ccosto", length = 20, nullable = false)
+    private String idCosto;
+    @Column(name = "id_auxiliar", nullable = false, length = 20)
+    private String idAuxiliar;
 
     public CuentaPK() {
     }
 
-    public CuentaPK(Ejercicio ejercicio, CtaMayor ctaMayor, CentroCosto ccosto, Auxiliar auxiliar) {
+    public CuentaPK(Ejercicio ejercicio, String idCtaMayor, String tipoCuenta, String idCosto, String auxiliar) {
         this.ejercicio = ejercicio;
-        this.ctaMayor = ctaMayor;
-        this.ccosto = ccosto;
-        this.auxiliar = auxiliar;
+        this.idCtaMayor = idCtaMayor;
+        this.tipoCuenta = tipoCuenta;
+        this.idCosto = idCosto;
+        this.idAuxiliar = auxiliar;
     }
 
     /**
@@ -69,54 +78,69 @@ public class CuentaPK implements Serializable {
     }
 
     /**
-     * @return the ctaMayor
+     * @return the idCtaMayor
      */
-    public CtaMayor getCtaMayor() {
-        return ctaMayor;
+    public String getIdCtaMayor() {
+        return idCtaMayor;
     }
 
     /**
-     * @param ctaMayor the ctaMayor to set
+     * @param idCtaMayor the idCtaMayor to set
      */
-    public void setCtaMayor(CtaMayor ctaMayor) {
-        this.ctaMayor = ctaMayor;
+    public void setIdCtaMayor(String idCtaMayor) {
+        this.idCtaMayor = idCtaMayor;
     }
 
     /**
-     * @return the ccosto
+     * @return the tipoCuenta
      */
-    public CentroCosto getCcosto() {
-        return ccosto;
+    public String getTipoCuenta() {
+        return tipoCuenta;
     }
 
     /**
-     * @param ccosto the ccosto to set
+     * @param tipoCuenta the tipoCuenta to set
      */
-    public void setCcosto(CentroCosto ccosto) {
-        this.ccosto = ccosto;
+    public void setTipoCuenta(String tipoCuenta) {
+        this.tipoCuenta = tipoCuenta;
     }
 
     /**
-     * @return the auxiliar
+     * @return the idCosto
      */
-    public Auxiliar getAuxiliar() {
-        return auxiliar;
+    public String getIdCosto() {
+        return idCosto;
     }
 
     /**
-     * @param auxiliar the auxiliar to set
+     * @param idCosto the idCosto to set
      */
-    public void setAuxiliar(Auxiliar auxiliar) {
-        this.auxiliar = auxiliar;
+    public void setIdCosto(String idCosto) {
+        this.idCosto = idCosto;
+    }
+
+    /**
+     * @return the idAuxiliar
+     */
+    public String getIdAuxiliar() {
+        return idAuxiliar;
+    }
+
+    /**
+     * @param idAuxiliar the idAuxiliar to set
+     */
+    public void setIdAuxiliar(String idAuxiliar) {
+        this.idAuxiliar = idAuxiliar;
     }
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 41 * hash + Objects.hashCode(this.ejercicio);
-        hash = 41 * hash + Objects.hashCode(this.ctaMayor);
-        hash = 41 * hash + Objects.hashCode(this.ccosto);
-        hash = 41 * hash + Objects.hashCode(this.auxiliar);
+        int hash = 7;
+        hash = 47 * hash + Objects.hashCode(this.ejercicio);
+        hash = 47 * hash + Objects.hashCode(this.idCtaMayor);
+        hash = 47 * hash + Objects.hashCode(this.tipoCuenta);
+        hash = 47 * hash + Objects.hashCode(this.idCosto);
+        hash = 47 * hash + Objects.hashCode(this.idAuxiliar);
         return hash;
     }
 
@@ -132,13 +156,16 @@ public class CuentaPK implements Serializable {
         if (!Objects.equals(this.ejercicio, other.ejercicio)) {
             return false;
         }
-        if (!Objects.equals(this.ctaMayor, other.ctaMayor)) {
+        if (!Objects.equals(this.idCtaMayor, other.idCtaMayor)) {
             return false;
         }
-        if (!Objects.equals(this.ccosto, other.ccosto)) {
+        if (!Objects.equals(this.tipoCuenta, other.tipoCuenta)) {
             return false;
         }
-        if (!Objects.equals(this.auxiliar, other.auxiliar)) {
+        if (!Objects.equals(this.idCosto, other.idCosto)) {
+            return false;
+        }
+        if (!Objects.equals(this.idAuxiliar, other.idAuxiliar)) {
             return false;
         }
         return true;
@@ -146,6 +173,6 @@ public class CuentaPK implements Serializable {
 
     @Override
     public String toString() {
-        return "CuentaPK{" + "ejercicio=" + ejercicio + ", ctaMayor=" + ctaMayor + ", ccosto=" + ccosto + ", auxiliar=" + auxiliar + '}';
+        return "CuentaPK{" + "ejercicio=" + ejercicio + ", idCtaMayor=" + idCtaMayor + ", tipoCuenta=" + tipoCuenta + ", idCosto=" + idCosto + ", idAuxiliar=" + idAuxiliar + '}';
     }
 }

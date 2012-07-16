@@ -59,7 +59,7 @@ public class TipoActivo implements Serializable {
     @Column(nullable = false, name = "vida_util")
     private Long vidaUtil;
     @ManyToOne(optional = false)
-    private Cuenta cuenta;
+    private CuentaMayor cuenta;
     @ManyToOne(optional = false)
     private Empresa empresa;
     @OneToMany(mappedBy = "tipoActivo")
@@ -155,14 +155,14 @@ public class TipoActivo implements Serializable {
     /**
      * @return the cuenta
      */
-    public Cuenta getCuenta() {
+    public CuentaMayor getCuenta() {
         return cuenta;
     }
 
     /**
      * @param cuenta the cuenta to set
      */
-    public void setCuenta(Cuenta cuenta) {
+    public void setCuenta(CuentaMayor cuenta) {
         this.cuenta = cuenta;
     }
 

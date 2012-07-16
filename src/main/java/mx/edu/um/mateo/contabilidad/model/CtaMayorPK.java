@@ -27,6 +27,8 @@ import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 
 /**
@@ -37,6 +39,9 @@ import javax.persistence.ManyToOne;
 public class CtaMayorPK implements Serializable {
 
     @ManyToOne(optional = false)
+    @JoinColumns({
+        @JoinColumn(name = "id_ejercicio"),
+        @JoinColumn(name = "id_organizacion")})
     private Ejercicio ejercicio;
     @Column(name = "id_ctamayor", length = 20, nullable = false)
     private String idCtaMayor;

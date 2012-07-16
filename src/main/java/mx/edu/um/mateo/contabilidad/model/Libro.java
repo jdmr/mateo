@@ -8,7 +8,7 @@ import javax.persistence.*;
  * @author develop
  */
 @Entity
-@Table(name = "libro")
+@Table(name = "cont_libro")
 public class Libro implements Serializable {
 
     @Id
@@ -19,6 +19,11 @@ public class Libro implements Serializable {
     private String nombre;
 
     public Libro() {
+    }
+
+    public Libro(LibroPK id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
     }
 
     /**
@@ -61,6 +66,5 @@ public class Libro implements Serializable {
      */
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }    
-    
+    }
 }

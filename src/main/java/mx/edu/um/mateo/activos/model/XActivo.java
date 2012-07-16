@@ -92,6 +92,14 @@ public class XActivo implements Serializable {
     private Long proveedorId;
     @Column(name = "empresa_id")
     private Long empresaId;
+    @Column(name = "id_ejercicio")
+    private Long ejercicioId;
+    @Column(name = "id_organizacion")
+    private Long organizacionId;
+    @Column(name = "id_ctamayor", length = 20)
+    private String idCtaMayor;
+    @Column(name = "tipo_cuenta", length = 1)
+    private String tipoCuenta;
     @Column(length = 128)
     private String responsable;
     @Column(length = 32)
@@ -393,10 +401,16 @@ public class XActivo implements Serializable {
         this.ubicacion = ubicacion;
     }
 
+    /**
+     * @return the fechaCompra
+     */
     public Date getFechaCompra() {
         return fechaCompra;
     }
 
+    /**
+     * @param fechaCompra the fechaCompra to set
+     */
     public void setFechaCompra(Date fechaCompra) {
         this.fechaCompra = fechaCompra;
     }
@@ -483,6 +497,62 @@ public class XActivo implements Serializable {
      */
     public void setEmpresaId(Long empresaId) {
         this.empresaId = empresaId;
+    }
+
+    /**
+     * @return the ejercicioId
+     */
+    public Long getEjercicioId() {
+        return ejercicioId;
+    }
+
+    /**
+     * @param ejercicioId the ejercicioId to set
+     */
+    public void setEjercicioId(Long ejercicioId) {
+        this.ejercicioId = ejercicioId;
+    }
+
+    /**
+     * @return the organizacionId
+     */
+    public Long getOrganizacionId() {
+        return organizacionId;
+    }
+
+    /**
+     * @param organizacionId the organizacionId to set
+     */
+    public void setOrganizacionId(Long organizacionId) {
+        this.organizacionId = organizacionId;
+    }
+
+    /**
+     * @return the idCtaMayor
+     */
+    public String getIdCtaMayor() {
+        return idCtaMayor;
+    }
+
+    /**
+     * @param idCtaMayor the idCtaMayor to set
+     */
+    public void setIdCtaMayor(String idCtaMayor) {
+        this.idCtaMayor = idCtaMayor;
+    }
+
+    /**
+     * @return the tipoCuenta
+     */
+    public String getTipoCuenta() {
+        return tipoCuenta;
+    }
+
+    /**
+     * @param tipoCuenta the tipoCuenta to set
+     */
+    public void setTipoCuenta(String tipoCuenta) {
+        this.tipoCuenta = tipoCuenta;
     }
 
     /**
@@ -680,6 +750,7 @@ public class XActivo implements Serializable {
     public void setDepreciacionAcumulada(BigDecimal depreciacionAcumulada) {
         this.depreciacionAcumulada = depreciacionAcumulada;
     }
+
 
     @Override
     public String toString() {

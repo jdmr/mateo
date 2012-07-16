@@ -29,11 +29,6 @@ import javax.persistence.*;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- * NO UTILIZAR
- *
- * Clase utilizada SOLO para migrar los activos, luego sera necesario hacer una
- * reingenieria en donde se actualice este objeto por un departamento que este
- * ligado a una CuentaMayor. Pero por ahora, migraremos con esta.
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */

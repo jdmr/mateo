@@ -42,6 +42,7 @@ import mx.edu.um.mateo.activos.model.ReubicacionActivo;
 import mx.edu.um.mateo.activos.model.TipoActivo;
 import mx.edu.um.mateo.activos.model.XActivo;
 import mx.edu.um.mateo.contabilidad.model.Cuenta;
+import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Proveedor;
@@ -226,7 +227,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         }
         activo.setTipoActivo((TipoActivo) session.load(TipoActivo.class, activo.getTipoActivo().getId()));
         activo.setProveedor((Proveedor) session.load(Proveedor.class, activo.getProveedor().getId()));
-        activo.setCuenta((Cuenta) session.load(Cuenta.class, activo.getCuenta().getId()));
+        activo.setCuenta((CuentaMayor) session.load(Cuenta.class, activo.getCuenta().getId()));
         activo.setFolio(this.getFolio(activo.getEmpresa()));
         activo.setFechaCreacion(fecha);
         activo.setFechaModificacion(fecha);
@@ -513,7 +514,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         Date fecha = new Date();
         Activo activo = reubicacion.getActivo();
         activo.setFechaModificacion(fecha);
-        activo.setCuenta((Cuenta) currentSession().load(Cuenta.class, reubicacion.getDepartamento().getCuenta().getId()));
+        activo.setCuenta((CuentaMayor) currentSession().load(Cuenta.class, reubicacion.getDepartamento().getCuenta().getId()));
         currentSession().update(activo);
         if (usuario != null) {
             reubicacion.setCreador(usuario.getUsername());

@@ -63,6 +63,18 @@ public class Ejercicio implements Serializable {
     public Ejercicio() {
     }
 
+    public Ejercicio(EjercicioPK id, String nombre, String status, String mascBalance, String mascResultado, String mascAuxiliar, String mascCcosto, Byte nivelContable, Byte nivelTauxiliar) {
+        this.id = id;
+        this.nombre = nombre;
+        this.status = status;
+        this.mascBalance = mascBalance;
+        this.mascResultado = mascResultado;
+        this.mascAuxiliar = mascAuxiliar;
+        this.mascCcosto = mascCcosto;
+        this.nivelContable = nivelContable;
+        this.nivelTauxiliar = nivelTauxiliar;
+    }
+    
     /**
      * @return the id
      */

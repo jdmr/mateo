@@ -32,6 +32,7 @@ import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.contabilidad.model.Cuenta;
+import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Proveedor;
@@ -99,7 +100,7 @@ public class Activo implements Serializable {
     @ManyToOne(optional = false)
     private Proveedor proveedor;
     @ManyToOne(optional = false)
-    private Cuenta cuenta;
+    private CuentaMayor cuenta;
     @ManyToOne(optional = false)
     private Empresa empresa;
     @Column(length = 128)
@@ -522,14 +523,14 @@ public class Activo implements Serializable {
     /**
      * @return the cuenta
      */
-    public Cuenta getCuenta() {
+    public CuentaMayor getCuenta() {
         return cuenta;
     }
 
     /**
      * @param cuenta the cuenta to set
      */
-    public void setCuenta(Cuenta cuenta) {
+    public void setCuenta(CuentaMayor cuenta) {
         this.cuenta = cuenta;
     }
 

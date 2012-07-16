@@ -28,6 +28,7 @@ import java.util.Map;
 import mx.edu.um.mateo.activos.dao.TipoActivoDao;
 import mx.edu.um.mateo.activos.model.TipoActivo;
 import mx.edu.um.mateo.contabilidad.model.Cuenta;
+import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import org.hibernate.Criteria;
@@ -123,7 +124,7 @@ public class TipoActivoDaoHibernate extends BaseDao implements TipoActivoDao {
         if (usuario != null) {
             tipoActivo.setEmpresa(usuario.getEmpresa());
         }
-        tipoActivo.setCuenta((Cuenta) currentSession().load(Cuenta.class, tipoActivo.getCuenta().getId()));
+        tipoActivo.setCuenta((CuentaMayor) currentSession().load(CuentaMayor.class, tipoActivo.getCuenta().getId()));
         session.save(tipoActivo);
         session.flush();
         return tipoActivo;
@@ -145,7 +146,7 @@ public class TipoActivoDaoHibernate extends BaseDao implements TipoActivoDao {
         if (usuario != null) {
             tipoActivo.setEmpresa(usuario.getEmpresa());
         }
-        tipoActivo.setCuenta((Cuenta) currentSession().load(Cuenta.class, tipoActivo.getCuenta().getId()));
+        tipoActivo.setCuenta((CuentaMayor) currentSession().load(Cuenta.class, tipoActivo.getCuenta().getId()));
         session.update(tipoActivo);
         session.flush();
         return tipoActivo;

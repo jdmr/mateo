@@ -48,6 +48,15 @@
     </bean>
     
     <bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" />
+    
+    <bean id="dataSource2" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+        <property name="url" value="jdbc:oracle:thin:@rigel.um.edu.mx:1521:ora1" />
+        <property name="username" value="noe" />
+        <property name="password" value="arcopacto" />
+        <property name="initialSize" value="5" />
+        <property name="maxActive" value="10" />
+    </bean>
         
     <beans profile="produccion">
         <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
