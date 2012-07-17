@@ -95,6 +95,8 @@ public class EjercicioDaoHibernate extends BaseDao implements EjercicioDao {
             } else {
                 criteria.addOrder(Order.asc(campo));
             }
+        } else {
+            criteria.addOrder(Order.desc("id.idEjercicio"));
         }
 
         if (!params.containsKey("reporte")) {
@@ -122,6 +124,7 @@ public class EjercicioDaoHibernate extends BaseDao implements EjercicioDao {
             ejercicio.getId().setOrganizacion(usuario.getEmpresa().getOrganizacion());
         }
         session.save(ejercicio);
+        session.flush();
         /**
          * TODO Crear cuentas del ejercicio
          */

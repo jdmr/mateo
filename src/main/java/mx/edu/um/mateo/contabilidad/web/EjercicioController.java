@@ -147,7 +147,7 @@ public class EjercicioController extends BaseController {
             return "contabilidad/ejercicio/nuevo";
         }
 
-        redirectAttributes.addFlashAttribute("message", "ejercicio.creada.message");
+        redirectAttributes.addFlashAttribute("message", "ejercicio.creado.message");
         redirectAttributes.addFlashAttribute("messageAttrs", new String[]{ejercicio.getNombre()});
 
         return "redirect:/contabilidad/ejercicio/ver/" + ejercicio.getId().getIdEjercicio();
@@ -184,7 +184,7 @@ public class EjercicioController extends BaseController {
             return "contabilidad/ejercicio/edita";
         }
 
-        redirectAttributes.addFlashAttribute("message", "ejercicio.actualizada.message");
+        redirectAttributes.addFlashAttribute("message", "ejercicio.actualizado.message");
         redirectAttributes.addFlashAttribute("messageAttrs", new String[]{ejercicio.getNombre()});
 
         return "redirect:/contabilidad/ejercicio/ver/" + ejercicio.getId().getIdEjercicio();

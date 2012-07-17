@@ -11,19 +11,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="empresa.nueva.label" /></title>
+        <title><s:message code="ejercicio.nuevo.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="empresa" />
+            <jsp:param name="menu" value="ejercicio" />
         </jsp:include>
 
-        <div id="nueva-empresa" class="content scaffold-list" role="main">
-            <h1><s:message code="empresa.nueva.label" /></h1>
+        <div id="nueva-ejercicio" class="content scaffold-list" role="main">
+            <h1><s:message code="ejercicio.nuevo.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/admin/empresa'/>"><i class="icon-list icon-white"></i> <s:message code='empresa.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/ejercicio'/>"><i class="icon-list icon-white"></i> <s:message code='ejercicio.lista.label' /></a>
             </p>
-            <form:form commandName="empresa" action="crea" method="post">
+            <form:form commandName="ejercicio" action="crea" method="post">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -34,17 +34,17 @@
                 </form:errors>
 
                 <fieldset>
-                    <s:bind path="empresa.codigo">
+                    <s:bind path="ejercicio.id.idEjercicio">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="codigo">
-                                <s:message code="codigo.label" />
+                            <label for="idEjercicio">
+                                <s:message code="id.idEjercicio.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="codigo" maxlength="128" required="true" />
-                            <form:errors path="codigo" cssClass="alert alert-error" />
+                            <form:input id="idEjercicio" path="id.idEjercicio" maxlength="128" required="true" />
+                            <form:errors path="id.idEjercicio" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="empresa.nombre">
+                    <s:bind path="ejercicio.nombre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombre">
                                 <s:message code="nombre.label" />
@@ -54,38 +54,18 @@
                             <form:errors path="nombre" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="empresa.nombreCompleto">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="nombreCompleto">
-                                <s:message code="nombreCompleto.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="nombreCompleto" maxlength="128" required="true" />
-                            <form:errors path="nombreCompleto" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
-                    <s:bind path="empresa.rfc">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="rfc">
-                                <s:message code="rfc.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="rfc" maxlength="13" required="true" />
-                            <form:errors path="rfc" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/admin/empresa'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <a class="btn btn-large" href="<s:url value='/contabilidad/ejercicio'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>
         <content>
             <script>
                 $(document).ready(function() {
-                    $('input#codigo').focus();
+                    $('input#idEjercicio').focus();
                 });
             </script>                    
         </content>
