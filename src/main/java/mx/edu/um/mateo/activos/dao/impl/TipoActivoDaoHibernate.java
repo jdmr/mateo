@@ -39,7 +39,6 @@ import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.contabilidad.model.EjercicioPK;
 import mx.edu.um.mateo.general.dao.BaseDao;
-import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Usuario;
 import org.hibernate.Criteria;
 import org.hibernate.Session;

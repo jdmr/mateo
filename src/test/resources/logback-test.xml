@@ -28,11 +28,11 @@
     </triggeringPolicy>
   </appender>
   <logger name="mx.edu.um.mateo" level="DEBUG"/>
-  <logger name="org.springframework.orm.hibernate4" level="DEBUG"/>
-  <logger name="org.hibernate.engine.transaction" level="DEBUG"/>
+  <logger name="org.springframework" level="DEBUG"/>
   <logger name="org.hibernate.SQL" level="TRACE"/>
   <logger name="org.hibernate.type" level="TRACE"/>
   <!--
+  <logger name="org.hibernate" level="DEBUG"/>
   -->
   <root level="INFO">
     <appender-ref ref="stdout"/>

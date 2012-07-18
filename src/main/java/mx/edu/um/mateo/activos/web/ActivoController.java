@@ -434,12 +434,11 @@ public class ActivoController extends BaseController {
 
     @RequestMapping(value = "/subeActivos", method = RequestMethod.POST)
     public String sube(HttpServletResponse response, RedirectAttributes redirectAttributes, MultipartFile archivo) throws IOException, ActivoNoCreadoException {
-        byte[] resultado = activoDao.sube(archivo.getBytes(), ambiente.obtieneUsuario());
         redirectAttributes.addFlashAttribute("message", "activo.sube.archivo.message");
         response.setContentType("application/vnd.ms-excel");
-        response.setHeader("Content-disposition","attachment; filename='"+archivo.getOriginalFilename()+"'");
+        response.setHeader("Content-disposition","attachment; filename='errores-"+archivo.getOriginalFilename()+"'");
         OutputStream out = response.getOutputStream();
-        out.write(resultado);
+        activoDao.sube(archivo.getBytes(), ambiente.obtieneUsuario(), response.getOutputStream());
         out.flush();
 
         return "redirect:/activoFijo/activo";

@@ -69,6 +69,13 @@
             <property name="maxActive" value="${jdbc.maxActive}" />
             <property name="removeAbandoned" value="true" />
             <property name="logAbandoned" value="true" />
+            <property name="validationQuery" value="SELECT 1" />
+            <property name="testOnBorrow" value="true" />
+            <property name="testWhileIdle" value="true" />
+            <property name="testOnReturn" value="true" />
+            <property name="minEvictableIdleTimeMillis" value="1800000" />
+            <property name="timeBetweenEvictionRunsMillis" value="1800000" />
+            <property name="numTestsPerEvictionRun" value="3" />
         </bean>
         
         <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
@@ -80,6 +87,7 @@
                     <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
                     <prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop>
                     <prop key="hibernate.cache.provider_class">${hibernate.cache.provider_class}</prop>
+                    <prop key="hibernate.dialect">${hibernate.dialect}</prop>
                 </props>
             </property>
         </bean>
@@ -104,6 +112,7 @@
                     <prop key="hibernate.hbm2ddl.auto">${test.hibernate.hbm2ddl.auto}</prop>
                     <prop key="hibernate.cache.use_second_level_cache">${test.hibernate.cache.use_second_level_cache}</prop>
                     <prop key="hibernate.cache.provider_class">${test.hibernate.cache.provider_class}</prop>
+                    <prop key="hibernate.dialect">${hibernate.dialect}</prop>
                 </props>
             </property>
         </bean>

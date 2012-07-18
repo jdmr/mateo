@@ -24,6 +24,7 @@
 package mx.edu.um.mateo.activos.dao.impl;
 
 import java.io.ByteArrayInputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -43,27 +44,28 @@ import mx.edu.um.mateo.activos.model.FolioActivo;
 import mx.edu.um.mateo.activos.model.ReubicacionActivo;
 import mx.edu.um.mateo.activos.model.TipoActivo;
 import mx.edu.um.mateo.activos.model.XActivo;
-import mx.edu.um.mateo.activos.utils.ActivoNoCreadoException;
 import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.contabilidad.model.Cuenta;
-import mx.edu.um.mateo.contabilidad.model.Ejercicio;
-import mx.edu.um.mateo.contabilidad.model.EjercicioPK;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellValue;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.Criteria;
 import org.hibernate.LockOptions;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -550,14 +552,16 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
     }
 
     @Override
-    @Transactional(rollbackFor = ActivoNoCreadoException.class)
-    public byte[] sube(byte[] datos, Usuario usuario) throws ActivoNoCreadoException {
+    public void sube(byte[] datos, Usuario usuario, OutputStream out) {
         int idx = 5;
         int i = 0;
+        Transaction tx = null;
         try {
+            SimpleDateFormat sdf = new SimpleDateFormat("d/M/yyyy");
+            SimpleDateFormat sdf2 = new SimpleDateFormat("d/MM/yy");
+            SimpleDateFormat sdf3 = new SimpleDateFormat("d-MM-yyyy");
+            SimpleDateFormat sdf4 = new SimpleDateFormat("dd-MMM-yyyy");
             String ejercicioId = "001-2012";
-            EjercicioPK ejercicioPK = new EjercicioPK(ejercicioId, usuario.getEmpresa().getOrganizacion());
-            Ejercicio ejercicio = (Ejercicio) currentSession().load(Ejercicio.class, ejercicioPK);
             Map<String, CentroCosto> centrosDeCosto = new HashMap<>();
             Map<String, TipoActivo> tipos = new HashMap<>();
             Query tipoActivoQuery = currentSession().createQuery("select ta from TipoActivo ta "
@@ -577,92 +581,284 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             proveedorQuery.setString("nombreEmpresa", usuario.getEmpresa().getNombre());
             Proveedor proveedor = (Proveedor) proveedorQuery.uniqueResult();
 
-            POIFSFileSystem fs = new POIFSFileSystem(new ByteArrayInputStream(datos));
-            HSSFWorkbook workbook = new HSSFWorkbook(fs);
-            FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
-            int numeroDePaginas = workbook.getNumberOfSheets();
-            // inicia for para distintas paginas
-            HSSFSheet sheet = workbook.getSheetAt(idx);
-            int rows = sheet.getPhysicalNumberOfRows();
-            for (i = 2; i < rows; i++) {
-                log.debug("Leyendo pagina {} renglon {}", idx, i);
-                HSSFRow row = sheet.getRow(i);
-                String nombreGrupo = row.getCell(0).getStringCellValue().trim();
-                TipoActivo tipoActivo = tipos.get(nombreGrupo);
-                if (tipoActivo != null) {
-                    String cuentaCCosto = row.getCell(2).getStringCellValue().trim();
-                    if (cuentaCCosto != null) {
-                        CentroCosto centroCosto = centrosDeCosto.get(cuentaCCosto);
-                        if (centroCosto == null) {
-                            Query ccostoQuery = currentSession().createQuery("select cc from CentroCosto cc "
-                                    + "where cc.id.ejercicio.id.idEjercicio = :ejercicioId "
-                                    + "and cc.id.ejercicio.id.organizacion.id = :organizacionId "
-                                    + "and cc.id.idCosto like :idCosto");
-                            ccostoQuery.setString("ejercicioId", ejercicioId);
-                            ccostoQuery.setLong("organizacionId", usuario.getEmpresa().getOrganizacion().getId());
-                            ccostoQuery.setString("idCosto", "%" + cuentaCCosto);
-                            List<CentroCosto> listaCCosto = ccostoQuery.list();
-                            log.debug("Regreso: {}", listaCCosto);
-                            if (listaCCosto != null && listaCCosto.size() > 0) {
-                                centroCosto = listaCCosto.get(0);
-                            }
-                            if (centroCosto == null) {
-                                throw new RuntimeException("(" + idx + ":" + i + ") No se encontro el centro de costo " + cuentaCCosto);
-                            }
-                            centrosDeCosto.put(cuentaCCosto, centroCosto);
-                        }
-                        Date fechaCompra = row.getCell(4) != null ? row.getCell(4).getDateCellValue() : null;
-                        Boolean seguro = false;
-                        if (row.getCell(6) != null && StringUtils.isNotBlank(row.getCell(6).getStringCellValue())) {
-                            seguro = true;
-                        }
-                        String poliza = null;
-                        switch (row.getCell(4).getCellType()) {
-                            case HSSFCell.CELL_TYPE_NUMERIC:
-                                poliza = row.getCell(4).toString();
-                                break;
-                            case HSSFCell.CELL_TYPE_STRING:
-                                poliza = row.getCell(4).getStringCellValue().trim();
-                                break;
-                        }
-                        String codigo = row.getCell(8) != null ? row.getCell(8).getStringCellValue().trim() : null;
-                        String descripcion = row.getCell(9) != null ? row.getCell(9).getStringCellValue().trim() : null;
-                        String marca = row.getCell(10) != null ? row.getCell(10).getStringCellValue().trim() : null;
-                        String modelo = null;
-                        switch (row.getCell(11).getCellType()) {
-                            case HSSFCell.CELL_TYPE_NUMERIC:
-                                modelo = row.getCell(11).toString();
-                                break;
-                            case HSSFCell.CELL_TYPE_STRING:
-                                modelo = row.getCell(11).getStringCellValue().trim();
-                                break;
-                        }
-                        String serie = row.getCell(12) != null ? row.getCell(12).getStringCellValue().trim() : null;
-                        String responsable = row.getCell(13) != null ? row.getCell(13).getStringCellValue().trim() : null;
-                        String ubicacion = row.getCell(14) != null ? row.getCell(14).getStringCellValue().trim() : null;
-                        BigDecimal costo = null;
-                        switch (row.getCell(12).getCellType()) {
-                            case HSSFCell.CELL_TYPE_NUMERIC:
-                                costo = new BigDecimal(row.getCell(15).getNumericCellValue());
-                                break;
-                            case HSSFCell.CELL_TYPE_STRING:
-                                costo = new BigDecimal(row.getCell(15).toString());
-                                break;
-                        }
+            Query codigoDuplicadoQuery = currentSession().createQuery("select a from Activo a where a.empresa.id = :empresaId and a.codigo = :codigo");
 
-                        Activo activo = new Activo(fechaCompra, seguro, poliza, codigo, descripcion, marca, modelo, serie, responsable, ubicacion, costo, tipoActivo, centroCosto, proveedor, usuario.getEmpresa());
-                        this.crea(activo, usuario);
-                    } else {
-                        throw new ActivoNoCreadoException("La cuenta viene vacia (" + idx + ":" + i + ")");
+            XSSFWorkbook workbook = new XSSFWorkbook(new ByteArrayInputStream(datos));
+            FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+
+            XSSFWorkbook wb = new XSSFWorkbook();
+            XSSFSheet ccostoFantasma = wb.createSheet("CCOSTO-FANTASMAS");
+            int ccostoFantasmaRow = 0;
+            XSSFSheet sinCodigo = wb.createSheet("SIN-CODIGO");
+            int sinCodigoRow = 0;
+            XSSFSheet fechaInvalida = wb.createSheet("FECHA-INVALIDA");
+            int fechaInvalidaRow = 0;
+            XSSFSheet codigoDuplicado = wb.createSheet("CODIGO-DUPLICADO");
+            int codigoDuplicadoRow = 0;
+
+            tx = currentSession().beginTransaction();
+            for (idx = 5; idx <= 5; idx++) {
+                XSSFSheet sheet = workbook.getSheetAt(idx);
+
+                int rows = sheet.getPhysicalNumberOfRows();
+                for (i = 2; i < rows; i++) {
+                    log.debug("Leyendo pagina {} renglon {}", idx, i);
+                    XSSFRow row = sheet.getRow(i);
+                    if (row.getCell(0) == null) {
+                        break;
                     }
-                } else {
-                    throw new ActivoNoCreadoException("No se encontro el tipo de activo (" + idx + ":" + i + ")");
+                    String nombreGrupo = row.getCell(0).getStringCellValue().trim();
+                    TipoActivo tipoActivo = tipos.get(nombreGrupo);
+                    if (tipoActivo != null) {
+                        String cuentaCCosto = row.getCell(2).toString().trim();
+                        if (cuentaCCosto != null) {
+                            CentroCosto centroCosto = centrosDeCosto.get(cuentaCCosto);
+                            if (centroCosto == null) {
+                                Query ccostoQuery = currentSession().createQuery("select cc from CentroCosto cc "
+                                        + "where cc.id.ejercicio.id.idEjercicio = :ejercicioId "
+                                        + "and cc.id.ejercicio.id.organizacion.id = :organizacionId "
+                                        + "and cc.id.idCosto like :idCosto");
+                                ccostoQuery.setString("ejercicioId", ejercicioId);
+                                ccostoQuery.setLong("organizacionId", usuario.getEmpresa().getOrganizacion().getId());
+                                ccostoQuery.setString("idCosto", "%" + cuentaCCosto);
+                                List<CentroCosto> listaCCosto = ccostoQuery.list();
+                                log.debug("Regreso: {}", listaCCosto);
+                                if (listaCCosto != null && listaCCosto.size() > 0) {
+                                    centroCosto = listaCCosto.get(0);
+                                }
+                                if (centroCosto == null) {
+                                    XSSFRow renglon = ccostoFantasma.createRow(ccostoFantasmaRow++);
+                                    renglon.createCell(0).setCellValue(sheet.getSheetName() + ":" + (i + 1));
+                                    renglon.createCell(1).setCellValue(row.getCell(0).toString());
+                                    renglon.createCell(2).setCellValue(row.getCell(1).toString());
+                                    renglon.createCell(3).setCellValue(row.getCell(2).toString());
+                                    renglon.createCell(4).setCellValue(row.getCell(3).toString());
+                                    renglon.createCell(5).setCellValue(row.getCell(4).toString());
+                                    renglon.createCell(6).setCellValue(row.getCell(5).toString());
+                                    renglon.createCell(7).setCellValue(row.getCell(6).toString());
+                                    renglon.createCell(8).setCellValue(row.getCell(7).toString());
+                                    renglon.createCell(9).setCellValue(row.getCell(8).toString());
+                                    renglon.createCell(10).setCellValue(row.getCell(9).toString());
+                                    renglon.createCell(11).setCellValue(row.getCell(10).toString());
+                                    renglon.createCell(12).setCellValue(row.getCell(11).toString());
+                                    renglon.createCell(13).setCellValue(row.getCell(12).toString());
+                                    renglon.createCell(14).setCellValue(row.getCell(13).toString());
+                                    renglon.createCell(15).setCellValue(row.getCell(14).toString());
+                                    renglon.createCell(16).setCellValue(row.getCell(15).toString());
+                                    continue;
+                                }
+                                centrosDeCosto.put(cuentaCCosto, centroCosto);
+                            }
+                            Date fechaCompra = null;
+                            if (row.getCell(4) != null) {
+                                try {
+                                    log.debug("VALIDANDO FECHA");
+                                    XSSFCell cell = row.getCell(4);
+                                    switch (cell.getCellType()) {
+                                        case Cell.CELL_TYPE_NUMERIC:
+                                            log.debug("ES NUMERIC");
+                                            if (DateUtil.isCellDateFormatted(cell)) {
+                                                log.debug("ES FECHA");
+                                                fechaCompra = cell.getDateCellValue();
+                                            } else if (DateUtil.isCellInternalDateFormatted(cell)) {
+                                                log.debug("ES FECHA INTERNAL");
+                                                fechaCompra = cell.getDateCellValue();
+                                            } else {
+                                                BigDecimal bd = new BigDecimal(cell.getNumericCellValue());
+                                                bd = stripTrailingZeros(bd);
+
+                                                log.debug("CONVIRTIENDO DOUBLE {} - {}", DateUtil.isValidExcelDate(bd.doubleValue()), bd);
+                                                fechaCompra = HSSFDateUtil.getJavaDate(bd.longValue(), true);
+                                                log.debug("Cal: {}", fechaCompra);
+                                            }
+                                            break;
+                                        case Cell.CELL_TYPE_FORMULA:
+                                            log.debug("ES FORMULA");
+                                            CellValue cellValue = evaluator.evaluate(cell);
+                                            switch (cellValue.getCellType()) {
+                                                case Cell.CELL_TYPE_NUMERIC:
+                                                    if (DateUtil.isCellDateFormatted(cell)) {
+                                                        fechaCompra = DateUtil.getJavaDate(cellValue.getNumberValue(), true);
+                                                    } else {
+                                                        throw new RuntimeException("No se pudo crear la fecha");
+                                                    }
+                                                    break;
+                                                default:
+                                                    throw new RuntimeException("No se pudo crear la fecha");
+                                            }
+                                    }
+                                    if (fechaCompra == null) {
+                                        throw new RuntimeException("No se pudo crear la fecha " + row.getCell(4).toString());
+                                    }
+                                    log.debug("Obtuve fecha {}", fechaCompra);
+                                } catch (Exception e) {
+                                    String fechaCompraString = row.getCell(4).toString().trim();
+                                    log.debug("Intentando entender fechaCompraString", fechaCompraString);
+                                    XSSFRow renglon = fechaInvalida.createRow(fechaInvalidaRow++);
+                                    renglon.createCell(0).setCellValue(sheet.getSheetName() + ":" + (i + 1));
+                                    renglon.createCell(1).setCellValue(row.getCell(0).toString());
+                                    renglon.createCell(2).setCellValue(row.getCell(1).toString());
+                                    renglon.createCell(3).setCellValue(row.getCell(2).toString());
+                                    renglon.createCell(4).setCellValue(row.getCell(3).toString());
+                                    renglon.createCell(5).setCellValue(row.getCell(4).toString());
+                                    renglon.createCell(6).setCellValue(row.getCell(5).toString());
+                                    renglon.createCell(7).setCellValue(row.getCell(6).toString());
+                                    renglon.createCell(8).setCellValue(row.getCell(7).toString());
+                                    renglon.createCell(9).setCellValue(row.getCell(8).toString());
+                                    renglon.createCell(10).setCellValue(row.getCell(9).toString());
+                                    renglon.createCell(11).setCellValue(row.getCell(10).toString());
+                                    renglon.createCell(12).setCellValue(row.getCell(11).toString());
+                                    renglon.createCell(13).setCellValue(row.getCell(12).toString());
+                                    renglon.createCell(14).setCellValue(row.getCell(13).toString());
+                                    renglon.createCell(15).setCellValue(row.getCell(14).toString());
+                                    renglon.createCell(16).setCellValue(row.getCell(15).toString());
+                                    continue;
+                                }
+                            }
+                            Boolean seguro = false;
+                            if (row.getCell(6) != null && StringUtils.isNotBlank(row.getCell(6).getStringCellValue())) {
+                                seguro = true;
+                            }
+                            String poliza = null;
+                            switch (row.getCell(4).getCellType()) {
+                                case XSSFCell.CELL_TYPE_NUMERIC:
+                                    poliza = row.getCell(4).toString();
+                                    break;
+                                case XSSFCell.CELL_TYPE_STRING:
+                                    poliza = row.getCell(4).getStringCellValue().trim();
+                                    break;
+                            }
+                            String codigo = null;
+                            switch (row.getCell(8).getCellType()) {
+                                case XSSFCell.CELL_TYPE_NUMERIC:
+                                    codigo = row.getCell(8).toString();
+                                    break;
+                                case XSSFCell.CELL_TYPE_STRING:
+                                    codigo = row.getCell(8).getStringCellValue().trim();
+                                    break;
+                            }
+                            if (StringUtils.isBlank(codigo)) {
+                                XSSFRow renglon = sinCodigo.createRow(sinCodigoRow++);
+                                renglon.createCell(0).setCellValue(sheet.getSheetName() + ":" + (i + 1));
+                                renglon.createCell(1).setCellValue(row.getCell(0).toString());
+                                renglon.createCell(2).setCellValue(row.getCell(1).toString());
+                                renglon.createCell(3).setCellValue(row.getCell(2).toString());
+                                renglon.createCell(4).setCellValue(row.getCell(3).toString());
+                                renglon.createCell(5).setCellValue(row.getCell(4).toString());
+                                renglon.createCell(6).setCellValue(row.getCell(5).toString());
+                                renglon.createCell(7).setCellValue(row.getCell(6).toString());
+                                renglon.createCell(8).setCellValue(row.getCell(7).toString());
+                                renglon.createCell(9).setCellValue(row.getCell(8).toString());
+                                renglon.createCell(10).setCellValue(row.getCell(9).toString());
+                                renglon.createCell(11).setCellValue(row.getCell(10).toString());
+                                renglon.createCell(12).setCellValue(row.getCell(11).toString());
+                                renglon.createCell(13).setCellValue(row.getCell(12).toString());
+                                renglon.createCell(14).setCellValue(row.getCell(13).toString());
+                                renglon.createCell(15).setCellValue(row.getCell(14).toString());
+                                renglon.createCell(16).setCellValue(row.getCell(15).toString());
+                                continue;
+                            } else {
+                                // busca codigo duplicado
+                                if (codigo.contains(".")) {
+                                    codigo = codigo.substring(0, codigo.lastIndexOf("."));
+                                    log.debug("CODIGO: {}", codigo);
+                                }
+
+                                codigoDuplicadoQuery.setLong("empresaId", usuario.getEmpresa().getId());
+                                codigoDuplicadoQuery.setString("codigo", codigo);
+                                Activo activo = (Activo) codigoDuplicadoQuery.uniqueResult();
+                                if (activo != null) {
+                                    XSSFRow renglon = codigoDuplicado.createRow(codigoDuplicadoRow++);
+                                    renglon.createCell(0).setCellValue(sheet.getSheetName() + ":" + (i + 1));
+                                    renglon.createCell(1).setCellValue(row.getCell(0).toString());
+                                    renglon.createCell(2).setCellValue(row.getCell(1).toString());
+                                    renglon.createCell(3).setCellValue(row.getCell(2).toString());
+                                    renglon.createCell(4).setCellValue(row.getCell(3).toString());
+                                    renglon.createCell(5).setCellValue(row.getCell(4).toString());
+                                    renglon.createCell(6).setCellValue(row.getCell(5).toString());
+                                    renglon.createCell(7).setCellValue(row.getCell(6).toString());
+                                    renglon.createCell(8).setCellValue(row.getCell(7).toString());
+                                    renglon.createCell(9).setCellValue(row.getCell(8).toString());
+                                    renglon.createCell(10).setCellValue(row.getCell(9).toString());
+                                    renglon.createCell(11).setCellValue(row.getCell(10).toString());
+                                    renglon.createCell(12).setCellValue(row.getCell(11).toString());
+                                    renglon.createCell(13).setCellValue(row.getCell(12).toString());
+                                    renglon.createCell(14).setCellValue(row.getCell(13).toString());
+                                    renglon.createCell(15).setCellValue(row.getCell(14).toString());
+                                    renglon.createCell(16).setCellValue(row.getCell(15).toString());
+                                    continue;
+                                }
+                            }
+                            String descripcion = row.getCell(9) != null ? row.getCell(9).getStringCellValue().trim() : null;
+                            String marca = row.getCell(10) != null ? row.getCell(10).getStringCellValue().trim() : null;
+                            String modelo = null;
+                            switch (row.getCell(11).getCellType()) {
+                                case XSSFCell.CELL_TYPE_NUMERIC:
+                                    modelo = row.getCell(11).toString();
+                                    break;
+                                case XSSFCell.CELL_TYPE_STRING:
+                                    modelo = row.getCell(11).getStringCellValue().trim();
+                                    break;
+                            }
+                            String serie = row.getCell(12) != null ? row.getCell(12).getStringCellValue().trim() : null;
+                            String responsable = row.getCell(13) != null ? row.getCell(13).getStringCellValue().trim() : null;
+                            String ubicacion = row.getCell(14) != null ? row.getCell(14).getStringCellValue().trim() : null;
+                            BigDecimal costo = null;
+                            switch (row.getCell(12).getCellType()) {
+                                case XSSFCell.CELL_TYPE_NUMERIC:
+                                    costo = new BigDecimal(row.getCell(15).getNumericCellValue());
+                                    break;
+                                case XSSFCell.CELL_TYPE_STRING:
+                                    costo = new BigDecimal(row.getCell(15).toString());
+                                    break;
+                            }
+
+                            Activo activo = new Activo(fechaCompra, seguro, poliza, codigo, descripcion, marca, modelo, serie, responsable, ubicacion, costo, tipoActivo, centroCosto, proveedor, usuario.getEmpresa());
+                            this.crea(activo, usuario);
+
+                        } else {
+                            throw new RuntimeException("(" + idx + ":" + i + ") La cuenta viene vacia " + cuentaCCosto);
+                        }
+                    } else {
+                        throw new RuntimeException("(" + idx + ":" + i + ") No se encontro el tipo de activo " + nombreGrupo);
+                    }
                 }
             }
-            return workbook.getBytes();
+            tx.commit();
+
+            wb.write(out);
         } catch (Exception e) {
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
             log.error("Hubo problemas al intentar pasar datos de archivo excel a BD (" + idx + ":" + i + ")", e);
-            throw new ActivoNoCreadoException("Hubo problemas al intentar pasar datos de archivo excel a BD (" + idx + ":" + i + ")", e);
+            throw new RuntimeException("Hubo problemas al intentar pasar datos de archivo excel a BD (" + idx + ":" + i + ")", e);
         }
+    }
+
+    private BigDecimal stripTrailingZeros(BigDecimal value) {
+        if (value.scale() <= 0) {
+            return value;
+        }
+
+        String valueAsString = String.valueOf(value);
+        int idx = valueAsString.indexOf(".");
+        if (idx == -1) {
+            return value;
+        }
+
+        for (int i = valueAsString.length() - 1; i > idx; i--) {
+            if (valueAsString.charAt(i) == '0') {
+                valueAsString = valueAsString.substring(0, i);
+            } else if (valueAsString.charAt(i) == '.') {
+                valueAsString = valueAsString.substring(0, i);
+                // Stop when decimal point is reached
+                break;
+            } else {
+                break;
+            }
+        }
+        BigDecimal result = new BigDecimal(valueAsString);
+        return result;
     }
 }

@@ -35,6 +35,7 @@ import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Proveedor;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *
@@ -42,7 +43,8 @@ import mx.edu.um.mateo.general.model.Proveedor;
  */
 @Entity
 @Table(name = "activos", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"folio", "empresa_id"})
+    @UniqueConstraint(columnNames = {"folio", "empresa_id"}),
+    @UniqueConstraint(columnNames = {"codigo", "empresa_id"})
 })
 public class Activo implements Serializable {
 
@@ -67,7 +69,8 @@ public class Activo implements Serializable {
     private String condicion;
     @Column(length = 64)
     private String poliza;
-    @Column(length = 64)
+    @NotBlank
+    @Column(length = 64, nullable = false)
     private String codigo;
     @Column(length = 200)
     private String descripcion;
@@ -77,6 +80,7 @@ public class Activo implements Serializable {
     private String modelo;
     @Column(length = 64)
     private String serial;
+    @NotNull
     @Column(nullable = false, scale = 2, precision = 8)
     private BigDecimal moi = BigDecimal.ZERO;
     @Column(nullable = false, scale = 2, precision = 8, name = "valor_rescate")

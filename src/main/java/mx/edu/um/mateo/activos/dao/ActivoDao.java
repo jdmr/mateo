@@ -23,13 +23,13 @@
  */
 package mx.edu.um.mateo.activos.dao;
 
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.activos.model.Activo;
 import mx.edu.um.mateo.activos.model.BajaActivo;
 import mx.edu.um.mateo.activos.model.ReubicacionActivo;
-import mx.edu.um.mateo.activos.utils.ActivoNoCreadoException;
 import mx.edu.um.mateo.contabilidad.model.Cuenta;
 import mx.edu.um.mateo.general.model.Usuario;
 
@@ -67,5 +67,5 @@ public interface ActivoDao {
     
     public String reubica(ReubicacionActivo reubicacion, Usuario usuario);
     
-    public byte[] sube(byte[] datos, Usuario usuario) throws ActivoNoCreadoException;
+    public void sube(byte[] datos, Usuario usuario, OutputStream out);
 }
