@@ -70,12 +70,6 @@
             <property name="removeAbandoned" value="true" />
             <property name="logAbandoned" value="true" />
             <property name="validationQuery" value="SELECT 1" />
-            <property name="testOnBorrow" value="true" />
-            <property name="testWhileIdle" value="true" />
-            <property name="testOnReturn" value="true" />
-            <property name="minEvictableIdleTimeMillis" value="1800000" />
-            <property name="timeBetweenEvictionRunsMillis" value="1800000" />
-            <property name="numTestsPerEvictionRun" value="3" />
         </bean>
         
         <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">

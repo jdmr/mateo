@@ -29,6 +29,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -555,12 +556,11 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
     public void sube(byte[] datos, Usuario usuario, OutputStream out) {
         int idx = 5;
         int i = 0;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yy");
+        SimpleDateFormat sdf3 = new SimpleDateFormat("dd-MM-yy");
         Transaction tx = null;
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("d/M/yyyy");
-            SimpleDateFormat sdf2 = new SimpleDateFormat("d/MM/yy");
-            SimpleDateFormat sdf3 = new SimpleDateFormat("d-MM-yyyy");
-            SimpleDateFormat sdf4 = new SimpleDateFormat("dd-MMM-yyyy");
             String ejercicioId = "001-2012";
             Map<String, CentroCosto> centrosDeCosto = new HashMap<>();
             Map<String, TipoActivo> tipos = new HashMap<>();
@@ -589,15 +589,19 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             XSSFWorkbook wb = new XSSFWorkbook();
             XSSFSheet ccostoFantasma = wb.createSheet("CCOSTO-FANTASMAS");
             int ccostoFantasmaRow = 0;
+            XSSFSheet sinCCosto = wb.createSheet("SIN-CCOSTO");
+            int sinCCostoRow = 0;
             XSSFSheet sinCodigo = wb.createSheet("SIN-CODIGO");
             int sinCodigoRow = 0;
-            XSSFSheet fechaInvalida = wb.createSheet("FECHA-INVALIDA");
-            int fechaInvalidaRow = 0;
             XSSFSheet codigoDuplicado = wb.createSheet("CODIGO-DUPLICADO");
             int codigoDuplicadoRow = 0;
+            XSSFSheet fechaInvalida = wb.createSheet("FECHA-INVALIDA");
+            int fechaInvalidaRow = 0;
+            XSSFSheet sinCosto = wb.createSheet("SIN-COSTO");
+            int sinCostoRow = 0;
 
             tx = currentSession().beginTransaction();
-            for (idx = 5; idx <= 5; idx++) {
+            for (idx = 0; idx <= 5; idx++) {
                 XSSFSheet sheet = workbook.getSheetAt(idx);
 
                 int rows = sheet.getPhysicalNumberOfRows();
@@ -611,7 +615,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                     TipoActivo tipoActivo = tipos.get(nombreGrupo);
                     if (tipoActivo != null) {
                         String cuentaCCosto = row.getCell(2).toString().trim();
-                        if (cuentaCCosto != null) {
+                        if (StringUtils.isNotBlank(cuentaCCosto)) {
                             CentroCosto centroCosto = centrosDeCosto.get(cuentaCCosto);
                             if (centroCosto == null) {
                                 Query ccostoQuery = currentSession().createQuery("select cc from CentroCosto cc "
@@ -621,8 +625,8 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                                 ccostoQuery.setString("ejercicioId", ejercicioId);
                                 ccostoQuery.setLong("organizacionId", usuario.getEmpresa().getOrganizacion().getId());
                                 ccostoQuery.setString("idCosto", "%" + cuentaCCosto);
+                                ccostoQuery.setMaxResults(1);
                                 List<CentroCosto> listaCCosto = ccostoQuery.list();
-                                log.debug("Regreso: {}", listaCCosto);
                                 if (listaCCosto != null && listaCCosto.size() > 0) {
                                     centroCosto = listaCCosto.get(0);
                                 }
@@ -649,85 +653,103 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                                 }
                                 centrosDeCosto.put(cuentaCCosto, centroCosto);
                             }
-                            Date fechaCompra = null;
-                            if (row.getCell(4) != null) {
-                                try {
-                                    log.debug("VALIDANDO FECHA");
-                                    XSSFCell cell = row.getCell(4);
-                                    switch (cell.getCellType()) {
-                                        case Cell.CELL_TYPE_NUMERIC:
-                                            log.debug("ES NUMERIC");
-                                            if (DateUtil.isCellDateFormatted(cell)) {
-                                                log.debug("ES FECHA");
-                                                fechaCompra = cell.getDateCellValue();
-                                            } else if (DateUtil.isCellInternalDateFormatted(cell)) {
-                                                log.debug("ES FECHA INTERNAL");
-                                                fechaCompra = cell.getDateCellValue();
-                                            } else {
-                                                BigDecimal bd = new BigDecimal(cell.getNumericCellValue());
-                                                bd = stripTrailingZeros(bd);
-
-                                                log.debug("CONVIRTIENDO DOUBLE {} - {}", DateUtil.isValidExcelDate(bd.doubleValue()), bd);
-                                                fechaCompra = HSSFDateUtil.getJavaDate(bd.longValue(), true);
-                                                log.debug("Cal: {}", fechaCompra);
-                                            }
-                                            break;
-                                        case Cell.CELL_TYPE_FORMULA:
-                                            log.debug("ES FORMULA");
-                                            CellValue cellValue = evaluator.evaluate(cell);
-                                            switch (cellValue.getCellType()) {
-                                                case Cell.CELL_TYPE_NUMERIC:
-                                                    if (DateUtil.isCellDateFormatted(cell)) {
-                                                        fechaCompra = DateUtil.getJavaDate(cellValue.getNumberValue(), true);
-                                                    } else {
-                                                        throw new RuntimeException("No se pudo crear la fecha");
-                                                    }
-                                                    break;
-                                                default:
-                                                    throw new RuntimeException("No se pudo crear la fecha");
-                                            }
-                                    }
-                                    if (fechaCompra == null) {
-                                        throw new RuntimeException("No se pudo crear la fecha " + row.getCell(4).toString());
-                                    }
-                                    log.debug("Obtuve fecha {}", fechaCompra);
-                                } catch (Exception e) {
-                                    String fechaCompraString = row.getCell(4).toString().trim();
-                                    log.debug("Intentando entender fechaCompraString", fechaCompraString);
-                                    XSSFRow renglon = fechaInvalida.createRow(fechaInvalidaRow++);
-                                    renglon.createCell(0).setCellValue(sheet.getSheetName() + ":" + (i + 1));
-                                    renglon.createCell(1).setCellValue(row.getCell(0).toString());
-                                    renglon.createCell(2).setCellValue(row.getCell(1).toString());
-                                    renglon.createCell(3).setCellValue(row.getCell(2).toString());
-                                    renglon.createCell(4).setCellValue(row.getCell(3).toString());
-                                    renglon.createCell(5).setCellValue(row.getCell(4).toString());
-                                    renglon.createCell(6).setCellValue(row.getCell(5).toString());
-                                    renglon.createCell(7).setCellValue(row.getCell(6).toString());
-                                    renglon.createCell(8).setCellValue(row.getCell(7).toString());
-                                    renglon.createCell(9).setCellValue(row.getCell(8).toString());
-                                    renglon.createCell(10).setCellValue(row.getCell(9).toString());
-                                    renglon.createCell(11).setCellValue(row.getCell(10).toString());
-                                    renglon.createCell(12).setCellValue(row.getCell(11).toString());
-                                    renglon.createCell(13).setCellValue(row.getCell(12).toString());
-                                    renglon.createCell(14).setCellValue(row.getCell(13).toString());
-                                    renglon.createCell(15).setCellValue(row.getCell(14).toString());
-                                    renglon.createCell(16).setCellValue(row.getCell(15).toString());
-                                    continue;
-                                }
-                            }
-                            Boolean seguro = false;
-                            if (row.getCell(6) != null && StringUtils.isNotBlank(row.getCell(6).getStringCellValue())) {
-                                seguro = true;
-                            }
                             String poliza = null;
                             switch (row.getCell(4).getCellType()) {
                                 case XSSFCell.CELL_TYPE_NUMERIC:
                                     poliza = row.getCell(4).toString();
+                                    poliza = StringUtils.removeEnd(poliza, ".0");
+                                    log.debug("POLIZA-N: {}", poliza);
                                     break;
                                 case XSSFCell.CELL_TYPE_STRING:
                                     poliza = row.getCell(4).getStringCellValue().trim();
+                                    log.debug("POLIZA-S: {}", poliza);
                                     break;
                             }
+                            Boolean seguro = false;
+                            if (row.getCell(5) != null && StringUtils.isNotBlank(row.getCell(5).toString())) {
+                                seguro = true;
+                            }
+                            Boolean garantia = false;
+                            if (row.getCell(6) != null && StringUtils.isNotBlank(row.getCell(6).toString())) {
+                                garantia = true;
+                            }
+                            Date fechaCompra = null;
+                            if (row.getCell(7) != null) {
+                                log.debug("VALIDANDO FECHA");
+                                XSSFCell cell = row.getCell(7);
+                                switch (cell.getCellType()) {
+                                    case Cell.CELL_TYPE_NUMERIC:
+                                        log.debug("ES NUMERIC");
+                                        if (DateUtil.isCellDateFormatted(cell)) {
+                                            log.debug("ES FECHA");
+                                            fechaCompra = cell.getDateCellValue();
+                                        } else if (DateUtil.isCellInternalDateFormatted(cell)) {
+                                            log.debug("ES FECHA INTERNAL");
+                                            fechaCompra = cell.getDateCellValue();
+                                        } else {
+                                            BigDecimal bd = new BigDecimal(cell.getNumericCellValue());
+                                            bd = stripTrailingZeros(bd);
+
+                                            log.debug("CONVIRTIENDO DOUBLE {} - {}", DateUtil.isValidExcelDate(bd.doubleValue()), bd);
+                                            fechaCompra = HSSFDateUtil.getJavaDate(bd.longValue(), true);
+                                            log.debug("Cal: {}", fechaCompra);
+                                        }
+                                        break;
+                                    case Cell.CELL_TYPE_FORMULA:
+                                        log.debug("ES FORMULA");
+                                        CellValue cellValue = evaluator.evaluate(cell);
+                                        switch (cellValue.getCellType()) {
+                                            case Cell.CELL_TYPE_NUMERIC:
+                                                if (DateUtil.isCellDateFormatted(cell)) {
+                                                    fechaCompra = DateUtil.getJavaDate(cellValue.getNumberValue(), true);
+                                                }
+                                        }
+                                }
+                            }
+                            if (row.getCell(7) != null && fechaCompra == null) {
+                                String fechaCompraString;
+                                if (row.getCell(7).getCellType() == Cell.CELL_TYPE_STRING) {
+                                    fechaCompraString = row.getCell(7).getStringCellValue();
+                                } else {
+                                    fechaCompraString = row.getCell(7).toString().trim();
+                                }
+                                try {
+                                    fechaCompra = sdf.parse(fechaCompraString);
+                                } catch(ParseException e) {
+                                    try {
+                                        fechaCompra = sdf2.parse(fechaCompraString);
+                                    } catch(ParseException e2) {
+                                        try {
+                                            fechaCompra = sdf3.parse(fechaCompraString);
+                                        } catch(ParseException e3) {
+                                            // no se pudo convertir
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            if (fechaCompra == null) {
+                                XSSFRow renglon = fechaInvalida.createRow(fechaInvalidaRow++);
+                                renglon.createCell(0).setCellValue(sheet.getSheetName() + ":" + (i + 1));
+                                renglon.createCell(1).setCellValue(row.getCell(0).toString());
+                                renglon.createCell(2).setCellValue(row.getCell(1).toString());
+                                renglon.createCell(3).setCellValue(row.getCell(2).toString());
+                                renglon.createCell(4).setCellValue(row.getCell(3).toString());
+                                renglon.createCell(5).setCellValue(row.getCell(4).toString());
+                                renglon.createCell(6).setCellValue(row.getCell(5).toString());
+                                renglon.createCell(7).setCellValue(row.getCell(6).toString());
+                                renglon.createCell(8).setCellValue(row.getCell(7).toString());
+                                renglon.createCell(9).setCellValue(row.getCell(8).toString());
+                                renglon.createCell(10).setCellValue(row.getCell(9).toString());
+                                renglon.createCell(11).setCellValue(row.getCell(10).toString());
+                                renglon.createCell(12).setCellValue(row.getCell(11).toString());
+                                renglon.createCell(13).setCellValue(row.getCell(12).toString());
+                                renglon.createCell(14).setCellValue(row.getCell(13).toString());
+                                renglon.createCell(15).setCellValue(row.getCell(14).toString());
+                                renglon.createCell(16).setCellValue(row.getCell(15).toString());
+                                continue;
+                            }
+                            
                             String codigo = null;
                             switch (row.getCell(8).getCellType()) {
                                 case XSSFCell.CELL_TYPE_NUMERIC:
@@ -789,35 +811,150 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                                     continue;
                                 }
                             }
-                            String descripcion = row.getCell(9) != null ? row.getCell(9).getStringCellValue().trim() : null;
-                            String marca = row.getCell(10) != null ? row.getCell(10).getStringCellValue().trim() : null;
-                            String modelo = null;
-                            switch (row.getCell(11).getCellType()) {
-                                case XSSFCell.CELL_TYPE_NUMERIC:
-                                    modelo = row.getCell(11).toString();
-                                    break;
-                                case XSSFCell.CELL_TYPE_STRING:
-                                    modelo = row.getCell(11).getStringCellValue().trim();
-                                    break;
+                            String descripcion = null;
+                            if (row.getCell(9) != null) {
+                                switch (row.getCell(9).getCellType()) {
+                                    case XSSFCell.CELL_TYPE_NUMERIC:
+                                        descripcion = row.getCell(9).toString();
+                                        descripcion = StringUtils.removeEnd(descripcion, ".0");
+                                        break;
+                                    case XSSFCell.CELL_TYPE_STRING:
+                                        descripcion = row.getCell(9).getStringCellValue().trim();
+                                        break;
+                                    default:
+                                        descripcion = row.getCell(9).toString().trim();
+                                }
                             }
-                            String serie = row.getCell(12) != null ? row.getCell(12).getStringCellValue().trim() : null;
-                            String responsable = row.getCell(13) != null ? row.getCell(13).getStringCellValue().trim() : null;
-                            String ubicacion = row.getCell(14) != null ? row.getCell(14).getStringCellValue().trim() : null;
+                            String marca = null;
+                            if (row.getCell(10) != null) {
+                                switch (row.getCell(10).getCellType()) {
+                                    case XSSFCell.CELL_TYPE_NUMERIC:
+                                        marca = row.getCell(10).toString();
+                                        marca = StringUtils.removeEnd(marca, ".0");
+                                        break;
+                                    case XSSFCell.CELL_TYPE_STRING:
+                                        marca = row.getCell(10).getStringCellValue().trim();
+                                        break;
+                                    default:
+                                        marca = row.getCell(10).toString().trim();
+                                }
+                            }
+                            String modelo = null;
+                            if (row.getCell(11) != null) {
+                                switch (row.getCell(11).getCellType()) {
+                                    case XSSFCell.CELL_TYPE_NUMERIC:
+                                        modelo = row.getCell(11).toString();
+                                        modelo = StringUtils.removeEnd(modelo, ".0");
+                                        break;
+                                    case XSSFCell.CELL_TYPE_STRING:
+                                        modelo = row.getCell(11).getStringCellValue().trim();
+                                        break;
+                                    default:
+                                        modelo = row.getCell(11).toString().trim();
+                                }
+                            }
+                            String serie = null;
+                            if (row.getCell(12) != null) {
+                                switch (row.getCell(12).getCellType()) {
+                                    case XSSFCell.CELL_TYPE_NUMERIC:
+                                        serie = row.getCell(12).toString();
+                                        serie = StringUtils.removeEnd(serie, ".0");
+                                        break;
+                                    case XSSFCell.CELL_TYPE_STRING:
+                                        serie = row.getCell(12).getStringCellValue().trim();
+                                        break;
+                                    default:
+                                        serie = row.getCell(12).toString().trim();
+                                }
+                            }
+                            String responsable = null;
+                            if (row.getCell(13) != null) {
+                                switch (row.getCell(13).getCellType()) {
+                                    case XSSFCell.CELL_TYPE_NUMERIC:
+                                        responsable = row.getCell(13).toString();
+                                        responsable = StringUtils.removeEnd(responsable, ".0");
+                                        break;
+                                    case XSSFCell.CELL_TYPE_STRING:
+                                        responsable = row.getCell(13).getStringCellValue().trim();
+                                        break;
+                                    default:
+                                        responsable = row.getCell(13).toString().trim();
+                                }
+                            }
+
+                            String ubicacion = null;
+                            if (row.getCell(14) != null) {
+                                switch (row.getCell(14).getCellType()) {
+                                    case XSSFCell.CELL_TYPE_NUMERIC:
+                                        ubicacion = row.getCell(14).toString();
+                                        ubicacion = StringUtils.removeEnd(ubicacion, ".0");
+                                        break;
+                                    case XSSFCell.CELL_TYPE_STRING:
+                                        ubicacion = row.getCell(14).getStringCellValue().trim();
+                                        break;
+                                    default:
+                                        ubicacion = row.getCell(14).toString().trim();
+                                }
+                            }
                             BigDecimal costo = null;
-                            switch (row.getCell(12).getCellType()) {
+                            switch (row.getCell(15).getCellType()) {
                                 case XSSFCell.CELL_TYPE_NUMERIC:
                                     costo = new BigDecimal(row.getCell(15).getNumericCellValue());
+                                    log.debug("COSTO-N: {} - {}", costo, row.getCell(15).getNumericCellValue());
                                     break;
                                 case XSSFCell.CELL_TYPE_STRING:
                                     costo = new BigDecimal(row.getCell(15).toString());
+                                    log.debug("COSTO-S: {} - {}", costo, row.getCell(15).toString());
                                     break;
+                                case XSSFCell.CELL_TYPE_FORMULA:
+                                    costo = new BigDecimal(evaluator.evaluateInCell(row.getCell(15)).getNumericCellValue());
+                                    log.debug("COSTO-F: {}", costo);
+                            }
+                            if (costo == null) {
+                                XSSFRow renglon = sinCosto.createRow(sinCostoRow++);
+                                renglon.createCell(0).setCellValue(sheet.getSheetName() + ":" + (i + 1));
+                                renglon.createCell(1).setCellValue(row.getCell(0).toString());
+                                renglon.createCell(2).setCellValue(row.getCell(1).toString());
+                                renglon.createCell(3).setCellValue(row.getCell(2).toString());
+                                renglon.createCell(4).setCellValue(row.getCell(3).toString());
+                                renglon.createCell(5).setCellValue(row.getCell(4).toString());
+                                renglon.createCell(6).setCellValue(row.getCell(5).toString());
+                                renglon.createCell(7).setCellValue(row.getCell(6).toString());
+                                renglon.createCell(8).setCellValue(row.getCell(7).toString());
+                                renglon.createCell(9).setCellValue(row.getCell(8).toString());
+                                renglon.createCell(10).setCellValue(row.getCell(9).toString());
+                                renglon.createCell(11).setCellValue(row.getCell(10).toString());
+                                renglon.createCell(12).setCellValue(row.getCell(11).toString());
+                                renglon.createCell(13).setCellValue(row.getCell(12).toString());
+                                renglon.createCell(14).setCellValue(row.getCell(13).toString());
+                                renglon.createCell(15).setCellValue(row.getCell(14).toString());
+                                renglon.createCell(16).setCellValue(row.getCell(15).toString());
+                                continue;
                             }
 
-                            Activo activo = new Activo(fechaCompra, seguro, poliza, codigo, descripcion, marca, modelo, serie, responsable, ubicacion, costo, tipoActivo, centroCosto, proveedor, usuario.getEmpresa());
+                            Activo activo = new Activo(fechaCompra, seguro, garantia, poliza, codigo, descripcion, marca, modelo, serie, responsable, ubicacion, costo, tipoActivo, centroCosto, proveedor, usuario.getEmpresa());
                             this.crea(activo, usuario);
 
                         } else {
-                            throw new RuntimeException("(" + idx + ":" + i + ") La cuenta viene vacia " + cuentaCCosto);
+                            XSSFRow renglon = sinCCosto.createRow(sinCCostoRow++);
+                            renglon.createCell(0).setCellValue(sheet.getSheetName() + ":" + (i + 1));
+                            renglon.createCell(1).setCellValue(row.getCell(0).toString());
+                            renglon.createCell(2).setCellValue(row.getCell(1).toString());
+                            renglon.createCell(3).setCellValue(row.getCell(2).toString());
+                            renglon.createCell(4).setCellValue(row.getCell(3).toString());
+                            renglon.createCell(5).setCellValue(row.getCell(4).toString());
+                            renglon.createCell(6).setCellValue(row.getCell(5).toString());
+                            renglon.createCell(7).setCellValue(row.getCell(6).toString());
+                            renglon.createCell(8).setCellValue(row.getCell(7).toString());
+                            renglon.createCell(9).setCellValue(row.getCell(8).toString());
+                            renglon.createCell(10).setCellValue(row.getCell(9).toString());
+                            renglon.createCell(11).setCellValue(row.getCell(10).toString());
+                            renglon.createCell(12).setCellValue(row.getCell(11).toString());
+                            renglon.createCell(13).setCellValue(row.getCell(12).toString());
+                            renglon.createCell(14).setCellValue(row.getCell(13).toString());
+                            renglon.createCell(15).setCellValue(row.getCell(14).toString());
+                            renglon.createCell(16).setCellValue(row.getCell(15).toString());
+                            continue;
                         }
                     } else {
                         throw new RuntimeException("(" + idx + ":" + i + ") No se encontro el tipo de activo " + nombreGrupo);

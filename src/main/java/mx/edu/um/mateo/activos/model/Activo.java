@@ -159,7 +159,9 @@ public class Activo implements Serializable {
         this.fechaInactivo = fechaInactivo;
     }
     
-    public Activo(Date fechaCompra, Boolean seguro, String poliza, String codigo, String descripcion, String marca, String modelo, String serial, String responsable, String ubicacion, BigDecimal costo, TipoActivo tipoActivo, CentroCosto centroCosto, Proveedor proveedor, Empresa empresa) {
+    public Activo(Date fechaCompra, Boolean seguro, Boolean garantia, String poliza, String codigo, String descripcion, String marca, String modelo
+            , String serial, String responsable, String ubicacion, BigDecimal costo, TipoActivo tipoActivo, CentroCosto centroCosto
+            , Proveedor proveedor, Empresa empresa) {
         this.poliza = poliza;
         this.codigo = codigo;
         this.descripcion = descripcion;
@@ -173,6 +175,9 @@ public class Activo implements Serializable {
         this.centroCosto = centroCosto;
         this.proveedor = proveedor;
         this.empresa = empresa;
+        this.seguro = seguro;
+        this.garantia = garantia;
+        this.moi = costo;
     }
 
     /**
