@@ -7,6 +7,7 @@ package mx.edu.um.mateo.rh.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.*;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -75,14 +76,14 @@ public class Empleado implements Serializable {
     public Empleado() {
     }
 
-    public Empleado(String clave, String nombre, String apPaterno, String apMaterno, 
+    public Empleado(String clave, String nombre, String apPaterno, String apMaterno,
             String genero, String direccion, String status,
-            String curp, String rfc, String cuenta, String imms, Integer scalafon, 
-            Integer turno,  BigDecimal experienciaFueraUm, 
-            String modalidad, String ife, String rango, Boolean adventista, String padre, 
-            String madre, String estadoCivil, String conyuge,  
+            String curp, String rfc, String cuenta, String imms, Integer scalafon,
+            Integer turno, BigDecimal experienciaFueraUm,
+            String modalidad, String ife, String rango, Boolean adventista, String padre,
+            String madre, String estadoCivil, String conyuge,
             Boolean finadoPadre, Boolean finadoMadre, String iglesia, String responsabilidad,
-            Integer escalafon, Integer version) {
+            Integer escalafon) {
         this.clave = clave;
         this.nombre = nombre;
         this.apPaterno = apPaterno;
@@ -90,32 +91,31 @@ public class Empleado implements Serializable {
         this.genero = genero;
         this.direccion = direccion;
         this.status = status;
-        this.adventista=adventista;
-        this.conyuge=conyuge;
-        this.cuenta=cuenta;
-        this.curp=curp;
-        this.direccion=direccion;
-        this.escalafon=escalafon;
-        this.estadoCivil=estadoCivil;
-        this.experienciaFueraUm=experienciaFueraUm;
-        this.fechaAlta=new Date();
-        this.fechaBaja=new Date();
-        this.fechaMatrimonio=new Date();
-        this.fechaNacimiento=new Date();
-        this.finadoMadre=finadoMadre;
-        this.finadoPadre=finadoPadre;
-        this.genero=genero;
-        this.ife=ife;
-        this.iglesia=iglesia;
-        this.imms=imms;
-        this.madre=madre;
-        this.modalidad=modalidad;
-        this.padre=padre;
-        this.rango=rango;
-        this.responsabilidad=responsabilidad;
-        this.rfc=rfc;
-        this.turno=turno;
-      this.version=version;
+        this.adventista = adventista;
+        this.conyuge = conyuge;
+        this.cuenta = cuenta;
+        this.curp = curp;
+        this.direccion = direccion;
+        this.escalafon = escalafon;
+        this.estadoCivil = estadoCivil;
+        this.experienciaFueraUm = experienciaFueraUm;
+        this.fechaAlta = new Date();
+        this.fechaBaja = new Date();
+        this.fechaMatrimonio = new Date();
+        this.fechaNacimiento = new Date();
+        this.finadoMadre = finadoMadre;
+        this.finadoPadre = finadoPadre;
+        this.genero = genero;
+        this.ife = ife;
+        this.iglesia = iglesia;
+        this.imms = imms;
+        this.madre = madre;
+        this.modalidad = modalidad;
+        this.padre = padre;
+        this.rango = rango;
+        this.responsabilidad = responsabilidad;
+        this.rfc = rfc;
+        this.turno = turno;
     }
 
     public String getApMaterno() {
@@ -375,6 +375,15 @@ public class Empleado implements Serializable {
     }
 
     @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 23 * hash + Objects.hashCode(this.id);
+        hash = 23 * hash + Objects.hashCode(this.version);
+        hash = 23 * hash + Objects.hashCode(this.clave);
+        return hash;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;
@@ -383,13 +392,13 @@ public class Empleado implements Serializable {
             return false;
         }
         final Empleado other = (Empleado) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.clave, other.clave)) {
+            return false;
+        }
         return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        return hash;
     }
 
     @Override

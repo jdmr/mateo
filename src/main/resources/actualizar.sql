@@ -1,6 +1,12 @@
 begin;
-alter table activos  alter column depreciacion_fecha drop not null;
-alter table xactivos alter column depreciacion_fecha drop not null;
+-- alter table activos  alter column depreciacion_fecha drop not null;
+-- alter table xactivos alter column depreciacion_fecha drop not null;
 -- alter table activos  add constraint activo_codigo_idx unique (codigo);
 -- create unique index activo_codigo_idx on activos (codigo);
+drop table xactivos cascade;
+drop table reubicaciones_activo cascade;
+drop table bajas_activo cascade;
+drop table activos_imagenes cascade;
+drop table activos cascade;
+drop table folio_activos cascade;
 commit;

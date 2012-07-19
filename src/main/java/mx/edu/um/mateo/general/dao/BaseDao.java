@@ -43,4 +43,9 @@ public abstract class BaseDao {
     protected Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
+    
+    @Transactional
+    protected Session getSession() {
+        return sessionFactory.getCurrentSession();
+    }
 }
