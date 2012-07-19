@@ -302,7 +302,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         cal.set(Calendar.SECOND, 59);
         cal.set(Calendar.MILLISECOND, 999);
         fecha = cal.getTime();
-        Query query = currentSession().createQuery("select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCreacion <= :fecha");
+        Query query = currentSession().createQuery("select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha");
         query.setLong("empresaId", empresaId);
         query.setDate("fecha", fecha);
         List<Activo> activos = query.list();

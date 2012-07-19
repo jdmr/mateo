@@ -123,6 +123,10 @@ public class CentroCosto implements Serializable {
         this.iniciales = iniciales;
     }
 
+    public String getNombreCompleto() {
+        return id.getIdCosto() + " | " + nombre;
+    }
+
     @Override
     public int hashCode() {
         int hash = 3;

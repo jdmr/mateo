@@ -141,7 +141,7 @@
                         
                         <th><s:message code="tipoActivo.label" /></th>
                         
-                        <th><s:message code="cuenta.label" /></th>
+                        <th><s:message code="centroCosto.label" /></th>
                         
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="fechaCompra" />
@@ -193,7 +193,7 @@
                             <td>${activo.responsable}</td>
                             <td>${activo.proveedor.nombre}</td>
                             <td>${activo.tipoActivo.nombre}</td>
-                            <td>${activo.cuenta.nombre}</td>
+                            <td>${activo.centroCosto.nombre}</td>
                             <td><fmt:formatDate pattern="dd/MMM/yyyy" value="${activo.fechaCompra}" /></td>
                             <td style="text-align:right;"><fmt:formatNumber value="${activo.moi}" type="currency" currencySymbol="$" /></td>
                             <td><fmt:formatDate pattern="dd/MMM/yyyy" value="${activo.fechaDepreciacion}" /></td>

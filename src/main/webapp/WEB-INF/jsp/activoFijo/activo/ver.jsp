@@ -174,8 +174,8 @@
 
                         <div class="row-fluid" style="margin-top: 10px;">
                             <div class="span4">
-                                <h4><s:message code="cuenta.label" /></h4>
-                                <h3>${activo.cuenta.nombreCompleto}</h3>
+                                <h4><s:message code="centroCosto.label" /></h4>
+                                <h3>${activo.centroCosto.nombreCompleto}</h3>
                             </div>
                             <div class="span4">
                                 <h4><s:message code="empresa.label" /></h4>
