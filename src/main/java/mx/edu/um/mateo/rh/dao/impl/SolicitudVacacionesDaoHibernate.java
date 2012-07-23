@@ -40,8 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
-@Repository
-@Transactional
+
 public class SolicitudVacacionesDaoHibernate extends BaseDao implements SolicitudVacacionesDao {
 
     /**

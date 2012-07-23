@@ -47,8 +47,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
-@Repository
-@Transactional
+
 public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
 
     @Override

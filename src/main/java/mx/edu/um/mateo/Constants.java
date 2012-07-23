@@ -2216,4 +2216,5 @@ public class Constants {
     public static final String NOMINA_PARAMGRAL_PPTO_GASTOS = "nominaPptoGastos";
     public static final String NOMINA_PARAMGRAL_PPTO_AGUA = "nominaPptoAgua";
 //NominaParamGral - END
+    
 }

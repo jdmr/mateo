@@ -28,6 +28,7 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -37,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class BaseDao {
     protected final transient Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
+    @Qualifier("sessionFactory")
     private SessionFactory sessionFactory;
     
     @Transactional
