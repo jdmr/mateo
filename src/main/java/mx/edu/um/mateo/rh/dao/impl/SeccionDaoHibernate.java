@@ -46,6 +46,7 @@ public class SeccionDaoHibernate extends BaseDao implements SeccionDao {
     @Override
     public List getSecciones(final Seccion seccion) {
         return currentSession().createCriteria(Seccion.class).list();
+        
     }
 
     /**
