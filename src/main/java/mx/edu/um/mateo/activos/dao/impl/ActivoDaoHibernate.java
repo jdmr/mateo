@@ -456,7 +456,11 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                 cal1.add(Calendar.YEAR, 1900);
                 activo.setFechaCompra(cal1.getTime());
                 currentSession().update(activo);
-            } else if (cal1.get(Calendar.YEAR) > 1900) {
+            } else if (cal1.get(Calendar.YEAR) >= 1900 && cal1.get(Calendar.YEAR) <= 1912) {
+                cal1.add(Calendar.YEAR, 100);
+                activo.setFechaCompra(cal1.getTime());
+                currentSession().update(activo);
+            } else if (cal1.get(Calendar.YEAR) > 1912) {
                 currentSession().flush();
                 break;
             }
