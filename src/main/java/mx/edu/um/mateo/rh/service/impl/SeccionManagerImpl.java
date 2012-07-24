@@ -10,18 +10,22 @@ import mx.edu.um.mateo.Constants;
 import mx.edu.um.mateo.rh.dao.SeccionDao;
 import mx.edu.um.mateo.rh.model.Seccion;
 import mx.edu.um.mateo.rh.service.SeccionManager;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author osoto
  */
+@Service
+@Transactional
+public class SeccionManagerImpl implements SeccionManager {
 
-public class SeccionManagerImpl implements SeccionManager{
-    
     private SeccionDao dao;
 
     /**
-     * @see mx.edu.um.rh.service.SeccionManager#getSeccions(mx.edu.um.rh.model.Seccion)
+     * @see
+     * mx.edu.um.rh.service.SeccionManager#getSeccions(mx.edu.um.rh.model.Seccion)
      */
     @Override
     public Map<String, Object> getSecciones(final Seccion seccion) {
