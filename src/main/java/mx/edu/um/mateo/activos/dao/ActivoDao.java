@@ -67,5 +67,5 @@ public interface ActivoDao {
     
     public String reubica(ReubicacionActivo reubicacion, Usuario usuario);
     
-    public void sube(byte[] datos, Usuario usuario, OutputStream out);
+    public void sube(byte[] datos, Usuario usuario, OutputStream out, Integer codigo);
 }

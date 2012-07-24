@@ -30,6 +30,15 @@
                             
                     <div class="row-fluid">
                         <div class="control-group">
+                            <label for="codigo">
+                                <s:message code="codigo.label" />
+                            </label>
+                            <input id="codigo" name="codigo" type="number" min="0" step="1" value="0" />
+                        </div>
+                    </div>
+                            
+                    <div class="row-fluid">
+                        <div class="control-group">
                             <button type="submit" class="btn btn-primary btn-large"><i class="icon-upload icon-white"></i> <s:message code="sube.button" /></button>
                         </div>
                     </div>

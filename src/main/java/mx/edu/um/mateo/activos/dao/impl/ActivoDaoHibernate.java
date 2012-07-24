@@ -26,6 +26,7 @@ package mx.edu.um.mateo.activos.dao.impl;
 import java.io.ByteArrayInputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -37,7 +38,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import javax.sql.DataSource;
 import mx.edu.um.mateo.activos.dao.ActivoDao;
 import mx.edu.um.mateo.activos.model.Activo;
 import mx.edu.um.mateo.activos.model.BajaActivo;
@@ -53,6 +53,7 @@ import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellValue;
@@ -74,8 +75,6 @@ import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,10 +85,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
-
-    @Autowired
-    @Qualifier("dataSource2")
-    private DataSource dataSource2;
 
     public ActivoDaoHibernate() {
         log.info("Nueva instancia de Activo Dao creada.");
@@ -553,12 +548,20 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
     }
 
     @Override
-    public void sube(byte[] datos, Usuario usuario, OutputStream out) {
+    public void sube(byte[] datos, Usuario usuario, OutputStream out, Integer codigoInicial) {
+        Date inicio = new Date();
         int idx = 5;
         int i = 0;
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yy");
         SimpleDateFormat sdf3 = new SimpleDateFormat("dd-MM-yy");
+        
+        MathContext mc = new MathContext(16, RoundingMode.HALF_UP);
+        NumberFormat nf = NumberFormat.getInstance();
+        nf.setGroupingUsed(false);
+        nf.setMaximumFractionDigits(0);
+        nf.setMinimumIntegerDigits(5);
+        
         Transaction tx = null;
         try {
             String ejercicioId = "001-2012";
@@ -591,10 +594,8 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             int ccostoFantasmaRow = 0;
             XSSFSheet sinCCosto = wb.createSheet("SIN-CCOSTO");
             int sinCCostoRow = 0;
-            XSSFSheet sinCodigo = wb.createSheet("SIN-CODIGO");
-            int sinCodigoRow = 0;
-            XSSFSheet codigoDuplicado = wb.createSheet("CODIGO-DUPLICADO");
-            int codigoDuplicadoRow = 0;
+            XSSFSheet codigoAsignado = wb.createSheet("CODIGO-ASIGNADO");
+            int codigoAsignadoRow = 0;
             XSSFSheet fechaInvalida = wb.createSheet("FECHA-INVALIDA");
             int fechaInvalidaRow = 0;
             XSSFSheet sinCosto = wb.createSheet("SIN-COSTO");
@@ -760,7 +761,8 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                                     break;
                             }
                             if (StringUtils.isBlank(codigo)) {
-                                XSSFRow renglon = sinCodigo.createRow(sinCodigoRow++);
+                                codigo = nf.format(codigoInicial);
+                                XSSFRow renglon = codigoAsignado.createRow(codigoAsignadoRow++);
                                 renglon.createCell(0).setCellValue(sheet.getSheetName() + ":" + (i + 1));
                                 renglon.createCell(1).setCellValue(row.getCell(0).toString());
                                 renglon.createCell(2).setCellValue(row.getCell(1).toString());
@@ -770,7 +772,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                                 renglon.createCell(6).setCellValue(row.getCell(5).toString());
                                 renglon.createCell(7).setCellValue(row.getCell(6).toString());
                                 renglon.createCell(8).setCellValue(row.getCell(7).toString());
-                                renglon.createCell(9).setCellValue(row.getCell(8).toString());
+                                renglon.createCell(9).setCellValue(codigoInicial);
                                 renglon.createCell(10).setCellValue(row.getCell(9).toString());
                                 renglon.createCell(11).setCellValue(row.getCell(10).toString());
                                 renglon.createCell(12).setCellValue(row.getCell(11).toString());
@@ -778,7 +780,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                                 renglon.createCell(14).setCellValue(row.getCell(13).toString());
                                 renglon.createCell(15).setCellValue(row.getCell(14).toString());
                                 renglon.createCell(16).setCellValue(row.getCell(15).toString());
-                                continue;
+                                codigoInicial++;
                             } else {
                                 // busca codigo duplicado
                                 if (codigo.contains(".")) {
@@ -790,7 +792,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                                 codigoDuplicadoQuery.setString("codigo", codigo);
                                 Activo activo = (Activo) codigoDuplicadoQuery.uniqueResult();
                                 if (activo != null) {
-                                    XSSFRow renglon = codigoDuplicado.createRow(codigoDuplicadoRow++);
+                                    XSSFRow renglon = codigoAsignado.createRow(codigoAsignadoRow++);
                                     renglon.createCell(0).setCellValue(sheet.getSheetName() + ":" + (i + 1));
                                     renglon.createCell(1).setCellValue(row.getCell(0).toString());
                                     renglon.createCell(2).setCellValue(row.getCell(1).toString());
@@ -800,7 +802,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                                     renglon.createCell(6).setCellValue(row.getCell(5).toString());
                                     renglon.createCell(7).setCellValue(row.getCell(6).toString());
                                     renglon.createCell(8).setCellValue(row.getCell(7).toString());
-                                    renglon.createCell(9).setCellValue(row.getCell(8).toString());
+                                    renglon.createCell(9).setCellValue(codigo + "-" + nf.format(codigoInicial));
                                     renglon.createCell(10).setCellValue(row.getCell(9).toString());
                                     renglon.createCell(11).setCellValue(row.getCell(10).toString());
                                     renglon.createCell(12).setCellValue(row.getCell(11).toString());
@@ -808,7 +810,8 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                                     renglon.createCell(14).setCellValue(row.getCell(13).toString());
                                     renglon.createCell(15).setCellValue(row.getCell(14).toString());
                                     renglon.createCell(16).setCellValue(row.getCell(15).toString());
-                                    continue;
+                                    codigo = nf.format(codigoInicial);
+                                    codigoInicial++;
                                 }
                             }
                             String descripcion = null;
@@ -899,15 +902,15 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                             BigDecimal costo = null;
                             switch (row.getCell(15).getCellType()) {
                                 case XSSFCell.CELL_TYPE_NUMERIC:
-                                    costo = new BigDecimal(row.getCell(15).getNumericCellValue());
+                                    costo = new BigDecimal(row.getCell(15).getNumericCellValue(), mc);
                                     log.debug("COSTO-N: {} - {}", costo, row.getCell(15).getNumericCellValue());
                                     break;
                                 case XSSFCell.CELL_TYPE_STRING:
-                                    costo = new BigDecimal(row.getCell(15).toString());
+                                    costo = new BigDecimal(row.getCell(15).toString(), mc);
                                     log.debug("COSTO-S: {} - {}", costo, row.getCell(15).toString());
                                     break;
                                 case XSSFCell.CELL_TYPE_FORMULA:
-                                    costo = new BigDecimal(evaluator.evaluateInCell(row.getCell(15)).getNumericCellValue());
+                                    costo = new BigDecimal(evaluator.evaluateInCell(row.getCell(15)).getNumericCellValue(), mc);
                                     log.debug("COSTO-F: {}", costo);
                             }
                             if (costo == null) {
@@ -962,6 +965,11 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                 }
             }
             tx.commit();
+            log.debug("################################################");
+            log.debug("################################################");
+            log.debug("TERMINO EN {} MINS", DateUtils.truncatedCompareTo(new Date(), inicio, Calendar.MINUTE));
+            log.debug("################################################");
+            log.debug("################################################");
 
             wb.write(out);
         } catch (Exception e) {

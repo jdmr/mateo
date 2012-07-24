@@ -81,11 +81,11 @@ public class Activo implements Serializable {
     @Column(length = 64)
     private String serial;
     @NotNull
-    @Column(nullable = false, scale = 2, precision = 8)
+    @Column(nullable = false, scale = 2, precision = 16)
     private BigDecimal moi = BigDecimal.ZERO;
-    @Column(nullable = false, scale = 2, precision = 8, name = "valor_rescate")
+    @Column(nullable = false, scale = 2, precision = 16, name = "valor_rescate")
     private BigDecimal valorRescate = BigDecimal.ONE;
-    @Column(nullable = false, scale = 2, precision = 8)
+    @Column(nullable = false, scale = 2, precision = 16)
     private BigDecimal inpc = BigDecimal.ZERO;
     private String ubicacion;
     @NotNull
@@ -116,7 +116,7 @@ public class Activo implements Serializable {
     private Integer mesesGarantia = 0;
     @Column(nullable = false)
     private Boolean seguro = false;
-    @Column(nullable = false, scale = 2, precision = 8, name = "valor_neto")
+    @Column(nullable = false, scale = 2, precision = 16, name = "valor_neto")
     private BigDecimal valorNeto = BigDecimal.ZERO;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "activos_imagenes", joinColumns = {
@@ -134,11 +134,11 @@ public class Activo implements Serializable {
     @Temporal(TemporalType.DATE)
     @Column(name = "depreciacion_fecha")
     private Date fechaDepreciacion;
-    @Column(name = "depreciacion_anual", scale = 2, precision = 8, nullable=false)
+    @Column(name = "depreciacion_anual", scale = 2, precision = 16, nullable=false)
     private BigDecimal depreciacionAnual = BigDecimal.ZERO;
-    @Column(name = "depreciacion_mensual", scale = 2, precision = 8, nullable = false)
+    @Column(name = "depreciacion_mensual", scale = 2, precision = 16, nullable = false)
     private BigDecimal depreciacionMensual = BigDecimal.ZERO;
-    @Column(name = "depreciacion_acumulada", scale = 2, precision = 8, nullable = false)
+    @Column(name = "depreciacion_acumulada", scale = 2, precision = 16, nullable = false)
     private BigDecimal depreciacionAcumulada = BigDecimal.ZERO;
     @Transient
     private BigDecimal porciento;
