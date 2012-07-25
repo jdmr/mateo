@@ -26,6 +26,7 @@ package mx.edu.um.mateo.general.model;
 import java.io.Serializable;
 import java.util.*;
 import javax.persistence.*;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -79,6 +80,8 @@ public class Usuario implements Serializable, UserDetails {
     private Empresa empresa;
     @ManyToOne(optional = false)
     private Almacen almacen;
+    @ManyToOne
+    private Ejercicio ejercicio;
 
     public Usuario() {
     }
@@ -303,6 +306,20 @@ public class Usuario implements Serializable, UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    /**
+     * @return the ejercicio
+     */
+    public Ejercicio getEjercicio() {
+        return ejercicio;
+    }
+
+    /**
+     * @param ejercicio the ejercicio to set
+     */
+    public void setEjercicio(Ejercicio ejercicio) {
+        this.ejercicio = ejercicio;
     }
 
     @Override

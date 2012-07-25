@@ -138,20 +138,22 @@
                             </div>
                         </div>
 
-                        <div class="row-fluid" style="margin-top: 10px;">
-                            <div class="span4">
-                                <h4><s:message code="ubicacion.label" /></h4>
-                                <h3>${bajaActivo.activo.ubicacion}</h3>
+                        <c:if test="${not empty bajaActivo.activo.ubicacion or bajaActivo.activo.inactivo or activo.fechaInactivo != null}">
+                            <div class="row-fluid" style="margin-top: 10px;">
+                                <div class="span4">
+                                    <h4><s:message code="ubicacion.label" /></h4>
+                                    <h3>${bajaActivo.activo.ubicacion}</h3>
+                                </div>
+                                <div class="span4">
+                                    <h4><s:message code="inactivo.label" /></h4>
+                                    <h3><form:checkbox path="activo.inactivo" disabled="true" /></h3>
+                                </div>
+                                <div class="span4">
+                                    <h4><s:message code="fechaInactivo.label" /></h4>
+                                    <h3>${bajaActivo.activo.fechaInactivo}</h3>
+                                </div>
                             </div>
-                            <div class="span4">
-                                <h4><s:message code="inactivo.label" /></h4>
-                                <h3>${bajaActivo.activo.inactivo}</h3>
-                            </div>
-                            <div class="span4">
-                                <h4><s:message code="fechaInactivo.label" /></h4>
-                                <h3>${activo.fechaInactivo}</h3>
-                            </div>
-                        </div>
+                        </c:if>
 
                         <div class="row-fluid" style="margin-top: 10px;">
                             <div class="span4">
@@ -170,8 +172,8 @@
 
                         <div class="row-fluid" style="margin-top: 10px;">
                             <div class="span4">
-                                <h4><s:message code="cuenta.label" /></h4>
-                                <h3>${bajaActivo.activo.cuenta.nombreCompleto}</h3>
+                                <h4><s:message code="centroCosto.label" /></h4>
+                                <h3>${bajaActivo.activo.centroCosto.nombreCompleto}</h3>
                             </div>
                             <div class="span4">
                                 <h4><s:message code="empresa.label" /></h4>
@@ -186,11 +188,11 @@
                         <div class="row-fluid" style="margin-top: 10px;">
                             <div class="span4">
                                 <h4><s:message code="seguro.label" /></h4>
-                                <h3>${bajaActivo.activo.seguro}</h3>
+                                <h3><form:checkbox path="activo.seguro" disabled="true" /></h3>
                             </div>
                             <div class="span4">
                                 <h4><s:message code="garantia.label" /></h4>
-                                <h3>${bajaActivo.activo.garantia}</h3>
+                                <h3><form:checkbox path="activo.garantia" disabled="true" /></h3>
                             </div>
                             <div class="span4">
                                 <h4><s:message code="mesesGarantia.label" /></h4>
@@ -215,9 +217,17 @@
 
                     </div>
                     <div class="span3">
-                        <c:forEach items="${bajaActivo.activo.imagenes}" var="imagen">
-                            <p><img src="<c:url value='/imagen/mostrar/${imagen.id}' />" /></p>
-                            </c:forEach>
+                        <c:choose>
+                            <c:when test="${tieneImagenes}">
+                                <c:forEach items="${bajaActivo.activo.imagenes}" var="imagen">
+                                    <p><img src="<c:url value='/imagen/mostrar/${imagen.id}' />" /></p>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <p><img src="<c:url value='/imagen/mostrar/0' />" /></p>
+                            </c:otherwise>
+                        </c:choose>
+                        <a class="btn" href="<c:url value='/activoFijo/activo/sube/${bajaActivo.activo.id}'/>"><i class="icon-upload"></i> <s:message code="activo.sube.imagen.button" /></a>
                     </div>
                 </div>
 

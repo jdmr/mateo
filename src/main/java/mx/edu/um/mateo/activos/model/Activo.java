@@ -134,7 +134,7 @@ public class Activo implements Serializable {
     @Temporal(TemporalType.DATE)
     @Column(name = "depreciacion_fecha")
     private Date fechaDepreciacion;
-    @Column(name = "depreciacion_anual", scale = 2, precision = 16, nullable=false)
+    @Column(name = "depreciacion_anual", scale = 2, precision = 16, nullable = false)
     private BigDecimal depreciacionAnual = BigDecimal.ZERO;
     @Column(name = "depreciacion_mensual", scale = 2, precision = 16, nullable = false)
     private BigDecimal depreciacionMensual = BigDecimal.ZERO;
@@ -144,6 +144,10 @@ public class Activo implements Serializable {
     private BigDecimal porciento;
     @Transient
     private Long vidaUtil;
+    @Transient
+    private String tipoActivoCuenta;
+    @Transient
+    private String centroCostoCuenta;
 
     public Activo() {
     }
@@ -158,10 +162,8 @@ public class Activo implements Serializable {
         this.inactivo = inactivo;
         this.fechaInactivo = fechaInactivo;
     }
-    
-    public Activo(Date fechaCompra, Boolean seguro, Boolean garantia, String poliza, String codigo, String descripcion, String marca, String modelo
-            , String serial, String responsable, String ubicacion, BigDecimal costo, TipoActivo tipoActivo, CentroCosto centroCosto
-            , Proveedor proveedor, Empresa empresa) {
+
+    public Activo(Date fechaCompra, Boolean seguro, Boolean garantia, String poliza, String codigo, String descripcion, String marca, String modelo, String serial, String responsable, String ubicacion, BigDecimal costo, TipoActivo tipoActivo, CentroCosto centroCosto, Proveedor proveedor, Empresa empresa) {
         this.poliza = poliza;
         this.codigo = codigo;
         this.descripcion = descripcion;
@@ -178,6 +180,15 @@ public class Activo implements Serializable {
         this.seguro = seguro;
         this.garantia = garantia;
         this.moi = costo;
+    }
+
+    public Activo(Long id, String descripcion, Date fechaCompra, String tipoActivoCuenta, String centroCostoCuenta, String codigo) {
+        this.id = id;
+        this.descripcion = descripcion;
+        this.fechaCompra = fechaCompra;
+        this.tipoActivoCuenta = tipoActivoCuenta;
+        this.centroCostoCuenta = centroCostoCuenta;
+        this.codigo = codigo;
     }
 
     /**
@@ -766,6 +777,34 @@ public class Activo implements Serializable {
      */
     public void setVidaUtil(Long vidaUtil) {
         this.vidaUtil = vidaUtil;
+    }
+
+    /**
+     * @return the tipoActivoCuenta
+     */
+    public String getTipoActivoCuenta() {
+        return tipoActivoCuenta;
+    }
+
+    /**
+     * @param tipoActivoCuenta the tipoActivoCuenta to set
+     */
+    public void setTipoActivoCuenta(String tipoActivoCuenta) {
+        this.tipoActivoCuenta = tipoActivoCuenta;
+    }
+
+    /**
+     * @return the centroCostoCuenta
+     */
+    public String getCentroCostoCuenta() {
+        return centroCostoCuenta;
+    }
+
+    /**
+     * @param centroCostoCuenta the centroCostoCuenta to set
+     */
+    public void setCentroCostoCuenta(String centroCostoCuenta) {
+        this.centroCostoCuenta = centroCostoCuenta;
     }
 
     @Override

@@ -43,6 +43,7 @@ import mx.edu.um.mateo.activos.model.Activo;
 import mx.edu.um.mateo.activos.model.BajaActivo;
 import mx.edu.um.mateo.activos.model.ReubicacionActivo;
 import mx.edu.um.mateo.activos.utils.ActivoNoCreadoException;
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.contabilidad.model.Cuenta;
 import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -163,8 +164,8 @@ public class ActivoController extends BaseController {
         params = tipoActivoDao.lista(params);
         modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
 
-        List<Cuenta> cuentas = activoDao.cuentas(organizacionId);
-        modelo.addAttribute("cuentas", cuentas);
+        List<CentroCosto> centrosDeCosto = activoDao.centrosDeCosto(ambiente.obtieneUsuario());
+        modelo.addAttribute("centrosDeCosto", centrosDeCosto);
 
         return "activoFijo/activo/nuevo";
     }
@@ -191,8 +192,8 @@ public class ActivoController extends BaseController {
             params = tipoActivoDao.lista(params);
             modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
 
-            List<Cuenta> cuentas = activoDao.cuentas(organizacionId);
-            modelo.addAttribute("cuentas", cuentas);
+            List<CentroCosto> centrosDeCosto = activoDao.centrosDeCosto(ambiente.obtieneUsuario());
+            modelo.addAttribute("centrosDeCosto", centrosDeCosto);
 
             return "activoFijo/activo/nuevo";
         }
@@ -227,8 +228,8 @@ public class ActivoController extends BaseController {
             params = tipoActivoDao.lista(params);
             modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
 
-            List<Cuenta> cuentas = activoDao.cuentas(organizacionId);
-            modelo.addAttribute("cuentas", cuentas);
+            List<CentroCosto> centrosDeCosto = activoDao.centrosDeCosto(ambiente.obtieneUsuario());
+            modelo.addAttribute("centrosDeCosto", centrosDeCosto);
 
             return "activoFijo/activo/nuevo";
         }
@@ -325,9 +326,15 @@ public class ActivoController extends BaseController {
     }
 
     @RequestMapping("/arreglaFechas")
-    public String arreglaFechas(RedirectAttributes redirectAttributes) {
+    public String arreglaFechas(HttpServletResponse response, RedirectAttributes redirectAttributes) {
         log.debug("Arreglando fechas");
-        activoDao.arreglaFechas();
+        try {
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("Content-disposition", "attachment; filename='arreglarFechas.xlsx'");
+            activoDao.arreglaFechas(response.getOutputStream());
+        } catch (IOException e) {
+            log.error("Hubo un problema al intentar arreglar las fechas de los activos", e);
+        }
         redirectAttributes.addFlashAttribute("message", "activo.arregla.fechas");
         redirectAttributes.addFlashAttribute("messageStyle", "alert-success");
         return "redirect:/activoFijo/activo";
@@ -436,7 +443,7 @@ public class ActivoController extends BaseController {
     public String sube(HttpServletResponse response, RedirectAttributes redirectAttributes, MultipartFile archivo, @RequestParam Integer codigo) throws IOException, ActivoNoCreadoException {
         redirectAttributes.addFlashAttribute("message", "activo.sube.archivo.message");
         response.setContentType("application/vnd.ms-excel");
-        response.setHeader("Content-disposition","attachment; filename='errores-"+archivo.getOriginalFilename()+"'");
+        response.setHeader("Content-disposition", "attachment; filename='errores-" + archivo.getOriginalFilename() + "'");
         OutputStream out = response.getOutputStream();
         activoDao.sube(archivo.getBytes(), ambiente.obtieneUsuario(), response.getOutputStream(), codigo);
         out.flush();

@@ -45,18 +45,19 @@ import mx.edu.um.mateo.activos.model.FolioActivo;
 import mx.edu.um.mateo.activos.model.ReubicacionActivo;
 import mx.edu.um.mateo.activos.model.TipoActivo;
 import mx.edu.um.mateo.activos.model.XActivo;
+import mx.edu.um.mateo.contabilidad.model.CCostoPK;
 import mx.edu.um.mateo.contabilidad.model.CentroCosto;
-import mx.edu.um.mateo.contabilidad.model.Cuenta;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellValue;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -190,8 +191,9 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             } else {
                 criteria.addOrder(Order.asc(campo));
             }
+        } else {
+            criteria.addOrder(Order.desc("folio"));
         }
-        criteria.addOrder(Order.desc("fechaModificacion"));
 
         if (!params.containsKey("reporte")) {
             criteria.setFirstResult((Integer) params.get("offset"));
@@ -241,6 +243,8 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         if (usuario != null) {
             activo.setEmpresa(usuario.getEmpresa());
         }
+        CCostoPK pk = new CCostoPK(usuario.getEjercicio(), activo.getCentroCosto().getId().getIdCosto());
+        activo.setCentroCosto((CentroCosto) session.load(CentroCosto.class, pk));
         activo.setTipoActivo((TipoActivo) session.load(TipoActivo.class, activo.getTipoActivo().getId()));
         activo.setProveedor((Proveedor) session.load(Proveedor.class, activo.getProveedor().getId()));
         activo.setCentroCosto((CentroCosto) session.load(CentroCosto.class, activo.getCentroCosto().getId()));
@@ -439,34 +443,129 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
     }
 
     @Override
-    public void arreglaFechas() {
-        Query query = currentSession().createQuery("from Activo order by fechaCompra");
-        List<Activo> activos = query.list();
-        int cont = 0;
-        for (Activo activo : activos) {
-            Calendar cal1 = Calendar.getInstance();
-            cal1.setTime(activo.getFechaCompra());
-            if (cal1.get(Calendar.YEAR) < 10) {
-                log.debug("Pasando al año 2000 {}", activo);
-                cal1.add(Calendar.YEAR, 2000);
-                activo.setFechaCompra(cal1.getTime());
-                currentSession().update(activo);
-            } else if (cal1.get(Calendar.YEAR) < 100) {
-                log.debug("Pasando al año 1900 {}", activo);
-                cal1.add(Calendar.YEAR, 1900);
-                activo.setFechaCompra(cal1.getTime());
-                currentSession().update(activo);
-            } else if (cal1.get(Calendar.YEAR) >= 1900 && cal1.get(Calendar.YEAR) <= 1912) {
-                cal1.add(Calendar.YEAR, 100);
-                activo.setFechaCompra(cal1.getTime());
-                currentSession().update(activo);
-            } else if (cal1.get(Calendar.YEAR) > 1912) {
-                currentSession().flush();
-                break;
+    public void arreglaFechas(OutputStream out) {
+        log.debug("Arreglando fechas");
+        Date inicio = new Date();
+        XSSFWorkbook wb = new XSSFWorkbook();
+        CreationHelper createHelper = wb.getCreationHelper();
+        CellStyle cellStyle = wb.createCellStyle();
+        cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy"));
+        XSSFSheet fechas = wb.createSheet("FECHAS-ANTERIORES");
+        int fechasRow = 0;
+        XSSFSheet fechas2 = wb.createSheet("FECHAS-POSTERIORES");
+        int fechas2Row = 0;
+        Transaction tx = null;
+        try {
+            tx = currentSession().beginTransaction();
+            Query update = currentSession().createQuery("update Activo set fechaCompra = :fechaCompra where id = :id");
+            Query query = currentSession().createQuery("select new Activo(a.id, a.descripcion, a.fechaCompra, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.codigo) from Activo a where a.fechaCompra < :fechaCompra order by a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.codigo");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            query.setDate("fechaCompra", sdf.parse("01/01/1970"));
+            List<Activo> activos = query.list();
+            int cont = 0;
+            for (Activo activo : activos) {
+                Calendar cal1 = Calendar.getInstance();
+                cal1.setTime(activo.getFechaCompra());
+                if (cal1.get(Calendar.YEAR) < 10) {
+                    log.debug("Pasando al año 2000 {} - {}", activo.getDescripcion(), activo.getFechaCompra());
+                    cal1.add(Calendar.YEAR, 2000);
+                    update.setDate("fechaCompra", cal1.getTime());
+                    update.setLong("id", activo.getId());
+                    update.executeUpdate();
+                    XSSFRow renglon = fechas.createRow(fechasRow++);
+                    renglon.createCell(0).setCellValue(activo.getTipoActivoCuenta());
+                    renglon.createCell(1).setCellValue(activo.getCentroCostoCuenta());
+                    renglon.createCell(2).setCellValue(activo.getCodigo());
+                    renglon.createCell(3).setCellValue(activo.getDescripcion());
+                    renglon.createCell(4).setCellValue(sdf.format(activo.getFechaCompra()));
+                    Cell cell = renglon.createCell(5);
+                    cell.setCellValue(cal1.getTime());
+                    cell.setCellStyle(cellStyle);
+                } else if (cal1.get(Calendar.YEAR) < 100) {
+                    log.debug("Pasando al año 1900 {} - {}", activo.getDescripcion(), activo.getFechaCompra());
+                    cal1.add(Calendar.YEAR, 1900);
+                    update.setDate("fechaCompra", cal1.getTime());
+                    update.setLong("id", activo.getId());
+                    update.executeUpdate();
+                    XSSFRow renglon = fechas.createRow(fechasRow++);
+                    renglon.createCell(0).setCellValue(activo.getTipoActivoCuenta());
+                    renglon.createCell(1).setCellValue(activo.getCentroCostoCuenta());
+                    renglon.createCell(2).setCellValue(activo.getCodigo());
+                    renglon.createCell(3).setCellValue(activo.getDescripcion());
+                    renglon.createCell(4).setCellValue(sdf.format(activo.getFechaCompra()));
+                    Cell cell = renglon.createCell(5);
+                    cell.setCellValue(cal1.getTime());
+                    cell.setCellStyle(cellStyle);
+                } else if (cal1.get(Calendar.YEAR) >= 1900 && cal1.get(Calendar.YEAR) <= 1912) {
+                    log.debug("Pasando al año 2000 {} - {}", activo.getDescripcion(), activo.getFechaCompra());
+                    cal1.add(Calendar.YEAR, 100);
+                    update.setDate("fechaCompra", cal1.getTime());
+                    update.setLong("id", activo.getId());
+                    update.executeUpdate();
+                    XSSFRow renglon = fechas.createRow(fechasRow++);
+                    renglon.createCell(0).setCellValue(activo.getTipoActivoCuenta());
+                    renglon.createCell(1).setCellValue(activo.getCentroCostoCuenta());
+                    renglon.createCell(2).setCellValue(activo.getCodigo());
+                    renglon.createCell(3).setCellValue(activo.getDescripcion());
+                    renglon.createCell(4).setCellValue(sdf.format(activo.getFechaCompra()));
+                    Cell cell = renglon.createCell(5);
+                    cell.setCellValue(cal1.getTime());
+                    cell.setCellStyle(cellStyle);
+                }
+                cont++;
             }
-            cont++;
+            currentSession().flush();
+
+
+            query = currentSession().createQuery("select new Activo(a.id, a.descripcion, a.fechaCompra, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.codigo) from Activo a where a.fechaCompra > :fechaCompra order by a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.codigo");
+            query.setDate("fechaCompra", new Date());
+            activos = query.list();
+            for (Activo activo : activos) {
+                Calendar cal1 = Calendar.getInstance();
+                cal1.setTime(activo.getFechaCompra());
+                if (cal1.get(Calendar.YEAR) < 2020) {
+                    log.debug("Quitandole 10 anios {} - {}", activo.getDescripcion(), activo.getFechaCompra());
+                    cal1.add(Calendar.YEAR, -10);
+                    update.setDate("fechaCompra", cal1.getTime());
+                    update.setLong("id", activo.getId());
+                    update.executeUpdate();
+                    XSSFRow renglon = fechas2.createRow(fechas2Row++);
+                    renglon.createCell(0).setCellValue(activo.getTipoActivoCuenta());
+                    renglon.createCell(1).setCellValue(activo.getCentroCostoCuenta());
+                    renglon.createCell(2).setCellValue(activo.getCodigo());
+                    renglon.createCell(3).setCellValue(activo.getDescripcion());
+                    renglon.createCell(4).setCellValue(sdf.format(activo.getFechaCompra()));
+                    Cell cell = renglon.createCell(5);
+                    cell.setCellValue(cal1.getTime());
+                    cell.setCellStyle(cellStyle);
+                } else if (cal1.get(Calendar.YEAR) >= 2020) {
+                    log.debug("Pasando al año 1900 {} - {}", activo.getDescripcion(), activo.getFechaCompra());
+                    cal1.add(Calendar.YEAR, -100);
+                    update.setDate("fechaCompra", cal1.getTime());
+                    update.setLong("id", activo.getId());
+                    update.executeUpdate();
+                    XSSFRow renglon = fechas2.createRow(fechas2Row++);
+                    renglon.createCell(0).setCellValue(activo.getTipoActivoCuenta());
+                    renglon.createCell(1).setCellValue(activo.getCentroCostoCuenta());
+                    renglon.createCell(2).setCellValue(activo.getCodigo());
+                    renglon.createCell(3).setCellValue(activo.getDescripcion());
+                    renglon.createCell(4).setCellValue(sdf.format(activo.getFechaCompra()));
+                    Cell cell = renglon.createCell(5);
+                    cell.setCellValue(cal1.getTime());
+                    cell.setCellStyle(cellStyle);
+                }
+                cont++;
+            }
+            currentSession().flush();
+
+            tx.commit();
+            log.debug("Termino actualizando {} de {} en {}", new Object[]{cont, activos.size(), ((new Date().getTime() - inicio.getTime()) / 1000)});
+            wb.write(out);
+        } catch (Exception e) {
+            log.error("No se pudieron arreglar las fechas de los activos", e);
+            tx.rollback();
+            throw new RuntimeException("No se pudieron arreglar las fechas de los actios", e);
         }
-        log.debug("Termino actualizando {} de {}", cont, activos.size());
     }
 
     @Override
@@ -514,10 +613,11 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
     }
 
     @Override
-    public List<Cuenta> cuentas(Long organizacionId) {
-        Criteria criteria = currentSession().createCriteria(Cuenta.class);
-        criteria.createCriteria("organizacion").add(Restrictions.idEq(organizacionId));
-        criteria.addOrder(Order.asc("nombre"));
+    public List<CentroCosto> centrosDeCosto(Usuario usuario) {
+        Criteria criteria = currentSession().createCriteria(CentroCosto.class);
+        criteria.add(Restrictions.eq("id.ejercicio.id.organizacion.id", usuario.getEjercicio().getId().getOrganizacion().getId()));
+        criteria.add(Restrictions.eq("id.ejercicio.id.idEjercicio", usuario.getEjercicio().getId().getIdEjercicio()));
+        criteria.addOrder(Order.asc("id.idCosto"));
         return criteria.list();
     }
 
@@ -559,13 +659,13 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yy");
         SimpleDateFormat sdf3 = new SimpleDateFormat("dd-MM-yy");
-        
+
         MathContext mc = new MathContext(16, RoundingMode.HALF_UP);
         NumberFormat nf = NumberFormat.getInstance();
         nf.setGroupingUsed(false);
         nf.setMaximumFractionDigits(0);
         nf.setMinimumIntegerDigits(5);
-        
+
         Transaction tx = null;
         try {
             String ejercicioId = "001-2012";
@@ -720,19 +820,19 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                                 }
                                 try {
                                     fechaCompra = sdf.parse(fechaCompraString);
-                                } catch(ParseException e) {
+                                } catch (ParseException e) {
                                     try {
                                         fechaCompra = sdf2.parse(fechaCompraString);
-                                    } catch(ParseException e2) {
+                                    } catch (ParseException e2) {
                                         try {
                                             fechaCompra = sdf3.parse(fechaCompraString);
-                                        } catch(ParseException e3) {
+                                        } catch (ParseException e3) {
                                             // no se pudo convertir
                                         }
                                     }
                                 }
                             }
-                            
+
                             if (fechaCompra == null) {
                                 XSSFRow renglon = fechaInvalida.createRow(fechaInvalidaRow++);
                                 renglon.createCell(0).setCellValue(sheet.getSheetName() + ":" + (i + 1));
@@ -754,7 +854,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                                 renglon.createCell(16).setCellValue(row.getCell(15).toString());
                                 continue;
                             }
-                            
+
                             String codigo = null;
                             switch (row.getCell(8).getCellType()) {
                                 case XSSFCell.CELL_TYPE_NUMERIC:
@@ -971,7 +1071,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             tx.commit();
             log.debug("################################################");
             log.debug("################################################");
-            log.debug("TERMINO EN {} MINS", DateUtils.truncatedCompareTo(new Date(), inicio, Calendar.MINUTE));
+            log.debug("TERMINO EN {} MINS", (new Date().getTime() - inicio.getTime()) / (1000 * 60));
             log.debug("################################################");
             log.debug("################################################");
 

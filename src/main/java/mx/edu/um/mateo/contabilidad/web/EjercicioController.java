@@ -138,8 +138,6 @@ public class EjercicioController extends BaseController {
         try {
             Usuario usuario = ambiente.obtieneUsuario();
             ejercicio = ejercicioDao.crea(ejercicio, usuario);
-
-            ambiente.actualizaSesion(request, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al ejercicio", e);
             errors.rejectValue("id", "campo.duplicado.message", new String[]{"id"}, null);
@@ -175,8 +173,6 @@ public class EjercicioController extends BaseController {
         try {
             Usuario usuario = ambiente.obtieneUsuario();
             ejercicio = ejercicioDao.actualiza(ejercicio, usuario);
-
-            ambiente.actualizaSesion(request, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la ejercicio", e);
             errors.rejectValue("id", "campo.duplicado.message", new String[]{"id"}, null);
@@ -196,8 +192,6 @@ public class EjercicioController extends BaseController {
         try {
             EjercicioPK key = new EjercicioPK(id, ambiente.obtieneUsuario().getEmpresa().getOrganizacion());
             String nombre = ejercicioDao.elimina(key);
-
-            ambiente.actualizaSesion(request);
 
             redirectAttributes.addFlashAttribute("message", "ejercicio.eliminado.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});

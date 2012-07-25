@@ -214,6 +214,10 @@ public class Ejercicio implements Serializable {
     public void setNivelTauxiliar(Byte nivelTauxiliar) {
         this.nivelTauxiliar = nivelTauxiliar;
     }
+    
+    public String getNombreCompleto() {
+        return id.getOrganizacion().getNombre() + " | " + id.getIdEjercicio();
+    }
 
     @Override
     public int hashCode() {

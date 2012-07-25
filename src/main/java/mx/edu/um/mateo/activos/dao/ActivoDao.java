@@ -30,7 +30,7 @@ import java.util.Map;
 import mx.edu.um.mateo.activos.model.Activo;
 import mx.edu.um.mateo.activos.model.BajaActivo;
 import mx.edu.um.mateo.activos.model.ReubicacionActivo;
-import mx.edu.um.mateo.contabilidad.model.Cuenta;
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.general.model.Usuario;
 
 /**
@@ -57,11 +57,11 @@ public interface ActivoDao {
     
     public String baja(BajaActivo bajaActivo, Usuario usuario);
     
-    public void arreglaFechas();
+    public void arreglaFechas(OutputStream out);
     
     public void depreciar(Date fecha, Long empresaId);
     
-    public List<Cuenta> cuentas(Long organizacionId);
+public List<CentroCosto> centrosDeCosto(Usuario usuario);
     
     public void subeImagen(Activo activo, Usuario usuario);
     

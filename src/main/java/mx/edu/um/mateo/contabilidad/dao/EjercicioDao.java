@@ -27,7 +27,6 @@ import java.util.Map;
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.contabilidad.model.EjercicioPK;
 import mx.edu.um.mateo.general.model.*;
-import mx.edu.um.mateo.general.utils.UltimoException;
 
 /**
  *

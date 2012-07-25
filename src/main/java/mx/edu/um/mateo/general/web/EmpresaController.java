@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import mx.edu.um.mateo.general.dao.EmpresaDao;
 import mx.edu.um.mateo.general.model.Empresa;
@@ -129,10 +130,7 @@ public class EmpresaController extends BaseController {
     }
 
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Empresa empresa, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
-        for (String nombre : request.getParameterMap().keySet()) {
-            log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
-        }
+    public String crea(HttpSession session, @Valid Empresa empresa, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
             for (ObjectError error : bindingResult.getAllErrors()) {
@@ -145,7 +143,7 @@ public class EmpresaController extends BaseController {
             Usuario usuario = ambiente.obtieneUsuario();
             empresa = empresaDao.crea(empresa, usuario);
 
-            ambiente.actualizaSesion(request, usuario);
+            ambiente.actualizaSesion(session, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al empresa", e);
             errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
@@ -168,7 +166,7 @@ public class EmpresaController extends BaseController {
     }
 
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, @Valid Empresa empresa, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String actualiza(HttpSession session, @Valid Empresa empresa, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
             for (ObjectError error : bindingResult.getAllErrors()) {
@@ -181,7 +179,7 @@ public class EmpresaController extends BaseController {
             Usuario usuario = ambiente.obtieneUsuario();
             empresa = empresaDao.actualiza(empresa, usuario);
 
-            ambiente.actualizaSesion(request, usuario);
+            ambiente.actualizaSesion(session, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la empresa", e);
             errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
@@ -196,12 +194,12 @@ public class EmpresaController extends BaseController {
     }
 
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Empresa empresa, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String elimina(HttpSession session, @RequestParam Long id, Model modelo, @ModelAttribute Empresa empresa, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina empresa");
         try {
             String nombre = empresaDao.elimina(id);
 
-            ambiente.actualizaSesion(request);
+            ambiente.actualizaSesion(session);
 
             redirectAttributes.addFlashAttribute("message", "empresa.eliminada.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});

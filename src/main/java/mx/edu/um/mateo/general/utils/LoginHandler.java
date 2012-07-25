@@ -54,6 +54,6 @@ public class LoginHandler extends SavedRequestAwareAuthenticationSuccessHandler 
         String username = ((UserDetails)authentication.getPrincipal()).getUsername();
         log.debug("Se ha firmado a {}", username);
         Usuario usuario = (Usuario)authentication.getPrincipal();
-        ambiente.actualizaSesion(request, usuario);
+        ambiente.actualizaSesion(request.getSession(), usuario);
     }
 }

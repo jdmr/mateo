@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -137,10 +138,7 @@ public class AlmacenController extends BaseController {
     }
 
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Almacen almacen, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
-        for (String nombre : request.getParameterMap().keySet()) {
-            log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
-        }
+    public String crea(HttpSession session, @Valid Almacen almacen, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
             for (ObjectError error : bindingResult.getAllErrors()) {
@@ -153,7 +151,7 @@ public class AlmacenController extends BaseController {
             Usuario usuario = ambiente.obtieneUsuario();
             almacen = almacenDao.crea(almacen, usuario);
 
-            ambiente.actualizaSesion(request, usuario);
+            ambiente.actualizaSesion(session, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al almacen", e);
             errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
@@ -175,7 +173,7 @@ public class AlmacenController extends BaseController {
     }
 
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, @Valid Almacen almacen, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String actualiza(HttpSession session, @Valid Almacen almacen, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
             for (ObjectError error : bindingResult.getAllErrors()) {
@@ -188,7 +186,7 @@ public class AlmacenController extends BaseController {
             Usuario usuario = ambiente.obtieneUsuario();
             almacen = almacenDao.actualiza(almacen, usuario);
 
-            ambiente.actualizaSesion(request, usuario);
+            ambiente.actualizaSesion(session, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la almacen", e);
             errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
@@ -202,13 +200,13 @@ public class AlmacenController extends BaseController {
     }
 
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Almacen almacen, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String elimina(HttpSession session, Model modelo, @ModelAttribute Almacen almacen, BindingResult bindingResult, RedirectAttributes redirectAttributes, @RequestParam Long id) {
         log.debug("Elimina almacen");
         try {
-            Long empresaId = (Long) request.getSession().getAttribute("empresaId");
+            Long empresaId = (Long) session.getAttribute("empresaId");
             String nombre = almacenDao.elimina(id, empresaId);
 
-            ambiente.actualizaSesion(request);
+            ambiente.actualizaSesion(session);
 
             redirectAttributes.addFlashAttribute("message", "almacen.eliminado.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});

@@ -12,6 +12,7 @@
 <html>
     <head>
         <title><s:message code="perfil.edita.label" /></title>
+        <link rel="stylesheet" href="<c:url value='/css/chosen.css' />" type="text/css">
     </head>
     <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
@@ -47,6 +48,16 @@
                             <form:errors path="almacen" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
+                    <s:bind path="usuario.ejercicio">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="ejercicio">
+                                <s:message code="ejercicio.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:select path="ejercicio.id.idEjercicio" id="ejercicioId" items="${ejercicios}" itemLabel="nombreCompleto" itemValue="id.idEjercicio"/>
+                            <form:errors path="ejercicio" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
                     <s:bind path="usuario.password">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="password">
@@ -66,8 +77,11 @@
             </form:form>
         </div>
         <content>
+            <script src="<c:url value='/js/chosen.jquery.min.js' />"></script>
             <script>
                 $(document).ready(function() {
+                    $("select#ejercicioId").chosen();
+                    $("select#almacenId").chosen();
                     $('#almacenId').focus();
                 });
             </script>                    
