@@ -44,7 +44,6 @@ import mx.edu.um.mateo.activos.model.BajaActivo;
 import mx.edu.um.mateo.activos.model.ReubicacionActivo;
 import mx.edu.um.mateo.activos.utils.ActivoNoCreadoException;
 import mx.edu.um.mateo.contabilidad.model.CentroCosto;
-import mx.edu.um.mateo.contabilidad.model.Cuenta;
 import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -139,6 +138,9 @@ public class ActivoController extends BaseController {
         modelo.addAttribute("activo", activo);
         if (activo.getImagenes() != null & activo.getImagenes().size() > 0) {
             modelo.addAttribute("tieneImagenes", Boolean.TRUE);
+        }
+        if (!activo.getInactivo()) {
+            modelo.addAttribute("puedeDarDeBaja", Boolean.TRUE);
         }
 
         return "activoFijo/activo/ver";

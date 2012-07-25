@@ -233,11 +233,13 @@
                     </div>
                 </div>
 
-                <p class="well" style="margin-top: 10px;">
-                    <a href="<c:url value='/activoFijo/activo/reubica/${activo.id}' />" class="btn btn-warning btn-large"><i class="icon-cog icon-white"></i> <s:message code="reubica.button" /></a>
-                    <form:hidden path="id" />
-                    <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="eliminar" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='baja.button'/></button>
-                </p>
+                <c:if test="${puedeDarDeBaja}">
+                    <div class="well" style="margin-top: 10px;">
+                        <a href="<c:url value='/activoFijo/activo/reubica/${activo.id}' />" class="btn btn-warning btn-large"><i class="icon-cog icon-white"></i> <s:message code="reubica.button" /></a>
+                        <form:hidden path="id" />
+                        <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="eliminar" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='baja.button'/></button>
+                    </div>
+                </c:if>
             </form:form>
         </div>
     </body>
