@@ -216,6 +216,15 @@
                                 <h3>${activo.fechaModificacion}</h3>
                             </div>
                         </div>
+                            
+                        <c:if test="${activo.fechaReubicado != null}" >
+                            <div class="row-fluid" style="margin-top: 10px;">
+                                <div class="span4">
+                                    <h4><s:message code="fecha.reubicacion.label" /></h4>
+                                    <h3>${activo.fechaReubicado}</h3>
+                                </div>
+                            </div>
+                        </c:if>
 
                     </div>
                     <div class="span3">

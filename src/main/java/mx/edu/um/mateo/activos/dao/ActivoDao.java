@@ -47,25 +47,19 @@ public interface ActivoDao {
 
     public Activo crea(Activo activo);
 
-    public Activo actualiza(Activo activo);
-
-    public Activo actualiza(Activo activo, Usuario usuario);
-    
     public Activo carga(Long id);
 
-    public String elimina(Long id);
-    
     public String baja(BajaActivo bajaActivo, Usuario usuario);
-    
+
     public void arreglaFechas(OutputStream out);
-    
+
     public void depreciar(Date fecha, Long empresaId);
-    
-public List<CentroCosto> centrosDeCosto(Usuario usuario);
-    
+
+    public List<CentroCosto> centrosDeCosto(Usuario usuario);
+
     public void subeImagen(Activo activo, Usuario usuario);
-    
+
     public String reubica(ReubicacionActivo reubicacion, Usuario usuario);
-    
+
     public void sube(byte[] datos, Usuario usuario, OutputStream out, Integer codigo);
 }

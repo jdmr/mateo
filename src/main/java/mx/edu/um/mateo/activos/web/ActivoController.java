@@ -150,7 +150,6 @@ public class ActivoController extends BaseController {
     public String nuevo(HttpSession session, Model modelo) {
         log.debug("Nuevo activo");
         Long empresaId = (Long) session.getAttribute("empresaId");
-        Long organizacionId = (Long) session.getAttribute("organizacionId");
 
         Activo activo = new Activo();
         modelo.addAttribute("activo", activo);
@@ -181,7 +180,6 @@ public class ActivoController extends BaseController {
             log.debug("Hubo algun error en la forma, regresando");
 
             Long empresaId = (Long) request.getSession().getAttribute("empresaId");
-            Long organizacionId = (Long) request.getSession().getAttribute("organizacionId");
 
             List<String> motivos = new ArrayList<>();
             motivos.add("COMPRA");
@@ -217,7 +215,6 @@ public class ActivoController extends BaseController {
             errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
 
             Long empresaId = (Long) request.getSession().getAttribute("empresaId");
-            Long organizacionId = (Long) request.getSession().getAttribute("organizacionId");
 
             List<String> motivos = new ArrayList<>();
             motivos.add("COMPRA");
@@ -237,57 +234,6 @@ public class ActivoController extends BaseController {
         }
 
         redirectAttributes.addFlashAttribute("message", "activo.creado.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{activo.getFolio()});
-
-        return "redirect:/activoFijo/activo/ver/" + activo.getId();
-    }
-
-    @RequestMapping("/edita/{id}")
-    public String edita(HttpServletRequest request, @PathVariable Long id, Model modelo) {
-        log.debug("Edita activo {}", id);
-        Activo activo = activoDao.obtiene(id);
-        modelo.addAttribute("activo", activo);
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("empresa", request.getSession().getAttribute("empresaId"));
-        params.put("reporte", true);
-        params = tipoActivoDao.lista(params);
-        modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
-
-        return "activoFijo/activo/edita";
-    }
-
-    @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, @Valid Activo activo, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            log.error("Hubo algun error en la forma, regresando");
-
-            Map<String, Object> params = new HashMap<>();
-            params.put("empresa", request.getSession().getAttribute("empresaId"));
-            params.put("reporte", true);
-            params = tipoActivoDao.lista(params);
-            modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
-
-            return "activoFijo/activo/edita";
-        }
-
-        try {
-            Usuario usuario = ambiente.obtieneUsuario();
-            activo = activoDao.actualiza(activo, usuario);
-        } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear la activo", e);
-            errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
-
-            Map<String, Object> params = new HashMap<>();
-            params.put("empresa", request.getSession().getAttribute("empresaId"));
-            params.put("reporte", true);
-            params = tipoActivoDao.lista(params);
-            modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
-
-            return "activoFijo/activo/nuevo";
-        }
-
-        redirectAttributes.addFlashAttribute("message", "activo.actualizado.message");
         redirectAttributes.addFlashAttribute("messageAttrs", new String[]{activo.getFolio()});
 
         return "redirect:/activoFijo/activo/ver/" + activo.getId();
@@ -419,6 +365,9 @@ public class ActivoController extends BaseController {
         Activo activo = activoDao.obtiene(id);
         ReubicacionActivo reubicacion = new ReubicacionActivo(activo, new Date());
         modelo.addAttribute("reubicacion", reubicacion);
+        List<CentroCosto> centrosDeCosto = activoDao.centrosDeCosto(ambiente.obtieneUsuario());
+        modelo.addAttribute("centrosDeCosto", centrosDeCosto);
+        
         return "activoFijo/activo/reubica";
     }
 

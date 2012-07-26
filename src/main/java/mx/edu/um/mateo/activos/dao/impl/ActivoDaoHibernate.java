@@ -136,20 +136,14 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             countCriteria.createCriteria("proveedor").add(Restrictions.idEq(params.get("proveedorId")));
         }
 
+        Date fechaIniciado = null;
         if (params.containsKey("fechaIniciado")) {
-            criteria.add(Restrictions.ge("fechaCompra", params.get("fechaIniciado")));
-            countCriteria.add(Restrictions.ge("fechaCompra", params.get("fechaIniciado")));
+            fechaIniciado = (Date) params.get("fechaIniciado");
+            criteria.add(Restrictions.ge("fechaCompra", fechaIniciado));
+            countCriteria.add(Restrictions.ge("fechaCompra", fechaIniciado));
         }
 
-        if (params.containsKey("bajas")) {
-            criteria.add(Restrictions.eq("inactivo", true));
-        }
-
-        if (params.containsKey("reubicaciones")) {
-            criteria.createCriteria("reubicaciones").add(Restrictions.isNotNull("id"));
-            countCriteria.createCriteria("reubicaciones").add(Restrictions.isNotNull("id"));
-        }
-
+        Date fechaTerminado = null;
         if (params.containsKey("fechaTerminado")) {
             Calendar cal = Calendar.getInstance();
             cal.setTime((Date) params.get("fechaTerminado"));
@@ -157,8 +151,54 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             cal.set(Calendar.MINUTE, 59);
             cal.set(Calendar.SECOND, 59);
             cal.set(Calendar.MILLISECOND, 999);
-            criteria.add(Restrictions.le("fechaCompra", cal.getTime()));
-            countCriteria.add(Restrictions.le("fechaCompra", cal.getTime()));
+            fechaTerminado = cal.getTime();
+            criteria.add(Restrictions.le("fechaCompra", fechaTerminado));
+            countCriteria.add(Restrictions.le("fechaCompra", fechaTerminado));
+        }
+
+        if (params.containsKey("bajas")) {
+            if (fechaIniciado != null) {
+                criteria.add(Restrictions.eq("inactivo", true));
+                countCriteria.add(Restrictions.eq("inactivo", true));
+                criteria.add(Restrictions.ge("fechaInactivo", fechaIniciado));
+                countCriteria.add(Restrictions.ge("fechaInactivo", fechaIniciado));
+                if (fechaTerminado != null) {
+                    criteria.add(Restrictions.le("fechaInactivo", fechaTerminado));
+                    countCriteria.add(Restrictions.le("fechaInactivo", fechaTerminado));
+                }
+            } else if (fechaTerminado != null) {
+                criteria.add(Restrictions.eq("inactivo", true));
+                countCriteria.add(Restrictions.eq("inactivo", true));
+                criteria.add(Restrictions.le("fechaInactivo", fechaTerminado));
+                countCriteria.add(Restrictions.le("fechaInactivo", fechaTerminado));
+            } else {
+                criteria.add(Restrictions.eq("inactivo", true));
+                countCriteria.add(Restrictions.eq("inactivo", true));
+            }
+        } else {
+            criteria.add(Restrictions.eq("inactivo", false));
+            countCriteria.add(Restrictions.eq("inactivo", false));
+        }
+
+        if (params.containsKey("reubicaciones")) {
+            if (fechaIniciado != null) {
+                criteria.add(Restrictions.isNotNull("fechaReubicado"));
+                countCriteria.add(Restrictions.isNotNull("fechaReubicado"));
+                criteria.add(Restrictions.ge("fechaReubicado", fechaIniciado));
+                countCriteria.add(Restrictions.ge("fechaReubicado", fechaIniciado));
+                if (fechaTerminado != null) {
+                    criteria.add(Restrictions.le("fechaReubicado", fechaIniciado));
+                    countCriteria.add(Restrictions.le("fechaReubicado", fechaIniciado));
+                }
+            } else if (fechaTerminado != null) {
+                criteria.add(Restrictions.isNotNull("fechaReubicado"));
+                countCriteria.add(Restrictions.isNotNull("fechaReubicado"));
+                criteria.add(Restrictions.le("fechaReubicado", fechaIniciado));
+                countCriteria.add(Restrictions.le("fechaReubicado", fechaIniciado));
+            } else {
+                criteria.add(Restrictions.isNotNull("fechaReubicado"));
+                countCriteria.add(Restrictions.isNotNull("fechaReubicado"));
+            }
         }
 
         if (params.containsKey("responsableNombre")) {
@@ -247,7 +287,6 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         activo.setCentroCosto((CentroCosto) session.load(CentroCosto.class, pk));
         activo.setTipoActivo((TipoActivo) session.load(TipoActivo.class, activo.getTipoActivo().getId()));
         activo.setProveedor((Proveedor) session.load(Proveedor.class, activo.getProveedor().getId()));
-        activo.setCentroCosto((CentroCosto) session.load(CentroCosto.class, activo.getCentroCosto().getId()));
         activo.setFolio(this.getFolio(activo.getEmpresa()));
         activo.setFechaCreacion(fecha);
         activo.setFechaModificacion(fecha);
@@ -260,35 +299,6 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
     @Override
     public Activo crea(Activo activo) {
         return this.crea(activo, null);
-    }
-
-    @Override
-    public Activo actualiza(Activo activo) {
-        return this.actualiza(activo, null);
-    }
-
-    @Override
-    public Activo actualiza(Activo activo, Usuario usuario) {
-        Session session = currentSession();
-        Date fecha = new Date();
-        if (usuario != null) {
-            activo.setEmpresa(usuario.getEmpresa());
-        }
-        activo.setTipoActivo((TipoActivo) session.load(TipoActivo.class, activo.getTipoActivo().getId()));
-        activo.setFechaModificacion(fecha);
-        session.update(activo);
-        audita(activo, usuario, Constantes.ACTUALIZAR, fecha);
-        session.flush();
-        return activo;
-    }
-
-    @Override
-    public String elimina(Long id) {
-        Activo activo = obtiene(id);
-        String nombre = activo.getFolio();
-        currentSession().delete(activo);
-        currentSession().flush();
-        return nombre;
     }
 
     @Override
@@ -635,19 +645,27 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
     public String reubica(ReubicacionActivo reubicacion, Usuario usuario) {
         log.debug("Reubicando activo {}", reubicacion.getActivo());
         Date fecha = new Date();
+
+        CCostoPK pk = new CCostoPK(usuario.getEjercicio(), reubicacion.getCentroCosto().getId().getIdCosto());
+        CentroCosto centroCosto = (CentroCosto) currentSession().load(CentroCosto.class, pk);
+
         Activo activo = reubicacion.getActivo();
+        currentSession().refresh(activo);
+        activo.setCentroCosto(centroCosto);
         activo.setFechaModificacion(fecha);
-        activo.setCentroCosto((CentroCosto) currentSession().load(CentroCosto.class, activo.getCentroCosto().getId()));
+        activo.setFechaReubicado(reubicacion.getFecha());
         currentSession().update(activo);
-        if (usuario != null) {
-            reubicacion.setCreador(usuario.getUsername());
-        } else {
-            reubicacion.setCreador("sistema");
-        }
+
+        reubicacion.setCentroCosto(centroCosto);
         reubicacion.setFechaCreacion(fecha);
+        reubicacion.setCreador(usuario.getUsername());
+        reubicacion.setEmpresa(usuario.getEmpresa());
         currentSession().save(reubicacion);
+
         this.audita(activo, usuario, Constantes.REUBICACION, fecha);
+
         currentSession().flush();
+
         return activo.getFolio();
     }
 

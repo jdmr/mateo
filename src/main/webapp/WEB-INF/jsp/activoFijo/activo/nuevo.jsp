@@ -181,8 +181,9 @@
                                 <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                     <label for="fechaCompra">
                                         <s:message code="fechaCompra.label" />
+                                        <span class="required-indicator">*</span>
                                     </label>
-                                    <form:input path="fechaCompra" maxlength="64" cssClass="span2" />
+                                    <form:input path="fechaCompra" maxlength="64" cssClass="span2" required="true" />
                                     <form:errors path="fechaCompra" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>

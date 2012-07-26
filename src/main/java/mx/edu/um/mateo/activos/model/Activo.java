@@ -148,6 +148,9 @@ public class Activo implements Serializable {
     private String tipoActivoCuenta;
     @Transient
     private String centroCostoCuenta;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "fecha_reubicado")
+    private Date fechaReubicado;
 
     public Activo() {
     }
@@ -805,6 +808,20 @@ public class Activo implements Serializable {
      */
     public void setCentroCostoCuenta(String centroCostoCuenta) {
         this.centroCostoCuenta = centroCostoCuenta;
+    }
+
+    /**
+     * @return the fechaReubicado
+     */
+    public Date getFechaReubicado() {
+        return fechaReubicado;
+    }
+
+    /**
+     * @param fechaReubicado the fechaReubicado to set
+     */
+    public void setFechaReubicado(Date fechaReubicado) {
+        this.fechaReubicado = fechaReubicado;
     }
 
     @Override

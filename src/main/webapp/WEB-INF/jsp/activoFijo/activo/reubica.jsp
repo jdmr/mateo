@@ -12,6 +12,7 @@
 <html>
     <head>
         <title><s:message code="activo.reubica.label" /></title>
+        <link rel="stylesheet" href="<c:url value='/css/chosen.css' />" type="text/css">
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -143,20 +144,22 @@
                             </div>
                         </div>
 
-                        <div class="row-fluid" style="margin-top: 10px;">
-                            <div class="span4">
-                                <h4><s:message code="ubicacion.label" /></h4>
-                                <h3>${reubicacion.activo.ubicacion}</h3>
+                        <c:if test="${not empty reubicacion.activo.ubicacion or reubicacion.activo.inactivo or activo.fechaInactivo != null}">
+                            <div class="row-fluid" style="margin-top: 10px;">
+                                <div class="span4">
+                                    <h4><s:message code="ubicacion.label" /></h4>
+                                    <h3>${reubicacion.activo.ubicacion}</h3>
+                                </div>
+                                <div class="span4">
+                                    <h4><s:message code="inactivo.label" /></h4>
+                                    <h3><form:checkbox path="activo.inactivo" disabled="true" /></h3>
+                                </div>
+                                <div class="span4">
+                                    <h4><s:message code="fechaInactivo.label" /></h4>
+                                    <h3>${reubicacion.activo.fechaInactivo}</h3>
+                                </div>
                             </div>
-                            <div class="span4">
-                                <h4><s:message code="inactivo.label" /></h4>
-                                <h3>${reubicacion.activo.inactivo}</h3>
-                            </div>
-                            <div class="span4">
-                                <h4><s:message code="fechaInactivo.label" /></h4>
-                                <h3>${activo.fechaInactivo}</h3>
-                            </div>
-                        </div>
+                        </c:if>
 
                         <div class="row-fluid" style="margin-top: 10px;">
                             <div class="span4">
@@ -175,8 +178,8 @@
 
                         <div class="row-fluid" style="margin-top: 10px;">
                             <div class="span4">
-                                <h4><s:message code="cuenta.label" /></h4>
-                                <h3>${reubicacion.activo.cuenta.nombreCompleto}</h3>
+                                <h4><s:message code="centroCosto.label" /></h4>
+                                <h3>${reubicacion.activo.centroCosto.nombreCompleto}</h3>
                             </div>
                             <div class="span4">
                                 <h4><s:message code="empresa.label" /></h4>
@@ -191,11 +194,11 @@
                         <div class="row-fluid" style="margin-top: 10px;">
                             <div class="span4">
                                 <h4><s:message code="seguro.label" /></h4>
-                                <h3>${reubicacion.activo.seguro}</h3>
+                                <h3><form:checkbox path="activo.seguro" disabled="true" /></h3>
                             </div>
                             <div class="span4">
                                 <h4><s:message code="garantia.label" /></h4>
-                                <h3>${reubicacion.activo.garantia}</h3>
+                                <h3><form:checkbox path="activo.garantia" disabled="true" /></h3>
                             </div>
                             <div class="span4">
                                 <h4><s:message code="mesesGarantia.label" /></h4>
@@ -220,21 +223,40 @@
 
                     </div>
                     <div class="span3">
-                        <c:forEach items="${reubicacion.activo.imagenes}" var="imagen">
-                            <p><img src="<c:url value='/imagen/mostrar/${imagen.id}' />" /></p>
-                            </c:forEach>
+                        <c:choose>
+                            <c:when test="${tieneImagenes}">
+                                <c:forEach items="${reubicacion.activo.imagenes}" var="imagen">
+                                    <p><img src="<c:url value='/imagen/mostrar/${imagen.id}' />" /></p>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <p><img src="<c:url value='/imagen/mostrar/0' />" /></p>
+                            </c:otherwise>
+                        </c:choose>
+                        <a class="btn" href="<c:url value='/activoFijo/activo/sube/${reubicacion.activo.id}'/>"><i class="icon-upload"></i> <s:message code="activo.sube.imagen.button" /></a>
                     </div>
                 </div>
 
                 <fieldset class="well">
                     <s:bind path="reubicacion.fecha">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="fecha">
-                                <s:message code="fecha.label" />
+                            <label for="fecha">
+                                <s:message code="fecha.reubicacion.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="fecha" required="true" maxlength="64" cssClass="span3" />
+                            <form:input id="fecha" path="fecha" required="true" maxlength="64" cssClass="span3" />
                             <form:errors path="fecha" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="activo.centroCosto">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="centroCostoId">
+                                <s:message code="centroCosto.label" />
+                            </label>
+                            <form:select id="centroCostoId" path="centroCosto.id.idCosto" required="true" cssClass="span4" >
+                                <form:options items="${centrosDeCosto}" itemValue="id.idCosto" itemLabel="nombreCompleto" />
+                            </form:select>
+                            <form:errors path="centroCosto" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                     <s:bind path="reubicacion.comentarios">
@@ -247,14 +269,16 @@
                             <form:errors path="comentarios" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <button type="submit" name="actualizarBtn" class="btn btn-danger btn-large" id="actualizar" onclick="return confirm('<s:message code="confirma.baja.message" />');" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
+                    <button type="submit" name="actualizarBtn" class="btn btn-danger btn-large" id="actualizar" onclick="return confirm('<s:message code="confirma.reubicacion.message" />');" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
                     <a class="btn btn-large" href="<s:url value='/activoFijo/activo/ver/${reubicacion.activo.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </fieldset>
             </form:form>
         </div>
     <content>
+        <script src="<c:url value='/js/chosen.jquery.min.js' />"></script>
         <script>
             $(document).ready(function() {
+                $("select#centroCostoId").chosen();
                 $("input#fecha").datepicker($.datepicker.regional['es']);
                 $("input#fecha").datepicker("option","firstDay",0);
                 $("input#fecha").focus();
