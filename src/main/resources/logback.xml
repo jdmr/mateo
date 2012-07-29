@@ -31,8 +31,8 @@
   <logger name="org.springframework.orm.hibernate4" level="DEBUG"/>
   <logger name="org.hibernate.engine.transaction" level="DEBUG"/>
   <logger name="org.hibernate.SQL" level="TRACE"/>
-  <logger name="org.hibernate.type" level="TRACE"/>
   <!--
+  <logger name="org.hibernate.type" level="TRACE"/>
   -->
   <root level="INFO">
     <appender-ref ref="stdout"/>

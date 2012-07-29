@@ -367,7 +367,7 @@ public class ActivoController extends BaseController {
         modelo.addAttribute("reubicacion", reubicacion);
         List<CentroCosto> centrosDeCosto = activoDao.centrosDeCosto(ambiente.obtieneUsuario());
         modelo.addAttribute("centrosDeCosto", centrosDeCosto);
-        
+
         return "activoFijo/activo/reubica";
     }
 
@@ -387,7 +387,7 @@ public class ActivoController extends BaseController {
 
     @RequestMapping(value = "/subeActivos", method = RequestMethod.GET)
     public String preparaParaSubir() {
-        return "/activoFijo/activo/subeActivos";
+        return "activoFijo/activo/subeActivos";
     }
 
     @RequestMapping(value = "/subeActivos", method = RequestMethod.POST)
@@ -400,5 +400,22 @@ public class ActivoController extends BaseController {
         out.flush();
 
         return "redirect:/activoFijo/activo";
+    }
+
+    @RequestMapping("/depreciacionAcumuladaPorCentroDeCosto")
+    public String depreciacionAcumuladaPorCentroDeCosto(Model modelo, @RequestParam(required = false) String fecha) throws ParseException {
+        log.debug("Depreciacion Acumulada por Centro de Costo");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        if (fecha != null) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("usuario", ambiente.obtieneUsuario());
+            params.put("fecha", sdf.parse(fecha));
+            params = activoDao.depreciacionAcumuladaPorCentroDeCosto(params);
+            modelo.addAllAttributes(params);
+            modelo.addAttribute("fecha", fecha);
+        } else {
+            modelo.addAttribute("fecha", sdf.format(new Date()));
+        }
+        return "activoFijo/activo/depreciacionAcumuladaPorCentroDeCosto";
     }
 }

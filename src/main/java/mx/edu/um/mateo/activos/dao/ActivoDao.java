@@ -62,4 +62,6 @@ public interface ActivoDao {
     public String reubica(ReubicacionActivo reubicacion, Usuario usuario);
 
     public void sube(byte[] datos, Usuario usuario, OutputStream out, Integer codigo);
+
+    public Map<String, Object> depreciacionAcumuladaPorCentroDeCosto(Map<String, Object> params);
 }

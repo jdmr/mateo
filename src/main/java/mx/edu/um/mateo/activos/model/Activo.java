@@ -148,6 +148,8 @@ public class Activo implements Serializable {
     private String tipoActivoCuenta;
     @Transient
     private String centroCostoCuenta;
+    @Transient
+    private String centroCostoNombre;
     @Temporal(TemporalType.DATE)
     @Column(name = "fecha_reubicado")
     private Date fechaReubicado;
@@ -164,6 +166,47 @@ public class Activo implements Serializable {
         this.vidaUtil = vidaUtil;
         this.inactivo = inactivo;
         this.fechaInactivo = fechaInactivo;
+    }
+
+    public Activo(Long id, Integer version, BigDecimal moi, Date fechaCompra, BigDecimal porciento, Long vidaUtil, Boolean inactivo, Date fechaInactivo, Date fechaReubicado) {
+        this.id = id;
+        this.version = version;
+        this.moi = moi;
+        this.fechaCompra = fechaCompra;
+        this.porciento = porciento;
+        this.vidaUtil = vidaUtil;
+        this.inactivo = inactivo;
+        this.fechaInactivo = fechaInactivo;
+        this.fechaReubicado = fechaReubicado;
+    }
+
+    public Activo(Long id, Integer version, BigDecimal moi, Date fechaCompra, BigDecimal porciento, Long vidaUtil, Boolean inactivo, Date fechaInactivo, Date fechaReubicado, String tipoActivoCuenta, String centroCostoCuenta) {
+        this.id = id;
+        this.version = version;
+        this.moi = moi;
+        this.fechaCompra = fechaCompra;
+        this.porciento = porciento;
+        this.vidaUtil = vidaUtil;
+        this.inactivo = inactivo;
+        this.fechaInactivo = fechaInactivo;
+        this.fechaReubicado = fechaReubicado;
+        this.tipoActivoCuenta = tipoActivoCuenta;
+        this.centroCostoCuenta = centroCostoCuenta;
+    }
+
+    public Activo(Long id, Integer version, BigDecimal moi, Date fechaCompra, BigDecimal porciento, Long vidaUtil, Boolean inactivo, Date fechaInactivo, Date fechaReubicado, String tipoActivoCuenta, String centroCostoCuenta, String centroCostoNombre) {
+        this.id = id;
+        this.version = version;
+        this.moi = moi;
+        this.fechaCompra = fechaCompra;
+        this.porciento = porciento;
+        this.vidaUtil = vidaUtil;
+        this.inactivo = inactivo;
+        this.fechaInactivo = fechaInactivo;
+        this.fechaReubicado = fechaReubicado;
+        this.tipoActivoCuenta = tipoActivoCuenta;
+        this.centroCostoCuenta = centroCostoCuenta;
+        this.centroCostoNombre = centroCostoNombre;
     }
 
     public Activo(Date fechaCompra, Boolean seguro, Boolean garantia, String poliza, String codigo, String descripcion, String marca, String modelo, String serial, String responsable, String ubicacion, BigDecimal costo, TipoActivo tipoActivo, CentroCosto centroCosto, Proveedor proveedor, Empresa empresa) {
@@ -808,6 +851,20 @@ public class Activo implements Serializable {
      */
     public void setCentroCostoCuenta(String centroCostoCuenta) {
         this.centroCostoCuenta = centroCostoCuenta;
+    }
+
+    /**
+     * @return the centroCostoNombre
+     */
+    public String getCentroCostoNombre() {
+        return centroCostoNombre;
+    }
+
+    /**
+     * @param centroCostoNombre the centroCostoNombre to set
+     */
+    public void setCentroCostoNombre(String centroCostoNombre) {
+        this.centroCostoNombre = centroCostoNombre;
     }
 
     /**
