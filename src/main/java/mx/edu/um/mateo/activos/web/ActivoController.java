@@ -406,16 +406,43 @@ public class ActivoController extends BaseController {
     public String depreciacionAcumuladaPorCentroDeCosto(Model modelo, @RequestParam(required = false) String fecha) throws ParseException {
         log.debug("Depreciacion Acumulada por Centro de Costo");
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MM-yyyy");
+        if (fecha != null) {
+            Date date = sdf.parse(fecha);
+            Map<String, Object> params = new HashMap<>();
+            params.put("usuario", ambiente.obtieneUsuario());
+            params.put("fecha", date);
+            params = activoDao.depreciacionAcumuladaPorCentroDeCosto(params);
+            modelo.addAllAttributes(params);
+            modelo.addAttribute("fecha", fecha);
+            modelo.addAttribute("fechaParam", sdf2.format(date));
+        } else {
+            modelo.addAttribute("fecha", sdf.format(new Date()));
+            modelo.addAttribute("fechaParam", sdf2.format(new Date()));
+            
+        }
+        return "activoFijo/activo/depreciacionAcumuladaPorCentroDeCosto";
+    }
+    
+    @RequestMapping("/depreciacionAcumuladaPorCentroDeCosto/{centroCostoId}/{fecha}")
+    public String depreciacionAcumuladaPorCentroDeCostoDetalle(
+            @PathVariable String centroCostoId,
+            @PathVariable String fecha,
+            Model modelo) throws ParseException {
+        log.debug("Detalle de Depreciacion Acumulada por Centro de Costo {} y fecha {}", centroCostoId, fecha);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         if (fecha != null) {
             Map<String, Object> params = new HashMap<>();
             params.put("usuario", ambiente.obtieneUsuario());
+            params.put("centroCostoId", centroCostoId);
             params.put("fecha", sdf.parse(fecha));
-            params = activoDao.depreciacionAcumuladaPorCentroDeCosto(params);
+            params = activoDao.depreciacionAcumuladaPorCentroDeCostoDetalle(params);
             modelo.addAllAttributes(params);
             modelo.addAttribute("fecha", fecha);
         } else {
             modelo.addAttribute("fecha", sdf.format(new Date()));
         }
-        return "activoFijo/activo/depreciacionAcumuladaPorCentroDeCosto";
+        return "activoFijo/activo/depreciacionAcumuladaPorCentroDeCostoDetalle";
     }
+    
 }

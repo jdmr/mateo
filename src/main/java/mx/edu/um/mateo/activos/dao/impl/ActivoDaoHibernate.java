@@ -32,7 +32,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -343,6 +342,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
     private Activo deprecia(Activo activo, Date fecha) {
         // depreciacion anual
         BigDecimal porciento = activo.getPorciento();
+        log.trace("Activo - MOI - Porciento: {} - {} - {}", new Object[] {activo.getId(), activo.getMoi(), porciento});
         BigDecimal depreciacionAnual = activo.getMoi().multiply(porciento);
         log.trace("DepreciacionAnual: {}", depreciacionAnual);
 
@@ -1188,6 +1188,29 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         }
 
         params.put("centrosDeCosto", mapa1.values());
+        return params;
+    }
+
+    @Override
+    public Map<String, Object> depreciacionAcumuladaPorCentroDeCostoDetalle(Map<String, Object> params) {
+        Usuario usuario = (Usuario) params.get("usuario");
+        String centroCostoId = (String) params.get("centroCostoId");
+        Date fecha = (Date) params.get("fecha");
+        CCostoPK ccostoPK = new CCostoPK(usuario.getEjercicio(), centroCostoId);
+        CentroCosto centroCosto = (CentroCosto) currentSession().get(CentroCosto.class, ccostoPK);
+        params.put("centroCosto", centroCosto);
+        Criteria criteria = currentSession().createCriteria(Activo.class);
+        criteria.add(Restrictions.eq("empresa.id", usuario.getEmpresa().getId()));
+        criteria.add(Restrictions.eq("centroCosto.id.ejercicio.id.idEjercicio", usuario.getEjercicio().getId().getIdEjercicio()));
+        criteria.add(Restrictions.eq("centroCosto.id.ejercicio.id.organizacion.id", usuario.getEjercicio().getId().getOrganizacion().getId()));
+        criteria.add(Restrictions.eq("centroCosto.id.idCosto", centroCostoId));
+        criteria.add(Restrictions.le("fechaCompra", fecha));
+        List<Activo> activos = criteria.list();
+        for(Activo activo : activos) {
+            log.trace("Depreciando activo {}", activo.getId());
+            activo = this.deprecia(activo, fecha);
+        }
+        params.put("activos", activos);
         return params;
     }
 }

@@ -64,4 +64,6 @@ public interface ActivoDao {
     public void sube(byte[] datos, Usuario usuario, OutputStream out, Integer codigo);
 
     public Map<String, Object> depreciacionAcumuladaPorCentroDeCosto(Map<String, Object> params);
+    
+    public Map<String, Object> depreciacionAcumuladaPorCentroDeCostoDetalle(Map<String, Object> params);
 }

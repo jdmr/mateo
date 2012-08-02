@@ -47,7 +47,7 @@
                 <tbody>
                     <c:forEach items="${centrosDeCosto}" var="centroDeCosto" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/activoFijo/activo/depreciacionAcumuladaPorCentroDeCosto/${centroDeCosto.cuenta}' />">${centroDeCosto.nombre}</a></td>
+                            <td><a href="<c:url value='/activoFijo/activo/depreciacionAcumuladaPorCentroDeCosto/${centroDeCosto.cuenta}/${fechaParam}' />">${centroDeCosto.nombre}</a></td>
                             <c:forEach items="${tiposDeActivo}" var="tipoDeActivo">
                                 <td style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="${centroDeCosto.totales[tipoDeActivo.cuenta]}" /></td>
                             </c:forEach>

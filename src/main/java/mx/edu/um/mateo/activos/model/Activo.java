@@ -147,6 +147,8 @@ public class Activo implements Serializable {
     @Transient
     private String tipoActivoCuenta;
     @Transient
+    private String tipoActivoNombre;
+    @Transient
     private String centroCostoCuenta;
     @Transient
     private String centroCostoNombre;
@@ -801,6 +803,9 @@ public class Activo implements Serializable {
      * @return the porciento
      */
     public BigDecimal getPorciento() {
+        if (porciento == null) {
+            porciento = tipoActivo.getPorciento();
+        }
         return porciento;
     }
 
@@ -815,6 +820,9 @@ public class Activo implements Serializable {
      * @return the vidaUtil
      */
     public Long getVidaUtil() {
+        if (vidaUtil == null) {
+            vidaUtil = tipoActivo.getVidaUtil();
+        }
         return vidaUtil;
     }
 
@@ -829,6 +837,9 @@ public class Activo implements Serializable {
      * @return the tipoActivoCuenta
      */
     public String getTipoActivoCuenta() {
+        if (tipoActivoCuenta == null) {
+            tipoActivoCuenta = tipoActivo.getCuenta().getId().getIdCtaMayor();
+        }
         return tipoActivoCuenta;
     }
 
@@ -840,9 +851,29 @@ public class Activo implements Serializable {
     }
 
     /**
+     * @return the tipoActivoNombre
+     */
+    public String getTipoActivoNombre() {
+        if (tipoActivoNombre == null) {
+            tipoActivoNombre = tipoActivo.getNombre();
+        }
+        return tipoActivoNombre;
+    }
+
+    /**
+     * @param tipoActivoNombre the tipoActivoNombre to set
+     */
+    public void setTipoActivoNombre(String tipoActivoNombre) {
+        this.tipoActivoNombre = tipoActivoNombre;
+    }
+
+    /**
      * @return the centroCostoCuenta
      */
     public String getCentroCostoCuenta() {
+        if (centroCostoCuenta == null) {
+            centroCostoCuenta = centroCosto.getId().getIdCosto();
+        }
         return centroCostoCuenta;
     }
 
@@ -857,6 +888,9 @@ public class Activo implements Serializable {
      * @return the centroCostoNombre
      */
     public String getCentroCostoNombre() {
+        if (centroCostoNombre == null) {
+            centroCostoNombre = centroCosto.getNombre();
+        }
         return centroCostoNombre;
     }
 
