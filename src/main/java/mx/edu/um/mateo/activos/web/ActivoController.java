@@ -445,4 +445,47 @@ public class ActivoController extends BaseController {
         return "activoFijo/activo/depreciacionAcumuladaPorCentroDeCostoDetalle";
     }
     
+    @RequestMapping("/depreciacionAcumuladaPorGrupo")
+    public String depreciacionAcumuladaPorGrupo(Model modelo, @RequestParam(required = false) String fecha) throws ParseException {
+        log.debug("Depreciacion Acumulada por Tipo de Activo");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MM-yyyy");
+        if (fecha != null) {
+            Date date = sdf.parse(fecha);
+            Map<String, Object> params = new HashMap<>();
+            params.put("usuario", ambiente.obtieneUsuario());
+            params.put("fecha", date);
+            params = activoDao.depreciacionAcumuladaPorTipoActivo(params);
+            modelo.addAllAttributes(params);
+            modelo.addAttribute("fecha", fecha);
+            modelo.addAttribute("fechaParam", sdf2.format(date));
+        } else {
+            modelo.addAttribute("fecha", sdf.format(new Date()));
+            modelo.addAttribute("fechaParam", sdf2.format(new Date()));
+            
+        }
+        return "activoFijo/activo/depreciacionAcumuladaPorGrupo";
+    }
+    
+    @RequestMapping("/depreciacionAcumuladaPorGrupo/{tipoActivoId}/{fecha}")
+    public String depreciacionAcumuladaPorGrupoDetalle(
+            @PathVariable String tipoActivoId,
+            @PathVariable String fecha,
+            Model modelo) throws ParseException {
+        log.debug("Detalle de Depreciacion Acumulada por TipoDeActivo {} y fecha {}", tipoActivoId, fecha);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        if (fecha != null) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("usuario", ambiente.obtieneUsuario());
+            params.put("tipoActivoId", tipoActivoId);
+            params.put("fecha", sdf.parse(fecha));
+            params = activoDao.depreciacionAcumuladaPorTipoActivoDetalle(params);
+            modelo.addAllAttributes(params);
+            modelo.addAttribute("fecha", fecha);
+        } else {
+            modelo.addAttribute("fecha", sdf.format(new Date()));
+        }
+        return "activoFijo/activo/depreciacionAcumuladaPorGrupoDetalle";
+    }
+    
 }

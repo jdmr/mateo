@@ -66,4 +66,8 @@ public interface ActivoDao {
     public Map<String, Object> depreciacionAcumuladaPorCentroDeCosto(Map<String, Object> params);
     
     public Map<String, Object> depreciacionAcumuladaPorCentroDeCostoDetalle(Map<String, Object> params);
+    
+    public Map<String, Object> depreciacionAcumuladaPorTipoActivo(Map<String, Object> params);
+    
+    public Map<String, Object> depreciacionAcumuladaPorTipoActivoDetalle(Map<String, Object> params);
 }
