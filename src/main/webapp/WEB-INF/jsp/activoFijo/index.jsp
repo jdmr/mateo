@@ -16,8 +16,17 @@
         <div class="well">
             <div class="row-fluid">
                 <h5><a href="<c:url value='/activoFijo/activo/depreciacionAcumuladaPorCentroDeCosto' />"><s:message code="depreciacionAcumuladaPorCentroDeCosto.label" /></a></h5>
+                <h5><a href="<c:url value='/activoFijo/activo/depreciacionMensualPorCentroDeCosto' />"><s:message code="depreciacionMensualPorCentroDeCosto.label" /></a></h5>
                 <h5><a href="<c:url value='/activoFijo/activo/depreciacionAcumuladaPorGrupo' />"><s:message code="depreciacionAcumuladaPorGrupo.label" /></a></h5>
             </div>
         </div>
+            
+        <h3><s:message code="acciones.label" /></h3>
+        <div class="well">
+            <div class="row-fluid">
+                <h5><a href="<c:url value='/activoFijo/activo/depreciar'/>"><s:message code='activo.depreciar.label' /></a></h5>
+            </div>
+        </div>
+            
     </body>
 </html>

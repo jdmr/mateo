@@ -15,7 +15,7 @@
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="activo" />
+            <jsp:param name="menu" value="principal" />
         </jsp:include>
 
         <div id="nuevo-tipoActivo" class="content scaffold-list" role="main">

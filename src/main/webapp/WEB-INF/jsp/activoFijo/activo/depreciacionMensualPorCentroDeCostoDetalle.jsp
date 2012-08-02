@@ -5,14 +5,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="depreciacionAcumuladaPorCentroDeCostoDetalle.label" arguments="${centroCostoId}" /></title>
+        <title><s:message code="depreciacionMensualPorCentroDeCostoDetalle.label" arguments="${centroCostoId}" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
             <jsp:param name="menu" value="activo" />
         </jsp:include>
 
-        <h1><s:message code="depreciacionAcumuladaPorCentroDeCostoDetalle.label" arguments="${centroCosto.nombre}" /></h1>
+        <h1><s:message code="depreciacionMensualPorCentroDeCostoDetalle.label" arguments="${centroCosto.nombre}" /></h1>
         <hr/>
         <table id="lista" class="table table-striped">
             <thead>

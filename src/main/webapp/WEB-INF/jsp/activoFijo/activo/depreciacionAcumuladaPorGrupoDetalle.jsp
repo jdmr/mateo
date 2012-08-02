@@ -49,6 +49,15 @@
                     </tr>
                 </c:forEach>
             </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="8">&nbsp;</th>
+                    <th style="text-align:right;"><fmt:formatNumber value="${totales.ANUAL}" type="currency" currencySymbol="$" /></th>
+                    <th style="text-align:right;"><fmt:formatNumber value="${totales.MENSUAL}" type="currency" currencySymbol="$" /></th>
+                    <th style="text-align:right;"><fmt:formatNumber value="${totales.ACUMULADA}" type="currency" currencySymbol="$" /></th>
+                    <th style="text-align:right;"><fmt:formatNumber value="${totales.NETO}" type="currency" currencySymbol="$" /></th>
+                </tr>
+            </tfoot>
         </table>
         <content>
             <script src="<c:url value='/js/lista.js' />"></script>

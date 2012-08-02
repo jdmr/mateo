@@ -419,11 +419,11 @@ public class ActivoController extends BaseController {
         } else {
             modelo.addAttribute("fecha", sdf.format(new Date()));
             modelo.addAttribute("fechaParam", sdf2.format(new Date()));
-            
+
         }
         return "activoFijo/activo/depreciacionAcumuladaPorCentroDeCosto";
     }
-    
+
     @RequestMapping("/depreciacionAcumuladaPorCentroDeCosto/{centroCostoId}/{fecha}")
     public String depreciacionAcumuladaPorCentroDeCostoDetalle(
             @PathVariable String centroCostoId,
@@ -444,7 +444,50 @@ public class ActivoController extends BaseController {
         }
         return "activoFijo/activo/depreciacionAcumuladaPorCentroDeCostoDetalle";
     }
-    
+
+    @RequestMapping("/depreciacionMensualPorCentroDeCosto")
+    public String depreciacionMensualPorCentroDeCosto(Model modelo, @RequestParam(required = false) String fecha) throws ParseException {
+        log.debug("Depreciacion Mensual por Centro de Costo");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MM-yyyy");
+        if (fecha != null) {
+            Date date = sdf.parse(fecha);
+            Map<String, Object> params = new HashMap<>();
+            params.put("usuario", ambiente.obtieneUsuario());
+            params.put("fecha", date);
+            params = activoDao.depreciacionMensualPorCentroDeCosto(params);
+            modelo.addAllAttributes(params);
+            modelo.addAttribute("fecha", fecha);
+            modelo.addAttribute("fechaParam", sdf2.format(date));
+        } else {
+            modelo.addAttribute("fecha", sdf.format(new Date()));
+            modelo.addAttribute("fechaParam", sdf2.format(new Date()));
+
+        }
+        return "activoFijo/activo/depreciacionMensualPorCentroDeCosto";
+    }
+
+    @RequestMapping("/depreciacionMensualPorCentroDeCosto/{centroCostoId}/{fecha}")
+    public String depreciacionMensualPorCentroDeCostoDetalle(
+            @PathVariable String centroCostoId,
+            @PathVariable String fecha,
+            Model modelo) throws ParseException {
+        log.debug("Detalle de Depreciacion Mensual por Centro de Costo {} y fecha {}", centroCostoId, fecha);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        if (fecha != null) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("usuario", ambiente.obtieneUsuario());
+            params.put("centroCostoId", centroCostoId);
+            params.put("fecha", sdf.parse(fecha));
+            params = activoDao.depreciacionMensualPorCentroDeCostoDetalle(params);
+            modelo.addAllAttributes(params);
+            modelo.addAttribute("fecha", fecha);
+        } else {
+            modelo.addAttribute("fecha", sdf.format(new Date()));
+        }
+        return "activoFijo/activo/depreciacionMensualPorCentroDeCostoDetalle";
+    }
+
     @RequestMapping("/depreciacionAcumuladaPorGrupo")
     public String depreciacionAcumuladaPorGrupo(Model modelo, @RequestParam(required = false) String fecha) throws ParseException {
         log.debug("Depreciacion Acumulada por Tipo de Activo");
@@ -462,11 +505,11 @@ public class ActivoController extends BaseController {
         } else {
             modelo.addAttribute("fecha", sdf.format(new Date()));
             modelo.addAttribute("fechaParam", sdf2.format(new Date()));
-            
+
         }
         return "activoFijo/activo/depreciacionAcumuladaPorGrupo";
     }
-    
+
     @RequestMapping("/depreciacionAcumuladaPorGrupo/{tipoActivoId}/{fecha}")
     public String depreciacionAcumuladaPorGrupoDetalle(
             @PathVariable String tipoActivoId,
@@ -487,5 +530,5 @@ public class ActivoController extends BaseController {
         }
         return "activoFijo/activo/depreciacionAcumuladaPorGrupoDetalle";
     }
-    
+
 }
