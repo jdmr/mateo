@@ -1143,6 +1143,13 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             tipoActivo.put("total", BigDecimal.ZERO);
             tiposDeActivoMap.put((String)tipoActivo.get("cuenta"), tipoActivo);
         }
+        Map<String, Object> totalCC = new HashMap<>();
+        totalCC.put("nombre", "");
+        totalCC.put("cuenta", "TOTAL");
+        totalCC.put("id", 0);
+        totalCC.put("total", BigDecimal.ZERO);
+        tiposDeActivo.add(totalCC);
+        tiposDeActivoMap.put("TOTAL", totalCC);
         params.put("tiposDeActivo", tiposDeActivo);
 
         Date fecha = (Date) params.get("fecha");
@@ -1165,12 +1172,15 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                 for (Map<String, Object> tipoActivo : tiposDeActivo) {
                     mapa3.put((String) tipoActivo.get("cuenta"), BigDecimal.ZERO);
                 }
+                mapa3.put("TOTAL", BigDecimal.ZERO);
                 mapa2.put("totales", mapa3);
                 mapa2.put("cuenta", activo.getCentroCostoCuenta());
                 mapa2.put("nombre", activo.getCentroCostoNombre());
                 mapa1.put(activo.getCentroCostoCuenta(), mapa2);
             }
+            
             mapa3 = (Map<String, BigDecimal>) mapa2.get("totales");
+            
             BigDecimal cantidad = mapa3.get(activo.getTipoActivoCuenta());
             cantidad = cantidad.add(activo.getDepreciacionAcumulada(), mc);
             mapa3.put(activo.getTipoActivoCuenta(), cantidad);
@@ -1179,6 +1189,17 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             BigDecimal total = (BigDecimal)tipoActivo.get("total");
             total = total.add(activo.getDepreciacionAcumulada(), mc);
             tipoActivo.put("total", total);
+            
+            // Totales
+            cantidad = mapa3.get("TOTAL");
+            cantidad = cantidad.add(activo.getDepreciacionAcumulada(), mc);
+            mapa3.put("TOTAL", cantidad);
+            
+            tipoActivo = (Map<String, Object>) tiposDeActivoMap.get("TOTAL");
+            total = (BigDecimal)tipoActivo.get("total");
+            total = total.add(activo.getDepreciacionAcumulada(), mc);
+            tipoActivo.put("total", total);
+            
         }
         
         if (log.isTraceEnabled()) {
