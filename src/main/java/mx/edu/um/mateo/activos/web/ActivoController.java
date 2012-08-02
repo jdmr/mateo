@@ -531,4 +531,17 @@ public class ActivoController extends BaseController {
         return "activoFijo/activo/depreciacionAcumuladaPorGrupoDetalle";
     }
 
+    @RequestMapping("/dia")
+    public String depreciacionAcumuladaPorGrupo(Model modelo, @RequestParam(required = false) Integer anio) throws ParseException {
+        log.debug("Reporte DIA para el anio {}", anio);
+        if (anio != null) {
+            Map<String, Object> params = activoDao.reporteDIA(anio, ambiente.obtieneUsuario());
+            modelo.addAllAttributes(params);
+            modelo.addAttribute("anio", anio);
+        } else {
+            Calendar cal = Calendar.getInstance();
+            modelo.addAttribute("anio", cal.get(Calendar.YEAR));
+        }
+        return "activoFijo/activo/dia";
+    }
 }

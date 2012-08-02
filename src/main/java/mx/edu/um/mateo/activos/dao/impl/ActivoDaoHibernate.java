@@ -1156,7 +1156,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
 
         MathContext mc = new MathContext(16, RoundingMode.HALF_UP);
         Map<String, Map<String, Object>> mapa1 = new TreeMap<>();
-        Query query = currentSession().createQuery("select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha");
+        Query query = currentSession().createQuery("select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha and (a.inactivo = false or a.fechaInactivo > :fecha)");
         query.setLong("empresaId", usuario.getEmpresa().getId());
         query.setDate("fecha", fecha);
         List<Activo> activos = query.list();
@@ -1283,7 +1283,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
 
         MathContext mc = new MathContext(16, RoundingMode.HALF_UP);
         Map<String, Map<String, Object>> mapa1 = new TreeMap<>();
-        Query query = currentSession().createQuery("select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha");
+        Query query = currentSession().createQuery("select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha and (a.inactivo = false or a.fechaInactivo > :fecha)");
         query.setLong("empresaId", usuario.getEmpresa().getId());
         query.setDate("fecha", fecha);
         List<Activo> activos = query.list();
@@ -1409,7 +1409,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         Date fecha = (Date) params.get("fecha");
 
         MathContext mc = new MathContext(16, RoundingMode.HALF_UP);
-        Query query = currentSession().createQuery("select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha");
+        Query query = currentSession().createQuery("select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha and (a.inactivo = false or a.fechaInactivo > :fecha)");
         query.setLong("empresaId", usuario.getEmpresa().getId());
         query.setDate("fecha", fecha);
         List<Activo> activos = query.list();
@@ -1496,5 +1496,162 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
 
         }
         return params;
+    }
+
+    @Override
+    public Map<String, Object> reporteDIA(Integer anio, Usuario usuario) {
+        Map<String, Object> resultado = new HashMap<>();
+        Calendar fecha = Calendar.getInstance();
+        fecha.setTimeInMillis(0);
+        fecha.set(Calendar.DAY_OF_YEAR, 1);
+        fecha.set(Calendar.YEAR, anio);
+        fecha.set(Calendar.HOUR_OF_DAY, 0);
+
+        Calendar fecha2 = Calendar.getInstance();
+        fecha2.setTime(fecha.getTime());
+        fecha2.add(Calendar.YEAR, 1);
+        log.debug("Armando reporte dia de {} a {}", fecha, fecha2);
+
+        MathContext mc = new MathContext(16, RoundingMode.HALF_UP);
+        Map<String, Map<String, Object>> grupos = new TreeMap<>();
+        BigDecimal totalCosto = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal totalCompras = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal totalBajas = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal costoFinal = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal totalDepreciacionAcumulada = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal totalComprasAcumuladas = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal totalBajasAcumuladas = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal totalDepreciacionFinal = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal valorNeto = BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP);
+
+        Criteria criteria = currentSession().createCriteria(TipoActivo.class);
+        criteria.add(Restrictions.eq("empresa.id", usuario.getEmpresa().getId()));
+        List<TipoActivo> tiposDeActivo = criteria.list();
+        for (TipoActivo tipoActivo : tiposDeActivo) {
+            Map<String, Object> ta = new HashMap<>();
+            ta.put("cuenta", tipoActivo.getCuenta().getId().getIdCtaMayor());
+            ta.put("nombre", tipoActivo.getNombre());
+            ta.put("costo", BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
+            ta.put("compras", BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
+            ta.put("bajas", BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
+            ta.put("costoFinal", BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
+            ta.put("depreciacionAcumulada", BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
+            ta.put("comprasAcumuladas", BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
+            ta.put("bajasAcumuladas", BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
+            ta.put("depreciacionFinal", BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
+            ta.put("valorNeto", BigDecimal.ZERO.setScale(2, RoundingMode.HALF_UP));
+            grupos.put(tipoActivo.getCuenta().getId().getIdCtaMayor(), ta);
+        }
+
+        log.debug("Activos");
+        Query query = currentSession().createQuery("select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) "
+                + "from Activo a inner join a.tipoActivo "
+                + "where a.empresa.id = :empresaId "
+                + "and a.fechaCompra <= :fecha "
+                + "and (a.inactivo = false or a.fechaInactivo > :fecha)");
+        query.setLong("empresaId", usuario.getEmpresa().getId());
+        query.setDate("fecha", fecha.getTime());
+        for (Activo activo : (List<Activo>) query.list()) {
+            activo = this.deprecia(activo, fecha.getTime());
+            Map<String, Object> ta = grupos.get(activo.getTipoActivoCuenta());
+            BigDecimal costo = (BigDecimal) ta.get("costo");
+            costo = costo.add(activo.getMoi(), mc);
+            ta.put("costo", costo);
+
+            BigDecimal depreciacionAcumulada = (BigDecimal) ta.get("depreciacionAcumulada");
+            depreciacionAcumulada = depreciacionAcumulada.add(activo.getDepreciacionAcumulada(), mc);
+            ta.put("depreciacionAcumulada", depreciacionAcumulada);
+
+            totalCosto = totalCosto.add(activo.getMoi());
+            totalDepreciacionAcumulada = totalDepreciacionAcumulada.add(activo.getDepreciacionAcumulada(), mc);
+
+            activo = this.deprecia(activo, fecha2.getTime());
+            BigDecimal depreciacionFinal = (BigDecimal) ta.get("depreciacionFinal");
+            depreciacionFinal = depreciacionFinal.add(activo.getDepreciacionAcumulada(), mc);
+            ta.put("depreciacionFinal", depreciacionFinal);
+
+            totalDepreciacionFinal = totalDepreciacionFinal.add(activo.getDepreciacionAcumulada(), mc);
+        }
+
+        // Compras
+        query = currentSession().createQuery("select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) "
+                + "from Activo a inner join a.tipoActivo "
+                + "where a.empresa.id = :empresaId "
+                + "and a.fechaCompra between :fecha and :fecha2 "
+                + "and (a.inactivo = false or a.fechaInactivo > :fecha)");
+        query.setLong("empresaId", usuario.getEmpresa().getId());
+        query.setDate("fecha", fecha.getTime());
+        query.setDate("fecha2", fecha2.getTime());
+        for (Activo activo : (List<Activo>) query.list()) {
+            activo = this.deprecia(activo, fecha.getTime());
+            Map<String, Object> ta = grupos.get(activo.getTipoActivoCuenta());
+            BigDecimal compras = (BigDecimal) ta.get("compras");
+            compras = compras.add(activo.getMoi(), mc);
+            ta.put("compras", compras);
+            totalCompras = totalCompras.add(activo.getMoi(), mc);
+
+            activo = this.deprecia(activo, fecha2.getTime());
+            BigDecimal comprasAcumuladas = (BigDecimal) ta.get("comprasAcumuladas");
+            comprasAcumuladas = comprasAcumuladas.add(activo.getDepreciacionAcumulada(), mc);
+            ta.put("comprasAcumuladas", comprasAcumuladas);
+
+            totalComprasAcumuladas = totalComprasAcumuladas.add(activo.getDepreciacionAcumulada(), mc);
+            totalDepreciacionFinal = totalDepreciacionFinal.add(activo.getDepreciacionAcumulada(), mc);
+        }
+
+        // Bajas
+        query = currentSession().createQuery("select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) "
+                + "from Activo a inner join a.tipoActivo "
+                + "where a.empresa.id = :empresaId "
+                + "and a.inactivo = true and a.fechaInactivo between :fecha and :fecha2");
+        query.setLong("empresaId", usuario.getEmpresa().getId());
+        query.setDate("fecha", fecha.getTime());
+        query.setDate("fecha2", fecha2.getTime());
+        for (Activo activo : (List<Activo>) query.list()) {
+            activo = this.deprecia(activo, fecha.getTime());
+            Map<String, Object> ta = grupos.get(activo.getTipoActivoCuenta());
+            BigDecimal bajas = (BigDecimal) ta.get("bajas");
+            bajas = bajas.add(activo.getMoi(), mc);
+            ta.put("bajas", bajas);
+
+            BigDecimal bajasAcumuladas = (BigDecimal) ta.get("bajasAcumuladas");
+            bajasAcumuladas = bajasAcumuladas.add(activo.getDepreciacionAcumulada(), mc);
+            ta.put("bajasAcumuladas", bajasAcumuladas);
+
+            totalBajas = totalBajas.add(activo.getMoi(), mc);
+            totalBajasAcumuladas = totalBajasAcumuladas.add(activo.getDepreciacionAcumulada(), mc);
+        }
+
+        for (TipoActivo tipoActivo : tiposDeActivo) {
+            Map<String, Object> grupo = grupos.get(tipoActivo.getCuenta().getId().getIdCtaMayor());
+            BigDecimal costo = (BigDecimal) grupo.get("costo");
+            BigDecimal compras = (BigDecimal) grupo.get("compras");
+            BigDecimal bajas = (BigDecimal) grupo.get("bajas");
+            BigDecimal grupoCostoFinal = costo.add(compras.subtract(bajas, mc), mc);
+            grupo.put("costoFinal", grupoCostoFinal);
+            costoFinal = costoFinal.add(grupoCostoFinal, mc);
+            
+            BigDecimal depreciacionFinal = (BigDecimal) grupo.get("depreciacionFinal");
+            BigDecimal depreciacionAcumulada = (BigDecimal) grupo.get("depreciacionAcumulada");
+            grupo.put("comprasAcumuladas", depreciacionFinal.subtract(depreciacionAcumulada, mc));
+            totalComprasAcumuladas = totalDepreciacionFinal.subtract(totalDepreciacionAcumulada, mc);
+            
+            
+            BigDecimal grupoValorNeto = costoFinal.subtract(depreciacionFinal, mc);
+            grupo.put("valorNeto", grupoValorNeto);
+            valorNeto = valorNeto.add(grupoValorNeto, mc);
+        }
+
+        resultado.put("lista", grupos.values());
+        resultado.put("totalCosto", totalCosto);
+        resultado.put("totalCompras", totalCompras);
+        resultado.put("totalBajas", totalBajas);
+        resultado.put("costoFinal", costoFinal);
+        resultado.put("totalDepreciacionAcumulada", totalDepreciacionAcumulada);
+        resultado.put("totalComprasAcumuladas", totalComprasAcumuladas);
+        resultado.put("totalBajasAcumuladas", totalBajasAcumuladas);
+        resultado.put("totalDepreciacionFinal", totalDepreciacionFinal);
+        resultado.put("valorNeto", valorNeto);
+        return resultado;
     }
 }

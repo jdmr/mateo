@@ -74,4 +74,6 @@ public interface ActivoDao {
     public Map<String, Object> depreciacionAcumuladaPorTipoActivo(Map<String, Object> params);
 
     public Map<String, Object> depreciacionAcumuladaPorTipoActivoDetalle(Map<String, Object> params);
+
+    public Map<String, Object> reporteDIA(Integer anio, Usuario obtieneUsuario);
 }
