@@ -56,6 +56,7 @@ public class Ambiente {
             session.setAttribute("organizacionId", usuario.getEmpresa().getOrganizacion().getId());
             session.setAttribute("empresaId", usuario.getEmpresa().getId());
             session.setAttribute("almacenId", usuario.getAlmacen().getId());
+            session.setAttribute("ejercicioId", usuario.getEjercicio().getId().getIdEjercicio());
         }
     }
 

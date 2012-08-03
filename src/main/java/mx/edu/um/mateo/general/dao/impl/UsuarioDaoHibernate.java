@@ -177,6 +177,12 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
         }
         log.debug("Roles del usuario {}", usuario.getRoles());
 
+        EjercicioPK pk = new EjercicioPK(usuario.getEjercicio().getId().getIdEjercicio(), almacen.getEmpresa().getOrganizacion());
+        Ejercicio ejercicio = (Ejercicio) currentSession().get(Ejercicio.class, pk);
+        if (ejercicio != null) {
+            usuario.setEjercicio(ejercicio);
+        }
+
         currentSession().save(usuario);
         currentSession().flush();
 
