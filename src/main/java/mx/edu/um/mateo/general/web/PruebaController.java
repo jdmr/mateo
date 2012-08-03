@@ -23,11 +23,6 @@
  */
 package mx.edu.um.mateo.general.web;
 
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import mx.edu.um.mateo.general.dao.*;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.utils.Ambiente;
@@ -37,10 +32,6 @@ import mx.edu.um.mateo.inventario.dao.EntradaDao;
 import mx.edu.um.mateo.inventario.dao.ProductoDao;
 import mx.edu.um.mateo.inventario.dao.TipoProductoDao;
 import mx.edu.um.mateo.inventario.model.*;
-import mx.edu.um.mateo.inventario.utils.NoCuadraException;
-import mx.edu.um.mateo.inventario.utils.NoEstaAbiertaException;
-import mx.edu.um.mateo.inventario.utils.NoSePuedeCerrarException;
-import mx.edu.um.mateo.inventario.utils.ProductoNoSoportaFraccionException;
 import org.hibernate.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,44 +98,45 @@ public class PruebaController {
         Transaction transaction = null;
         try {
             transaction = currentSession().beginTransaction();
-            reporteDao.inicializa();
-            Organizacion organizacion = new Organizacion("UM", "UM", "Universidad de Montemorelos");
-            organizacion = organizacionDao.crea(organizacion);
-            Rol rol = new Rol("ROLE_ADMIN");
-            rol = rolDao.crea(rol);
-            Usuario usuario = new Usuario(
-                    username,
-                    password,
-                    "Admin",
-                    "User", 
-                    username);
-            Long almacenId = 0l;
-            actualizaUsuario:
-            for (Empresa empresa : organizacion.getEmpresas()) {
-                for (Almacen almacen : empresa.getAlmacenes()) {
-                    almacenId = almacen.getId();
-                    break actualizaUsuario;
-                }
-            }
-            usuarioDao.crea(usuario, almacenId, new String[]{rol.getAuthority()});
-            rol = new Rol("ROLE_ORG");
-            rolDao.crea(rol);
-            rol = new Rol("ROLE_EMP");
-            rolDao.crea(rol);
-            rol = new Rol("ROLE_USER");
-            rolDao.crea(rol);
+//            reporteDao.inicializa();
+//            Organizacion organizacion = new Organizacion("UM", "UM", "Universidad de Montemorelos");
+//            organizacion = organizacionDao.crea(organizacion);
+//            Rol rol = new Rol("ROLE_ADMIN");
+//            rol = rolDao.crea(rol);
+//            Usuario usuario = new Usuario(
+//                    username,
+//                    password,
+//                    "Admin",
+//                    "User", 
+//                    username);
+//            Long almacenId = 0l;
+//            actualizaUsuario:
+//            for (Empresa empresa : organizacion.getEmpresas()) {
+//                for (Almacen almacen : empresa.getAlmacenes()) {
+//                    almacenId = almacen.getId();
+//                    break actualizaUsuario;
+//                }
+//            }
+//            usuarioDao.crea(usuario, almacenId, new String[]{rol.getAuthority()});
+//            rol = new Rol("ROLE_ORG");
+//            rolDao.crea(rol);
+//            rol = new Rol("ROLE_EMP");
+//            rolDao.crea(rol);
+//            rol = new Rol("ROLE_USER");
+//            rolDao.crea(rol);
+//
+//            Estatus estatus = new Estatus(Constantes.ABIERTA, 100);
+//            currentSession().save(estatus);
+//            estatus = new Estatus(Constantes.PENDIENTE, 200);
+//            currentSession().save(estatus);
+//            estatus = new Estatus(Constantes.CERRADA, 300);
+//            currentSession().save(estatus);
+//            estatus = new Estatus(Constantes.FACTURADA, 400);
+//            currentSession().save(estatus);
+//            estatus = new Estatus(Constantes.CANCELADA, 500);
+//            currentSession().save(estatus);
 
-            Estatus estatus = new Estatus(Constantes.ABIERTA, 100);
-            currentSession().save(estatus);
-            estatus = new Estatus(Constantes.PENDIENTE, 200);
-            currentSession().save(estatus);
-            estatus = new Estatus(Constantes.CERRADA, 300);
-            currentSession().save(estatus);
-            estatus = new Estatus(Constantes.FACTURADA, 400);
-            currentSession().save(estatus);
-            estatus = new Estatus(Constantes.CANCELADA, 500);
-            currentSession().save(estatus);
-
+            Usuario usuario = usuarioDao.obtiene(username);
             migracionDao.hazlo(usuario);
             
 //            reporteDao.inicializa();

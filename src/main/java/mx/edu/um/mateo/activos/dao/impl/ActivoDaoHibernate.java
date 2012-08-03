@@ -1156,7 +1156,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
 
         MathContext mc = new MathContext(16, RoundingMode.HALF_UP);
         Map<String, Map<String, Object>> mapa1 = new TreeMap<>();
-        Query query = currentSession().createQuery("select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha and (a.inactivo = false or a.fechaInactivo > :fecha)");
+        Query query = currentSession().createQuery("select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha");
         query.setLong("empresaId", usuario.getEmpresa().getId());
         query.setDate("fecha", fecha);
         List<Activo> activos = query.list();
@@ -1283,7 +1283,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
 
         MathContext mc = new MathContext(16, RoundingMode.HALF_UP);
         Map<String, Map<String, Object>> mapa1 = new TreeMap<>();
-        Query query = currentSession().createQuery("select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha and (a.inactivo = false or a.fechaInactivo > :fecha)");
+        Query query = currentSession().createQuery("select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha");
         query.setLong("empresaId", usuario.getEmpresa().getId());
         query.setDate("fecha", fecha);
         List<Activo> activos = query.list();
@@ -1409,7 +1409,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         Date fecha = (Date) params.get("fecha");
 
         MathContext mc = new MathContext(16, RoundingMode.HALF_UP);
-        Query query = currentSession().createQuery("select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha and (a.inactivo = false or a.fechaInactivo > :fecha)");
+        Query query = currentSession().createQuery("select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha");
         query.setLong("empresaId", usuario.getEmpresa().getId());
         query.setDate("fecha", fecha);
         List<Activo> activos = query.list();

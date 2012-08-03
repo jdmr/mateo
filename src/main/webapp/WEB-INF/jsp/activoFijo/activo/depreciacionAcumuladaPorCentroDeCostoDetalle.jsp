@@ -9,7 +9,7 @@
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="activo" />
+            <jsp:param name="menu" value="principal" />
         </jsp:include>
 
         <h1><s:message code="depreciacionAcumuladaPorCentroDeCostoDetalle.label" arguments="${centroCosto.nombre}" /></h1>
