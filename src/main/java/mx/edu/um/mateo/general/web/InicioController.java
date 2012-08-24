@@ -30,22 +30,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- *
+ * 
  * @author jdmr
  */
 @Controller
 public class InicioController {
-    
-    private static final Logger log = LoggerFactory.getLogger(InicioController.class);
 
-    @RequestMapping({"/","/inicio"})
-    public String inicio() {
-        log.debug("Cargando pagina de inicio");
-        return "inicio/index";
-    }
-    
-    @RequestMapping("/login/auth")
-    public String otraEntrada() {
-        return "redirect:/inicio";
-    }
+	private static final Logger log = LoggerFactory
+			.getLogger(InicioController.class);
+
+	@RequestMapping({ "/", "/inicio" })
+	public String inicio() {
+		log.debug("Cargando pagina de inicio");
+		return "inicio/index";
+	}
+
+	@RequestMapping("/login/auth")
+	public String otraEntrada() {
+		log.debug("Entrando por entrada anterior");
+		return "redirect:/inicio";
+	}
 }

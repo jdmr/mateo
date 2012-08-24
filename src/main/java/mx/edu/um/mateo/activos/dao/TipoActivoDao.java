@@ -24,28 +24,29 @@
 package mx.edu.um.mateo.activos.dao;
 
 import java.util.Map;
+
 import mx.edu.um.mateo.activos.model.TipoActivo;
 import mx.edu.um.mateo.general.model.Usuario;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public interface TipoActivoDao {
 
-    public Map<String, Object> lista(Map<String, Object> params);
+	public Map<String, Object> lista(Map<String, Object> params);
 
-    public TipoActivo obtiene(Long id);
+	public TipoActivo obtiene(Long id);
 
-    public TipoActivo crea(TipoActivo tipoActivo, Usuario usuario);
+	public TipoActivo crea(TipoActivo tipoActivo, Usuario usuario);
 
-    public TipoActivo crea(TipoActivo tipoActivo);
+	public TipoActivo crea(TipoActivo tipoActivo);
 
-    public TipoActivo actualiza(TipoActivo tipoActivo);
+	public TipoActivo actualiza(TipoActivo tipoActivo);
 
-    public TipoActivo actualiza(TipoActivo tipoActivo, Usuario usuario);
+	public TipoActivo actualiza(TipoActivo tipoActivo, Usuario usuario);
 
-    public String elimina(Long id);
-    
-    public void migrar(Usuario usuario);
+	public String elimina(Long id);
+
+	public void migrar(Usuario usuario);
 }

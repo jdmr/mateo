@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!-- For assistance related to logback-translator or configuration  -->
-<!-- files in general, please contact the logback user mailing list -->
-<!-- at http://www.qos.ch/mailman/listinfo/logback-user             -->
-<!--                                                                -->
-<!-- For professional support please see                            -->
-<!--    http://www.qos.ch/shop/products/professionalSupport         -->
-<!--                                                                -->
 <configuration>
   <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
@@ -33,6 +25,7 @@
   <logger name="org.hibernate.SQL" level="TRACE"/>
   <!--
   <logger name="org.hibernate.type" level="TRACE"/>
+  <logger name="org.springframework" level="DEBUG"/>
   -->
   <root level="INFO">
     <appender-ref ref="stdout"/>

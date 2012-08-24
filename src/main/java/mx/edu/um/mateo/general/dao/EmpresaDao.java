@@ -24,26 +24,28 @@
 package mx.edu.um.mateo.general.dao;
 
 import java.util.Map;
-import mx.edu.um.mateo.general.model.*;
+
+import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public interface EmpresaDao {
 
-    public Map<String, Object> lista(Map<String, Object> params);
+	public Map<String, Object> lista(Map<String, Object> params);
 
-    public Empresa obtiene(Long id);
+	public Empresa obtiene(Long id);
 
-    public Empresa crea(Empresa empresa, Usuario usuario);
+	public Empresa crea(Empresa empresa, Usuario usuario);
 
-    public Empresa crea(Empresa empresa);
+	public Empresa crea(Empresa empresa);
 
-    public Empresa actualiza(Empresa empresa);
+	public Empresa actualiza(Empresa empresa);
 
-    public Empresa actualiza(Empresa empresa, Usuario usuario);
+	public Empresa actualiza(Empresa empresa, Usuario usuario);
 
-    public String elimina(Long id) throws UltimoException;
+	public String elimina(Long id) throws UltimoException;
 }

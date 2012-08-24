@@ -24,6 +24,7 @@
 package mx.edu.um.mateo.general.dao;
 
 import java.util.*;
+
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Session;
@@ -79,7 +80,8 @@ public class TipoClienteDaoTest {
     /**
      * Test of lista method, of class TipoClienteDao.
      */
-    @Test
+    @SuppressWarnings("unchecked")
+	@Test
     public void debieraMostrarListaDeProveedores() {
         log.debug("Debiera mostrar lista de proveedores");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
@@ -92,7 +94,7 @@ public class TipoClienteDaoTest {
         }
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", empresa.getId());
-        Map result = instance.lista(params);
+        Map<String, Object> result = instance.lista(params);
         assertNotNull(result.get("tiposDeCliente"));
         assertNotNull(result.get("cantidad"));
         assertEquals(10, ((List<TipoCliente>) result.get("tiposDeCliente")).size());

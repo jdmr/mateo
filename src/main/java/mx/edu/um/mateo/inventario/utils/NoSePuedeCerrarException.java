@@ -24,20 +24,25 @@
 package mx.edu.um.mateo.inventario.utils;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public class NoSePuedeCerrarException extends Exception {
 
-    public NoSePuedeCerrarException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 336358127276094246L;
 
-    public NoSePuedeCerrarException(String message) {
-        super(message);
-    }
+	public NoSePuedeCerrarException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
-    public NoSePuedeCerrarException() {
-    }
-    
+	public NoSePuedeCerrarException(String message) {
+		super(message);
+	}
+
+	public NoSePuedeCerrarException() {
+	}
+
 }

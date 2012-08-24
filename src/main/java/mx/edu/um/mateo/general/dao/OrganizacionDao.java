@@ -24,27 +24,28 @@
 package mx.edu.um.mateo.general.dao;
 
 import java.util.Map;
+
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 
 /**
- *
+ * 
  * @author jdmr
  */
 public interface OrganizacionDao {
 
-    public Map<String, Object> lista(Map<String, Object> params);
+	public Map<String, Object> lista(Map<String, Object> params);
 
-    public Organizacion obtiene(Long id);
+	public Organizacion obtiene(Long id);
 
-    public Organizacion crea(Organizacion organizacion, Usuario usuario);
+	public Organizacion crea(Organizacion organizacion, Usuario usuario);
 
-    public Organizacion crea(Organizacion organizacion);
+	public Organizacion crea(Organizacion organizacion);
 
-    public Organizacion actualiza(Organizacion organizacion);
+	public Organizacion actualiza(Organizacion organizacion);
 
-    public Organizacion actualiza(Organizacion organizacion, Usuario usuario);
+	public Organizacion actualiza(Organizacion organizacion, Usuario usuario);
 
-    public String elimina(Long id) throws UltimoException;
+	public String elimina(Long id) throws UltimoException;
 }

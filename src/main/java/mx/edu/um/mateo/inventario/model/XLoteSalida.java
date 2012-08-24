@@ -27,226 +27,255 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
 @Table(name = "xlotes_salida")
 public class XLoteSalida implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Version
-    private Integer version;
-    @Column(nullable = false, scale = 3, precision = 8)
-    private BigDecimal cantidad;
-    @Column(nullable = false, scale = 2, precision = 8, name = "precio_unitario")
-    private BigDecimal precioUnitario;
-    @Column(nullable = false, scale = 2, precision = 8)
-    private BigDecimal iva;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, name = "date_created")
-    private Date fechaCreacion;
-    @Column(nullable = false, name = "lote_salida_id")
-    private Long loteSalidaId;
-    @Column(nullable = false, name = "producto_id")
-    private Long productoId;
-    @Column(nullable = false, name = "salida_id")
-    private Long salidaId;
-    @Column(nullable = false, length = 32)
-    private String actividad;
-    @Column(nullable = false, length = 64)
-    private String creador;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2537095386795872475L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Version
+	private Integer version;
+	@Column(nullable = false, scale = 3, precision = 8)
+	private BigDecimal cantidad;
+	@Column(nullable = false, scale = 2, precision = 8, name = "precio_unitario")
+	private BigDecimal precioUnitario;
+	@Column(nullable = false, scale = 2, precision = 8)
+	private BigDecimal iva;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false, name = "date_created")
+	private Date fechaCreacion;
+	@Column(nullable = false, name = "lote_salida_id")
+	private Long loteSalidaId;
+	@Column(nullable = false, name = "producto_id")
+	private Long productoId;
+	@Column(nullable = false, name = "salida_id")
+	private Long salidaId;
+	@Column(nullable = false, length = 32)
+	private String actividad;
+	@Column(nullable = false, length = 64)
+	private String creador;
 
-    public XLoteSalida() {
-    }
+	public XLoteSalida() {
+	}
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @return the version
-     */
-    public Integer getVersion() {
-        return version;
-    }
+	/**
+	 * @return the version
+	 */
+	public Integer getVersion() {
+		return version;
+	}
 
-    /**
-     * @param version the version to set
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
+	/**
+	 * @param version
+	 *            the version to set
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
 
-    /**
-     * @return the cantidad
-     */
-    public BigDecimal getCantidad() {
-        return cantidad;
-    }
+	/**
+	 * @return the cantidad
+	 */
+	public BigDecimal getCantidad() {
+		return cantidad;
+	}
 
-    /**
-     * @param cantidad the cantidad to set
-     */
-    public void setCantidad(BigDecimal cantidad) {
-        this.cantidad = cantidad;
-    }
+	/**
+	 * @param cantidad
+	 *            the cantidad to set
+	 */
+	public void setCantidad(BigDecimal cantidad) {
+		this.cantidad = cantidad;
+	}
 
-    /**
-     * @return the precioUnitario
-     */
-    public BigDecimal getPrecioUnitario() {
-        return precioUnitario;
-    }
+	/**
+	 * @return the precioUnitario
+	 */
+	public BigDecimal getPrecioUnitario() {
+		return precioUnitario;
+	}
 
-    /**
-     * @param precioUnitario the precioUnitario to set
-     */
-    public void setPrecioUnitario(BigDecimal precioUnitario) {
-        this.precioUnitario = precioUnitario;
-    }
+	/**
+	 * @param precioUnitario
+	 *            the precioUnitario to set
+	 */
+	public void setPrecioUnitario(BigDecimal precioUnitario) {
+		this.precioUnitario = precioUnitario;
+	}
 
-    /**
-     * @return the iva
-     */
-    public BigDecimal getIva() {
-        return iva;
-    }
+	/**
+	 * @return the iva
+	 */
+	public BigDecimal getIva() {
+		return iva;
+	}
 
-    /**
-     * @param iva the iva to set
-     */
-    public void setIva(BigDecimal iva) {
-        this.iva = iva;
-    }
+	/**
+	 * @param iva
+	 *            the iva to set
+	 */
+	public void setIva(BigDecimal iva) {
+		this.iva = iva;
+	}
 
-    /**
-     * @return the fechaCreacion
-     */
-    public Date getFechaCreacion() {
-        return fechaCreacion;
-    }
+	/**
+	 * @return the fechaCreacion
+	 */
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
 
-    /**
-     * @param fechaCreacion the fechaCreacion to set
-     */
-    public void setFechaCreacion(Date fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
+	/**
+	 * @param fechaCreacion
+	 *            the fechaCreacion to set
+	 */
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
 
-    /**
-     * @return the loteSalidaId
-     */
-    public Long getLoteSalidaId() {
-        return loteSalidaId;
-    }
+	/**
+	 * @return the loteSalidaId
+	 */
+	public Long getLoteSalidaId() {
+		return loteSalidaId;
+	}
 
-    /**
-     * @param loteSalidaId the loteSalidaId to set
-     */
-    public void setLoteSalidaId(Long loteSalidaId) {
-        this.loteSalidaId = loteSalidaId;
-    }
+	/**
+	 * @param loteSalidaId
+	 *            the loteSalidaId to set
+	 */
+	public void setLoteSalidaId(Long loteSalidaId) {
+		this.loteSalidaId = loteSalidaId;
+	}
 
-    /**
-     * @return the productoId
-     */
-    public Long getProductoId() {
-        return productoId;
-    }
+	/**
+	 * @return the productoId
+	 */
+	public Long getProductoId() {
+		return productoId;
+	}
 
-    /**
-     * @param productoId the productoId to set
-     */
-    public void setProductoId(Long productoId) {
-        this.productoId = productoId;
-    }
+	/**
+	 * @param productoId
+	 *            the productoId to set
+	 */
+	public void setProductoId(Long productoId) {
+		this.productoId = productoId;
+	}
 
-    /**
-     * @return the salidaId
-     */
-    public Long getSalidaId() {
-        return salidaId;
-    }
+	/**
+	 * @return the salidaId
+	 */
+	public Long getSalidaId() {
+		return salidaId;
+	}
 
-    /**
-     * @param salidaId the salidaId to set
-     */
-    public void setSalidaId(Long salidaId) {
-        this.salidaId = salidaId;
-    }
+	/**
+	 * @param salidaId
+	 *            the salidaId to set
+	 */
+	public void setSalidaId(Long salidaId) {
+		this.salidaId = salidaId;
+	}
 
-    /**
-     * @return the actividad
-     */
-    public String getActividad() {
-        return actividad;
-    }
+	/**
+	 * @return the actividad
+	 */
+	public String getActividad() {
+		return actividad;
+	}
 
-    /**
-     * @param actividad the actividad to set
-     */
-    public void setActividad(String actividad) {
-        this.actividad = actividad;
-    }
+	/**
+	 * @param actividad
+	 *            the actividad to set
+	 */
+	public void setActividad(String actividad) {
+		this.actividad = actividad;
+	}
 
-    /**
-     * @return the creador
-     */
-    public String getCreador() {
-        return creador;
-    }
+	/**
+	 * @return the creador
+	 */
+	public String getCreador() {
+		return creador;
+	}
 
-    /**
-     * @param creador the creador to set
-     */
-    public void setCreador(String creador) {
-        this.creador = creador;
-    }
+	/**
+	 * @param creador
+	 *            the creador to set
+	 */
+	public void setCreador(String creador) {
+		this.creador = creador;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 53 * hash + Objects.hashCode(this.id);
-        hash = 53 * hash + Objects.hashCode(this.loteSalidaId);
-        return hash;
-    }
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 53 * hash + Objects.hashCode(this.id);
+		hash = 53 * hash + Objects.hashCode(this.loteSalidaId);
+		return hash;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final XLoteSalida other = (XLoteSalida) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!Objects.equals(this.loteSalidaId, other.loteSalidaId)) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final XLoteSalida other = (XLoteSalida) obj;
+		if (!Objects.equals(this.id, other.id)) {
+			return false;
+		}
+		if (!Objects.equals(this.loteSalidaId, other.loteSalidaId)) {
+			return false;
+		}
+		return true;
+	}
 
-    @Override
-    public String toString() {
-        return "XLoteSalida{" + "id=" + id + ", version=" + version + ", cantidad=" + cantidad + ", precioUnitario=" + precioUnitario + ", iva=" + iva + ", fechaCreacion=" + fechaCreacion + ", loteSalidaId=" + loteSalidaId + ", productoId=" + productoId + ", salidaId=" + salidaId + ", actividad=" + actividad + ", creador=" + creador + '}';
-    }
+	@Override
+	public String toString() {
+		return "XLoteSalida{" + "id=" + id + ", version=" + version
+				+ ", cantidad=" + cantidad + ", precioUnitario="
+				+ precioUnitario + ", iva=" + iva + ", fechaCreacion="
+				+ fechaCreacion + ", loteSalidaId=" + loteSalidaId
+				+ ", productoId=" + productoId + ", salidaId=" + salidaId
+				+ ", actividad=" + actividad + ", creador=" + creador + '}';
+	}
 }

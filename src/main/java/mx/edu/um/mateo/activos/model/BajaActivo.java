@@ -26,191 +26,215 @@ package mx.edu.um.mateo.activos.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
+
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
 @Table(name = "bajas_activo")
 public class BajaActivo implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Version
-    private Integer version;
-    @NotBlank
-    @Column(nullable = false, length = 64)
-    private String creador;
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @Temporal(TemporalType.DATE)
-    @Column(nullable = false)
-    private Date fecha;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, name="date_created")
-    private Date fechaCreacion;
-    @NotBlank
-    @Column(nullable = false, length = 32)
-    private String motivo;
-    @Column(length = 200)
-    private String comentarios;
-    @ManyToOne(optional = false)
-    private Activo activo;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4385128976512135127L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Version
+	private Integer version;
+	@NotBlank
+	@Column(nullable = false, length = 64)
+	private String creador;
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@Temporal(TemporalType.DATE)
+	@Column(nullable = false)
+	private Date fecha;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false, name = "date_created")
+	private Date fechaCreacion;
+	@NotBlank
+	@Column(nullable = false, length = 32)
+	private String motivo;
+	@Column(length = 200)
+	private String comentarios;
+	@ManyToOne(optional = false)
+	private Activo activo;
 
-    public BajaActivo() {
-    }
+	public BajaActivo() {
+	}
 
-    public BajaActivo(Activo activo, Date fecha) {
-        this.activo = activo;
-        this.fecha = fecha;
-    }
-    
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+	public BajaActivo(Activo activo, Date fecha) {
+		this.activo = activo;
+		this.fecha = fecha;
+	}
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @return the version
-     */
-    public Integer getVersion() {
-        return version;
-    }
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @param version the version to set
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
+	/**
+	 * @return the version
+	 */
+	public Integer getVersion() {
+		return version;
+	}
 
-    /**
-     * @return the creador
-     */
-    public String getCreador() {
-        return creador;
-    }
+	/**
+	 * @param version
+	 *            the version to set
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
 
-    /**
-     * @param creador the creador to set
-     */
-    public void setCreador(String creador) {
-        this.creador = creador;
-    }
+	/**
+	 * @return the creador
+	 */
+	public String getCreador() {
+		return creador;
+	}
 
-    /**
-     * @return the fecha
-     */
-    public Date getFecha() {
-        return fecha;
-    }
+	/**
+	 * @param creador
+	 *            the creador to set
+	 */
+	public void setCreador(String creador) {
+		this.creador = creador;
+	}
 
-    /**
-     * @param fecha the fecha to set
-     */
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
+	/**
+	 * @return the fecha
+	 */
+	public Date getFecha() {
+		return fecha;
+	}
 
-    /**
-     * @return the fechaCreacion
-     */
-    public Date getFechaCreacion() {
-        return fechaCreacion;
-    }
+	/**
+	 * @param fecha
+	 *            the fecha to set
+	 */
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
+	}
 
-    /**
-     * @param fechaCreacion the fechaCreacion to set
-     */
-    public void setFechaCreacion(Date fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
+	/**
+	 * @return the fechaCreacion
+	 */
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
 
-    /**
-     * @return the motivo
-     */
-    public String getMotivo() {
-        return motivo;
-    }
+	/**
+	 * @param fechaCreacion
+	 *            the fechaCreacion to set
+	 */
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
 
-    /**
-     * @param motivo the motivo to set
-     */
-    public void setMotivo(String motivo) {
-        this.motivo = motivo;
-    }
+	/**
+	 * @return the motivo
+	 */
+	public String getMotivo() {
+		return motivo;
+	}
 
-    /**
-     * @return the comentarios
-     */
-    public String getComentarios() {
-        return comentarios;
-    }
+	/**
+	 * @param motivo
+	 *            the motivo to set
+	 */
+	public void setMotivo(String motivo) {
+		this.motivo = motivo;
+	}
 
-    /**
-     * @param comentarios the comentarios to set
-     */
-    public void setComentarios(String comentarios) {
-        this.comentarios = comentarios;
-    }
+	/**
+	 * @return the comentarios
+	 */
+	public String getComentarios() {
+		return comentarios;
+	}
 
-    /**
-     * @return the activo
-     */
-    public Activo getActivo() {
-        return activo;
-    }
+	/**
+	 * @param comentarios
+	 *            the comentarios to set
+	 */
+	public void setComentarios(String comentarios) {
+		this.comentarios = comentarios;
+	}
 
-    /**
-     * @param activo the activo to set
-     */
-    public void setActivo(Activo activo) {
-        this.activo = activo;
-    }
+	/**
+	 * @return the activo
+	 */
+	public Activo getActivo() {
+		return activo;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final BajaActivo other = (BajaActivo) obj;
-        if (!Objects.equals(this.fecha, other.fecha)) {
-            return false;
-        }
-        if (!Objects.equals(this.activo, other.activo)) {
-            return false;
-        }
-        return true;
-    }
+	/**
+	 * @param activo
+	 *            the activo to set
+	 */
+	public void setActivo(Activo activo) {
+		this.activo = activo;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 23 * hash + Objects.hashCode(this.id);
-        hash = 23 * hash + Objects.hashCode(this.version);
-        hash = 23 * hash + Objects.hashCode(this.creador);
-        hash = 23 * hash + Objects.hashCode(this.activo);
-        return hash;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final BajaActivo other = (BajaActivo) obj;
+		if (!Objects.equals(this.fecha, other.fecha)) {
+			return false;
+		}
+		if (!Objects.equals(this.activo, other.activo)) {
+			return false;
+		}
+		return true;
+	}
 
-    @Override
-    public String toString() {
-        return "BajaActivo{" + "creador=" + creador + ", fecha=" + fecha + ", motivo=" + motivo + ", activo=" + activo + '}';
-    }
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 23 * hash + Objects.hashCode(this.id);
+		hash = 23 * hash + Objects.hashCode(this.version);
+		hash = 23 * hash + Objects.hashCode(this.creador);
+		hash = 23 * hash + Objects.hashCode(this.activo);
+		return hash;
+	}
+
+	@Override
+	public String toString() {
+		return "BajaActivo{" + "creador=" + creador + ", fecha=" + fecha
+				+ ", motivo=" + motivo + ", activo=" + activo + '}';
+	}
 }

@@ -23,10 +23,12 @@
  */
 package mx.edu.um.mateo.contabilidad.dao;
 
+import java.util.List;
 import java.util.Map;
+
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.contabilidad.model.EjercicioPK;
-import mx.edu.um.mateo.general.model.*;
+import mx.edu.um.mateo.general.model.Usuario;
 
 /**
  *
@@ -47,4 +49,6 @@ public interface EjercicioDao {
     public Ejercicio actualiza(Ejercicio ejercicio, Usuario usuario);
 
     public String elimina(EjercicioPK id);
+    
+    public List<Ejercicio> lista(Long organizacionId);
 }

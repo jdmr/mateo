@@ -25,135 +25,154 @@ package mx.edu.um.mateo.inventario.model;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
-@Table(name = "folio_inventario", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"almacen_id", "nombre"})})
+@Table(name = "folio_inventario", uniqueConstraints = { @UniqueConstraint(columnNames = {
+		"almacen_id", "nombre" }) })
 public class Folio implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Version
-    private Integer version;
-    @NotNull
-    @Column(nullable = false, length = 128)
-    private String nombre;
-    @NotNull
-    @Column(nullable = false)
-    private Long valor = 0l;
-    @ManyToOne(optional = false)
-    private Almacen almacen;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4519558003244011142L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Version
+	private Integer version;
+	@NotNull
+	@Column(nullable = false, length = 128)
+	private String nombre;
+	@NotNull
+	@Column(nullable = false)
+	private Long valor = 0l;
+	@ManyToOne(optional = false)
+	private Almacen almacen;
 
-    public Folio() {
-    }
-    
-    public Folio(String nombre) {
-        this.nombre = nombre;
-    }
+	public Folio() {
+	}
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+	public Folio(String nombre) {
+		this.nombre = nombre;
+	}
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @return the version
-     */
-    public Integer getVersion() {
-        return version;
-    }
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @param version the version to set
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
+	/**
+	 * @return the version
+	 */
+	public Integer getVersion() {
+		return version;
+	}
 
-    /**
-     * @return the nombre
-     */
-    public String getNombre() {
-        return nombre;
-    }
+	/**
+	 * @param version
+	 *            the version to set
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
 
-    /**
-     * @param nombre the nombre to set
-     */
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
 
-    /**
-     * @return the valor
-     */
-    public Long getValor() {
-        return valor;
-    }
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-    /**
-     * @param valor the valor to set
-     */
-    public void setValor(Long valor) {
-        this.valor = valor;
-    }
+	/**
+	 * @return the valor
+	 */
+	public Long getValor() {
+		return valor;
+	}
 
-    /**
-     * @return the almacen
-     */
-    public Almacen getAlmacen() {
-        return almacen;
-    }
+	/**
+	 * @param valor
+	 *            the valor to set
+	 */
+	public void setValor(Long valor) {
+		this.valor = valor;
+	}
 
-    /**
-     * @param almacen the almacen to set
-     */
-    public void setAlmacen(Almacen almacen) {
-        this.almacen = almacen;
-    }
+	/**
+	 * @return the almacen
+	 */
+	public Almacen getAlmacen() {
+		return almacen;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Folio other = (Folio) obj;
-        if (!Objects.equals(this.nombre, other.nombre)) {
-            return false;
-        }
-        return true;
-    }
+	/**
+	 * @param almacen
+	 *            the almacen to set
+	 */
+	public void setAlmacen(Almacen almacen) {
+		this.almacen = almacen;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 67 * hash + Objects.hashCode(this.id);
-        hash = 67 * hash + Objects.hashCode(this.version);
-        hash = 67 * hash + Objects.hashCode(this.nombre);
-        return hash;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Folio other = (Folio) obj;
+		if (!Objects.equals(this.nombre, other.nombre)) {
+			return false;
+		}
+		return true;
+	}
 
-    @Override
-    public String toString() {
-        return "Folio{" + "nombre=" + nombre + ", valor=" + valor + ", almacen=" + almacen + '}';
-    }
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 67 * hash + Objects.hashCode(this.id);
+		hash = 67 * hash + Objects.hashCode(this.version);
+		hash = 67 * hash + Objects.hashCode(this.nombre);
+		return hash;
+	}
+
+	@Override
+	public String toString() {
+		return "Folio{" + "nombre=" + nombre + ", valor=" + valor
+				+ ", almacen=" + almacen + '}';
+	}
 }

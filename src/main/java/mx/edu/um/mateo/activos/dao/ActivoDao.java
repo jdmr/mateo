@@ -27,6 +27,7 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import mx.edu.um.mateo.activos.model.Activo;
 import mx.edu.um.mateo.activos.model.BajaActivo;
 import mx.edu.um.mateo.activos.model.ReubicacionActivo;
@@ -34,46 +35,53 @@ import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.general.model.Usuario;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public interface ActivoDao {
 
-    public Map<String, Object> lista(Map<String, Object> params);
+	public Map<String, Object> lista(Map<String, Object> params);
 
-    public Activo obtiene(Long id);
+	public Activo obtiene(Long id);
 
-    public Activo crea(Activo activo, Usuario usuario);
+	public Activo crea(Activo activo, Usuario usuario);
 
-    public Activo crea(Activo activo);
+	public Activo crea(Activo activo);
 
-    public Activo carga(Long id);
+	public Activo carga(Long id);
 
-    public String baja(BajaActivo bajaActivo, Usuario usuario);
+	public String baja(BajaActivo bajaActivo, Usuario usuario);
 
-    public void arreglaFechas(OutputStream out);
+	public void arreglaFechas(OutputStream out);
 
-    public void depreciar(Date fecha, Long empresaId);
+	public void depreciar(Date fecha, Long empresaId);
 
-    public List<CentroCosto> centrosDeCosto(Usuario usuario);
+	public List<CentroCosto> centrosDeCosto(Usuario usuario);
 
-    public void subeImagen(Activo activo, Usuario usuario);
+	public void subeImagen(Activo activo, Usuario usuario);
 
-    public String reubica(ReubicacionActivo reubicacion, Usuario usuario);
+	public String reubica(ReubicacionActivo reubicacion, Usuario usuario);
 
-    public void sube(byte[] datos, Usuario usuario, OutputStream out, Integer codigo);
+	public void sube(byte[] datos, Usuario usuario, OutputStream out,
+			Integer codigo);
 
-    public Map<String, Object> depreciacionAcumuladaPorCentroDeCosto(Map<String, Object> params);
+	public Map<String, Object> depreciacionAcumuladaPorCentroDeCosto(
+			Map<String, Object> params);
 
-    public Map<String, Object> depreciacionAcumuladaPorCentroDeCostoDetalle(Map<String, Object> params);
+	public Map<String, Object> depreciacionAcumuladaPorCentroDeCostoDetalle(
+			Map<String, Object> params);
 
-    public Map<String, Object> depreciacionMensualPorCentroDeCosto(Map<String, Object> params);
+	public Map<String, Object> depreciacionMensualPorCentroDeCosto(
+			Map<String, Object> params);
 
-    public Map<String, Object> depreciacionMensualPorCentroDeCostoDetalle(Map<String, Object> params);
+	public Map<String, Object> depreciacionMensualPorCentroDeCostoDetalle(
+			Map<String, Object> params);
 
-    public Map<String, Object> depreciacionAcumuladaPorTipoActivo(Map<String, Object> params);
+	public Map<String, Object> depreciacionAcumuladaPorTipoActivo(
+			Map<String, Object> params);
 
-    public Map<String, Object> depreciacionAcumuladaPorTipoActivoDetalle(Map<String, Object> params);
+	public Map<String, Object> depreciacionAcumuladaPorTipoActivoDetalle(
+			Map<String, Object> params);
 
-    public Map<String, Object> reporteDIA(Integer anio, Usuario obtieneUsuario);
+	public Map<String, Object> reporteDIA(Integer anio, Usuario obtieneUsuario);
 }

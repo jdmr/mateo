@@ -31,15 +31,20 @@ package mx.edu.um.mateo.general.utils;
  */
 public class UltimoException extends Exception {
 
-    public UltimoException() {
-        super();
-    }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4659864342592299477L;
 
-    public UltimoException(String message) {
-        super(message);
-    }
+	public UltimoException() {
+		super();
+	}
 
-    public UltimoException(String message, Exception e) {
-        super(message, e);
-    }
+	public UltimoException(String message) {
+		super(message);
+	}
+
+	public UltimoException(String message, Exception e) {
+		super(message, e);
+	}
 }

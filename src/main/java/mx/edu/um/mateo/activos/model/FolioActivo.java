@@ -24,104 +24,122 @@
 package mx.edu.um.mateo.activos.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Version;
+
 import mx.edu.um.mateo.general.model.Organizacion;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
 @Table(name = "folio_activos")
 public class FolioActivo implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Version
-    private Integer version;
-    @Column(nullable = false, length = 32)
-    private String nombre;
-    @Column(nullable = false)
-    private Long valor;
-    @ManyToOne(optional = false)
-    private Organizacion organizacion;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1676645449349735932L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Version
+	private Integer version;
+	@Column(nullable = false, length = 32)
+	private String nombre;
+	@Column(nullable = false)
+	private Long valor;
+	@ManyToOne(optional = false)
+	private Organizacion organizacion;
 
-    public FolioActivo() {
-    }
+	public FolioActivo() {
+	}
 
-    public FolioActivo(String nombre) {
-        this.nombre = nombre;
-        this.valor = 0L;
-    }
+	public FolioActivo(String nombre) {
+		this.nombre = nombre;
+		this.valor = 0L;
+	}
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @return the version
-     */
-    public Integer getVersion() {
-        return version;
-    }
+	/**
+	 * @return the version
+	 */
+	public Integer getVersion() {
+		return version;
+	}
 
-    /**
-     * @param version the version to set
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
+	/**
+	 * @param version
+	 *            the version to set
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
 
-    /**
-     * @return the nombre
-     */
-    public String getNombre() {
-        return nombre;
-    }
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
 
-    /**
-     * @param nombre the nombre to set
-     */
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-    /**
-     * @return the valor
-     */
-    public Long getValor() {
-        return valor;
-    }
+	/**
+	 * @return the valor
+	 */
+	public Long getValor() {
+		return valor;
+	}
 
-    /**
-     * @param valor the valor to set
-     */
-    public void setValor(Long valor) {
-        this.valor = valor;
-    }
+	/**
+	 * @param valor
+	 *            the valor to set
+	 */
+	public void setValor(Long valor) {
+		this.valor = valor;
+	}
 
-    /**
-     * @return the organizacion
-     */
-    public Organizacion getOrganizacion() {
-        return organizacion;
-    }
+	/**
+	 * @return the organizacion
+	 */
+	public Organizacion getOrganizacion() {
+		return organizacion;
+	}
 
-    /**
-     * @param organizacion the organizacion to set
-     */
-    public void setOrganizacion(Organizacion organizacion) {
-        this.organizacion = organizacion;
-    }
+	/**
+	 * @param organizacion
+	 *            the organizacion to set
+	 */
+	public void setOrganizacion(Organizacion organizacion) {
+		this.organizacion = organizacion;
+	}
 }

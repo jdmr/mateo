@@ -24,21 +24,26 @@
 package mx.edu.um.mateo.general.utils;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public class ReporteException extends Exception {
 
-    public ReporteException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3864464719393647087L;
 
-    public ReporteException(String message) {
-        super(message);
-    }
+	public ReporteException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
-    public ReporteException() {
-        super();
-    }
-    
+	public ReporteException(String message) {
+		super(message);
+	}
+
+	public ReporteException() {
+		super();
+	}
+
 }

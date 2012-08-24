@@ -25,153 +25,173 @@ package mx.edu.um.mateo.general.model;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Version;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
 @Table(name = "imagenes")
 public class Imagen implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Version
-    private Integer version;
-    @NotBlank
-    @Column(nullable = false, length = 64)
-    private String nombre;
-    @NotBlank
-    @Column(nullable = false, length = 128, name = "tipo_contenido")
-    private String tipoContenido;
-    @Column(nullable = false)
-    private Long tamano;
-    @Column(nullable = false)
-    private byte[] archivo;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3387974275938400076L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Version
+	private Integer version;
+	@NotBlank
+	@Column(nullable = false, length = 64)
+	private String nombre;
+	@NotBlank
+	@Column(nullable = false, length = 128, name = "tipo_contenido")
+	private String tipoContenido;
+	@Column(nullable = false)
+	private Long tamano;
+	@Column(nullable = false)
+	private byte[] archivo;
 
-    public Imagen() {
-    }
+	public Imagen() {
+	}
 
-    public Imagen(String nombre, String tipoContenido, Long tamano, byte[] archivo) {
-        this.nombre = nombre;
-        this.tipoContenido = tipoContenido;
-        this.tamano = tamano;
-        this.archivo = archivo;
-    }
+	public Imagen(String nombre, String tipoContenido, Long tamano,
+			byte[] archivo) {
+		this.nombre = nombre;
+		this.tipoContenido = tipoContenido;
+		this.tamano = tamano;
+		this.archivo = archivo;
+	}
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @return the version
-     */
-    public Integer getVersion() {
-        return version;
-    }
+	/**
+	 * @return the version
+	 */
+	public Integer getVersion() {
+		return version;
+	}
 
-    /**
-     * @param version the version to set
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
+	/**
+	 * @param version
+	 *            the version to set
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
 
-    /**
-     * @return the nombre
-     */
-    public String getNombre() {
-        return nombre;
-    }
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
 
-    /**
-     * @param nombre the nombre to set
-     */
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-    /**
-     * @return the tipoContenido
-     */
-    public String getTipoContenido() {
-        return tipoContenido;
-    }
+	/**
+	 * @return the tipoContenido
+	 */
+	public String getTipoContenido() {
+		return tipoContenido;
+	}
 
-    /**
-     * @param tipoContenido the tipoContenido to set
-     */
-    public void setTipoContenido(String tipoContenido) {
-        this.tipoContenido = tipoContenido;
-    }
+	/**
+	 * @param tipoContenido
+	 *            the tipoContenido to set
+	 */
+	public void setTipoContenido(String tipoContenido) {
+		this.tipoContenido = tipoContenido;
+	}
 
-    /**
-     * @return the tamano
-     */
-    public Long getTamano() {
-        return tamano;
-    }
+	/**
+	 * @return the tamano
+	 */
+	public Long getTamano() {
+		return tamano;
+	}
 
-    /**
-     * @param tamano the tamano to set
-     */
-    public void setTamano(Long tamano) {
-        this.tamano = tamano;
-    }
+	/**
+	 * @param tamano
+	 *            the tamano to set
+	 */
+	public void setTamano(Long tamano) {
+		this.tamano = tamano;
+	}
 
-    /**
-     * @return the archivo
-     */
-    public byte[] getArchivo() {
-        return archivo;
-    }
+	/**
+	 * @return the archivo
+	 */
+	public byte[] getArchivo() {
+		return archivo;
+	}
 
-    /**
-     * @param archivo the archivo to set
-     */
-    public void setArchivo(byte[] archivo) {
-        this.archivo = archivo;
-    }
+	/**
+	 * @param archivo
+	 *            the archivo to set
+	 */
+	public void setArchivo(byte[] archivo) {
+		this.archivo = archivo;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Imagen other = (Imagen) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Imagen other = (Imagen) obj;
+		if (!Objects.equals(this.id, other.id)) {
+			return false;
+		}
+		return true;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.id);
-        hash = 97 * hash + Objects.hashCode(this.version);
-        hash = 97 * hash + Objects.hashCode(this.nombre);
-        return hash;
-    }
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 97 * hash + Objects.hashCode(this.id);
+		hash = 97 * hash + Objects.hashCode(this.version);
+		hash = 97 * hash + Objects.hashCode(this.nombre);
+		return hash;
+	}
 
-    @Override
-    public String toString() {
-        return "Imagen{" + "nombre=" + nombre + ", tipoContenido=" + tipoContenido + '}';
-    }
+	@Override
+	public String toString() {
+		return "Imagen{" + "nombre=" + nombre + ", tipoContenido="
+				+ tipoContenido + '}';
+	}
 }

@@ -26,208 +26,235 @@ package mx.edu.um.mateo.activos.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
+
 import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.general.model.Empresa;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
 @Table(name = "reubicaciones_activo")
 public class ReubicacionActivo implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Version
-    private Integer version;
-    @NotBlank
-    @Column(nullable = false, length=64)
-    private String creador;
-    @Column(length=200)
-    private String comentarios;
-    @ManyToOne(optional = false)
-    private Activo activo;
-    @ManyToOne(optional = false)
-    private CentroCosto centroCosto;
-    @ManyToOne(optional = false)
-    private Empresa empresa;
-    @Temporal(TemporalType.DATE)
-    @Column(nullable = false)
-    private Date fecha;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, name="date_created")
-    private Date fechaCreacion;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8138985945224150169L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Version
+	private Integer version;
+	@NotBlank
+	@Column(nullable = false, length = 64)
+	private String creador;
+	@Column(length = 200)
+	private String comentarios;
+	@ManyToOne(optional = false)
+	private Activo activo;
+	@ManyToOne(optional = false)
+	private CentroCosto centroCosto;
+	@ManyToOne(optional = false)
+	private Empresa empresa;
+	@Temporal(TemporalType.DATE)
+	@Column(nullable = false)
+	private Date fecha;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false, name = "date_created")
+	private Date fechaCreacion;
 
-    public ReubicacionActivo() {
-    }
-    
-    public ReubicacionActivo(Activo activo, Date fecha) {
-        this.activo = activo;
-        this.fecha = fecha;
-    }
+	public ReubicacionActivo() {
+	}
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+	public ReubicacionActivo(Activo activo, Date fecha) {
+		this.activo = activo;
+		this.fecha = fecha;
+	}
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @return the version
-     */
-    public Integer getVersion() {
-        return version;
-    }
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @param version the version to set
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
+	/**
+	 * @return the version
+	 */
+	public Integer getVersion() {
+		return version;
+	}
 
-    /**
-     * @return the creador
-     */
-    public String getCreador() {
-        return creador;
-    }
+	/**
+	 * @param version
+	 *            the version to set
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
 
-    /**
-     * @param creador the creador to set
-     */
-    public void setCreador(String creador) {
-        this.creador = creador;
-    }
+	/**
+	 * @return the creador
+	 */
+	public String getCreador() {
+		return creador;
+	}
 
-    /**
-     * @return the comentarios
-     */
-    public String getComentarios() {
-        return comentarios;
-    }
+	/**
+	 * @param creador
+	 *            the creador to set
+	 */
+	public void setCreador(String creador) {
+		this.creador = creador;
+	}
 
-    /**
-     * @param comentarios the comentarios to set
-     */
-    public void setComentarios(String comentarios) {
-        this.comentarios = comentarios;
-    }
+	/**
+	 * @return the comentarios
+	 */
+	public String getComentarios() {
+		return comentarios;
+	}
 
-    /**
-     * @return the activo
-     */
-    public Activo getActivo() {
-        return activo;
-    }
+	/**
+	 * @param comentarios
+	 *            the comentarios to set
+	 */
+	public void setComentarios(String comentarios) {
+		this.comentarios = comentarios;
+	}
 
-    /**
-     * @param activo the activo to set
-     */
-    public void setActivo(Activo activo) {
-        this.activo = activo;
-    }
+	/**
+	 * @return the activo
+	 */
+	public Activo getActivo() {
+		return activo;
+	}
 
-    /**
-     * @return the centro de costo
-     */
-    public CentroCosto getCentroCosto() {
-        return centroCosto;
-    }
+	/**
+	 * @param activo
+	 *            the activo to set
+	 */
+	public void setActivo(Activo activo) {
+		this.activo = activo;
+	}
 
-    /**
-     * @param centroCosto the centro de costo to set
-     */
-    public void setCentroCosto(CentroCosto centroCosto) {
-        this.centroCosto = centroCosto;
-    }
+	/**
+	 * @return the centro de costo
+	 */
+	public CentroCosto getCentroCosto() {
+		return centroCosto;
+	}
 
-    /**
-     * @return the empresa
-     */
-    public Empresa getEmpresa() {
-        return empresa;
-    }
+	/**
+	 * @param centroCosto
+	 *            the centro de costo to set
+	 */
+	public void setCentroCosto(CentroCosto centroCosto) {
+		this.centroCosto = centroCosto;
+	}
 
-    /**
-     * @param empresa the empresa to set
-     */
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
-    }
+	/**
+	 * @return the empresa
+	 */
+	public Empresa getEmpresa() {
+		return empresa;
+	}
 
-    /**
-     * @return the fecha
-     */
-    public Date getFecha() {
-        return fecha;
-    }
+	/**
+	 * @param empresa
+	 *            the empresa to set
+	 */
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
+	}
 
-    /**
-     * @param fecha the fecha to set
-     */
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
+	/**
+	 * @return the fecha
+	 */
+	public Date getFecha() {
+		return fecha;
+	}
 
-    /**
-     * @return the fechaCreacion
-     */
-    public Date getFechaCreacion() {
-        return fechaCreacion;
-    }
+	/**
+	 * @param fecha
+	 *            the fecha to set
+	 */
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
+	}
 
-    /**
-     * @param fechaCreacion the fechaCreacion to set
-     */
-    public void setFechaCreacion(Date fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
+	/**
+	 * @return the fechaCreacion
+	 */
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final ReubicacionActivo other = (ReubicacionActivo) obj;
-        if (!Objects.equals(this.activo, other.activo)) {
-            return false;
-        }
-        if (!Objects.equals(this.centroCosto, other.centroCosto)) {
-            return false;
-        }
-        if (!Objects.equals(this.fecha, other.fecha)) {
-            return false;
-        }
-        return true;
-    }
+	/**
+	 * @param fechaCreacion
+	 *            the fechaCreacion to set
+	 */
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 67 * hash + Objects.hashCode(this.id);
-        hash = 67 * hash + Objects.hashCode(this.version);
-        hash = 67 * hash + Objects.hashCode(this.activo);
-        return hash;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final ReubicacionActivo other = (ReubicacionActivo) obj;
+		if (!Objects.equals(this.activo, other.activo)) {
+			return false;
+		}
+		if (!Objects.equals(this.centroCosto, other.centroCosto)) {
+			return false;
+		}
+		if (!Objects.equals(this.fecha, other.fecha)) {
+			return false;
+		}
+		return true;
+	}
 
-    @Override
-    public String toString() {
-        return "ReubicacionActivo{" + "creador=" + creador + ", comentarios=" + comentarios + ", activo=" + activo + ", centroCosto=" + centroCosto + ", fecha=" + fecha + '}';
-    }
+	@Override
+	public int hashCode() {
+		int hash = 3;
+		hash = 67 * hash + Objects.hashCode(this.id);
+		hash = 67 * hash + Objects.hashCode(this.version);
+		hash = 67 * hash + Objects.hashCode(this.activo);
+		return hash;
+	}
+
+	@Override
+	public String toString() {
+		return "ReubicacionActivo{" + "creador=" + creador + ", comentarios="
+				+ comentarios + ", activo=" + activo + ", centroCosto="
+				+ centroCosto + ", fecha=" + fecha + '}';
+	}
 }

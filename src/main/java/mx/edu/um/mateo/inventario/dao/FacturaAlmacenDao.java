@@ -25,49 +25,64 @@ package mx.edu.um.mateo.inventario.dao;
 
 import java.util.List;
 import java.util.Map;
+
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.inventario.model.*;
-import mx.edu.um.mateo.inventario.utils.*;
+import mx.edu.um.mateo.inventario.model.Entrada;
+import mx.edu.um.mateo.inventario.model.FacturaAlmacen;
+import mx.edu.um.mateo.inventario.model.Salida;
+import mx.edu.um.mateo.inventario.utils.NoEstaAbiertaException;
+import mx.edu.um.mateo.inventario.utils.NoEstaCerradaException;
+import mx.edu.um.mateo.inventario.utils.NoSePuedeCancelarException;
+import mx.edu.um.mateo.inventario.utils.NoSePuedeCerrarEnCeroException;
+import mx.edu.um.mateo.inventario.utils.NoSePuedeCerrarException;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public interface FacturaAlmacenDao {
 
-    public Map<String, Object> lista(Map<String, Object> params);
+	public Map<String, Object> lista(Map<String, Object> params);
 
-    public FacturaAlmacen obtiene(Long id);
+	public FacturaAlmacen obtiene(Long id);
 
-    public FacturaAlmacen carga(Long id);
+	public FacturaAlmacen carga(Long id);
 
-    public FacturaAlmacen crea(FacturaAlmacen factura, Usuario usuario);
+	public FacturaAlmacen crea(FacturaAlmacen factura, Usuario usuario);
 
-    public FacturaAlmacen crea(FacturaAlmacen factura);
+	public FacturaAlmacen crea(FacturaAlmacen factura);
 
-    public FacturaAlmacen actualiza(FacturaAlmacen factura) throws NoEstaAbiertaException;
+	public FacturaAlmacen actualiza(FacturaAlmacen factura)
+			throws NoEstaAbiertaException;
 
-    public FacturaAlmacen actualiza(FacturaAlmacen otraFactura, Usuario usuario) throws NoEstaAbiertaException;
+	public FacturaAlmacen actualiza(FacturaAlmacen otraFactura, Usuario usuario)
+			throws NoEstaAbiertaException;
 
-    public String cierra(Long facturaId, Usuario usuario) throws NoSePuedeCerrarException, NoSePuedeCerrarEnCeroException, NoEstaAbiertaException;
+	public String cierra(Long facturaId, Usuario usuario)
+			throws NoSePuedeCerrarException, NoSePuedeCerrarEnCeroException,
+			NoEstaAbiertaException;
 
-    public FacturaAlmacen cierra(FacturaAlmacen factura, Usuario usuario) throws NoSePuedeCerrarException, NoSePuedeCerrarEnCeroException, NoEstaAbiertaException;
+	public FacturaAlmacen cierra(FacturaAlmacen factura, Usuario usuario)
+			throws NoSePuedeCerrarException, NoSePuedeCerrarEnCeroException,
+			NoEstaAbiertaException;
 
-    public FacturaAlmacen cancelar(Long id, Usuario usuario) throws NoEstaCerradaException, NoSePuedeCancelarException;
+	public FacturaAlmacen cancelar(Long id, Usuario usuario)
+			throws NoEstaCerradaException, NoSePuedeCancelarException;
 
-    public String elimina(Long id) throws NoEstaAbiertaException;
+	public String elimina(Long id) throws NoEstaAbiertaException;
 
-    public String elimina(Long id, Usuario usuario) throws NoEstaAbiertaException;
+	public String elimina(Long id, Usuario usuario)
+			throws NoEstaAbiertaException;
 
-    public FacturaAlmacen agregaSalida(Long facturaId, Long salidaId);
+	public FacturaAlmacen agregaSalida(Long facturaId, Long salidaId);
 
-    public FacturaAlmacen agregaEntrada(Long facturaId, Long entradaId);
+	public FacturaAlmacen agregaEntrada(Long facturaId, Long entradaId);
 
-    public FacturaAlmacen eliminaSalida(Long facturaId, Long salidaId);
+	public FacturaAlmacen eliminaSalida(Long facturaId, Long salidaId);
 
-    public FacturaAlmacen eliminaEntrada(Long facturaId, Long entradaId);
-    
-    public List<Salida> salidas(Long facturaId);
-    
-    public List<Entrada> entradas(Long facturaId);
+	public FacturaAlmacen eliminaEntrada(Long facturaId, Long entradaId);
+
+	public List<Salida> salidas(Long facturaId);
+
+	public List<Entrada> entradas(Long facturaId);
 }

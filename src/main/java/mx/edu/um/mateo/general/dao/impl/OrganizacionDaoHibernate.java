@@ -23,8 +23,12 @@
  */
 package mx.edu.um.mateo.general.dao.impl;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
+import mx.edu.um.mateo.contabilidad.model.EjercicioPK;
+
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.dao.EmpresaDao;
 import mx.edu.um.mateo.general.dao.OrganizacionDao;
@@ -35,6 +39,8 @@ import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import org.apache.commons.lang.StringUtils;
+
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -87,13 +93,16 @@ public class OrganizacionDaoHibernate extends BaseDao implements OrganizacionDao
             params.put("offset", 0);
         }
         Criteria criteria = currentSession().createCriteria(Organizacion.class);
-        Criteria countCriteria = currentSession().createCriteria(Organizacion.class);
+        Criteria countCriteria = currentSession().createCriteria(
+                Organizacion.class);
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("nombreCompleto", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("nombre", filtro,
+                    MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("nombreCompleto", filtro,
+                    MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -121,7 +130,8 @@ public class OrganizacionDaoHibernate extends BaseDao implements OrganizacionDao
 
     @Override
     public Organizacion obtiene(Long id) {
-        Organizacion organizacion = (Organizacion) currentSession().get(Organizacion.class, id);
+        Organizacion organizacion = (Organizacion) currentSession().get(
+                Organizacion.class, id);
         return organizacion;
     }
 
@@ -129,7 +139,17 @@ public class OrganizacionDaoHibernate extends BaseDao implements OrganizacionDao
     public Organizacion crea(Organizacion organizacion, Usuario usuario) {
         Session session = currentSession();
         session.save(organizacion);
-        Empresa empresa = new Empresa("MTZ", "MATRIZ", "MATRIZ", "000000000001", organizacion);
+        Calendar cal = Calendar.getInstance();
+        StringBuilder idEjercicio = new StringBuilder();
+        idEjercicio.append("001-");
+        idEjercicio.append(cal.get(Calendar.YEAR));
+        EjercicioPK ejercicioPK = new EjercicioPK(idEjercicio.toString(), organizacion);
+        Byte x = new Byte("0");
+        Ejercicio ejercicio = new Ejercicio(ejercicioPK, idEjercicio.toString(), "A", StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, x, x);
+        session.save(ejercicio);
+
+        Empresa empresa = new Empresa("MTZ", "MATRIZ", "MATRIZ",
+                "000000000001", organizacion);
         if (usuario != null) {
             usuario.setEmpresa(empresa);
         }
@@ -180,7 +200,9 @@ public class OrganizacionDaoHibernate extends BaseDao implements OrganizacionDao
         Long cantidad = (Long) criteria.list().get(0);
         if (cantidad > 1) {
             Organizacion organizacion = obtiene(id);
-            Query query = currentSession().createQuery("select o from Organizacion o where o.id != :organizacionId");
+            Query query = currentSession()
+                    .createQuery(
+                    "select o from Organizacion o where o.id != :organizacionId");
             query.setLong("organizacionId", id);
             query.setMaxResults(1);
             Organizacion otraOrganizacion = (Organizacion) query.uniqueResult();
@@ -192,8 +214,10 @@ public class OrganizacionDaoHibernate extends BaseDao implements OrganizacionDao
                         for (Rol rol : usuario.getRoles()) {
                             if (rol.getAuthority().equals("ROLE_ADMIN")) {
                                 encontreAlmacen:
-                                for (Empresa otraEmpresa : otraOrganizacion.getEmpresas()) {
-                                    for (Almacen otroAlmacen : otraEmpresa.getAlmacenes()) {
+                                for (Empresa otraEmpresa : otraOrganizacion
+                                        .getEmpresas()) {
+                                    for (Almacen otroAlmacen : otraEmpresa
+                                            .getAlmacenes()) {
                                         usuario.setEmpresa(otraEmpresa);
                                         usuario.setAlmacen(otroAlmacen);
                                         currentSession().update(usuario);
@@ -215,7 +239,8 @@ public class OrganizacionDaoHibernate extends BaseDao implements OrganizacionDao
             currentSession().flush();
             return nombre;
         } else {
-            throw new UltimoException("No se puede eliminar porque es el ultimo");
+            throw new UltimoException(
+                    "No se puede eliminar porque es el ultimo");
         }
     }
 }

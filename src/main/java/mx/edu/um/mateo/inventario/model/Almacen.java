@@ -27,221 +27,248 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
+
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Reporte;
 import mx.edu.um.mateo.general.model.Usuario;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- *
+ * 
  * @author jdmr
  */
 @Entity
 @Table(name = "almacenes", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"empresa_id", "codigo"}),
-    @UniqueConstraint(columnNames = {"empresa_id", "nombre"})
-})
+		@UniqueConstraint(columnNames = { "empresa_id", "codigo" }),
+		@UniqueConstraint(columnNames = { "empresa_id", "nombre" }) })
 public class Almacen implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Version
-    private Integer version;
-    @NotBlank
-    @Column(nullable = false, length = 6)
-    private String codigo;
-    @NotBlank
-    @Column(nullable = false, length = 128)
-    private String nombre;
-    @ManyToOne(optional = false)
-    private Empresa empresa;
-    @OneToMany(mappedBy = "almacen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Usuario> usuarios = new ArrayList<>();
-    @OneToMany(mappedBy = "almacen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<TipoProducto> tiposDeProducto = new ArrayList<>();
-    @ManyToMany
-    @JoinTable(name = "almacenes_reportes", joinColumns = {
-        @JoinColumn(name = "almacen_id")}, inverseJoinColumns = {
-        @JoinColumn(name = "reporte_id")})
-    private List<Reporte> reportes = new ArrayList<>();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1822281411455233523L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Version
+	private Integer version;
+	@NotBlank
+	@Column(nullable = false, length = 6)
+	private String codigo;
+	@NotBlank
+	@Column(nullable = false, length = 128)
+	private String nombre;
+	@ManyToOne(optional = false)
+	private Empresa empresa;
+	@OneToMany(mappedBy = "almacen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Usuario> usuarios = new ArrayList<>();
+	@OneToMany(mappedBy = "almacen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<TipoProducto> tiposDeProducto = new ArrayList<>();
+	@ManyToMany
+	@JoinTable(name = "almacenes_reportes", joinColumns = { @JoinColumn(name = "almacen_id") }, inverseJoinColumns = { @JoinColumn(name = "reporte_id") })
+	private List<Reporte> reportes = new ArrayList<>();
 
-    public Almacen() {
-    }
+	public Almacen() {
+	}
 
-    public Almacen(String codigo, String nombre, Empresa empresa) {
-        this.codigo = codigo;
-        this.nombre = nombre;
-        this.empresa = empresa;
-    }
-    
-    public Almacen(String nombre) {
-        this.nombre = nombre;
-    }
+	public Almacen(String codigo, String nombre, Empresa empresa) {
+		this.codigo = codigo;
+		this.nombre = nombre;
+		this.empresa = empresa;
+	}
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+	public Almacen(String nombre) {
+		this.nombre = nombre;
+	}
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @return the version
-     */
-    public Integer getVersion() {
-        return version;
-    }
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @param version the version to set
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
+	/**
+	 * @return the version
+	 */
+	public Integer getVersion() {
+		return version;
+	}
 
-    /**
-     * @return the codigo
-     */
-    public String getCodigo() {
-        return codigo;
-    }
+	/**
+	 * @param version
+	 *            the version to set
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
 
-    /**
-     * @param codigo the codigo to set
-     */
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
+	/**
+	 * @return the codigo
+	 */
+	public String getCodigo() {
+		return codigo;
+	}
 
-    /**
-     * @return the nombre
-     */
-    public String getNombre() {
-        return nombre;
-    }
+	/**
+	 * @param codigo
+	 *            the codigo to set
+	 */
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
 
-    /**
-     * @param nombre the nombre to set
-     */
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
 
-    /**
-     * @return the empresa
-     */
-    public Empresa getEmpresa() {
-        return empresa;
-    }
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-    /**
-     * @param empresa the empresa to set
-     */
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
-    }
+	/**
+	 * @return the empresa
+	 */
+	public Empresa getEmpresa() {
+		return empresa;
+	}
 
-    /**
-     * @return the usuarios
-     */
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
+	/**
+	 * @param empresa
+	 *            the empresa to set
+	 */
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
+	}
 
-    /**
-     * @param usuarios the usuarios to set
-     */
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.setUsuarios(usuarios);
-    }
+	/**
+	 * @return the usuarios
+	 */
+	public List<Usuario> getUsuarios() {
+		return usuarios;
+	}
 
-    /**
-     * @return the tiposDeProducto
-     */
-    public List<TipoProducto> getTiposDeProducto() {
-        return tiposDeProducto;
-    }
+	/**
+	 * @param usuarios
+	 *            the usuarios to set
+	 */
+	public void setUsuarios(List<Usuario> usuarios) {
+		this.setUsuarios(usuarios);
+	}
 
-    /**
-     * @param tiposDeProducto the tiposDeProducto to set
-     */
-    public void setTiposDeProducto(List<TipoProducto> tiposDeProducto) {
-        this.tiposDeProducto = tiposDeProducto;
-    }
-    
-    /**
-     * Obtiene el nombre con los nombres tanto de empresa y organizacion
-     * 
-     * @return nombre El nombre completo del almacen (organizacion|empresa|almacen)
-     */
-    public String getNombreCompleto() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getEmpresa().getOrganizacion().getNombre());
-        sb.append(" | ");
-        sb.append(getEmpresa().getNombre());
-        sb.append(" | ");
-        sb.append(getNombre());
-        return sb.toString();
-    }
+	/**
+	 * @return the tiposDeProducto
+	 */
+	public List<TipoProducto> getTiposDeProducto() {
+		return tiposDeProducto;
+	}
 
-    /**
-     * No hace nada. NO USAR.
-     * 
-     * @param nombreCompleto 
-     */
-    public void setNombreCompleto(String nombreCompleto) {
-        // no hace nada
-    }
+	/**
+	 * @param tiposDeProducto
+	 *            the tiposDeProducto to set
+	 */
+	public void setTiposDeProducto(List<TipoProducto> tiposDeProducto) {
+		this.tiposDeProducto = tiposDeProducto;
+	}
 
-    /**
-     * @return the reportes
-     */
-    public List<Reporte> getReportes() {
-        return reportes;
-    }
+	/**
+	 * Obtiene el nombre con los nombres tanto de empresa y organizacion
+	 * 
+	 * @return nombre El nombre completo del almacen
+	 *         (organizacion|empresa|almacen)
+	 */
+	public String getNombreCompleto() {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getEmpresa().getOrganizacion().getNombre());
+		sb.append(" | ");
+		sb.append(getEmpresa().getNombre());
+		sb.append(" | ");
+		sb.append(getNombre());
+		return sb.toString();
+	}
 
-    /**
-     * @param reportes the reportes to set
-     */
-    public void setReportes(List<Reporte> reportes) {
-        this.reportes = reportes;
-    }
+	/**
+	 * No hace nada. NO USAR.
+	 * 
+	 * @param nombreCompleto
+	 */
+	public void setNombreCompleto(String nombreCompleto) {
+		// no hace nada
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Almacen other = (Almacen) obj;
-        if (!Objects.equals(this.nombre, other.nombre)) {
-            return false;
-        }
-        return true;
-    }
+	/**
+	 * @return the reportes
+	 */
+	public List<Reporte> getReportes() {
+		return reportes;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 67 * hash + Objects.hashCode(this.id);
-        hash = 67 * hash + Objects.hashCode(this.version);
-        hash = 67 * hash + Objects.hashCode(this.nombre);
-        return hash;
-    }
+	/**
+	 * @param reportes
+	 *            the reportes to set
+	 */
+	public void setReportes(List<Reporte> reportes) {
+		this.reportes = reportes;
+	}
 
-    @Override
-    public String toString() {
-        return "Almacen{" + "nombre=" + nombre + '}';
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Almacen other = (Almacen) obj;
+		if (!Objects.equals(this.nombre, other.nombre)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 5;
+		hash = 67 * hash + Objects.hashCode(this.id);
+		hash = 67 * hash + Objects.hashCode(this.version);
+		hash = 67 * hash + Objects.hashCode(this.nombre);
+		return hash;
+	}
+
+	@Override
+	public String toString() {
+		return "Almacen{" + "nombre=" + nombre + '}';
+	}
 }

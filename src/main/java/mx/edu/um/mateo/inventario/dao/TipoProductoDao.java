@@ -24,26 +24,27 @@
 package mx.edu.um.mateo.inventario.dao;
 
 import java.util.Map;
+
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inventario.model.TipoProducto;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public interface TipoProductoDao {
 
-    public Map<String, Object> lista(Map<String, Object> params) ;
+	public Map<String, Object> lista(Map<String, Object> params);
 
-    public TipoProducto obtiene(Long id) ;
+	public TipoProducto obtiene(Long id);
 
-    public TipoProducto crea(TipoProducto tipoProducto, Usuario usuario) ;
+	public TipoProducto crea(TipoProducto tipoProducto, Usuario usuario);
 
-    public TipoProducto crea(TipoProducto tipoProducto) ;
+	public TipoProducto crea(TipoProducto tipoProducto);
 
-    public TipoProducto actualiza(TipoProducto tipoProducto) ;
+	public TipoProducto actualiza(TipoProducto tipoProducto);
 
-    public TipoProducto actualiza(TipoProducto tipoProducto, Usuario usuario) ;
+	public TipoProducto actualiza(TipoProducto tipoProducto, Usuario usuario);
 
-    public String elimina(Long id) ;
+	public String elimina(Long id);
 }

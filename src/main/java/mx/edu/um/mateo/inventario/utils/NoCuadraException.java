@@ -24,19 +24,24 @@
 package mx.edu.um.mateo.inventario.utils;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public class NoCuadraException extends Exception {
 
-    public NoCuadraException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2631158786290418889L;
 
-    public NoCuadraException(String message) {
-        super(message);
-    }
+	public NoCuadraException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
-    public NoCuadraException() {
-    }
+	public NoCuadraException(String message) {
+		super(message);
+	}
+
+	public NoCuadraException() {
+	}
 }

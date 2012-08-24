@@ -24,23 +24,24 @@
 package mx.edu.um.mateo.inventario.dao;
 
 import java.util.Map;
+
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.inventario.model.Cancelacion;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public interface CancelacionDao {
 
-    public Map<String, Object> lista(Map<String, Object> params);
+	public Map<String, Object> lista(Map<String, Object> params);
 
-    public Cancelacion obtiene(Long id);
+	public Cancelacion obtiene(Long id);
 
-    public Cancelacion crea(Cancelacion cancelacion);
+	public Cancelacion crea(Cancelacion cancelacion);
 
-    public Cancelacion crea(Cancelacion cancelacion, Usuario usuario);
+	public Cancelacion crea(Cancelacion cancelacion, Usuario usuario);
 
-    public String getFolio(Almacen almacen);
+	public String getFolio(Almacen almacen);
 }

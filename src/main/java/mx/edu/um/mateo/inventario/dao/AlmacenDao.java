@@ -24,27 +24,28 @@
 package mx.edu.um.mateo.inventario.dao;
 
 import java.util.Map;
+
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public interface AlmacenDao {
 
-    public Map<String, Object> lista(Map<String, Object> params);
+	public Map<String, Object> lista(Map<String, Object> params);
 
-    public Almacen obtiene(Long id);
+	public Almacen obtiene(Long id);
 
-    public Almacen crea(Almacen almacen, Usuario usuario);
+	public Almacen crea(Almacen almacen, Usuario usuario);
 
-    public Almacen crea(Almacen almacen);
+	public Almacen crea(Almacen almacen);
 
-    public Almacen actualiza(Almacen almacen);
+	public Almacen actualiza(Almacen almacen);
 
-    public Almacen actualiza(Almacen almacen, Usuario usuario);
+	public Almacen actualiza(Almacen almacen, Usuario usuario);
 
-    public String elimina(Long id, Long empresaId) throws UltimoException;
+	public String elimina(Long id, Long empresaId) throws UltimoException;
 }

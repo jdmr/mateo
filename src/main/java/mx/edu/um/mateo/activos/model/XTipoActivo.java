@@ -26,193 +26,214 @@ package mx.edu.um.mateo.activos.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Version;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
 @Table(name = "xtipos_activo")
 public class XTipoActivo implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Version
-    private Integer version;
-    @NotBlank
-    @Column(nullable = false, length = 64)
-    private String nombre;
-    @Column(length = 128)
-    private String descripcion;
-    @Column(nullable = false, scale = 2, precision = 8)
-    private BigDecimal porciento;
-    @Column(nullable = false, name = "vida_util")
-    private Long vidaUtil;
-    @Column(nullable = false, name = "cuenta_id")
-    private Long cuentaId;
-    @Column(nullable = false, name = "empresa_id")
-    private Long empresaId;
-    @Column(nullable = false, name = "tipo_activo_id")
-    private Long tipoActivoId;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8190092390878742840L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Version
+	private Integer version;
+	@NotBlank
+	@Column(nullable = false, length = 64)
+	private String nombre;
+	@Column(length = 128)
+	private String descripcion;
+	@Column(nullable = false, scale = 2, precision = 8)
+	private BigDecimal porciento;
+	@Column(nullable = false, name = "vida_util")
+	private Long vidaUtil;
+	@Column(nullable = false, name = "cuenta_id")
+	private Long cuentaId;
+	@Column(nullable = false, name = "empresa_id")
+	private Long empresaId;
+	@Column(nullable = false, name = "tipo_activo_id")
+	private Long tipoActivoId;
 
-    public XTipoActivo() {
-    }
+	public XTipoActivo() {
+	}
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @return the version
-     */
-    public Integer getVersion() {
-        return version;
-    }
+	/**
+	 * @return the version
+	 */
+	public Integer getVersion() {
+		return version;
+	}
 
-    /**
-     * @param version the version to set
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
+	/**
+	 * @param version
+	 *            the version to set
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
 
-    /**
-     * @return the nombre
-     */
-    public String getNombre() {
-        return nombre;
-    }
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
 
-    /**
-     * @param nombre the nombre to set
-     */
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-    /**
-     * @return the descripcion
-     */
-    public String getDescripcion() {
-        return descripcion;
-    }
+	/**
+	 * @return the descripcion
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
 
-    /**
-     * @param descripcion the descripcion to set
-     */
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
+	/**
+	 * @param descripcion
+	 *            the descripcion to set
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
 
-    /**
-     * @return the porciento
-     */
-    public BigDecimal getPorciento() {
-        return porciento;
-    }
+	/**
+	 * @return the porciento
+	 */
+	public BigDecimal getPorciento() {
+		return porciento;
+	}
 
-    /**
-     * @param porciento the porciento to set
-     */
-    public void setPorciento(BigDecimal porciento) {
-        this.porciento = porciento;
-    }
+	/**
+	 * @param porciento
+	 *            the porciento to set
+	 */
+	public void setPorciento(BigDecimal porciento) {
+		this.porciento = porciento;
+	}
 
-    /**
-     * @return the vidaUtil
-     */
-    public Long getVidaUtil() {
-        return vidaUtil;
-    }
+	/**
+	 * @return the vidaUtil
+	 */
+	public Long getVidaUtil() {
+		return vidaUtil;
+	}
 
-    /**
-     * @param vidaUtil the vidaUtil to set
-     */
-    public void setVidaUtil(Long vidaUtil) {
-        this.vidaUtil = vidaUtil;
-    }
+	/**
+	 * @param vidaUtil
+	 *            the vidaUtil to set
+	 */
+	public void setVidaUtil(Long vidaUtil) {
+		this.vidaUtil = vidaUtil;
+	}
 
-    /**
-     * @return the cuentaId
-     */
-    public Long getCuentaId() {
-        return cuentaId;
-    }
+	/**
+	 * @return the cuentaId
+	 */
+	public Long getCuentaId() {
+		return cuentaId;
+	}
 
-    /**
-     * @param cuentaId the cuentaId to set
-     */
-    public void setCuentaId(Long cuentaId) {
-        this.cuentaId = cuentaId;
-    }
+	/**
+	 * @param cuentaId
+	 *            the cuentaId to set
+	 */
+	public void setCuentaId(Long cuentaId) {
+		this.cuentaId = cuentaId;
+	}
 
-    /**
-     * @return the empresaId
-     */
-    public Long getEmpresaId() {
-        return empresaId;
-    }
+	/**
+	 * @return the empresaId
+	 */
+	public Long getEmpresaId() {
+		return empresaId;
+	}
 
-    /**
-     * @param empresaId the empresaId to set
-     */
-    public void setEmpresaId(Long empresaId) {
-        this.empresaId = empresaId;
-    }
+	/**
+	 * @param empresaId
+	 *            the empresaId to set
+	 */
+	public void setEmpresaId(Long empresaId) {
+		this.empresaId = empresaId;
+	}
 
-    /**
-     * @return the tipoActivoId
-     */
-    public Long getTipoActivoId() {
-        return tipoActivoId;
-    }
+	/**
+	 * @return the tipoActivoId
+	 */
+	public Long getTipoActivoId() {
+		return tipoActivoId;
+	}
 
-    /**
-     * @param tipoActivoId the tipoActivoId to set
-     */
-    public void setTipoActivoId(Long tipoActivoId) {
-        this.tipoActivoId = tipoActivoId;
-    }
+	/**
+	 * @param tipoActivoId
+	 *            the tipoActivoId to set
+	 */
+	public void setTipoActivoId(Long tipoActivoId) {
+		this.tipoActivoId = tipoActivoId;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final XTipoActivo other = (XTipoActivo) obj;
-        if (!Objects.equals(this.nombre, other.nombre)) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final XTipoActivo other = (XTipoActivo) obj;
+		if (!Objects.equals(this.nombre, other.nombre)) {
+			return false;
+		}
+		return true;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 61 * hash + Objects.hashCode(this.getId());
-        hash = 61 * hash + Objects.hashCode(this.getVersion());
-        hash = 61 * hash + Objects.hashCode(this.getNombre());
-        return hash;
-    }
+	@Override
+	public int hashCode() {
+		int hash = 7;
+		hash = 61 * hash + Objects.hashCode(this.getId());
+		hash = 61 * hash + Objects.hashCode(this.getVersion());
+		hash = 61 * hash + Objects.hashCode(this.getNombre());
+		return hash;
+	}
 
-    @Override
-    public String toString() {
-        return "TipoActivo{" + "nombre=" + getNombre() + '}';
-    }
+	@Override
+	public String toString() {
+		return "TipoActivo{" + "nombre=" + getNombre() + '}';
+	}
 }

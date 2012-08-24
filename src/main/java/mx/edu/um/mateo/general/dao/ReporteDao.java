@@ -24,6 +24,7 @@
 package mx.edu.um.mateo.general.dao;
 
 import java.util.List;
+
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Reporte;
@@ -32,28 +33,29 @@ import mx.edu.um.mateo.inventario.model.Almacen;
 import net.sf.jasperreports.engine.JasperReport;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public interface ReporteDao {
 
-    public JasperReport obtieneReporteAdministrativo(String nombre);
+	public JasperReport obtieneReporteAdministrativo(String nombre);
 
-    public JasperReport obtieneReportePorOrganizacion(String nombre, Long organizacionId);
+	public JasperReport obtieneReportePorOrganizacion(String nombre,
+			Long organizacionId);
 
-    public JasperReport obtieneReportePorEmpresa(String nombre, Long empresaId);
+	public JasperReport obtieneReportePorEmpresa(String nombre, Long empresaId);
 
-    public JasperReport obtieneReportePorAlmacen(String nombre, Long almacenId);
+	public JasperReport obtieneReportePorAlmacen(String nombre, Long almacenId);
 
-    public void inicializa();
+	public void inicializa();
 
-    public List<Reporte> inicializaReportes(List<String> nombres);
+	public List<Reporte> inicializaReportes(List<String> nombres);
 
-    public void inicializaOrganizacion(Organizacion organizacion);
+	public void inicializaOrganizacion(Organizacion organizacion);
 
-    public void inicializaEmpresa(Empresa empresa);
+	public void inicializaEmpresa(Empresa empresa);
 
-    public void inicializaAlmacen(Almacen almacen);
+	public void inicializaAlmacen(Almacen almacen);
 
-    public void compila(String nombre, String tipo, Usuario usuario);
+	public void compila(String nombre, String tipo, Usuario usuario);
 }
