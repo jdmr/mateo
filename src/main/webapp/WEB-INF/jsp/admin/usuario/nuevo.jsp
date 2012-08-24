@@ -25,6 +25,7 @@
                 <a class="btn btn-primary" href="<s:url value='/admin/usuario'/>"><i class="icon-list icon-white"></i> <s:message code='usuario.lista.label' /></a>
             </p>
             <form:form commandName="usuario" action="crea" method="post">
+                <input type="hidden" name="enviaCorreo" value="${enviaCorreo}" />
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>

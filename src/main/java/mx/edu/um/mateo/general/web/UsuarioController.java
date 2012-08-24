@@ -149,6 +149,7 @@ public class UsuarioController extends BaseController {
 		List<Ejercicio> ejercicios = usuarioDao.obtieneEjercicios(ambiente
 				.obtieneUsuario().getEmpresa().getOrganizacion().getId());
 		modelo.addAttribute("ejercicios", ejercicios);
+                modelo.addAttribute("enviaCorreo", Boolean.TRUE);
 		return "admin/usuario/nuevo";
 	}
 
@@ -157,7 +158,8 @@ public class UsuarioController extends BaseController {
 	public String crea(HttpServletRequest request,
 			HttpServletResponse response, @Valid Usuario usuario,
 			BindingResult bindingResult, Errors errors, Model modelo,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes,
+                        @RequestParam Boolean enviaCorreo) {
 		for (String nombre : request.getParameterMap().keySet()) {
 			log.debug("Param: {} : {}", nombre,
 					request.getParameterMap().get(nombre));
@@ -183,17 +185,19 @@ public class UsuarioController extends BaseController {
 			usuario.setPassword(password);
 			usuario = usuarioDao.crea(usuario, almacenId, roles);
 
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(message, true);
-			helper.setTo(usuario.getCorreo());
-			helper.setSubject(messageSource.getMessage(
-					"envia.correo.password.titulo.message", new String[] {},
-					request.getLocale()));
-			helper.setText(messageSource.getMessage(
-					"envia.correo.password.contenido.message", new String[] {
-							usuario.getNombre(), usuario.getUsername(),
-							password }, request.getLocale()), true);
-			mailSender.send(message);
+                        if (enviaCorreo) {
+                            MimeMessage message = mailSender.createMimeMessage();
+                            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+                            helper.setTo(usuario.getCorreo());
+                            helper.setSubject(messageSource.getMessage(
+                                            "envia.correo.password.titulo.message", new String[] {},
+                                            request.getLocale()));
+                            helper.setText(messageSource.getMessage(
+                                            "envia.correo.password.contenido.message", new String[] {
+                                                            usuario.getNombre(), usuario.getUsername(),
+                                                            password }, request.getLocale()), true);
+                            mailSender.send(message);
+                        }
 
 		} catch (ConstraintViolationException e) {
 			log.error("No se pudo crear al usuario", e);
