@@ -65,361 +65,361 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.ui.Model;
 
 /**
- * 
+ *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public abstract class BaseController {
 
-	protected final transient Logger log = LoggerFactory.getLogger(getClass());
-	@Autowired
-	protected JavaMailSender mailSender;
-	@Autowired
-	protected ResourceBundleMessageSource messageSource;
-	@Autowired
-	protected Ambiente ambiente;
-	@Autowired
-	protected ReporteUtil reporteUtil;
-	@Autowired
-	protected ReporteDao reporteDao;
+    protected final transient Logger log = LoggerFactory.getLogger(getClass());
+    @Autowired
+    protected JavaMailSender mailSender;
+    @Autowired
+    protected ResourceBundleMessageSource messageSource;
+    @Autowired
+    protected Ambiente ambiente;
+    @Autowired
+    protected ReporteUtil reporteUtil;
+    @Autowired
+    protected ReporteDao reporteDao;
 
-	protected void pagina(Map<String, Object> params, Model modelo,
-			String lista, Long pagina) {
-		if (pagina != null) {
-			params.put("pagina", pagina);
-			modelo.addAttribute("pagina", pagina);
-		} else {
-			pagina = 1L;
-			modelo.addAttribute("pagina", pagina);
-		}
-		// inicia paginado
-		Long cantidad = (Long) params.get("cantidad");
-		Integer max = (Integer) params.get("max");
-		List<Long> paginas = paginacion(pagina, cantidad, max);
-		List<?> listado = (List<?>) params.get(lista);
-		Long primero = ((pagina - 1) * max) + 1;
-		Long ultimo = primero + (listado.size() - 1);
-		String[] paginacion = new String[] { primero.toString(),
-				ultimo.toString(), cantidad.toString() };
-		modelo.addAttribute("paginacion", paginacion);
-		modelo.addAttribute("paginas", paginas);
-		// termina paginado
-	}
+    protected void pagina(Map<String, Object> params, Model modelo,
+            String lista, Long pagina) {
+        if (pagina != null) {
+            params.put("pagina", pagina);
+            modelo.addAttribute("pagina", pagina);
+        } else {
+            pagina = 1L;
+            modelo.addAttribute("pagina", pagina);
+        }
+        // inicia paginado
+        Long cantidad = (Long) params.get("cantidad");
+        Integer max = (Integer) params.get("max");
+        List<Long> paginas = paginacion(pagina, cantidad, max);
+        List<?> listado = (List<?>) params.get(lista);
+        Long primero = ((pagina - 1) * max) + 1;
+        Long ultimo = primero + (listado.size() - 1);
+        String[] paginacion = new String[]{primero.toString(),
+            ultimo.toString(), cantidad.toString()};
+        modelo.addAttribute("paginacion", paginacion);
+        modelo.addAttribute("paginas", paginas);
+        // termina paginado
+    }
 
-	private List<Long> paginacion(Long pagina, Long cantidad, Integer max) {
-		Long cantidadDePaginas = cantidad / max;
-		log.debug("Paginacion: {} {} {} {}", new Object[] { pagina, cantidad,
-				max, cantidadDePaginas });
-		Set<Long> paginas = new LinkedHashSet<>();
-		long h = pagina - 1;
-		long i = pagina;
-		long j = pagina + 1;
-		boolean esMiles = false;
-		boolean esQuinientos = false;
-		boolean esCientos = false;
-		boolean esCincuentas = false;
-		boolean esDecenas = false;
-		boolean iniciado = false;
-		if (h > 0 && h > 1000) {
-			for (long y = 0; y < h; y += 1000) {
-				if (y == 0) {
-					iniciado = true;
-					paginas.add(1l);
-				} else {
-					paginas.add(y);
-				}
-			}
-		} else if (h > 0 && h > 500) {
-			for (long y = 0; y < h; y += 500) {
-				if (y == 0) {
-					iniciado = true;
-					paginas.add(1l);
-				} else {
-					paginas.add(y);
-				}
-			}
-		} else if (h > 0 && h > 100) {
-			for (long y = 0; y < h; y += 100) {
-				if (y == 0) {
-					iniciado = true;
-					paginas.add(1l);
-				} else {
-					paginas.add(y);
-				}
-			}
-		} else if (h > 0 && h > 50) {
-			for (long y = 0; y < h; y += 50) {
-				if (y == 0) {
-					iniciado = true;
-					paginas.add(1l);
-				} else {
-					paginas.add(y);
-				}
-			}
-		} else if (h > 0 && h > 10) {
-			for (long y = 0; y < h; y += 10) {
-				if (y == 0) {
-					iniciado = true;
-					paginas.add(1l);
-				} else {
-					paginas.add(y);
-				}
-			}
-		}
-		if (i > 1 && i < 4) {
-			for (long x = 1; x < i; x++) {
-				paginas.add(x);
-			}
-		} else if (h > 0) {
-			if (!iniciado) {
-				paginas.add(1L);
-			}
-			for (long x = h; x < i; x++) {
-				paginas.add(x);
-			}
-		}
-		do {
-			paginas.add(i);
-			if (i > j) {
-				if (esMiles || (i + 1000) < cantidadDePaginas) {
-					esMiles = true;
-					i -= i % 1000;
-					i += 999;
-				} else if (esQuinientos || (i + 500) < cantidadDePaginas) {
-					esQuinientos = true;
-					i -= i % 500;
-					i += 499;
-				} else if (esCientos || (i + 100) < cantidadDePaginas) {
-					esCientos = true;
-					i -= i % 100;
-					i += 99;
-				} else if (esCincuentas || (i + 50) < cantidadDePaginas) {
-					esCincuentas = true;
-					i -= i % 50;
-					i += 49;
-				} else if (esDecenas || (i + 10) < cantidadDePaginas) {
-					esDecenas = true;
-					i -= i % 10;
-					i += 9;
-				}
-			}
-		} while (i++ < cantidadDePaginas);
-		if (cantidadDePaginas > 0) {
-			paginas.add(cantidadDePaginas);
-		}
+    private List<Long> paginacion(Long pagina, Long cantidad, Integer max) {
+        Long cantidadDePaginas = cantidad / max;
+        log.debug("Paginacion: {} {} {} {}", new Object[]{pagina, cantidad,
+                    max, cantidadDePaginas});
+        Set<Long> paginas = new LinkedHashSet<>();
+        long h = pagina - 1;
+        long i = pagina;
+        long j = pagina + 1;
+        boolean esMiles = false;
+        boolean esQuinientos = false;
+        boolean esCientos = false;
+        boolean esCincuentas = false;
+        boolean esDecenas = false;
+        boolean iniciado = false;
+        if (h > 0 && h > 1000) {
+            for (long y = 0; y < h; y += 1000) {
+                if (y == 0) {
+                    iniciado = true;
+                    paginas.add(1l);
+                } else {
+                    paginas.add(y);
+                }
+            }
+        } else if (h > 0 && h > 500) {
+            for (long y = 0; y < h; y += 500) {
+                if (y == 0) {
+                    iniciado = true;
+                    paginas.add(1l);
+                } else {
+                    paginas.add(y);
+                }
+            }
+        } else if (h > 0 && h > 100) {
+            for (long y = 0; y < h; y += 100) {
+                if (y == 0) {
+                    iniciado = true;
+                    paginas.add(1l);
+                } else {
+                    paginas.add(y);
+                }
+            }
+        } else if (h > 0 && h > 50) {
+            for (long y = 0; y < h; y += 50) {
+                if (y == 0) {
+                    iniciado = true;
+                    paginas.add(1l);
+                } else {
+                    paginas.add(y);
+                }
+            }
+        } else if (h > 0 && h > 10) {
+            for (long y = 0; y < h; y += 10) {
+                if (y == 0) {
+                    iniciado = true;
+                    paginas.add(1l);
+                } else {
+                    paginas.add(y);
+                }
+            }
+        }
+        if (i > 1 && i < 4) {
+            for (long x = 1; x < i; x++) {
+                paginas.add(x);
+            }
+        } else if (h > 0) {
+            if (!iniciado) {
+                paginas.add(1L);
+            }
+            for (long x = h; x < i; x++) {
+                paginas.add(x);
+            }
+        }
+        do {
+            paginas.add(i);
+            if (i > j) {
+                if (esMiles || (i + 1000) < cantidadDePaginas) {
+                    esMiles = true;
+                    i -= i % 1000;
+                    i += 999;
+                } else if (esQuinientos || (i + 500) < cantidadDePaginas) {
+                    esQuinientos = true;
+                    i -= i % 500;
+                    i += 499;
+                } else if (esCientos || (i + 100) < cantidadDePaginas) {
+                    esCientos = true;
+                    i -= i % 100;
+                    i += 99;
+                } else if (esCincuentas || (i + 50) < cantidadDePaginas) {
+                    esCincuentas = true;
+                    i -= i % 50;
+                    i += 49;
+                } else if (esDecenas || (i + 10) < cantidadDePaginas) {
+                    esDecenas = true;
+                    i -= i % 10;
+                    i += 9;
+                }
+            }
+        } while (i++ < cantidadDePaginas);
+        if (cantidadDePaginas > 0) {
+            paginas.add(cantidadDePaginas);
+        }
 
-		log.debug("Paginas {}: {}", pagina, paginas);
-		return new ArrayList<>(paginas);
-	}
+        log.debug("Paginas {}: {}", pagina, paginas);
+        return new ArrayList<>(paginas);
+    }
 
-	protected byte[] generaPdf(List<?> lista, String nombre, String tipo,
-			Long id) throws JRException {
-		log.debug("Generando PDF");
-		Map<String, Object> params = new HashMap<>();
-		JasperReport jasperReport = null;
-		switch (tipo) {
-		case Constantes.ADMIN:
-			jasperReport = reporteDao.obtieneReporteAdministrativo(nombre);
-			break;
-		case Constantes.ORG:
-			jasperReport = reporteDao.obtieneReportePorOrganizacion(nombre, id);
-			break;
-		case Constantes.EMP:
-			jasperReport = reporteDao.obtieneReportePorEmpresa(nombre, id);
-			break;
-		case Constantes.ALM:
-			jasperReport = reporteDao.obtieneReportePorAlmacen(nombre, id);
-			break;
-		}
-		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,
-				params, new JRBeanCollectionDataSource(lista));
-		byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
+    protected byte[] generaPdf(List<?> lista, String nombre, String tipo,
+            Long id) throws JRException {
+        log.debug("Generando PDF");
+        Map<String, Object> params = new HashMap<>();
+        JasperReport jasperReport = null;
+        switch (tipo) {
+            case Constantes.ADMIN:
+                jasperReport = reporteDao.obtieneReporteAdministrativo(nombre);
+                break;
+            case Constantes.ORG:
+                jasperReport = reporteDao.obtieneReportePorOrganizacion(nombre, id);
+                break;
+            case Constantes.EMP:
+                jasperReport = reporteDao.obtieneReportePorEmpresa(nombre, id);
+                break;
+            case Constantes.ALM:
+                jasperReport = reporteDao.obtieneReportePorAlmacen(nombre, id);
+                break;
+        }
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,
+                params, new JRBeanCollectionDataSource(lista));
+        byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
 
-		return archivo;
-	}
+        return archivo;
+    }
 
-	protected byte[] generaCsv(List<?> lista, String nombre, String tipo,
-			Long id) throws JRException {
-		log.debug("Generando CSV");
-		Map<String, Object> params = new HashMap<>();
-		JRCsvExporter exporter = new JRCsvExporter();
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		JasperReport jasperReport = null;
-		switch (tipo) {
-		case Constantes.ADMIN:
-			jasperReport = reporteDao.obtieneReporteAdministrativo(nombre);
-			break;
-		case Constantes.ORG:
-			jasperReport = reporteDao.obtieneReportePorOrganizacion(nombre, id);
-			break;
-		case Constantes.EMP:
-			jasperReport = reporteDao.obtieneReportePorEmpresa(nombre, id);
-			break;
-		case Constantes.ALM:
-			jasperReport = reporteDao.obtieneReportePorAlmacen(nombre, id);
-			break;
-		}
-		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,
-				params, new JRBeanCollectionDataSource(lista));
-		exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-		exporter.setParameter(JRExporterParameter.OUTPUT_STREAM,
-				byteArrayOutputStream);
-		exporter.exportReport();
-		byte[] archivo = byteArrayOutputStream.toByteArray();
+    protected byte[] generaCsv(List<?> lista, String nombre, String tipo,
+            Long id) throws JRException {
+        log.debug("Generando CSV");
+        Map<String, Object> params = new HashMap<>();
+        JRCsvExporter exporter = new JRCsvExporter();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        JasperReport jasperReport = null;
+        switch (tipo) {
+            case Constantes.ADMIN:
+                jasperReport = reporteDao.obtieneReporteAdministrativo(nombre);
+                break;
+            case Constantes.ORG:
+                jasperReport = reporteDao.obtieneReportePorOrganizacion(nombre, id);
+                break;
+            case Constantes.EMP:
+                jasperReport = reporteDao.obtieneReportePorEmpresa(nombre, id);
+                break;
+            case Constantes.ALM:
+                jasperReport = reporteDao.obtieneReportePorAlmacen(nombre, id);
+                break;
+        }
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,
+                params, new JRBeanCollectionDataSource(lista));
+        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM,
+                byteArrayOutputStream);
+        exporter.exportReport();
+        byte[] archivo = byteArrayOutputStream.toByteArray();
 
-		return archivo;
-	}
+        return archivo;
+    }
 
-	protected byte[] generaXls(List<?> lista, String nombre, String tipo,
-			Long id) throws JRException {
-		log.debug("Generando XLS");
-		Map<String, Object> params = new HashMap<>();
-		JRXlsExporter exporter = new JRXlsExporter();
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		JasperReport jasperReport = null;
-		switch (tipo) {
-		case Constantes.ADMIN:
-			jasperReport = reporteDao.obtieneReporteAdministrativo(nombre);
-			break;
-		case Constantes.ORG:
-			jasperReport = reporteDao.obtieneReportePorOrganizacion(nombre, id);
-			break;
-		case Constantes.EMP:
-			jasperReport = reporteDao.obtieneReportePorEmpresa(nombre, id);
-			break;
-		case Constantes.ALM:
-			jasperReport = reporteDao.obtieneReportePorAlmacen(nombre, id);
-			break;
-		}
-		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,
-				params, new JRBeanCollectionDataSource(lista));
-		exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-		exporter.setParameter(JRExporterParameter.OUTPUT_STREAM,
-				byteArrayOutputStream);
-		exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND,
-				Boolean.FALSE);
-		exporter.setParameter(
-				JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS,
-				Boolean.TRUE);
-		exporter.setParameter(
-				JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS,
-				Boolean.TRUE);
-		exporter.setParameter(JRXlsExporterParameter.IS_COLLAPSE_ROW_SPAN,
-				Boolean.TRUE);
-		exporter.setParameter(JRXlsExporterParameter.IGNORE_PAGE_MARGINS,
-				Boolean.TRUE);
-		exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET,
-				Boolean.FALSE);
-		exporter.setParameter(
-				JRXlsExporterParameter.PARAMETERS_OVERRIDE_REPORT_HINTS,
-				Boolean.FALSE);
-		exporter.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE,
-				Boolean.TRUE);
+    protected byte[] generaXls(List<?> lista, String nombre, String tipo,
+            Long id) throws JRException {
+        log.debug("Generando XLS");
+        Map<String, Object> params = new HashMap<>();
+        JRXlsExporter exporter = new JRXlsExporter();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        JasperReport jasperReport = null;
+        switch (tipo) {
+            case Constantes.ADMIN:
+                jasperReport = reporteDao.obtieneReporteAdministrativo(nombre);
+                break;
+            case Constantes.ORG:
+                jasperReport = reporteDao.obtieneReportePorOrganizacion(nombre, id);
+                break;
+            case Constantes.EMP:
+                jasperReport = reporteDao.obtieneReportePorEmpresa(nombre, id);
+                break;
+            case Constantes.ALM:
+                jasperReport = reporteDao.obtieneReportePorAlmacen(nombre, id);
+                break;
+        }
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,
+                params, new JRBeanCollectionDataSource(lista));
+        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM,
+                byteArrayOutputStream);
+        exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND,
+                Boolean.FALSE);
+        exporter.setParameter(
+                JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS,
+                Boolean.TRUE);
+        exporter.setParameter(
+                JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS,
+                Boolean.TRUE);
+        exporter.setParameter(JRXlsExporterParameter.IS_COLLAPSE_ROW_SPAN,
+                Boolean.TRUE);
+        exporter.setParameter(JRXlsExporterParameter.IGNORE_PAGE_MARGINS,
+                Boolean.TRUE);
+        exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET,
+                Boolean.FALSE);
+        exporter.setParameter(
+                JRXlsExporterParameter.PARAMETERS_OVERRIDE_REPORT_HINTS,
+                Boolean.FALSE);
+        exporter.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE,
+                Boolean.TRUE);
 
-		exporter.exportReport();
-		byte[] archivo = byteArrayOutputStream.toByteArray();
+        exporter.exportReport();
+        byte[] archivo = byteArrayOutputStream.toByteArray();
 
-		return archivo;
-	}
+        return archivo;
+    }
 
-	protected void generaReporte(String tipo, List<?> lista,
-			HttpServletResponse response, String nombre, String tipoReporte,
-			Long id) throws ReporteException {
-		try {
-			log.debug("Generando reporte {}", tipo);
-			byte[] archivo = null;
-			switch (tipo) {
-			case "PDF":
-				archivo = generaPdf(lista, nombre, tipoReporte, id);
-				response.setContentType("application/pdf");
-				response.addHeader("Content-Disposition",
-						"attachment; filename=" + nombre + ".pdf");
-				System.out.println("termina de generar pdf");
-				break;
-			case "CSV":
-				archivo = generaCsv(lista, nombre, tipoReporte, id);
-				response.setContentType("text/csv");
-				response.addHeader("Content-Disposition",
-						"attachment; filename=" + nombre + ".csv");
-				break;
-			case "XLS":
-				archivo = generaXls(lista, nombre, tipoReporte, id);
-				response.setContentType("application/vnd.ms-excel");
-				response.addHeader("Content-Disposition",
-						"attachment; filename=" + nombre + ".xls");
-			}
-			if (archivo != null) {
-				response.setContentLength(archivo.length);
-				try (BufferedOutputStream bos = new BufferedOutputStream(
-						response.getOutputStream())) {
-					bos.write(archivo);
-					bos.flush();
-				}
-			}
-		} catch (JRException | IOException e) {
-			throw new ReporteException("No se pudo generar el reporte", e);
-		}
+    protected void generaReporte(String tipo, List<?> lista,
+            HttpServletResponse response, String nombre, String tipoReporte,
+            Long id) throws ReporteException {
+        try {
+            log.debug("Generando reporte {}", tipo);
+            byte[] archivo = null;
+            switch (tipo) {
+                case "PDF":
+                    archivo = generaPdf(lista, nombre, tipoReporte, id);
+                    response.setContentType("application/pdf");
+                    response.addHeader("Content-Disposition",
+                            "attachment; filename=" + nombre + ".pdf");
+                    System.out.println("termina de generar pdf");
+                    break;
+                case "CSV":
+                    archivo = generaCsv(lista, nombre, tipoReporte, id);
+                    response.setContentType("text/csv");
+                    response.addHeader("Content-Disposition",
+                            "attachment; filename=" + nombre + ".csv");
+                    break;
+                case "XLS":
+                    archivo = generaXls(lista, nombre, tipoReporte, id);
+                    response.setContentType("application/vnd.ms-excel");
+                    response.addHeader("Content-Disposition",
+                            "attachment; filename=" + nombre + ".xls");
+            }
+            if (archivo != null) {
+                response.setContentLength(archivo.length);
+                try (BufferedOutputStream bos = new BufferedOutputStream(
+                                response.getOutputStream())) {
+                    bos.write(archivo);
+                    bos.flush();
+                }
+            }
+        } catch (JRException | IOException e) {
+            throw new ReporteException("No se pudo generar el reporte", e);
+        }
 
-	}
+    }
 
-	protected void enviaCorreo(String tipo, List<?> lista,
-			HttpServletRequest request, String nombre, String tipoReporte,
-			Long id) throws ReporteException {
-		try {
-			log.debug("Enviando correo {}", tipo);
-			byte[] archivo = null;
-			String tipoContenido = null;
-			switch (tipo) {
-			case "PDF":
-				archivo = generaPdf(lista, nombre, tipoReporte, id);
-				tipoContenido = "application/pdf";
-				break;
-			case "CSV":
-				archivo = generaCsv(lista, nombre, tipoReporte, id);
-				tipoContenido = "text/csv";
-				break;
-			case "XLS":
-				archivo = generaXls(lista, nombre, tipoReporte, id);
-				tipoContenido = "application/vnd.ms-excel";
-			}
+    protected void enviaCorreo(String tipo, List<?> lista,
+            HttpServletRequest request, String nombre, String tipoReporte,
+            Long id) throws ReporteException {
+        try {
+            log.debug("Enviando correo {}", tipo);
+            byte[] archivo = null;
+            String tipoContenido = null;
+            switch (tipo) {
+                case "PDF":
+                    archivo = generaPdf(lista, nombre, tipoReporte, id);
+                    tipoContenido = "application/pdf";
+                    break;
+                case "CSV":
+                    archivo = generaCsv(lista, nombre, tipoReporte, id);
+                    tipoContenido = "text/csv";
+                    break;
+                case "XLS":
+                    archivo = generaXls(lista, nombre, tipoReporte, id);
+                    tipoContenido = "application/vnd.ms-excel";
+            }
 
-			MimeMessage message = mailSender.createMimeMessage();
-			MimeMessageHelper helper = new MimeMessageHelper(message, true);
-			helper.setTo(ambiente.obtieneUsuario().getCorreo());
-			String titulo = messageSource.getMessage(nombre + ".reporte.label",
-					null, request.getLocale());
-			helper.setSubject(messageSource.getMessage(
-					"envia.correo.titulo.message", new String[] { titulo },
-					request.getLocale()));
-			helper.setText(messageSource.getMessage(
-					"envia.correo.contenido.message", new String[] { titulo },
-					request.getLocale()), true);
-			helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(
-					archivo, tipoContenido));
-			mailSender.send(message);
-		} catch (JRException | MessagingException e) {
-			throw new ReporteException("No se pudo generar el reporte", e);
-		}
-	}
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(ambiente.obtieneUsuario().getCorreo());
+            String titulo = messageSource.getMessage(nombre + ".reporte.label",
+                    null, request.getLocale());
+            helper.setSubject(messageSource.getMessage(
+                    "envia.correo.titulo.message", new String[]{titulo},
+                    request.getLocale()));
+            helper.setText(messageSource.getMessage(
+                    "envia.correo.contenido.message", new String[]{titulo},
+                    request.getLocale()), true);
+            helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(
+                    archivo, tipoContenido));
+            mailSender.send(message);
+        } catch (JRException | MessagingException e) {
+            throw new ReporteException("No se pudo generar el reporte", e);
+        }
+    }
 
-	protected Map<String, Object> convierteParams(Map<String, String[]> mapa) {
-		Map<String, Object> params = new HashMap<>();
-		for (String key : mapa.keySet()) {
-			String[] values = mapa.get(key);
-			log.debug("Convirtiendo {} : {}", key, values);
-			if (values.length == 1) {
-				if (StringUtils.isNotBlank(values[0])) {
-					if (key.equals("pagina")) {
-						params.put(key, new Long(values[0]));
-					} else if (key.endsWith("Id")) {
-						params.put(key, new Long(values[0]));
-					} else {
-						params.put(key, values[0]);
-					}
-				}
-			} else if (values.length > 1) {
-				params.put(key, values);
-			}
-		}
-		return params;
-	}
+    protected Map<String, Object> convierteParams(Map<String, String[]> mapa) {
+        Map<String, Object> params = new HashMap<>();
+        for (String key : mapa.keySet()) {
+            String[] values = mapa.get(key);
+            log.debug("Convirtiendo {} : {}", key, values);
+            if (values.length == 1) {
+                if (StringUtils.isNotBlank(values[0])) {
+                    if (key.equals("pagina")) {
+                        params.put(key, new Long(values[0]));
+                    } else if (key.endsWith("Id")) {
+                        params.put(key, new Long(values[0]));
+                    } else {
+                        params.put(key, values[0]);
+                    }
+                }
+            } else if (values.length > 1) {
+                params.put(key, values);
+            }
+        }
+        return params;
+    }
 }
