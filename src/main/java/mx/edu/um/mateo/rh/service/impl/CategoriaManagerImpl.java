@@ -30,7 +30,7 @@ public class CategoriaManagerImpl implements CategoriaManager {
     @Override
     public Map<String, Object> getCategorias(final Categoria categoria) {
         Map<String, Object> params = new HashMap<>();
-        params.put(Constantes.CATEGORIA_LIST, dao.getCategorias(categoria));
+        params.put(Constantes.CATEGORIA_LIST, dao.getCategoria(categoria.getId()));
         return params;
     }
 

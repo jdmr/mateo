@@ -5,6 +5,7 @@
 package mx.edu.um.mateo.rh.dao;
 
 import java.util.List;
+import java.util.Map;
 import mx.edu.um.mateo.rh.model.Categoria;
 
 /**
@@ -16,7 +17,7 @@ public interface CategoriaDao {
     /**
      * Retrieves all of the Categorias
      */
-    public List getCategorias(Categoria categoria);
+    public Map<String, Object>  getCategorias(Map<String, Object> params);
 
     /**
      * Gets Categoria's information based on primary key. An
@@ -26,7 +27,7 @@ public interface CategoriaDao {
      * @param id the Categoria's id
      * @return categoria populated Categoria object
      */
-    public Categoria getCategoria(final Integer id);
+    public Categoria getCategoria( Integer id);
 
     /**
      * Saves a Categoria's information
@@ -39,5 +40,7 @@ public interface CategoriaDao {
      * @param id the categoria's id
      */
     public void removeCategoria(final Integer id);
+
+   
     
 }
