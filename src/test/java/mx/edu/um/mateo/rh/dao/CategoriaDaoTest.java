@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.inventario.model.TipoProducto;
 import mx.edu.um.mateo.rh.model.Categoria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -62,7 +63,32 @@ public class CategoriaDaoTest {
         assertEquals(1, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
         
     }
+    
+    @Test
+        public void testElimina(){    
+        log.debug("Insertar categoria");
+        Categoria categoria = null;
+        categoria = new Categoria();
+        categoria.setNombre("prueba");
+        categoria.setStatus("AC");
+        currentSession().save(categoria);
+        assertNotNull(categoria);
+        assertNotNull(categoria.getId());
+        assertEquals("prueba", categoria.getNombre());
 
+        instance.removeCategoria(categoria.getId());
+        Categoria prueba=null;
+        try{
+        prueba= instance.getCategoria(categoria.getId());
+        fail("Error No se borro categoria");
+        }catch(Exception e){
+        assertNull(prueba);
+        }
+        }
+        
+    
+    
+    
     /**
      * Test of crea method, of class CategoriaDao.
      */
@@ -103,6 +129,7 @@ public class CategoriaDaoTest {
         for (int j = 0; j < i; j++) {
             categoria = new Categoria();
             categoria.setNombre("prueba" + j);
+            categoria.setStatus("AC");
             currentSession().save(categoria);
             log.debug(categoria.toString());
             lista.add(categoria);

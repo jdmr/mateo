@@ -6,6 +6,7 @@ package mx.edu.um.mateo.rh.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -23,6 +24,21 @@ public class Categoria implements Serializable {
     private String nombre;
     @Version
     private Integer version;
+    @Length(max=2)
+    @Column(nullable=false, length=2)
+    private String status; 
+    
+    
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
+    
 
     /**
      * @return the id

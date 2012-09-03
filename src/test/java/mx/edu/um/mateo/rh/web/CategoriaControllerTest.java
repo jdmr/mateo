@@ -73,6 +73,7 @@ public class CategoriaControllerTest extends BaseTest {
         for (int i = 0; i < 20; i++) {
             Categoria categoria = new Categoria();
             categoria.setNombre("test"+i);
+            categoria.setStatus("AC");
             categoriaDao.saveCategoria(categoria);
             assertNotNull(categoria);
         }
@@ -91,6 +92,7 @@ public class CategoriaControllerTest extends BaseTest {
         log.debug("Debiera mostrar categoria");
         Categoria categoria = new Categoria();
         categoria.setNombre("test1");
+        categoria.setStatus("AC");
         categoriaDao.saveCategoria(categoria);
         assertNotNull(categoria);
 
@@ -102,11 +104,17 @@ public class CategoriaControllerTest extends BaseTest {
 
     @Test
     public void debieraCrearCategoria() throws Exception {
-        log.debug("Debiera crear categoria");
+        log.debug("Debiera mostrar categoria");
+        Categoria categoria = new Categoria();
+        categoria.setNombre("test1");
+        categoria.setStatus("AC");
+        categoriaDao.saveCategoria(categoria);
+        assertNotNull(categoria);
 
         this.mockMvc.perform(post(Constantes.PATH_CATEGORIA_CREA)
-                .param("nombre", "test")
-                                        )
+                .param("id", categoria.getId().toString())
+                .param("status", categoria.getStatus().toString())
+                .param("nombre", "test1"))
                 .andExpect(status().isOk())
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE));
     }
@@ -117,11 +125,13 @@ public class CategoriaControllerTest extends BaseTest {
         
         Categoria categoria = new Categoria();
         categoria.setNombre("test1");
+        categoria.setStatus("AC");
         categoriaDao.saveCategoria(categoria);
         assertNotNull(categoria);
 
         this.mockMvc.perform(post(Constantes.PATH_CATEGORIA_ACTUALIZA)
                 .param("id", categoria.getId().toString())
+                .param("status", categoria.getStatus().toString())
                 .param("nombre", "test1")                )
                 .andExpect(status().isOk())
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
@@ -134,6 +144,7 @@ public class CategoriaControllerTest extends BaseTest {
         log.debug("Debiera eliminar categoria");
         Categoria categoria = new Categoria();
         categoria.setNombre("test");
+        categoria.setStatus("AC");
         categoriaDao.saveCategoria(categoria);
 
         this.mockMvc.perform(post(Constantes.PATH_CATEGORIA_ELIMINA).param("id", categoria.getId().toString())).

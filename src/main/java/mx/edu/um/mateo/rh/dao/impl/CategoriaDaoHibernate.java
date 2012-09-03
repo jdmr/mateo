@@ -132,6 +132,8 @@ public class CategoriaDaoHibernate extends BaseDao implements CategoriaDao {
           //  log.debug("{}", categoria);
          //   getSession().merge(categoria);
         getSession().saveOrUpdate(categoria);
+        currentSession().flush();
+        
         
 
     }
@@ -141,7 +143,9 @@ public class CategoriaDaoHibernate extends BaseDao implements CategoriaDao {
      */
     @Override
     public void removeCategoria(final Integer id) {
+        log.debug("removeCategoria");
         currentSession().delete(getCategoria(id));
+        currentSession().flush();
     }
     
 }
