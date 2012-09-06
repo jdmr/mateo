@@ -21,15 +21,17 @@
             </div>
         </c:if>
         <form action="<c:url value='/activoFijo/activo/depreciacionAcumuladaPorCentroDeCosto'/>" method="post" class="form-search">
-        <fieldset>
-            <div class="well">
-                <label for="fecha">
-                    <s:message code="fecha.label" />
-                </label>
-                <input type="text" name="fecha" id="fecha" value="${fecha}" />
-                <input type="submit" value="<s:message code='buscar.label' />" class="btn"/>
-            </div>
-        </fieldset>
+            <input type="hidden" name="hojaCalculo" id="hojaCalculo" value="0" />
+            <fieldset>
+                <div class="well">
+                    <label for="fecha">
+                        <s:message code="fecha.label" />
+                    </label>
+                    <input type="text" name="fecha" id="fecha" value="${fecha}" />
+                    <button type="submit" class="btn" name="submitBtn" id="submitBtn"><s:message code='buscar.label' /></button>
+                    <button type="submit" class="btn btn-success" name="hojaCalculoBtn" id="hojaCalculoBtn" ><s:message code='excel.label' /></button>
+                </div>
+            </fieldset>
         </form>
         <c:if test="${tiposDeActivo != null}">
             <table id="lista" class="table table-striped">
@@ -69,6 +71,14 @@
             <script>
                 $(document).ready(function() {
                     $("input#fecha").datepicker();
+                    $("button#hojaCalculoBtn").click(function() {
+                        $("input#hojaCalculo").val("1");
+                        return true;
+                    });
+                    $("button#submitBtn").click(function() {
+                        $("input#hojaCalculo").val("0");
+                        return true;
+                    });
                 });
             </script>
         </content>
