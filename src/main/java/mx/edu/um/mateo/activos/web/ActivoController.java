@@ -672,4 +672,41 @@ public class ActivoController extends BaseController {
         }
         return "activoFijo/activo/dia";
     }
+    
+    @RequestMapping("/concentrado/depreciacionPorCentroDeCosto")
+    public String concentradoDepreciacionPorCentroDeCosto(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Model modelo,
+            @RequestParam(required = false) String fecha,
+            @RequestParam(required = false) Byte hojaCalculo) throws ParseException, IOException {
+        log.debug("Concentrado de Depreciacion por Centro de Costo {}", fecha);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MM-yyyy");
+        if (fecha != null) {
+            Date date = sdf.parse(fecha);
+            Map<String, Object> params = new HashMap<>();
+            params.put("usuario", ambiente.obtieneUsuario());
+            params.put("fecha", date);
+            params = activoDao.concentradoDepreciacionPorCentroDeCosto(params);
+            if (hojaCalculo == 1) {
+                response.setContentType("application/vnd.ms-excel");
+                response.setHeader(
+                        "Content-disposition",
+                        "attachment; filename='concentradoDepreciacionPorCentroDeCosto-"+sdf2.format(date) +".xlsx'");
+                params.put("out", response.getOutputStream());
+//                activoDao.hojaCalculoDepreciacion(params);
+                return null;
+            }
+            modelo.addAllAttributes(params);
+            modelo.addAttribute("fecha", fecha);
+            modelo.addAttribute("fechaParam", sdf2.format(date));
+        } else {
+            modelo.addAttribute("fecha", sdf.format(new Date()));
+            modelo.addAttribute("fechaParam", sdf2.format(new Date()));
+
+        }
+        return "activoFijo/activo/concentradoDepreciacionPorCentroDeCosto";
+    }
+
 }

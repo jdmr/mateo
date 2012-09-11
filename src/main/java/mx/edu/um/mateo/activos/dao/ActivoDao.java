@@ -83,6 +83,9 @@ public interface ActivoDao {
             Map<String, Object> params);
 
     public Map<String, Object> reporteDIA(Integer anio, Usuario obtieneUsuario);
-    
+
     public void hojaCalculoDepreciacion(Map<String, Object> params);
+
+    public Map<String, Object> concentradoDepreciacionPorCentroDeCosto(
+            Map<String, Object> params);
 }

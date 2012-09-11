@@ -19,6 +19,7 @@
                 <h5><a href="<c:url value='/activoFijo/activo/depreciacionMensualPorCentroDeCosto' />"><s:message code="depreciacionMensualPorCentroDeCosto.label" arguments=" " /></a></h5>
                 <h5><a href="<c:url value='/activoFijo/activo/depreciacionAcumuladaPorGrupo' />"><s:message code="depreciacionAcumuladaPorGrupo.label" arguments=" " /></a></h5>
                 <h5><a href="<c:url value='/activoFijo/activo/dia' />"><s:message code="activo.dia.label" arguments=" " /></a></h5>
+                <h5><a href="<c:url value='/activoFijo/activo/concentrado/depreciacionPorCentroDeCosto' />"><s:message code="concentrado.depreciacionPorCentroDeCosto.label" arguments=" " /></a></h5>
             </div>
         </div>
             
