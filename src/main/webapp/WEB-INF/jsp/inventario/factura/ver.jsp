@@ -78,7 +78,7 @@
                             </div>
                         </form>
                     </c:if>
-                    <table class="table table-striped">
+                    <table class="table table-striped table-hover">
                         <thead>
                             <tr>
                                 <th><s:message code="folio.label" /></th>
@@ -145,7 +145,7 @@
                             </div>
                         </form>
                     </c:if>
-                    <table class="table table-striped">
+                    <table class="table table-striped table-hover">
                         <thead>
                             <tr>
                                 <th><s:message code="folio.label" /></th>

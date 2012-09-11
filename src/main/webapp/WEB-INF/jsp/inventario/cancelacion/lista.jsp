@@ -45,7 +45,7 @@
                 </div>
             </c:if>
             
-            <table id="lista" class="table table-striped">
+            <table id="lista" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >

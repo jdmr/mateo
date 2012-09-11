@@ -25,6 +25,7 @@ package mx.edu.um.mateo.activos.web;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -651,17 +652,23 @@ public class ActivoController extends BaseController {
     }
 
     @RequestMapping("/dia")
-    public String depreciacionAcumuladaPorGrupo(Model modelo,
+    public String dia(Model modelo,
             @RequestParam(required = false) Integer anio) throws ParseException {
         log.debug("Reporte DIA para el anio {}", anio);
+        NumberFormat nf = NumberFormat.getInstance();
+        nf.setGroupingUsed(false);
         if (anio != null) {
             Map<String, Object> params = activoDao.reporteDIA(anio,
                     ambiente.obtieneUsuario());
             modelo.addAllAttributes(params);
             modelo.addAttribute("anio", anio);
+            modelo.addAttribute("year", nf.format(anio));
         } else {
             Calendar cal = Calendar.getInstance();
-            modelo.addAttribute("anio", cal.get(Calendar.YEAR));
+            cal.add(Calendar.YEAR, -1);
+            int year = cal.get(Calendar.YEAR);
+            modelo.addAttribute("anio", year);
+            modelo.addAttribute("year", nf.format(year));
         }
         return "activoFijo/activo/dia";
     }

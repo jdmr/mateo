@@ -5,14 +5,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="activo.dia.label" /></title>
+        <title><s:message code="activo.dia.label" arguments="${year}" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
             <jsp:param name="menu" value="principal" />
         </jsp:include>
 
-        <h1><s:message code="activo.dia.label" /></h1>
+        <h1><s:message code="activo.dia.label" arguments="${year}" /></h1>
         <hr/>
         <c:if test="${not empty message}">
             <div class="alert alert-block alert-success fade in" role="status">
@@ -32,7 +32,7 @@
         </fieldset>
         </form>
         <c:if test="${lista != null}">
-            <table id="lista" class="table table-striped">
+            <table id="lista" class="table table-striped table-hover">
                 <thead>
                     <tr>
 
@@ -93,8 +93,5 @@
                 </tfoot>
             </table>
         </c:if>
-        <content>
-            <script src="<c:url value='/js/lista.js' />"></script>
-        </content>
     </body>
 </html>

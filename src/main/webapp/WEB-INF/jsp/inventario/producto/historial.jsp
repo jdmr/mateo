@@ -32,7 +32,7 @@
                 </div>
             </c:if>
             
-            <table id="lista" class="table table-striped">
+            <table id="lista" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th><s:message code="folio.label"/></th>

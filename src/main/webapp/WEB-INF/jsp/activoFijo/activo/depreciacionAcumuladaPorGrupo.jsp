@@ -5,14 +5,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="depreciacionAcumuladaPorGrupo.label" /></title>
+        <title><s:message code="depreciacionAcumuladaPorGrupo.label" arguments="${fecha}" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
             <jsp:param name="menu" value="principal" />
         </jsp:include>
 
-        <h1><s:message code="depreciacionAcumuladaPorGrupo.label" /></h1>
+        <h1><s:message code="depreciacionAcumuladaPorGrupo.label" arguments="${fecha}" /></h1>
         <hr/>
         <c:if test="${not empty message}">
             <div class="alert alert-block alert-success fade in" role="status">
@@ -34,7 +34,7 @@
             </fieldset>
         </form>
         <c:if test="${tiposDeActivo != null}">
-            <table id="lista" class="table table-striped">
+            <table id="lista" class="table table-striped table-hover">
                 <thead>
                     <tr>
 

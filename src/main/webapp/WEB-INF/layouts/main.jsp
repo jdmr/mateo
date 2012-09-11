@@ -45,7 +45,7 @@
                         <sitemesh:write property="nav"/>
                         <p class="navbar-text pull-right">
                             <s:message code="mensaje.bienvenida" /> <a href="<c:url value='/perfil' />"><%= request.getUserPrincipal().getName()%></a> 
-                            <a href="<c:url value='/salir' />"><i class="icon-off icon-white"></i></a></p>
+                            <a href="<c:url value='/salir' />"><i class="icon-off"></i></a></p>
                     </div><!--/.nav-collapse -->
                 </div>
             </div>
@@ -70,11 +70,12 @@
         <!-- JavaScript at the bottom for fast page loading -->
 
         <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="<c:url value='/js/jquery-1.7.1.min.js'/>"><\/script>')</script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="<c:url value='/js/jquery-1.8.1.min.js'/>"><\/script>')</script>
 
         <!-- end scripts -->        
-        <script src="<c:url value='/js/jquery-ui-1.8.17.custom.min.js' />"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+        <%--script src="<c:url value='/js/jquery-ui-1.8.17.custom.min.js' />"></script--%>
         <script src="<c:url value='/js/i18n/jquery.ui.datepicker-es.min.js' />"></script>
         <script src="<c:url value='/js/bootstrap.min.js' />"></script>
         <script src="<c:url value='/js/app.js' />"></script>
