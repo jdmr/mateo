@@ -25,13 +25,13 @@ package mx.edu.um.mateo.general.web;
 
 import java.util.List;
 import java.util.Map;
-
+import java.util.Set;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Rol;
@@ -40,7 +40,6 @@ import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.utils.SpringSecurityUtils;
 import mx.edu.um.mateo.general.utils.UltimoException;
-
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,266 +59,283 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- * 
+ *
  * @author jdmr
  */
 @Controller
 @RequestMapping("/admin/usuario")
 public class UsuarioController extends BaseController {
 
-	@Autowired
-	private UsuarioDao usuarioDao;
-	@Autowired
-	private SpringSecurityUtils springSecurityUtils;
+    @Autowired
+    private UsuarioDao usuarioDao;
+    @Autowired
+    private SpringSecurityUtils springSecurityUtils;
 
-	@SuppressWarnings("unchecked")
-	@RequestMapping
-	public String lista(HttpServletRequest request,
-			HttpServletResponse response,
-			@RequestParam(required = false) String filtro,
-			@RequestParam(required = false) Long pagina,
-			@RequestParam(required = false) String tipo,
-			@RequestParam(required = false) String correo,
-			@RequestParam(required = false) String order,
-			@RequestParam(required = false) String sort, Model modelo) {
-		log.debug("Mostrando lista de usuarios");
-		Map<String, Object> params = this.convierteParams(request
-				.getParameterMap());
-		Long empresaId = (Long) request.getSession().getAttribute("empresaId");
-		params.put("empresa", empresaId);
+    @SuppressWarnings("unchecked")
+    @RequestMapping
+    public String lista(HttpServletRequest request,
+            HttpServletResponse response,
+            @RequestParam(required = false) String filtro,
+            @RequestParam(required = false) Long pagina,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) String sort, Model modelo) {
+        log.debug("Mostrando lista de usuarios");
+        Map<String, Object> params = this.convierteParams(request
+                .getParameterMap());
+        Long empresaId = (Long) request.getSession().getAttribute("empresaId");
+        params.put("empresa", empresaId);
 
-		if (StringUtils.isNotBlank(tipo)) {
-			params.put("reporte", true);
-			params = usuarioDao.lista(params);
-			try {
-				generaReporte(tipo, (List<Usuario>) params.get("usuarios"),
-						response, "usuarios", Constantes.EMP, empresaId);
-				return null;
-			} catch (ReporteException e) {
-				log.error("No se pudo generar el reporte", e);
-			}
-		}
+        if (StringUtils.isNotBlank(tipo)) {
+            params.put("reporte", true);
+            params = usuarioDao.lista(params);
+            try {
+                generaReporte(tipo, (List<Usuario>) params.get("usuarios"),
+                        response, "usuarios", Constantes.EMP, empresaId);
+                return null;
+            } catch (ReporteException e) {
+                log.error("No se pudo generar el reporte", e);
+            }
+        }
 
-		if (StringUtils.isNotBlank(correo)) {
-			params.put("reporte", true);
-			params = usuarioDao.lista(params);
+        if (StringUtils.isNotBlank(correo)) {
+            params.put("reporte", true);
+            params = usuarioDao.lista(params);
 
-			params.remove("reporte");
-			try {
-				enviaCorreo(correo, (List<Usuario>) params.get("usuarios"),
-						request, "usuarios", Constantes.EMP, empresaId);
-				modelo.addAttribute("message", "lista.enviada.message");
-				modelo.addAttribute(
-						"messageAttrs",
-						new String[] {
-								messageSource.getMessage("usuario.lista.label",
-										null, request.getLocale()),
-								ambiente.obtieneUsuario().getUsername() });
-			} catch (ReporteException e) {
-				log.error("No se pudo enviar el reporte por correo", e);
-			}
-		}
-		params = usuarioDao.lista(params);
-		modelo.addAttribute("usuarios", params.get("usuarios"));
+            params.remove("reporte");
+            try {
+                enviaCorreo(correo, (List<Usuario>) params.get("usuarios"),
+                        request, "usuarios", Constantes.EMP, empresaId);
+                modelo.addAttribute("message", "lista.enviada.message");
+                modelo.addAttribute(
+                        "messageAttrs",
+                        new String[]{
+                            messageSource.getMessage("usuario.lista.label",
+                            null, request.getLocale()),
+                            ambiente.obtieneUsuario().getUsername()});
+            } catch (ReporteException e) {
+                log.error("No se pudo enviar el reporte por correo", e);
+            }
+        }
+        params = usuarioDao.lista(params);
+        modelo.addAttribute("usuarios", params.get("usuarios"));
 
-		this.pagina(params, modelo, "usuarios", pagina);
+        this.pagina(params, modelo, "usuarios", pagina);
 
-		return "admin/usuario/lista";
-	}
+        return "admin/usuario/lista";
+    }
 
-	@RequestMapping("/ver/{id}")
-	public String ver(@PathVariable Long id, Model modelo) {
-		log.debug("Mostrando usuario {}", id);
-		Usuario usuario = usuarioDao.obtiene(id);
-		List<Rol> roles = usuarioDao.roles();
+    @RequestMapping("/ver/{id}")
+    public String ver(@PathVariable Long id, Model modelo) {
+        log.debug("Mostrando usuario {}", id);
+        Usuario usuario = usuarioDao.obtiene(id);
+        List<Rol> roles = usuarioDao.roles();
 
-		modelo.addAttribute("usuario", usuario);
-		modelo.addAttribute("roles", roles);
+        modelo.addAttribute("usuario", usuario);
+        modelo.addAttribute("roles", roles);
 
-		return "admin/usuario/ver";
-	}
+        return "admin/usuario/ver";
+    }
 
-	@RequestMapping("/nuevo")
-	public String nuevo(Model modelo) {
-		log.debug("Nuevo usuario");
-		List<Rol> roles = obtieneRoles();
-		Usuario usuario = new Usuario();
-		modelo.addAttribute("usuario", usuario);
-		modelo.addAttribute("roles", roles);
-		List<Ejercicio> ejercicios = usuarioDao.obtieneEjercicios(ambiente
-				.obtieneUsuario().getEmpresa().getOrganizacion().getId());
-		modelo.addAttribute("ejercicios", ejercicios);
-                modelo.addAttribute("enviaCorreo", Boolean.TRUE);
-		return "admin/usuario/nuevo";
-	}
+    @RequestMapping("/nuevo")
+    public String nuevo(Model modelo) {
+        log.debug("Nuevo usuario");
+        List<Rol> roles = obtieneRoles();
+        Usuario usuario = new Usuario();
+        modelo.addAttribute("usuario", usuario);
+        modelo.addAttribute("roles", roles);
+        List<Ejercicio> ejercicios = usuarioDao.obtieneEjercicios(ambiente
+                .obtieneUsuario().getEmpresa().getOrganizacion().getId());
+        modelo.addAttribute("ejercicios", ejercicios);
+        modelo.addAttribute("enviaCorreo", Boolean.TRUE);
+        return "admin/usuario/nuevo";
+    }
 
-	@Transactional
-	@RequestMapping(value = "/crea", method = RequestMethod.POST)
-	public String crea(HttpServletRequest request,
-			HttpServletResponse response, @Valid Usuario usuario,
-			BindingResult bindingResult, Errors errors, Model modelo,
-			RedirectAttributes redirectAttributes,
-                        @RequestParam Boolean enviaCorreo) {
-		for (String nombre : request.getParameterMap().keySet()) {
-			log.debug("Param: {} : {}", nombre,
-					request.getParameterMap().get(nombre));
-		}
-		if (bindingResult.hasErrors()) {
-			log.debug("Hubo algun error en la forma, regresando");
-			List<Rol> roles = obtieneRoles();
-			modelo.addAttribute("roles", roles);
-			return "admin/usuario/nuevo";
-		}
+    @Transactional
+    @RequestMapping(value = "/crea", method = RequestMethod.POST)
+    public String crea(HttpServletRequest request,
+            HttpServletResponse response, @Valid Usuario usuario,
+            BindingResult bindingResult, Errors errors, Model modelo,
+            RedirectAttributes redirectAttributes,
+            @RequestParam Boolean enviaCorreo) {
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre,
+                    request.getParameterMap().get(nombre));
+        }
+        if (bindingResult.hasErrors()) {
+            log.debug("Hubo algun error en la forma, regresando");
+            List<Rol> roles = obtieneRoles();
+            modelo.addAttribute("roles", roles);
+            return "admin/usuario/nuevo";
+        }
 
-		String password = null;
-		try {
-			log.debug("Evaluando roles {}", request.getParameterValues("roles"));
-			String[] roles = request.getParameterValues("roles");
-			if (roles == null || roles.length == 0) {
-				log.debug("Asignando ROLE_USER por defecto");
-				roles = new String[] { "ROLE_USER" };
-			}
-			Long almacenId = (Long) request.getSession().getAttribute(
-					"almacenId");
-			password = KeyGenerators.string().generateKey();
-			usuario.setPassword(password);
-			usuario = usuarioDao.crea(usuario, almacenId, roles);
+        String password = null;
+        try {
+            log.debug("Evaluando roles {}", request.getParameterValues("roles"));
+            String[] roles = request.getParameterValues("roles");
+            if (roles == null || roles.length == 0) {
+                log.debug("Asignando ROLE_USER por defecto");
+                roles = new String[]{"ROLE_USER"};
+            }
+            Long almacenId = (Long) request.getSession().getAttribute(
+                    "almacenId");
+            password = KeyGenerators.string().generateKey();
+            usuario.setPassword(password);
+            usuario = usuarioDao.crea(usuario, almacenId, roles);
 
-                        if (enviaCorreo) {
-                            MimeMessage message = mailSender.createMimeMessage();
-                            MimeMessageHelper helper = new MimeMessageHelper(message, true);
-                            helper.setTo(usuario.getCorreo());
-                            helper.setSubject(messageSource.getMessage(
-                                            "envia.correo.password.titulo.message", new String[] {},
-                                            request.getLocale()));
-                            helper.setText(messageSource.getMessage(
-                                            "envia.correo.password.contenido.message", new String[] {
-                                                            usuario.getNombre(), usuario.getUsername(),
-                                                            password }, request.getLocale()), true);
-                            mailSender.send(message);
-                        }
+            if (enviaCorreo) {
+                MimeMessage message = mailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(message, true);
+                helper.setTo(usuario.getCorreo());
+                helper.setSubject(messageSource.getMessage(
+                        "envia.correo.password.titulo.message", new String[]{},
+                        request.getLocale()));
+                helper.setText(messageSource.getMessage(
+                        "envia.correo.password.contenido.message", new String[]{
+                            usuario.getNombre(), usuario.getUsername(),
+                            password}, request.getLocale()), true);
+                mailSender.send(message);
+            }
 
-		} catch (ConstraintViolationException e) {
-			log.error("No se pudo crear al usuario", e);
-			errors.rejectValue("username", "campo.duplicado.message",
-					new String[] { "username" }, null);
-			List<Rol> roles = obtieneRoles();
-			modelo.addAttribute("roles", roles);
-			return "admin/usuario/nuevo";
-		} catch (MessagingException e) {
-			log.error("No se pudo enviar la contrasena por correo", e);
+        } catch (ConstraintViolationException e) {
+            log.error("No se pudo crear al usuario", e);
+            errors.rejectValue("username", "campo.duplicado.message",
+                    new String[]{"username"}, null);
+            List<Rol> roles = obtieneRoles();
+            modelo.addAttribute("roles", roles);
+            return "admin/usuario/nuevo";
+        } catch (MessagingException e) {
+            log.error("No se pudo enviar la contrasena por correo", e);
 
-			redirectAttributes.addFlashAttribute("message",
-					"usuario.creado.sin.correo.message");
-			redirectAttributes.addFlashAttribute("messageAttrs", new String[] {
-					usuario.getUsername(), password });
+            redirectAttributes.addFlashAttribute("message",
+                    "usuario.creado.sin.correo.message");
+            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{
+                        usuario.getUsername(), password});
 
-			return "redirect:/admin/usuario/ver/" + usuario.getId();
-		}
+            return "redirect:/admin/usuario/ver/" + usuario.getId();
+        }
 
-		redirectAttributes.addFlashAttribute("message",
-				"usuario.creado.message");
-		redirectAttributes.addFlashAttribute("messageAttrs",
-				new String[] { usuario.getUsername() });
+        redirectAttributes.addFlashAttribute("message",
+                "usuario.creado.message");
+        redirectAttributes.addFlashAttribute("messageAttrs",
+                new String[]{usuario.getUsername()});
 
-		return "redirect:/admin/usuario/ver/" + usuario.getId();
-	}
+        return "redirect:/admin/usuario/ver/" + usuario.getId();
+    }
 
-	@RequestMapping("/edita/{id}")
-	public String edita(@PathVariable Long id, Model modelo) {
-		log.debug("Edita usuario {}", id);
-		List<Rol> roles = obtieneRoles();
-		Usuario usuario = usuarioDao.obtiene(id);
-		modelo.addAttribute("usuario", usuario);
-		modelo.addAttribute("roles", roles);
-		return "admin/usuario/edita";
-	}
+    @RequestMapping("/edita/{id}")
+    public String edita(@PathVariable Long id, Model modelo) {
+        log.debug("Edita usuario {}", id);
+        Usuario usuario = usuarioDao.obtiene(id);
+        List<CentroCosto> centrosDeCosto = usuarioDao.obtieneCentrosDeCosto(usuario.getEjercicio());
+        for(CentroCosto centroCosto : centrosDeCosto) {
+            if (usuario.getCentrosDeCosto().contains(centroCosto)) {
+                centroCosto.setSeleccionado(Boolean.TRUE);
+            }
+        }
+        modelo.addAttribute("centrosDeCosto", centrosDeCosto);
+        
+        List<Rol> roles = obtieneRoles();
+        for (Rol rol : usuario.getRoles()) {
+            log.debug("ROL: {}", rol.getAuthority());
+            if (rol.getAuthority().equals("ROLE_JEFE")) {
+                modelo.addAttribute("esJefe", Boolean.TRUE);
+                break;
+            }
+        }
 
-	@Transactional
-	@RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-	public String actualiza(HttpServletRequest request, @Valid Usuario usuario,
-			BindingResult bindingResult, Errors errors, Model modelo,
-			RedirectAttributes redirectAttributes) {
-		if (bindingResult.hasErrors()) {
-			log.error("Hubo algun error en la forma, regresando");
-			List<Rol> roles = obtieneRoles();
-			modelo.addAttribute("roles", roles);
-			return "admin/usuario/edita";
-		}
+        modelo.addAttribute("usuario", usuario);
+        modelo.addAttribute("roles", roles);
 
-		try {
-			String[] roles = request.getParameterValues("roles");
-			if (roles == null || roles.length == 0) {
-				roles = new String[] { "ROLE_USER" };
-			}
-			Long almacenId = (Long) request.getSession().getAttribute(
-					"almacenId");
-			usuario = usuarioDao.actualiza(usuario, almacenId, roles);
-		} catch (ConstraintViolationException e) {
-			log.error("No se pudo crear al usuario", e);
-			errors.rejectValue("username", "campo.duplicado.message",
-					new String[] { "username" }, null);
-			List<Rol> roles = obtieneRoles();
-			modelo.addAttribute("roles", roles);
-			return "admin/usuario/edita";
-		}
+        return "admin/usuario/edita";
+    }
 
-		redirectAttributes.addFlashAttribute("message",
-				"usuario.actualizado.message");
-		redirectAttributes.addFlashAttribute("messageAttrs",
-				new String[] { usuario.getUsername() });
+    @Transactional
+    @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
+    public String actualiza(HttpServletRequest request, @Valid Usuario usuario,
+            BindingResult bindingResult, Errors errors, Model modelo,
+            RedirectAttributes redirectAttributes,
+            @RequestParam(required=false) String[] centrosDeCostoIds) {
+        if (bindingResult.hasErrors()) {
+            log.error("Hubo algun error en la forma, regresando");
+            List<Rol> roles = obtieneRoles();
+            modelo.addAttribute("roles", roles);
+            return "admin/usuario/edita";
+        }
 
-		return "redirect:/admin/usuario/ver/" + usuario.getId();
-	}
+        try {
+            String[] roles = request.getParameterValues("roles");
+            if (roles == null || roles.length == 0) {
+                roles = new String[]{"ROLE_USER"};
+            }
+            Long almacenId = (Long) request.getSession().getAttribute(
+                    "almacenId");
+            usuario = usuarioDao.actualiza(usuario, almacenId, roles, centrosDeCostoIds);
+        } catch (ConstraintViolationException e) {
+            log.error("No se pudo crear al usuario", e);
+            errors.rejectValue("username", "campo.duplicado.message",
+                    new String[]{"username"}, null);
+            List<Rol> roles = obtieneRoles();
+            modelo.addAttribute("roles", roles);
+            return "admin/usuario/edita";
+        }
 
-	@Transactional
-	@RequestMapping(value = "/elimina", method = RequestMethod.POST)
-	public String elimina(@RequestParam Long id, Model modelo,
-			@ModelAttribute Usuario usuario, BindingResult bindingResult,
-			RedirectAttributes redirectAttributes) {
-		log.debug("Elimina usuario");
-		try {
-			String nombre = usuarioDao.elimina(id);
-			redirectAttributes.addFlashAttribute("message",
-					"usuario.eliminado.message");
-			redirectAttributes.addFlashAttribute("messageAttrs",
-					new String[] { nombre });
-		} catch (UltimoException e) {
-			log.error("No se pudo eliminar el usuario " + id, e);
-			bindingResult.addError(new ObjectError("usuario",
-					new String[] { "ultimo.usuario.no.eliminado.message" },
-					null, null));
-			List<Rol> roles = usuarioDao.roles();
-			modelo.addAttribute("roles", roles);
-			return "admin/usuario/ver";
-		} catch (Exception e) {
-			log.error("No se pudo eliminar el usuario " + id, e);
-			bindingResult
-					.addError(new ObjectError("usuario",
-							new String[] { "usuario.no.eliminado.message" },
-							null, null));
-			List<Rol> roles = usuarioDao.roles();
-			modelo.addAttribute("roles", roles);
-			return "admin/usuario/ver";
-		}
+        redirectAttributes.addFlashAttribute("message",
+                "usuario.actualizado.message");
+        redirectAttributes.addFlashAttribute("messageAttrs",
+                new String[]{usuario.getUsername()});
 
-		return "redirect:/admin/usuario";
-	}
+        return "redirect:/admin/usuario/ver/" + usuario.getId();
+    }
 
-	private List<Rol> obtieneRoles() {
-		List<Rol> roles = usuarioDao.roles();
-		if (springSecurityUtils.ifAnyGranted("ROLE_ADMIN")) {
-			// no se hace nada
-		} else if (springSecurityUtils.ifAnyGranted("ROLE_ORG")) {
-			roles.remove(new Rol("ROLE_ADMIN"));
-			roles.remove(new Rol("ROLE_ORG"));
-		} else {
-			roles.remove(new Rol("ROLE_ADMIN"));
-			roles.remove(new Rol("ROLE_ORG"));
-			roles.remove(new Rol("ROLE_EMP"));
-		}
+    @Transactional
+    @RequestMapping(value = "/elimina", method = RequestMethod.POST)
+    public String elimina(@RequestParam Long id, Model modelo,
+            @ModelAttribute Usuario usuario, BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
+        log.debug("Elimina usuario");
+        try {
+            String nombre = usuarioDao.elimina(id);
+            redirectAttributes.addFlashAttribute("message",
+                    "usuario.eliminado.message");
+            redirectAttributes.addFlashAttribute("messageAttrs",
+                    new String[]{nombre});
+        } catch (UltimoException e) {
+            log.error("No se pudo eliminar el usuario " + id, e);
+            bindingResult.addError(new ObjectError("usuario",
+                    new String[]{"ultimo.usuario.no.eliminado.message"},
+                    null, null));
+            List<Rol> roles = usuarioDao.roles();
+            modelo.addAttribute("roles", roles);
+            return "admin/usuario/ver";
+        } catch (Exception e) {
+            log.error("No se pudo eliminar el usuario " + id, e);
+            bindingResult
+                    .addError(new ObjectError("usuario",
+                    new String[]{"usuario.no.eliminado.message"},
+                    null, null));
+            List<Rol> roles = usuarioDao.roles();
+            modelo.addAttribute("roles", roles);
+            return "admin/usuario/ver";
+        }
 
-		return roles;
-	}
+        return "redirect:/admin/usuario";
+    }
 
+    private List<Rol> obtieneRoles() {
+        List<Rol> roles = usuarioDao.roles();
+        if (springSecurityUtils.ifAnyGranted("ROLE_ADMIN")) {
+            // no se hace nada
+        } else if (springSecurityUtils.ifAnyGranted("ROLE_ORG")) {
+            roles.remove(new Rol("ROLE_ADMIN"));
+            roles.remove(new Rol("ROLE_ORG"));
+        } else {
+            roles.remove(new Rol("ROLE_ADMIN"));
+            roles.remove(new Rol("ROLE_ORG"));
+            roles.remove(new Rol("ROLE_EMP"));
+        }
+
+        return roles;
+    }
 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2012 jdmr.
+ * Copyright 2012 Universidad de Montemorelos A. C.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,34 +23,19 @@
  */
 package mx.edu.um.mateo.general.web;
 
-import javax.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  *
- * @author jdmr
+ * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Controller
-public class InicioController {
-
-    private static final Logger log = LoggerFactory
-            .getLogger(InicioController.class);
-
-    @RequestMapping({"/", "/inicio"})
-    public String inicio(HttpServletRequest request) {
-        log.debug("Cargando pagina de inicio");
-        if (request.isUserInRole("ROLE_JEFE")) {
-            return "redirect:/jefe";
-        }
-        return "inicio/index";
-    }
-
-    @RequestMapping("/login/auth")
-    public String otraEntrada() {
-        log.debug("Entrando por entrada anterior");
-        return "redirect:/inicio";
+@RequestMapping("/jefe")
+public class JefeController {
+    
+    @RequestMapping
+    public String index() {
+        return "jefe/index";
     }
 }

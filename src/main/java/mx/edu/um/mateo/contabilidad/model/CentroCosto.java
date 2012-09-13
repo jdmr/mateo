@@ -25,146 +25,157 @@ package mx.edu.um.mateo.contabilidad.model;
 
 import java.io.Serializable;
 import java.util.Objects;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 /**
- * 
+ *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
 @Table(name = "cont_ccosto")
 public class CentroCosto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1471080942869622597L;
-	@Id
-	private CCostoPK id;
-	@Version
-	private Integer version;
-	@Column(length = 60, nullable = false)
-	private String nombre;
-	@Column(length = 1, nullable = false)
-	private String detalle;
-	@Column(length = 5)
-	private String iniciales;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1471080942869622597L;
+    @Id
+    private CCostoPK id;
+    @Version
+    private Integer version;
+    @Column(length = 60, nullable = false)
+    private String nombre;
+    @Column(length = 1, nullable = false)
+    private String detalle;
+    @Column(length = 5)
+    private String iniciales;
+    @Transient
+    private Boolean seleccionado = Boolean.FALSE;
 
-	public CentroCosto() {
-	}
+    public CentroCosto() {
+    }
 
-	/**
-	 * @return the id
-	 */
-	public CCostoPK getId() {
-		return id;
-	}
+    /**
+     * @return the id
+     */
+    public CCostoPK getId() {
+        return id;
+    }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(CCostoPK id) {
-		this.id = id;
-	}
+    /**
+     * @param id the id to set
+     */
+    public void setId(CCostoPK id) {
+        this.id = id;
+    }
 
-	/**
-	 * @return the version
-	 */
-	public Integer getVersion() {
-		return version;
-	}
+    /**
+     * @return the version
+     */
+    public Integer getVersion() {
+        return version;
+    }
 
-	/**
-	 * @param version
-	 *            the version to set
-	 */
-	public void setVersion(Integer version) {
-		this.version = version;
-	}
+    /**
+     * @param version the version to set
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 
-	/**
-	 * @return the nombre
-	 */
-	public String getNombre() {
-		return nombre;
-	}
+    /**
+     * @return the nombre
+     */
+    public String getNombre() {
+        return nombre;
+    }
 
-	/**
-	 * @param nombre
-	 *            the nombre to set
-	 */
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+    /**
+     * @param nombre the nombre to set
+     */
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-	/**
-	 * @return the detalle
-	 */
-	public String getDetalle() {
-		return detalle;
-	}
+    /**
+     * @return the detalle
+     */
+    public String getDetalle() {
+        return detalle;
+    }
 
-	/**
-	 * @param detalle
-	 *            the detalle to set
-	 */
-	public void setDetalle(String detalle) {
-		this.detalle = detalle;
-	}
+    /**
+     * @param detalle the detalle to set
+     */
+    public void setDetalle(String detalle) {
+        this.detalle = detalle;
+    }
 
-	/**
-	 * @return the iniciales
-	 */
-	public String getIniciales() {
-		return iniciales;
-	}
+    /**
+     * @return the iniciales
+     */
+    public String getIniciales() {
+        return iniciales;
+    }
 
-	/**
-	 * @param iniciales
-	 *            the iniciales to set
-	 */
-	public void setIniciales(String iniciales) {
-		this.iniciales = iniciales;
-	}
+    /**
+     * @param iniciales the iniciales to set
+     */
+    public void setIniciales(String iniciales) {
+        this.iniciales = iniciales;
+    }
 
-	public String getNombreCompleto() {
-		return id.getIdCosto() + " | " + nombre;
-	}
+    public String getNombreCompleto() {
+        return id.getIdCosto() + " | " + nombre;
+    }
 
-	@Override
-	public int hashCode() {
-		int hash = 3;
-		hash = 29 * hash + Objects.hashCode(this.id);
-		hash = 29 * hash + Objects.hashCode(this.version);
-		hash = 29 * hash + Objects.hashCode(this.nombre);
-		return hash;
-	}
+    /**
+     * @return the seleccionado
+     */
+    public Boolean getSeleccionado() {
+        return seleccionado;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final CentroCosto other = (CentroCosto) obj;
-		if (!Objects.equals(this.id, other.id)) {
-			return false;
-		}
-		return true;
-	}
+    /**
+     * @param seleccionado the seleccionado to set
+     */
+    public void setSeleccionado(Boolean seleccionado) {
+        this.seleccionado = seleccionado;
+    }
 
-	@Override
-	public String toString() {
-		return "CentroCosto{" + "id=" + id + ", version=" + version
-				+ ", nombre=" + nombre + ", detalle=" + detalle
-				+ ", iniciales=" + iniciales + '}';
-	}
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 29 * hash + Objects.hashCode(this.id);
+        hash = 29 * hash + Objects.hashCode(this.version);
+        hash = 29 * hash + Objects.hashCode(this.nombre);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final CentroCosto other = (CentroCosto) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "CentroCosto{" + "id=" + id + ", version=" + version
+                + ", nombre=" + nombre + ", detalle=" + detalle
+                + ", iniciales=" + iniciales + '}';
+    }
 }

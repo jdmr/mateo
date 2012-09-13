@@ -57,7 +57,9 @@
             <beans:value>
                 ROLE_ADMIN > ROLE_ORG
                 ROLE_ORG   > ROLE_EMP
+                ROLE_ORG   > ROLE_JEFE
                 ROLE_EMP   > ROLE_USER
+                ROLE_JEFE  > ROLE_USER
                 ROLE_USER  > ROLE_AUTHENTICATED
                 ROLE_AUTHENTICATED > ROLE_UNAUTHENTICATED
             </beans:value>

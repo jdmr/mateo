@@ -27,7 +27,8 @@
         <link rel="apple-touch-icon" sizes="114x114" href="<c:url value='/images/apple-touch-icon-retina.png' />">
         <link rel="stylesheet" href="<c:url value='/css/bootstrap.min.css' />" type="text/css">
         <link rel="stylesheet" href="<c:url value='/css/bootstrap-responsive.min.css' />" type="text/css">
-        <link rel="stylesheet" href="<c:url value='/css/custom-theme/jquery-ui-1.8.17.custom.css' />" type="text/css">
+        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/themes/base/jquery-ui.css" type="text/css" media="all" />
+        <%--link rel="stylesheet" href="<c:url value='/css/custom-theme/jquery-ui-1.8.17.custom.css' />" type="text/css"--%>
         <link rel="stylesheet" href="<c:url value='/css/app.css' />" type="text/css">
         <sitemesh:write property='head'/>
     </head>

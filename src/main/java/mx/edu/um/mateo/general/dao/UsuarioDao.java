@@ -25,7 +25,8 @@ package mx.edu.um.mateo.general.dao;
 
 import java.util.List;
 import java.util.Map;
-
+import java.util.Set;
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -53,6 +54,9 @@ public interface UsuarioDao {
 	public Usuario actualiza(Usuario usuario, Long almacenId,
 			String[] nombreDeRoles);
 
+	public Usuario actualiza(Usuario usuario, Long almacenId,
+			String[] nombreDeRoles, String[] centrosDeCostoIds);
+
 	public void actualiza(Usuario usuario);
 
 	public String elimina(Long id) throws UltimoException;
@@ -65,4 +69,8 @@ public interface UsuarioDao {
 			String ejercicioId);
 
 	public List<Ejercicio> obtieneEjercicios(Long organizacionId);
+        
+        public List<CentroCosto> obtieneCentrosDeCosto(Ejercicio ejercicio);
+        
+        public Set<CentroCosto> obtieneCentrosDeCosto(Ejercicio ejercicio, String[] centrosDeCostoIds);
 }

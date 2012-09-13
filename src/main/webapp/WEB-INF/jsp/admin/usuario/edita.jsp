@@ -12,6 +12,7 @@
 <html>
     <head>
         <title><s:message code="usuario.edita.label" /></title>
+        <link rel="stylesheet" href="<c:url value='/css/chosen.css' />" type="text/css">
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -90,6 +91,16 @@
                             <form:errors path="authorities" cssClass="errors" />
                         </div>
                     </s:bind>
+                    <div id="centrosDeCostoDiv" class="control-group" <c:if test="${esJefe==null}">style="display:none;"</c:if>>
+                        <label for="centrosDeCostoIds">
+                            <s:message code="centrosDeCosto.label" />
+                        </label>
+                        <select name="centrosDeCostoIds" id="centrosDeCostoIds" multiple="true" class="span6">
+                            <c:forEach items="${centrosDeCosto}" var="centroCosto">
+                                <option value="${centroCosto.id.idCosto}" <c:if test="${centroCosto.seleccionado}">selected="selected"</c:if> >${centroCosto.nombreCompleto}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
@@ -99,8 +110,14 @@
             </form:form>
         </div>
         <content>
+            <script src="<c:url value='/js/chosen.jquery.min.js' />"></script>
             <script>
                 $(document).ready(function() {
+                    $('select#centrosDeCostoIds').chosen();
+                    $('input#roles4').change(function() {
+                        //mostrar centros de costo
+                        $('div#centrosDeCostoDiv').toggle('slow');
+                    });
                     $('input#username').focus();
                 });
             </script>                    
