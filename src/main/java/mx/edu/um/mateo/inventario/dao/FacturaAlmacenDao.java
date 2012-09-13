@@ -25,7 +25,6 @@ package mx.edu.um.mateo.inventario.dao;
 
 import java.util.List;
 import java.util.Map;
-
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inventario.model.Entrada;
 import mx.edu.um.mateo.inventario.model.FacturaAlmacen;
@@ -74,13 +73,13 @@ public interface FacturaAlmacenDao {
 	public String elimina(Long id, Usuario usuario)
 			throws NoEstaAbiertaException;
 
-	public FacturaAlmacen agregaSalida(Long facturaId, Long salidaId);
+	public FacturaAlmacen agregaSalida(Long facturaId, Long salidaId) throws NoEstaAbiertaException;
 
-	public FacturaAlmacen agregaEntrada(Long facturaId, Long entradaId);
+	public FacturaAlmacen agregaEntrada(Long facturaId, Long entradaId) throws NoEstaAbiertaException;
 
-	public FacturaAlmacen eliminaSalida(Long facturaId, Long salidaId);
+	public FacturaAlmacen eliminaSalida(Long facturaId, Long salidaId) throws NoEstaAbiertaException;
 
-	public FacturaAlmacen eliminaEntrada(Long facturaId, Long entradaId);
+	public FacturaAlmacen eliminaEntrada(Long facturaId, Long entradaId) throws NoEstaAbiertaException;
 
 	public List<Salida> salidas(Long facturaId);
 
