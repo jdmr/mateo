@@ -21,7 +21,7 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author osoto
  */
 @Entity
-@Table(name = "seccion")
+@Table(name = "puesto")
 public class Puesto implements Serializable {
 	/**
 	 * 
@@ -31,8 +31,24 @@ public class Puesto implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	@NotBlank
-	@Column(nullable = false, length = 50)
-	private String nombre;
+	@Column(nullable = false, length = 150, unique=true)
+	private String descripcion;
+        @NotBlank
+	@Column(nullable = false)
+        private Integer categoria;
+        @NotBlank
+	@Column(nullable = false)
+        private Integer seccion;
+        @NotBlank
+	@Column(nullable = false)
+        private Integer minima;
+        @NotBlank
+	@Column(nullable = false)
+        private Integer maxima;
+        @Column(nullable = false, length = 2)
+        private String status;
+        @Column
+        private Double rangoAcademico;
 	@Version
 	private Integer version;
 
@@ -43,43 +59,71 @@ public class Puesto implements Serializable {
 		return id;
 	}
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public String getDescripcion() {
+        return descripcion;
+    }
 
-	/**
-	 * @return the nombre
-	 */
-	public String getNombre() {
-		return nombre;
-	}
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
-	/**
-	 * @param nombre
-	 *            the nombre to set
-	 */
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+    public Integer getCategoria() {
+        return categoria;
+    }
 
-	/**
-	 * @return the version
-	 */
-	public Integer getVersion() {
-		return version;
-	}
+    public void setCategoria(Integer categoria) {
+        this.categoria = categoria;
+    }
 
-	/**
-	 * @param version
-	 *            the version to set
-	 */
-	public void setVersion(Integer version) {
-		this.version = version;
-	}
+    public Integer getSeccion() {
+        return seccion;
+    }
+
+    public void setSeccion(Integer seccion) {
+        this.seccion = seccion;
+    }
+
+    public Integer getMinima() {
+        return minima;
+    }
+
+    public void setMinima(Integer minima) {
+        this.minima = minima;
+    }
+
+    public Integer getMaxima() {
+        return maxima;
+    }
+
+    public void setMaxima(Integer maxima) {
+        this.maxima = maxima;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Double getRangoAcademico() {
+        return rangoAcademico;
+    }
+
+    public void setRangoAcademico(Double rangoAcademico) {
+        this.rangoAcademico = rangoAcademico;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+	
 
 	@Override
 	public boolean equals(Object obj) {
@@ -105,10 +149,11 @@ public class Puesto implements Serializable {
 		return hash;
 	}
 
-	@Override
-	public String toString() {
-		return "Seccion{" + "id=" + id + ", nombre=" + nombre + ", version="
-				+ version + '}';
-	}
+    @Override
+    public String toString() {
+        return "Puesto{" + "id=" + id + ", descripcion=" + descripcion + ", categoria=" + categoria + ", seccion=" + seccion + ", minima=" + minima + ", maxima=" + maxima + ", status=" + status + ", rangoAcademico=" + rangoAcademico + ", version=" + version + '}';
+    }
+
+	
 
 }
