@@ -18,7 +18,7 @@ import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
-import mx.edu.um.mateo.rh.model.Seccion;
+import mx.edu.um.mateo.rh.model.Puesto;
 import mx.edu.um.mateo.rh.service.SeccionManager;
 
 import org.apache.commons.lang.StringUtils;
@@ -62,7 +62,7 @@ public class SeccionController extends BaseController {
 		log.debug("Mostrando secciones {}");
 
 		Map<String, Object> params = new HashMap<>();
-		Seccion seccion = null;
+		Puesto seccion = null;
 
 		Long organizacionId = (Long) request.getSession().getAttribute(
 				"organizacionId");
@@ -80,7 +80,7 @@ public class SeccionController extends BaseController {
 			params = mgr.getSecciones(seccion);
 			try {
 				generaReporte(tipo,
-						(List<Seccion>) params.get(Constants.SECCION_LIST),
+						(List<Puesto>) params.get(Constants.SECCION_LIST),
 						response, Constants.SECCION_LIST,
 						mx.edu.um.mateo.general.utils.Constantes.ORG,
 						organizacionId);
@@ -129,7 +129,7 @@ public class SeccionController extends BaseController {
 	public String ver(@PathVariable Long id, Model modelo) {
 		log.debug("Mostrando seccion {}", id);
 
-		Seccion seccion = mgr.getSeccion(id.toString());
+		Puesto seccion = mgr.getSeccion(id.toString());
 
 		modelo.addAttribute(Constants.SECCION_LIST, seccion);
 
@@ -140,7 +140,7 @@ public class SeccionController extends BaseController {
 	public String nueva(Model modelo) {
 		log.debug("Nueva seccion");
 
-		Seccion seccion = new Seccion();
+		Puesto seccion = new Puesto();
 		modelo.addAttribute(Constants.SECCION_LIST, seccion);
 		return "/rh/seccion/nueva";
 	}
@@ -148,7 +148,7 @@ public class SeccionController extends BaseController {
 	@Transactional
 	@RequestMapping(value = "/crea", method = RequestMethod.POST)
 	public String crea(HttpServletRequest request,
-			HttpServletResponse response, @Valid Seccion seccion,
+			HttpServletResponse response, @Valid Puesto seccion,
 			BindingResult bindingResult, Errors errors, Model modelo,
 			RedirectAttributes redirectAttributes) {
 		for (String nombre : request.getParameterMap().keySet()) {
@@ -179,7 +179,7 @@ public class SeccionController extends BaseController {
 	@RequestMapping("/edita/{id}")
 	public String edita(@PathVariable Long id, Model modelo) {
 		log.debug("Editar cuenta de mayor {}", id);
-		Seccion seccion = mgr.getSeccion(id.toString());
+		Puesto seccion = mgr.getSeccion(id.toString());
 
 		modelo.addAttribute(Constants.SECCION_LIST, seccion);
 
@@ -188,7 +188,7 @@ public class SeccionController extends BaseController {
 
 	@Transactional
 	@RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-	public String actualiza(HttpServletRequest request, @Valid Seccion seccion,
+	public String actualiza(HttpServletRequest request, @Valid Puesto seccion,
 			BindingResult bindingResult, Errors errors, Model modelo,
 			RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
@@ -214,7 +214,7 @@ public class SeccionController extends BaseController {
 	@Transactional
 	@RequestMapping(value = "/elimina", method = RequestMethod.POST)
 	public String elimina(HttpServletRequest request, @RequestParam Long id,
-			Model modelo, @ModelAttribute Seccion seccion,
+			Model modelo, @ModelAttribute Puesto seccion,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		log.debug("Elimina seccion");
 		try {

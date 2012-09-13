@@ -22,7 +22,7 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Entity
 @Table(name = "seccion")
-public class Seccion implements Serializable {
+public class Puesto implements Serializable {
 	/**
 	 * 
 	 */
@@ -89,7 +89,7 @@ public class Seccion implements Serializable {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		final Seccion other = (Seccion) obj;
+		final Puesto other = (Puesto) obj;
 		if (this.id != other.id
 				&& (this.id == null || !this.id.equals(other.id))) {
 			return false;

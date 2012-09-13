@@ -9,7 +9,7 @@ import java.util.Map;
 
 import mx.edu.um.mateo.Constants;
 import mx.edu.um.mateo.rh.dao.SeccionDao;
-import mx.edu.um.mateo.rh.model.Seccion;
+import mx.edu.um.mateo.rh.model.Puesto;
 import mx.edu.um.mateo.rh.service.SeccionManager;
 
 import org.springframework.stereotype.Service;
@@ -26,10 +26,10 @@ public class SeccionManagerImpl implements SeccionManager {
 	private SeccionDao dao;
 
 	/**
-	 * @see mx.edu.um.rh.service.SeccionManager#getSeccions(mx.edu.um.rh.model.Seccion)
+	 * @see mx.edu.um.rh.service.SeccionManager#getSeccions(mx.edu.um.rh.model.Puesto)
 	 */
 	@Override
-	public Map<String, Object> getSecciones(final Seccion seccion) {
+	public Map<String, Object> getSecciones(final Puesto seccion) {
 		Map<String, Object> params = new HashMap<>();
 		params.put(Constants.SECCION_LIST, dao.getSecciones(seccion));
 		return params;
@@ -39,15 +39,15 @@ public class SeccionManagerImpl implements SeccionManager {
 	 * @see mx.edu.um.rh.service.SeccionManager#getSeccion(String id)
 	 */
 	@Override
-	public Seccion getSeccion(final String id) {
+	public Puesto getSeccion(final String id) {
 		return dao.getSeccion(new Integer(id));
 	}
 
 	/**
-	 * @see mx.edu.um.rh.service.SeccionManager#saveSeccion(Seccion seccion)
+	 * @see mx.edu.um.rh.service.SeccionManager#saveSeccion(Puesto seccion)
 	 */
 	@Override
-	public void saveSeccion(Seccion seccion) {
+	public void saveSeccion(Puesto seccion) {
 		dao.saveSeccion(seccion);
 	}
 

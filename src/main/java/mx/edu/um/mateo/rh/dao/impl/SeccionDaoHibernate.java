@@ -28,7 +28,7 @@ import java.util.List;
 
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.rh.dao.SeccionDao;
-import mx.edu.um.mateo.rh.model.Seccion;
+import mx.edu.um.mateo.rh.model.Puesto;
 
 import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
@@ -43,12 +43,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class SeccionDaoHibernate extends BaseDao implements SeccionDao {
 
 	/**
-	 * @see mx.edu.um.rh.dao.SeccionDao#getSeccions(mx.edu.um.rh.model.Seccion)
+	 * @see mx.edu.um.rh.dao.SeccionDao#getSeccions(mx.edu.um.rh.model.Puesto)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Seccion> getSecciones(final Seccion seccion) {
-		return currentSession().createCriteria(Seccion.class).list();
+	public List<Puesto> getSecciones(final Puesto seccion) {
+		return currentSession().createCriteria(Puesto.class).list();
 
 	}
 
@@ -56,21 +56,21 @@ public class SeccionDaoHibernate extends BaseDao implements SeccionDao {
 	 * @see mx.edu.um.rh.dao.SeccionDao#getSeccion(Integer id)
 	 */
 	@Override
-	public Seccion getSeccion(final Integer id) {
-		Seccion seccion = (Seccion) currentSession().get(Seccion.class, id);
+	public Puesto getSeccion(final Integer id) {
+		Puesto seccion = (Puesto) currentSession().get(Puesto.class, id);
 		if (seccion == null) {
 			log.warn("uh oh, seccion with id '" + id + "' not found...");
-			throw new ObjectRetrievalFailureException(Seccion.class, id);
+			throw new ObjectRetrievalFailureException(Puesto.class, id);
 		}
 
 		return seccion;
 	}
 
 	/**
-	 * @see mx.edu.um.rh.dao.SeccionDao#saveSeccion(Seccion seccion)
+	 * @see mx.edu.um.rh.dao.SeccionDao#saveSeccion(Puesto seccion)
 	 */
 	@Override
-	public void saveSeccion(final Seccion seccion) {
+	public void saveSeccion(final Puesto seccion) {
 		if (seccion.getId() == null) {
 			getSession().save(seccion);
 		} else {
