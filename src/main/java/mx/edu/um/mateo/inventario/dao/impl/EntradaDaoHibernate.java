@@ -111,6 +111,8 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
         }
         Criteria criteria = currentSession().createCriteria(Entrada.class);
         Criteria countCriteria = currentSession().createCriteria(Entrada.class);
+        criteria.createAlias("estatus", "est");
+        countCriteria.createAlias("estatus", "est");
 
         if (params.containsKey("almacen")) {
             criteria.createCriteria("almacen").add(
@@ -153,6 +155,37 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
                     params.get("fechaTerminado")));
         }
 
+        if (params.containsKey(Constantes.ABIERTA)
+                || params.containsKey(Constantes.CERRADA)
+                || params.containsKey(Constantes.PENDIENTE)
+                || params.containsKey(Constantes.FACTURADA)
+                || params.containsKey(Constantes.CANCELADA)
+                || params.containsKey(Constantes.DEVOLUCION)) {
+            Disjunction propiedades = Restrictions.disjunction();
+            if (params.containsKey(Constantes.ABIERTA)) {
+                propiedades.add(Restrictions.eq("est.nombre", Constantes.ABIERTA));
+            }
+            if (params.containsKey(Constantes.CERRADA)) {
+                propiedades.add(Restrictions.eq("est.nombre", Constantes.CERRADA));
+            }
+            if (params.containsKey(Constantes.PENDIENTE)) {
+                propiedades.add(Restrictions.eq("est.nombre", Constantes.PENDIENTE));
+            }
+            if (params.containsKey(Constantes.FACTURADA)) {
+                propiedades.add(Restrictions.eq("est.nombre", Constantes.FACTURADA));
+            }
+            if (params.containsKey(Constantes.CANCELADA)) {
+                propiedades.add(Restrictions.eq("est.nombre", Constantes.CANCELADA));
+            }
+            criteria.add(propiedades);
+            countCriteria.add(propiedades);
+            
+            if (params.containsKey(Constantes.DEVOLUCION)) {
+                criteria.add(Restrictions.eq("devolucion", Boolean.TRUE));
+                countCriteria.add(Restrictions.eq("devolucion", Boolean.TRUE));
+            }
+        }
+
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
@@ -174,7 +207,7 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
                 criteria.addOrder(Order.asc(campo));
             }
         } else {
-            criteria.createCriteria("estatus").addOrder(Order.asc("prioridad"));
+            criteria.addOrder(Order.asc("est.prioridad"));
         }
 
         if (!params.containsKey("reporte")) {
@@ -234,7 +267,7 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
                 criteria.add(Restrictions.not(Restrictions.in("id", idsDeEntradas)));
             }
         }
-        
+
         criteria.add(Restrictions.eq("devolucion", Boolean.TRUE));
         criteria.createCriteria("estatus").add(
                 Restrictions.eq("nombre", Constantes.CERRADA));

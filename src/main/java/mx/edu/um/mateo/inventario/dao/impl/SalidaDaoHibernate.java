@@ -33,7 +33,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -58,12 +57,10 @@ import mx.edu.um.mateo.inventario.utils.NoEstaCerradaException;
 import mx.edu.um.mateo.inventario.utils.NoHayExistenciasSuficientes;
 import mx.edu.um.mateo.inventario.utils.NoSePuedeCerrarException;
 import mx.edu.um.mateo.inventario.utils.ProductoNoSoportaFraccionException;
-
 import org.hibernate.Criteria;
 import org.hibernate.LockOptions;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -113,6 +110,8 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
         }
         Criteria criteria = currentSession().createCriteria(Salida.class);
         Criteria countCriteria = currentSession().createCriteria(Salida.class);
+        criteria.createAlias("estatus", "est");
+        countCriteria.createAlias("estatus", "est");
 
         if (params.containsKey("almacen")) {
             criteria.createCriteria("almacen").add(
@@ -162,6 +161,31 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
                     params.get("fechaTerminado")));
         }
 
+        if (params.containsKey(Constantes.ABIERTA)
+                || params.containsKey(Constantes.CERRADA)
+                || params.containsKey(Constantes.PENDIENTE)
+                || params.containsKey(Constantes.FACTURADA)
+                || params.containsKey(Constantes.CANCELADA)) {
+            Disjunction propiedades = Restrictions.disjunction();
+            if (params.containsKey(Constantes.ABIERTA)) {
+                propiedades.add(Restrictions.eq("est.nombre", Constantes.ABIERTA));
+            }
+            if (params.containsKey(Constantes.CERRADA)) {
+                propiedades.add(Restrictions.eq("est.nombre", Constantes.CERRADA));
+            }
+            if (params.containsKey(Constantes.PENDIENTE)) {
+                propiedades.add(Restrictions.eq("est.nombre", Constantes.PENDIENTE));
+            }
+            if (params.containsKey(Constantes.FACTURADA)) {
+                propiedades.add(Restrictions.eq("est.nombre", Constantes.FACTURADA));
+            }
+            if (params.containsKey(Constantes.CANCELADA)) {
+                propiedades.add(Restrictions.eq("est.nombre", Constantes.CANCELADA));
+            }
+            criteria.add(propiedades);
+            countCriteria.add(propiedades);
+        }
+
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
@@ -189,7 +213,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
                 criteria.addOrder(Order.asc(campo));
             }
         } else if (!params.containsKey("estatusId")) {
-            criteria.createCriteria("estatus").addOrder(Order.asc("prioridad"));
+            criteria.addOrder(Order.asc("est.prioridad"));
         }
         criteria.addOrder(Order.desc("fechaModificacion"));
 
