@@ -136,10 +136,10 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         }
 
         if (params.containsKey("cuentaId")) {
-            criteria.createCriteria("cuenta").add(
-                    Restrictions.idEq(params.get("cuentaId")));
-            countCriteria.createCriteria("cuenta").add(
-                    Restrictions.idEq(params.get("cuentaId")));
+            criteria.createCriteria("centroCosto").add(
+                    Restrictions.eq("id.idCosto", params.get("cuentaId")));
+            countCriteria.createCriteria("centroCosto").add(
+                    Restrictions.eq("id.idCosto", params.get("cuentaId")));
         }
 
         if (params.containsKey("proveedorId")) {

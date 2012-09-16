@@ -256,14 +256,25 @@
                         $("div#buscarBajasDiv").show('slide', {direction:'up'}, 500, function() {
                             $("input#bajas").focus();
                         });
-                    });                
-                            
+                    });
+                    
                     $("a#buscarReubicacionesAnchor").click(function(e) {
                         e.preventDefault();
                         $("div#buscarReubicacionesDiv").show('slide', {direction:'up'}, 500, function() {
                             $("input#reubicaciones").focus();
                         });
-                    });                
+                    });
+                    
+                    $('input#cuentaNombre')
+                    .autocomplete({
+                        source: "<c:url value='/activoFijo/activo/centrosDeCosto' />",
+                        select: function(event, ui) {
+                            $("input#cuentaId").val(ui.item.id);
+                            $("input#cuentaNombre").focus();
+                            return false;
+                        }
+                    });
+
                 });
             </script>
         </content>

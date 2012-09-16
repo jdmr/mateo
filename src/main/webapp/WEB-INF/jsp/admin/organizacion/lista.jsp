@@ -53,6 +53,7 @@
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="nombreCompleto" />
                         </jsp:include>
+                        <th><s:message code="centroCosto.label" /></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,6 +61,7 @@
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/admin/organizacion/ver/${organizacion.id}' />">${organizacion.nombre}</a></td>
                             <td>${organizacion.nombreCompleto}</td>
+                            <td>${organizacion.centroCostoId}</td>
                         </tr>
                     </c:forEach>
                 </tbody>

@@ -56,6 +56,7 @@
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="rfc" />
                         </jsp:include>
+                        <th><s:message code="centroCosto.label" /></th>
                         <th><s:message code="organizacion.label" /></th>
                     </tr>
                 </thead>
@@ -65,6 +66,7 @@
                             <td><a href="<c:url value='/admin/empresa/ver/${empresa.id}' />">${empresa.nombre}</a></td>
                             <td>${empresa.nombreCompleto}</td>
                             <td>${empresa.rfc}</td>
+                            <td>${empresa.centroCosto.nombreCompleto}</td>
                             <td>${empresa.organizacion.nombre}</td>
                         </tr>
                     </c:forEach>

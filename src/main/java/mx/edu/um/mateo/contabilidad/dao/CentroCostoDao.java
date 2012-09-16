@@ -21,32 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package mx.edu.um.mateo.inventario.tasks;
+package mx.edu.um.mateo.contabilidad.dao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import java.util.List;
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
+import mx.edu.um.mateo.general.model.Usuario;
 
 /**
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
-@Component
-public class ProductoTask {
+public interface CentroCostoDao {
 
-    private static final Logger log = LoggerFactory
-            .getLogger(ProductoTask.class);
-//	@Autowired
-//	private ProductoDao productoDao;
+    public CentroCosto obtieneCentroDeCosto(String centroDeCostoId, Usuario usuario);
 
-    public ProductoTask() {
-        log.info("Se ha creado una nueva instancia del cron de productos");
-    }
-//	@Scheduled(cron = "0 0 0 * * *")
-//	public void buscaHistorial() {
-//		Date fecha = new Date();
-//		log.debug("Buscando historial {}", fecha);
-//		// productoDao.guardaHistorial(fecha);
-//		log.debug("TERMINO DE BUSCAR EL HISTORIAL {}", new Date());
-//	}
+    public List<CentroCosto> buscaCentrosDeCosto(String filtro, Usuario usuario);
+
+    public List<CentroCosto> buscaCentrosDeCostoPorOrganizacion(String filtro, Usuario usuario);
+
+    public List<CentroCosto> buscaCentrosDeCostoPorEmpresa(String filtro, Usuario usuario);
 }

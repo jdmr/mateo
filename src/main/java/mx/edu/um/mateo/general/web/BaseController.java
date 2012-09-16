@@ -410,6 +410,8 @@ public abstract class BaseController {
                 if (StringUtils.isNotBlank(values[0])) {
                     if (key.equals("pagina")) {
                         params.put(key, new Long(values[0]));
+                    } else if (key.equals("cuentaId")) {
+                        params.put(key, values[0]);
                     } else if (key.endsWith("Id")) {
                         params.put(key, new Long(values[0]));
                     } else {

@@ -63,6 +63,15 @@
                     </div>
                 </div>
 
+                <c:if test="${empresa.centroCosto != null}">
+                    <div class="row-fluid" style="padding-bottom: 10px;">
+                        <div class="span4">
+                            <h4><s:message code="centroCosto.label" /></h4>
+                            <h3>${empresa.centroCosto.nombreCompleto}</h3>
+                        </div>
+                    </div>
+                </c:if>
+
                 <p class="well">
                     <a href="<c:url value='/admin/empresa/edita/${empresa.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
                     <form:hidden path="id" />
