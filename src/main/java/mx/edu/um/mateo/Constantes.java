@@ -130,4 +130,16 @@ public class Constantes {
 	public static final String PATH_CUENTA_LIBRO_CREA = "/contabilidad/libro/crea";
 	public static final String PATH_CUENTA_LIBRO_ACTUALIZA = "/contabilidad/libro/actualiza";
 	public static final String PATH_CUENTA_LIBRO_ELIMINA = "/contabilidad/libro/elimina";
+        
+        //Puesto-START
+        /**
+         * The request scope attribute that holds the puesto form.
+         */
+        public static final String PUESTO_KEY = "puestoForm";
+
+        /**
+         * The request scope attribute that holds the puesto list
+         */
+        public static final String PUESTO_LIST = "puestoList";
+        //Puesto-END
 }

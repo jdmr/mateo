@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import mx.edu.um.mateo.Constants;
-import mx.edu.um.mateo.rh.dao.SeccionDao;
+import mx.edu.um.mateo.rh.dao.PuestoDao;
 import mx.edu.um.mateo.rh.model.Puesto;
 import mx.edu.um.mateo.rh.service.SeccionManager;
 
@@ -23,39 +23,59 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SeccionManagerImpl implements SeccionManager {
 
-	private SeccionDao dao;
+    @Override
+    public Map<String, Object> getSecciones(Puesto seccion) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-	/**
-	 * @see mx.edu.um.rh.service.SeccionManager#getSeccions(mx.edu.um.rh.model.Puesto)
-	 */
-	@Override
-	public Map<String, Object> getSecciones(final Puesto seccion) {
-		Map<String, Object> params = new HashMap<>();
-		params.put(Constants.SECCION_LIST, dao.getSecciones(seccion));
-		return params;
-	}
+    @Override
+    public Puesto getSeccion(String id) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-	/**
-	 * @see mx.edu.um.rh.service.SeccionManager#getSeccion(String id)
-	 */
-	@Override
-	public Puesto getSeccion(final String id) {
-		return dao.getSeccion(new Integer(id));
-	}
+    @Override
+    public void saveSeccion(Puesto seccion) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
-	/**
-	 * @see mx.edu.um.rh.service.SeccionManager#saveSeccion(Puesto seccion)
-	 */
-	@Override
-	public void saveSeccion(Puesto seccion) {
-		dao.saveSeccion(seccion);
-	}
-
-	/**
-	 * @see mx.edu.um.rh.service.SeccionManager#removeSeccion(String id)
-	 */
-	@Override
-	public void removeSeccion(final String id) {
-		dao.removeSeccion(new Integer(id));
-	}
+    @Override
+    public void removeSeccion(String id) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+//
+//	private PuestoDao dao;
+//
+//	/**
+//	 * @see mx.edu.um.rh.service.SeccionManager#getSeccions(mx.edu.um.rh.model.Puesto)
+//	 */
+//	@Override
+//	public Map<String, Object> getSecciones(final Puesto seccion) {
+//		Map<String, Object> params = new HashMap<>();
+//		params.put(Constants.SECCION_LIST, dao.getSecciones(seccion));
+//		return params;
+//	}
+//
+//	/**
+//	 * @see mx.edu.um.rh.service.SeccionManager#getSeccion(String id)
+//	 */
+//	@Override
+//	public Puesto getSeccion(final String id) {
+//		return dao.getSeccion(new Integer(id));
+//	}
+//
+//	/**
+//	 * @see mx.edu.um.rh.service.SeccionManager#saveSeccion(Puesto seccion)
+//	 */
+//	@Override
+//	public void saveSeccion(Puesto seccion) {
+//		dao.saveSeccion(seccion);
+//	}
+//
+//	/**
+//	 * @see mx.edu.um.rh.service.SeccionManager#removeSeccion(String id)
+//	 */
+//	@Override
+//	public void removeSeccion(final String id) {
+//		dao.removeSeccion(new Integer(id));
+//	}
 }

@@ -11,8 +11,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
+import mx.edu.um.mateo.general.model.Empresa;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -29,20 +32,20 @@ public class Puesto implements Serializable {
 	private static final long serialVersionUID = 8291747354060833386L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
 	@NotBlank
 	@Column(nullable = false, length = 150, unique=true)
 	private String descripcion;
-        @NotBlank
+        @NotNull
 	@Column(nullable = false)
         private Integer categoria;
-        @NotBlank
+        @NotNull
 	@Column(nullable = false)
         private Integer seccion;
-        @NotBlank
+        @NotNull
 	@Column(nullable = false)
         private Integer minima;
-        @NotBlank
+        @NotNull
 	@Column(nullable = false)
         private Integer maxima;
         @Column(nullable = false, length = 2)
@@ -50,14 +53,34 @@ public class Puesto implements Serializable {
         @Column
         private Double rangoAcademico;
 	@Version
-	private Integer version;
+	private Long version;
+        @ManyToOne
+        private Empresa empresa;
 
+    public Puesto() {
+    }
+
+    public Puesto(String descripcion, Integer categoria, Integer seccion, Integer minima, Integer maxima, String status, Empresa empresa) {
+        this.descripcion = descripcion;
+        this.categoria = categoria;
+        this.seccion = seccion;
+        this.minima = minima;
+        this.maxima = maxima;
+        this.status = status;
+        this.empresa = empresa;
+    }
+
+        
 	/**
 	 * @return the id
 	 */
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getDescripcion() {
         return descripcion;
@@ -115,12 +138,26 @@ public class Puesto implements Serializable {
         this.rangoAcademico = rangoAcademico;
     }
 
-    public Integer getVersion() {
+    public Long getVersion() {
         return version;
     }
 
-    public void setVersion(Integer version) {
+    public void setVersion(Long version) {
         this.version = version;
+    }
+
+    /**
+     * @return the empresa
+     */
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    /**
+     * @param empresa the empresa to set
+     */
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
     }
 
 	
