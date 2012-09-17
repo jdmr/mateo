@@ -120,6 +120,9 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         }
         Criteria criteria = currentSession().createCriteria(Activo.class);
         Criteria countCriteria = currentSession().createCriteria(Activo.class);
+        
+        criteria.createAlias("tipoActivo", "ta");
+        countCriteria.createAlias("tipoActivo", "ta");
 
         if (params.containsKey("empresa")) {
             criteria.createCriteria("empresa").add(
@@ -128,11 +131,9 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                     Restrictions.idEq(params.get("empresa")));
         }
 
-        if (params.containsKey("tipoActivoId")) {
-            criteria.createCriteria("tipoActivo").add(
-                    Restrictions.idEq(params.get("tipoActivoId")));
-            countCriteria.createCriteria("tipoActivo").add(
-                    Restrictions.idEq(params.get("tipoActivoId")));
+        if (params.containsKey("tipoActivoIds")) {
+            criteria.add(Restrictions.in("ta.id", (List)params.get("tipoActivoIds")));
+            countCriteria.add(Restrictions.in("ta.id", (List)params.get("tipoActivoIds")));
         }
 
         if (params.containsKey("cuentaId")) {
@@ -259,6 +260,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         }
 
         if (params.containsKey("order")) {
+            criteria.addOrder(Order.asc("ta.cuenta.id.idCtaMayor"));
             String campo = (String) params.get("order");
             if (params.get("sort").equals("desc")) {
                 criteria.addOrder(Order.desc(campo));
@@ -266,6 +268,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                 criteria.addOrder(Order.asc(campo));
             }
         } else {
+            criteria.addOrder(Order.asc("ta.cuenta.id.idCtaMayor"));
             criteria.addOrder(Order.desc("folio"));
         }
 

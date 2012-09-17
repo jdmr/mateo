@@ -412,6 +412,20 @@ public abstract class BaseController {
                         params.put(key, new Long(values[0]));
                     } else if (key.equals("cuentaId")) {
                         params.put(key, values[0]);
+                    } else if (key.endsWith("Ids")) {
+                        boolean tieneComas = false;
+                        List<Long> ids = new ArrayList<>();
+                        for (String x : values) {
+                            String[] y = StringUtils.split(x, ", ");
+                            for (String z : y) {
+                                ids.add(new Long(z.trim()));
+                                tieneComas = true;
+                            }
+                            if (!tieneComas) {
+                                ids.add(new Long(x.trim()));
+                            }
+                        }
+                        params.put(key, ids);
                     } else if (key.endsWith("Id")) {
                         params.put(key, new Long(values[0]));
                     } else {
@@ -419,7 +433,23 @@ public abstract class BaseController {
                     }
                 }
             } else if (values.length > 1) {
-                params.put(key, values);
+                if (key.endsWith("Ids")) {
+                    boolean tieneComas = false;
+                    List<Long> ids = new ArrayList<>();
+                    for (String x : values) {
+                        String[] y = StringUtils.split(x, ", ");
+                        for (String z : y) {
+                            ids.add(new Long(z.trim()));
+                            tieneComas = true;
+                        }
+                        if (!tieneComas) {
+                            ids.add(new Long(x.trim()));
+                        }
+                    }
+                    params.put(key, ids);
+                } else {
+                    params.put(key, values);
+                }
             }
         }
         return params;

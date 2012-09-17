@@ -43,6 +43,7 @@ import mx.edu.um.mateo.activos.dao.TipoActivoDao;
 import mx.edu.um.mateo.activos.model.Activo;
 import mx.edu.um.mateo.activos.model.BajaActivo;
 import mx.edu.um.mateo.activos.model.ReubicacionActivo;
+import mx.edu.um.mateo.activos.model.TipoActivo;
 import mx.edu.um.mateo.activos.utils.ActivoNoCreadoException;
 import mx.edu.um.mateo.contabilidad.dao.CentroCostoDao;
 import mx.edu.um.mateo.contabilidad.model.CentroCosto;
@@ -155,6 +156,20 @@ public class ActivoController extends BaseController {
         modelo.addAttribute("resumen", params.get("resumen"));
 
         this.pagina(params, modelo, "activos", pagina);
+        
+        List<TipoActivo> tiposDeActivo = tipoActivoDao.lista(ambiente.obtieneUsuario());
+        if (params.containsKey("tipoActivoIds")) {
+            List<Long> ids = (List<Long>) params.get("tipoActivoIds");
+            List<TipoActivo> seleccionados = new ArrayList<>();
+            for(TipoActivo tipoActivo : tiposDeActivo) {
+                if (ids.contains(tipoActivo.getId())) {
+                    seleccionados.add(tipoActivo);
+                }
+            }
+            tiposDeActivo.removeAll(seleccionados);
+            modelo.addAttribute("seleccionados", seleccionados);
+        }
+        modelo.addAttribute("disponibles", tiposDeActivo);
 
         return "activoFijo/activo/lista";
     }
