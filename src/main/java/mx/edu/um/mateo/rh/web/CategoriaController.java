@@ -1,4 +1,4 @@
-/*
+    /*
  * The MIT License
  *
  * Copyright 2012 Universidad de Montemorelos A. C.
@@ -40,8 +40,9 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
-import mx.edu.um.mateo.rh.dao.CategoriaDao;
+import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.rh.model.Categoria;
+import mx.edu.um.mateo.rh.service.CategoriaManager;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -68,15 +69,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
- * @author jdmr
+ * @author jdmrz
  */
 @Controller
 @RequestMapping(Constantes.PATH_CATEGORIA)
-public class CategoriaController {
+public class CategoriaController extends BaseController{
     
     private static final Logger log = LoggerFactory.getLogger(mx.edu.um.mateo.rh.web.CategoriaController.class);
     @Autowired
-    private CategoriaDao categoriaDao;
+    private CategoriaManager categoriaManager;
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
@@ -97,6 +98,8 @@ public class CategoriaController {
             Model modelo) {
         log.debug("Mostrando lista de categorias");
         Map<String, Object> params = new HashMap<>();
+        Long empresaId = (Long) request.getSession().getAttribute("empresaId");
+        params.put("empresa", empresaId);
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }
@@ -114,7 +117,7 @@ public class CategoriaController {
         
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = categoriaDao.getCategorias(params);
+            params = categoriaManager.lista(params);
             try {
                 generaReporte(tipo, (List<Categoria>) params.get(Constantes.CONTAINSKEY_CATEGORIAS), response);
                 return null;
@@ -127,18 +130,18 @@ public class CategoriaController {
         
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = categoriaDao.getCategorias(params);
+            params = categoriaManager.lista(params);
             
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
                 enviaCorreo(correo, (List<Categoria>) params.get(Constantes.CONTAINSKEY_CATEGORIAS), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
-                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("categoria.getCategorias.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("categoria.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-        params = categoriaDao.getCategorias(params);
+        params = categoriaManager.lista(params);
         log.debug("params{}",params.get(Constantes.CONTAINSKEY_CATEGORIAS));
         modelo.addAttribute(Constantes.CONTAINSKEY_CATEGORIAS, params.get(Constantes.CONTAINSKEY_CATEGORIAS));
 
@@ -169,9 +172,9 @@ public class CategoriaController {
     }
     
     @RequestMapping("/ver/{id}")
-    public String ver(@PathVariable Integer id, Model modelo) {
+    public String ver(@PathVariable String id, Model modelo) {
         log.debug("Mostrando categoria {}", id);
-        Categoria categoria = categoriaDao.getCategoria(id);
+        Categoria categoria = categoriaManager.obtiene(id);
         
         modelo.addAttribute(Constantes.ADDATTRIBUTE_CATEGORIA, categoria);
         
@@ -198,22 +201,23 @@ public class CategoriaController {
         }
         
         try {
-             categoriaDao.saveCategoria(categoria);
+            Usuario usuario = ambiente.obtieneUsuario();
+             categoriaManager.graba(categoria,usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear categoria", e);
             return Constantes.PATH_CATEGORIA_NUEVO;
         }
         
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "categoria.saveCategoria.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "categoria.graba.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{categoria.getNombre()});
         
         return "redirect:" + Constantes.PATH_CATEGORIA_VER + "/" + categoria.getId();
     }
     
     @RequestMapping("/edita/{id}")
-    public String edita(@PathVariable Integer id, Model modelo) {
+    public String edita(@PathVariable String id, Model modelo) {
         log.debug("Editar cuenta de categoria {}", id);
-        Categoria categoria = categoriaDao.getCategoria(id);
+        Categoria categoria = categoriaManager.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_CATEGORIA, categoria);
         return Constantes.PATH_CATEGORIA_EDITA;
     }
@@ -226,13 +230,14 @@ public class CategoriaController {
             return Constantes.PATH_CATEGORIA_EDITA;
         }
         try {
-           categoriaDao.saveCategoria(categoria);
+           Usuario usuario = ambiente.obtieneUsuario();
+           categoriaManager.graba(categoria, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la cuenta de categoria", e);
             return Constantes.PATH_CATEGORIA_NUEVO;
         }
         
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "categoria.saveCategoria.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "categoria.graba.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{categoria.getNombre()});
         
         return "redirect:" + Constantes.PATH_CATEGORIA_VER + "/" + categoria.getId();
@@ -240,16 +245,16 @@ public class CategoriaController {
     
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpServletRequest request, @RequestParam Integer id, Model modelo, @ModelAttribute Categoria categoria, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String elimina(HttpServletRequest request, @RequestParam String id, Model modelo, @ModelAttribute Categoria categoria, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina cuenta de categoria");
         try {
-           categoriaDao.removeCategoria(id);
+           categoriaManager.elimina(id);
             
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "categoria.removeCategoria.message");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "categoria.elimina.message");
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{categoria.getNombre()});
         } catch (Exception e) {
             log.error("No se pudo eliminar categoria " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_CATEGORIA, new String[]{"categoria.no.removeCategoria.message"}, null, null));
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_CATEGORIA, new String[]{"categoria.no.elimina.message"}, null, null));
             return Constantes.PATH_CATEGORIA_VER;
         }
         
@@ -306,7 +311,7 @@ public class CategoriaController {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(ambiente.obtieneUsuario().getUsername());
-        String titulo = messageSource.getMessage("categoria.getCategorias.label", null, request.getLocale());
+        String titulo = messageSource.getMessage("categoria.lista.label", null, request.getLocale());
         helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
         helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
         helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));

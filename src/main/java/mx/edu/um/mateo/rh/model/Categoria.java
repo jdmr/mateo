@@ -6,15 +6,17 @@ package mx.edu.um.mateo.rh.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import mx.edu.um.mateo.general.model.Empresa;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *
- * @author osoto
+ * @author zorch
  */
 @Entity
 @Table(name = "categoria")
+
 public class Categoria implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +29,16 @@ public class Categoria implements Serializable {
     @Length(max=2)
     @Column(nullable=false, length=2)
     private String status; 
+    @ManyToOne(optional=false)
+    private Empresa empresa;
+
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
+    }
     
     
 

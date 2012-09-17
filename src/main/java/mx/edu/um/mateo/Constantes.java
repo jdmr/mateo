@@ -169,6 +169,6 @@ public class Constantes {
     public static final String PATH_CATEGORIA_CREA = "/rh/categoria/crea";
     public static final String PATH_CATEGORIA_ACTUALIZA = "/rh/categoria/actualiza";
     public static final String PATH_CATEGORIA_ELIMINA = "/rh/categoria/elimina";
-    
+    public static final String CATEGORIA_FORM = "categoriaForm";
     
 }

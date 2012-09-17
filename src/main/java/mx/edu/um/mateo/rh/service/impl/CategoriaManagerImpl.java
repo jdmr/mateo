@@ -1,60 +1,72 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package mx.edu.um.mateo.rh.service.impl;
 
-import java.util.HashMap;
 import java.util.Map;
-import mx.edu.um.mateo.Constantes;
+import mx.edu.um.mateo.general.dao.BaseDao;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.rh.dao.CategoriaDao;
 import mx.edu.um.mateo.rh.model.Categoria;
 import mx.edu.um.mateo.rh.service.CategoriaManager;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-/**
- *
- * @author osoto
- */
-@Service
-@Transactional
-public class CategoriaManagerImpl implements CategoriaManager {
-
+@Component
+public class CategoriaManagerImpl extends BaseDao implements CategoriaManager {
+    @Autowired
     private CategoriaDao dao;
 
+    
+    
+
     /**
-     * @see
-     * mx.edu.um.rh.service.CategoriaManager#getCategorias(mx.edu.um.rh.model.Categoria)
+     * @see mx.edu.um.rh.service.CategoriaManager#lista(mx.edu.um.rh.model.Categoria)
      */
+    
     @Override
-    public Map<String, Object> getCategorias(final Categoria categoria) {
-        Map<String, Object> params = new HashMap<>();
-        params.put(Constantes.CATEGORIA_LIST, dao.getCategoria(categoria.getId()));
-        return params;
+     public Map<String, Object> lista(Map<String, Object> params) {
+        return dao.lista(params);
     }
 
     /**
-     * @see mx.edu.um.rh.service.CategoriaManager#getCategoria(String id)
+     * @see mx.edu.um.rh.service.CategoriaManager#obtiene(String id)
      */
+    
+    
     @Override
-    public Categoria getCategoria(final String id) {
-        return dao.getCategoria(new Integer(id));
+    public Categoria obtiene(final String id) {
+        return dao.obtiene(new Integer(id));
     }
 
     /**
-     * @see mx.edu.um.rh.service.CategoriaManager#saveCategoria(Categoria categoria)
+     * @see mx.edu.um.rh.service.CategoriaManager#graba(Categoria categoria)
      */
     @Override
-    public void saveCategoria(Categoria categoria) {
-        dao.saveCategoria(categoria);
+    public void graba(Categoria categoria, Usuario usuario) {
+        dao.graba(categoria, usuario);
     }
 
     /**
-     * @see mx.edu.um.rh.service.CategoriaManager#removeCategoria(String id)
+     * @see mx.edu.um.rh.service.CategoriaManager#elimina(String id)
      */
     @Override
-    public void removeCategoria(final String id) {
-        dao.removeCategoria(new Integer(id));
+    public String elimina(final String id) {
+        dao.elimina(new Integer(id));
+        return dao.elimina(new Integer (id));
+        
     }
+
+   
+
+  
+
+   
+
+  
+
+
+        
+
+   
+
+    
 }

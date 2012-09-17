@@ -25,14 +25,14 @@
 package mx.edu.um.mateo.rh.dao.impl;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.dao.BaseDao;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.rh.dao.CategoriaDao;
 import mx.edu.um.mateo.rh.model.Categoria;
-import mx.edu.um.mateo.rh.model.Nacionalidad;
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -42,79 +42,89 @@ import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- *
- * @author zorch
- */
-@Transactional
 @Repository
+@Transactional
 public class CategoriaDaoHibernate extends BaseDao implements CategoriaDao {
+ 
+    
+
 
     /**
-     * @see mx.edu.um.rh.dao.CategoriaDao#getCategorias(mx.edu.um.rh.model.Categoria)
+     * @see mx.edu.um.mateo.rh.dao.CategoriaDao#lista(java.util.Map)
+     * 
      */
+    
     @Override
-      public Map<String, Object> getCategorias(Map<String, Object> params) {
+    public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de categorias con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
 
-        if (!params.containsKey(Constantes.CONTAINSKEY_MAX)) {
-            params.put(Constantes.CONTAINSKEY_MAX, 10);
+        if (!params.containsKey("max")) {
+            params.put("max", 10);
         } else {
-            params.put(Constantes.CONTAINSKEY_MAX, Math.min((Integer) params.get(Constantes.CONTAINSKEY_MAX), 100));
+            params.put("max", Math.min((Integer) params.get("max"), 100));
         }
 
-        if (params.containsKey(Constantes.CONTAINSKEY_PAGINA)) {
-            Long pagina = (Long) params.get(Constantes.CONTAINSKEY_PAGINA);
-            Long offset = (pagina - 1) * (Integer) params.get(Constantes.CONTAINSKEY_MAX);
-            params.put(Constantes.CONTAINSKEY_OFFSET, offset.intValue());
+        if (params.containsKey("pagina")) {
+            Long pagina = (Long) params.get("pagina");
+            Long offset = (pagina - 1) * (Integer) params.get("max");
+            params.put("offset", offset.intValue());
         }
 
-        if (!params.containsKey(Constantes.CONTAINSKEY_OFFSET)) {
-            params.put(Constantes.CONTAINSKEY_OFFSET, 0);
+        if (!params.containsKey("offset")) {
+            params.put("offset", 0);
         }
         Criteria criteria = currentSession().createCriteria(Categoria.class);
         Criteria countCriteria = currentSession().createCriteria(Categoria.class);
 
-        if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
-            String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);
+        if (params.containsKey("empresa")) {
+            criteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
+            countCriteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
+        }
+
+        if (params.containsKey("filtro")) {
+            String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
             propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("nombreCompleto", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("rfc", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("correo", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("contacto", filtro, MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
 
-        if (params.containsKey(Constantes.CONTAINSKEY_ORDER)) {
-            String campo = (String) params.get(Constantes.CONTAINSKEY_ORDER);
-            if (params.get(Constantes.CONTAINSKEY_SORT).equals(Constantes.CONTAINSKEY_DESC)) {
+        if (params.containsKey("order")) {
+            String campo = (String) params.get("order");
+            if (params.get("sort").equals("desc")) {
                 criteria.addOrder(Order.desc(campo));
             } else {
                 criteria.addOrder(Order.asc(campo));
             }
         }
 
-        if (!params.containsKey(Constantes.CONTAINSKEY_REPORTE)) {
-            criteria.setFirstResult((Integer) params.get(Constantes.CONTAINSKEY_OFFSET));
-            criteria.setMaxResults((Integer) params.get(Constantes.CONTAINSKEY_MAX));
+        if (!params.containsKey("reporte")) {
+            criteria.setFirstResult((Integer) params.get("offset"));
+            criteria.setMaxResults((Integer) params.get("max"));
         }
         params.put(Constantes.CONTAINSKEY_CATEGORIAS, criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
-        params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));
+        params.put("cantidad", (Long) countCriteria.list().get(0));
 
         return params;
     }
 
     /**
-     * @see mx.edu.um.rh.dao.CategoriaDao#getCategoria(Integer id)
+     * @see mx.edu.um.rh.dao.CategoriaDao#obtiene(Integer id)
      */
     @Override
-    public Categoria getCategoria(final Integer id) {
+    public Categoria obtiene(final Integer id) {
         Categoria categoria = (Categoria) currentSession().get(Categoria.class, id);
         if (categoria == null) {
-            log.warn("uh oh, Categoria with id '" + id + "' not found...");
+            log.warn("uh oh, categoria with id '" + id + "' not found...");
             throw new ObjectRetrievalFailureException(Categoria.class, id);
         }
 
@@ -122,30 +132,66 @@ public class CategoriaDaoHibernate extends BaseDao implements CategoriaDao {
     }
 
     /**
-     * @see mx.edu.um.rh.dao.CategoriaDao#save Categoria(Categoria categoria)
+     * @see mx.edu.um.rh.dao.CategoriaDao#Graba(Categoria categoria)
      */    
+    
     @Override
-    public void saveCategoria(final Categoria categoria) {
-       // if (categoria.getId() == null) {
-         //   getSession().save(categoria);
-        //} else {
-          //  log.debug("{}", categoria);
-         //   getSession().merge(categoria);
-        getSession().saveOrUpdate(categoria);
+    public void graba(final Categoria categoria, Usuario usuario) {
+        Session session = currentSession();
+        if (usuario != null) {
+            categoria.setEmpresa(usuario.getEmpresa());
+        }
+        currentSession().saveOrUpdate(categoria);
+        currentSession().merge(categoria);
         currentSession().flush();
         
-        
-
+//        if(categoria.getId() != null){
+//        	Categoria nuevaCategoria = obtiene(categoria.getId());
+//        	if(categoria.hashCode() == nuevaCategoria.hashCode()){
+//        		System.out.println("No se modifico nada");
+//        	}
+//        	else{
+//        		System.out.println("Hubo modificaciones");
+//        		System.out.println(categoria);
+//        		System.out.println(nuevaCategoria);
+//        	}
+//        }
     }
 
     /**
-     * @see mx.edu.um.rh.dao.CategoriaDao#removeCategoria(Integer id)
+     * @see mx.edu.um.rh.dao.CategoriaDao#elimina(Long id)
      */
+   
     @Override
-    public void removeCategoria(final Integer id) {
-        log.debug("removeCategoria");
-        currentSession().delete(getCategoria(id));
+    public String elimina(final Integer id) {
+        Categoria categoria=this.obtiene(id);
+        String nombre=categoria.getNombre();
+        currentSession().delete(categoria);
+         currentSession().merge(categoria);
         currentSession().flush();
+        
+        return nombre;
+        
+        
     }
+
+    
+
+   
+
+   
+
+   
+
+    
+    
+
+   
+
+  
+
+  
+
+   
     
 }
