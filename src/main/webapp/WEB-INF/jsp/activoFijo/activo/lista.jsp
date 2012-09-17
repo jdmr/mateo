@@ -265,12 +265,20 @@
                         });
                     });
                     
-                    $('input#cuentaNombre')
-                    .autocomplete({
+                    $('input#cuentaNombre').autocomplete({
                         source: "<c:url value='/activoFijo/activo/centrosDeCosto' />",
                         select: function(event, ui) {
                             $("input#cuentaId").val(ui.item.id);
                             $("input#cuentaNombre").focus();
+                            return false;
+                        }
+                    });
+
+                    $('input#proveedorNombre').autocomplete({
+                        source: "<c:url value='/activoFijo/activo/proveedores' />",
+                        select: function(event, ui) {
+                            $("input#proveedorId").val(ui.item.id);
+                            $("input#proveedorNombre").focus();
                             return false;
                         }
                     });

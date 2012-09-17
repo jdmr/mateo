@@ -46,9 +46,12 @@ import mx.edu.um.mateo.activos.model.ReubicacionActivo;
 import mx.edu.um.mateo.activos.utils.ActivoNoCreadoException;
 import mx.edu.um.mateo.contabilidad.dao.CentroCostoDao;
 import mx.edu.um.mateo.contabilidad.model.CentroCosto;
+import mx.edu.um.mateo.general.dao.ProveedorDao;
 import mx.edu.um.mateo.general.model.Imagen;
+import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.general.utils.LabelValueBean;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import org.apache.commons.lang.StringUtils;
@@ -82,6 +85,8 @@ public class ActivoController extends BaseController {
     private TipoActivoDao tipoActivoDao;
     @Autowired
     private CentroCostoDao centroCostoDao;
+    @Autowired
+    private ProveedorDao proveedorDao;
 
     @SuppressWarnings("unchecked")
     @RequestMapping
@@ -722,10 +727,10 @@ public class ActivoController extends BaseController {
             log.debug("Param: {} : {}", nombre,
                     request.getParameterMap().get(nombre));
         }
-        
+
         List<CentroCosto> centrosDeCosto = centroCostoDao.buscaCentrosDeCostoPorEmpresa(filtro, ambiente.obtieneUsuario());
         List<Map<String, String>> resultados = new ArrayList<>();
-        for(CentroCosto centroCosto : centrosDeCosto) {
+        for (CentroCosto centroCosto : centrosDeCosto) {
             Map<String, String> map = new HashMap<>();
             map.put("id", centroCosto.getId().getIdCosto());
             map.put("value", centroCosto.getNombreCompleto());
@@ -733,5 +738,34 @@ public class ActivoController extends BaseController {
         }
 
         return resultados;
+    }
+
+    @SuppressWarnings("unchecked")
+    @RequestMapping(value = "/proveedores", params = "term", produces = "application/json")
+    public @ResponseBody
+    List<LabelValueBean> proveedores(HttpServletRequest request,
+            @RequestParam("term") String filtro) {
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre,
+                    request.getParameterMap().get(nombre));
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", request.getSession().getAttribute("empresaId"));
+        params.put("filtro", filtro);
+        params = proveedorDao.lista(params);
+        List<LabelValueBean> valores = new ArrayList<>();
+        List<Proveedor> proveedores = (List<Proveedor>) params
+                .get("proveedores");
+        for (Proveedor proveedor : proveedores) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(proveedor.getNombre());
+            sb.append(" | ");
+            sb.append(proveedor.getRfc());
+            sb.append(" | ");
+            sb.append(proveedor.getNombreCompleto());
+            valores.add(new LabelValueBean(proveedor.getId(), sb.toString(),
+                    proveedor.getNombre()));
+        }
+        return valores;
     }
 }
