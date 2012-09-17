@@ -34,6 +34,17 @@
                         </div>
                     </div>
 
+                    <%--
+                    <div class="row-fluid">
+                        <div class="control-group">
+                            <label for="meses">
+                                <s:message code="meses.label" />
+                            </label>
+                            <input name="meses" id="meses" value="12" type="number" min="0" />
+                        </div>
+                    </div>
+                    --%>
+
                     <div class="row-fluid">
                         <div class="control-group">
                             <button type="submit" class="btn btn-warning btn-large"><i class="icon-time icon-white"></i> <s:message code="depreciar.button" /></button>

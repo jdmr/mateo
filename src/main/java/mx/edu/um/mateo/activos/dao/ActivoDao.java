@@ -88,4 +88,6 @@ public interface ActivoDao {
 
     public Map<String, Object> concentradoDepreciacionPorCentroDeCosto(
             Map<String, Object> params);
+
+    public void hojaCalculoConcentradoDepreciacion(Map<String, Object> params);
 }

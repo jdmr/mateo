@@ -33,6 +33,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -120,7 +121,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         }
         Criteria criteria = currentSession().createCriteria(Activo.class);
         Criteria countCriteria = currentSession().createCriteria(Activo.class);
-        
+
         criteria.createAlias("tipoActivo", "ta");
         countCriteria.createAlias("tipoActivo", "ta");
 
@@ -132,8 +133,8 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         }
 
         if (params.containsKey("tipoActivoIds")) {
-            criteria.add(Restrictions.in("ta.id", (List)params.get("tipoActivoIds")));
-            countCriteria.add(Restrictions.in("ta.id", (List)params.get("tipoActivoIds")));
+            criteria.add(Restrictions.in("ta.id", (List) params.get("tipoActivoIds")));
+            countCriteria.add(Restrictions.in("ta.id", (List) params.get("tipoActivoIds")));
         }
 
         if (params.containsKey("cuentaId")) {
@@ -2141,19 +2142,30 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                 .getId().getIdEjercicio());
         tiposDeActivoQuery.setLong("organizacionId", usuario.getEjercicio()
                 .getId().getOrganizacion().getId());
-        List<Map<String, Object>> tiposDeActivo = tiposDeActivoQuery.list();
-        Map<String, Map<String, Object>> tiposDeActivoMap = new HashMap<>();
-        for (Map<String, Object> tipoActivo : tiposDeActivo) {
-            tipoActivo.put("total", BigDecimal.ZERO);
-            tiposDeActivoMap.put((String) tipoActivo.get("cuenta"), tipoActivo);
-        }
+        List<Map<String, Object>> tiposDeActivo = new ArrayList<>();
         Map<String, Object> totalCC = new HashMap<>();
         totalCC.put("nombre", "");
         totalCC.put("cuenta", "TOTAL");
         totalCC.put("id", 0);
-        totalCC.put("total", BigDecimal.ZERO);
+        totalCC.put("acumulada", BigDecimal.ZERO);
+        totalCC.put("mensual", BigDecimal.ZERO);
+        totalCC.put("anual", BigDecimal.ZERO);
+        totalCC.put("valorNeto", BigDecimal.ZERO);
+        totalCC.put("costo", BigDecimal.ZERO);
         tiposDeActivo.add(totalCC);
+        tiposDeActivo.addAll(tiposDeActivoQuery.list());
+        Map<String, Map<String, Object>> tiposDeActivoMap = new HashMap<>();
         tiposDeActivoMap.put("TOTAL", totalCC);
+        for (Map<String, Object> tipoActivo : tiposDeActivo) {
+            if (!tipoActivo.get("cuenta").equals("TOTAL")) {
+                tipoActivo.put("acumulada", BigDecimal.ZERO);
+                tipoActivo.put("mensual", BigDecimal.ZERO);
+                tipoActivo.put("anual", BigDecimal.ZERO);
+                tipoActivo.put("valorNeto", BigDecimal.ZERO);
+                tipoActivo.put("costo", BigDecimal.ZERO);
+                tiposDeActivoMap.put((String) tipoActivo.get("cuenta"), tipoActivo);
+            }
+        }
         params.put("tiposDeActivo", tiposDeActivo);
 
         Date fecha = (Date) params.get("fecha");
@@ -2172,53 +2184,204 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
 
             Map<String, Object> mapa2 = mapa1
                     .get(activo.getCentroCostoCuenta());
-            Map<String, BigDecimal> mapa3;
+            Map<String, Map<String, BigDecimal>> mapa3;
             if (mapa2 == null) {
                 mapa2 = new HashMap<>();
                 mapa3 = new HashMap<>();
                 for (Map<String, Object> tipoActivo : tiposDeActivo) {
+                    Map<String, BigDecimal> mapa4 = new HashMap<>();
+                    mapa4.put("acumulada", BigDecimal.ZERO);
+                    mapa4.put("mensual", BigDecimal.ZERO);
+                    mapa4.put("anual", BigDecimal.ZERO);
+                    mapa4.put("valorNeto", BigDecimal.ZERO);
+                    mapa4.put("costo", BigDecimal.ZERO);
                     mapa3.put((String) tipoActivo.get("cuenta"),
-                            BigDecimal.ZERO);
+                            mapa4);
                 }
-                mapa3.put("TOTAL", BigDecimal.ZERO);
                 mapa2.put("totales", mapa3);
                 mapa2.put("cuenta", activo.getCentroCostoCuenta());
                 mapa2.put("nombre", activo.getCentroCostoNombre());
                 mapa1.put(activo.getCentroCostoCuenta(), mapa2);
             }
 
-            mapa3 = (Map<String, BigDecimal>) mapa2.get("totales");
+            mapa3 = (Map<String, Map<String, BigDecimal>>) mapa2.get("totales");
 
-            BigDecimal cantidad = mapa3.get(activo.getTipoActivoCuenta());
-            cantidad = cantidad.add(activo.getDepreciacionAcumulada(), mc);
-            mapa3.put(activo.getTipoActivoCuenta(), cantidad);
+            Map<String, BigDecimal> mapa4 = mapa3.get(activo.getTipoActivoCuenta());
+            BigDecimal acumulada = mapa4.get("acumulada");
+            acumulada = acumulada.add(activo.getDepreciacionAcumulada(), mc);
+            mapa4.put("acumulada", acumulada);
+
+            BigDecimal mensual = mapa4.get("mensual");
+            mensual = mensual.add(activo.getDepreciacionMensual(), mc);
+            mapa4.put("mensual", mensual);
+
+            BigDecimal anual = mapa4.get("anual");
+            anual = anual.add(activo.getDepreciacionAnual(), mc);
+            mapa4.put("anual", anual);
+
+            BigDecimal valorNeto = mapa4.get("valorNeto");
+            valorNeto = valorNeto.add(activo.getValorNeto(), mc);
+            mapa4.put("valorNeto", valorNeto);
+
+            BigDecimal costo = mapa4.get("costo");
+            costo = costo.add(activo.getMoi(), mc);
+            mapa4.put("costo", costo);
+
+            Map<String, BigDecimal> total = mapa3.get("TOTAL");
+            acumulada = total.get("acumulada");
+            acumulada = acumulada.add(activo.getDepreciacionAcumulada(), mc);
+            total.put("acumulada", acumulada);
+
+            mensual = total.get("mensual");
+            mensual = mensual.add(activo.getDepreciacionMensual(), mc);
+            total.put("mensual", mensual);
+
+            anual = total.get("anual");
+            anual = anual.add(activo.getDepreciacionAnual(), mc);
+            total.put("anual", anual);
+
+            valorNeto = total.get("valorNeto");
+            valorNeto = valorNeto.add(activo.getValorNeto(), mc);
+            total.put("valorNeto", valorNeto);
+
+            costo = total.get("costo");
+            costo = costo.add(activo.getMoi(), mc);
+            total.put("costo", costo);
 
             Map<String, Object> tipoActivo = (Map<String, Object>) tiposDeActivoMap
                     .get(activo.getTipoActivoCuenta());
-            BigDecimal total = (BigDecimal) tipoActivo.get("total");
-            total = total.add(activo.getDepreciacionAcumulada(), mc);
-            tipoActivo.put("total", total);
+            acumulada = (BigDecimal) tipoActivo.get("acumulada");
+            acumulada = acumulada.add(activo.getDepreciacionAcumulada(), mc);
+            tipoActivo.put("acumulada", acumulada);
+
+            mensual = (BigDecimal) tipoActivo.get("mensual");
+            mensual = mensual.add(activo.getDepreciacionMensual(), mc);
+            tipoActivo.put("mensual", mensual);
+
+            anual = (BigDecimal) tipoActivo.get("anual");
+            anual = anual.add(activo.getDepreciacionAnual(), mc);
+            tipoActivo.put("anual", anual);
+
+            valorNeto = (BigDecimal) tipoActivo.get("valorNeto");
+            valorNeto = valorNeto.add(activo.getValorNeto(), mc);
+            tipoActivo.put("valorNeto", valorNeto);
+
+            costo = (BigDecimal) tipoActivo.get("costo");
+            costo = costo.add(activo.getMoi(), mc);
+            tipoActivo.put("costo", costo);
 
             // Totales
-            cantidad = mapa3.get("TOTAL");
-            cantidad = cantidad.add(activo.getDepreciacionAcumulada(), mc);
-            mapa3.put("TOTAL", cantidad);
+            tipoActivo = (Map<String, Object>) tiposDeActivoMap.get("TOTAL");
+            acumulada = (BigDecimal) tipoActivo.get("acumulada");
+            acumulada = acumulada.add(activo.getDepreciacionAcumulada(), mc);
+            tipoActivo.put("acumulada", acumulada);
 
             tipoActivo = (Map<String, Object>) tiposDeActivoMap.get("TOTAL");
-            total = (BigDecimal) tipoActivo.get("total");
-            total = total.add(activo.getDepreciacionAcumulada(), mc);
-            tipoActivo.put("total", total);
+            mensual = (BigDecimal) tipoActivo.get("mensual");
+            mensual = mensual.add(activo.getDepreciacionMensual(), mc);
+            tipoActivo.put("mensual", mensual);
 
+            tipoActivo = (Map<String, Object>) tiposDeActivoMap.get("TOTAL");
+            anual = (BigDecimal) tipoActivo.get("anual");
+            anual = anual.add(activo.getDepreciacionAnual(), mc);
+            tipoActivo.put("anual", anual);
+
+            tipoActivo = (Map<String, Object>) tiposDeActivoMap.get("TOTAL");
+            valorNeto = (BigDecimal) tipoActivo.get("valorNeto");
+            valorNeto = valorNeto.add(activo.getValorNeto(), mc);
+            tipoActivo.put("valorNeto", valorNeto);
+
+            tipoActivo = (Map<String, Object>) tiposDeActivoMap.get("TOTAL");
+            costo = (BigDecimal) tipoActivo.get("costo");
+            costo = costo.add(activo.getMoi(), mc);
+            tipoActivo.put("costo", costo);
         }
 
         if (log.isTraceEnabled()) {
             for (Map<String, Object> centroCosto : mapa1.values()) {
-                log.trace("CentroCosto: {} : {}", centroCosto.get("nombre"),
-                        centroCosto.get("totales"));
+                log.trace("CentroCosto: {} : {} : {}", new Object[]{centroCosto.get("cuenta"), centroCosto.get("nombre"),
+                            centroCosto.get("totales")});
             }
+            log.trace("TiposDeActivo: {}", tiposDeActivo);
         }
 
         params.put("centrosDeCosto", mapa1.values());
         return params;
+    }
+
+    @Override
+    public void hojaCalculoConcentradoDepreciacion(Map<String, Object> params) {
+        try {
+            log.debug("Creando excel con concentrado depreciacion");
+            XSSFWorkbook wb = new XSSFWorkbook();
+            int rows = 0;
+            if (params.containsKey("centrosDeCosto")) {
+                XSSFSheet sheet = wb.createSheet("CentrosDeCosto");
+                List<Map<String, Object>> tiposDeActivo = (List<Map<String, Object>>) params.get("tiposDeActivo");
+                Collection<Map<String, Object>> centrosDeCosto = (Collection<Map<String, Object>>) params.get("centrosDeCosto");
+                for (Map<String, Object> centroCosto : centrosDeCosto) {
+                    Map<String, Object> totales = (Map<String, Object>) centroCosto.get("totales");
+                    if (rows == 0) {
+                        XSSFRow row = sheet.createRow(rows++);
+                        int cols = 0;
+                        row.createCell(cols++);
+                        row.createCell(cols++);
+                        for (Map<String, Object> tipoActivo : tiposDeActivo) {
+                            log.debug("Creando encabezado de {}", tipoActivo.get("cuenta"));
+                            row.createCell(cols++).setCellValue((String) tipoActivo.get("cuenta"));
+                            row.createCell(cols++).setCellValue((String) tipoActivo.get("nombre"));
+                            row.createCell(cols++);
+                            row.createCell(cols++);
+                            row.createCell(cols++);
+                            row.createCell(cols++);
+                        }
+                        row = sheet.createRow(rows++);
+                        cols = 0;
+                        row.createCell(cols++).setCellValue("Cuenta");
+                        row.createCell(cols++).setCellValue("Nombre");
+                        for (Map<String, Object> tipoActivo : tiposDeActivo) {
+                            log.debug("Creando columnas para {}", tipoActivo.get("cuenta"));
+                            row.createCell(cols++).setCellValue("Costo");
+                            row.createCell(cols++).setCellValue("Depreciación Año");
+                            row.createCell(cols++).setCellValue("Depreciacion Anual");
+                            row.createCell(cols++).setCellValue("Depreciación Mensual");
+                            row.createCell(cols++).setCellValue("Depreciación Acumulada");
+                            row.createCell(cols++).setCellValue("Valor Neto");
+                        }
+                    }
+                    int cols = 0;
+                    XSSFRow row = sheet.createRow(rows++);
+                    row.createCell(cols++).setCellValue((String) centroCosto.get("cuenta"));
+                    row.createCell(cols++).setCellValue((String) centroCosto.get("nombre"));
+                    for (Map<String, Object> tipoActivo : tiposDeActivo) {
+                        Map<String, BigDecimal> valores = (Map<String, BigDecimal>) totales.get((String) tipoActivo.get("cuenta"));
+                        row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue((valores.get("costo")).doubleValue());
+                        row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue(0d);
+                        row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue((valores.get("anual")).doubleValue());
+                        row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue((valores.get("mensual")).doubleValue());
+                        row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue((valores.get("acumulada")).doubleValue());
+                        row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue((valores.get("valorNeto")).doubleValue());
+                    }
+                }
+
+                int cols = 0;
+                XSSFRow row = sheet.createRow(rows++);
+                row.createCell(cols++);
+                row.createCell(cols++).setCellValue("TOTAL");
+                for (Map<String, Object> tipoDeActivo : tiposDeActivo) {
+                    row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue(((BigDecimal) tipoDeActivo.get("costo")).doubleValue());
+                    row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue(0d);
+                    row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue(((BigDecimal) tipoDeActivo.get("anual")).doubleValue());
+                    row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue(((BigDecimal) tipoDeActivo.get("mensual")).doubleValue());
+                    row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue(((BigDecimal) tipoDeActivo.get("acumulada")).doubleValue());
+                    row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue(((BigDecimal) tipoDeActivo.get("valorNeto")).doubleValue());
+                }
+            }
+
+            OutputStream out = (OutputStream) params.get("out");
+            wb.write(out);
+        } catch (IOException ex) {
+            log.error("No se pudo crear la hoja de calculo", ex);
+        }
     }
 }

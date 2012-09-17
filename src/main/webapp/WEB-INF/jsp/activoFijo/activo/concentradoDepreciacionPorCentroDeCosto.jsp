@@ -34,34 +34,81 @@
             </fieldset>
         </form>
         <c:if test="${tiposDeActivo != null}">
-            <table id="lista" class="table table-striped table-hover">
+            <table id="lista" class="table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
 
                         <th><s:message code="centroCosto.label" /></th>
 
                         <c:forEach items="${tiposDeActivo}" var="tipoDeActivo">
-                            <th style="text-align:right;">${tipoDeActivo.nombre} | ${tipoDeActivo.cuenta}</th>
+                            <th colspan="6">${tipoDeActivo.nombre} | ${tipoDeActivo.cuenta}</th>
+                        </c:forEach>
+
+                    </tr>
+                    <tr>
+
+                        <th></th>
+
+                        <c:forEach items="${tiposDeActivo}" var="tipoDeActivo">
+                            <th style="text-align:right;"><s:message code="costo.label" /></th>
+                            <th style="text-align:right;"><s:message code="depreciacionAnio.label" /></th>
+                            <th style="text-align:right;"><s:message code="depreciacionAnual.label" /></th>
+                            <th style="text-align:right;"><s:message code="depreciacionMensual.label" /></th>
+                            <th style="text-align:right;"><s:message code="depreciacionAcumulada.label" /></th>
+                            <th style="text-align:right;"><s:message code="valorNeto.label" /></th>
                         </c:forEach>
 
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${centrosDeCosto}" var="centroDeCosto" varStatus="status">
-                        <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
+                    <c:forEach items="${centrosDeCosto}" var="centroDeCosto">
+                        <tr>
                             <td><a href="<c:url value='/activoFijo/activo/depreciacionAcumuladaPorCentroDeCosto/${centroDeCosto.cuenta}/${fechaParam}' />">${centroDeCosto.nombre}</a></td>
                             <c:forEach items="${tiposDeActivo}" var="tipoDeActivo">
-                                <td style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="${centroDeCosto.totales[tipoDeActivo.cuenta]}" /></td>
+                                <td style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="${centroDeCosto.totales[tipoDeActivo.cuenta]['costo']}" /></td>
+                                <td style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="0" /></td>
+                                <td style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="${centroDeCosto.totales[tipoDeActivo.cuenta]['anual']}" /></td>
+                                <td style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="${centroDeCosto.totales[tipoDeActivo.cuenta]['mensual']}" /></td>
+                                <td style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="${centroDeCosto.totales[tipoDeActivo.cuenta]['acumulada']}" /></td>
+                                <td style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="${centroDeCosto.totales[tipoDeActivo.cuenta]['valorNeto']}" /></td>
                             </c:forEach>
                         </tr>
                     </c:forEach>
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th>&nbsp;</th>
+                        <th><s:message code="total.label" /></th>
                         <c:forEach items="${tiposDeActivo}" var="tipoDeActivo">
-                            <th style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="${tipoDeActivo.total}" /></th>
+                            <th style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="${tipoDeActivo.costo}" /></th>
+                            <th style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="0" /></th>
+                            <th style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="${tipoDeActivo.anual}" /></th>
+                            <th style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="${tipoDeActivo.mensual}" /></th>
+                            <th style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="${tipoDeActivo.acumulada}" /></th>
+                            <th style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="${tipoDeActivo.valorNeto}" /></th>
                         </c:forEach>
+                    </tr>
+                    <tr>
+
+                        <th></th>
+
+                        <c:forEach items="${tiposDeActivo}" var="tipoDeActivo">
+                            <th style="text-align:right;"><s:message code="costo.label" /></th>
+                            <th style="text-align:right;"><s:message code="depreciacionAnio.label" /></th>
+                            <th style="text-align:right;"><s:message code="depreciacionAnual.label" /></th>
+                            <th style="text-align:right;"><s:message code="depreciacionMensual.label" /></th>
+                            <th style="text-align:right;"><s:message code="depreciacionAcumulada.label" /></th>
+                            <th style="text-align:right;"><s:message code="valorNeto.label" /></th>
+                        </c:forEach>
+
+                    </tr>
+                    <tr>
+
+                        <th><s:message code="centroCosto.label" /></th>
+
+                        <c:forEach items="${tiposDeActivo}" var="tipoDeActivo">
+                            <th colspan="6">${tipoDeActivo.nombre} | ${tipoDeActivo.cuenta}</th>
+                        </c:forEach>
+
                     </tr>
                 </tfoot>
             </table>

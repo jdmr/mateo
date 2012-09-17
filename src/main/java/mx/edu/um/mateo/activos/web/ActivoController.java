@@ -719,7 +719,7 @@ public class ActivoController extends BaseController {
                         "Content-disposition",
                         "attachment; filename='concentradoDepreciacionPorCentroDeCosto-" + sdf2.format(date) + ".xlsx'");
                 params.put("out", response.getOutputStream());
-//                activoDao.hojaCalculoDepreciacion(params);
+                activoDao.hojaCalculoConcentradoDepreciacion(params);
                 return null;
             }
             modelo.addAllAttributes(params);
