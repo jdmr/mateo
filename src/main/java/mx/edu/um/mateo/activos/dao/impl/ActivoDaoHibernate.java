@@ -2038,10 +2038,11 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             totalComprasAcumuladas = totalDepreciacionFinal.subtract(
                     totalDepreciacionAcumulada, mc);
 
-            BigDecimal grupoValorNeto = costoFinal.subtract(depreciacionFinal,
+            BigDecimal grupoValorNeto = grupoCostoFinal.subtract(depreciacionFinal,
                     mc);
             grupo.put("valorNeto", grupoValorNeto);
             valorNeto = valorNeto.add(grupoValorNeto, mc);
+            log.debug("{} : {} : {} : {} : {}", new Object[] {tipoActivo.getNombre(), costoFinal, depreciacionFinal, grupoValorNeto, valorNeto});
         }
 
         resultado.put("lista", grupos.values());
