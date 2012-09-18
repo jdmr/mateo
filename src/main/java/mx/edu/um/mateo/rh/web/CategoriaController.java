@@ -73,6 +73,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping(Constantes.PATH_CATEGORIA)
+
 public class CategoriaController extends BaseController{
     
     private static final Logger log = LoggerFactory.getLogger(mx.edu.um.mateo.rh.web.CategoriaController.class);
@@ -85,7 +86,7 @@ public class CategoriaController extends BaseController{
     @Autowired
     private Ambiente ambiente;
     
-    @RequestMapping
+    @RequestMapping ({"","/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
             @RequestParam(required = false) Long pagina,
@@ -258,7 +259,7 @@ public class CategoriaController extends BaseController{
             return Constantes.PATH_CATEGORIA_VER;
         }
         
-        return "redirect:" + Constantes.PATH_CATEGORIA;
+        return "redirect:" + Constantes.PATH_CATEGORIA_LISTA ;
     }
     
     private void generaReporte(String tipo, List<Categoria> categorias, HttpServletResponse response) throws JRException, IOException {

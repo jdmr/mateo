@@ -50,8 +50,8 @@ public class CategoriaManagerImpl extends BaseDao implements CategoriaManager {
      */
     @Override
     public String elimina(final String id) {
-        dao.elimina(new Integer(id));
-        return dao.elimina(new Integer (id));
+        String nombre = dao.elimina(new Integer(id));
+        return nombre;
         
     }
 

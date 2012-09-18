@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package mx.edu.um.mateo.rh.dao.impl;
 
 import java.util.HashMap;
@@ -45,15 +44,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class CategoriaDaoHibernate extends BaseDao implements CategoriaDao {
- 
-    
-
 
     /**
      * @see mx.edu.um.mateo.rh.dao.CategoriaDao#lista(java.util.Map)
-     * 
+     *
      */
-    
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de categorias con params {}", params);
@@ -88,10 +83,7 @@ public class CategoriaDaoHibernate extends BaseDao implements CategoriaDao {
             String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
             propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("nombreCompleto", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("rfc", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("correo", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("contacto", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("status", filtro, MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -133,8 +125,7 @@ public class CategoriaDaoHibernate extends BaseDao implements CategoriaDao {
 
     /**
      * @see mx.edu.um.rh.dao.CategoriaDao#Graba(Categoria categoria)
-     */    
-    
+     */
     @Override
     public void graba(final Categoria categoria, Usuario usuario) {
         Session session = currentSession();
@@ -144,7 +135,7 @@ public class CategoriaDaoHibernate extends BaseDao implements CategoriaDao {
         currentSession().saveOrUpdate(categoria);
         currentSession().merge(categoria);
         currentSession().flush();
-        
+
 //        if(categoria.getId() != null){
 //        	Categoria nuevaCategoria = obtiene(categoria.getId());
 //        	if(categoria.hashCode() == nuevaCategoria.hashCode()){
@@ -161,37 +152,17 @@ public class CategoriaDaoHibernate extends BaseDao implements CategoriaDao {
     /**
      * @see mx.edu.um.rh.dao.CategoriaDao#elimina(Long id)
      */
-   
     @Override
     public String elimina(final Integer id) {
-        Categoria categoria=this.obtiene(id);
-        String nombre=categoria.getNombre();
+        log.debug("Eliminando la categoria {}", id);
+        Categoria categoria = this.obtiene(id);
+        String nombre = categoria.getNombre();
         currentSession().delete(categoria);
-         currentSession().merge(categoria);
+
         currentSession().flush();
-        
+
         return nombre;
-        
-        
+
+
     }
-
-    
-
-   
-
-   
-
-   
-
-    
-    
-
-   
-
-  
-
-  
-
-   
-    
 }

@@ -51,17 +51,15 @@
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="nombre" />
                         </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="descripcion" />
-                        </jsp:include>
-                        <th><s:message code="almacen.label" /></th>
+                        
+                        <th><s:message code="status.label" /></th>
                     </tr>
                 </thead>
                 <tbody>
                     <c:forEach items="${categorias}" var="categoria" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/rh/categoria/ver/${categoria.id}' />">${categoria.nombre}</a></td>
-                            <td>${categoria.nombre}</td>
+                            
                             <td>${categoria.status}</td>
                         </tr>
                     </c:forEach>
