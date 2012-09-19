@@ -158,7 +158,7 @@ public class EmpresaController extends BaseController {
         try {
             Usuario usuario = ambiente.obtieneUsuario();
             if (StringUtils.isNotBlank(centroDeCostoId)) {
-                CentroCosto centroCosto = centroCostoDao.obtieneCentroDeCosto(centroDeCostoId, usuario);
+                CentroCosto centroCosto = centroCostoDao.obtiene(centroDeCostoId, usuario);
                 empresa.setCentroCosto(centroCosto);
             }
             
@@ -206,7 +206,7 @@ public class EmpresaController extends BaseController {
         try {
             Usuario usuario = ambiente.obtieneUsuario();
             if (StringUtils.isNotBlank(centroDeCostoId)) {
-                CentroCosto centroCosto = centroCostoDao.obtieneCentroDeCosto(centroDeCostoId, usuario);
+                CentroCosto centroCosto = centroCostoDao.obtiene(centroDeCostoId, usuario);
                 empresa.setCentroCosto(centroCosto);
             }
             
@@ -272,7 +272,7 @@ public class EmpresaController extends BaseController {
                     request.getParameterMap().get(nombre));
         }
 
-        List<CentroCosto> centrosDeCosto = centroCostoDao.buscaCentrosDeCostoPorOrganizacion(filtro, ambiente.obtieneUsuario());
+        List<CentroCosto> centrosDeCosto = centroCostoDao.buscaPorOrganizacion(filtro, ambiente.obtieneUsuario());
         List<Map<String, String>> resultados = new ArrayList<>();
         for (CentroCosto centroCosto : centrosDeCosto) {
             Map<String, String> map = new HashMap<>();

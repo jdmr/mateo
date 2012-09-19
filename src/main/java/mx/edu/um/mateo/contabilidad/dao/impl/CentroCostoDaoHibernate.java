@@ -58,14 +58,14 @@ public class CentroCostoDaoHibernate implements CentroCostoDao {
     }
 
     @Override
-    public CentroCosto obtieneCentroDeCosto(String centroDeCostoId, Usuario usuario) {
+    public CentroCosto obtiene(String centroDeCostoId, Usuario usuario) {
         Ejercicio ejercicio = usuario.getEjercicio();
         CCostoPK pk = new CCostoPK(ejercicio, centroDeCostoId);
         return (CentroCosto) currentSession().get(CentroCosto.class, pk);
     }
 
     @Override
-    public List<CentroCosto> buscaCentrosDeCosto(String filtro, Usuario usuario) {
+    public List<CentroCosto> busca(String filtro, Usuario usuario) {
         Ejercicio ejercicio = usuario.getEjercicio();
         Criteria criteria = currentSession().createCriteria(CentroCosto.class);
         criteria.add(Restrictions.eq("id.ejercicio", ejercicio));
@@ -78,7 +78,7 @@ public class CentroCostoDaoHibernate implements CentroCostoDao {
     }
 
     @Override
-    public List<CentroCosto> buscaCentrosDeCostoPorOrganizacion(String filtro, Usuario usuario) {
+    public List<CentroCosto> buscaPorOrganizacion(String filtro, Usuario usuario) {
         Ejercicio ejercicio = usuario.getEjercicio();
         Organizacion organizacion = usuario.getEmpresa().getOrganizacion();
         Criteria criteria = currentSession().createCriteria(CentroCosto.class);
@@ -101,7 +101,7 @@ public class CentroCostoDaoHibernate implements CentroCostoDao {
     }
 
     @Override
-    public List<CentroCosto> buscaCentrosDeCostoPorEmpresa(String filtro, Usuario usuario) {
+    public List<CentroCosto> buscaPorEmpresa(String filtro, Usuario usuario) {
         Ejercicio ejercicio = usuario.getEjercicio();
         Empresa empresa = usuario.getEmpresa();
         Criteria criteria = currentSession().createCriteria(CentroCosto.class);
@@ -120,6 +120,21 @@ public class CentroCostoDaoHibernate implements CentroCostoDao {
         or.add(and);
         criteria.add(or);
         criteria.setMaxResults(10);
+        return criteria.list();
+    }
+
+    @Override
+    public List<CentroCosto> listaPorEmpresa(Usuario usuario) {
+        Ejercicio ejercicio = usuario.getEjercicio();
+        Empresa empresa = usuario.getEmpresa();
+        Criteria criteria = currentSession().createCriteria(CentroCosto.class);
+        criteria.add(Restrictions.eq("id.ejercicio", ejercicio));
+        String base = empresa.getCentroCosto().getId().getIdCosto();
+        StringBuilder sb = new StringBuilder();
+        sb.append(base);
+        sb.append("%");
+        String cuenta = sb.toString();
+        criteria.add(Restrictions.ilike("id.idCosto", cuenta, MatchMode.START));
         return criteria.list();
     }
 }

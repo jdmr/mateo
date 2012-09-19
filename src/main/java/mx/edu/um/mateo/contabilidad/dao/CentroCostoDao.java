@@ -33,11 +33,13 @@ import mx.edu.um.mateo.general.model.Usuario;
  */
 public interface CentroCostoDao {
 
-    public CentroCosto obtieneCentroDeCosto(String centroDeCostoId, Usuario usuario);
+    public CentroCosto obtiene(String centroDeCostoId, Usuario usuario);
 
-    public List<CentroCosto> buscaCentrosDeCosto(String filtro, Usuario usuario);
+    public List<CentroCosto> busca(String filtro, Usuario usuario);
 
-    public List<CentroCosto> buscaCentrosDeCostoPorOrganizacion(String filtro, Usuario usuario);
+    public List<CentroCosto> buscaPorOrganizacion(String filtro, Usuario usuario);
 
-    public List<CentroCosto> buscaCentrosDeCostoPorEmpresa(String filtro, Usuario usuario);
+    public List<CentroCosto> buscaPorEmpresa(String filtro, Usuario usuario);
+
+    public List<CentroCosto> listaPorEmpresa(Usuario usuario);
 }

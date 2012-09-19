@@ -279,7 +279,7 @@ public class OrganizacionController extends BaseController {
                     request.getParameterMap().get(nombre));
         }
 
-        List<CentroCosto> centrosDeCosto = centroCostoDao.buscaCentrosDeCosto(filtro, ambiente.obtieneUsuario());
+        List<CentroCosto> centrosDeCosto = centroCostoDao.busca(filtro, ambiente.obtieneUsuario());
         List<Map<String, String>> resultados = new ArrayList<>();
         for (CentroCosto centroCosto : centrosDeCosto) {
             Map<String, String> map = new HashMap<>();

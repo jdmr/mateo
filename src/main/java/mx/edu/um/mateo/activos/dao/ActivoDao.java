@@ -55,8 +55,6 @@ public interface ActivoDao {
 
     public void depreciar(Date fecha, Long empresaId);
 
-    public List<CentroCosto> centrosDeCosto(Usuario usuario);
-
     public void subeImagen(Activo activo, Usuario usuario);
 
     public String reubica(ReubicacionActivo reubicacion, Usuario usuario);

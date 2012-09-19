@@ -156,12 +156,12 @@ public class ActivoController extends BaseController {
         modelo.addAttribute("resumen", params.get("resumen"));
 
         this.pagina(params, modelo, "activos", pagina);
-        
+
         List<TipoActivo> tiposDeActivo = tipoActivoDao.lista(ambiente.obtieneUsuario());
         if (params.containsKey("tipoActivoIds")) {
             List<Long> ids = (List<Long>) params.get("tipoActivoIds");
             List<TipoActivo> seleccionados = new ArrayList<>();
-            for(TipoActivo tipoActivo : tiposDeActivo) {
+            for (TipoActivo tipoActivo : tiposDeActivo) {
                 if (ids.contains(tipoActivo.getId())) {
                     seleccionados.add(tipoActivo);
                 }
@@ -208,8 +208,7 @@ public class ActivoController extends BaseController {
         params = tipoActivoDao.lista(params);
         modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
 
-        List<CentroCosto> centrosDeCosto = activoDao.centrosDeCosto(ambiente
-                .obtieneUsuario());
+        List<CentroCosto> centrosDeCosto = centroCostoDao.listaPorEmpresa(ambiente.obtieneUsuario());
         modelo.addAttribute("centrosDeCosto", centrosDeCosto);
 
         return "activoFijo/activo/nuevo";
@@ -246,8 +245,7 @@ public class ActivoController extends BaseController {
             params = tipoActivoDao.lista(params);
             modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
 
-            List<CentroCosto> centrosDeCosto = activoDao
-                    .centrosDeCosto(ambiente.obtieneUsuario());
+            List<CentroCosto> centrosDeCosto = centroCostoDao.listaPorEmpresa(ambiente.obtieneUsuario());
             modelo.addAttribute("centrosDeCosto", centrosDeCosto);
 
             return "activoFijo/activo/nuevo";
@@ -282,8 +280,7 @@ public class ActivoController extends BaseController {
             params = tipoActivoDao.lista(params);
             modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
 
-            List<CentroCosto> centrosDeCosto = activoDao
-                    .centrosDeCosto(ambiente.obtieneUsuario());
+            List<CentroCosto> centrosDeCosto = centroCostoDao.listaPorEmpresa(ambiente.obtieneUsuario());
             modelo.addAttribute("centrosDeCosto", centrosDeCosto);
 
             return "activoFijo/activo/nuevo";
@@ -446,8 +443,11 @@ public class ActivoController extends BaseController {
         ReubicacionActivo reubicacion = new ReubicacionActivo(activo,
                 new Date());
         modelo.addAttribute("reubicacion", reubicacion);
-        List<CentroCosto> centrosDeCosto = activoDao.centrosDeCosto(ambiente
-                .obtieneUsuario());
+
+        CentroCosto centroCosto = activo.getCentroCosto();
+        modelo.addAttribute("centroCosto", centroCosto);
+
+        List<CentroCosto> centrosDeCosto = centroCostoDao.listaPorEmpresa(ambiente.obtieneUsuario());
         modelo.addAttribute("centrosDeCosto", centrosDeCosto);
 
         return "activoFijo/activo/reubica";
@@ -456,13 +456,16 @@ public class ActivoController extends BaseController {
     @RequestMapping(value = "/reubica", method = RequestMethod.POST)
     public String reubica(Model modelo,
             @ModelAttribute ReubicacionActivo reubicacion,
-            BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+            BindingResult bindingResult, RedirectAttributes redirectAttributes,
+            @RequestParam String cuenta) {
         if (bindingResult.hasErrors()) {
             return "activoFijo/activo/reubica/"
                     + reubicacion.getActivo().getId();
         }
 
         Usuario usuario = ambiente.obtieneUsuario();
+        CentroCosto centroCosto = centroCostoDao.obtiene(cuenta, usuario);
+        reubicacion.setCentroCosto(centroCosto);
         String nombre = activoDao.reubica(reubicacion, usuario);
         redirectAttributes.addFlashAttribute("message",
                 "activo.reubica.message");
@@ -743,7 +746,7 @@ public class ActivoController extends BaseController {
                     request.getParameterMap().get(nombre));
         }
 
-        List<CentroCosto> centrosDeCosto = centroCostoDao.buscaCentrosDeCostoPorEmpresa(filtro, ambiente.obtieneUsuario());
+        List<CentroCosto> centrosDeCosto = centroCostoDao.buscaPorEmpresa(filtro, ambiente.obtieneUsuario());
         List<Map<String, String>> resultados = new ArrayList<>();
         for (CentroCosto centroCosto : centrosDeCosto) {
             Map<String, String> map = new HashMap<>();
