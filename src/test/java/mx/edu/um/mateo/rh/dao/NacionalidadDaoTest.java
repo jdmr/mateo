@@ -4,20 +4,19 @@
  */
 package mx.edu.um.mateo.rh.dao;
 
-import mx.edu.um.mateo.rh.dao.impl.NacionalidadDao;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
-import mx.edu.um.mateo.rh.model.Colegio;
+import mx.edu.um.mateo.rh.dao.impl.NacionalidadDaoHibernate;
 import mx.edu.um.mateo.rh.model.Nacionalidad;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class NacionalidadDaoTest {
 
     @Autowired
-    private NacionalidadDao nacionalidadDao;
+    private NacionalidadDaoHibernate nacionalidadDao;
     private static final Logger log = LoggerFactory.getLogger(ColegioDaoTest.class);
     @Autowired
     private SessionFactory sessionFactory;

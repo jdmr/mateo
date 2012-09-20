@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.rh.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 
@@ -13,7 +14,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "dependiente")
-public class Dependiente {
+public class Dependiente implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

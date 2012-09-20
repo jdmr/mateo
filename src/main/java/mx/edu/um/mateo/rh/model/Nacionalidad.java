@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.rh.model;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,7 +19,7 @@ import javax.persistence.Version;
  */
 @Entity
 @Table(name="nacionalidad")
-public class Nacionalidad {
+public class Nacionalidad implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

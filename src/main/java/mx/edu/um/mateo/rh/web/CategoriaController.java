@@ -69,7 +69,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
- * @author jdmrz
+ * @author zorch
  */
 @Controller
 @RequestMapping(Constantes.PATH_CATEGORIA)

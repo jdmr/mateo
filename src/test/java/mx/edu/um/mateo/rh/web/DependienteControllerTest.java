@@ -4,7 +4,6 @@
  */
 package mx.edu.um.mateo.rh.web;
 
-import java.math.BigDecimal;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
@@ -13,8 +12,8 @@ import mx.edu.um.mateo.rh.model.Dependiente;
 import mx.edu.um.mateo.rh.model.TipoDependiente;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import static org.junit.Assert.assertNotNull;
 import org.junit.*;
+import static org.junit.Assert.assertNotNull;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +76,6 @@ public class DependienteControllerTest extends BaseTest {
     @Test
     public void debieraMostrarListaDeDependientes() throws Exception {
         log.debug("Debiera mostrar lista de dependientes");
-
         for (int i = 0; i < 20; i++) {
         Dependiente dependiente = new Dependiente();
         dependiente.setTipoDependiente(TipoDependiente.HIJO);

@@ -26,13 +26,13 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class NacionalidadDao {
+public class NacionalidadDaoHibernate {
 
-    private static final Logger log = LoggerFactory.getLogger(NacionalidadDao.class);
+    private static final Logger log = LoggerFactory.getLogger(NacionalidadDaoHibernate.class);
     @Autowired
     private SessionFactory sessionFactory;
 
-    public NacionalidadDao() {
+    public NacionalidadDaoHibernate() {
         log.info("Nueva instancia de ColegioDao");
     }
 
