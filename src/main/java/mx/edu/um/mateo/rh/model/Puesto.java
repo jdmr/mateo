@@ -44,10 +44,10 @@ public class Puesto implements Serializable {
         private Integer seccion;
         @NotNull
 	@Column(nullable = false)
-        private Integer minima;
+        private Integer minimo;
         @NotNull
 	@Column(nullable = false)
-        private Integer maxima;
+        private Integer maximo;
         @Column(nullable = false, length = 2)
         private String status;
         @Column
@@ -60,12 +60,12 @@ public class Puesto implements Serializable {
     public Puesto() {
     }
 
-    public Puesto(String descripcion, Integer categoria, Integer seccion, Integer minima, Integer maxima, String status, Empresa empresa) {
+    public Puesto(String descripcion, Integer categoria, Integer seccion, Integer minimo, Integer maximo, String status, Empresa empresa) {
         this.descripcion = descripcion;
         this.categoria = categoria;
         this.seccion = seccion;
-        this.minima = minima;
-        this.maxima = maxima;
+        this.minimo = minimo;
+        this.maximo = maximo;
         this.status = status;
         this.empresa = empresa;
     }
@@ -106,20 +106,20 @@ public class Puesto implements Serializable {
         this.seccion = seccion;
     }
 
-    public Integer getMinima() {
-        return minima;
+    public Integer getMinimo() {
+        return minimo;
     }
 
-    public void setMinima(Integer minima) {
-        this.minima = minima;
+    public void setMinimo(Integer minimo) {
+        this.minimo = minimo;
     }
 
-    public Integer getMaxima() {
-        return maxima;
+    public Integer getMaximo() {
+        return maximo;
     }
 
-    public void setMaxima(Integer maxima) {
-        this.maxima = maxima;
+    public void setMaximo(Integer maximo) {
+        this.maximo = maximo;
     }
 
     public String getStatus() {
@@ -188,7 +188,7 @@ public class Puesto implements Serializable {
 
     @Override
     public String toString() {
-        return "Puesto{" + "id=" + id + ", descripcion=" + descripcion + ", categoria=" + categoria + ", seccion=" + seccion + ", minima=" + minima + ", maxima=" + maxima + ", status=" + status + ", rangoAcademico=" + rangoAcademico + ", version=" + version + '}';
+        return "Puesto{" + "id=" + id + ", descripcion=" + descripcion + ", categoria=" + categoria + ", seccion=" + seccion + ", minima=" + minimo + ", maxima=" + maximo + ", status=" + status + ", rangoAcademico=" + rangoAcademico + ", version=" + version + '}';
     }
 
 	

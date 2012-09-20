@@ -124,7 +124,8 @@ public class PuestoDaoHibernate extends BaseDao implements PuestoDao {
 
     @Override
     public Puesto obtiene(Long id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Puesto puesto = (Puesto) currentSession().get(Puesto.class, id);
+		return puesto;
     }
 
     @Override
@@ -142,7 +143,11 @@ public class PuestoDaoHibernate extends BaseDao implements PuestoDao {
 
     @Override
     public String elimina(Long id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Puesto puesto = obtiene(id);
+		String descripcion = puesto.getDescripcion();
+		currentSession().delete(puesto);
+		currentSession().flush();
+		return descripcion;
     }
 
 	

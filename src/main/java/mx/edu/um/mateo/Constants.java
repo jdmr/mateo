@@ -1048,7 +1048,7 @@ public class Constants {
 	/**
 	 * The request scope attribute that holds the puesto form.
 	 */
-	public static final String PUESTO_KEY = "puestoForm";
+	public static final String PUESTO_KEY = "puesto";
 	/**
 	 * The request scope attribute that holds the puesto list
 	 */

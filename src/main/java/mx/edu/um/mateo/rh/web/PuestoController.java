@@ -122,7 +122,7 @@ public class PuestoController extends BaseController {
 
 		this.pagina(params, modelo, Constants.PUESTO_LIST, pagina);
 
-		return "/rh/puesto/lista";
+		return "/rh/puestos/lista";
 	}
 
 	@RequestMapping("/ver/{id}")
@@ -133,7 +133,7 @@ public class PuestoController extends BaseController {
 
 		modelo.addAttribute(Constants.PUESTO_KEY, puesto);
 
-		return "/rh/puesto/ver";
+		return "/rh/puestos/ver";
 	}
 
 	@RequestMapping("/nuevo")
@@ -142,7 +142,7 @@ public class PuestoController extends BaseController {
 
 		Puesto puesto = new Puesto();
 		modelo.addAttribute(Constants.PUESTO_KEY, puesto);
-		return "/rh/puesto/nuevo";
+		return "/rh/puestos/nuevo";
 	}
 
 	@Transactional
@@ -157,14 +157,14 @@ public class PuestoController extends BaseController {
 		}
 		if (bindingResult.hasErrors()) {
 			log.debug("Hubo algun error en la forma, regresando");
-			return "/rh/puesto/nuevo";
+			return "/rh/puestos/nuevo";
 		}
 
 		try {
 			mgr.graba(puesto, null);
 		} catch (ConstraintViolationException e) {
 			log.error("No se pudo crear el puesto", e);
-			return "/rh/puesto/nuevo";
+			return "/rh/puestos/nuevo";
 		}
 
 		redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE,
@@ -173,7 +173,7 @@ public class PuestoController extends BaseController {
 				Constantes.CONTAINSKEY_MESSAGE_ATTRS,
 				new String[] { puesto.getDescripcion() });
 
-		return "redirect:" + "/rh/puesto/ver" + "/" + puesto.getId();
+		return "redirect:" + "/rh/puestos/ver" + "/" + puesto.getId();
 	}
 
 	@RequestMapping("/edita/{id}")
@@ -183,7 +183,7 @@ public class PuestoController extends BaseController {
 
 		modelo.addAttribute(Constants.PUESTO_KEY, puesto);
 
-		return "/rh/puesto/edita";
+		return "/rh/puestos/edita";
 	}
 
 	@Transactional
@@ -193,13 +193,13 @@ public class PuestoController extends BaseController {
 			RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			log.error("Hubo algun error en la forma, regresando");
-			return "/rh/puesto/edita";
+			return "/rh/puestos/edita";
 		}
 		try {
 			mgr.graba(puesto, null);
 		} catch (ConstraintViolationException e) {
 			log.error("No se pudo crear el puesto", e);
-			return "/rh/puesto/nuevo";
+			return "/rh/puestos/nuevo";
 		}
 
 		redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE,
@@ -208,7 +208,7 @@ public class PuestoController extends BaseController {
 				Constantes.CONTAINSKEY_MESSAGE_ATTRS,
 				new String[] { puesto.getDescripcion() });
 
-		return "redirect:" + "/rh/puesto/ver" + "/" + puesto.getId();
+		return "redirect:" + "/rh/puestos/ver" + "/" + puesto.getId();
 	}
 
 	@Transactional
@@ -232,9 +232,9 @@ public class PuestoController extends BaseController {
 					.addError(new ObjectError("puesto",
 							new String[] { "puesto.no.eliminado.message" },
 							null, null));
-			return "/rh/puesto/ver";
+			return "/rh/puestos/ver";
 		}
 
-		return "redirect:" + "/rh/puesto/ver";
+		return "redirect:" + "/rh/puestos";
 	}
 }
