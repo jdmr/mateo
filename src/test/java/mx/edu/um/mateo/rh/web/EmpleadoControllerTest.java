@@ -116,7 +116,16 @@ public class EmpleadoControllerTest extends BaseTest {
     public void debieraCrearEmpleado() throws Exception {
         log.debug("Debiera crear empleado");
 
-        this.mockMvc.perform(post(Constantes.PATH_EMPLEADO_CREA).param("clave", "test").param("nombre", "test").param("apPaterno", "test").param("apMaterno", "test").param("genero", "m").param("direccion", "test").param("status", "te")).andExpect(status().isOk()).andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE));
+        this.mockMvc.perform(post(Constantes.PATH_EMPLEADO_CREA)
+                .param("clave", "test")
+                .param("nombre", "test")
+                .param("apPaterno", "test")
+                .param("apMaterno", "test")
+                .param("genero", "m")
+                .param("direccion", "test")
+                .param("status", "te"))
+                .andExpect(status().isOk())
+                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE));
     }
 
     @Test
@@ -133,21 +142,20 @@ public class EmpleadoControllerTest extends BaseTest {
         empleado = empleadoDao.crea(empleado);
         assertNotNull(empleado);
 
-        this.mockMvc.perform(post(Constantes.PATH_EMPLEADO_ACTUALIZA).param("id", empleado.getId().toString()).param("version", empleado.getVersion().toString()).param("nombre", "test1").param("clave", empleado.getClave()).param("apPaterno", "test1").param("apMaterno", "test1").param("genero", "t").param("direccion", "test1").param("status", "ts")).andExpect(status().isOk()).andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE)).andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "empleado.actualizado.message"));
+        this.mockMvc.perform(post(Constantes.PATH_EMPLEADO_ACTUALIZA)
+                .param("id", empleado.getId().toString())
+                .param("version", empleado.getVersion().toString())
+                .param("nombre", "test1")
+                .param("clave", empleado.getClave())
+                .param("apPaterno", "test1")
+                .param("apMaterno", "test1")
+                .param("genero", "t")
+                .param("direccion", "test1")
+                .param("status", "ts"))
+                .andExpect(status().isOk())
+                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "empleado.actualizado.message"));
 
-//        log.debug("Debiera actualizar empleado");
-//
-//        this.mockMvc.perform(post(Constantes.PATH_EMPLEADO_ACTUALIZA)                
-//                .param("clave", "test1")
-//                .param("nombre","test1")
-//                .param("apPaterno","test1")
-//                .param("apMaterno","test1")
-//                .param("genero","1")
-//                .param("direccion","test1")
-//                .param("status","t1"))                
-//                .andExpect(status().isOk()).
-//                andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE)).
-//                andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "empleado.actualizado.message"));
     }
 
     @Test
