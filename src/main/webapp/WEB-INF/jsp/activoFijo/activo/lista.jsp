@@ -23,6 +23,7 @@
             <div class="well">
                 <div class="row-fluid">
                     <a class="btn btn-primary" href="<s:url value='/activoFijo/activo/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='activo.nuevo.label' /></a>
+                    <a class="btn btn-warning" href="<s:url value='/activoFijo/activo/depreciar'/>"><i class="icon-time icon-white"></i> <s:message code='activo.depreciar.label' /></a>
                     <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                     <div class="btn-group" style="display: inline-block; position: absolute; margin-left: 5px;">
                         <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
@@ -140,7 +141,7 @@
                         
                         <th><s:message code="tipoActivo.label" /></th>
                         
-                        <th><s:message code="cuenta.label" /></th>
+                        <th><s:message code="centroCosto.label" /></th>
                         
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="fechaCompra" />
@@ -192,7 +193,7 @@
                             <td>${activo.responsable}</td>
                             <td>${activo.proveedor.nombre}</td>
                             <td>${activo.tipoActivo.nombre}</td>
-                            <td>${activo.cuenta.nombre}</td>
+                            <td>${activo.centroCosto.nombre}</td>
                             <td><fmt:formatDate pattern="dd/MMM/yyyy" value="${activo.fechaCompra}" /></td>
                             <td style="text-align:right;"><fmt:formatNumber value="${activo.moi}" type="currency" currencySymbol="$" /></td>
                             <td><fmt:formatDate pattern="dd/MMM/yyyy" value="${activo.fechaDepreciacion}" /></td>

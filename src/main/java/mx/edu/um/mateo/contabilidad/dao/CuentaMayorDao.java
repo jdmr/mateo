@@ -109,7 +109,7 @@ public class CuentaMayorDao {
     public CuentaMayor crea(CuentaMayor cuentaMayor, Usuario usuario) {
         log.debug("Creando cuenta de mayor : {}", cuentaMayor);
         if (usuario != null) {
-            cuentaMayor.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+            cuentaMayor.getId().getEjercicio().getId().setOrganizacion(usuario.getEmpresa().getOrganizacion());
         }
         currentSession().save(cuentaMayor);
         currentSession().flush();
@@ -124,10 +124,10 @@ public class CuentaMayorDao {
         log.debug("Actualizando cuenta de mayor {}", cuentaMayor);
         
         CuentaMayor nueva = (CuentaMayor)currentSession().get(CuentaMayor.class, cuentaMayor.getId());
-        BeanUtils.copyProperties(cuentaMayor, nueva);
+        BeanUtils.copyProperties(cuentaMayor, nueva, new String[] {"id","version"});
         
         if (usuario != null) {
-            nueva.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+            nueva.getId().getEjercicio().getId().setOrganizacion(usuario.getEmpresa().getOrganizacion());
         }
         currentSession().update(nueva);
         currentSession().flush();

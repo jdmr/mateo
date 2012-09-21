@@ -46,4 +46,6 @@ public interface TipoActivoDao {
     public TipoActivo actualiza(TipoActivo tipoActivo, Usuario usuario);
 
     public String elimina(Long id);
+    
+    public void migrar(Usuario usuario);
 }

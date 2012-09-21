@@ -31,10 +31,11 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import mx.edu.um.mateo.contabilidad.model.Cuenta;
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Proveedor;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *
@@ -42,9 +43,9 @@ import mx.edu.um.mateo.general.model.Proveedor;
  */
 @Entity
 @Table(name = "activos", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"folio", "empresa_id"})
+    @UniqueConstraint(columnNames = {"folio", "empresa_id"}),
+    @UniqueConstraint(columnNames = {"codigo", "empresa_id"})
 })
-@org.hibernate.annotations.Entity(dynamicInsert = true, dynamicUpdate = true)
 public class Activo implements Serializable {
 
     @Id
@@ -68,7 +69,8 @@ public class Activo implements Serializable {
     private String condicion;
     @Column(length = 64)
     private String poliza;
-    @Column(length = 64)
+    @NotBlank
+    @Column(length = 64, nullable = false)
     private String codigo;
     @Column(length = 200)
     private String descripcion;
@@ -78,11 +80,12 @@ public class Activo implements Serializable {
     private String modelo;
     @Column(length = 64)
     private String serial;
-    @Column(nullable = false, scale = 2, precision = 8)
+    @NotNull
+    @Column(nullable = false, scale = 2, precision = 16)
     private BigDecimal moi = BigDecimal.ZERO;
-    @Column(nullable = false, scale = 2, precision = 8, name = "valor_rescate")
+    @Column(nullable = false, scale = 2, precision = 16, name = "valor_rescate")
     private BigDecimal valorRescate = BigDecimal.ONE;
-    @Column(nullable = false, scale = 2, precision = 8)
+    @Column(nullable = false, scale = 2, precision = 16)
     private BigDecimal inpc = BigDecimal.ZERO;
     private String ubicacion;
     @NotNull
@@ -100,8 +103,7 @@ public class Activo implements Serializable {
     @ManyToOne(optional = false)
     private Proveedor proveedor;
     @ManyToOne(optional = false)
-    @JoinColumn(name = "centro_costo_id")
-    private Cuenta cuenta;
+    private CentroCosto centroCosto;
     @ManyToOne(optional = false)
     private Empresa empresa;
     @Column(length = 128)
@@ -114,7 +116,7 @@ public class Activo implements Serializable {
     private Integer mesesGarantia = 0;
     @Column(nullable = false)
     private Boolean seguro = false;
-    @Column(nullable = false, scale = 2, precision = 8, name = "valor_neto")
+    @Column(nullable = false, scale = 2, precision = 16, name = "valor_neto")
     private BigDecimal valorNeto = BigDecimal.ZERO;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "activos_imagenes", joinColumns = {
@@ -132,16 +134,27 @@ public class Activo implements Serializable {
     @Temporal(TemporalType.DATE)
     @Column(name = "depreciacion_fecha")
     private Date fechaDepreciacion;
-    @Column(name = "depreciacion_anual", scale = 2, precision = 8, nullable=false)
+    @Column(name = "depreciacion_anual", scale = 2, precision = 16, nullable = false)
     private BigDecimal depreciacionAnual = BigDecimal.ZERO;
-    @Column(name = "depreciacion_mensual", scale = 2, precision = 8, nullable = false)
+    @Column(name = "depreciacion_mensual", scale = 2, precision = 16, nullable = false)
     private BigDecimal depreciacionMensual = BigDecimal.ZERO;
-    @Column(name = "depreciacion_acumulada", scale = 2, precision = 8, nullable = false)
+    @Column(name = "depreciacion_acumulada", scale = 2, precision = 16, nullable = false)
     private BigDecimal depreciacionAcumulada = BigDecimal.ZERO;
     @Transient
     private BigDecimal porciento;
     @Transient
     private Long vidaUtil;
+    @Transient
+    private String tipoActivoCuenta;
+    @Transient
+    private String tipoActivoNombre;
+    @Transient
+    private String centroCostoCuenta;
+    @Transient
+    private String centroCostoNombre;
+    @Temporal(TemporalType.DATE)
+    @Column(name = "fecha_reubicado")
+    private Date fechaReubicado;
 
     public Activo() {
     }
@@ -155,6 +168,75 @@ public class Activo implements Serializable {
         this.vidaUtil = vidaUtil;
         this.inactivo = inactivo;
         this.fechaInactivo = fechaInactivo;
+    }
+
+    public Activo(Long id, Integer version, BigDecimal moi, Date fechaCompra, BigDecimal porciento, Long vidaUtil, Boolean inactivo, Date fechaInactivo, Date fechaReubicado) {
+        this.id = id;
+        this.version = version;
+        this.moi = moi;
+        this.fechaCompra = fechaCompra;
+        this.porciento = porciento;
+        this.vidaUtil = vidaUtil;
+        this.inactivo = inactivo;
+        this.fechaInactivo = fechaInactivo;
+        this.fechaReubicado = fechaReubicado;
+    }
+
+    public Activo(Long id, Integer version, BigDecimal moi, Date fechaCompra, BigDecimal porciento, Long vidaUtil, Boolean inactivo, Date fechaInactivo, Date fechaReubicado, String tipoActivoCuenta, String centroCostoCuenta) {
+        this.id = id;
+        this.version = version;
+        this.moi = moi;
+        this.fechaCompra = fechaCompra;
+        this.porciento = porciento;
+        this.vidaUtil = vidaUtil;
+        this.inactivo = inactivo;
+        this.fechaInactivo = fechaInactivo;
+        this.fechaReubicado = fechaReubicado;
+        this.tipoActivoCuenta = tipoActivoCuenta;
+        this.centroCostoCuenta = centroCostoCuenta;
+    }
+
+    public Activo(Long id, Integer version, BigDecimal moi, Date fechaCompra, BigDecimal porciento, Long vidaUtil, Boolean inactivo, Date fechaInactivo, Date fechaReubicado, String tipoActivoCuenta, String centroCostoCuenta, String centroCostoNombre) {
+        this.id = id;
+        this.version = version;
+        this.moi = moi;
+        this.fechaCompra = fechaCompra;
+        this.porciento = porciento;
+        this.vidaUtil = vidaUtil;
+        this.inactivo = inactivo;
+        this.fechaInactivo = fechaInactivo;
+        this.fechaReubicado = fechaReubicado;
+        this.tipoActivoCuenta = tipoActivoCuenta;
+        this.centroCostoCuenta = centroCostoCuenta;
+        this.centroCostoNombre = centroCostoNombre;
+    }
+
+    public Activo(Date fechaCompra, Boolean seguro, Boolean garantia, String poliza, String codigo, String descripcion, String marca, String modelo, String serial, String responsable, String ubicacion, BigDecimal costo, TipoActivo tipoActivo, CentroCosto centroCosto, Proveedor proveedor, Empresa empresa) {
+        this.poliza = poliza;
+        this.codigo = codigo;
+        this.descripcion = descripcion;
+        this.marca = marca;
+        this.modelo = modelo;
+        this.serial = serial;
+        this.ubicacion = ubicacion;
+        this.fechaCompra = fechaCompra;
+        this.responsable = responsable;
+        this.tipoActivo = tipoActivo;
+        this.centroCosto = centroCosto;
+        this.proveedor = proveedor;
+        this.empresa = empresa;
+        this.seguro = seguro;
+        this.garantia = garantia;
+        this.moi = costo;
+    }
+
+    public Activo(Long id, String descripcion, Date fechaCompra, String tipoActivoCuenta, String centroCostoCuenta, String codigo) {
+        this.id = id;
+        this.descripcion = descripcion;
+        this.fechaCompra = fechaCompra;
+        this.tipoActivoCuenta = tipoActivoCuenta;
+        this.centroCostoCuenta = centroCostoCuenta;
+        this.codigo = codigo;
     }
 
     /**
@@ -522,17 +604,17 @@ public class Activo implements Serializable {
     }
 
     /**
-     * @return the cuenta
+     * @return the centroCosto
      */
-    public Cuenta getCuenta() {
-        return cuenta;
+    public CentroCosto getCentroCosto() {
+        return centroCosto;
     }
 
     /**
-     * @param cuenta the cuenta to set
+     * @param centroCosto the centroCosto to set
      */
-    public void setCuenta(Cuenta cuenta) {
-        this.cuenta = cuenta;
+    public void setCentroCosto(CentroCosto centroCosto) {
+        this.centroCosto = centroCosto;
     }
 
     /**
@@ -721,6 +803,9 @@ public class Activo implements Serializable {
      * @return the porciento
      */
     public BigDecimal getPorciento() {
+        if (porciento == null) {
+            porciento = tipoActivo.getPorciento();
+        }
         return porciento;
     }
 
@@ -735,6 +820,9 @@ public class Activo implements Serializable {
      * @return the vidaUtil
      */
     public Long getVidaUtil() {
+        if (vidaUtil == null) {
+            vidaUtil = tipoActivo.getVidaUtil();
+        }
         return vidaUtil;
     }
 
@@ -743,6 +831,88 @@ public class Activo implements Serializable {
      */
     public void setVidaUtil(Long vidaUtil) {
         this.vidaUtil = vidaUtil;
+    }
+
+    /**
+     * @return the tipoActivoCuenta
+     */
+    public String getTipoActivoCuenta() {
+        if (tipoActivoCuenta == null) {
+            tipoActivoCuenta = tipoActivo.getCuenta().getId().getIdCtaMayor();
+        }
+        return tipoActivoCuenta;
+    }
+
+    /**
+     * @param tipoActivoCuenta the tipoActivoCuenta to set
+     */
+    public void setTipoActivoCuenta(String tipoActivoCuenta) {
+        this.tipoActivoCuenta = tipoActivoCuenta;
+    }
+
+    /**
+     * @return the tipoActivoNombre
+     */
+    public String getTipoActivoNombre() {
+        if (tipoActivoNombre == null) {
+            tipoActivoNombre = tipoActivo.getNombre();
+        }
+        return tipoActivoNombre;
+    }
+
+    /**
+     * @param tipoActivoNombre the tipoActivoNombre to set
+     */
+    public void setTipoActivoNombre(String tipoActivoNombre) {
+        this.tipoActivoNombre = tipoActivoNombre;
+    }
+
+    /**
+     * @return the centroCostoCuenta
+     */
+    public String getCentroCostoCuenta() {
+        if (centroCostoCuenta == null) {
+            centroCostoCuenta = centroCosto.getId().getIdCosto();
+        }
+        return centroCostoCuenta;
+    }
+
+    /**
+     * @param centroCostoCuenta the centroCostoCuenta to set
+     */
+    public void setCentroCostoCuenta(String centroCostoCuenta) {
+        this.centroCostoCuenta = centroCostoCuenta;
+    }
+
+    /**
+     * @return the centroCostoNombre
+     */
+    public String getCentroCostoNombre() {
+        if (centroCostoNombre == null) {
+            centroCostoNombre = centroCosto.getNombre();
+        }
+        return centroCostoNombre;
+    }
+
+    /**
+     * @param centroCostoNombre the centroCostoNombre to set
+     */
+    public void setCentroCostoNombre(String centroCostoNombre) {
+        this.centroCostoNombre = centroCostoNombre;
+    }
+
+    /**
+     * @return the fechaReubicado
+     */
+    public Date getFechaReubicado() {
+        return fechaReubicado;
+    }
+
+    /**
+     * @param fechaReubicado the fechaReubicado to set
+     */
+    public void setFechaReubicado(Date fechaReubicado) {
+        this.fechaReubicado = fechaReubicado;
     }
 
     @Override

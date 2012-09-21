@@ -12,6 +12,7 @@
 <html>
     <head>
         <title><s:message code="usuario.nuevo.label" /></title>
+        <link rel="stylesheet" href="<c:url value='/css/chosen.css' />" type="text/css">
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -86,6 +87,16 @@
                             <form:errors path="authorities" cssClass="errors" />
                         </div>
                     </s:bind>
+                    <s:bind path="usuario.ejercicio">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="ejercicio">
+                                <s:message code="ejercicio.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:select path="ejercicio.id.idEjercicio" id="ejercicioId" items="${ejercicios}" itemLabel="nombreCompleto" itemValue="id.idEjercicio"/>
+                            <form:errors path="ejercicio" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
@@ -95,8 +106,10 @@
             </form:form>
         </div>
         <content>
+            <script src="<c:url value='/js/chosen.jquery.min.js' />"></script>
             <script>
                 $(document).ready(function() {
+                    $("select#ejercicioId").chosen();
                     $('input#username').focus();
                 });
             </script>                    

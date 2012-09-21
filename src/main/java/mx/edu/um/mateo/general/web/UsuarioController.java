@@ -35,6 +35,7 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -149,6 +150,8 @@ public class UsuarioController extends BaseController {
         Usuario usuario = new Usuario();
         modelo.addAttribute("usuario", usuario);
         modelo.addAttribute("roles", roles);
+        List<Ejercicio> ejercicios = usuarioDao.obtieneEjercicios(ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
+        modelo.addAttribute("ejercicios", ejercicios);
         return "admin/usuario/nuevo";
     }
 

@@ -27,7 +27,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.*;
-import mx.edu.um.mateo.general.model.Departamento;
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.general.model.Empresa;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -52,7 +52,7 @@ public class ReubicacionActivo implements Serializable {
     @ManyToOne(optional = false)
     private Activo activo;
     @ManyToOne(optional = false)
-    private Departamento departamento;
+    private CentroCosto centroCosto;
     @ManyToOne(optional = false)
     private Empresa empresa;
     @Temporal(TemporalType.DATE)
@@ -63,6 +63,11 @@ public class ReubicacionActivo implements Serializable {
     private Date fechaCreacion;
 
     public ReubicacionActivo() {
+    }
+    
+    public ReubicacionActivo(Activo activo, Date fecha) {
+        this.activo = activo;
+        this.fecha = fecha;
     }
 
     /**
@@ -136,17 +141,17 @@ public class ReubicacionActivo implements Serializable {
     }
 
     /**
-     * @return the departamento
+     * @return the centro de costo
      */
-    public Departamento getDepartamento() {
-        return departamento;
+    public CentroCosto getCentroCosto() {
+        return centroCosto;
     }
 
     /**
-     * @param departamento the departamento to set
+     * @param centroCosto the centro de costo to set
      */
-    public void setDepartamento(Departamento departamento) {
-        this.departamento = departamento;
+    public void setCentroCosto(CentroCosto centroCosto) {
+        this.centroCosto = centroCosto;
     }
 
     /**
@@ -203,7 +208,7 @@ public class ReubicacionActivo implements Serializable {
         if (!Objects.equals(this.activo, other.activo)) {
             return false;
         }
-        if (!Objects.equals(this.departamento, other.departamento)) {
+        if (!Objects.equals(this.centroCosto, other.centroCosto)) {
             return false;
         }
         if (!Objects.equals(this.fecha, other.fecha)) {
@@ -223,6 +228,6 @@ public class ReubicacionActivo implements Serializable {
 
     @Override
     public String toString() {
-        return "ReubicacionActivo{" + "creador=" + creador + ", comentarios=" + comentarios + ", activo=" + activo + ", departamento=" + departamento + ", fecha=" + fecha + '}';
+        return "ReubicacionActivo{" + "creador=" + creador + ", comentarios=" + comentarios + ", activo=" + activo + ", centroCosto=" + centroCosto + ", fecha=" + fecha + '}';
     }
 }

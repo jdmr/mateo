@@ -27,7 +27,7 @@
         <property name="password" value="${mail.smtp.password}" />
         <property name="javaMailProperties">
             <props>
-                <prop key="mail.debug">true</prop>
+                <prop key="mail.debug">${mail.debug}</prop>
                 <prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
                 <prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>
                 <prop key="mail.smtp.socketFactory.class">${mail.smtp.socketFactory.class}</prop>
@@ -48,7 +48,17 @@
     </bean>
     
     <bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" />
-        
+    
+    <bean id="dataSource2" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+        <property name="url" value="jdbc:oracle:thin:@rigel.um.edu.mx:1521:ora1" />
+        <property name="username" value="noe" />
+        <property name="password" value="arcopacto" />
+        <property name="initialSize" value="5" />
+        <property name="maxActive" value="10" />
+    </bean>
+
+    <!-- No puede ir ningun bean debajo de esta configuracion de beans -->        
     <beans profile="produccion">
         <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
             <property name="driverClassName" value="${jdbc.driverClassName}" />
@@ -57,6 +67,9 @@
             <property name="password" value="${jdbc.password}" />
             <property name="initialSize" value="${jdbc.initialSize}" />
             <property name="maxActive" value="${jdbc.maxActive}" />
+            <property name="removeAbandoned" value="true" />
+            <property name="logAbandoned" value="true" />
+            <property name="validationQuery" value="SELECT 1" />
         </bean>
         
         <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
@@ -68,6 +81,7 @@
                     <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
                     <prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop>
                     <prop key="hibernate.cache.provider_class">${hibernate.cache.provider_class}</prop>
+                    <prop key="hibernate.dialect">${hibernate.dialect}</prop>
                 </props>
             </property>
         </bean>
@@ -92,6 +106,7 @@
                     <prop key="hibernate.hbm2ddl.auto">${test.hibernate.hbm2ddl.auto}</prop>
                     <prop key="hibernate.cache.use_second_level_cache">${test.hibernate.cache.use_second_level_cache}</prop>
                     <prop key="hibernate.cache.provider_class">${test.hibernate.cache.provider_class}</prop>
+                    <prop key="hibernate.dialect">${hibernate.dialect}</prop>
                 </props>
             </property>
         </bean>

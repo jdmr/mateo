@@ -68,11 +68,11 @@ public class XActivo implements Serializable {
     private String modelo;
     @Column(length = 64)
     private String serial;
-    @Column(nullable = false, scale = 2, precision = 8)
+    @Column(nullable = false, scale = 2, precision = 16)
     private BigDecimal moi = BigDecimal.ZERO;
-    @Column(nullable = false, scale = 2, precision = 8, name = "valor_rescate")
+    @Column(nullable = false, scale = 2, precision = 16, name = "valor_rescate")
     private BigDecimal valorRescate = BigDecimal.ONE;
-    @Column(nullable = false, scale = 2, precision = 8)
+    @Column(nullable = false, scale = 2, precision = 16)
     private BigDecimal inpc = BigDecimal.ZERO;
     private String ubicacion;
     @NotNull
@@ -90,10 +90,14 @@ public class XActivo implements Serializable {
     private Long tipoActivoId;
     @Column(name = "proveedor_id")
     private Long proveedorId;
-    @Column(name = "centro_costo_id")
-    private Long cuentaId;
     @Column(name = "empresa_id")
     private Long empresaId;
+    @Column(name = "id_ejercicio", nullable = false, length = 16)
+    private String ejercicioId;
+    @Column(name = "id_organizacion", nullable = false)
+    private Long organizacionId;
+    @Column(name = "id_costo", length = 20, nullable = false)
+    private String idCosto;
     @Column(length = 128)
     private String responsable;
     @Column(length = 32)
@@ -104,7 +108,7 @@ public class XActivo implements Serializable {
     private Integer mesesGarantia = 0;
     @Column(nullable = false)
     private Boolean seguro = false;
-    @Column(nullable = false, scale = 2, precision = 8, name = "valor_neto")
+    @Column(nullable = false, scale = 2, precision = 16, name = "valor_neto")
     private BigDecimal valorNeto = BigDecimal.ZERO;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, name = "date_created")
@@ -119,11 +123,11 @@ public class XActivo implements Serializable {
     @Temporal(TemporalType.DATE)
     @Column(name = "depreciacion_fecha")
     private Date fechaDepreciacion;
-    @Column(name = "depreciacion_anual", scale = 2, precision = 8)
+    @Column(name = "depreciacion_anual", scale = 2, precision = 16)
     private BigDecimal depreciacionAnual;
-    @Column(name = "depreciacion_mensual", scale = 2, precision = 8)
+    @Column(name = "depreciacion_mensual", scale = 2, precision = 16)
     private BigDecimal depreciacionMensual;
-    @Column(name = "depreciacion_acumulada", scale = 2, precision = 8)
+    @Column(name = "depreciacion_acumulada", scale = 2, precision = 16)
     private BigDecimal depreciacionAcumulada;
 
     public XActivo() {
@@ -395,10 +399,16 @@ public class XActivo implements Serializable {
         this.ubicacion = ubicacion;
     }
 
+    /**
+     * @return the fechaCompra
+     */
     public Date getFechaCompra() {
         return fechaCompra;
     }
 
+    /**
+     * @param fechaCompra the fechaCompra to set
+     */
     public void setFechaCompra(Date fechaCompra) {
         this.fechaCompra = fechaCompra;
     }
@@ -474,20 +484,6 @@ public class XActivo implements Serializable {
     }
 
     /**
-     * @return the cuentaId
-     */
-    public Long getCuentaId() {
-        return cuentaId;
-    }
-
-    /**
-     * @param cuentaId the cuentaId to set
-     */
-    public void setCuentaId(Long cuentaId) {
-        this.cuentaId = cuentaId;
-    }
-
-    /**
      * @return the empresaId
      */
     public Long getEmpresaId() {
@@ -499,6 +495,48 @@ public class XActivo implements Serializable {
      */
     public void setEmpresaId(Long empresaId) {
         this.empresaId = empresaId;
+    }
+
+    /**
+     * @return the ejercicioId
+     */
+    public String getEjercicioId() {
+        return ejercicioId;
+    }
+
+    /**
+     * @param ejercicioId the ejercicioId to set
+     */
+    public void setEjercicioId(String ejercicioId) {
+        this.ejercicioId = ejercicioId;
+    }
+
+    /**
+     * @return the organizacionId
+     */
+    public Long getOrganizacionId() {
+        return organizacionId;
+    }
+
+    /**
+     * @param organizacionId the organizacionId to set
+     */
+    public void setOrganizacionId(Long organizacionId) {
+        this.organizacionId = organizacionId;
+    }
+
+    /**
+     * @return the idCosto
+     */
+    public String getIdCosto() {
+        return idCosto;
+    }
+
+    /**
+     * @param idCosto the idCosto to set
+     */
+    public void setIdCosto(String idCosto) {
+        this.idCosto = idCosto;
     }
 
     /**
@@ -696,6 +734,7 @@ public class XActivo implements Serializable {
     public void setDepreciacionAcumulada(BigDecimal depreciacionAcumulada) {
         this.depreciacionAcumulada = depreciacionAcumulada;
     }
+
 
     @Override
     public String toString() {

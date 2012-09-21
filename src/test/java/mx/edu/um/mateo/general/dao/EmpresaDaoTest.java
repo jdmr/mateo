@@ -209,18 +209,4 @@ public class EmpresaDaoTest {
         assertNull(prueba);
     }
     
-    @Test
-    public void debieraAsignarCuentaAEmpresa() {
-        log.debug("Debiera asignar cuenta a empresa");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        
-        CuentaMayor cuenta = new CuentaMayor("TEST", "TEST", "01.01.01", organizacion);
-        currentSession().save(cuenta);
-        
-        Empresa test = new Empresa("TEST01", "TEST01", "TEST01", "000000000001", organizacion);
-        test.setCuenta(cuenta);
-        test = instance.crea(test);
-        assertNotNull(test.getId());
-    }
 }

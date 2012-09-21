@@ -75,14 +75,14 @@ public class Empleado implements Serializable {
     public Empleado() {
     }
 
-    public Empleado(String clave, String nombre, String apPaterno, String apMaterno, 
+    public Empleado(String clave, String nombre, String apPaterno, String apMaterno,
             String genero, String direccion, String status,
-            String curp, String rfc, String cuenta, String imms, Integer scalafon, 
-            Integer turno,  BigDecimal experienciaFueraUm, 
-            String modalidad, String ife, String rango, Boolean adventista, String padre, 
-            String madre, String estadoCivil, String conyuge,  
+            String curp, String rfc, String cuenta, String imms, Integer scalafon,
+            Integer turno, BigDecimal experienciaFueraUm,
+            String modalidad, String ife, String rango, Boolean adventista, String padre,
+            String madre, String estadoCivil, String conyuge,
             Boolean finadoPadre, Boolean finadoMadre, String iglesia, String responsabilidad,
-            Integer escalafon, Integer version) {
+            Integer escalafon) {
         this.clave = clave;
         this.nombre = nombre;
         this.apPaterno = apPaterno;
@@ -90,32 +90,31 @@ public class Empleado implements Serializable {
         this.genero = genero;
         this.direccion = direccion;
         this.status = status;
-        this.adventista=adventista;
-        this.conyuge=conyuge;
-        this.cuenta=cuenta;
-        this.curp=curp;
-        this.direccion=direccion;
-        this.escalafon=escalafon;
-        this.estadoCivil=estadoCivil;
-        this.experienciaFueraUm=experienciaFueraUm;
-        this.fechaAlta=new Date();
-        this.fechaBaja=new Date();
-        this.fechaMatrimonio=new Date();
-        this.fechaNacimiento=new Date();
-        this.finadoMadre=finadoMadre;
-        this.finadoPadre=finadoPadre;
-        this.genero=genero;
-        this.ife=ife;
-        this.iglesia=iglesia;
-        this.imms=imms;
-        this.madre=madre;
-        this.modalidad=modalidad;
-        this.padre=padre;
-        this.rango=rango;
-        this.responsabilidad=responsabilidad;
-        this.rfc=rfc;
-        this.turno=turno;
-      this.version=version;
+        this.adventista = adventista;
+        this.conyuge = conyuge;
+        this.cuenta = cuenta;
+        this.curp = curp;
+        this.direccion = direccion;
+        this.escalafon = escalafon;
+        this.estadoCivil = estadoCivil;
+        this.experienciaFueraUm = experienciaFueraUm;
+        this.fechaAlta = new Date();
+        this.fechaBaja = new Date();
+        this.fechaMatrimonio = new Date();
+        this.fechaNacimiento = new Date();
+        this.finadoMadre = finadoMadre;
+        this.finadoPadre = finadoPadre;
+        this.genero = genero;
+        this.ife = ife;
+        this.iglesia = iglesia;
+        this.imms = imms;
+        this.madre = madre;
+        this.modalidad = modalidad;
+        this.padre = padre;
+        this.rango = rango;
+        this.responsabilidad = responsabilidad;
+        this.rfc = rfc;
+        this.turno = turno;
     }
 
     public String getApMaterno() {
@@ -375,6 +374,11 @@ public class Empleado implements Serializable {
     }
 
     @Override
+    public String toString() {
+        return "Empleado{ id= " + id + ", nombre=" + nombre + ", status=" + status + '}';
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;
@@ -383,17 +387,23 @@ public class Empleado implements Serializable {
             return false;
         }
         final Empleado other = (Empleado) obj;
+        if (this.id != other.id && (this.id == null || !this.id.equals(other.id))) {
+            return false;
+        }
+        if ((this.clave == null) ? (other.clave != null) : !this.clave.equals(other.clave)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
+        int hash = 7;
+        hash = 13 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 13 * hash + (this.version != null ? this.version.hashCode() : 0);
+        hash = 13 * hash + (this.clave != null ? this.clave.hashCode() : 0);
         return hash;
     }
-
-    @Override
-    public String toString() {
-        return "Empleado{ id= " + id + ", nombre=" + nombre + ", status=" + status + '}';
-    }
+    
+    
 }

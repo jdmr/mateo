@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
+import mx.edu.um.mateo.contabilidad.model.EjercicioPK;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Rol;
@@ -175,6 +177,12 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
         }
         log.debug("Roles del usuario {}", usuario.getRoles());
 
+        EjercicioPK pk = new EjercicioPK(usuario.getEjercicio().getId().getIdEjercicio(), almacen.getEmpresa().getOrganizacion());
+        Ejercicio ejercicio = (Ejercicio) currentSession().get(Ejercicio.class, pk);
+        if (ejercicio != null) {
+            usuario.setEjercicio(ejercicio);
+        }
+
         currentSession().save(usuario);
         currentSession().flush();
 
@@ -258,7 +266,7 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
     }
 
     @Override
-    public void asignaAlmacen(Usuario usuario, Long almacenId) {
+    public void asignaAlmacen(Usuario usuario, Long almacenId, String ejercicioId) {
         Almacen almacen = (Almacen) currentSession().get(Almacen.class, almacenId);
         if (almacen != null) {
             log.debug("Asignando {} a usuario {}", almacen, usuario);
@@ -269,8 +277,23 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
             }
             usuario.setAlmacen(almacen);
             usuario.setEmpresa(almacen.getEmpresa());
+            if (ejercicioId != null) {
+                EjercicioPK pk = new EjercicioPK(ejercicioId, almacen.getEmpresa().getOrganizacion());
+                Ejercicio ejercicio = (Ejercicio) currentSession().get(Ejercicio.class, pk);
+                if (ejercicio != null) {
+                    usuario.setEjercicio(ejercicio);
+                }
+            }
+
             currentSession().update(usuario);
             currentSession().flush();
         }
+    }
+
+    @Override
+    public List<Ejercicio> obtieneEjercicios(Long organizacionId) {
+        Query query = currentSession().createQuery("select e from Ejercicio e where e.id.organizacion.id = :organizacionId order by e.id.idEjercicio desc");
+        query.setLong("organizacionId", organizacionId);
+        return query.list();
     }
 }
