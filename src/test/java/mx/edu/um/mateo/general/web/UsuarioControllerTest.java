@@ -158,7 +158,6 @@ public class UsuarioControllerTest {
                 .param("ejercicio.id.idEjercicio", ejercicio.getId().getIdEjercicio())
                 )
                 .andExpect(status().isOk())
-                .andExpect(redirectedUrl("/admin/usuario/ver/2"))
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message","usuario.creado.message"))
                 ;
