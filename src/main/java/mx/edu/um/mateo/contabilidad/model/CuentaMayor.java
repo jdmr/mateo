@@ -1,166 +1,227 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2012 Universidad de Montemorelos A. C.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package mx.edu.um.mateo.contabilidad.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Objects;
-import javax.persistence.*;
-import mx.edu.um.mateo.general.model.Organizacion;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *
- * @author nujev
+ * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
-@Table(name = "mayores")
+@Table(name = "cont_ctamayor")
 public class CuentaMayor implements Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = -6640176472960675938L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private CtaMayorPK id;
     @Version
     private Integer version;
     @NotBlank
-    @Column(nullable = false, length = 24)
+    @Column(length = 60, nullable = false)
     private String nombre;
     @NotBlank
-    @Column(nullable = false, length = 24, name = "nombre_fiscal")
+    @Column(name = "nombrefiscal", length = 60, nullable = false)
     private String nombreFiscal;
+    @Column(length = 2, nullable = false)
+    private String detalle;
     @NotBlank
-    @Column(nullable = false, length = 50)
-    private String clave;
-    @Column(nullable = false)
-    private Boolean detalle = false;
-    @Column(nullable = false)
-    private Boolean aviso = false;
-    @Column(nullable = false)
-    private Boolean auxiliar = false;
-    @Column(nullable = false)
-    private Boolean iva = false;
-    @Column(nullable = false, scale = 2, precision = 8, name = "porcentaje_iva")
-    private BigDecimal porcentajeIva = new BigDecimal("0");
-    @ManyToOne
-    private Organizacion organizacion;
+    @Column(length = 1, nullable = false)
+    private String aviso;
+    @NotBlank
+    @Column(length = 1, nullable = false)
+    private String auxiliar;
+    @NotBlank
+    @Column(length = 2, nullable = false)
+    private String iva;
+    @NotNull
+    @Column(name = "pctiva", nullable = false)
+    private Long pctIVA;
+    @NotBlank
+    @Column(length = 2, nullable = false)
+    private String detaller;
 
     public CuentaMayor() {
     }
 
-    public CuentaMayor(String nombre, String nombreFiscal, String clave, Organizacion organizacion) {
-        this.nombre = nombre;
-        this.nombreFiscal = nombreFiscal;
-        this.clave = clave;
-        this.organizacion = organizacion;
-    }
-
-    public CuentaMayor(String nombre, String nombreFiscal, String clave, Boolean detalle, Boolean aviso, Boolean auxiliar, Boolean iva, BigDecimal porcentajeIva) {
-        this.nombre = nombre;
-        this.nombreFiscal = nombreFiscal;
-        this.clave = clave;
-        this.detalle = detalle;
-        this.aviso = aviso;
-        this.auxiliar = auxiliar;
-        this.iva = iva;
-        this.porcentajeIva = porcentajeIva;
-    }
-
-    public Long getId() {
+    /**
+     * @return the id
+     */
+    public CtaMayorPK getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    /**
+     * @param id the id to set
+     */
+    public void setId(CtaMayorPK id) {
         this.id = id;
     }
 
+    /**
+     * @return the version
+     */
     public Integer getVersion() {
         return version;
     }
 
+    /**
+     * @param version the version to set
+     */
     public void setVersion(Integer version) {
         this.version = version;
     }
 
+    /**
+     * @return the nombre
+     */
     public String getNombre() {
         return nombre;
     }
 
+    /**
+     * @param nombre the nombre to set
+     */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
+    /**
+     * @return the nombreFiscal
+     */
     public String getNombreFiscal() {
         return nombreFiscal;
     }
 
+    /**
+     * @param nombreFiscal the nombreFiscal to set
+     */
     public void setNombreFiscal(String nombreFiscal) {
         this.nombreFiscal = nombreFiscal;
     }
 
-    public String getClave() {
-        return clave;
-    }
-
-    public void setClave(String clave) {
-        this.clave = clave;
-    }
-
-    public Boolean getDetalle() {
+    /**
+     * @return the detalle
+     */
+    public String getDetalle() {
         return detalle;
     }
 
-    public void setDetalle(Boolean detalle) {
+    /**
+     * @param detalle the detalle to set
+     */
+    public void setDetalle(String detalle) {
         this.detalle = detalle;
     }
 
-    public Boolean getAviso() {
+    /**
+     * @return the aviso
+     */
+    public String getAviso() {
         return aviso;
     }
 
-    public void setAviso(Boolean aviso) {
+    /**
+     * @param aviso the aviso to set
+     */
+    public void setAviso(String aviso) {
         this.aviso = aviso;
     }
 
-    public Boolean getAuxiliar() {
+    /**
+     * @return the auxiliar
+     */
+    public String getAuxiliar() {
         return auxiliar;
     }
 
-    public void setAuxiliar(Boolean auxiliar) {
+    /**
+     * @param auxiliar the auxiliar to set
+     */
+    public void setAuxiliar(String auxiliar) {
         this.auxiliar = auxiliar;
     }
 
-    public Boolean getIva() {
+    /**
+     * @return the iva
+     */
+    public String getIva() {
         return iva;
     }
 
-    public void setIva(Boolean iva) {
+    /**
+     * @param iva the iva to set
+     */
+    public void setIva(String iva) {
         this.iva = iva;
     }
 
-    public BigDecimal getPorcentajeIva() {
-        return porcentajeIva;
-    }
-
-    public void setPorcentajeIva(BigDecimal porcentajeIva) {
-        this.porcentajeIva = porcentajeIva;
+    /**
+     * @return the pctIVA
+     */
+    public Long getPctIVA() {
+        return pctIVA;
     }
 
     /**
-     * @return the organizacion
+     * @param pctIVA the pctIVA to set
      */
-    public Organizacion getOrganizacion() {
-        return organizacion;
+    public void setPctIVA(Long pctIVA) {
+        this.pctIVA = pctIVA;
     }
 
     /**
-     * @param organizacion the organizacion to set
+     * @return the detaller
      */
-    public void setOrganizacion(Organizacion organizacion) {
-        this.organizacion = organizacion;
+    public String getDetaller() {
+        return detaller;
+    }
+
+    /**
+     * @param detaller the detaller to set
+     */
+    public void setDetaller(String detaller) {
+        this.detaller = detaller;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 37 * hash + Objects.hashCode(this.clave);
+        hash = 73 * hash + Objects.hashCode(this.id);
+        hash = 73 * hash + Objects.hashCode(this.version);
+        hash = 73 * hash + Objects.hashCode(this.nombre);
         return hash;
     }
 
@@ -173,7 +234,7 @@ public class CuentaMayor implements Serializable {
             return false;
         }
         final CuentaMayor other = (CuentaMayor) obj;
-        if (!Objects.equals(this.clave, other.clave)) {
+        if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         return true;
@@ -181,6 +242,10 @@ public class CuentaMayor implements Serializable {
 
     @Override
     public String toString() {
-        return "CuentaMayor{" + "nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + ", clave=" + clave + ", detalle=" + detalle + ", aviso=" + aviso + ", auxiliar=" + auxiliar + ", iva=" + iva + ", porcentajeIva=" + porcentajeIva + '}';
+        return "CtaMayor{" + "id=" + id + ", version=" + version + ", nombre="
+                + nombre + ", nombreFiscal=" + nombreFiscal + ", detalle="
+                + detalle + ", aviso=" + aviso + ", auxiliar=" + auxiliar
+                + ", iva=" + iva + ", pctIVA=" + pctIVA + ", detaller="
+                + detaller + '}';
     }
 }

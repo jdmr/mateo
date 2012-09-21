@@ -25,7 +25,14 @@ package mx.edu.um.mateo.inventario.model;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.*;
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -37,6 +44,10 @@ import javax.validation.constraints.NotNull;
 @Cacheable
 public class Estatus implements Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 3737797969614185462L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -142,6 +153,7 @@ public class Estatus implements Serializable {
 
     @Override
     public String toString() {
-        return "Estatus{" + "nombre=" + nombre + ", prioridad=" + prioridad + '}';
+        return "Estatus{" + "nombre=" + nombre + ", prioridad=" + prioridad
+                + '}';
     }
 }

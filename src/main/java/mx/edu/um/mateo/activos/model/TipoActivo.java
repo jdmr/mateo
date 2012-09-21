@@ -28,8 +28,16 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
-import mx.edu.um.mateo.contabilidad.model.Cuenta;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.Empresa;
 import org.hibernate.validator.constraints.NotBlank;
@@ -40,10 +48,14 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Entity
 @Table(name = "tipos_activo", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"nombre", "empresa_id"})
-})
+    @UniqueConstraint(columnNames = {
+        "nombre", "empresa_id"})})
 public class TipoActivo implements Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 5534404510810243957L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -59,7 +71,7 @@ public class TipoActivo implements Serializable {
     @Column(nullable = false, name = "vida_util")
     private Long vidaUtil;
     @ManyToOne(optional = false)
-    private Cuenta cuenta;
+    private CuentaMayor cuenta;
     @ManyToOne(optional = false)
     private Empresa empresa;
     @OneToMany(mappedBy = "tipoActivo")
@@ -155,14 +167,14 @@ public class TipoActivo implements Serializable {
     /**
      * @return the cuenta
      */
-    public Cuenta getCuenta() {
+    public CuentaMayor getCuenta() {
         return cuenta;
     }
 
     /**
      * @param cuenta the cuenta to set
      */
-    public void setCuenta(Cuenta cuenta) {
+    public void setCuenta(CuentaMayor cuenta) {
         this.cuenta = cuenta;
     }
 
@@ -192,6 +204,14 @@ public class TipoActivo implements Serializable {
      */
     public void setActivos(List<Activo> activos) {
         this.activos = activos;
+    }
+    
+    public String getNombreCompleto() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(cuenta.getId().getIdCtaMayor());
+        sb.append(" | ");
+        sb.append(nombre);
+        return sb.toString();
     }
 
     @Override

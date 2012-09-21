@@ -23,41 +23,54 @@
  */
 package mx.edu.um.mateo.general.utils;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import mx.edu.um.mateo.general.model.Usuario;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Component
 public class Ambiente {
 
-    private static final Logger log = LoggerFactory.getLogger(Ambiente.class);
+	private static final Logger log = LoggerFactory.getLogger(Ambiente.class);
 
-    public void actualizaSesion(HttpServletRequest request) {
-        Usuario usuario = obtieneUsuario();
-        this.actualizaSesion(request, usuario);
-    }
+	public void actualizaSesion(HttpSession session) {
+		Usuario usuario = obtieneUsuario();
+		this.actualizaSesion(session, usuario);
+	}
 
-    public void actualizaSesion(HttpServletRequest request, Usuario usuario) {
-        log.debug("Actualizando sesion");
-        if (usuario != null) {
-            request.getSession().setAttribute("organizacionLabel", usuario.getEmpresa().getOrganizacion().getNombre());
-            request.getSession().setAttribute("empresaLabel", usuario.getEmpresa().getNombre());
-            request.getSession().setAttribute("almacenLabel", usuario.getAlmacen().getNombre());
-            request.getSession().setAttribute("organizacionId", usuario.getEmpresa().getOrganizacion().getId());
-            request.getSession().setAttribute("empresaId", usuario.getEmpresa().getId());
-            request.getSession().setAttribute("almacenId", usuario.getAlmacen().getId());
-        }
-    }
+	public void actualizaSesion(HttpSession session, Usuario usuario) {
+		log.debug("Actualizando sesion");
+		if (usuario != null) {
+			if (usuario.getEjercicio() != null) {
+				session.setAttribute("ejercicioLabel", usuario.getEjercicio()
+						.getId().getIdEjercicio());
+			}
+			session.setAttribute("organizacionLabel", usuario.getEmpresa()
+					.getOrganizacion().getNombre());
+			session.setAttribute("empresaLabel", usuario.getEmpresa()
+					.getNombre());
+			session.setAttribute("almacenLabel", usuario.getAlmacen()
+					.getNombre());
+			session.setAttribute("organizacionId", usuario.getEmpresa()
+					.getOrganizacion().getId());
+			session.setAttribute("empresaId", usuario.getEmpresa().getId());
+			session.setAttribute("almacenId", usuario.getAlmacen().getId());
+			session.setAttribute("ejercicioId", usuario.getEjercicio().getId()
+					.getIdEjercicio());
+		}
+	}
 
-    public Usuario obtieneUsuario() {
-        Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return usuario;
-    }
+	public Usuario obtieneUsuario() {
+		Usuario usuario = (Usuario) SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal();
+		return usuario;
+	}
 }

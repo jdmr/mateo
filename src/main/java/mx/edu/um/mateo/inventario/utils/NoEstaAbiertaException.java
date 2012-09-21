@@ -24,19 +24,24 @@
 package mx.edu.um.mateo.inventario.utils;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public class NoEstaAbiertaException extends Exception {
 
-    public NoEstaAbiertaException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6341839501625063017L;
 
-    public NoEstaAbiertaException(String message) {
-        super(message);
-    }
+	public NoEstaAbiertaException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
-    public NoEstaAbiertaException() {
-    }
+	public NoEstaAbiertaException(String message) {
+		super(message);
+	}
+
+	public NoEstaAbiertaException() {
+	}
 }

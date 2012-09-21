@@ -64,7 +64,8 @@ public class AlmacenDaoTest {
     /**
      * Test of lista method, of class AlmacenDao.
      */
-    @Test
+    @SuppressWarnings("unchecked")
+	@Test
     public void debieraMostrarListaDeAlmacenes() {
         log.debug("Debiera mostrar lista de almacenes");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
@@ -78,7 +79,7 @@ public class AlmacenDaoTest {
 
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", empresa.getId());
-        Map result = instance.lista(params);
+        Map<String, Object> result = instance.lista(params);
         assertNotNull(result.get("almacenes"));
         assertNotNull(result.get("cantidad"));
         assertEquals(10, ((List<Almacen>) result.get("almacenes")).size());

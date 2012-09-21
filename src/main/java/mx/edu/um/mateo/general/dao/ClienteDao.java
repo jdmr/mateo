@@ -24,26 +24,27 @@
 package mx.edu.um.mateo.general.dao;
 
 import java.util.Map;
+
 import mx.edu.um.mateo.general.model.Cliente;
 import mx.edu.um.mateo.general.model.Usuario;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public interface ClienteDao {
 
-    public Map<String, Object> lista(Map<String, Object> params);
+	public Map<String, Object> lista(Map<String, Object> params);
 
-    public Cliente obtiene(Long id);
+	public Cliente obtiene(Long id);
 
-    public Cliente crea(Cliente cliente, Usuario usuario);
+	public Cliente crea(Cliente cliente, Usuario usuario);
 
-    public Cliente crea(Cliente cliente);
+	public Cliente crea(Cliente cliente);
 
-    public Cliente actualiza(Cliente cliente);
+	public Cliente actualiza(Cliente cliente);
 
-    public Cliente actualiza(Cliente cliente, Usuario usuario);
+	public Cliente actualiza(Cliente cliente, Usuario usuario);
 
-    public String elimina(Long id);
+	public String elimina(Long id);
 }

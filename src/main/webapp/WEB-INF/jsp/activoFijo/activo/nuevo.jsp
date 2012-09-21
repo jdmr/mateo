@@ -181,8 +181,9 @@
                                 <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                     <label for="fechaCompra">
                                         <s:message code="fechaCompra.label" />
+                                        <span class="required-indicator">*</span>
                                     </label>
-                                    <form:input path="fechaCompra" maxlength="64" cssClass="span2" />
+                                    <form:input path="fechaCompra" maxlength="64" cssClass="span2" required="true" />
                                     <form:errors path="fechaCompra" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
@@ -329,15 +330,15 @@
                     </div>
                     <div class="row-fluid">
                         <div class="span4">
-                            <s:bind path="activo.cuenta">
+                            <s:bind path="activo.centroCosto">
                                 <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="cuentaId">
-                                        <s:message code="cuenta.label" />
+                                    <label for="centroCostoId">
+                                        <s:message code="centroCosto.label" />
                                     </label>
-                                    <form:select id="cuentaId" path="cuenta.id" required="true" cssClass="span4" >
-                                        <form:options items="${cuentas}" itemValue="id" itemLabel="nombreCompleto" />
+                                    <form:select id="centroCostoId" path="centroCosto.id.idCosto" required="true" cssClass="span4" >
+                                        <form:options items="${centrosDeCosto}" itemValue="id.idCosto" itemLabel="nombreCompleto" />
                                     </form:select>
-                                    <form:errors path="cuenta" cssClass="alert alert-error" />
+                                    <form:errors path="centroCosto" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
                         </div>
@@ -371,7 +372,7 @@
                         });
                     $("select#motivo").chosen();
                     $("select#tipoActivoId").chosen();
-                    $("select#cuentaId").chosen();
+                    $("select#centroCostoId").chosen();
                     $("input#fechaCompra").datepicker($.datepicker.regional['es']);
                     $("input#fechaCompra").datepicker("option","firstDay",0);
                     $('input#codigo').focus();

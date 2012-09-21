@@ -30,7 +30,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.general.model.Proveedor;
 import org.hibernate.validator.constraints.NotBlank;
@@ -43,10 +55,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Table(name = "entradas", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"almacen_id", "folio"}),
-    @UniqueConstraint(columnNames = {"almacen_id", "factura"})
-})
+    @UniqueConstraint(columnNames = {"almacen_id", "factura"})})
 public class Entrada implements Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 3448790632861400304L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -89,7 +104,8 @@ public class Entrada implements Serializable {
     public Entrada() {
     }
 
-    public Entrada(String folio, String factura, Date fechaFactura, Estatus estatus, Proveedor proveedor, Almacen almacen) {
+    public Entrada(String folio, String factura, Date fechaFactura,
+            Estatus estatus, Proveedor proveedor, Almacen almacen) {
         this.folio = folio;
         this.factura = factura;
         this.fechaFactura = fechaFactura;
@@ -298,7 +314,8 @@ public class Entrada implements Serializable {
     }
 
     public BigDecimal getSubtotal() {
-        BigDecimal subtotal = total.subtract(iva).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal subtotal = total.subtract(iva).setScale(2,
+                RoundingMode.HALF_UP);
         return subtotal;
     }
 
@@ -356,6 +373,7 @@ public class Entrada implements Serializable {
 
     @Override
     public String toString() {
-        return "Entrada{" + "folio=" + folio + ", factura=" + factura + ", total=" + total + '}';
+        return "Entrada{" + "folio=" + folio + ", factura=" + factura
+                + ", total=" + total + '}';
     }
 }

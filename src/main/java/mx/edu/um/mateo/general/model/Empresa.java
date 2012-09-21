@@ -27,9 +27,20 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.validation.constraints.Size;
-import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -43,6 +54,10 @@ import org.hibernate.validator.constraints.NotBlank;
     @UniqueConstraint(columnNames = {"organizacion_id", "nombre"})})
 public class Empresa implements Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 7116598843287753824L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -58,11 +73,11 @@ public class Empresa implements Serializable {
     @Column(nullable = false, length = 128, name = "nombre_completo")
     private String nombreCompleto;
     @NotBlank
-    @Size(min=12,max=13)
+    @Size(min = 12, max = 13)
     @Column(nullable = false, length = 13, name = "rfc")
     private String rfc;
     @ManyToOne
-    private CuentaMayor cuenta;
+    private CentroCosto centroCosto;
     @ManyToOne(optional = false)
     private Organizacion organizacion;
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL)
@@ -79,7 +94,8 @@ public class Empresa implements Serializable {
     public Empresa() {
     }
 
-    public Empresa(String codigo, String nombre, String nombreCompleto, String rfc, Organizacion organizacion) {
+    public Empresa(String codigo, String nombre, String nombreCompleto,
+            String rfc, Organizacion organizacion) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.nombreCompleto = nombreCompleto;
@@ -172,17 +188,17 @@ public class Empresa implements Serializable {
     }
 
     /**
-     * @return the cuenta
+     * @return the centroCosto
      */
-    public CuentaMayor getCuenta() {
-        return cuenta;
+    public CentroCosto getCentroCosto() {
+        return centroCosto;
     }
 
     /**
-     * @param cuenta the cuenta to set
+     * @param centroCosto the centroCosto to set
      */
-    public void setCuenta(CuentaMayor cuenta) {
-        this.cuenta = cuenta;
+    public void setCentroCosto(CentroCosto centroCosto) {
+        this.centroCosto = centroCosto;
     }
 
     /**

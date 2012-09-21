@@ -30,9 +30,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
 import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -42,6 +44,7 @@ import mx.edu.um.mateo.inventario.dao.ProductoDao;
 import mx.edu.um.mateo.inventario.dao.TipoProductoDao;
 import mx.edu.um.mateo.inventario.model.Producto;
 import mx.edu.um.mateo.inventario.model.XProducto;
+
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +54,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -68,14 +75,15 @@ public class ProductoController extends BaseController {
     @Autowired
     private TipoProductoDao tipoProductoDao;
 
+    @SuppressWarnings("unchecked")
     @RequestMapping
-    public String lista(HttpServletRequest request, HttpServletResponse response,
-            Usuario usuario,
-            Errors errors,
+    public String lista(HttpServletRequest request,
+            HttpServletResponse response, Usuario usuario, Errors errors,
             Model modelo) throws ParseException {
         log.debug("Mostrando lista de productos");
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Map<String, Object> params = this.convierteParams(request.getParameterMap());
+        Map<String, Object> params = this.convierteParams(request
+                .getParameterMap());
         Long almacenId = (Long) request.getSession().getAttribute("almacenId");
         params.put("almacen", almacenId);
 
@@ -85,12 +93,14 @@ public class ProductoController extends BaseController {
             params.put("fecha", sdf.parse((String) params.get("fecha")));
             buscarPorFecha = true;
         }
-        
+
         if (params.containsKey("inactivo")) {
-            params.put("inactivo", Boolean.valueOf((String) params.get("inactivo")));
+            params.put("inactivo",
+                    Boolean.valueOf((String) params.get("inactivo")));
         }
 
-        if (params.containsKey("tipo") && StringUtils.isNotBlank((String) params.get("tipo"))) {
+        if (params.containsKey("tipo")
+                && StringUtils.isNotBlank((String) params.get("tipo"))) {
             params.put("reporte", true);
             if (!buscarPorFecha) {
                 params = productoDao.lista(params);
@@ -99,7 +109,9 @@ public class ProductoController extends BaseController {
                 params = productoDao.obtieneHistorial(params);
             }
             try {
-                generaReporte((String) params.get("tipo"), (List<Producto>) params.get("productos"), response, "productos", Constantes.ALM, almacenId);
+                generaReporte((String) params.get("tipo"),
+                        (List<Producto>) params.get("productos"), response,
+                        "productos", Constantes.ALM, almacenId);
                 return null;
             } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -108,7 +120,8 @@ public class ProductoController extends BaseController {
             }
         }
 
-        if (params.containsKey("correo") && StringUtils.isNotBlank((String) params.get("correo"))) {
+        if (params.containsKey("correo")
+                && StringUtils.isNotBlank((String) params.get("correo"))) {
             params.put("reporte", true);
             if (!buscarPorFecha) {
                 params = productoDao.lista(params);
@@ -119,9 +132,17 @@ public class ProductoController extends BaseController {
 
             params.remove("reporte");
             try {
-                enviaCorreo((String) params.get("correo"), (List<Producto>) params.get("productos"), request, "productos", Constantes.ALM, almacenId);
+                enviaCorreo((String) params.get("correo"),
+                        (List<Producto>) params.get("productos"), request,
+                        "productos", Constantes.ALM, almacenId);
                 modelo.addAttribute("message", "lista.enviada.message");
-                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("producto.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+                modelo.addAttribute(
+                        "messageAttrs",
+                        new String[]{
+                            messageSource.getMessage(
+                            "producto.lista.label", null,
+                            request.getLocale()),
+                            ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
@@ -169,9 +190,17 @@ public class ProductoController extends BaseController {
     }
 
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, @Valid Producto producto, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes, @RequestParam(value = "imagen", required = false) MultipartFile archivo) {
+    public String crea(
+            HttpServletRequest request,
+            @Valid Producto producto,
+            BindingResult bindingResult,
+            Errors errors,
+            Model modelo,
+            RedirectAttributes redirectAttributes,
+            @RequestParam(value = "imagen", required = false) MultipartFile archivo) {
         for (String nombre : request.getParameterMap().keySet()) {
-            log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
+            log.debug("Param: {} : {}", nombre,
+                    request.getParameterMap().get(nombre));
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
@@ -181,10 +210,8 @@ public class ProductoController extends BaseController {
         try {
 
             if (archivo != null && !archivo.isEmpty()) {
-                Imagen imagen = new Imagen(
-                        archivo.getOriginalFilename(),
-                        archivo.getContentType(),
-                        archivo.getSize(),
+                Imagen imagen = new Imagen(archivo.getOriginalFilename(),
+                        archivo.getContentType(), archivo.getSize(),
                         archivo.getBytes());
                 producto.getImagenes().add(imagen);
             }
@@ -193,36 +220,45 @@ public class ProductoController extends BaseController {
 
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el producto", e);
-            errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
+            errors.rejectValue("nombre", "campo.duplicado.message",
+                    new String[]{"nombre"}, null);
 
             Map<String, Object> params = new HashMap<>();
-            params.put("almacen", request.getSession().getAttribute("almacenId"));
+            params.put("almacen", request.getSession()
+                    .getAttribute("almacenId"));
             params.put("reporte", true);
             params = tipoProductoDao.lista(params);
-            modelo.addAttribute("tiposDeProducto", params.get("tiposDeProducto"));
+            modelo.addAttribute("tiposDeProducto",
+                    params.get("tiposDeProducto"));
 
             return "inventario/producto/nuevo";
         } catch (IOException e) {
             log.error("No se pudo crear el producto", e);
-            errors.rejectValue("imagenes", "problema.con.imagen.message", new String[]{archivo.getOriginalFilename()}, null);
+            errors.rejectValue("imagenes", "problema.con.imagen.message",
+                    new String[]{archivo.getOriginalFilename()}, null);
 
             Map<String, Object> params = new HashMap<>();
-            params.put("almacen", request.getSession().getAttribute("almacenId"));
+            params.put("almacen", request.getSession()
+                    .getAttribute("almacenId"));
             params.put("reporte", true);
             params = tipoProductoDao.lista(params);
-            modelo.addAttribute("tiposDeProducto", params.get("tiposDeProducto"));
+            modelo.addAttribute("tiposDeProducto",
+                    params.get("tiposDeProducto"));
 
             return "inventario/producto/nuevo";
         }
 
-        redirectAttributes.addFlashAttribute("message", "producto.creado.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{producto.getNombre()});
+        redirectAttributes.addFlashAttribute("message",
+                "producto.creado.message");
+        redirectAttributes.addFlashAttribute("messageAttrs",
+                new String[]{producto.getNombre()});
 
         return "redirect:/inventario/producto/ver/" + producto.getId();
     }
 
     @RequestMapping("/edita/{id}")
-    public String edita(HttpServletRequest request, @PathVariable Long id, Model modelo) {
+    public String edita(HttpServletRequest request, @PathVariable Long id,
+            Model modelo) {
         log.debug("Edita producto {}", id);
         Producto producto = productoDao.obtiene(id);
         modelo.addAttribute("producto", producto);
@@ -238,7 +274,14 @@ public class ProductoController extends BaseController {
 
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, @Valid Producto producto, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes, @RequestParam(value = "imagen", required = false) MultipartFile archivo) {
+    public String actualiza(
+            HttpServletRequest request,
+            @Valid Producto producto,
+            BindingResult bindingResult,
+            Errors errors,
+            Model modelo,
+            RedirectAttributes redirectAttributes,
+            @RequestParam(value = "imagen", required = false) MultipartFile archivo) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
             return "inventario/producto/edita";
@@ -246,10 +289,8 @@ public class ProductoController extends BaseController {
 
         try {
             if (archivo != null && !archivo.isEmpty()) {
-                Imagen imagen = new Imagen(
-                        archivo.getOriginalFilename(),
-                        archivo.getContentType(),
-                        archivo.getSize(),
+                Imagen imagen = new Imagen(archivo.getOriginalFilename(),
+                        archivo.getContentType(), archivo.getSize(),
                         archivo.getBytes());
                 producto.getImagenes().add(imagen);
             }
@@ -257,46 +298,60 @@ public class ProductoController extends BaseController {
             producto = productoDao.actualiza(producto, usuario);
         } catch (IOException e) {
             log.error("No se pudo actualizar el producto", e);
-            errors.rejectValue("imagenes", "problema.con.imagen.message", new String[]{archivo.getOriginalFilename()}, null);
+            errors.rejectValue("imagenes", "problema.con.imagen.message",
+                    new String[]{archivo.getOriginalFilename()}, null);
 
             Map<String, Object> params = new HashMap<>();
-            params.put("almacen", request.getSession().getAttribute("almacenId"));
+            params.put("almacen", request.getSession()
+                    .getAttribute("almacenId"));
             params.put("reporte", true);
             params = tipoProductoDao.lista(params);
-            modelo.addAttribute("tiposDeProducto", params.get("tiposDeProducto"));
+            modelo.addAttribute("tiposDeProducto",
+                    params.get("tiposDeProducto"));
 
             return "inventario/producto/edita";
         } catch (ConstraintViolationException e) {
             log.error("No se pudo actualizar el producto", e);
-            errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
+            errors.rejectValue("nombre", "campo.duplicado.message",
+                    new String[]{"nombre"}, null);
 
             Map<String, Object> params = new HashMap<>();
-            params.put("almacen", request.getSession().getAttribute("almacenId"));
+            params.put("almacen", request.getSession()
+                    .getAttribute("almacenId"));
             params.put("reporte", true);
             params = tipoProductoDao.lista(params);
-            modelo.addAttribute("tiposDeProducto", params.get("tiposDeProducto"));
+            modelo.addAttribute("tiposDeProducto",
+                    params.get("tiposDeProducto"));
 
             return "inventario/producto/edita";
         }
 
-        redirectAttributes.addFlashAttribute("message", "producto.actualizado.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{producto.getNombre()});
+        redirectAttributes.addFlashAttribute("message",
+                "producto.actualizado.message");
+        redirectAttributes.addFlashAttribute("messageAttrs",
+                new String[]{producto.getNombre()});
 
         return "redirect:/inventario/producto/ver/" + producto.getId();
     }
 
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Producto producto, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String elimina(HttpServletRequest request, @RequestParam Long id,
+            Model modelo, @ModelAttribute Producto producto,
+            BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina producto");
         try {
             String nombre = productoDao.elimina(id);
 
-            redirectAttributes.addFlashAttribute("message", "producto.eliminado.message");
-            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
+            redirectAttributes.addFlashAttribute("message",
+                    "producto.eliminado.message");
+            redirectAttributes.addFlashAttribute("messageAttrs",
+                    new String[]{nombre});
         } catch (Exception e) {
             log.error("No se pudo eliminar la producto " + id, e);
-            bindingResult.addError(new ObjectError("producto", new String[]{"producto.no.eliminado.message"}, null, null));
+            bindingResult.addError(new ObjectError("producto",
+                    new String[]{"producto.no.eliminado.message"}, null,
+                    null));
             return "inventario/producto/ver";
         }
 
@@ -304,36 +359,27 @@ public class ProductoController extends BaseController {
     }
 
     @RequestMapping("/historial/{id}")
-    public String historial(@PathVariable Long id, @RequestParam(required = false) Long pagina, Model modelo) {
+    public String historial(HttpServletRequest request, @PathVariable Long id,
+            @RequestParam(required = false) Long pagina, Model modelo) {
         log.debug("Mostrando historial del producto {}", id);
-        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> params = this.convierteParams(request
+                .getParameterMap());
         params = productoDao.historial(id, params);
 
         modelo.addAttribute("historial", params.get("historial"));
 
         // inicia paginado
-        Long cantidad = (Long) params.get("cantidad");
-        Integer max = (Integer) params.get("max");
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<XProducto> productos = (List<XProducto>) params.get("historial");
-        if (pagina == null) {
-            pagina = 1l;
+        if (params.containsKey("pagina")) {
+            pagina = (Long) params.get("pagina");
+        } else {
+            pagina = 1L;
         }
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (productos.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute("paginacion", paginacion);
-        modelo.addAttribute("paginas", paginas);
+        this.pagina(params, modelo, "historial", pagina);
         // termina paginado
 
         return "inventario/producto/historial";
     }
-    
+
     @RequestMapping("/arreglaDescripciones")
     public String arreglaDescripciones() {
         log.debug("Arreglando descripciones");

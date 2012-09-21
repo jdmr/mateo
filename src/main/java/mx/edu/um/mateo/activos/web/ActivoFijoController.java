@@ -30,18 +30,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- *
+ * 
  * @author jdmr
  */
 @Controller
 @RequestMapping("/activoFijo")
 public class ActivoFijoController {
-    
-    private static final Logger log = LoggerFactory.getLogger(ActivoFijoController.class);
-    
-    @RequestMapping
-    public String index() {
-        log.debug("Mostrando indice de activoFijo");
-        return "activoFijo/index";
-    }
+
+	private static final Logger log = LoggerFactory
+			.getLogger(ActivoFijoController.class);
+
+	@RequestMapping
+	public String index() {
+		log.debug("Mostrando indice de activoFijo");
+		return "activoFijo/index";
+	}
 }

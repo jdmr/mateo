@@ -30,18 +30,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- *
+ * 
  * @author jdmr
  */
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    
-    private static final Logger log = LoggerFactory.getLogger(AdminController.class);
-    
-    @RequestMapping
-    public String index() {
-        log.debug("Mostrando indice de admin");
-        return "admin/index";
-    }
+
+	private static final Logger log = LoggerFactory
+			.getLogger(AdminController.class);
+
+	@RequestMapping
+	public String index() {
+		log.debug("Mostrando indice de admin");
+		return "admin/index";
+	}
 }

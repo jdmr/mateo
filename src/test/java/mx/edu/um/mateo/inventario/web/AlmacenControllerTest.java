@@ -26,6 +26,8 @@ package mx.edu.um.mateo.inventario.web;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
+import mx.edu.um.mateo.contabilidad.model.EjercicioPK;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
@@ -33,6 +35,7 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import static org.junit.Assert.assertNotNull;
@@ -112,6 +115,10 @@ public class AlmacenControllerTest extends BaseTest {
     public void debieraCrearAlmacen() throws Exception {
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
+        EjercicioPK ejercicioPK = new EjercicioPK("TEST", organizacion);
+        Byte x = new Byte("0");
+        Ejercicio ejercicio = new Ejercicio(ejercicioPK, "TEST", "A", StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, x, x);
+        currentSession().save(ejercicio);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         Rol rol = new Rol("ROLE_TEST");
@@ -124,6 +131,7 @@ public class AlmacenControllerTest extends BaseTest {
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
+        usuario.setEjercicio(ejercicio);
         currentSession().save(usuario);
         Long id = usuario.getId();
         assertNotNull(id);

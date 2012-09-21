@@ -29,18 +29,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- *
+ * 
  * @author AMDA
  */
 @Controller
 @RequestMapping("/rh")
 public class RhController {
 
-    private static final Logger log = LoggerFactory.getLogger(RhController.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(RhController.class);
 
-    @RequestMapping
-    public String index() {
-        log.debug("Mostrando indice de rh");
-        return "rh/index";
-    }
+	@RequestMapping
+	public String index() {
+		log.debug("Mostrando indice de rh");
+		return "rh/index";
+	}
 }

@@ -32,9 +32,9 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <a id="buscarFechaAnchor" href="#"><s:message code="buscar.fecha.button" /></a>
-                            <a id="buscarClienteAnchor" href="#"><s:message code="buscar.cliente.button" /></a>
-                            <a id="buscarEstatusAnchor" href="#"><s:message code="buscar.estatus.button" /></a>
+                            <li><a id="buscarFechaAnchor" href="#"><s:message code="buscar.fecha.button" /></a></li>
+                            <li><a id="buscarClienteAnchor" href="#"><s:message code="buscar.cliente.button" /></a></li>
+                            <li><a id="buscarEstatusAnchor" href="#"><s:message code="buscar.estatus.button" /></a></li>
                         </ul>
                     </div>
                 </div>
@@ -55,16 +55,37 @@
                         <input type="text" name="clienteNombre" id="clienteNombre" value="${param.clienteNombre}" class="input-xxlarge" />
                     </label>
                 </div>
-                <div id="buscarEstatusDiv" class="row-fluid" style="<c:if test='${empty param.estatusId}'>display: none;</c:if> margin-top: 10px;">
-                    <label>
-                        <s:message code="estatus.label" /><br/>
-                        <select name="estatusId" id="estatusId">
-                            <option value=""><s:message code="estatus.elija.message" /></option>
-                            <c:forEach items="${estados}" var="estatus">
-                                <option value="${estatus.id}" <c:if test="${param.estatusId == estatus.id}">selected="selected"</c:if>><s:message code="${estatus.nombre}" /></option>
-                            </c:forEach>
-                        </select>
-                    </label>
+                <div id="buscarEstatusDiv" class="row-fluid" style="<c:if test='${not estatus}'>display: none;</c:if> margin-top: 10px;">
+                    <div class="span2">
+                        <label class="checkbox">
+                            <input type="checkbox" name="ABIERTA" id="ABIERTA" <c:if test="${param.ABIERTA == 'on'}">checked="checked"</c:if>/>
+                            <s:message code="ABIERTA" />
+                        </label>
+                    </div>
+                    <div class="span2">
+                        <label class="checkbox">
+                            <input type="checkbox" name="CERRADA" id="CERRADA" <c:if test="${param.CERRADA == 'on'}">checked="checked"</c:if>/>
+                            <s:message code="CERRADA" />
+                        </label>
+                    </div>
+                    <div class="span2">
+                        <label class="checkbox">
+                            <input type="checkbox" name="FACTURADA" id="FACTURADA" <c:if test="${param.FACTURADA == 'on'}">checked="checked"</c:if>/>
+                            <s:message code="FACTURADA" />
+                        </label>
+                    </div>
+                    <div class="span2">
+                        <label class="checkbox">
+                            <input type="checkbox" name="PENDIENTE" id="PENDIENTE" <c:if test="${param.PENDIENTE == 'on'}">checked="checked"</c:if>/>
+                            <s:message code="PENDIENTE" />
+                        </label>
+                    </div>
+                    <div class="span2">
+                        <label class="checkbox">
+                            <input type="checkbox" name="CANCELADA" id="CANCELADA" <c:if test="${param.CANCELADA == 'on'}">checked="checked"</c:if>/>
+                            <s:message code="CANCELADA" />
+                        </label>
+                    </div>
                 </div>
             </div>
             <c:if test="${not empty message}">
@@ -86,7 +107,7 @@
                 </s:bind>
             </c:if>
 
-            <table id="lista" class="table table-striped">
+            <table id="lista" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
@@ -179,7 +200,7 @@
                     $("a#buscarEstatusAnchor").click(function(e) {
                         e.preventDefault();
                         $("div#buscarEstatusDiv").show('slide', {direction:'up'}, 500, function() {
-                            $("select#estatusId").focus();
+                            $("input#ABIERTA").focus();
                         });
                     });
                 });

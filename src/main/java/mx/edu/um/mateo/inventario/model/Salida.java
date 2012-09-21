@@ -30,7 +30,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import mx.edu.um.mateo.general.model.Cliente;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,10 +53,14 @@ import org.slf4j.LoggerFactory;
  */
 @Entity
 @Table(name = "salidas", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"almacen_id", "folio"})
-})
+    @UniqueConstraint(columnNames = {
+        "almacen_id", "folio"})})
 public class Salida implements Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 2278102520247637345L;
     private static final Logger log = LoggerFactory.getLogger(Salida.class);
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -85,7 +101,9 @@ public class Salida implements Serializable {
     public Salida() {
     }
 
-    public Salida(String atendio, String reporte, String empleado, String departamento, String comentarios, Estatus estatus, Cliente cliente, Almacen almacen) {
+    public Salida(String atendio, String reporte, String empleado,
+            String departamento, String comentarios, Estatus estatus,
+            Cliente cliente, Almacen almacen) {
         this.atendio = atendio;
         this.reporte = reporte;
         this.empleado = empleado;
@@ -296,7 +314,8 @@ public class Salida implements Serializable {
     }
 
     public BigDecimal getSubtotal() {
-        BigDecimal subtotal = total.subtract(iva).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal subtotal = total.subtract(iva).setScale(2,
+                RoundingMode.HALF_UP);
         return subtotal;
     }
 
@@ -359,6 +378,10 @@ public class Salida implements Serializable {
 
     @Override
     public String toString() {
-        return "Salida{" + "folio=" + folio + ", atendio=" + atendio + ", reporte=" + reporte + ", empleado=" + empleado + ", departamento=" + departamento + ", iva=" + iva + ", total=" + total + ", estatus=" + estatus + ", cliente=" + cliente + ", almacen=" + almacen + '}';
+        return "Salida{" + "folio=" + folio + ", atendio=" + atendio
+                + ", reporte=" + reporte + ", empleado=" + empleado
+                + ", departamento=" + departamento + ", iva=" + iva
+                + ", total=" + total + ", estatus=" + estatus + ", cliente="
+                + cliente + ", almacen=" + almacen + '}';
     }
 }

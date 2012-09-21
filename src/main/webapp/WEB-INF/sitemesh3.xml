@@ -25,6 +25,7 @@ THE SOFTWARE.
 
 
 <sitemesh>
+    <mapping path="/jefe*" decorator="/WEB-INF/layouts/main3.jsp"/>
     <mapping path="/inicializa*" decorator="/WEB-INF/layouts/main2.jsp"/>
     <mapping path="/prueba*" decorator="/WEB-INF/layouts/main2.jsp"/>
     <mapping path="/login.jsp" decorator="/WEB-INF/layouts/main2.jsp"/>

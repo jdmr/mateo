@@ -24,7 +24,7 @@
         
         <c:if test="${cancelacion.productos != null}">
             <h2><s:message code="producto.lista.label" /></h2>
-            <table id="productos" class="table table-striped">
+            <table id="productos" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th><s:message code="sku.label" /></th>
@@ -56,7 +56,7 @@
                         
         <c:if test="${cancelacion.entradas != null}">
             <h2><s:message code="entrada.lista.label" /></h2>
-            <table id="productos" class="table table-striped">
+            <table id="productos" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th><s:message code="folio.label" /></th>
@@ -86,7 +86,7 @@
             
         <c:if test="${cancelacion.salidas != null}">
             <h2><s:message code="salida.lista.label" /></h2>
-            <table id="productos" class="table table-striped">
+            <table id="productos" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th><s:message code="folio.label" /></th>

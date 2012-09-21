@@ -5,7 +5,7 @@
     <ul class="nav">
         <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
         <li<c:if test="${param.menu eq 'principal'}"> class="active"</c:if>><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
-        <li<c:if test="${param.menu eq 'mayor'}"> class="active"</c:if>><a href="<s:url value='/contabilidad/mayor'/>" ><s:message code="mayores.label" /></a></li>
+        <li<c:if test="${param.menu eq 'ejercicio'}"> class="active"</c:if>><a href="<s:url value='/contabilidad/ejercicio'/>" ><s:message code="ejercicios.label" /></a></li>
         <li<c:if test="${param.menu eq 'auxiliar'}"> class="active"</c:if>><a href="<s:url value='/contabilidad/auxiliar'/>" ><s:message code="auxiliares.label" /></a></li>
         <li<c:if test="${param.menu eq 'resultado'}"> class="active"</c:if>><a href="<s:url value='/contabilidad/resultado'/>" ><s:message code="resultados.label" /></a></li>
         <li<c:if test="${param.menu eq 'libro'}"> class="active"</c:if>><a href="<s:url value='/contabilidad/libro'/>" ><s:message code="libros.label" /></a></li>

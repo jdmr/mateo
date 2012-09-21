@@ -23,11 +23,13 @@
  */
 package mx.edu.um.mateo.general.dao;
 
+import mx.edu.um.mateo.general.model.Usuario;
+
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public interface MigracionDao {
 
-    public void hazlo();
+	public void hazlo(Usuario usuario);
 }

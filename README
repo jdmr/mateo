@@ -3,3 +3,11 @@ MATEO
 Proyecto que busca ayudar a pequeñas empresas de servicio a administrar su negocio. 
 
 Participa haciendo un fork y enviando pull requests.
+
+Por cuestiones de integración con un sistema local es necesario instalar la 
+librería JDBC de Oracle, la cual, por cuestiones de licencia, no podrán encontrar
+en los repositorios públicos de Maven. Para poder instalarlo es necesario 
+conseguir el driver ojdbc6.jar (Este se puede encontrar dentro del sitio de
+Oracle) e instalarlo en su repositorio local maven con la siguiente instrucción:
+
+mvn install:install-file -Dfile=/Users/jdmr/Downloads/ojdbc6.jar -DgroupId=oracle -DartifactId=ojdbc6 -Dversion=11.2.0.3 -Dpackaging=jar

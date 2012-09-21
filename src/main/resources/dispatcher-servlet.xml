@@ -11,7 +11,7 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd 
        ">
     
-    <context:component-scan base-package="mx.edu.um.mateo" >
+    <context:component-scan base-package="mx.edu.um.mateo.**.web" >
         <context:include-filter type="annotation"
                                 expression="org.springframework.stereotype.Controller" />
     </context:component-scan>    
@@ -47,7 +47,7 @@
     </bean>
     
     <bean id="multipartResolver" class= "org.springframework.web.multipart.commons.CommonsMultipartResolver" >
-         <property name="maxUploadSize" value="1024000" />
+         <property name="maxUploadSize" value="10240000" />
     </bean>
             
 </beans>

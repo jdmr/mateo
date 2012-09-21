@@ -1,40 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!-- For assistance related to logback-translator or configuration  -->
-<!-- files in general, please contact the logback user mailing list -->
-<!-- at http://www.qos.ch/mailman/listinfo/logback-user             -->
-<!--                                                                -->
-<!-- For professional support please see                            -->
-<!--    http://www.qos.ch/shop/products/professionalSupport         -->
-<!--                                                                -->
 <configuration>
-  <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
-      <pattern>%d{yy/MM/dd HH:mm:ss.SSS} [MATEO] %-5level [%thread] %logger{36}[%line] - %msg%n</pattern>
-    </encoder>
-  </appender>
-  <appender name="R" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <!--    See also http://logback.qos.ch/manual/appenders.html#RollingFileAppender-->
-    <File>mateo.log</File>
-    <encoder>
-      <pattern>%d{yy/MM/dd HH:mm:ss.SSS} [MATEO] %-5level [%thread] %logger{36}[%line] - %msg%n</pattern>
-    </encoder>
-    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-      <maxIndex>10</maxIndex>
-      <FileNamePattern>mateo.log.%i</FileNamePattern>
-    </rollingPolicy>
-    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-      <MaxFileSize>1MB</MaxFileSize>
-    </triggeringPolicy>
-  </appender>
-  <logger name="mx.edu.um.mateo" level="DEBUG"/>
-  <!--
-  <logger name="org.springframework" level="DEBUG"/>
-  <logger name="org.hibernate.sql" level="TRACE"/>
-  <logger name="org.hibernate.type" level="TRACE"/>
-  -->
-  <root level="INFO">
-    <appender-ref ref="stdout"/>
-    <appender-ref ref="R"/>
-  </root>
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yy/MM/dd HH:mm:ss.SSS} [MATEO] %-5level [%thread] %logger{36}[%line] - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="R" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--    See also http://logback.qos.ch/manual/appenders.html#RollingFileAppender-->
+        <File>mateo.log</File>
+        <encoder>
+            <pattern>%d{yy/MM/dd HH:mm:ss.SSS} [MATEO] %-5level [%thread] %logger{36}[%line] - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <maxIndex>10</maxIndex>
+            <FileNamePattern>mateo.log.%i</FileNamePattern>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>1MB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+    <logger name="mx.edu.um.mateo" level="DEBUG"/>
+    <logger name="org.hibernate.engine.transaction" level="DEBUG"/>
+    <logger name="org.hibernate.SQL" level="TRACE"/>
+    <!--
+    <logger name="org.springframework.orm.hibernate4" level="DEBUG"/>
+    <logger name="org.hibernate.type" level="TRACE"/>
+    <logger name="org.springframework" level="DEBUG"/>
+    -->
+    <root level="INFO">
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="R"/>
+    </root>
 </configuration>

@@ -31,22 +31,27 @@ import org.sitemesh.content.tagrules.html.ExportTagToContentRule;
 import org.sitemesh.tagprocessor.State;
 
 /**
- *
+ * 
  * @author jdmr
  */
 public class ExtraHtmlTagRuleBundle implements TagRuleBundle {
 
-    @Override
-    public void install(State defaultState, ContentProperty contentProperty, SiteMeshContext smc) {
-        // Extra HTML 5 tags
-        defaultState.addRule("header", new ExportTagToContentRule(contentProperty.getChild("header"), false));
-        defaultState.addRule("nav", new ExportTagToContentRule(contentProperty.getChild("nav"), false));
-        defaultState.addRule("content", new ExportTagToContentRule(contentProperty.getChild("content"), false));
-    }
+	@Override
+	public void install(State defaultState, ContentProperty contentProperty,
+			SiteMeshContext smc) {
+		// Extra HTML 5 tags
+		defaultState.addRule("header", new ExportTagToContentRule(
+				contentProperty.getChild("header"), false));
+		defaultState.addRule("nav",
+				new ExportTagToContentRule(contentProperty.getChild("nav"),
+						false));
+		defaultState.addRule("content", new ExportTagToContentRule(
+				contentProperty.getChild("content"), false));
+	}
 
-    @Override
-    public void cleanUp(State state, ContentProperty cp, SiteMeshContext smc) {
-        // No op.
-    }
+	@Override
+	public void cleanUp(State state, ContentProperty cp, SiteMeshContext smc) {
+		// No op.
+	}
 
 }

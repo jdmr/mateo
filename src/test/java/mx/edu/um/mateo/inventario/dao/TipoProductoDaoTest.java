@@ -24,6 +24,7 @@
 package mx.edu.um.mateo.inventario.dao;
 
 import java.util.*;
+
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.inventario.model.TipoProducto;
@@ -80,7 +81,8 @@ public class TipoProductoDaoTest {
     /**
      * Test of lista method, of class TipoProductoDao.
      */
-    @Test
+    @SuppressWarnings("unchecked")
+	@Test
     public void debieraMostrarListaDeTiposDeProducto() {
         log.debug("Debiera mostrar lista de tiposDeProducto");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
@@ -95,7 +97,7 @@ public class TipoProductoDaoTest {
         }
         Map<String, Object> params = new HashMap<>();
         params.put("almacen", almacen.getId());
-        Map result = instance.lista(params);
+        Map<String, Object> result = instance.lista(params);
         assertNotNull(result.get("tiposDeProducto"));
         assertNotNull(result.get("cantidad"));
         assertEquals(10, ((List<TipoProducto>) result.get("tiposDeProducto")).size());

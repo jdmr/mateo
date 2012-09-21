@@ -24,26 +24,27 @@
 package mx.edu.um.mateo.general.dao;
 
 import java.util.Map;
+
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public interface ProveedorDao {
 
-    public Map<String, Object> lista(Map<String, Object> params);
+	public Map<String, Object> lista(Map<String, Object> params);
 
-    public Proveedor obtiene(Long id);
+	public Proveedor obtiene(Long id);
 
-    public Proveedor crea(Proveedor proveedor, Usuario usuario);
+	public Proveedor crea(Proveedor proveedor, Usuario usuario);
 
-    public Proveedor crea(Proveedor proveedor);
+	public Proveedor crea(Proveedor proveedor);
 
-    public Proveedor actualiza(Proveedor proveedor);
+	public Proveedor actualiza(Proveedor proveedor);
 
-    public Proveedor actualiza(Proveedor proveedor, Usuario usuario);
+	public Proveedor actualiza(Proveedor proveedor, Usuario usuario);
 
-    public String elimina(Long id);
+	public String elimina(Long id);
 }

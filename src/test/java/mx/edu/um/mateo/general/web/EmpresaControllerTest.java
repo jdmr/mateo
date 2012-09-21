@@ -26,11 +26,14 @@ package mx.edu.um.mateo.general.web;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
+import mx.edu.um.mateo.contabilidad.model.EjercicioPK;
 import mx.edu.um.mateo.general.dao.EmpresaDao;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import static org.junit.Assert.assertEquals;
@@ -40,6 +43,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.server.MockMvc;
@@ -119,6 +123,10 @@ public class EmpresaControllerTest extends BaseTest {
     public void debieraCrearEmpresa() throws Exception {
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
         currentSession().save(organizacion);
+        EjercicioPK ejercicioPK = new EjercicioPK("TEST", organizacion);
+        Byte x = new Byte("0");
+        Ejercicio ejercicio = new Ejercicio(ejercicioPK, "TEST", "A", StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, x, x);
+        currentSession().save(ejercicio);
         Empresa otraEmpresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(otraEmpresa);
         Almacen almacen = new Almacen("TST", "TEST01",otraEmpresa);
@@ -131,9 +139,10 @@ public class EmpresaControllerTest extends BaseTest {
         usuario.setEmpresa(otraEmpresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
+        usuario.setEjercicio(ejercicio);
         currentSession().save(usuario);
         
-        this.authenticate(usuario, usuario.getPassword(), new ArrayList(usuario.getAuthorities()));
+        this.authenticate(usuario, usuario.getPassword(), new ArrayList<>(usuario.getAuthorities()));
         
         this.mockMvc.perform(post("/admin/empresa/crea")
                 .param("codigo", "tst-02")
@@ -150,6 +159,10 @@ public class EmpresaControllerTest extends BaseTest {
     public void debieraActualizarEmpresa() throws Exception {
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
         currentSession().save(organizacion);
+        EjercicioPK ejercicioPK = new EjercicioPK("TEST", organizacion);
+        Byte x = new Byte("0");
+        Ejercicio ejercicio = new Ejercicio(ejercicioPK, "TEST", "A", StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, x, x);
+        currentSession().save(ejercicio);
         Empresa otraEmpresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(otraEmpresa);
         Almacen almacen = new Almacen("TST", "TEST01",otraEmpresa);
@@ -162,9 +175,10 @@ public class EmpresaControllerTest extends BaseTest {
         usuario.setEmpresa(otraEmpresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
+        usuario.setEjercicio(ejercicio);
         currentSession().save(usuario);
         
-        this.authenticate(usuario, usuario.getPassword(), new ArrayList(usuario.getAuthorities()));
+        this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getAuthorities()));
         
         Empresa empresa = otraEmpresa;
         

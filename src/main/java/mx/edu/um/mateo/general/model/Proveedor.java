@@ -25,279 +25,309 @@ package mx.edu.um.mateo.general.model;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.validation.constraints.Size;
+
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
-@Table(name = "proveedores", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"empresa_id", "nombre"})})
+@Table(name = "proveedores", uniqueConstraints = { @UniqueConstraint(columnNames = {
+		"empresa_id", "nombre" }) })
 public class Proveedor implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Version
-    private Integer version;
-    @NotBlank
-    @Column(nullable = false, length = 64)
-    private String nombre;
-    @NotBlank
-    @Column(nullable = false, length = 128, name="nombre_completo")
-    private String nombreCompleto;
-    @NotBlank
-    @Size(min = 12, max = 13)
-    @Column(nullable = false, length = 13)
-    private String rfc;
-    @Column(length=18)
-    private String curp;
-    @Column(length=500)
-    private String direccion;
-    @Column(length=25)
-    private String telefono;
-    @Column(length=25)
-    private String fax;
-    @Column(length=64)
-    private String contacto;
-    @Email
-    @Column(length=128)
-    private String correo;
-    @Column(nullable = false)
-    private Boolean base = false;
-    @ManyToOne(optional=false)
-    private Empresa empresa;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1070501345314196282L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Version
+	private Integer version;
+	@NotBlank
+	@Column(nullable = false, length = 64)
+	private String nombre;
+	@NotBlank
+	@Column(nullable = false, length = 128, name = "nombre_completo")
+	private String nombreCompleto;
+	@NotBlank
+	@Size(min = 12, max = 13)
+	@Column(nullable = false, length = 13)
+	private String rfc;
+	@Column(length = 18)
+	private String curp;
+	@Column(length = 500)
+	private String direccion;
+	@Column(length = 25)
+	private String telefono;
+	@Column(length = 25)
+	private String fax;
+	@Column(length = 64)
+	private String contacto;
+	@Email
+	@Column(length = 128)
+	private String correo;
+	@Column(nullable = false)
+	private Boolean base = false;
+	@ManyToOne(optional = false)
+	private Empresa empresa;
 
-    public Proveedor() {
-    }
+	public Proveedor() {
+	}
 
-    public Proveedor(String nombre, String nombreCompleto, String rfc, Empresa empresa) {
-        this.nombre = nombre;
-        this.nombreCompleto = nombreCompleto;
-        this.rfc = rfc;
-        this.empresa = empresa;
-    }
+	public Proveedor(String nombre, String nombreCompleto, String rfc,
+			Empresa empresa) {
+		this.nombre = nombre;
+		this.nombreCompleto = nombreCompleto;
+		this.rfc = rfc;
+		this.empresa = empresa;
+	}
 
-    public Proveedor(String nombre, String nombreCompleto, String rfc, Boolean base, Empresa empresa) {
-        this.nombre = nombre;
-        this.nombreCompleto = nombreCompleto;
-        this.rfc = rfc;
-        this.empresa = empresa;
-        this.base = base;
-    }
+	public Proveedor(String nombre, String nombreCompleto, String rfc,
+			Boolean base, Empresa empresa) {
+		this.nombre = nombre;
+		this.nombreCompleto = nombreCompleto;
+		this.rfc = rfc;
+		this.empresa = empresa;
+		this.base = base;
+	}
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @return the version
-     */
-    public Integer getVersion() {
-        return version;
-    }
+	/**
+	 * @return the version
+	 */
+	public Integer getVersion() {
+		return version;
+	}
 
-    /**
-     * @param version the version to set
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
+	/**
+	 * @param version
+	 *            the version to set
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
 
-    /**
-     * @return the nombre
-     */
-    public String getNombre() {
-        return nombre;
-    }
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
 
-    /**
-     * @param nombre the nombre to set
-     */
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-    /**
-     * @return the nombreCompleto
-     */
-    public String getNombreCompleto() {
-        return nombreCompleto;
-    }
+	/**
+	 * @return the nombreCompleto
+	 */
+	public String getNombreCompleto() {
+		return nombreCompleto;
+	}
 
-    /**
-     * @param nombreCompleto the nombreCompleto to set
-     */
-    public void setNombreCompleto(String nombreCompleto) {
-        this.nombreCompleto = nombreCompleto;
-    }
+	/**
+	 * @param nombreCompleto
+	 *            the nombreCompleto to set
+	 */
+	public void setNombreCompleto(String nombreCompleto) {
+		this.nombreCompleto = nombreCompleto;
+	}
 
-    /**
-     * @return the rfc
-     */
-    public String getRfc() {
-        return rfc;
-    }
+	/**
+	 * @return the rfc
+	 */
+	public String getRfc() {
+		return rfc;
+	}
 
-    /**
-     * @param rfc the rfc to set
-     */
-    public void setRfc(String rfc) {
-        this.rfc = rfc;
-    }
+	/**
+	 * @param rfc
+	 *            the rfc to set
+	 */
+	public void setRfc(String rfc) {
+		this.rfc = rfc;
+	}
 
-    /**
-     * @return the curp
-     */
-    public String getCurp() {
-        return curp;
-    }
+	/**
+	 * @return the curp
+	 */
+	public String getCurp() {
+		return curp;
+	}
 
-    /**
-     * @param curp the curp to set
-     */
-    public void setCurp(String curp) {
-        this.curp = curp;
-    }
+	/**
+	 * @param curp
+	 *            the curp to set
+	 */
+	public void setCurp(String curp) {
+		this.curp = curp;
+	}
 
-    /**
-     * @return the direccion
-     */
-    public String getDireccion() {
-        return direccion;
-    }
+	/**
+	 * @return the direccion
+	 */
+	public String getDireccion() {
+		return direccion;
+	}
 
-    /**
-     * @param direccion the direccion to set
-     */
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
+	/**
+	 * @param direccion
+	 *            the direccion to set
+	 */
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
+	}
 
-    /**
-     * @return the telefono
-     */
-    public String getTelefono() {
-        return telefono;
-    }
+	/**
+	 * @return the telefono
+	 */
+	public String getTelefono() {
+		return telefono;
+	}
 
-    /**
-     * @param telefono the telefono to set
-     */
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
+	/**
+	 * @param telefono
+	 *            the telefono to set
+	 */
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
 
-    /**
-     * @return the fax
-     */
-    public String getFax() {
-        return fax;
-    }
+	/**
+	 * @return the fax
+	 */
+	public String getFax() {
+		return fax;
+	}
 
-    /**
-     * @param fax the fax to set
-     */
-    public void setFax(String fax) {
-        this.fax = fax;
-    }
+	/**
+	 * @param fax
+	 *            the fax to set
+	 */
+	public void setFax(String fax) {
+		this.fax = fax;
+	}
 
-    /**
-     * @return the contacto
-     */
-    public String getContacto() {
-        return contacto;
-    }
+	/**
+	 * @return the contacto
+	 */
+	public String getContacto() {
+		return contacto;
+	}
 
-    /**
-     * @param contacto the contacto to set
-     */
-    public void setContacto(String contacto) {
-        this.contacto = contacto;
-    }
+	/**
+	 * @param contacto
+	 *            the contacto to set
+	 */
+	public void setContacto(String contacto) {
+		this.contacto = contacto;
+	}
 
-    /**
-     * @return the correo
-     */
-    public String getCorreo() {
-        return correo;
-    }
+	/**
+	 * @return the correo
+	 */
+	public String getCorreo() {
+		return correo;
+	}
 
-    /**
-     * @param correo the correo to set
-     */
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
+	/**
+	 * @param correo
+	 *            the correo to set
+	 */
+	public void setCorreo(String correo) {
+		this.correo = correo;
+	}
 
-    /**
-     * @return the base
-     */
-    public Boolean getBase() {
-        return base;
-    }
+	/**
+	 * @return the base
+	 */
+	public Boolean getBase() {
+		return base;
+	}
 
-    /**
-     * @param base the base to set
-     */
-    public void setBase(Boolean base) {
-        this.base = base;
-    }
+	/**
+	 * @param base
+	 *            the base to set
+	 */
+	public void setBase(Boolean base) {
+		this.base = base;
+	}
 
-    /**
-     * @return the empresa
-     */
-    public Empresa getEmpresa() {
-        return empresa;
-    }
+	/**
+	 * @return the empresa
+	 */
+	public Empresa getEmpresa() {
+		return empresa;
+	}
 
-    /**
-     * @param empresa the empresa to set
-     */
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
-    }
+	/**
+	 * @param empresa
+	 *            the empresa to set
+	 */
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Proveedor other = (Proveedor) obj;
-        if (!Objects.equals(this.nombre, other.nombre)) {
-            return false;
-        }
-        return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final Proveedor other = (Proveedor) obj;
+		if (!Objects.equals(this.nombre, other.nombre)) {
+			return false;
+		}
+		return true;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 79 * hash + Objects.hashCode(this.id);
-        hash = 79 * hash + Objects.hashCode(this.version);
-        hash = 79 * hash + Objects.hashCode(this.nombre);
-        return hash;
-    }
+	@Override
+	public int hashCode() {
+		int hash = 5;
+		hash = 79 * hash + Objects.hashCode(this.id);
+		hash = 79 * hash + Objects.hashCode(this.version);
+		hash = 79 * hash + Objects.hashCode(this.nombre);
+		return hash;
+	}
 
-    @Override
-    public String toString() {
-        return "Proveedor{" + "id=" + id + ", nombre=" + nombre + ", rfc=" + rfc + '}';
-    }
+	@Override
+	public String toString() {
+		return "Proveedor{" + "id=" + id + ", nombre=" + nombre + ", rfc="
+				+ rfc + '}';
+	}
 }

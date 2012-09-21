@@ -24,6 +24,9 @@
 package mx.edu.um.mateo.general.web;
 
 import java.util.ArrayList;
+import java.util.List;
+import mx.edu.um.mateo.contabilidad.dao.EjercicioDao;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.general.dao.OrganizacionDao;
 import mx.edu.um.mateo.general.dao.RolDao;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
@@ -34,8 +37,8 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.inventario.model.Almacen;
-import static org.junit.Assert.assertNotNull;
 import org.junit.*;
+import static org.junit.Assert.assertNotNull;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +76,8 @@ public class OrganizacionControllerTest extends BaseTest {
     private RolDao rolDao;
     @Autowired
     private UsuarioDao usuarioDao;
+    @Autowired
+    private EjercicioDao ejercicioDao;
 
     public OrganizacionControllerTest() {
     }
@@ -123,11 +128,15 @@ public class OrganizacionControllerTest extends BaseTest {
                 break actualizaUsuario;
             }
         }
+        
+        List<Ejercicio> ejercicios = ejercicioDao.lista(organizacion.getId());
+        usuario.setEjercicio(ejercicios.get(0));
+        
         usuario = usuarioDao.crea(usuario, almacenId, new String[]{rol.getAuthority()});
         Long id = usuario.getId();
         assertNotNull(id);
 
-        this.authenticate(usuario, usuario.getPassword(), new ArrayList(usuario.getAuthorities()));
+        this.authenticate(usuario, usuario.getPassword(), new ArrayList<>(usuario.getAuthorities()));
         
         this.mockMvc.perform(
                 post("/admin/organizacion/crea")

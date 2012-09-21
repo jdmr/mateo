@@ -140,20 +140,22 @@
                             </div>
                         </div>
 
-                        <div class="row-fluid" style="margin-top: 10px;">
-                            <div class="span4">
-                                <h4><s:message code="ubicacion.label" /></h4>
-                                <h3>${activo.ubicacion}</h3>
+                        <c:if test="${not empty activo.ubicacion or activo.inactivo or activo.fechaInactivo != null}">
+                            <div class="row-fluid" style="margin-top: 10px;">
+                                <div class="span4">
+                                    <h4><s:message code="ubicacion.label" /></h4>
+                                    <h3>${activo.ubicacion}</h3>
+                                </div>
+                                <div class="span4">
+                                    <h4><s:message code="inactivo.label" /></h4>
+                                    <h3><form:checkbox path="inactivo" disabled="true" /></h3>
+                                </div>
+                                <div class="span4">
+                                    <h4><s:message code="fechaInactivo.label" /></h4>
+                                    <h3>${activo.fechaInactivo}</h3>
+                                </div>
                             </div>
-                            <div class="span4">
-                                <h4><s:message code="inactivo.label" /></h4>
-                                <h3><form:checkbox path="inactivo" disabled="true" /></h3>
-                            </div>
-                            <div class="span4">
-                                <h4><s:message code="fechaInactivo.label" /></h4>
-                                <h3>${activo.fechaInactivo}</h3>
-                            </div>
-                        </div>
+                        </c:if>
 
                         <div class="row-fluid" style="margin-top: 10px;">
                             <div class="span4">
@@ -172,8 +174,8 @@
 
                         <div class="row-fluid" style="margin-top: 10px;">
                             <div class="span4">
-                                <h4><s:message code="cuenta.label" /></h4>
-                                <h3>${activo.cuenta.nombreCompleto}</h3>
+                                <h4><s:message code="centroCosto.label" /></h4>
+                                <h3>${activo.centroCosto.nombreCompleto}</h3>
                             </div>
                             <div class="span4">
                                 <h4><s:message code="empresa.label" /></h4>
@@ -214,6 +216,15 @@
                                 <h3>${activo.fechaModificacion}</h3>
                             </div>
                         </div>
+                            
+                        <c:if test="${activo.fechaReubicado != null}" >
+                            <div class="row-fluid" style="margin-top: 10px;">
+                                <div class="span4">
+                                    <h4><s:message code="fecha.reubicacion.label" /></h4>
+                                    <h3>${activo.fechaReubicado}</h3>
+                                </div>
+                            </div>
+                        </c:if>
 
                     </div>
                     <div class="span3">
@@ -227,14 +238,17 @@
                                 <p><img src="<c:url value='/imagen/mostrar/0' />" /></p>
                             </c:otherwise>
                         </c:choose>
+                        <a class="btn" href="<c:url value='/activoFijo/activo/sube/${activo.id}'/>"><i class="icon-upload"></i> <s:message code="activo.sube.imagen.button" /></a>
                     </div>
                 </div>
 
-                <p class="well" style="margin-top: 10px;">
-                    <a href="<c:url value='/activoFijo/activo/edita/${activo.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
-                    <form:hidden path="id" />
-                    <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="eliminar" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='baja.button'/></button>
-                </p>
+                <c:if test="${puedeDarDeBaja}">
+                    <div class="well" style="margin-top: 10px;">
+                        <a href="<c:url value='/activoFijo/activo/reubica/${activo.id}' />" class="btn btn-warning btn-large"><i class="icon-cog icon-white"></i> <s:message code="reubica.button" /></a>
+                        <form:hidden path="id" />
+                        <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="eliminar" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='baja.button'/></button>
+                    </div>
+                </c:if>
             </form:form>
         </div>
     </body>

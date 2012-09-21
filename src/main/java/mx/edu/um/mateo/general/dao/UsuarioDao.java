@@ -23,40 +23,54 @@
  */
 package mx.edu.um.mateo.general.dao;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
 
 /**
- *
+ * 
  * @author jdmr
  */
 public interface UsuarioDao {
 
-    public Map<String, Object> lista(Map<String, Object> params) ;
+	public Map<String, Object> lista(Map<String, Object> params);
 
-    public Usuario obtiene(Long id) ;
+	public Usuario obtiene(Long id);
 
-    public Usuario obtiene(String username) ;
+	public Usuario obtiene(String username);
 
-    public Usuario obtienePorOpenId(String openId) ;
+	public Usuario obtienePorOpenId(String openId);
 
-    public Usuario obtienePorCorreo(String correo) ;
+	public Usuario obtienePorCorreo(String correo);
 
-    public Usuario crea(Usuario usuario, Long almacenId, String[] nombreDeRoles) ;
+	public Usuario crea(Usuario usuario, Long almacenId, String[] nombreDeRoles);
 
-    public Usuario actualiza(Usuario usuario, Long almacenId, String[] nombreDeRoles) ;
+	public Usuario actualiza(Usuario usuario, Long almacenId,
+			String[] nombreDeRoles);
 
-    public void actualiza(Usuario usuario) ;
-    
-    public String elimina(Long id) throws UltimoException ;
+	public Usuario actualiza(Usuario usuario, Long almacenId,
+			String[] nombreDeRoles, String[] centrosDeCostoIds);
 
-    public List<Rol> roles() ;
+	public void actualiza(Usuario usuario);
 
-    public List<Almacen> obtieneAlmacenes() ;
+	public String elimina(Long id) throws UltimoException;
 
-    public void asignaAlmacen(Usuario usuario, Long almacenId) ;
+	public List<Rol> roles();
 
+	public List<Almacen> obtieneAlmacenes();
+
+	public void asignaAlmacen(Usuario usuario, Long almacenId,
+			String ejercicioId);
+
+	public List<Ejercicio> obtieneEjercicios(Long organizacionId);
+        
+        public List<CentroCosto> obtieneCentrosDeCosto(Ejercicio ejercicio);
+        
+        public Set<CentroCosto> obtieneCentrosDeCosto(Ejercicio ejercicio, String[] centrosDeCostoIds);
 }

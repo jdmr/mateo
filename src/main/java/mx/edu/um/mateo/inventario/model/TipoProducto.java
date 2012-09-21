@@ -25,141 +25,160 @@ package mx.edu.um.mateo.inventario.model;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
-@Table(name="tipos_producto", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"almacen_id", "nombre"})})
+@Table(name = "tipos_producto", uniqueConstraints = { @UniqueConstraint(columnNames = {
+		"almacen_id", "nombre" }) })
 public class TipoProducto implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Version
-    private Integer version;
-    @NotBlank
-    @Column(nullable = false, length = 32)
-    private String nombre;
-    @NotBlank
-    @Column(nullable = false, length = 128)
-    private String descripcion;
-    @ManyToOne(optional = false)
-    private Almacen almacen;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8992832191478444727L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Version
+	private Integer version;
+	@NotBlank
+	@Column(nullable = false, length = 32)
+	private String nombre;
+	@NotBlank
+	@Column(nullable = false, length = 128)
+	private String descripcion;
+	@ManyToOne(optional = false)
+	private Almacen almacen;
 
-    public TipoProducto() {
-    }
+	public TipoProducto() {
+	}
 
-    public TipoProducto(String nombre, String descripcion, Almacen almacen) {
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.almacen = almacen;
-    }
-    
-    public TipoProducto(String nombre) {
-        this.nombre = nombre;
-    }
+	public TipoProducto(String nombre, String descripcion, Almacen almacen) {
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.almacen = almacen;
+	}
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+	public TipoProducto(String nombre) {
+		this.nombre = nombre;
+	}
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @return the version
-     */
-    public Integer getVersion() {
-        return version;
-    }
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @param version the version to set
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
+	/**
+	 * @return the version
+	 */
+	public Integer getVersion() {
+		return version;
+	}
 
-    /**
-     * @return the nombre
-     */
-    public String getNombre() {
-        return nombre;
-    }
+	/**
+	 * @param version
+	 *            the version to set
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
 
-    /**
-     * @param nombre the nombre to set
-     */
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+	/**
+	 * @return the nombre
+	 */
+	public String getNombre() {
+		return nombre;
+	}
 
-    /**
-     * @return the descripcion
-     */
-    public String getDescripcion() {
-        return descripcion;
-    }
+	/**
+	 * @param nombre
+	 *            the nombre to set
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-    /**
-     * @param descripcion the descripcion to set
-     */
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
+	/**
+	 * @return the descripcion
+	 */
+	public String getDescripcion() {
+		return descripcion;
+	}
 
-    /**
-     * @return the almacen
-     */
-    public Almacen getAlmacen() {
-        return almacen;
-    }
+	/**
+	 * @param descripcion
+	 *            the descripcion to set
+	 */
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
 
-    /**
-     * @param almacen the almacen to set
-     */
-    public void setAlmacen(Almacen almacen) {
-        this.almacen = almacen;
-    }
+	/**
+	 * @return the almacen
+	 */
+	public Almacen getAlmacen() {
+		return almacen;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final TipoProducto other = (TipoProducto) obj;
-        if (!Objects.equals(this.nombre, other.nombre)) {
-            return false;
-        }
-        return true;
-    }
+	/**
+	 * @param almacen
+	 *            the almacen to set
+	 */
+	public void setAlmacen(Almacen almacen) {
+		this.almacen = almacen;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 37 * hash + Objects.hashCode(this.id);
-        hash = 37 * hash + Objects.hashCode(this.version);
-        hash = 37 * hash + Objects.hashCode(this.nombre);
-        return hash;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final TipoProducto other = (TipoProducto) obj;
+		if (!Objects.equals(this.nombre, other.nombre)) {
+			return false;
+		}
+		return true;
+	}
 
-    @Override
-    public String toString() {
-        return "TipoProducto{" + "id=" + id + ", nombre=" + nombre + '}';
-    }
+	@Override
+	public int hashCode() {
+		int hash = 3;
+		hash = 37 * hash + Objects.hashCode(this.id);
+		hash = 37 * hash + Objects.hashCode(this.version);
+		hash = 37 * hash + Objects.hashCode(this.nombre);
+		return hash;
+	}
+
+	@Override
+	public String toString() {
+		return "TipoProducto{" + "id=" + id + ", nombre=" + nombre + '}';
+	}
 }

@@ -5,7 +5,7 @@
 package mx.edu.um.mateo;
 
 /**
- *
+ * 
  * @author nujev
  */
 public class Constantes {
@@ -171,4 +171,5 @@ public class Constantes {
     public static final String PATH_CATEGORIA_ELIMINA = "/rh/categoria/elimina";
     public static final String CATEGORIA_FORM = "categoriaForm";
     
+
 }

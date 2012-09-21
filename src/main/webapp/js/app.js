@@ -1,5 +1,4 @@
 function highlightTableRows(tableId) {
-    var previousClass = null;
     var table = document.getElementById(tableId);
     var startRow = 0;
     // workaround for Tapestry not using thead
@@ -9,9 +8,8 @@ function highlightTableRows(tableId) {
     var tbody = table.getElementsByTagName("tbody")[0];
     var rows = tbody.getElementsByTagName("tr");
     // add event handlers so rows light up and are clickable
-    for (i=startRow; i < rows.length; i++) {
+    for (var i=startRow; i < rows.length; i++) {
         rows[i].onmouseover = function() {
-            previousClass=this.className;
             this.style.cursor="pointer";
         };
         rows[i].onmouseout = function() {
@@ -30,7 +28,7 @@ function highlightTableRows(tableId) {
                 location.href = link.getAttribute("href");
             }
             return false;
-        }
+        };
     }
 }
 
@@ -48,10 +46,10 @@ function highlightMyTableRows(tableId) {
     for (var i=0; i < rows.length; i++) {
         rows[i].onmouseover = function() {
             previousClass=this.className;
-            this.className+=' over'
+            this.className+=' over';
         };
         rows[i].onmouseout = function() {
-            this.className=previousClass
+            this.className=previousClass;
         };
         var cells = rows[i].getElementsByTagName("td");
         for(var j=0; j < cells.length-1; j++) {
@@ -61,7 +59,7 @@ function highlightMyTableRows(tableId) {
                 location.href = link.getAttribute("href");
                 this.style.cursor="pointer";
                 return false;
-            }
+            };
         }
     }
 }

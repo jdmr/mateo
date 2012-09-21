@@ -66,7 +66,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class FacturaAlmacenDaoHibernate extends BaseDao implements FacturaAlmacenDao {
+public class FacturaAlmacenDaoHibernate extends BaseDao implements
+        FacturaAlmacenDao {
 
     public FacturaAlmacenDaoHibernate() {
         log.info("Nueva instancia de FacturaAlmacenDao");
@@ -94,18 +95,24 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements FacturaAlmace
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(FacturaAlmacen.class);
-        Criteria countCriteria = currentSession().createCriteria(FacturaAlmacen.class);
+        Criteria criteria = currentSession().createCriteria(
+                FacturaAlmacen.class);
+        Criteria countCriteria = currentSession().createCriteria(
+                FacturaAlmacen.class);
 
         if (params.containsKey("almacen")) {
-            criteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
-            countCriteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
+            criteria.createCriteria("almacen").add(
+                    Restrictions.idEq(params.get("almacen")));
+            countCriteria.createCriteria("almacen").add(
+                    Restrictions.idEq(params.get("almacen")));
         }
 
         if (params.containsKey("fechaIniciado")) {
             log.debug("Buscando desde {}", params.get("fechaIniciado"));
-            criteria.add(Restrictions.ge("fechaCreacion", params.get("fechaIniciado")));
-            countCriteria.add(Restrictions.ge("fechaCreacion", params.get("fechaIniciado")));
+            criteria.add(Restrictions.ge("fechaCreacion",
+                    params.get("fechaIniciado")));
+            countCriteria.add(Restrictions.ge("fechaCreacion",
+                    params.get("fechaIniciado")));
         } else {
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -115,19 +122,23 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements FacturaAlmace
             calendar.set(Calendar.MILLISECOND, 1);
             log.debug("Asignando busqueda desde {}", calendar.getTime());
             criteria.add(Restrictions.ge("fechaCreacion", calendar.getTime()));
-            countCriteria.add(Restrictions.ge("fechaCreacion", calendar.getTime()));
+            countCriteria.add(Restrictions.ge("fechaCreacion",
+                    calendar.getTime()));
         }
 
         if (params.containsKey("fechaTerminado")) {
             log.debug("Buscando hasta {}", params.get("fechaTerminado"));
-            criteria.add(Restrictions.le("fechaCreacion", params.get("fechaTerminado")));
-            countCriteria.add(Restrictions.le("fechaCreacion", params.get("fechaTerminado")));
+            criteria.add(Restrictions.le("fechaCreacion",
+                    params.get("fechaTerminado")));
+            countCriteria.add(Restrictions.le("fechaCreacion",
+                    params.get("fechaTerminado")));
         }
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("folio", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("folio", filtro,
+                    MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -172,7 +183,8 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements FacturaAlmace
         if (usuario != null) {
             factura.setAlmacen(usuario.getAlmacen());
         }
-        Query query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
+        Query query = currentSession().createQuery(
+                "select e from Estatus e where e.nombre = :nombre");
         query.setString("nombre", Constantes.ABIERTA);
         Estatus estatus = (Estatus) query.uniqueResult();
         factura.setEstatus(estatus);
@@ -194,13 +206,16 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements FacturaAlmace
     }
 
     @Override
-    public FacturaAlmacen actualiza(FacturaAlmacen factura) throws NoEstaAbiertaException {
+    public FacturaAlmacen actualiza(FacturaAlmacen factura)
+            throws NoEstaAbiertaException {
         return this.actualiza(factura, null);
     }
 
     @Override
-    public FacturaAlmacen actualiza(FacturaAlmacen otraFactura, Usuario usuario) throws NoEstaAbiertaException {
-        FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(FacturaAlmacen.class, otraFactura.getId());
+    public FacturaAlmacen actualiza(FacturaAlmacen otraFactura, Usuario usuario)
+            throws NoEstaAbiertaException {
+        FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(
+                FacturaAlmacen.class, otraFactura.getId());
         switch (factura.getEstatus().getNombre()) {
             case Constantes.ABIERTA:
                 Session session = currentSession();
@@ -219,19 +234,25 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements FacturaAlmace
                 session.flush();
                 return factura;
             default:
-                throw new NoEstaAbiertaException("No se puede actualizar una factura que no este abierta");
+                throw new NoEstaAbiertaException(
+                        "No se puede actualizar una factura que no este abierta");
         }
     }
 
     @Override
-    public String cierra(Long facturaId, Usuario usuario) throws NoSePuedeCerrarException, NoSePuedeCerrarEnCeroException, NoEstaAbiertaException {
-        FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(FacturaAlmacen.class, facturaId);
+    public String cierra(Long facturaId, Usuario usuario)
+            throws NoSePuedeCerrarException, NoSePuedeCerrarEnCeroException,
+            NoEstaAbiertaException {
+        FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(
+                FacturaAlmacen.class, facturaId);
         factura = cierra(factura, usuario);
         return factura.getFolio();
     }
 
     @Override
-    public FacturaAlmacen cierra(FacturaAlmacen factura, Usuario usuario) throws NoSePuedeCerrarException, NoSePuedeCerrarEnCeroException, NoEstaAbiertaException {
+    public FacturaAlmacen cierra(FacturaAlmacen factura, Usuario usuario)
+            throws NoSePuedeCerrarException, NoSePuedeCerrarEnCeroException,
+            NoEstaAbiertaException {
         if (factura != null) {
             if (factura.getEstatus().getNombre().equals(Constantes.ABIERTA)) {
                 if (usuario != null) {
@@ -241,7 +262,8 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements FacturaAlmace
                 Date fecha = new Date();
                 factura.setIva(BigDecimal.ZERO);
                 factura.setTotal(BigDecimal.ZERO);
-                Query query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
+                Query query = currentSession().createQuery(
+                        "select e from Estatus e where e.nombre = :nombre");
                 query.setString("nombre", Constantes.FACTURADA);
                 Estatus facturada = (Estatus) query.uniqueResult();
                 for (Salida salida : factura.getSalidas()) {
@@ -259,7 +281,8 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements FacturaAlmace
                     currentSession().update(entrada);
                     audita(entrada, usuario, Constantes.FACTURADA, fecha);
                     factura.setIva(factura.getIva().subtract(entrada.getIva()));
-                    factura.setTotal(factura.getTotal().subtract(entrada.getTotal()));
+                    factura.setTotal(factura.getTotal().subtract(
+                            entrada.getTotal()));
                 }
 
                 query.setString("nombre", Constantes.CERRADA);
@@ -275,19 +298,24 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements FacturaAlmace
                 currentSession().flush();
                 return factura;
             } else {
-                throw new NoEstaAbiertaException("No se puede actualizar una factura que no este abierta");
+                throw new NoEstaAbiertaException(
+                        "No se puede actualizar una factura que no este abierta");
             }
         } else {
-            throw new NoSePuedeCerrarException("No se puede cerrar la factura pues no existe");
+            throw new NoSePuedeCerrarException(
+                    "No se puede cerrar la factura pues no existe");
         }
     }
 
     @Override
-    public FacturaAlmacen cancelar(Long id, Usuario usuario) throws NoEstaCerradaException, NoSePuedeCancelarException {
-        FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(FacturaAlmacen.class, id);
+    public FacturaAlmacen cancelar(Long id, Usuario usuario)
+            throws NoEstaCerradaException, NoSePuedeCancelarException {
+        FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(
+                FacturaAlmacen.class, id);
         if (factura != null) {
             if (factura.getEstatus().getNombre().equals(Constantes.CERRADA)) {
-                Query query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
+                Query query = currentSession().createQuery(
+                        "select e from Estatus e where e.nombre = :nombre");
                 query.setString("nombre", Constantes.CERRADA);
                 Estatus cerrada = (Estatus) query.uniqueResult();
 
@@ -316,10 +344,13 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements FacturaAlmace
                 currentSession().flush();
                 return factura;
             } else {
-                throw new NoEstaCerradaException("No se puede actualizar una factura que no este cerrada", factura);
+                throw new NoEstaCerradaException(
+                        "No se puede actualizar una factura que no este cerrada",
+                        factura);
             }
         } else {
-            throw new NoSePuedeCancelarException("No se puede cancelar la factura porque no existe", factura);
+            throw new NoSePuedeCancelarException(
+                    "No se puede cancelar la factura porque no existe", factura);
         }
     }
 
@@ -329,7 +360,8 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements FacturaAlmace
     }
 
     @Override
-    public String elimina(Long id, Usuario usuario) throws NoEstaAbiertaException {
+    public String elimina(Long id, Usuario usuario)
+            throws NoEstaAbiertaException {
         FacturaAlmacen factura = obtiene(id);
         if (factura.getEstatus().getNombre().equals(Constantes.ABIERTA)) {
             String nombre = factura.getFolio();
@@ -339,12 +371,15 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements FacturaAlmace
             currentSession().flush();
             return nombre;
         } else {
-            throw new NoEstaAbiertaException("No se puede eliminar una factura que no este abierta");
+            throw new NoEstaAbiertaException(
+                    "No se puede eliminar una factura que no este abierta");
         }
     }
 
     private String getFolioTemporal(Almacen almacen) {
-        Query query = currentSession().createQuery("select f from Folio f where f.nombre = :nombre and f.almacen.id = :almacenId");
+        Query query = currentSession()
+                .createQuery(
+                "select f from Folio f where f.nombre = :nombre and f.almacen.id = :almacenId");
         query.setString("nombre", "FACTURA-TEMPORAL");
         query.setLong("almacenId", almacen.getId());
         query.setLockOptions(LockOptions.UPGRADE);
@@ -372,7 +407,9 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements FacturaAlmace
     }
 
     private String getFolio(Almacen almacen) {
-        Query query = currentSession().createQuery("select f from Folio f where f.nombre = :nombre and f.almacen.id = :almacenId");
+        Query query = currentSession()
+                .createQuery(
+                "select f from Folio f where f.nombre = :nombre and f.almacen.id = :almacenId");
         query.setString("nombre", "FACTURA");
         query.setLong("almacenId", almacen.getId());
         query.setLockOptions(LockOptions.UPGRADE);
@@ -398,7 +435,8 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements FacturaAlmace
         return sb.toString();
     }
 
-    private void audita(FacturaAlmacen factura, Usuario usuario, String actividad, Date fecha) {
+    private void audita(FacturaAlmacen factura, Usuario usuario,
+            String actividad, Date fecha) {
         XFacturaAlmacen xfactura = new XFacturaAlmacen();
         BeanUtils.copyProperties(factura, xfactura);
         xfactura.setId(null);
@@ -408,11 +446,13 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements FacturaAlmace
         xfactura.setEstatusId(factura.getEstatus().getId());
         xfactura.setFechaCreacion(fecha);
         xfactura.setActividad(actividad);
-        xfactura.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
+        xfactura.setCreador((usuario != null) ? usuario.getUsername()
+                : "sistema");
         currentSession().save(xfactura);
     }
 
-    private void audita(Salida salida, Usuario usuario, String actividad, Date fecha) {
+    private void audita(Salida salida, Usuario usuario, String actividad,
+            Date fecha) {
         XSalida xsalida = new XSalida();
         BeanUtils.copyProperties(salida, xsalida);
         xsalida.setId(null);
@@ -422,11 +462,13 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements FacturaAlmace
         xsalida.setEstatusId(salida.getEstatus().getId());
         xsalida.setFechaCreacion(fecha);
         xsalida.setActividad(actividad);
-        xsalida.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
+        xsalida.setCreador((usuario != null) ? usuario.getUsername()
+                : "sistema");
         currentSession().save(xsalida);
     }
 
-    private void audita(Entrada entrada, Usuario usuario, String actividad, Date fecha) {
+    private void audita(Entrada entrada, Usuario usuario, String actividad,
+            Date fecha) {
         XEntrada xentrada = new XEntrada();
         BeanUtils.copyProperties(entrada, xentrada);
         xentrada.setId(null);
@@ -436,62 +478,97 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements FacturaAlmace
         xentrada.setAlmacenId(entrada.getAlmacen().getId());
         xentrada.setFechaCreacion(fecha);
         xentrada.setActividad(actividad);
-        xentrada.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
+        xentrada.setCreador((usuario != null) ? usuario.getUsername()
+                : "sistema");
         currentSession().save(xentrada);
     }
 
     @Override
-    public FacturaAlmacen agregaSalida(Long facturaId, Long salidaId) {
-        FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(FacturaAlmacen.class, facturaId);
-        Salida salida = (Salida) currentSession().load(Salida.class, salidaId);
-        factura.getSalidas().add(salida);
-        factura.setFechaModificacion(new Date());
-        currentSession().save(factura);
-        currentSession().flush();
-        return factura;
+    public FacturaAlmacen agregaSalida(Long facturaId, Long salidaId) throws NoEstaAbiertaException {
+        FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(
+                FacturaAlmacen.class, facturaId);
+        if (factura.getEstatus().getNombre().equals(Constantes.ABIERTA)) {
+            Salida salida = (Salida) currentSession().get(Salida.class, salidaId);
+            factura.getSalidas().add(salida);
+            factura.setTotal(factura.getTotal().add(salida.getTotal()));
+            factura.setIva(factura.getIva().add(salida.getIva()));
+            factura.setFechaModificacion(new Date());
+            currentSession().save(factura);
+            currentSession().flush();
+            return factura;
+        } else {
+            throw new NoEstaAbiertaException("La factura no esta abierta, no se pueden agregar la salida");
+        }
     }
 
     @Override
-    public FacturaAlmacen agregaEntrada(Long facturaId, Long entradaId) {
-        FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(FacturaAlmacen.class, facturaId);
-        Entrada entrada = (Entrada) currentSession().load(Entrada.class, entradaId);
-        factura.getEntradas().add(entrada);
-        factura.setFechaModificacion(new Date());
-        currentSession().save(factura);
-        currentSession().flush();
-        return factura;
+    public FacturaAlmacen agregaEntrada(Long facturaId, Long entradaId) throws NoEstaAbiertaException {
+        FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(
+                FacturaAlmacen.class, facturaId);
+        if (factura.getEstatus().getNombre().equals(Constantes.ABIERTA)) {
+            Entrada entrada = (Entrada) currentSession().load(Entrada.class,
+                    entradaId);
+            factura.getEntradas().add(entrada);
+            factura.setTotal(factura.getTotal().subtract(entrada.getTotal()));
+            factura.setIva(factura.getIva().subtract(entrada.getIva()));
+            factura.setFechaModificacion(new Date());
+            currentSession().save(factura);
+            currentSession().flush();
+            return factura;
+        } else {
+            throw new NoEstaAbiertaException("La factura no esta abierta, no se puede agregar la entrada");
+        }
     }
 
     @Override
-    public FacturaAlmacen eliminaSalida(Long facturaId, Long salidaId) {
+    public FacturaAlmacen eliminaSalida(Long facturaId, Long salidaId) throws NoEstaAbiertaException {
         log.debug("Eliminando salida {} de factura {}", salidaId, facturaId);
-        FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(FacturaAlmacen.class, facturaId);
-        Salida salida = (Salida) currentSession().load(Salida.class, salidaId);
-        log.debug("SalidasA: {}", factura.getSalidas());
-        factura.getSalidas().remove(salida);
-        log.debug("SalidasB: {}", factura.getSalidas());
-        factura.setFechaModificacion(new Date());
-        currentSession().save(factura);
-        currentSession().flush();
-        return factura;
+        FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(
+                FacturaAlmacen.class, facturaId);
+        if (factura.getEstatus().getNombre().equals(Constantes.ABIERTA)) {
+            Salida salida = (Salida) currentSession().load(Salida.class, salidaId);
+            factura.setTotal(factura.getTotal().subtract(salida.getTotal()));
+            factura.setIva(factura.getIva().subtract(salida.getIva()));
+            log.trace("SalidasA: {}", factura.getSalidas());
+            factura.getSalidas().remove(salida);
+            log.trace("SalidasB: {}", factura.getSalidas());
+            factura.setFechaModificacion(new Date());
+            currentSession().save(factura);
+            currentSession().flush();
+            return factura;
+        } else {
+            throw new NoEstaAbiertaException("La factura no esta abierta, no se puede eliminar la salida");
+        }
     }
 
     @Override
-    public FacturaAlmacen eliminaEntrada(Long facturaId, Long entradaId) {
+    public FacturaAlmacen eliminaEntrada(Long facturaId, Long entradaId) throws NoEstaAbiertaException {
         log.debug("Eliminando entrada {} de factura {}", entradaId, facturaId);
-        FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(FacturaAlmacen.class, facturaId);
-        Entrada entrada = (Entrada) currentSession().load(Entrada.class, entradaId);
-        factura.getEntradas().remove(entrada);
-        factura.setFechaModificacion(new Date());
-        currentSession().save(factura);
-        currentSession().flush();
-        return factura;
+        FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(
+                FacturaAlmacen.class, facturaId);
+        if (factura.getEstatus().getNombre().equals(Constantes.ABIERTA)) {
+            Entrada entrada = (Entrada) currentSession().load(Entrada.class,
+                    entradaId);
+            factura.setTotal(factura.getTotal().add(entrada.getTotal()));
+            factura.setIva(factura.getIva().add(entrada.getIva()));
+            factura.getEntradas().remove(entrada);
+            factura.setFechaModificacion(new Date());
+            currentSession().save(factura);
+            currentSession().flush();
+            return factura;
+        } else {
+            throw new NoEstaAbiertaException("La factura no esta abierta, no se puede eliminar la entrada");
+        }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<Salida> salidas(Long facturaId) {
-        Query query = currentSession().createQuery("select new Salida() from Salida s inner join s.facturaAlmacen fa where fa.id = :facturaId");
-        throw new UnsupportedOperationException("Not supported yet.");
+        Query query = currentSession()
+                .createQuery(
+                "select new Salida() from Salida s inner join s.facturaAlmacen fa where fa.id = :facturaId");
+        query.setLong("facturaId", facturaId);
+        return query.list();
     }
 
     @Override

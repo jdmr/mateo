@@ -6,6 +6,7 @@
 <html>
     <head>
         <title><s:message code="activo.lista.label" /></title>
+        <link rel="stylesheet" href="<c:url value='/css/chosen.css' />" type="text/css">
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -23,6 +24,7 @@
             <div class="well">
                 <div class="row-fluid">
                     <a class="btn btn-primary" href="<s:url value='/activoFijo/activo/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='activo.nuevo.label' /></a>
+                    <a class="btn btn-warning" href="<s:url value='/activoFijo/activo/depreciar'/>"><i class="icon-time icon-white"></i> <s:message code='activo.depreciar.label' /></a>
                     <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                     <div class="btn-group" style="display: inline-block; position: absolute; margin-left: 5px;">
                         <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
@@ -64,11 +66,17 @@
                         <input type="text" name="proveedorNombre" id="proveedorNombre" value="${param.proveedorNombre}" class="input-xxlarge" />
                     </label>
                 </div>
-                <div id="buscarTipoActivoDiv" class="row-fluid" style="<c:if test='${empty param.tipoActivoNombre}'>display: none;</c:if> margin-top: 10px;">
+                <div id="buscarTipoActivoDiv" class="row-fluid" style="<c:if test='${empty param.tipoActivoIds}'>display: none;</c:if> margin-top: 10px;">
                     <label>
                         <s:message code="tipoActivo.label" /><br/>
-                        <input type="hidden" name="tipoActivoId" id="tipoActivoId" value="${param.tipoActivoId}" />
-                        <input type="text" name="tipoActivoNombre" id="tipoActivoNombre" value="${param.tipoActivoNombre}" class="input-xxlarge" />
+                        <select name="tipoActivoIds" id="tipoActivoIds" class="input-xxlarge" multiple="true" data-placeholder="<s:message code='tipoActivo.elija.message' />">
+                            <c:forEach items="${seleccionados}" var="tipoActivo">
+                                <option value="${tipoActivo.id}" selected="selected">${tipoActivo.nombreCompleto}</option>
+                            </c:forEach>
+                            <c:forEach items="${disponibles}" var="tipoActivo">
+                                <option value="${tipoActivo.id}">${tipoActivo.nombreCompleto}</option>
+                            </c:forEach>
+                        </select>
                     </label>
                 </div>
                 <div id="buscarResponsableDiv" class="row-fluid" style="<c:if test='${empty param.responsableNombre}'>display: none;</c:if> margin-top: 10px;">
@@ -97,7 +105,7 @@
                 </div>
             </c:if>
             <h4><s:message code="activo.resumen.message" arguments="${resumen}" /></h4>
-            <table id="lista" class="table table-striped">
+            <table id="lista" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
@@ -140,7 +148,7 @@
                         
                         <th><s:message code="tipoActivo.label" /></th>
                         
-                        <th><s:message code="cuenta.label" /></th>
+                        <th><s:message code="centroCosto.label" /></th>
                         
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="fechaCompra" />
@@ -192,7 +200,7 @@
                             <td>${activo.responsable}</td>
                             <td>${activo.proveedor.nombre}</td>
                             <td>${activo.tipoActivo.nombre}</td>
-                            <td>${activo.cuenta.nombre}</td>
+                            <td>${activo.centroCosto.nombre}</td>
                             <td><fmt:formatDate pattern="dd/MMM/yyyy" value="${activo.fechaCompra}" /></td>
                             <td style="text-align:right;"><fmt:formatNumber value="${activo.moi}" type="currency" currencySymbol="$" /></td>
                             <td><fmt:formatDate pattern="dd/MMM/yyyy" value="${activo.fechaDepreciacion}" /></td>
@@ -208,6 +216,7 @@
             <jsp:include page="/WEB-INF/jsp/paginacion.jsp" />
         </form>        
         <content>
+            <script src="<c:url value='/js/chosen.jquery.min.js' />"></script>
             <script src="<c:url value='/js/lista.js' />"></script>
             <script type="text/javascript">
                 $(document).ready(function() {
@@ -255,14 +264,35 @@
                         $("div#buscarBajasDiv").show('slide', {direction:'up'}, 500, function() {
                             $("input#bajas").focus();
                         });
-                    });                
-                            
+                    });
+                    
                     $("a#buscarReubicacionesAnchor").click(function(e) {
                         e.preventDefault();
                         $("div#buscarReubicacionesDiv").show('slide', {direction:'up'}, 500, function() {
                             $("input#reubicaciones").focus();
                         });
-                    });                
+                    });
+                    
+                    $('input#cuentaNombre').autocomplete({
+                        source: "<c:url value='/activoFijo/activo/centrosDeCosto' />",
+                        select: function(event, ui) {
+                            $("input#cuentaId").val(ui.item.id);
+                            $("input#cuentaNombre").focus();
+                            return false;
+                        }
+                    });
+
+                    $('input#proveedorNombre').autocomplete({
+                        source: "<c:url value='/activoFijo/activo/proveedores' />",
+                        select: function(event, ui) {
+                            $("input#proveedorId").val(ui.item.id);
+                            $("input#proveedorNombre").focus();
+                            return false;
+                        }
+                    });
+                    
+                    $('select#tipoActivoIds').chosen();
+
                 });
             </script>
         </content>

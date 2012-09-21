@@ -71,7 +71,7 @@
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span8">
+                    <div class="span12">
                         <h4><s:message code="rol.list.label" /></h4>
                         <h3>
                             <c:forEach items="${roles}" var="rol">
@@ -81,6 +81,24 @@
                     </div>
                 </div>
                         
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span8">
+                        <h4><s:message code="ejercicio.label" /></h4>
+                        <h3>${usuario.ejercicio.nombre} | ${usuario.ejercicio.id.idEjercicio}</h3>
+                    </div>
+                </div>
+                    
+                <c:if test="${usuario.centrosDeCosto != null}">
+                    <div class="row-fluid" style="padding-bottom: 10px;">
+                        <div class="span8">
+                            <h4><s:message code="centrosDeCosto.label" /></h4>
+                            <c:forEach items="${usuario.centrosDeCosto}" var="centroDeCosto">
+                                <h3>${centroDeCosto.nombreCompleto}</h3>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </c:if>
+
                 <p class="well">
                     <a href="<c:url value='/admin/usuario/edita/${usuario.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
                     <form:hidden path="id" />

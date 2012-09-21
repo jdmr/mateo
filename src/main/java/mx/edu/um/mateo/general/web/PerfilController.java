@@ -24,11 +24,15 @@
 package mx.edu.um.mateo.general.web;
 
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+
+import javax.servlet.http.HttpSession;
+
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.inventario.model.Almacen;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,49 +41,55 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Controller
 @RequestMapping("/perfil")
 public class PerfilController {
 
-    private static final Logger log = LoggerFactory.getLogger(AdminController.class);
-    @Autowired
-    private Ambiente ambiente;
-    @Autowired
-    private UsuarioDao usuarioDao;
+	private static final Logger log = LoggerFactory
+			.getLogger(AdminController.class);
+	@Autowired
+	private Ambiente ambiente;
+	@Autowired
+	private UsuarioDao usuarioDao;
 
-    @RequestMapping
-    public String edita(Model modelo) {
-        log.debug("Mostrando perfil");
-        Usuario usuario = ambiente.obtieneUsuario();
-        List<Almacen> almacenes = usuarioDao.obtieneAlmacenes();
-        modelo.addAttribute("usuario", usuario);
-        modelo.addAttribute("almacenes", almacenes);
-        return "perfil/edita";
-    }
+	@RequestMapping
+	public String edita(Model modelo) {
+		log.debug("Mostrando perfil");
+		Usuario usuario = ambiente.obtieneUsuario();
+		List<Almacen> almacenes = usuarioDao.obtieneAlmacenes();
+		List<Ejercicio> ejercicios = usuarioDao.obtieneEjercicios(usuario
+				.getEmpresa().getOrganizacion().getId());
+		modelo.addAttribute("usuario", usuario);
+		modelo.addAttribute("almacenes", almacenes);
+		modelo.addAttribute("ejercicios", ejercicios);
+		return "perfil/edita";
+	}
 
-    @Transactional
-    @RequestMapping(method = RequestMethod.POST)
-    public String guarda(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-        log.debug("Guardando perfil");
-        for (String nombre : request.getParameterMap().keySet()) {
-            log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
-        }
-        Long almacenId = new Long(request.getParameter("almacen.id"));
-        String password = request.getParameter("password");
-        Usuario usuario = ambiente.obtieneUsuario();
-        usuario.setPassword(password);
-        usuarioDao.asignaAlmacen(usuario, almacenId);
-        ambiente.actualizaSesion(request);
+	@Transactional
+	@RequestMapping(method = RequestMethod.POST)
+	public String guarda(HttpSession session,
+			RedirectAttributes redirectAttributes,
+			@RequestParam("almacen.id") Long almacenId,
+			@RequestParam String password,
+			@RequestParam("ejercicio.id.idEjercicio") String ejercicioId) {
+		log.debug("Guardando perfil");
+		Usuario usuario = ambiente.obtieneUsuario();
+		usuario.setPassword(password);
+		usuarioDao.asignaAlmacen(usuario, almacenId, ejercicioId);
+		ambiente.actualizaSesion(session);
 
-        redirectAttributes.addFlashAttribute("message", "perfil.actualizado.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{usuario.getUsername()});
+		redirectAttributes.addFlashAttribute("message",
+				"perfil.actualizado.message");
+		redirectAttributes.addFlashAttribute("messageAttrs",
+				new String[] { usuario.getUsername() });
 
-        return "redirect:/";
-    }
+		return "redirect:/";
+	}
 }

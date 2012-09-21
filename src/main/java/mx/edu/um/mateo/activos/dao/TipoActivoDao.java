@@ -23,6 +23,7 @@
  */
 package mx.edu.um.mateo.activos.dao;
 
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.activos.model.TipoActivo;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -34,6 +35,8 @@ import mx.edu.um.mateo.general.model.Usuario;
 public interface TipoActivoDao {
 
     public Map<String, Object> lista(Map<String, Object> params);
+    
+    public List<TipoActivo> lista(Usuario usuario);
 
     public TipoActivo obtiene(Long id);
 
@@ -46,4 +49,6 @@ public interface TipoActivoDao {
     public TipoActivo actualiza(TipoActivo tipoActivo, Usuario usuario);
 
     public String elimina(Long id);
+
+    public void migrar(Usuario usuario);
 }
