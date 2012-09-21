@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2012 jdmr.
+ * Copyright 2012 Universidad de Montemorelos A. C.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,42 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package mx.edu.um.mateo.general.web;
-
-import mx.edu.um.mateo.general.dao.InicializaDao;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+package mx.edu.um.mateo.general.dao;
 
 /**
  *
- * @author jdmr
+ * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
-@Controller
-@RequestMapping("/inicializa")
-public class InicializaController {
-
-    private static final Logger log = LoggerFactory
-            .getLogger(InicializaController.class);
-    @Autowired
-    private InicializaDao inicializaDao;
-
-    @RequestMapping
-    public String inicia() {
-        return "/inicializa/index";
-    }
-
-    @RequestMapping(method = RequestMethod.POST)
-    public String guarda(@RequestParam String username,
-            @RequestParam String password) {
-
-        log.debug("Inicializando...");
-        inicializaDao.inicializa(username, password);
-
-        return "redirect:/";
-    }
+public interface InicializaDao {
+    
+    public void inicializa(String username, String password);
 }
