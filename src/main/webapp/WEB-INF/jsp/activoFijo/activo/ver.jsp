@@ -231,14 +231,19 @@
                         <c:choose>
                             <c:when test="${tieneImagenes}">
                                 <c:forEach items="${activo.imagenes}" var="imagen">
-                                    <p><img src="<c:url value='/imagen/mostrar/${imagen.id}' />" /></p>
+                                    <c:url value='/imagen/mostrar/${imagen.id}' var="imagenUrl" />
+                                    <p><a href="${imagenUrl}" target="_blank"><img src="${imagenUrl}" style="width: 100%;"/></a></p>
+                                    <p style="margin-bottom: 50px;">
+                                        <a href="${imagenUrl}" target="_blank" class="btn btn-primary span6"><s:message code="activo.imagen.ver.message" /></a>
+                                        <a href="<c:url value='/activoFijo/activo/imagen/elimina/${activo.id}/${imagen.id}' />" class="btn btn-danger span6" onclick="return confirm('<s:message code="confirma.elimina.imagen.message" />');" ><s:message code="activo.imagen.elimina.message" /></a>
+                                    </p>
                                 </c:forEach>
                             </c:when>
                             <c:otherwise>
-                                <p><img src="<c:url value='/imagen/mostrar/0' />" /></p>
+                                <p><img src="<c:url value='/imagen/mostrar/0' />" style="width: 100%;"/></p>
                             </c:otherwise>
                         </c:choose>
-                        <a class="btn" href="<c:url value='/activoFijo/activo/sube/${activo.id}'/>"><i class="icon-upload"></i> <s:message code="activo.sube.imagen.button" /></a>
+                        <p><a class="btn span12" href="<c:url value='/activoFijo/activo/sube/${activo.id}'/>"><i class="icon-upload"></i> <s:message code="activo.sube.imagen.button" /></a></p>
                     </div>
                 </div>
 

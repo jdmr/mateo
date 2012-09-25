@@ -86,4 +86,6 @@ public interface ActivoDao {
             Map<String, Object> params);
 
     public void hojaCalculoConcentradoDepreciacion(Map<String, Object> params);
+    
+    public String eliminaImagen(Long activoId, Long imagenId, Usuario usuario);
 }

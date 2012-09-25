@@ -54,6 +54,7 @@ import mx.edu.um.mateo.contabilidad.model.CCostoPK;
 import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -2627,5 +2628,17 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         } catch (IOException ex) {
             log.error("No se pudo crear la hoja de calculo", ex);
         }
+    }
+
+    @Override
+    public String eliminaImagen(Long activoId, Long imagenId, Usuario usuario) {
+        log.debug("Eliminando imagen {} del activo {}", activoId, imagenId);
+        Query query = currentSession().createQuery("select new Imagen(i.id, i.version, i.nombre) from Imagen i where i.id = :imagenId");
+        query.setLong("imagenId", imagenId);
+        Imagen imagen = (Imagen) query.uniqueResult();
+        String nombre = imagen.getNombre();
+        currentSession().delete(imagen);
+        currentSession().flush();
+        return nombre;
     }
 }
