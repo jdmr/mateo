@@ -142,4 +142,53 @@ public class Constantes {
          */
         public static final String PUESTO_LIST = "puestoList";
         //Puesto-END
+    /**
+     * Valores para el los containsKey para las clases
+     */
+    public static final String CONTAINSKEY_DEPENDIENTES = "dependientes";
+    public static final String CONTAINSKEY_ESTUDIOSEMPLEADO = "estudiosEmpleado";
+    public static final String CONTAINSKEY_COLEGIOS = "colegios";
+    public static final String CONTAINSKEY_NACIONALIDADES = "nacionalidades";
+    public static final String CONTAINSKEY_CONCEPTOS = "conceptos";
+    /**
+     * Valores para el los addAttribute para las clases
+     */
+//      Valores para el los addAttribute para las clases
+    public static final String ADDATTRIBUTE_DEPENDIENTE = "dependiente";
+    public static final String ADDATTRIBUTE_ESTUDIOSEMPLEADO = "estudioEmpleado";
+    public static final String ADDATTRIBUTE_COLEGIO = "colegio";
+    /**
+     * Valores para el los path's para las clases
+     */
+    public static final String PATH_DEPENDIENTE = "/rh/dependiente";
+    public static final String PATH_DEPENDIENTE_LISTA = "/rh/dependiente/lista";
+    public static final String PATH_DEPENDIENTE_VER = "/rh/dependiente/ver";
+    public static final String PATH_DEPENDIENTE_NUEVO = "/rh/dependiente/nuevo";
+    public static final String PATH_DEPENDIENTE_EDITA = "/rh/dependiente/edita";
+    public static final String PATH_DEPENDIENTE_CREA = "/rh/dependiente/crea";
+    public static final String PATH_DEPENDIENTE_ACTUALIZA = "/rh/dependiente/actualiza";
+    public static final String PATH_DEPENDIENTE_ELIMINA = "/rh/dependiente/elimina";
+    public static final String PATH_ESTUDIOSEMPLEADO = "/rh/estudiosEmpleado";
+    public static final String PATH_ESTUDIOSEMPLEADO_LISTA = "/rh/estudiosEmpleado/lista";
+    public static final String PATH_ESTUDIOSEMPLEADO_VER = "/rh/estudiosEmpleado/ver";
+    public static final String PATH_ESTUDIOSEMPLEADO_NUEVO = "/rh/estudiosEmpleado/nuevo";
+    public static final String PATH_ESTUDIOSEMPLEADO_EDITA = "/rh/estudiosEmpleado/edita";
+    public static final String PATH_ESTUDIOSEMPLEADO_CREA = "/rh/estudiosEmpleado/crea";
+    public static final String PATH_ESTUDIOSEMPLEADO_ACTUALIZA = "/rh/estudiosEmpleado/actualiza";
+    public static final String PATH_ESTUDIOSEMPLEADO_ELIMINA = "/rh/estudiosEmpleado/elimina";
+    public static final String PATH_COLEGIO = "/rh/colegio";
+    public static final String PATH_COLEGIO_LISTA = "/rh/colegio/lista";
+    public static final String PATH_COLEGIO_VER = "/rh/colegio/ver";
+    public static final String PATH_COLEGIO_NUEVO = "/rh/colegio/nuevo";
+    public static final String PATH_COLEGIO_EDITA = "/rh/colegio/edita";
+    public static final String PATH_COLEGIO_CREA = "/rh/colegio/crea";
+    public static final String PATH_COLEGIO_ACTUALIZA = "/rh/colegio/actualiza";
+    public static final String PATH_COLEGIO_ELIMINA = "/rh/colegio/elimina";
+    
+    /**   
+     * Valores para los conceptos
+     */
+    public static final String CONCEPTO_LIST = "conceptoList";
+    public static final String CONCEPTO_KEY = "concepto";
+ 
 }

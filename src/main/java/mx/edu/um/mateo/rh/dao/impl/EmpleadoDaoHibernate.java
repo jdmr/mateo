@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import javax.persistence.Entity;
 
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.rh.dao.EmpleadoDao;
@@ -44,7 +45,7 @@ import org.springframework.orm.ObjectRetrievalFailureException;
  * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
-
+@Entity
 public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
 
 	@Override

@@ -786,4 +786,23 @@ public class ActivoController extends BaseController {
         }
         return valores;
     }
+
+    @RequestMapping(value = "/imagen/elimina/{activoId}/{imagenId}")
+    public String eliminaImagen(HttpServletRequest request,
+            @PathVariable Long activoId, @PathVariable Long imagenId, RedirectAttributes redirectAttributes) {
+        log.debug("Elimina imagen {} de activo {}", imagenId, activoId);
+        try {
+            String nombre = activoDao.eliminaImagen(activoId, imagenId, ambiente.obtieneUsuario());
+
+            redirectAttributes.addFlashAttribute("message",
+                    "activo.imagen.eliminado.message");
+            redirectAttributes.addFlashAttribute("messageAttrs",
+                    new String[]{nombre});
+        } catch (Exception e) {
+            log.error("No se pudo eliminar la imagen del activo " + activoId, e);
+            return "activoFijo/activo/ver";
+        }
+
+        return "redirect:/activoFijo/activo/ver/" + activoId;
+    }
 }
