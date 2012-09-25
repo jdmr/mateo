@@ -107,6 +107,9 @@ public abstract class BaseController {
 
     private List<Long> paginacion(Long pagina, Long cantidad, Integer max) {
         Long cantidadDePaginas = cantidad / max;
+        if (cantidad % max > 0) {
+            cantidadDePaginas++;
+        }
         log.debug("Paginacion: {} {} {} {}", new Object[]{pagina, cantidad,
                     max, cantidadDePaginas});
         Set<Long> paginas = new LinkedHashSet<>();

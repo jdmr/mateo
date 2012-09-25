@@ -25,7 +25,6 @@ package mx.edu.um.mateo.general.web;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
