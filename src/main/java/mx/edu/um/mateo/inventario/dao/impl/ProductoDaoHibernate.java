@@ -235,7 +235,7 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
             producto.getImagenes().add(otro.getImagenes().get(0));
             session.delete(imagen);
             session.flush();
-        } else {
+        } else if (otro.getImagenes() != null && otro.getImagenes().size() > 0) {
             producto.getImagenes().add(otro.getImagenes().get(0));
         }
         session.update(producto);
