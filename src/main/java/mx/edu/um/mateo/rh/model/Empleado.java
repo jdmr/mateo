@@ -16,8 +16,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Version;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * 
@@ -26,43 +28,50 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 @Table(name = "empleados")
 public class Empleado implements Serializable {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 6001011125338853446L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Version
 	private Integer version;
-	@NotBlank
-	@Column(nullable = false, length = 10)
+	@NotBlank(message="La clave del empleado es un campo requerido")
+        @Size(min=7, max=7,message="La clave del empleado debe contener una longitud de 7 caracteres")
+	@Column(nullable = false, length = 7)
 	private String clave;
 	@NotBlank
-	@Column(nullable = false, length = 24)
+	@Column(nullable = false, length = 100)
 	private String nombre;
 	@NotBlank
-	@Column(nullable = false, length = 24)
+	@Column(nullable = false, length = 100)
 	private String apPaterno;
 	@NotBlank
-	@Column(nullable = false, length = 24)
+	@Column(nullable = false, length = 100)
 	private String apMaterno;
 	@NotBlank
 	@Column(nullable = false, length = 1)
 	private String genero;
 	@NotBlank
-	@Column(nullable = false, length = 24)
+	@Column(nullable = false, length = 200)
 	private String direccion;
 	@NotBlank
 	@Column(nullable = false, length = 2)
 	private String status;
+        @NotBlank
 	@Temporal(javax.persistence.TemporalType.DATE)
 	private Date fechaNacimiento;
+        @NotBlank
+        @Column(nullable = false, length = 30)
 	private String curp;
+        @NotBlank
+        @Column(nullable = false, length = 15)
 	private String rfc;
+        @Column(nullable = false, length = 16)
 	private String cuenta;
+        @NotBlank
+        @Column(length = 15)
 	private String imms;
+        @NotEmpty
+        @Column(nullable = false)
 	private Integer escalafon;
 	private Integer turno;
 	@Temporal(javax.persistence.TemporalType.DATE)
