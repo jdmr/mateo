@@ -24,7 +24,8 @@
 package mx.edu.um.mateo.general.dao;
 
 import java.util.Map;
-import mx.edu.um.mateo.general.model.*;
+import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 
 /**

@@ -86,13 +86,16 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
             params.put("offset", 0);
         }
         Criteria criteria = currentSession().createCriteria(Producto.class);
-        Criteria countCriteria = currentSession().createCriteria(Producto.class);
+        Criteria countCriteria = currentSession()
+                .createCriteria(Producto.class);
 
         if (params.containsKey("almacen")) {
-            criteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
-            countCriteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
+            criteria.createCriteria("almacen").add(
+                    Restrictions.idEq(params.get("almacen")));
+            countCriteria.createCriteria("almacen").add(
+                    Restrictions.idEq(params.get("almacen")));
         }
-        
+
         if (params.containsKey("inactivo")) {
             criteria.add(Restrictions.eq("inactivo", true));
             countCriteria.add(Restrictions.eq("inactivo", true));
@@ -107,12 +110,18 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("sku", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("descripcion", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("marca", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("modelo", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("ubicacion", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("sku", filtro,
+                    MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("nombre", filtro,
+                    MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("descripcion", filtro,
+                    MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("marca", filtro,
+                    MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("modelo", filtro,
+                    MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("ubicacion", filtro,
+                    MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -138,6 +147,7 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
         return params;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<Producto> listaParaSalida(String filtro, Long almacenId) {
         Criteria criteria = currentSession().createCriteria(Producto.class);
@@ -145,13 +155,18 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
         filtro = "%" + filtro + "%";
         Disjunction propiedades = Restrictions.disjunction();
         propiedades.add(Restrictions.ilike("sku", filtro, MatchMode.ANYWHERE));
-        propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
-        propiedades.add(Restrictions.ilike("descripcion", filtro, MatchMode.ANYWHERE));
-        propiedades.add(Restrictions.ilike("marca", filtro, MatchMode.ANYWHERE));
-        propiedades.add(Restrictions.ilike("modelo", filtro, MatchMode.ANYWHERE));
-        propiedades.add(Restrictions.ilike("ubicacion", filtro, MatchMode.ANYWHERE));
+        propiedades.add(Restrictions
+                .ilike("nombre", filtro, MatchMode.ANYWHERE));
+        propiedades.add(Restrictions.ilike("descripcion", filtro,
+                MatchMode.ANYWHERE));
+        propiedades
+                .add(Restrictions.ilike("marca", filtro, MatchMode.ANYWHERE));
+        propiedades.add(Restrictions
+                .ilike("modelo", filtro, MatchMode.ANYWHERE));
+        propiedades.add(Restrictions.ilike("ubicacion", filtro,
+                MatchMode.ANYWHERE));
         criteria.add(propiedades);
-        
+
         propiedades = Restrictions.disjunction();
         propiedades.add(Restrictions.eq("inactivo", Boolean.FALSE));
         propiedades.add(Restrictions.isNull("inactivo"));
@@ -173,7 +188,8 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
         if (usuario != null) {
             producto.setAlmacen(usuario.getAlmacen());
         }
-        producto.setTipoProducto((TipoProducto) session.get(TipoProducto.class, producto.getTipoProducto().getId()));
+        producto.setTipoProducto((TipoProducto) session.get(TipoProducto.class,
+                producto.getTipoProducto().getId()));
         Date fecha = new Date();
         producto.setFechaCreacion(fecha);
         producto.setFechaModificacion(fecha);
@@ -197,22 +213,18 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
     public Producto actualiza(Producto otro, Usuario usuario) {
         Date fecha = new Date();
         Session session = currentSession();
-        Producto producto = (Producto) session.get(Producto.class, otro.getId());
-        producto.setVersion(otro.getVersion());
-        producto.setCodigo(otro.getCodigo());
-        producto.setDescripcion(otro.getDescripcion());
-        producto.setFraccion(otro.getFraccion());
-        producto.setIva(otro.getIva());
-        producto.setMarca(otro.getMarca());
-        producto.setNombre(otro.getNombre());
-        producto.setSku(otro.getSku());
-        producto.setTiempoEntrega(otro.getTiempoEntrega());
-        producto.setUnidadMedida(otro.getUnidadMedida());
-        producto.setTipoProducto((TipoProducto) session.get(TipoProducto.class, otro.getTipoProducto().getId()));
-        if (otro.getInactivo() && (producto.getInactivo() == null || !producto.getInactivo())) {
+        Producto producto = (Producto) session
+                .get(Producto.class, otro.getId());
+        BeanUtils.copyProperties(otro, producto, new String[]{"id", "version", "precioUnitario", "ultimoPrecio", "existencia", "puntoReorden", "tipoProducto", "almacen", "imagenes", "fechaCreacion", "fechaInactivo", "inactivo"
+                });
+        producto.setTipoProducto((TipoProducto) session.get(TipoProducto.class,
+                otro.getTipoProducto().getId()));
+        if (otro.getInactivo()
+                && (producto.getInactivo() == null || !producto.getInactivo())) {
             producto.setInactivo(true);
             producto.setFechaInactivo(fecha);
-        } else if (!otro.getInactivo() && producto.getInactivo() != null && producto.getInactivo()) {
+        } else if (!otro.getInactivo() && producto.getInactivo() != null
+                && producto.getInactivo()) {
             producto.setInactivo(false);
             producto.setFechaInactivo(null);
         }
@@ -222,6 +234,9 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
             producto.getImagenes().clear();
             producto.getImagenes().add(otro.getImagenes().get(0));
             session.delete(imagen);
+            session.flush();
+        } else {
+            producto.getImagenes().add(otro.getImagenes().get(0));
         }
         session.update(producto);
         audita(producto, usuario, Constantes.ACTUALIZAR, fecha);
@@ -271,6 +286,13 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
             query.setMaxResults(10);
             params.put("max", 10);
         }
+
+        if (params.containsKey("pagina")) {
+            Long pagina = (Long) params.get("pagina");
+            Long offset = (pagina - 1) * (Integer) params.get("max");
+            params.put("offset", offset.intValue());
+        }
+
         if (params.containsKey("offset")) {
             Integer offset = (Integer) params.get("offset");
             query.setFirstResult(offset);
@@ -290,13 +312,15 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
         return params;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void guardaHistorial(Date fecha) {
         log.debug("Buscando historial de productos de la fecha {}", fecha);
         StringBuilder sb = new StringBuilder();
         sb.append("select new HistorialProducto(p.id, p.almacen) from Producto p order by p.codigo");
         log.debug("Cargando lista de productos");
-        List<HistorialProducto> productos = currentSession().createQuery(sb.toString()).list();
+        List<HistorialProducto> productos = currentSession().createQuery(
+                sb.toString()).list();
         List<HistorialProducto> resultado = new ArrayList<>();
         log.debug("Buscando historial por producto ({})", productos.size());
         int cont = 0;
@@ -310,14 +334,16 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
             query.setLong("productoId", hp.getProductoId());
             query.setTimestamp("fecha", fecha);
             query.setMaxResults(1);
-            Map<String, Object> existencia = (Map<String, Object>) query.uniqueResult();
+            Map<String, Object> existencia = (Map<String, Object>) query
+                    .uniqueResult();
             if (existencia != null && !existencia.isEmpty()) {
                 sb = new StringBuilder();
                 sb.append("select hp from HistorialProducto hp where fecha = :fecha and productoId = :productoId");
                 Query query2 = currentSession().createQuery(sb.toString());
                 query2.setDate("fecha", fecha);
                 query2.setLong("productoId", hp.getProductoId());
-                HistorialProducto otro = (HistorialProducto) query2.uniqueResult();
+                HistorialProducto otro = (HistorialProducto) query2
+                        .uniqueResult();
                 if (otro != null) {
                     hp = otro;
                 }
@@ -337,6 +363,7 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Map<String, Object> obtieneHistorial(Map<String, Object> params) {
         List<Producto> resultado = new ArrayList<>();
@@ -354,7 +381,8 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
             int cont = 0;
             for (HistorialProducto hp : productos) {
                 if (cont++ % 10 == 0) {
-                    log.debug("Leyendo {} / {} Productos", cont, productos.size());
+                    log.debug("Leyendo {} / {} Productos", cont,
+                            productos.size());
                 }
                 sb = new StringBuilder();
                 sb.append("select new Producto(p.productoId, p.sku, p.nombre, p.descripcion, p.marca, p.modelo, p.ubicacion, p.existencia, p.unidadMedida, p.precioUnitario, p.fraccion, tp.nombre, a.nombre) from XProducto p, TipoProducto tp, Almacen a where p.tipoProductoId = tp.id and p.almacenId = a.id and p.productoId = :productoId and p.fechaCreacion <= :fecha order by p.fechaCreacion desc");
@@ -368,8 +396,9 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
                 }
             }
             log.debug("{} / {} Productos", cont, productos.size());
-            log.debug("Se encontro el historial de productos ({})", resultado.size());
-            
+            log.debug("Se encontro el historial de productos ({})",
+                    resultado.size());
+
             params.put("productos", resultado);
             params.put("cantidad", 1L);
             params.put("max", 1);
@@ -383,18 +412,22 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
         return params;
     }
 
-    private void audita(Producto producto, Usuario usuario, String actividad, Date fecha) {
+    private void audita(Producto producto, Usuario usuario, String actividad,
+            Date fecha) {
         XProducto xproducto = new XProducto();
-        BeanUtils.copyProperties(producto, xproducto, new String[] {"id", "version"});
+        BeanUtils.copyProperties(producto, xproducto, new String[]{"id",
+                    "version"});
         xproducto.setProductoId(producto.getId());
         xproducto.setTipoProductoId(producto.getTipoProducto().getId());
         xproducto.setAlmacenId(producto.getAlmacen().getId());
         xproducto.setFechaCreacion(fecha);
         xproducto.setActividad(actividad);
-        xproducto.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
+        xproducto.setCreador((usuario != null) ? usuario.getUsername()
+                : "sistema");
         currentSession().save(xproducto);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void arreglaDescripciones() {
         log.debug("Arreglando descripciones");
@@ -402,7 +435,7 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
         Query query = currentSession().createQuery("from Producto");
         List<Producto> productos = query.list();
         int cont = 0;
-        for(Producto producto : productos) {
+        for (Producto producto : productos) {
             if (StringUtils.isBlank(producto.getDescripcion())) {
                 log.debug("Actualizando {}", producto);
                 producto.setDescripcion(producto.getNombre());
@@ -413,5 +446,16 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
         }
         currentSession().flush();
         log.debug("Se arreglaron {} de {}", cont, productos.size());
+    }
+
+    @Override
+    public String eliminaImagen(Long productoId, Usuario usuario) {
+        log.debug("Elimina imagenes de producto {}", productoId);
+        Producto producto = (Producto) currentSession().get(Producto.class, productoId);
+        String nombre = producto.getNombre();
+        producto.getImagenes().clear();
+        currentSession().update(producto);
+        currentSession().flush();
+        return nombre;
     }
 }

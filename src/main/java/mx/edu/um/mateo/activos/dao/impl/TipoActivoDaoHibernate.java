@@ -29,6 +29,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 import mx.edu.um.mateo.activos.dao.TipoActivoDao;
@@ -41,6 +42,7 @@ import mx.edu.um.mateo.contabilidad.model.EjercicioPK;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
@@ -59,11 +61,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class TipoActivoDaoHibernate extends BaseDao implements TipoActivoDao {
-    
+
     @Autowired
     @Qualifier("dataSource2")
     private DataSource dataSource2;
-    
+
     public TipoActivoDaoHibernate() {
         log.info("Se ha creado una nueva instancia de TipoActivoDao");
     }
@@ -91,18 +93,23 @@ public class TipoActivoDaoHibernate extends BaseDao implements TipoActivoDao {
             params.put("offset", 0);
         }
         Criteria criteria = currentSession().createCriteria(TipoActivo.class);
-        Criteria countCriteria = currentSession().createCriteria(TipoActivo.class);
+        Criteria countCriteria = currentSession().createCriteria(
+                TipoActivo.class);
 
         if (params.containsKey("empresa")) {
-            criteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
-            countCriteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
+            criteria.createCriteria("empresa").add(
+                    Restrictions.idEq(params.get("empresa")));
+            countCriteria.createCriteria("empresa").add(
+                    Restrictions.idEq(params.get("empresa")));
         }
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("descripcion", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("nombre", filtro,
+                    MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("descripcion", filtro,
+                    MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -139,7 +146,8 @@ public class TipoActivoDaoHibernate extends BaseDao implements TipoActivoDao {
         if (usuario != null) {
             tipoActivo.setEmpresa(usuario.getEmpresa());
         }
-        tipoActivo.setCuenta((CuentaMayor) currentSession().load(CuentaMayor.class, tipoActivo.getCuenta().getId()));
+        tipoActivo.setCuenta((CuentaMayor) currentSession().load(
+                CuentaMayor.class, tipoActivo.getCuenta().getId()));
         session.save(tipoActivo);
         session.flush();
         return tipoActivo;
@@ -161,7 +169,8 @@ public class TipoActivoDaoHibernate extends BaseDao implements TipoActivoDao {
         if (usuario != null) {
             tipoActivo.setEmpresa(usuario.getEmpresa());
         }
-        tipoActivo.setCuenta((CuentaMayor) currentSession().load(Cuenta.class, tipoActivo.getCuenta().getId()));
+        tipoActivo.setCuenta((CuentaMayor) currentSession().load(Cuenta.class,
+                tipoActivo.getCuenta().getId()));
         session.update(tipoActivo);
         session.flush();
         return tipoActivo;
@@ -175,7 +184,7 @@ public class TipoActivoDaoHibernate extends BaseDao implements TipoActivoDao {
         currentSession().flush();
         return nombre;
     }
-    
+
     @Override
     public void migrar(Usuario usuario) {
         log.debug("Migrando datos de tipo de activos");
@@ -185,21 +194,26 @@ public class TipoActivoDaoHibernate extends BaseDao implements TipoActivoDao {
         try {
             conn = dataSource2.getConnection();
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("select * from mateo.cont_ctamayor where id_ctamayor like '1.3.01.0%' and id_ejercicio = '001-2012'");
+            rs = stmt
+                    .executeQuery("select * from mateo.cont_ctamayor where id_ctamayor like '1.3.01.0%' and id_ejercicio = '001-2012'");
             while (rs.next()) {
                 String ejercicioId = rs.getString("id_ejercicio");
                 String cuentaMayorId = rs.getString("id_ctamayor");
                 String tipoCuenta = rs.getString("tipo_cuenta");
-                EjercicioPK ejercicioPK = new EjercicioPK(ejercicioId, usuario.getEmpresa().getOrganizacion());
-                Ejercicio ejercicio = (Ejercicio) currentSession().load(Ejercicio.class, ejercicioPK);
-                CtaMayorPK cuentaMayorPK = new CtaMayorPK(ejercicio, cuentaMayorId, tipoCuenta);
-                CuentaMayor cuentaMayor = (CuentaMayor) currentSession().load(CuentaMayor.class, cuentaMayorPK);
+                EjercicioPK ejercicioPK = new EjercicioPK(ejercicioId, usuario
+                        .getEmpresa().getOrganizacion());
+                Ejercicio ejercicio = (Ejercicio) currentSession().load(
+                        Ejercicio.class, ejercicioPK);
+                CtaMayorPK cuentaMayorPK = new CtaMayorPK(ejercicio,
+                        cuentaMayorId, tipoCuenta);
+                CuentaMayor cuentaMayor = (CuentaMayor) currentSession().load(
+                        CuentaMayor.class, cuentaMayorPK);
                 TipoActivo tipoActivo = new TipoActivo();
                 tipoActivo.setCuenta(cuentaMayor);
                 tipoActivo.setDescripcion(rs.getString("nombrefiscal"));
                 tipoActivo.setEmpresa(usuario.getEmpresa());
                 tipoActivo.setNombre(rs.getString("nombre"));
-                switch(cuentaMayorPK.getIdCtaMayor()) {
+                switch (cuentaMayorPK.getIdCtaMayor()) {
                     case "1.3.01.01":
                         tipoActivo.setPorciento(new BigDecimal("0.10"));
                         tipoActivo.setVidaUtil(120L);
@@ -229,7 +243,9 @@ public class TipoActivoDaoHibernate extends BaseDao implements TipoActivoDao {
             }
             currentSession().flush();
         } catch (SQLException e) {
-            log.error("Hubo problemas con Oracle al intentar migrar datos de tipos de activo", e);
+            log.error(
+                    "Hubo problemas con Oracle al intentar migrar datos de tipos de activo",
+                    e);
         } finally {
             try {
                 if (rs != null) {
@@ -241,9 +257,18 @@ public class TipoActivoDaoHibernate extends BaseDao implements TipoActivoDao {
                 if (conn != null) {
                     conn.close();
                 }
-            } catch(SQLException e) {
-                log.error("Hubo problemas al intentar cerrar conexiones a Oracle", e);
+            } catch (SQLException e) {
+                log.error(
+                        "Hubo problemas al intentar cerrar conexiones a Oracle",
+                        e);
             }
         }
+    }
+
+    @Override
+    public List<TipoActivo> lista(Usuario usuario) {
+        Query query = currentSession().createQuery("select ta from TipoActivo ta where ta.empresa.id = :empresaId order by ta.cuenta.id.idCtaMayor");
+        query.setLong("empresaId", usuario.getEmpresa().getId());
+        return query.list();
     }
 }

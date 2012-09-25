@@ -41,6 +41,10 @@ import org.hibernate.validator.constraints.NotBlank;
 @Table(name = "cont_ctamayor")
 public class CuentaMayor implements Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = -6640176472960675938L;
     @Id
     private CtaMayorPK id;
     @Version
@@ -238,6 +242,10 @@ public class CuentaMayor implements Serializable {
 
     @Override
     public String toString() {
-        return "CtaMayor{" + "id=" + id + ", version=" + version + ", nombre=" + nombre + ", nombreFiscal=" + nombreFiscal + ", detalle=" + detalle + ", aviso=" + aviso + ", auxiliar=" + auxiliar + ", iva=" + iva + ", pctIVA=" + pctIVA + ", detaller=" + detaller + '}';
+        return "CtaMayor{" + "id=" + id + ", version=" + version + ", nombre="
+                + nombre + ", nombreFiscal=" + nombreFiscal + ", detalle="
+                + detalle + ", aviso=" + aviso + ", auxiliar=" + auxiliar
+                + ", iva=" + iva + ", pctIVA=" + pctIVA + ", detaller="
+                + detaller + '}';
     }
 }

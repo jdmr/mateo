@@ -26,14 +26,14 @@ package mx.edu.um.mateo.general.dao;
 import mx.edu.um.mateo.general.model.Rol;
 
 /**
- *
+ * 
  * @author jdmr
  */
 public interface RolDao {
 
-    public Rol obtiene(Long id);
+	public Rol obtiene(Long id);
 
-    public Rol obtiene(String nombre);
+	public Rol obtiene(String nombre);
 
-    public Rol crea(Rol rol);
+	public Rol crea(Rol rol);
 }

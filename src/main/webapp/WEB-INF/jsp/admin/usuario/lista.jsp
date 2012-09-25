@@ -14,7 +14,7 @@
         <h1><s:message code="usuario.lista.label" /></h1>
         <hr/>
 
-        <form name="filtraUsuarios" class="form-search" method="post" action="<c:url value='/admin/usuario' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/admin/usuario' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
@@ -44,7 +44,7 @@
                 </s:bind>
             </c:if>
             
-            <table id="lista" class="table table-striped">
+            <table id="lista" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >

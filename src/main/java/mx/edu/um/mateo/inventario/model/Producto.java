@@ -29,7 +29,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import mx.edu.um.mateo.general.model.Imagen;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -41,10 +55,13 @@ import org.hibernate.validator.constraints.NotBlank;
 @Table(name = "productos", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"almacen_id", "codigo"}),
     @UniqueConstraint(columnNames = {"almacen_id", "sku"}),
-    @UniqueConstraint(columnNames = {"almacen_id", "nombre"})
-})
+    @UniqueConstraint(columnNames = {"almacen_id", "nombre"})})
 public class Producto implements Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = -2044211351387213579L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -108,8 +125,9 @@ public class Producto implements Serializable {
 
     public Producto() {
     }
-    
-    public Producto(String codigo, String sku, String nombre, String descripcion, TipoProducto tipoProducto, Almacen almacen) {
+
+    public Producto(String codigo, String sku, String nombre,
+            String descripcion, TipoProducto tipoProducto, Almacen almacen) {
         this.codigo = codigo;
         this.sku = sku;
         this.nombre = nombre;
@@ -121,7 +139,11 @@ public class Producto implements Serializable {
         this.fechaModificacion = fecha;
     }
 
-    public Producto(Long id, String sku, String nombre, String descripcion, String marca, String modelo, String ubicacion, BigDecimal existencia, String unidadMedida, BigDecimal precioUnitario, Boolean fraccion, String nombreTipoProducto, String nombreAlmacen) {
+    public Producto(Long id, String sku, String nombre, String descripcion,
+            String marca, String modelo, String ubicacion,
+            BigDecimal existencia, String unidadMedida,
+            BigDecimal precioUnitario, Boolean fraccion,
+            String nombreTipoProducto, String nombreAlmacen) {
         this.id = id;
         this.sku = sku;
         this.nombre = nombre;
@@ -499,6 +521,8 @@ public class Producto implements Serializable {
 
     @Override
     public String toString() {
-        return "Producto{" + "id=" + id + ", sku=" + sku + ", nombre=" + nombre + ", precioUnitario=" + precioUnitario + ", existencia=" + existencia + ", iva=" + iva + ", fraccion=" + fraccion + '}';
+        return "Producto{" + "id=" + id + ", sku=" + sku + ", nombre=" + nombre
+                + ", precioUnitario=" + precioUnitario + ", existencia="
+                + existencia + ", iva=" + iva + ", fraccion=" + fraccion + '}';
     }
 }

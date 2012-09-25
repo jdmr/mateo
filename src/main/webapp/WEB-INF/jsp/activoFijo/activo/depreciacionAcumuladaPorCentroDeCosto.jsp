@@ -5,14 +5,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="depreciacionAcumuladaPorCentroDeCosto.label" /></title>
+        <title><s:message code="depreciacionAcumuladaPorCentroDeCosto.label" arguments="${fecha}" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
             <jsp:param name="menu" value="principal" />
         </jsp:include>
 
-        <h1><s:message code="depreciacionAcumuladaPorCentroDeCosto.label" /></h1>
+        <h1><s:message code="depreciacionAcumuladaPorCentroDeCosto.label" arguments="${fecha}" /></h1>
         <hr/>
         <c:if test="${not empty message}">
             <div class="alert alert-block alert-success fade in" role="status">
@@ -21,18 +21,20 @@
             </div>
         </c:if>
         <form action="<c:url value='/activoFijo/activo/depreciacionAcumuladaPorCentroDeCosto'/>" method="post" class="form-search">
-        <fieldset>
-            <div class="well">
-                <label for="fecha">
-                    <s:message code="fecha.label" />
-                </label>
-                <input type="text" name="fecha" id="fecha" value="${fecha}" />
-                <input type="submit" value="<s:message code='buscar.label' />" class="btn"/>
-            </div>
-        </fieldset>
+            <input type="hidden" name="hojaCalculo" id="hojaCalculo" value="0" />
+            <fieldset>
+                <div class="well">
+                    <label for="fecha">
+                        <s:message code="fecha.label" />
+                    </label>
+                    <input type="text" name="fecha" id="fecha" value="${fecha}" />
+                    <button type="submit" class="btn" name="submitBtn" id="submitBtn"><s:message code='buscar.label' /></button>
+                    <button type="submit" class="btn btn-success" name="hojaCalculoBtn" id="hojaCalculoBtn" ><s:message code='excel.label' /></button>
+                </div>
+            </fieldset>
         </form>
         <c:if test="${tiposDeActivo != null}">
-            <table id="lista" class="table table-striped">
+            <table id="lista" class="table table-striped table-hover">
                 <thead>
                     <tr>
 
@@ -69,6 +71,14 @@
             <script>
                 $(document).ready(function() {
                     $("input#fecha").datepicker();
+                    $("button#hojaCalculoBtn").click(function() {
+                        $("input#hojaCalculo").val("1");
+                        return true;
+                    });
+                    $("button#submitBtn").click(function() {
+                        $("input#hojaCalculo").val("0");
+                        return true;
+                    });
                 });
             </script>
         </content>

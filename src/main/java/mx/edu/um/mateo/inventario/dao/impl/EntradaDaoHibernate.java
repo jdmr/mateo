@@ -111,21 +111,29 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
         }
         Criteria criteria = currentSession().createCriteria(Entrada.class);
         Criteria countCriteria = currentSession().createCriteria(Entrada.class);
+        criteria.createAlias("estatus", "est");
+        countCriteria.createAlias("estatus", "est");
 
         if (params.containsKey("almacen")) {
-            criteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
-            countCriteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
+            criteria.createCriteria("almacen").add(
+                    Restrictions.idEq(params.get("almacen")));
+            countCriteria.createCriteria("almacen").add(
+                    Restrictions.idEq(params.get("almacen")));
         }
 
         if (params.containsKey("proveedorId")) {
-            criteria.createCriteria("proveedor").add(Restrictions.idEq(params.get("proveedorId")));
-            countCriteria.createCriteria("proveedor").add(Restrictions.idEq(params.get("proveedorId")));
+            criteria.createCriteria("proveedor").add(
+                    Restrictions.idEq(params.get("proveedorId")));
+            countCriteria.createCriteria("proveedor").add(
+                    Restrictions.idEq(params.get("proveedorId")));
         }
 
         if (params.containsKey("fechaIniciado")) {
             log.debug("Buscando desde {}", params.get("fechaIniciado"));
-            criteria.add(Restrictions.ge("fechaCreacion", params.get("fechaIniciado")));
-            countCriteria.add(Restrictions.ge("fechaCreacion", params.get("fechaIniciado")));
+            criteria.add(Restrictions.ge("fechaCreacion",
+                    params.get("fechaIniciado")));
+            countCriteria.add(Restrictions.ge("fechaCreacion",
+                    params.get("fechaIniciado")));
         } else {
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -135,21 +143,58 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
             calendar.set(Calendar.MILLISECOND, 1);
             log.debug("Asignando busqueda desde {}", calendar.getTime());
             criteria.add(Restrictions.ge("fechaCreacion", calendar.getTime()));
-            countCriteria.add(Restrictions.ge("fechaCreacion", calendar.getTime()));
+            countCriteria.add(Restrictions.ge("fechaCreacion",
+                    calendar.getTime()));
         }
 
         if (params.containsKey("fechaTerminado")) {
             log.debug("Buscando hasta {}", params.get("fechaTerminado"));
-            criteria.add(Restrictions.le("fechaCreacion", params.get("fechaTerminado")));
-            countCriteria.add(Restrictions.le("fechaCreacion", params.get("fechaTerminado")));
+            criteria.add(Restrictions.le("fechaCreacion",
+                    params.get("fechaTerminado")));
+            countCriteria.add(Restrictions.le("fechaCreacion",
+                    params.get("fechaTerminado")));
+        }
+
+        if (params.containsKey(Constantes.ABIERTA)
+                || params.containsKey(Constantes.CERRADA)
+                || params.containsKey(Constantes.PENDIENTE)
+                || params.containsKey(Constantes.FACTURADA)
+                || params.containsKey(Constantes.CANCELADA)
+                || params.containsKey(Constantes.DEVOLUCION)) {
+            Disjunction propiedades = Restrictions.disjunction();
+            if (params.containsKey(Constantes.ABIERTA)) {
+                propiedades.add(Restrictions.eq("est.nombre", Constantes.ABIERTA));
+            }
+            if (params.containsKey(Constantes.CERRADA)) {
+                propiedades.add(Restrictions.eq("est.nombre", Constantes.CERRADA));
+            }
+            if (params.containsKey(Constantes.PENDIENTE)) {
+                propiedades.add(Restrictions.eq("est.nombre", Constantes.PENDIENTE));
+            }
+            if (params.containsKey(Constantes.FACTURADA)) {
+                propiedades.add(Restrictions.eq("est.nombre", Constantes.FACTURADA));
+            }
+            if (params.containsKey(Constantes.CANCELADA)) {
+                propiedades.add(Restrictions.eq("est.nombre", Constantes.CANCELADA));
+            }
+            criteria.add(propiedades);
+            countCriteria.add(propiedades);
+            
+            if (params.containsKey(Constantes.DEVOLUCION)) {
+                criteria.add(Restrictions.eq("devolucion", Boolean.TRUE));
+                countCriteria.add(Restrictions.eq("devolucion", Boolean.TRUE));
+            }
         }
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("folio", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("factura", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("comentarios", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("folio", filtro,
+                    MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("factura", filtro,
+                    MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("comentarios", filtro,
+                    MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -162,7 +207,7 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
                 criteria.addOrder(Order.asc(campo));
             }
         } else {
-            criteria.createCriteria("estatus").addOrder(Order.asc("prioridad"));
+            criteria.addOrder(Order.asc("est.prioridad"));
         }
 
         if (!params.containsKey("reporte")) {
@@ -177,8 +222,9 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
         return params;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public List<Entrada> buscaEntradasPorFactura(Map<String, Object> params) {
+    public List<Entrada> buscaEntradasParaFactura(Map<String, Object> params) {
         log.debug("Buscando lista de entradas con params {}", params);
         if (params == null) {
             params = new HashMap<>();
@@ -196,20 +242,35 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
         Criteria criteria = currentSession().createCriteria(Entrada.class);
 
         if (params.containsKey("almacen")) {
-            criteria.createCriteria("almacen").add(Restrictions.idEq(params.get("almacen")));
+            criteria.createCriteria("almacen").add(
+                    Restrictions.idEq(params.get("almacen")));
         }
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("folio", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("factura", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("comentarios", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("folio", filtro,
+                    MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("factura", filtro,
+                    MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("comentarios", filtro,
+                    MatchMode.ANYWHERE));
             criteria.add(propiedades);
         }
 
+        if (params.containsKey("facturaId")) {
+            Query query = currentSession().createQuery("select e.id from FacturaAlmacen f inner join f.entradas as e where f.id = :facturaId");
+            query.setLong("facturaId", (Long) params.get("facturaId"));
+            List<Long> idsDeEntradas = query.list();
+            log.debug("idsDeEntradas: {}", idsDeEntradas);
+            if (idsDeEntradas != null && idsDeEntradas.size() > 0) {
+                criteria.add(Restrictions.not(Restrictions.in("id", idsDeEntradas)));
+            }
+        }
+
         criteria.add(Restrictions.eq("devolucion", Boolean.TRUE));
-        criteria.createCriteria("estatus").add(Restrictions.eq("nombre", Constantes.CERRADA));
+        criteria.createCriteria("estatus").add(
+                Restrictions.eq("nombre", Constantes.CERRADA));
         criteria.addOrder(Order.desc("fechaModificacion"));
 
         criteria.setFirstResult((Integer) params.get("offset"));
@@ -234,7 +295,8 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
         if (usuario != null) {
             entrada.setAlmacen(usuario.getAlmacen());
         }
-        Query query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
+        Query query = currentSession().createQuery(
+                "select e from Estatus e where e.nombre = :nombre");
         query.setString("nombre", Constantes.ABIERTA);
         Estatus estatus = (Estatus) query.uniqueResult();
         entrada.setEstatus(estatus);
@@ -261,8 +323,10 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
     }
 
     @Override
-    public Entrada actualiza(Entrada otraEntrada, Usuario usuario) throws NoEstaAbiertaException {
-        Entrada entrada = (Entrada) currentSession().get(Entrada.class, otraEntrada.getId());
+    public Entrada actualiza(Entrada otraEntrada, Usuario usuario)
+            throws NoEstaAbiertaException {
+        Entrada entrada = (Entrada) currentSession().get(Entrada.class,
+                otraEntrada.getId());
         switch (entrada.getEstatus().getNombre()) {
             case Constantes.ABIERTA:
                 Session session = currentSession();
@@ -284,13 +348,17 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
                 session.flush();
                 return entrada;
             default:
-                throw new NoEstaAbiertaException("No se puede actualizar una entrada que no este abierta");
+                throw new NoEstaAbiertaException(
+                        "No se puede actualizar una entrada que no este abierta");
         }
     }
 
     @Override
-    public String pendiente(Long entradaId, Usuario usuario) throws NoSePuedeCerrarException, NoCuadraException, NoSePuedeCerrarEnCeroException, NoEstaAbiertaException {
-        Entrada entrada = (Entrada) currentSession().get(Entrada.class, entradaId);
+    public String pendiente(Long entradaId, Usuario usuario)
+            throws NoSePuedeCerrarException, NoCuadraException,
+            NoSePuedeCerrarEnCeroException, NoEstaAbiertaException {
+        Entrada entrada = (Entrada) currentSession().get(Entrada.class,
+                entradaId);
         if (entrada != null) {
             if (entrada.getEstatus().getNombre().equals(Constantes.ABIERTA)) {
                 if (usuario != null) {
@@ -300,7 +368,8 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
                 Date fecha = new Date();
                 entrada = preparaParaCerrar(entrada, usuario, fecha);
 
-                Query query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
+                Query query = currentSession().createQuery(
+                        "select e from Estatus e where e.nombre = :nombre");
                 query.setString("nombre", Constantes.PENDIENTE);
                 Estatus estatus = (Estatus) query.uniqueResult();
                 entrada.setEstatus(estatus);
@@ -314,23 +383,30 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
                 currentSession().flush();
                 return entrada.getFolio();
             } else {
-                throw new NoEstaAbiertaException("No se puede actualizar una entrada que no este abierta");
+                throw new NoEstaAbiertaException(
+                        "No se puede actualizar una entrada que no este abierta");
             }
         } else {
-            throw new NoSePuedeCerrarException("No se puede cerrar la entrada pues no existe");
+            throw new NoSePuedeCerrarException(
+                    "No se puede cerrar la entrada pues no existe");
         }
 
     }
 
     @Override
-    public String cierra(Long entradaId, Usuario usuario) throws NoSePuedeCerrarException, NoCuadraException, NoSePuedeCerrarEnCeroException, NoEstaAbiertaException {
-        Entrada entrada = (Entrada) currentSession().get(Entrada.class, entradaId);
+    public String cierra(Long entradaId, Usuario usuario)
+            throws NoSePuedeCerrarException, NoCuadraException,
+            NoSePuedeCerrarEnCeroException, NoEstaAbiertaException {
+        Entrada entrada = (Entrada) currentSession().get(Entrada.class,
+                entradaId);
         entrada = cierra(entrada, usuario);
         return entrada.getFolio();
     }
 
     @Override
-    public Entrada cierra(Entrada entrada, Usuario usuario) throws NoSePuedeCerrarException, NoCuadraException, NoSePuedeCerrarEnCeroException, NoEstaAbiertaException {
+    public Entrada cierra(Entrada entrada, Usuario usuario)
+            throws NoSePuedeCerrarException, NoCuadraException,
+            NoSePuedeCerrarEnCeroException, NoEstaAbiertaException {
         if (entrada != null) {
             if (entrada.getEstatus().getNombre().equals(Constantes.ABIERTA)) {
                 if (usuario != null) {
@@ -339,7 +415,8 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
 
                 Date fecha = new Date();
                 entrada = preparaParaCerrar(entrada, usuario, fecha);
-                Query query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
+                Query query = currentSession().createQuery(
+                        "select e from Estatus e where e.nombre = :nombre");
                 query.setString("nombre", Constantes.CERRADA);
                 Estatus estatus = (Estatus) query.uniqueResult();
                 entrada.setEstatus(estatus);
@@ -353,25 +430,31 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
                 currentSession().flush();
                 return entrada;
             } else {
-                throw new NoEstaAbiertaException("No se puede actualizar una entrada que no este abierta");
+                throw new NoEstaAbiertaException(
+                        "No se puede actualizar una entrada que no este abierta");
             }
         } else {
-            throw new NoSePuedeCerrarException("No se puede cerrar la entrada pues no existe");
+            throw new NoSePuedeCerrarException(
+                    "No se puede cerrar la entrada pues no existe");
         }
     }
 
     @Override
-    public Entrada cierraPendiente(Entrada entrada, Usuario usuario) throws NoSePuedeCerrarException {
-        Entrada pendiente = (Entrada) currentSession().get(Entrada.class, entrada.getId());
+    public Entrada cierraPendiente(Entrada entrada, Usuario usuario)
+            throws NoSePuedeCerrarException {
+        Entrada pendiente = (Entrada) currentSession().get(Entrada.class,
+                entrada.getId());
         if (entrada.getVersion() != pendiente.getVersion()) {
-            throw new NoSePuedeCerrarException("No es la ultima version de la entrada");
+            throw new NoSePuedeCerrarException(
+                    "No es la ultima version de la entrada");
         }
         pendiente.setFactura(entrada.getFactura());
         pendiente.setFechaFactura(entrada.getFechaFactura());
         pendiente.setComentarios(entrada.getComentarios());
         entrada = pendiente;
 
-        Query query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
+        Query query = currentSession().createQuery(
+                "select e from Estatus e where e.nombre = :nombre");
         query.setString("nombre", Constantes.CERRADA);
         Estatus estatus = (Estatus) query.uniqueResult();
         entrada.setEstatus(estatus);
@@ -392,7 +475,8 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
     }
 
     @Override
-    public String elimina(Long id, Usuario usuario) throws NoEstaAbiertaException {
+    public String elimina(Long id, Usuario usuario)
+            throws NoEstaAbiertaException {
         Entrada entrada = obtiene(id);
         if (entrada.getEstatus().getNombre().equals(Constantes.ABIERTA)) {
             String nombre = entrada.getFolio();
@@ -402,22 +486,28 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
             currentSession().flush();
             return nombre;
         } else {
-            throw new NoEstaAbiertaException("No se puede eliminar una entrada que no este abierta");
+            throw new NoEstaAbiertaException(
+                    "No se puede eliminar una entrada que no este abierta");
         }
     }
 
     @Override
-    public LoteEntrada creaLote(LoteEntrada lote) throws ProductoNoSoportaFraccionException, NoEstaAbiertaException {
-        if (lote.getEntrada().getEstatus().getNombre().equals(Constantes.ABIERTA)) {
+    public LoteEntrada creaLote(LoteEntrada lote)
+            throws ProductoNoSoportaFraccionException, NoEstaAbiertaException {
+        if (lote.getEntrada().getEstatus().getNombre()
+                .equals(Constantes.ABIERTA)) {
             if (!lote.getProducto().getFraccion()) {
-                BigDecimal[] resultado = lote.getCantidad().divideAndRemainder(new BigDecimal("1"));
+                BigDecimal[] resultado = lote.getCantidad().divideAndRemainder(
+                        new BigDecimal("1"));
                 if (resultado[1].doubleValue() > 0) {
                     throw new ProductoNoSoportaFraccionException();
                 }
             }
 
-            BigDecimal subtotal = lote.getPrecioUnitario().multiply(lote.getCantidad());
-            BigDecimal iva = subtotal.multiply(lote.getProducto().getIva()).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal subtotal = lote.getPrecioUnitario().multiply(
+                    lote.getCantidad());
+            BigDecimal iva = subtotal.multiply(lote.getProducto().getIva())
+                    .setScale(2, RoundingMode.HALF_UP);
             lote.setIva(iva);
             lote.setFechaCreacion(new Date());
 
@@ -425,15 +515,18 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
 
             return lote;
         } else {
-            throw new NoEstaAbiertaException("No se puede crear un lote en una entrada que no este abierta");
+            throw new NoEstaAbiertaException(
+                    "No se puede crear un lote en una entrada que no este abierta");
         }
     }
 
     @Override
     public Long eliminaLote(Long id) throws NoEstaAbiertaException {
         log.debug("Eliminando lote {}", id);
-        LoteEntrada lote = (LoteEntrada) currentSession().get(LoteEntrada.class, id);
-        if (lote.getEntrada().getEstatus().getNombre().equals(Constantes.ABIERTA)) {
+        LoteEntrada lote = (LoteEntrada) currentSession().get(
+                LoteEntrada.class, id);
+        if (lote.getEntrada().getEstatus().getNombre()
+                .equals(Constantes.ABIERTA)) {
             id = lote.getEntrada().getId();
             currentSession().delete(lote);
             currentSession().flush();
@@ -443,7 +536,9 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
     }
 
     private String getFolioTemporal(Almacen almacen) {
-        Query query = currentSession().createQuery("select f from Folio f where f.nombre = :nombre and f.almacen.id = :almacenId");
+        Query query = currentSession()
+                .createQuery(
+                "select f from Folio f where f.nombre = :nombre and f.almacen.id = :almacenId");
         query.setString("nombre", "ENTRADA-TEMPORAL");
         query.setLong("almacenId", almacen.getId());
         query.setLockOptions(LockOptions.UPGRADE);
@@ -471,7 +566,9 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
     }
 
     private String getFolio(Almacen almacen) {
-        Query query = currentSession().createQuery("select f from Folio f where f.nombre = :nombre and f.almacen.id = :almacenId");
+        Query query = currentSession()
+                .createQuery(
+                "select f from Folio f where f.nombre = :nombre and f.almacen.id = :almacenId");
         query.setString("nombre", "ENTRADA");
         query.setLong("almacenId", almacen.getId());
         query.setLockOptions(LockOptions.UPGRADE);
@@ -501,15 +598,19 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
         Producto producto = lote.getProducto();
 
         BigDecimal cantidad = lote.getCantidad();
-        BigDecimal viejoBalance = producto.getPrecioUnitario().multiply(producto.getExistencia());
+        BigDecimal viejoBalance = producto.getPrecioUnitario().multiply(
+                producto.getExistencia());
         BigDecimal nuevoBalance = lote.getPrecioUnitario().multiply(cantidad);
 
         BigDecimal balanceTotal = viejoBalance.add(nuevoBalance);
         BigDecimal articulos = cantidad.add(producto.getExistencia());
-        return balanceTotal.divide(articulos, 10, RoundingMode.HALF_UP).setScale(2, RoundingMode.HALF_UP);
+        return balanceTotal.divide(articulos, 10, RoundingMode.HALF_UP)
+                .setScale(2, RoundingMode.HALF_UP);
     }
 
-    private Entrada preparaParaCerrar(Entrada entrada, Usuario usuario, Date fecha) throws NoCuadraException, NoSePuedeCerrarEnCeroException {
+    private Entrada preparaParaCerrar(Entrada entrada, Usuario usuario,
+            Date fecha) throws NoCuadraException,
+            NoSePuedeCerrarEnCeroException {
         BigDecimal iva = entrada.getIva();
         BigDecimal total = entrada.getTotal();
         entrada.setIva(BigDecimal.ZERO);
@@ -520,35 +621,47 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
             if (!entrada.getDevolucion()) {
                 producto.setUltimoPrecio(lote.getPrecioUnitario());
             }
-            producto.setExistencia(producto.getExistencia().add(lote.getCantidad()));
+            producto.setExistencia(producto.getExistencia().add(
+                    lote.getCantidad()));
             producto.setFechaModificacion(fecha);
             currentSession().update(producto);
-            auditaProducto(producto, usuario, Constantes.ACTUALIZAR, entrada.getId(), null, fecha);
+            auditaProducto(producto, usuario, Constantes.ACTUALIZAR,
+                    entrada.getId(), null, fecha);
 
-            BigDecimal subtotal = lote.getPrecioUnitario().multiply(lote.getCantidad());
+            BigDecimal subtotal = lote.getPrecioUnitario().multiply(
+                    lote.getCantidad());
             entrada.setIva(entrada.getIva().add(lote.getIva()));
-            entrada.setTotal(entrada.getTotal().add(subtotal.add(lote.getIva())));
+            entrada.setTotal(entrada.getTotal()
+                    .add(subtotal.add(lote.getIva())));
         }
         if (total.equals(BigDecimal.ZERO)) {
-            throw new NoSePuedeCerrarEnCeroException("No se puede cerrar la entrada en cero");
+            throw new NoSePuedeCerrarEnCeroException(
+                    "No se puede cerrar la entrada en cero");
         }
-        // Si tanto el iva o el total difieren mas de un 5% del valor que 
+        // Si tanto el iva o el total difieren mas de un 5% del valor que
         // viene en la factura lanzar excepcion
-        if (iva.compareTo(entrada.getIva()) != 0 || total.compareTo(entrada.getTotal()) != 0) {
+        if (iva.compareTo(entrada.getIva()) != 0
+                || total.compareTo(entrada.getTotal()) != 0) {
             BigDecimal variacion = new BigDecimal("0.05");
             BigDecimal topeIva = entrada.getIva().multiply(variacion);
             BigDecimal topeTotal = entrada.getTotal().multiply(variacion);
-            if (iva.compareTo(entrada.getIva()) < 0 || total.compareTo(entrada.getTotal()) < 0) {
-                if (iva.compareTo(entrada.getIva().subtract(topeIva)) >= 0 && total.compareTo(entrada.getTotal().subtract(topeTotal)) >= 0) {
+            if (iva.compareTo(entrada.getIva()) < 0
+                    || total.compareTo(entrada.getTotal()) < 0) {
+                if (iva.compareTo(entrada.getIva().subtract(topeIva)) >= 0
+                        && total.compareTo(entrada.getTotal().subtract(
+                        topeTotal)) >= 0) {
                     // todavia puede pasar
                 } else {
-                    throw new NoCuadraException("No se puede cerrar porque no cuadran los totales");
+                    throw new NoCuadraException(
+                            "No se puede cerrar porque no cuadran los totales");
                 }
             } else {
-                if (iva.compareTo(entrada.getIva().add(topeIva)) <= 0 && total.compareTo(entrada.getTotal().add(topeTotal)) <= 0) {
+                if (iva.compareTo(entrada.getIva().add(topeIva)) <= 0
+                        && total.compareTo(entrada.getTotal().add(topeTotal)) <= 0) {
                     // todavia puede pasar
                 } else {
-                    throw new NoCuadraException("No se puede cerrar porque no cuadran los totales");
+                    throw new NoCuadraException(
+                            "No se puede cerrar porque no cuadran los totales");
                 }
             }
         }
@@ -556,18 +669,25 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
         return entrada;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Map<String, Object> preCancelacion(Long id, Usuario usuario) throws NoEstaCerradaException {
+    public Map<String, Object> preCancelacion(Long id, Usuario usuario)
+            throws NoEstaCerradaException {
         log.info("{} mando llamar precancelacion de entrada {}", usuario, id);
         Entrada entrada = (Entrada) currentSession().get(Entrada.class, id);
-        if (entrada.getEstatus().getNombre().equals(Constantes.CERRADA) || entrada.getEstatus().getNombre().equals(Constantes.FACTURADA)) {
+        if (entrada.getEstatus().getNombre().equals(Constantes.CERRADA)
+                || entrada.getEstatus().getNombre()
+                .equals(Constantes.FACTURADA)) {
             Set<Producto> productos = new HashSet<>();
             for (LoteEntrada lote : entrada.getLotes()) {
                 productos.add(lote.getProducto());
             }
 
-            log.debug("Buscando entradas que contengan los productos {} despues de la fecha {}", productos, entrada.getFechaModificacion());
-            Query query = currentSession().createQuery(
+            log.debug(
+                    "Buscando entradas que contengan los productos {} despues de la fecha {}",
+                    productos, entrada.getFechaModificacion());
+            Query query = currentSession()
+                    .createQuery(
                     "select e from Entrada e inner join e.lotes le inner join e.estatus es "
                     + "where(es.nombre = 'CERRADA' or es.nombre = 'PENDIENTE') "
                     + "and le.producto in (:productos) "
@@ -602,7 +722,8 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
             Map<Long, Producto> productosSinHistoria = new HashMap<>();
             for (Producto producto : productos) {
                 log.debug("Buscando historial de {}", producto);
-                query = currentSession().createQuery(
+                query = currentSession()
+                        .createQuery(
                         "select xp from XProducto xp "
                         + "where xp.productoId = :productoId "
                         + "and (xp.actividad = 'CREAR' or actividad = 'ACTUALIZAR') "
@@ -643,29 +764,40 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
                 resultado.put("salidas", salidas);
             }
             if (productosCancelados.size() > 0) {
-                resultado.put("productosCancelados", productosCancelados.values());
+                resultado.put("productosCancelados",
+                        productosCancelados.values());
             }
             if (productosSinHistoria.size() > 0) {
-                resultado.put("productosSinHistoria", productosSinHistoria.values());
+                resultado.put("productosSinHistoria",
+                        productosSinHistoria.values());
             }
             return resultado;
         } else {
-            throw new NoEstaCerradaException("La entrada no se puede cancelar porque no esta cerrada o facturada", entrada);
+            throw new NoEstaCerradaException(
+                    "La entrada no se puede cancelar porque no esta cerrada o facturada",
+                    entrada);
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Cancelacion cancelar(Long id, Usuario usuario, String comentarios) throws NoEstaCerradaException {
+    public Cancelacion cancelar(Long id, Usuario usuario, String comentarios)
+            throws NoEstaCerradaException {
         log.info("{} esta cancelando entrada {}", usuario, id);
         Entrada entrada = (Entrada) currentSession().get(Entrada.class, id);
-        if (entrada.getEstatus().getNombre().equals(Constantes.CERRADA) || entrada.getEstatus().getNombre().equals(Constantes.FACTURADA)) {
+        if (entrada.getEstatus().getNombre().equals(Constantes.CERRADA)
+                || entrada.getEstatus().getNombre()
+                .equals(Constantes.FACTURADA)) {
             Set<Producto> productos = new HashSet<>();
             for (LoteEntrada lote : entrada.getLotes()) {
                 productos.add(lote.getProducto());
             }
 
-            log.debug("Buscando entradas que contengan los productos {} despues de la fecha {}", productos, entrada.getFechaModificacion());
-            Query query = currentSession().createQuery(
+            log.debug(
+                    "Buscando entradas que contengan los productos {} despues de la fecha {}",
+                    productos, entrada.getFechaModificacion());
+            Query query = currentSession()
+                    .createQuery(
                     "select e from Entrada e inner join e.lotes le inner join e.estatus es "
                     + "where(es.nombre = 'CERRADA' or es.nombre = 'PENDIENTE') "
                     + "and le.producto in (:productos) "
@@ -699,7 +831,8 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
             Date fecha = new Date();
             for (Producto producto : productos) {
                 log.debug("Buscando historial de {}", producto);
-                query = currentSession().createQuery(
+                query = currentSession()
+                        .createQuery(
                         "select xp from XProducto xp "
                         + "where xp.productoId = :productoId "
                         + "and (xp.actividad = 'CREAR' or actividad = 'ACTUALIZAR') "
@@ -728,7 +861,8 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
                 currentSession().update(producto);
             }
 
-            query = currentSession().createQuery("select e from Estatus e where e.nombre = :nombre");
+            query = currentSession().createQuery(
+                    "select e from Estatus e where e.nombre = :nombre");
             query.setString("nombre", Constantes.CANCELADA);
             Estatus cancelada = (Estatus) query.uniqueResult();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
@@ -766,18 +900,23 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
             cancelacion = cancelacionDao.crea(cancelacion, usuario);
             currentSession().flush();
             for (Producto producto : productos) {
-                auditaProducto(producto, usuario, Constantes.CANCELAR, null, cancelacion.getId(), fecha);
+                auditaProducto(producto, usuario, Constantes.CANCELAR, null,
+                        cancelacion.getId(), fecha);
             }
 
             return cancelacion;
         } else {
-            throw new NoEstaCerradaException("La entrada no se puede cancelar porque no esta cerrada o facturada", entrada);
+            throw new NoEstaCerradaException(
+                    "La entrada no se puede cancelar porque no esta cerrada o facturada",
+                    entrada);
         }
     }
 
-    private void auditaProducto(Producto producto, Usuario usuario, String actividad, Long entradaId, Long cancelacionId, Date fecha) {
+    private void auditaProducto(Producto producto, Usuario usuario,
+            String actividad, Long entradaId, Long cancelacionId, Date fecha) {
         XProducto xproducto = new XProducto();
-        BeanUtils.copyProperties(producto, xproducto, new String[]{"id", "version"});
+        BeanUtils.copyProperties(producto, xproducto, new String[]{"id",
+                    "version"});
         xproducto.setId(null);
         xproducto.setProductoId(producto.getId());
         xproducto.setEntradaId(entradaId);
@@ -786,56 +925,67 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
         xproducto.setAlmacenId(producto.getAlmacen().getId());
         xproducto.setFechaCreacion(fecha);
         xproducto.setActividad(actividad);
-        xproducto.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
+        xproducto.setCreador((usuario != null) ? usuario.getUsername()
+                : "sistema");
         currentSession().save(xproducto);
     }
 
-    private void audita(Entrada entrada, Usuario usuario, String actividad, Date fecha, Boolean conLotes) {
+    private void audita(Entrada entrada, Usuario usuario, String actividad,
+            Date fecha, Boolean conLotes) {
         XEntrada xentrada = new XEntrada();
-        BeanUtils.copyProperties(entrada, xentrada, new String[]{"id", "version"});
+        BeanUtils.copyProperties(entrada, xentrada, new String[]{"id",
+                    "version"});
         xentrada.setEntradaId(entrada.getId());
         xentrada.setAlmacenId(entrada.getAlmacen().getId());
         xentrada.setProveedorId(entrada.getProveedor().getId());
         xentrada.setEstatusId(entrada.getEstatus().getId());
         xentrada.setFechaCreacion(fecha);
         xentrada.setActividad(actividad);
-        xentrada.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
+        xentrada.setCreador((usuario != null) ? usuario.getUsername()
+                : "sistema");
         currentSession().save(xentrada);
         if (conLotes) {
             for (LoteEntrada lote : entrada.getLotes()) {
                 XLoteEntrada xlote = new XLoteEntrada();
-                BeanUtils.copyProperties(lote, xlote, new String[]{"id", "version"});
+                BeanUtils.copyProperties(lote, xlote, new String[]{"id",
+                            "version"});
                 xlote.setLoteEntradaId(lote.getId());
                 xlote.setEntradaId(entrada.getId());
                 xlote.setProductoId(lote.getProducto().getId());
                 xlote.setActividad(actividad);
-                xlote.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
+                xlote.setCreador((usuario != null) ? usuario.getUsername()
+                        : "sistema");
                 xlote.setFechaCreacion(fecha);
                 currentSession().save(xlote);
             }
         }
     }
 
-    private void auditaSalida(Salida salida, Usuario usuario, String actividad, Date fecha, Boolean conLotes) {
+    private void auditaSalida(Salida salida, Usuario usuario, String actividad,
+            Date fecha, Boolean conLotes) {
         XSalida xsalida = new XSalida();
-        BeanUtils.copyProperties(salida, xsalida, new String[]{"id", "version"});
+        BeanUtils.copyProperties(salida, xsalida, new String[]{"id",
+                    "version"});
         xsalida.setSalidaId(salida.getId());
         xsalida.setAlmacenId(salida.getAlmacen().getId());
         xsalida.setClienteId(salida.getCliente().getId());
         xsalida.setEstatusId(salida.getEstatus().getId());
         xsalida.setFechaCreacion(fecha);
         xsalida.setActividad(actividad);
-        xsalida.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
+        xsalida.setCreador((usuario != null) ? usuario.getUsername()
+                : "sistema");
         currentSession().save(xsalida);
         if (conLotes) {
             for (LoteSalida lote : salida.getLotes()) {
                 XLoteSalida xlote = new XLoteSalida();
-                BeanUtils.copyProperties(lote, xlote, new String[]{"id", "version"});
+                BeanUtils.copyProperties(lote, xlote, new String[]{"id",
+                            "version"});
                 xlote.setLoteSalidaId(lote.getId());
                 xlote.setSalidaId(salida.getId());
                 xlote.setProductoId(lote.getProducto().getId());
                 xlote.setActividad(actividad);
-                xlote.setCreador((usuario != null) ? usuario.getUsername() : "sistema");
+                xlote.setCreador((usuario != null) ? usuario.getUsername()
+                        : "sistema");
                 xlote.setFechaCreacion(fecha);
                 currentSession().save(xlote);
             }

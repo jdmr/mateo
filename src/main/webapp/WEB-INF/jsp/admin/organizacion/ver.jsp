@@ -56,6 +56,13 @@
                     </div>
                 </div>
 
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span6">
+                        <h4><s:message code="centroCosto.label" /></h4>
+                        <h3>${organizacion.centroCostoId}</h3>
+                    </div>
+                </div>
+
                 <p class="well">
                     <a href="<c:url value='/admin/organizacion/edita/${organizacion.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
                     <form:hidden path="id" />

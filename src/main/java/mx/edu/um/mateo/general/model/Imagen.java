@@ -25,7 +25,19 @@ package mx.edu.um.mateo.general.model;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Version;
+import mx.edu.um.mateo.activos.model.Activo;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -36,6 +48,10 @@ import org.hibernate.validator.constraints.NotBlank;
 @Table(name = "imagenes")
 public class Imagen implements Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = -3387974275938400076L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -51,15 +67,27 @@ public class Imagen implements Serializable {
     private Long tamano;
     @Column(nullable = false)
     private byte[] archivo;
+    @ManyToOne(cascade = CascadeType.ALL, optional = true, fetch = FetchType.LAZY)
+    @JoinTable(name = "activos_imagenes", joinColumns = {
+        @JoinColumn(name = "imagen_id")}, inverseJoinColumns = {
+        @JoinColumn(name = "activo_id")})
+    private Activo activo;
 
     public Imagen() {
     }
 
-    public Imagen(String nombre, String tipoContenido, Long tamano, byte[] archivo) {
+    public Imagen(String nombre, String tipoContenido, Long tamano,
+            byte[] archivo) {
         this.nombre = nombre;
         this.tipoContenido = tipoContenido;
         this.tamano = tamano;
         this.archivo = archivo;
+    }
+
+    public Imagen(Long id, Integer version, String nombre) {
+        this.id = id;
+        this.version = version;
+        this.nombre = nombre;
     }
 
     /**
@@ -146,6 +174,20 @@ public class Imagen implements Serializable {
         this.archivo = archivo;
     }
 
+    /**
+     * @return the activo
+     */
+    public Activo getActivo() {
+        return activo;
+    }
+
+    /**
+     * @param activo the activo to set
+     */
+    public void setActivo(Activo activo) {
+        this.activo = activo;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -172,6 +214,7 @@ public class Imagen implements Serializable {
 
     @Override
     public String toString() {
-        return "Imagen{" + "nombre=" + nombre + ", tipoContenido=" + tipoContenido + '}';
+        return "Imagen{" + "nombre=" + nombre + ", tipoContenido="
+                + tipoContenido + '}';
     }
 }

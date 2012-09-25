@@ -24,12 +24,15 @@
 package mx.edu.um.mateo.general.dao;
 
 import java.util.*;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
+import mx.edu.um.mateo.contabilidad.model.EjercicioPK;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import static org.junit.Assert.*;
@@ -92,7 +95,8 @@ public class UsuarioDaoTest {
 
         Map<String, Object> params = null;
         Map<String, Object> result = instance.lista(params);
-        List<Usuario> usuarios = (List<Usuario>) result.get("usuarios");
+        @SuppressWarnings("unchecked")
+		List<Usuario> usuarios = (List<Usuario>) result.get("usuarios");
         Long cantidad = (Long) result.get("cantidad");
         assertEquals(10, usuarios.size());
         assertTrue(20 <= cantidad);
@@ -142,8 +146,14 @@ public class UsuarioDaoTest {
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TST", "TEST01", empresa);
         currentSession().save(almacen);
+        EjercicioPK ejercicioPK = new EjercicioPK("TEST", organizacion);
+        Byte x = new Byte("0");
+        Ejercicio ejercicio = new Ejercicio(ejercicioPK, "TEST", "A", StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, x, x);
+        currentSession().save(ejercicio);
+        currentSession().flush();
 
         Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
+        usuario.setEjercicio(ejercicio);
         usuario = instance.crea(usuario, almacen.getId(), new String[]{rol.getAuthority()});
         Long id = usuario.getId();
         assertNotNull(id);
@@ -279,7 +289,8 @@ public class UsuarioDaoTest {
         assertNull(result);
     }
 
-    @Test
+    @SuppressWarnings("unchecked")
+	@Test
     public void debieraMostrarLosUsuariosFiltradosPorEmpresa() {
         log.debug("Mostrar los usuarios filtrados por empresa");
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");

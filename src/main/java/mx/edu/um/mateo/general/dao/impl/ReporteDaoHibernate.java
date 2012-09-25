@@ -30,6 +30,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.dao.ReporteDao;
 import mx.edu.um.mateo.general.model.Empresa;
@@ -43,6 +44,7 @@ import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
+
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,20 +56,24 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
-    
+
     public ReporteDaoHibernate() {
         log.info("Se ha creado una nueva instancia de ReporteDao");
     }
 
     private Reporte buscaReporteAdminstrativo(String nombre) {
-        Query query = currentSession().createQuery("select r from Reporte r where r.nombre = :nombre");
+        Query query = currentSession().createQuery(
+                "select r from Reporte r where r.nombre = :nombre");
         query.setString("nombre", nombre);
         Reporte reporte = (Reporte) query.uniqueResult();
         return reporte;
     }
 
-    private Reporte buscaReportePorOrganizacion(String nombre, Long organizacionId) {
-        Query query = currentSession().createQuery("select r from Organizacion o inner join o.reportes r where o.id = :id and r.nombre = :nombre");
+    private Reporte buscaReportePorOrganizacion(String nombre,
+            Long organizacionId) {
+        Query query = currentSession()
+                .createQuery(
+                "select r from Organizacion o inner join o.reportes r where o.id = :id and r.nombre = :nombre");
         query.setLong("id", organizacionId);
         query.setString("nombre", nombre);
         Reporte reporte = (Reporte) query.uniqueResult();
@@ -78,7 +84,9 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
     }
 
     private Reporte buscaReportePorEmpresa(String nombre, Long empresaId) {
-        Query query = currentSession().createQuery("select r from Empresa e inner join e.reportes r where e.id = :id and r.nombre = :nombre");
+        Query query = currentSession()
+                .createQuery(
+                "select r from Empresa e inner join e.reportes r where e.id = :id and r.nombre = :nombre");
         query.setLong("id", empresaId);
         query.setString("nombre", nombre);
         Reporte reporte = (Reporte) query.uniqueResult();
@@ -86,7 +94,9 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
     }
 
     private Reporte buscaReportePorAlmacen(String nombre, Long almacenId) {
-        Query query = currentSession().createQuery("select r from Almacen a inner join a.reportes r where a.id = :id and r.nombre = :nombre");
+        Query query = currentSession()
+                .createQuery(
+                "select r from Almacen a inner join a.reportes r where a.id = :id and r.nombre = :nombre");
         query.setLong("id", almacenId);
         query.setString("nombre", nombre);
         Reporte reporte = (Reporte) query.uniqueResult();
@@ -100,7 +110,8 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
     }
 
     @Override
-    public JasperReport obtieneReportePorOrganizacion(String nombre, Long organizacionId) {
+    public JasperReport obtieneReportePorOrganizacion(String nombre,
+            Long organizacionId) {
         log.debug("nombre=" + nombre);
         log.debug("organizacionId=" + organizacionId);
         Reporte reporte = buscaReportePorOrganizacion(nombre, organizacionId);
@@ -134,15 +145,20 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
         List<Reporte> reportes = new ArrayList<>();
         for (String nombre : nombres) {
             log.debug("Inicializando reporte {}", nombre);
-            Query query = currentSession().createQuery("select r from Reporte r where r.nombre = :nombre");
+            Query query = currentSession().createQuery(
+                    "select r from Reporte r where r.nombre = :nombre");
             query.setString("nombre", nombre);
             Reporte reporte = (Reporte) query.uniqueResult();
             if (reporte == null) {
                 log.debug("Compilando reporte {}", nombre);
                 try {
-                    JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/reportes/" + nombre + ".jrxml"));
+                    JasperDesign jd = JRXmlLoader.load(this.getClass()
+                            .getResourceAsStream(
+                            "/reportes/" + nombre + ".jrxml"));
                     JasperReport jr = JasperCompileManager.compileReport(jd);
-                    byte[] fuente = obtainByteData(this.getClass().getResourceAsStream("/reportes/" + nombre + ".jrxml"));
+                    byte[] fuente = obtainByteData(this.getClass()
+                            .getResourceAsStream(
+                            "/reportes/" + nombre + ".jrxml"));
                     byte[] compilado = obtainByteData(jr);
                     reporte = new Reporte();
                     reporte.setNombre(nombre);
@@ -218,7 +234,8 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
     private byte[] obtainByteData(InputStream inputStream) throws IOException {
         byte[] byteData;
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            for (int readBytes = inputStream.read(); readBytes >= 0; readBytes = inputStream.read()) {
+            for (int readBytes = inputStream.read(); readBytes >= 0; readBytes = inputStream
+                            .read()) {
                 outputStream.write(readBytes);
             }
             byteData = outputStream.toByteArray();
@@ -248,20 +265,25 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
                 reporte = buscaReporteAdminstrativo(nombre);
                 break;
             case Constantes.ORG:
-                reporte = buscaReportePorOrganizacion(nombre, usuario.getEmpresa().getOrganizacion().getId());
+                reporte = buscaReportePorOrganizacion(nombre, usuario.getEmpresa()
+                        .getOrganizacion().getId());
                 break;
             case Constantes.EMP:
-                reporte = buscaReportePorEmpresa(nombre, usuario.getEmpresa().getId());
+                reporte = buscaReportePorEmpresa(nombre, usuario.getEmpresa()
+                        .getId());
                 break;
             case Constantes.ALM:
-                reporte = buscaReportePorAlmacen(nombre, usuario.getAlmacen().getId());
+                reporte = buscaReportePorAlmacen(nombre, usuario.getAlmacen()
+                        .getId());
                 break;
         }
-        log.debug("Encontre el reporte {}", reporte.getId());
+        log.debug("Encontre el reporte {}", reporte);
         try {
-            JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/reportes/" + nombre + ".jrxml"));
+            JasperDesign jd = JRXmlLoader.load(this.getClass()
+                    .getResourceAsStream("/reportes/" + nombre + ".jrxml"));
             JasperReport jr = JasperCompileManager.compileReport(jd);
-            byte[] fuente = obtainByteData(this.getClass().getResourceAsStream("/reportes/" + nombre + ".jrxml"));
+            byte[] fuente = obtainByteData(this.getClass().getResourceAsStream(
+                    "/reportes/" + nombre + ".jrxml"));
             byte[] compilado = obtainByteData(jr);
             boolean nuevo = false;
             if (reporte == null) {
@@ -278,8 +300,10 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
                 currentSession().save(reporte);
                 switch (tipo) {
                     case Constantes.ORG:
-                        usuario.getEmpresa().getOrganizacion().getReportes().add(reporte);
-                        currentSession().update(usuario.getEmpresa().getOrganizacion());
+                        usuario.getEmpresa().getOrganizacion().getReportes()
+                                .add(reporte);
+                        currentSession().update(
+                                usuario.getEmpresa().getOrganizacion());
                         break;
                     case Constantes.EMP:
                         usuario.getEmpresa().getReportes().add(reporte);

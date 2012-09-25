@@ -28,100 +28,109 @@ import mx.edu.um.mateo.inventario.model.FacturaAlmacen;
 import mx.edu.um.mateo.inventario.model.Salida;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public class NoEstaCerradaException extends Exception {
 
-    private Entrada entrada;
-    private Salida salida;
-    private FacturaAlmacen factura;
-    
-    public NoEstaCerradaException(String message, Throwable cause, Entrada entrada) {
-        super(message, cause);
-        this.entrada = entrada;
-    }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8478144322228652056L;
+	private Entrada entrada;
+	private Salida salida;
+	private FacturaAlmacen factura;
 
-    public NoEstaCerradaException(String message, Throwable cause, Salida salida) {
-        super(message, cause);
-        this.salida = salida;
-    }
+	public NoEstaCerradaException(String message, Throwable cause,
+			Entrada entrada) {
+		super(message, cause);
+		this.entrada = entrada;
+	}
 
-    public NoEstaCerradaException(String message, Throwable cause, FacturaAlmacen factura) {
-        super(message, cause);
-        this.factura = factura;
-    }
+	public NoEstaCerradaException(String message, Throwable cause, Salida salida) {
+		super(message, cause);
+		this.salida = salida;
+	}
 
-    public NoEstaCerradaException(String message, Entrada entrada) {
-        super(message);
-        this.entrada = entrada;
-    }
+	public NoEstaCerradaException(String message, Throwable cause,
+			FacturaAlmacen factura) {
+		super(message, cause);
+		this.factura = factura;
+	}
 
-    public NoEstaCerradaException(String message, Salida salida) {
-        super(message);
-        this.salida = salida;
-    }
+	public NoEstaCerradaException(String message, Entrada entrada) {
+		super(message);
+		this.entrada = entrada;
+	}
 
-    public NoEstaCerradaException(String message, FacturaAlmacen factura) {
-        super(message);
-        this.factura = factura;
-    }
+	public NoEstaCerradaException(String message, Salida salida) {
+		super(message);
+		this.salida = salida;
+	}
 
-    public NoEstaCerradaException(Entrada entrada) {
-        super();
-        this.entrada = entrada;
-    }
+	public NoEstaCerradaException(String message, FacturaAlmacen factura) {
+		super(message);
+		this.factura = factura;
+	}
 
-    public NoEstaCerradaException(Salida salida) {
-        super();
-        this.salida = salida;
-    }
+	public NoEstaCerradaException(Entrada entrada) {
+		super();
+		this.entrada = entrada;
+	}
 
-    public NoEstaCerradaException(FacturaAlmacen factura) {
-        super();
-        this.factura = factura;
-    }
+	public NoEstaCerradaException(Salida salida) {
+		super();
+		this.salida = salida;
+	}
 
-    /**
-     * @return the entrada
-     */
-    public Entrada getEntrada() {
-        return entrada;
-    }
+	public NoEstaCerradaException(FacturaAlmacen factura) {
+		super();
+		this.factura = factura;
+	}
 
-    /**
-     * @param entrada the entrada to set
-     */
-    public void setEntrada(Entrada entrada) {
-        this.entrada = entrada;
-    }
+	/**
+	 * @return the entrada
+	 */
+	public Entrada getEntrada() {
+		return entrada;
+	}
 
-    /**
-     * @return the salida
-     */
-    public Salida getSalida() {
-        return salida;
-    }
+	/**
+	 * @param entrada
+	 *            the entrada to set
+	 */
+	public void setEntrada(Entrada entrada) {
+		this.entrada = entrada;
+	}
 
-    /**
-     * @param salida the salida to set
-     */
-    public void setSalida(Salida salida) {
-        this.salida = salida;
-    }
+	/**
+	 * @return the salida
+	 */
+	public Salida getSalida() {
+		return salida;
+	}
 
-    /**
-     * @return the factura
-     */
-    public FacturaAlmacen getFactura() {
-        return factura;
-    }
+	/**
+	 * @param salida
+	 *            the salida to set
+	 */
+	public void setSalida(Salida salida) {
+		this.salida = salida;
+	}
 
-    /**
-     * @param factura the factura to set
-     */
-    public void setFactura(FacturaAlmacen factura) {
-        this.factura = factura;
-    }
+	/**
+	 * @return the factura
+	 */
+	public FacturaAlmacen getFactura() {
+		return factura;
+	}
+
+	/**
+	 * @param factura
+	 *            the factura to set
+	 */
+	public void setFactura(FacturaAlmacen factura) {
+		this.factura = factura;
+	}
 
 }

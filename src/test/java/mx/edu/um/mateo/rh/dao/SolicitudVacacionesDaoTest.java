@@ -23,20 +23,23 @@
  */
 package mx.edu.um.mateo.rh.dao;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
+
 import mx.edu.um.mateo.Constants;
-import mx.edu.um.mateo.rh.model.Empleado;
 import mx.edu.um.mateo.rh.model.SolicitudVacaciones;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
-import static org.junit.Assert.*;
+
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -56,7 +59,7 @@ public class SolicitudVacacionesDaoTest {
     public void testGetSolicitudVacacionesByFechaRecepcion() throws Exception{
         
     	SolicitudVacaciones solicitudVacaciones = new SolicitudVacaciones();
-    	List list;
+    	List<SolicitudVacaciones> list;
     	solicitudVacaciones.setStatus(Constants.SOLICITUDSALIDA_STATUS_RECIBIDO);
     	list = dao.getSolicitudVacacionesByFechaInicial(solicitudVacaciones);
     	assertEquals(2, list.size());
@@ -80,7 +83,7 @@ public class SolicitudVacacionesDaoTest {
         SolicitudVacaciones solicitudVacaciones = new SolicitudVacaciones();        
         solicitudVacaciones.setStatus("P");
 
-        List results = dao.getSolicitudVacaciones(solicitudVacaciones);
+        List<SolicitudVacaciones> results = dao.getSolicitudVacaciones(solicitudVacaciones);
         log.debug("{}",results);
         log.debug("{}",results.size());
         assertTrue(results.size() > 0);

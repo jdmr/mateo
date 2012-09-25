@@ -38,6 +38,10 @@ import javax.persistence.ManyToOne;
 @Embeddable
 public class CtaMayorPK implements Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 6333224183354930196L;
     @ManyToOne(optional = false)
     @JoinColumns({
         @JoinColumn(name = "id_ejercicio"),
@@ -131,6 +135,7 @@ public class CtaMayorPK implements Serializable {
 
     @Override
     public String toString() {
-        return "CtaMayorPK{" + "ejercicio=" + ejercicio + ", idCtaMayor=" + idCtaMayor + ", tipoCuenta=" + tipoCuenta + '}';
+        return "CtaMayorPK{" + "ejercicio=" + ejercicio + ", idCtaMayor="
+                + idCtaMayor + ", tipoCuenta=" + tipoCuenta + '}';
     }
 }

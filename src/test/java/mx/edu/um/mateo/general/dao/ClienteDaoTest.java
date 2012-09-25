@@ -23,12 +23,26 @@
  */
 package mx.edu.um.mateo.general.dao;
 
-import java.util.*;
-import mx.edu.um.mateo.general.model.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import mx.edu.um.mateo.general.model.Cliente;
+import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Organizacion;
+import mx.edu.um.mateo.general.model.Rol;
+import mx.edu.um.mateo.general.model.TipoCliente;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inventario.model.Almacen;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -60,7 +74,8 @@ public class ClienteDaoTest {
     /**
      * Test of lista method, of class ClienteDao.
      */
-    @Test
+    @SuppressWarnings("unchecked")
+	@Test
     public void debieraMostrarListaDeClientes() {
         log.debug("Debiera mostrar lista de clientes");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
@@ -75,7 +90,7 @@ public class ClienteDaoTest {
         }
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", empresa.getId());
-        Map result = instance.lista(params);
+        Map<String, Object> result = instance.lista(params);
         assertNotNull(result.get("clientes"));
         assertNotNull(result.get("cantidad"));
         assertEquals(10, ((List<Cliente>) result.get("clientes")).size());

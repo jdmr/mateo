@@ -29,6 +29,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 /**
@@ -39,6 +40,10 @@ import javax.persistence.Version;
 @Table(name = "cont_ccosto")
 public class CentroCosto implements Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1471080942869622597L;
     @Id
     private CCostoPK id;
     @Version
@@ -49,6 +54,8 @@ public class CentroCosto implements Serializable {
     private String detalle;
     @Column(length = 5)
     private String iniciales;
+    @Transient
+    private Boolean seleccionado = Boolean.FALSE;
 
     public CentroCosto() {
     }
@@ -127,6 +134,20 @@ public class CentroCosto implements Serializable {
         return id.getIdCosto() + " | " + nombre;
     }
 
+    /**
+     * @return the seleccionado
+     */
+    public Boolean getSeleccionado() {
+        return seleccionado;
+    }
+
+    /**
+     * @param seleccionado the seleccionado to set
+     */
+    public void setSeleccionado(Boolean seleccionado) {
+        this.seleccionado = seleccionado;
+    }
+
     @Override
     public int hashCode() {
         int hash = 3;
@@ -153,6 +174,8 @@ public class CentroCosto implements Serializable {
 
     @Override
     public String toString() {
-        return "CentroCosto{" + "id=" + id + ", version=" + version + ", nombre=" + nombre + ", detalle=" + detalle + ", iniciales=" + iniciales + '}';
+        return "CentroCosto{" + "id=" + id + ", version=" + version
+                + ", nombre=" + nombre + ", detalle=" + detalle
+                + ", iniciales=" + iniciales + '}';
     }
 }

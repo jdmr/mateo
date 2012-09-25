@@ -32,21 +32,29 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import mx.edu.um.mateo.general.dao.ReporteDao;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.utils.ReporteUtil;
-import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +82,8 @@ public abstract class BaseController {
     @Autowired
     protected ReporteDao reporteDao;
 
-    protected void pagina(Map<String, Object> params, Model modelo, String lista, Long pagina) {
+    protected void pagina(Map<String, Object> params, Model modelo,
+            String lista, Long pagina) {
         if (pagina != null) {
             params.put("pagina", pagina);
             modelo.addAttribute("pagina", pagina);
@@ -86,10 +95,11 @@ public abstract class BaseController {
         Long cantidad = (Long) params.get("cantidad");
         Integer max = (Integer) params.get("max");
         List<Long> paginas = paginacion(pagina, cantidad, max);
-        List listado = (List) params.get(lista);
+        List<?> listado = (List<?>) params.get(lista);
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (listado.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
+        String[] paginacion = new String[]{primero.toString(),
+            ultimo.toString(), cantidad.toString()};
         modelo.addAttribute("paginacion", paginacion);
         modelo.addAttribute("paginas", paginas);
         // termina paginado
@@ -97,7 +107,11 @@ public abstract class BaseController {
 
     private List<Long> paginacion(Long pagina, Long cantidad, Integer max) {
         Long cantidadDePaginas = cantidad / max;
-        log.debug("Paginacion: {} {} {} {}", new Object[] {pagina, cantidad, max, cantidadDePaginas});
+        if (cantidad % max > 0) {
+            cantidadDePaginas++;
+        }
+        log.debug("Paginacion: {} {} {} {}", new Object[]{pagina, cantidad,
+                    max, cantidadDePaginas});
         Set<Long> paginas = new LinkedHashSet<>();
         long h = pagina - 1;
         long i = pagina;
@@ -200,7 +214,8 @@ public abstract class BaseController {
         return new ArrayList<>(paginas);
     }
 
-    protected byte[] generaPdf(List lista, String nombre, String tipo, Long id) throws JRException {
+    protected byte[] generaPdf(List<?> lista, String nombre, String tipo,
+            Long id) throws JRException {
         log.debug("Generando PDF");
         Map<String, Object> params = new HashMap<>();
         JasperReport jasperReport = null;
@@ -218,13 +233,15 @@ public abstract class BaseController {
                 jasperReport = reporteDao.obtieneReportePorAlmacen(nombre, id);
                 break;
         }
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(lista));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,
+                params, new JRBeanCollectionDataSource(lista));
         byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
 
         return archivo;
     }
 
-    protected byte[] generaCsv(List lista, String nombre, String tipo, Long id) throws JRException {
+    protected byte[] generaCsv(List<?> lista, String nombre, String tipo,
+            Long id) throws JRException {
         log.debug("Generando CSV");
         Map<String, Object> params = new HashMap<>();
         JRCsvExporter exporter = new JRCsvExporter();
@@ -244,16 +261,19 @@ public abstract class BaseController {
                 jasperReport = reporteDao.obtieneReportePorAlmacen(nombre, id);
                 break;
         }
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(lista));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,
+                params, new JRBeanCollectionDataSource(lista));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
+        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM,
+                byteArrayOutputStream);
         exporter.exportReport();
         byte[] archivo = byteArrayOutputStream.toByteArray();
 
         return archivo;
     }
 
-    protected byte[] generaXls(List lista, String nombre, String tipo, Long id) throws JRException {
+    protected byte[] generaXls(List<?> lista, String nombre, String tipo,
+            Long id) throws JRException {
         log.debug("Generando XLS");
         Map<String, Object> params = new HashMap<>();
         JRXlsExporter exporter = new JRXlsExporter();
@@ -273,17 +293,30 @@ public abstract class BaseController {
                 jasperReport = reporteDao.obtieneReportePorAlmacen(nombre, id);
                 break;
         }
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(lista));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,
+                params, new JRBeanCollectionDataSource(lista));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
-        exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);
-        exporter.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
-        exporter.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS, Boolean.TRUE);
-        exporter.setParameter(JRXlsExporterParameter.IS_COLLAPSE_ROW_SPAN, Boolean.TRUE);
-        exporter.setParameter(JRXlsExporterParameter.IGNORE_PAGE_MARGINS, Boolean.TRUE);
-        exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
-        exporter.setParameter(JRXlsExporterParameter.PARAMETERS_OVERRIDE_REPORT_HINTS, Boolean.FALSE);
-        exporter.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE, Boolean.TRUE);
+        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM,
+                byteArrayOutputStream);
+        exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND,
+                Boolean.FALSE);
+        exporter.setParameter(
+                JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS,
+                Boolean.TRUE);
+        exporter.setParameter(
+                JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS,
+                Boolean.TRUE);
+        exporter.setParameter(JRXlsExporterParameter.IS_COLLAPSE_ROW_SPAN,
+                Boolean.TRUE);
+        exporter.setParameter(JRXlsExporterParameter.IGNORE_PAGE_MARGINS,
+                Boolean.TRUE);
+        exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET,
+                Boolean.FALSE);
+        exporter.setParameter(
+                JRXlsExporterParameter.PARAMETERS_OVERRIDE_REPORT_HINTS,
+                Boolean.FALSE);
+        exporter.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE,
+                Boolean.TRUE);
 
         exporter.exportReport();
         byte[] archivo = byteArrayOutputStream.toByteArray();
@@ -291,7 +324,9 @@ public abstract class BaseController {
         return archivo;
     }
 
-    protected void generaReporte(String tipo, List lista, HttpServletResponse response, String nombre, String tipoReporte, Long id) throws ReporteException {
+    protected void generaReporte(String tipo, List<?> lista,
+            HttpServletResponse response, String nombre, String tipoReporte,
+            Long id) throws ReporteException {
         try {
             log.debug("Generando reporte {}", tipo);
             byte[] archivo = null;
@@ -299,22 +334,26 @@ public abstract class BaseController {
                 case "PDF":
                     archivo = generaPdf(lista, nombre, tipoReporte, id);
                     response.setContentType("application/pdf");
-                    response.addHeader("Content-Disposition", "attachment; filename=" + nombre + ".pdf");
+                    response.addHeader("Content-Disposition",
+                            "attachment; filename=" + nombre + ".pdf");
                     System.out.println("termina de generar pdf");
                     break;
                 case "CSV":
                     archivo = generaCsv(lista, nombre, tipoReporte, id);
                     response.setContentType("text/csv");
-                    response.addHeader("Content-Disposition", "attachment; filename=" + nombre + ".csv");
+                    response.addHeader("Content-Disposition",
+                            "attachment; filename=" + nombre + ".csv");
                     break;
                 case "XLS":
                     archivo = generaXls(lista, nombre, tipoReporte, id);
                     response.setContentType("application/vnd.ms-excel");
-                    response.addHeader("Content-Disposition", "attachment; filename=" + nombre + ".xls");
+                    response.addHeader("Content-Disposition",
+                            "attachment; filename=" + nombre + ".xls");
             }
             if (archivo != null) {
                 response.setContentLength(archivo.length);
-                try (BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream())) {
+                try (BufferedOutputStream bos = new BufferedOutputStream(
+                                response.getOutputStream())) {
                     bos.write(archivo);
                     bos.flush();
                 }
@@ -325,7 +364,9 @@ public abstract class BaseController {
 
     }
 
-    protected void enviaCorreo(String tipo, List lista, HttpServletRequest request, String nombre, String tipoReporte, Long id) throws ReporteException {
+    protected void enviaCorreo(String tipo, List<?> lista,
+            HttpServletRequest request, String nombre, String tipoReporte,
+            Long id) throws ReporteException {
         try {
             log.debug("Enviando correo {}", tipo);
             byte[] archivo = null;
@@ -347,10 +388,16 @@ public abstract class BaseController {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setTo(ambiente.obtieneUsuario().getCorreo());
-            String titulo = messageSource.getMessage(nombre + ".reporte.label", null, request.getLocale());
-            helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
-            helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
-            helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
+            String titulo = messageSource.getMessage(nombre + ".reporte.label",
+                    null, request.getLocale());
+            helper.setSubject(messageSource.getMessage(
+                    "envia.correo.titulo.message", new String[]{titulo},
+                    request.getLocale()));
+            helper.setText(messageSource.getMessage(
+                    "envia.correo.contenido.message", new String[]{titulo},
+                    request.getLocale()), true);
+            helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(
+                    archivo, tipoContenido));
             mailSender.send(message);
         } catch (JRException | MessagingException e) {
             throw new ReporteException("No se pudo generar el reporte", e);
@@ -366,6 +413,22 @@ public abstract class BaseController {
                 if (StringUtils.isNotBlank(values[0])) {
                     if (key.equals("pagina")) {
                         params.put(key, new Long(values[0]));
+                    } else if (key.equals("cuentaId")) {
+                        params.put(key, values[0]);
+                    } else if (key.endsWith("Ids")) {
+                        boolean tieneComas = false;
+                        List<Long> ids = new ArrayList<>();
+                        for (String x : values) {
+                            String[] y = StringUtils.split(x, ", ");
+                            for (String z : y) {
+                                ids.add(new Long(z.trim()));
+                                tieneComas = true;
+                            }
+                            if (!tieneComas) {
+                                ids.add(new Long(x.trim()));
+                            }
+                        }
+                        params.put(key, ids);
                     } else if (key.endsWith("Id")) {
                         params.put(key, new Long(values[0]));
                     } else {
@@ -373,7 +436,23 @@ public abstract class BaseController {
                     }
                 }
             } else if (values.length > 1) {
-                params.put(key, values);
+                if (key.endsWith("Ids")) {
+                    boolean tieneComas = false;
+                    List<Long> ids = new ArrayList<>();
+                    for (String x : values) {
+                        String[] y = StringUtils.split(x, ", ");
+                        for (String z : y) {
+                            ids.add(new Long(z.trim()));
+                            tieneComas = true;
+                        }
+                        if (!tieneComas) {
+                            ids.add(new Long(x.trim()));
+                        }
+                    }
+                    params.put(key, ids);
+                } else {
+                    params.put(key, values);
+                }
             }
         }
         return params;

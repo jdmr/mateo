@@ -72,7 +72,8 @@ public class OrganizacionDaoTest extends BaseTest {
         }
         Map<String, Object> params = null;
         Map<String, Object> result = instance.lista(params);
-        List<Organizacion> organizaciones = (List<Organizacion>) result.get("organizaciones");
+        @SuppressWarnings("unchecked")
+		List<Organizacion> organizaciones = (List<Organizacion>) result.get("organizaciones");
         Long cantidad = (Long) result.get("cantidad");
         assertEquals(10, organizaciones.size());
         assertTrue(20 <= cantidad);

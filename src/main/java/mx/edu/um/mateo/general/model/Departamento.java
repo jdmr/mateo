@@ -25,7 +25,15 @@ package mx.edu.um.mateo.general.model;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -35,10 +43,14 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Entity
 @Table(name = "departamentos", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"empresa_id", "nombre"})
-})
+    @UniqueConstraint(columnNames = {
+        "empresa_id", "nombre"})})
 public class Departamento implements Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = -4581820814072530102L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

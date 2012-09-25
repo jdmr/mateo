@@ -24,8 +24,25 @@
 package mx.edu.um.mateo.general.model;
 
 import java.io.Serializable;
-import java.util.*;
-import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Version;
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.validator.constraints.Email;
@@ -41,6 +58,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name = "usuarios")
 public class Usuario implements Serializable, UserDetails {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 3866041221691925369L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -82,11 +103,14 @@ public class Usuario implements Serializable, UserDetails {
     private Almacen almacen;
     @ManyToOne
     private Ejercicio ejercicio;
+    @ManyToMany
+    private Set<CentroCosto> centrosDeCosto;
 
     public Usuario() {
     }
 
-    public Usuario(String username, String password, String nombre, String apellido) {
+    public Usuario(String username, String password, String nombre,
+            String apellido) {
         this.username = username;
         this.password = password;
         this.nombre = nombre;
@@ -94,7 +118,8 @@ public class Usuario implements Serializable, UserDetails {
         this.correo = "test@test.com";
     }
 
-    public Usuario(String username, String password, String nombre, String apellido, String correo) {
+    public Usuario(String username, String password, String nombre,
+            String apellido, String correo) {
         this.username = username;
         this.password = password;
         this.nombre = nombre;
@@ -322,6 +347,20 @@ public class Usuario implements Serializable, UserDetails {
         this.ejercicio = ejercicio;
     }
 
+    /**
+     * @return the centrosDeCosto
+     */
+    public Set<CentroCosto> getCentrosDeCosto() {
+        return centrosDeCosto;
+    }
+
+    /**
+     * @param centrosDeCosto the centrosDeCosto to set
+     */
+    public void setCentrosDeCosto(Set<CentroCosto> centrosDeCosto) {
+        this.centrosDeCosto = centrosDeCosto;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -348,6 +387,7 @@ public class Usuario implements Serializable, UserDetails {
 
     @Override
     public String toString() {
-        return "Usuario{" + "username=" + username + ", nombre=" + nombre + ", apellido=" + apellido + '}';
+        return "Usuario{" + "username=" + username + ", nombre=" + nombre
+                + ", apellido=" + apellido + '}';
     }
 }

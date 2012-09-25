@@ -26,33 +26,37 @@ package mx.edu.um.mateo.inventario.utils;
 import mx.edu.um.mateo.inventario.model.Producto;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public class NoHayExistenciasSuficientes extends Exception {
-    private Producto producto;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5726096262163823038L;
+	private Producto producto;
 
-    public NoHayExistenciasSuficientes(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public NoHayExistenciasSuficientes(String message, Throwable cause) {
+		super(message, cause);
+	}
 
-    public NoHayExistenciasSuficientes(String message) {
-        super(message);
-    }
+	public NoHayExistenciasSuficientes(String message) {
+		super(message);
+	}
 
-    public NoHayExistenciasSuficientes() {
-    }
-    
-    public NoHayExistenciasSuficientes(String message, Producto producto) {
-        super(message);
-        this.producto = producto;
-    }
+	public NoHayExistenciasSuficientes() {
+	}
 
-    public Producto getProducto() {
-        return producto;
-    }
+	public NoHayExistenciasSuficientes(String message, Producto producto) {
+		super(message);
+		this.producto = producto;
+	}
 
-    public void setProducto(Producto producto) {
-        this.producto = producto;
-    }
+	public Producto getProducto() {
+		return producto;
+	}
+
+	public void setProducto(Producto producto) {
+		this.producto = producto;
+	}
 }

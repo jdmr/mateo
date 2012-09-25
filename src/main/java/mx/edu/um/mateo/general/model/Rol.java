@@ -25,7 +25,14 @@ package mx.edu.um.mateo.general.model;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.*;
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.IndexColumn;
 import org.springframework.security.core.GrantedAuthority;
@@ -39,6 +46,10 @@ import org.springframework.security.core.GrantedAuthority;
 @Cacheable
 public class Rol implements Serializable, GrantedAuthority {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = -6611766368311569317L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -46,8 +57,9 @@ public class Rol implements Serializable, GrantedAuthority {
     private Integer version;
     @NotNull
     @Column(unique = true, nullable = false, length = 128)
-    @IndexColumn(name="rol_authority_idx")
+    @IndexColumn(name = "rol_authority_idx")
     private String authority;
+    private Integer prioridad;
 
     public Rol() {
     }
@@ -97,6 +109,20 @@ public class Rol implements Serializable, GrantedAuthority {
      */
     public void setAuthority(String authority) {
         this.authority = authority;
+    }
+
+    /**
+     * @return the prioridad
+     */
+    public Integer getPrioridad() {
+        return prioridad;
+    }
+
+    /**
+     * @param prioridad the prioridad to set
+     */
+    public void setPrioridad(Integer prioridad) {
+        this.prioridad = prioridad;
     }
 
     @Override

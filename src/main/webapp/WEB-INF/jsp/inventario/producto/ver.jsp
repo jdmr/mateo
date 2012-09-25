@@ -131,7 +131,12 @@
                     </div>
                     <div class="span4">
                         <div class="row-fluid" class="span4">
-                            <p><img src="<c:url value='/imagen/producto/${producto.id}' />" /></p>
+                            <c:url value='/imagen/producto/${producto.id}' var="imagenUrl" />
+                            <p><a href="${imagenUrl}" target="_blank"><img src="${imagenUrl}" /></a></p>
+                            <p>
+                                <a href="${imagenUrl}" target="_blank" class="btn btn-primary span6"><s:message code="producto.imagen.ver.message" /></a>
+                                <a href="<c:url value='/inventario/producto/imagen/elimina/${producto.id}' />" class="btn btn-danger span6" onclick="return confirm('<s:message code="confirma.elimina.imagen.message" />');" ><s:message code="producto.imagen.elimina.message" /></a>
+                            </p>
                         </div>
                     </div>
                 </div>

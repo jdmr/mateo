@@ -67,6 +67,17 @@
                             <form:errors path="nombreCompleto" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
+                    <s:bind path="organizacion.centroCostoId">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="cuentaNombre">
+                                <s:message code="centroCosto.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <input type="hidden" name="cuentaId" id="cuentaId" value="${organizacion.centroCostoId}" />
+                            <input type="text" name="cuentaNombre" id="cuentaNombre" value="${organizacion.centroCostoId}" required="true" class="span8" />
+                            <form:errors path="centroCostoId" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
@@ -78,6 +89,15 @@
         <content>
             <script>
                 $(document).ready(function() {
+                    $('input#cuentaNombre').autocomplete({
+                        source: "<c:url value='/admin/organizacion/centrosDeCosto' />",
+                        select: function(event, ui) {
+                            $("input#cuentaId").val(ui.item.id);
+                            $("input#cuentaNombre").focus();
+                            return false;
+                        }
+                    });
+                    
                     $('input#codigo').focus();
                 });
             </script>                    

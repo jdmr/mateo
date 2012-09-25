@@ -38,6 +38,10 @@ import javax.persistence.ManyToOne;
 @Embeddable
 public class CCostoPK implements Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 3235516203373513172L;
     @ManyToOne(optional = false)
     @JoinColumns({
         @JoinColumn(name = "id_ejercicio"),
@@ -110,6 +114,7 @@ public class CCostoPK implements Serializable {
 
     @Override
     public String toString() {
-        return "CCostoPK{" + "ejercicio=" + ejercicio + ", idCosto=" + idCosto + '}';
+        return "CCostoPK{" + "ejercicio=" + ejercicio + ", idCosto=" + idCosto
+                + '}';
     }
 }

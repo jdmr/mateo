@@ -23,6 +23,7 @@
  */
 package mx.edu.um.mateo.general.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import mx.edu.um.mateo.contabilidad.dao.CentroCostoDao;
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.general.dao.EmpresaDao;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -44,7 +47,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -57,33 +65,32 @@ public class EmpresaController extends BaseController {
 
     @Autowired
     private EmpresaDao empresaDao;
+    @Autowired
+    private CentroCostoDao centroCostoDao;
 
+    @SuppressWarnings("unchecked")
     @RequestMapping
-    public String lista(HttpServletRequest request, HttpServletResponse response,
+    public String lista(HttpServletRequest request,
+            HttpServletResponse response,
             @RequestParam(required = false) String filtro,
             @RequestParam(required = false) Long pagina,
             @RequestParam(required = false) String tipo,
             @RequestParam(required = false) String correo,
             @RequestParam(required = false) String order,
-            @RequestParam(required = false) String sort,
-            Model modelo) {
+            @RequestParam(required = false) String sort, Model modelo) {
         log.debug("Mostrando lista de empresas");
-        Map<String, Object> params = new HashMap<>();
-        Long organizacionId = (Long) request.getSession().getAttribute("organizacionId");
+        Map<String, Object> params = this.convierteParams(request
+                .getParameterMap());
+        Long organizacionId = (Long) request.getSession().getAttribute(
+                "organizacionId");
         params.put("organizacion", organizacionId);
-        if (StringUtils.isNotBlank(filtro)) {
-            params.put("filtro", filtro);
-        }
-        if (StringUtils.isNotBlank(order)) {
-            params.put("order", order);
-            params.put("sort", sort);
-        }
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put("reporte", true);
             params = empresaDao.lista(params);
             try {
-                generaReporte(tipo, (List<Empresa>) params.get("empresas"), response, "empresas", Constantes.ORG, organizacionId);
+                generaReporte(tipo, (List<Empresa>) params.get("empresas"),
+                        response, "empresas", Constantes.ORG, organizacionId);
                 return null;
             } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -96,9 +103,15 @@ public class EmpresaController extends BaseController {
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<Empresa>) params.get("empresas"), request, "empresas", Constantes.ORG, organizacionId);
+                enviaCorreo(correo, (List<Empresa>) params.get("empresas"),
+                        request, "empresas", Constantes.ORG, organizacionId);
                 modelo.addAttribute("message", "lista.enviada.message");
-                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("empresa.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+                modelo.addAttribute(
+                        "messageAttrs",
+                        new String[]{
+                            messageSource.getMessage("empresa.lista.label",
+                            null, request.getLocale()),
+                            ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
@@ -130,7 +143,10 @@ public class EmpresaController extends BaseController {
     }
 
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpSession session, @Valid Empresa empresa, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String crea(HttpSession session, @Valid Empresa empresa,
+            BindingResult bindingResult, Errors errors, Model modelo,
+            RedirectAttributes redirectAttributes,
+            @RequestParam(value = "cuentaId", required = false) String centroDeCostoId) {
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
             for (ObjectError error : bindingResult.getAllErrors()) {
@@ -141,18 +157,27 @@ public class EmpresaController extends BaseController {
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
+            if (StringUtils.isNotBlank(centroDeCostoId)) {
+                CentroCosto centroCosto = centroCostoDao.obtiene(centroDeCostoId, usuario);
+                empresa.setCentroCosto(centroCosto);
+            }
+            
             empresa = empresaDao.crea(empresa, usuario);
 
             ambiente.actualizaSesion(session, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al empresa", e);
-            errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
-            errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
+            errors.rejectValue("codigo", "campo.duplicado.message",
+                    new String[]{"codigo"}, null);
+            errors.rejectValue("nombre", "campo.duplicado.message",
+                    new String[]{"nombre"}, null);
             return "admin/empresa/nueva";
         }
 
-        redirectAttributes.addFlashAttribute("message", "empresa.creada.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{empresa.getNombre()});
+        redirectAttributes.addFlashAttribute("message",
+                "empresa.creada.message");
+        redirectAttributes.addFlashAttribute("messageAttrs",
+                new String[]{empresa.getNombre()});
 
         return "redirect:/admin/empresa/ver/" + empresa.getId();
     }
@@ -166,7 +191,10 @@ public class EmpresaController extends BaseController {
     }
 
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpSession session, @Valid Empresa empresa, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String actualiza(HttpSession session, @Valid Empresa empresa,
+            BindingResult bindingResult, Errors errors, Model modelo,
+            RedirectAttributes redirectAttributes,
+            @RequestParam(value = "cuentaId", required = false) String centroDeCostoId) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
             for (ObjectError error : bindingResult.getAllErrors()) {
@@ -177,43 +205,82 @@ public class EmpresaController extends BaseController {
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
+            if (StringUtils.isNotBlank(centroDeCostoId)) {
+                CentroCosto centroCosto = centroCostoDao.obtiene(centroDeCostoId, usuario);
+                empresa.setCentroCosto(centroCosto);
+            }
+            
             empresa = empresaDao.actualiza(empresa, usuario);
 
             ambiente.actualizaSesion(session, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la empresa", e);
-            errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
-            errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
+            errors.rejectValue("codigo", "campo.duplicado.message",
+                    new String[]{"codigo"}, null);
+            errors.rejectValue("nombre", "campo.duplicado.message",
+                    new String[]{"nombre"}, null);
             return "admin/empresa/nueva";
         }
 
-        redirectAttributes.addFlashAttribute("message", "empresa.actualizada.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{empresa.getNombre()});
+        redirectAttributes.addFlashAttribute("message",
+                "empresa.actualizada.message");
+        redirectAttributes.addFlashAttribute("messageAttrs",
+                new String[]{empresa.getNombre()});
 
         return "redirect:/admin/empresa/ver/" + empresa.getId();
     }
 
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpSession session, @RequestParam Long id, Model modelo, @ModelAttribute Empresa empresa, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String elimina(HttpSession session, @RequestParam Long id,
+            Model modelo, @ModelAttribute Empresa empresa,
+            BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina empresa");
         try {
             String nombre = empresaDao.elimina(id);
 
             ambiente.actualizaSesion(session);
 
-            redirectAttributes.addFlashAttribute("message", "empresa.eliminada.message");
-            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
+            redirectAttributes.addFlashAttribute("message",
+                    "empresa.eliminada.message");
+            redirectAttributes.addFlashAttribute("messageAttrs",
+                    new String[]{nombre});
         } catch (UltimoException e) {
             log.error("No se pudo eliminar el empresa " + id, e);
-            bindingResult.addError(new ObjectError("empresa", new String[]{"ultima.empresa.no.eliminada.message"}, null, null));
+            bindingResult.addError(new ObjectError("empresa",
+                    new String[]{"ultima.empresa.no.eliminada.message"},
+                    null, null));
             return "admin/empresa/ver";
         } catch (Exception e) {
             log.error("No se pudo eliminar la empresa " + id, e);
-            bindingResult.addError(new ObjectError("empresa", new String[]{"empresa.no.eliminada.message"}, null, null));
+            bindingResult
+                    .addError(new ObjectError("empresa",
+                    new String[]{"empresa.no.eliminada.message"},
+                    null, null));
             return "admin/empresa/ver";
         }
 
         return "redirect:/admin/empresa";
     }
 
+    @RequestMapping(value = "/centrosDeCosto", params = "term", produces = "application/json")
+    public @ResponseBody
+    List<Map<String, String>> centrosDeCosto(HttpServletRequest request,
+            @RequestParam("term") String filtro) {
+        log.debug("Buscando Centros de Costo por {}", filtro);
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre,
+                    request.getParameterMap().get(nombre));
+        }
+
+        List<CentroCosto> centrosDeCosto = centroCostoDao.buscaPorOrganizacion(filtro, ambiente.obtieneUsuario());
+        List<Map<String, String>> resultados = new ArrayList<>();
+        for (CentroCosto centroCosto : centrosDeCosto) {
+            Map<String, String> map = new HashMap<>();
+            map.put("id", centroCosto.getId().getIdCosto());
+            map.put("value", centroCosto.getNombreCompleto());
+            resultados.add(map);
+        }
+
+        return resultados;
+    }
 }

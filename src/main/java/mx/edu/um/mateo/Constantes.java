@@ -5,7 +5,7 @@
 package mx.edu.um.mateo;
 
 /**
- *
+ * 
  * @author nujev
  */
 public class Constantes {
@@ -165,5 +165,5 @@ public class Constantes {
      */
     public static final String CONCEPTO_LIST = "conceptoList";
     public static final String CONCEPTO_KEY = "concepto";
-    
+ 
 }

@@ -29,7 +29,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.general.model.Empresa;
@@ -44,10 +59,13 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 @Table(name = "activos", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"folio", "empresa_id"}),
-    @UniqueConstraint(columnNames = {"codigo", "empresa_id"})
-})
+    @UniqueConstraint(columnNames = {"codigo", "empresa_id"})})
 public class Activo implements Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 6727133179931371107L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -159,7 +177,9 @@ public class Activo implements Serializable {
     public Activo() {
     }
 
-    public Activo(Long id, Integer version, BigDecimal moi, Date fechaCompra, BigDecimal porciento, Long vidaUtil, Boolean inactivo, Date fechaInactivo) {
+    public Activo(Long id, Integer version, BigDecimal moi, Date fechaCompra,
+            BigDecimal porciento, Long vidaUtil, Boolean inactivo,
+            Date fechaInactivo) {
         this.id = id;
         this.version = version;
         this.moi = moi;
@@ -170,7 +190,9 @@ public class Activo implements Serializable {
         this.fechaInactivo = fechaInactivo;
     }
 
-    public Activo(Long id, Integer version, BigDecimal moi, Date fechaCompra, BigDecimal porciento, Long vidaUtil, Boolean inactivo, Date fechaInactivo, Date fechaReubicado) {
+    public Activo(Long id, Integer version, BigDecimal moi, Date fechaCompra,
+            BigDecimal porciento, Long vidaUtil, Boolean inactivo,
+            Date fechaInactivo, Date fechaReubicado) {
         this.id = id;
         this.version = version;
         this.moi = moi;
@@ -182,7 +204,10 @@ public class Activo implements Serializable {
         this.fechaReubicado = fechaReubicado;
     }
 
-    public Activo(Long id, Integer version, BigDecimal moi, Date fechaCompra, BigDecimal porciento, Long vidaUtil, Boolean inactivo, Date fechaInactivo, Date fechaReubicado, String tipoActivoCuenta, String centroCostoCuenta) {
+    public Activo(Long id, Integer version, BigDecimal moi, Date fechaCompra,
+            BigDecimal porciento, Long vidaUtil, Boolean inactivo,
+            Date fechaInactivo, Date fechaReubicado, String tipoActivoCuenta,
+            String centroCostoCuenta) {
         this.id = id;
         this.version = version;
         this.moi = moi;
@@ -196,7 +221,10 @@ public class Activo implements Serializable {
         this.centroCostoCuenta = centroCostoCuenta;
     }
 
-    public Activo(Long id, Integer version, BigDecimal moi, Date fechaCompra, BigDecimal porciento, Long vidaUtil, Boolean inactivo, Date fechaInactivo, Date fechaReubicado, String tipoActivoCuenta, String centroCostoCuenta, String centroCostoNombre) {
+    public Activo(Long id, Integer version, BigDecimal moi, Date fechaCompra,
+            BigDecimal porciento, Long vidaUtil, Boolean inactivo,
+            Date fechaInactivo, Date fechaReubicado, String tipoActivoCuenta,
+            String centroCostoCuenta, String centroCostoNombre) {
         this.id = id;
         this.version = version;
         this.moi = moi;
@@ -211,7 +239,11 @@ public class Activo implements Serializable {
         this.centroCostoNombre = centroCostoNombre;
     }
 
-    public Activo(Date fechaCompra, Boolean seguro, Boolean garantia, String poliza, String codigo, String descripcion, String marca, String modelo, String serial, String responsable, String ubicacion, BigDecimal costo, TipoActivo tipoActivo, CentroCosto centroCosto, Proveedor proveedor, Empresa empresa) {
+    public Activo(Date fechaCompra, Boolean seguro, Boolean garantia,
+            String poliza, String codigo, String descripcion, String marca,
+            String modelo, String serial, String responsable, String ubicacion,
+            BigDecimal costo, TipoActivo tipoActivo, CentroCosto centroCosto,
+            Proveedor proveedor, Empresa empresa) {
         this.poliza = poliza;
         this.codigo = codigo;
         this.descripcion = descripcion;
@@ -230,7 +262,8 @@ public class Activo implements Serializable {
         this.moi = costo;
     }
 
-    public Activo(Long id, String descripcion, Date fechaCompra, String tipoActivoCuenta, String centroCostoCuenta, String codigo) {
+    public Activo(Long id, String descripcion, Date fechaCompra,
+            String tipoActivoCuenta, String centroCostoCuenta, String codigo) {
         this.id = id;
         this.descripcion = descripcion;
         this.fechaCompra = fechaCompra;

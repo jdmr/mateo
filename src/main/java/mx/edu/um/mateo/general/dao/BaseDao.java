@@ -32,22 +32,22 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public abstract class BaseDao {
-    protected final transient Logger log = LoggerFactory.getLogger(getClass());
-    @Autowired
-    @Qualifier("sessionFactory")
-    private SessionFactory sessionFactory;
-    
-    @Transactional
-    protected Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
-    
-    @Transactional
-    protected Session getSession() {
-        return sessionFactory.getCurrentSession();
-    }
+	protected final transient Logger log = LoggerFactory.getLogger(getClass());
+	@Autowired
+	@Qualifier("sessionFactory")
+	private SessionFactory sessionFactory;
+
+	@Transactional
+	protected Session currentSession() {
+		return sessionFactory.getCurrentSession();
+	}
+
+	@Transactional
+	protected Session getSession() {
+		return sessionFactory.getCurrentSession();
+	}
 }

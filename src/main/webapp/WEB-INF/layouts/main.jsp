@@ -13,21 +13,22 @@
     <head>
         <meta charset="utf-8">
         <title><s:message code="proyecto.nombre.label" /> - <sitemesh:write property='title'/></title>
-        <meta name="description" content="">
-        <meta name="author" content="">
+        <meta name="description" content="" />
+        <meta name="author" content="" />
 
         <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
         <!--[if lt IE 9]>
           <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->        
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="shortcut icon" href="<c:url value='/images/favicon.ico' />" type="image/x-icon">
-        <link rel="apple-touch-icon" href="<c:url value='/images/apple-touch-icon.png' />">
-        <link rel="apple-touch-icon" sizes="114x114" href="<c:url value='/images/apple-touch-icon-retina.png' />">
-        <link rel="stylesheet" href="<c:url value='/css/bootstrap.min.css' />" type="text/css">
-        <link rel="stylesheet" href="<c:url value='/css/bootstrap-responsive.min.css' />" type="text/css">
-        <link rel="stylesheet" href="<c:url value='/css/custom-theme/jquery-ui-1.8.17.custom.css' />" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="shortcut icon" href="<c:url value='/images/favicon.ico' />" type="image/x-icon" />
+        <link rel="apple-touch-icon" href="<c:url value='/images/apple-touch-icon.png' />" />
+        <link rel="apple-touch-icon" sizes="114x114" href="<c:url value='/images/apple-touch-icon-retina.png' />" />
+        <link rel="stylesheet" href="<c:url value='/css/bootstrap.min.css' />" type="text/css" />
+        <link rel="stylesheet" href="<c:url value='/css/bootstrap-responsive.min.css' />" type="text/css" />
+        <%--link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/themes/base/jquery-ui.css" type="text/css" media="all" /--%>
+        <link rel="stylesheet" href="<c:url value='/css/custom-theme/jquery-ui-1.8.23.custom.css' />" type="text/css"/>
         <sitemesh:write property='head'/>
         <link rel="stylesheet" href="<c:url value='/css/app.css' />" type="text/css">
     </head>
@@ -45,7 +46,7 @@
                         <sitemesh:write property="nav"/>
                         <p class="navbar-text pull-right">
                             <s:message code="mensaje.bienvenida" /> <a href="<c:url value='/perfil' />"><%= request.getUserPrincipal().getName()%></a> 
-                            <a href="<c:url value='/salir' />"><i class="icon-off icon-white"></i></a></p>
+                            <a href="<c:url value='/salir' />"><i class="icon-off"></i></a></p>
                     </div><!--/.nav-collapse -->
                 </div>
             </div>
@@ -70,11 +71,13 @@
         <!-- JavaScript at the bottom for fast page loading -->
 
         <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="<c:url value='/js/jquery-1.7.1.min.js'/>"><\/script>')</script>
+        <%--script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="<c:url value='/js/jquery-1.8.1.min.js'/>"><\/script>')</script--%>
 
         <!-- end scripts -->        
-        <script src="<c:url value='/js/jquery-ui-1.8.17.custom.min.js' />"></script>
+        <%--script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script--%>
+        <script src="<c:url value='/js/jquery-1.8.1.min.js' />"></script>
+        <script src="<c:url value='/js/jquery-ui-1.8.23.custom.min.js' />"></script>
         <script src="<c:url value='/js/i18n/jquery.ui.datepicker-es.min.js' />"></script>
         <script src="<c:url value='/js/bootstrap.min.js' />"></script>
         <script src="<c:url value='/js/app.js' />"></script>

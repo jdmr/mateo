@@ -24,16 +24,21 @@
 package mx.edu.um.mateo.activos.utils;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public class ActivoNoCreadoException extends Exception {
-    
-    public ActivoNoCreadoException(String message, Throwable e) {
-        super(message, e);
-    }
-    
-    public ActivoNoCreadoException(String message) {
-        super(message);
-    }
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1139496676056227204L;
+
+	public ActivoNoCreadoException(String message, Throwable e) {
+		super(message, e);
+	}
+
+	public ActivoNoCreadoException(String message) {
+		super(message);
+	}
 }

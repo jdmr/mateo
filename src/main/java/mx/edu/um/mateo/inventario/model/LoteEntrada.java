@@ -28,201 +28,228 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
 import java.util.Objects;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
 @Table(name = "lotes_entrada")
 public class LoteEntrada implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Version
-    private Integer version;
-    @Column(nullable = false, scale = 3, precision = 8)
-    private BigDecimal cantidad;
-    @Column(nullable = false, scale = 2, precision = 8, name = "precio_unitario")
-    private BigDecimal precioUnitario;
-    @Column(nullable = false, scale = 2, precision = 8)
-    private BigDecimal iva;
-    @ManyToOne(optional = false)
-    private Producto producto;
-    @ManyToOne(optional = false)
-    private Entrada entrada;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, name = "date_created")
-    private Date fechaCreacion;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -490719524396304687L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	@Version
+	private Integer version;
+	@Column(nullable = false, scale = 3, precision = 8)
+	private BigDecimal cantidad;
+	@Column(nullable = false, scale = 2, precision = 8, name = "precio_unitario")
+	private BigDecimal precioUnitario;
+	@Column(nullable = false, scale = 2, precision = 8)
+	private BigDecimal iva;
+	@ManyToOne(optional = false)
+	private Producto producto;
+	@ManyToOne(optional = false)
+	private Entrada entrada;
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false, name = "date_created")
+	private Date fechaCreacion;
 
-    public LoteEntrada() {
-    }
-    
-    public LoteEntrada(Entrada entrada) {
-        this.entrada = entrada;
-    }
+	public LoteEntrada() {
+	}
 
-    public LoteEntrada(BigDecimal cantidad, BigDecimal precioUnitario, Producto producto, Entrada entrada) {
-        this.cantidad = cantidad;
-        this.precioUnitario = precioUnitario;
-        this.producto = producto;
-        this.entrada = entrada;
-        this.fechaCreacion = new Date();
-    }
+	public LoteEntrada(Entrada entrada) {
+		this.entrada = entrada;
+	}
 
-    /**
-     * @return the id
-     */
-    public Long getId() {
-        return id;
-    }
+	public LoteEntrada(BigDecimal cantidad, BigDecimal precioUnitario,
+			Producto producto, Entrada entrada) {
+		this.cantidad = cantidad;
+		this.precioUnitario = precioUnitario;
+		this.producto = producto;
+		this.entrada = entrada;
+		this.fechaCreacion = new Date();
+	}
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
+	/**
+	 * @return the id
+	 */
+	public Long getId() {
+		return id;
+	}
 
-    /**
-     * @return the version
-     */
-    public Integer getVersion() {
-        return version;
-    }
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    /**
-     * @param version the version to set
-     */
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
+	/**
+	 * @return the version
+	 */
+	public Integer getVersion() {
+		return version;
+	}
 
-    /**
-     * @return the cantidad
-     */
-    public BigDecimal getCantidad() {
-        return cantidad;
-    }
+	/**
+	 * @param version
+	 *            the version to set
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
 
-    /**
-     * @param cantidad the cantidad to set
-     */
-    public void setCantidad(BigDecimal cantidad) {
-        this.cantidad = cantidad;
-    }
+	/**
+	 * @return the cantidad
+	 */
+	public BigDecimal getCantidad() {
+		return cantidad;
+	}
 
-    /**
-     * @return the precioUnitario
-     */
-    public BigDecimal getPrecioUnitario() {
-        return precioUnitario;
-    }
+	/**
+	 * @param cantidad
+	 *            the cantidad to set
+	 */
+	public void setCantidad(BigDecimal cantidad) {
+		this.cantidad = cantidad;
+	}
 
-    /**
-     * @param precioUnitario the precioUnitario to set
-     */
-    public void setPrecioUnitario(BigDecimal precioUnitario) {
-        this.precioUnitario = precioUnitario;
-    }
+	/**
+	 * @return the precioUnitario
+	 */
+	public BigDecimal getPrecioUnitario() {
+		return precioUnitario;
+	}
 
-    /**
-     * @return the iva
-     */
-    public BigDecimal getIva() {
-        return iva;
-    }
+	/**
+	 * @param precioUnitario
+	 *            the precioUnitario to set
+	 */
+	public void setPrecioUnitario(BigDecimal precioUnitario) {
+		this.precioUnitario = precioUnitario;
+	}
 
-    /**
-     * @param iva the iva to set
-     */
-    public void setIva(BigDecimal iva) {
-        this.iva = iva;
-    }
+	/**
+	 * @return the iva
+	 */
+	public BigDecimal getIva() {
+		return iva;
+	}
 
-    /**
-     * @return the producto
-     */
-    public Producto getProducto() {
-        return producto;
-    }
+	/**
+	 * @param iva
+	 *            the iva to set
+	 */
+	public void setIva(BigDecimal iva) {
+		this.iva = iva;
+	}
 
-    /**
-     * @param producto the producto to set
-     */
-    public void setProducto(Producto producto) {
-        this.producto = producto;
-    }
+	/**
+	 * @return the producto
+	 */
+	public Producto getProducto() {
+		return producto;
+	}
 
-    /**
-     * @return the entrada
-     */
-    public Entrada getEntrada() {
-        return entrada;
-    }
+	/**
+	 * @param producto
+	 *            the producto to set
+	 */
+	public void setProducto(Producto producto) {
+		this.producto = producto;
+	}
 
-    /**
-     * @param entrada the entrada to set
-     */
-    public void setEntrada(Entrada entrada) {
-        this.entrada = entrada;
-    }
+	/**
+	 * @return the entrada
+	 */
+	public Entrada getEntrada() {
+		return entrada;
+	}
 
-    /**
-     * @return the fechaCreacion
-     */
-    public Date getFechaCreacion() {
-        return fechaCreacion;
-    }
+	/**
+	 * @param entrada
+	 *            the entrada to set
+	 */
+	public void setEntrada(Entrada entrada) {
+		this.entrada = entrada;
+	}
 
-    /**
-     * @param fechaCreacion the fechaCreacion to set
-     */
-    public void setFechaCreacion(Date fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-    
-    public BigDecimal getTotal() {
-        BigDecimal total = iva.add(precioUnitario.multiply(cantidad)).setScale(2, RoundingMode.HALF_UP);
-        return total;
-    }
+	/**
+	 * @return the fechaCreacion
+	 */
+	public Date getFechaCreacion() {
+		return fechaCreacion;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final LoteEntrada other = (LoteEntrada) obj;
-        if (!Objects.equals(this.producto, other.producto)) {
-            return false;
-        }
-        if (!Objects.equals(this.entrada, other.entrada)) {
-            return false;
-        }
-        if (!Objects.equals(this.fechaCreacion, other.fechaCreacion)) {
-            return false;
-        }
-        return true;
-    }
+	/**
+	 * @param fechaCreacion
+	 *            the fechaCreacion to set
+	 */
+	public void setFechaCreacion(Date fechaCreacion) {
+		this.fechaCreacion = fechaCreacion;
+	}
 
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 19 * hash + Objects.hashCode(this.id);
-        hash = 19 * hash + Objects.hashCode(this.version);
-        hash = 19 * hash + Objects.hashCode(this.producto);
-        hash = 19 * hash + Objects.hashCode(this.entrada);
-        hash = 19 * hash + Objects.hashCode(this.fechaCreacion);
-        return hash;
-    }
+	public BigDecimal getTotal() {
+		BigDecimal total = iva.add(precioUnitario.multiply(cantidad)).setScale(
+				2, RoundingMode.HALF_UP);
+		return total;
+	}
 
-    @Override
-    public String toString() {
-        return "LoteEntrada{" + "cantidad=" + cantidad + ", precioUnitario=" + precioUnitario + ", iva=" + iva + ", producto=" + producto.getCodigo() + ", entrada=" + entrada.getFolio() + ", fechaCreacion=" + fechaCreacion + '}';
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		final LoteEntrada other = (LoteEntrada) obj;
+		if (!Objects.equals(this.producto, other.producto)) {
+			return false;
+		}
+		if (!Objects.equals(this.entrada, other.entrada)) {
+			return false;
+		}
+		if (!Objects.equals(this.fechaCreacion, other.fechaCreacion)) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 5;
+		hash = 19 * hash + Objects.hashCode(this.id);
+		hash = 19 * hash + Objects.hashCode(this.version);
+		hash = 19 * hash + Objects.hashCode(this.producto);
+		hash = 19 * hash + Objects.hashCode(this.entrada);
+		hash = 19 * hash + Objects.hashCode(this.fechaCreacion);
+		return hash;
+	}
+
+	@Override
+	public String toString() {
+		return "LoteEntrada{" + "cantidad=" + cantidad + ", precioUnitario="
+				+ precioUnitario + ", iva=" + iva + ", producto="
+				+ producto.getCodigo() + ", entrada=" + entrada.getFolio()
+				+ ", fechaCreacion=" + fechaCreacion + '}';
+	}
 }

@@ -24,7 +24,10 @@
 package mx.edu.um.mateo.general.dao.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.dao.EmpresaDao;
 import mx.edu.um.mateo.general.dao.ReporteDao;
@@ -56,7 +59,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class EmpresaDaoHibernate extends BaseDao implements EmpresaDao {
-    
+
     @Autowired
     private AlmacenDao almacenDao;
     @Autowired
@@ -92,15 +95,19 @@ public class EmpresaDaoHibernate extends BaseDao implements EmpresaDao {
         Criteria countCriteria = currentSession().createCriteria(Empresa.class);
 
         if (params.containsKey("organizacion")) {
-            criteria.createCriteria("organizacion").add(Restrictions.idEq(params.get("organizacion")));
-            countCriteria.createCriteria("organizacion").add(Restrictions.idEq(params.get("organizacion")));
+            criteria.createCriteria("organizacion").add(
+                    Restrictions.idEq(params.get("organizacion")));
+            countCriteria.createCriteria("organizacion").add(
+                    Restrictions.idEq(params.get("organizacion")));
         }
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("nombreCompleto", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("nombre", filtro,
+                    MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("nombreCompleto", filtro,
+                    MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -112,6 +119,8 @@ public class EmpresaDaoHibernate extends BaseDao implements EmpresaDao {
             } else {
                 criteria.addOrder(Order.asc(campo));
             }
+        } else {
+            criteria.addOrder(Order.asc("nombre"));
         }
 
         if (!params.containsKey("reporte")) {
@@ -139,18 +148,21 @@ public class EmpresaDaoHibernate extends BaseDao implements EmpresaDao {
             empresa.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         }
         session.save(empresa);
-        Almacen almacen = new Almacen("CT","CENTRAL", empresa);
+        Almacen almacen = new Almacen("CT", "CENTRAL", empresa);
         almacen = almacenDao.crea(almacen, usuario);
         if (usuario != null) {
             usuario.setEmpresa(empresa);
             usuario.setAlmacen(almacen);
             session.update(usuario);
         }
-        Proveedor proveedor = new Proveedor(empresa.getNombre(), empresa.getNombreCompleto(), empresa.getRfc(), true, empresa);
+        Proveedor proveedor = new Proveedor(empresa.getNombre(),
+                empresa.getNombreCompleto(), empresa.getRfc(), true, empresa);
         session.save(proveedor);
         TipoCliente tipoCliente = new TipoCliente("TIPO1", "TIPO1", empresa);
         session.save(tipoCliente);
-        Cliente cliente = new Cliente(empresa.getNombre(), empresa.getNombreCompleto(), empresa.getRfc(), tipoCliente, true, empresa);
+        Cliente cliente = new Cliente(empresa.getNombre(),
+                empresa.getNombreCompleto(), empresa.getRfc(), tipoCliente,
+                true, empresa);
         session.save(cliente);
         reporteDao.inicializaEmpresa(empresa);
         session.refresh(empresa);
@@ -181,7 +193,8 @@ public class EmpresaDaoHibernate extends BaseDao implements EmpresaDao {
 
             // Actualiza proveedor
             log.debug("Actualizando proveedor");
-            Query query = session.createQuery("select p from Proveedor p where p.empresa.id = :empresaId and p.base is true");
+            Query query = session
+                    .createQuery("select p from Proveedor p where p.empresa.id = :empresaId and p.base is true");
             query.setLong("empresaId", empresa.getId());
             Proveedor proveedor = (Proveedor) query.uniqueResult();
             log.debug("{}", proveedor);
@@ -192,7 +205,8 @@ public class EmpresaDaoHibernate extends BaseDao implements EmpresaDao {
 
             // Actualiza cliente
             log.debug("Actualizando cliente");
-            query = session.createQuery("select c from Cliente c where c.empresa.id = :empresaId and c.base is true");
+            query = session
+                    .createQuery("select c from Cliente c where c.empresa.id = :empresaId and c.base is true");
             query.setLong("empresaId", empresa.getId());
             Cliente cliente = (Cliente) query.uniqueResult();
             cliente.setNombre(empresa.getNombre());
@@ -204,7 +218,8 @@ public class EmpresaDaoHibernate extends BaseDao implements EmpresaDao {
                 session.merge(empresa);
             } catch (Exception ex) {
                 log.error("No se pudo actualizar la empresa", ex);
-                throw new RuntimeException("No se pudo actualizar la empresa", ex);
+                throw new RuntimeException("No se pudo actualizar la empresa",
+                        ex);
             }
         }
         if (usuario != null) {
@@ -231,7 +246,8 @@ public class EmpresaDaoHibernate extends BaseDao implements EmpresaDao {
             currentSession().delete(empresa);
             return nombre;
         } else {
-            throw new UltimoException("No se puede eliminar porque es el ultimo");
+            throw new UltimoException(
+                    "No se puede eliminar porque es el ultimo");
         }
     }
 }

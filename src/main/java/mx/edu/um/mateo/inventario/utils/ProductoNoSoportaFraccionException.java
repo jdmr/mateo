@@ -24,20 +24,25 @@
 package mx.edu.um.mateo.inventario.utils;
 
 /**
- *
+ * 
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public class ProductoNoSoportaFraccionException extends Exception {
 
-    public ProductoNoSoportaFraccionException() {
-    }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8946643856924475273L;
 
-    public ProductoNoSoportaFraccionException(String message) {
-        super(message);
-    }
+	public ProductoNoSoportaFraccionException() {
+	}
 
-    public ProductoNoSoportaFraccionException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public ProductoNoSoportaFraccionException(String message) {
+		super(message);
+	}
+
+	public ProductoNoSoportaFraccionException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

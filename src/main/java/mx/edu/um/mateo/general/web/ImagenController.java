@@ -45,37 +45,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/imagen")
 public class ImagenController {
 
-    private static final Logger log = LoggerFactory.getLogger(ImagenController.class);
+    private static final Logger log = LoggerFactory
+            .getLogger(ImagenController.class);
     @Autowired
     private SessionFactory sessionFactory;
 
     @RequestMapping("/mostrar/{id}")
-    public String mostrar(HttpServletRequest request, HttpServletResponse response, @PathVariable Long id) {
-        log.debug("Mostrando imagen {}",id);
-        Imagen imagen = (Imagen)currentSession().get(Imagen.class, id);
+    public String mostrar(HttpServletRequest request,
+            HttpServletResponse response, @PathVariable Long id) {
+        log.debug("Mostrando imagen {}", id);
+        Imagen imagen = (Imagen) currentSession().get(Imagen.class, id);
         if (imagen != null) {
             response.setContentType(imagen.getTipoContenido());
             response.setContentLength(imagen.getTamano().intValue());
             try {
                 response.getOutputStream().write(imagen.getArchivo());
             } catch (IOException e) {
-                log.error("No se pudo escribir el archivo",e);
-                throw new RuntimeException("No se pudo escribir el archivo en el outputstream");
+                log.error("No se pudo escribir el archivo", e);
+                throw new RuntimeException(
+                        "No se pudo escribir el archivo en el outputstream");
             }
         } else {
             try {
-                response.sendRedirect(request.getContextPath()+"/images/sin-foto.jpg");
-            } catch(IOException e) {
+                response.sendRedirect(request.getContextPath()
+                        + "/images/sin-foto.jpg");
+            } catch (IOException e) {
                 log.error("No se pudo obtener la imagen", e);
             }
         }
         return null;
     }
-    
+
     @RequestMapping("/producto/{id}")
-    public String producto(HttpServletRequest request, HttpServletResponse response, @PathVariable Long id) {
+    public String producto(HttpServletRequest request,
+            HttpServletResponse response, @PathVariable Long id) {
         log.debug("Buscando imagen del producto {}", id);
-        Query query = currentSession().createQuery("select imagen from Producto p left outer join p.imagenes as imagen where p.id = :productoId");
+        Query query = currentSession()
+                .createQuery(
+                "select imagen from Producto p left outer join p.imagenes as imagen where p.id = :productoId");
         query.setLong("productoId", id);
         Imagen imagen = (Imagen) query.uniqueResult();
         if (imagen != null) {
@@ -84,19 +91,21 @@ public class ImagenController {
             try {
                 response.getOutputStream().write(imagen.getArchivo());
             } catch (IOException e) {
-                log.error("No se pudo escribir el archivo",e);
-                throw new RuntimeException("No se pudo escribir el archivo en el outputstream");
+                log.error("No se pudo escribir el archivo", e);
+                throw new RuntimeException(
+                        "No se pudo escribir el archivo en el outputstream");
             }
         } else {
             try {
-                response.sendRedirect(request.getContextPath()+"/images/sin-foto.jpg");
-            } catch(IOException e) {
+                response.sendRedirect(request.getContextPath()
+                        + "/images/sin-foto.jpg");
+            } catch (IOException e) {
                 log.error("No se pudo obtener la imagen", e);
             }
         }
         return null;
     }
-    
+
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }

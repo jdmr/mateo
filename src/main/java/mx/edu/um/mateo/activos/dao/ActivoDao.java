@@ -25,12 +25,10 @@ package mx.edu.um.mateo.activos.dao;
 
 import java.io.OutputStream;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.activos.model.Activo;
 import mx.edu.um.mateo.activos.model.BajaActivo;
 import mx.edu.um.mateo.activos.model.ReubicacionActivo;
-import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.general.model.Usuario;
 
 /**
@@ -55,25 +53,39 @@ public interface ActivoDao {
 
     public void depreciar(Date fecha, Long empresaId);
 
-    public List<CentroCosto> centrosDeCosto(Usuario usuario);
-
     public void subeImagen(Activo activo, Usuario usuario);
 
     public String reubica(ReubicacionActivo reubicacion, Usuario usuario);
 
-    public void sube(byte[] datos, Usuario usuario, OutputStream out, Integer codigo);
+    public void sube(byte[] datos, Usuario usuario, OutputStream out,
+            Integer codigo);
 
-    public Map<String, Object> depreciacionAcumuladaPorCentroDeCosto(Map<String, Object> params);
+    public Map<String, Object> depreciacionAcumuladaPorCentroDeCosto(
+            Map<String, Object> params);
 
-    public Map<String, Object> depreciacionAcumuladaPorCentroDeCostoDetalle(Map<String, Object> params);
+    public Map<String, Object> depreciacionAcumuladaPorCentroDeCostoDetalle(
+            Map<String, Object> params);
 
-    public Map<String, Object> depreciacionMensualPorCentroDeCosto(Map<String, Object> params);
+    public Map<String, Object> depreciacionMensualPorCentroDeCosto(
+            Map<String, Object> params);
 
-    public Map<String, Object> depreciacionMensualPorCentroDeCostoDetalle(Map<String, Object> params);
+    public Map<String, Object> depreciacionMensualPorCentroDeCostoDetalle(
+            Map<String, Object> params);
 
-    public Map<String, Object> depreciacionAcumuladaPorTipoActivo(Map<String, Object> params);
+    public Map<String, Object> depreciacionAcumuladaPorTipoActivo(
+            Map<String, Object> params);
 
-    public Map<String, Object> depreciacionAcumuladaPorTipoActivoDetalle(Map<String, Object> params);
+    public Map<String, Object> depreciacionAcumuladaPorTipoActivoDetalle(
+            Map<String, Object> params);
 
     public Map<String, Object> reporteDIA(Integer anio, Usuario obtieneUsuario);
+
+    public void hojaCalculoDepreciacion(Map<String, Object> params);
+
+    public Map<String, Object> concentradoDepreciacionPorCentroDeCosto(
+            Map<String, Object> params);
+
+    public void hojaCalculoConcentradoDepreciacion(Map<String, Object> params);
+    
+    public String eliminaImagen(Long activoId, Long imagenId, Usuario usuario);
 }

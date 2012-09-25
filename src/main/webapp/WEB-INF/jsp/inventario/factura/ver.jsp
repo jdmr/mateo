@@ -78,13 +78,13 @@
                             </div>
                         </form>
                     </c:if>
-                    <table class="table table-striped">
+                    <table class="table table-striped table-hover">
                         <thead>
                             <tr>
                                 <th><s:message code="folio.label" /></th>
                                 <th><s:message code="fecha.label" /></th>
                                 <th style="text-align: right;"><s:message code="iva.label" /></th>
-                                <th style="text-align: right;"><s:message code="total.label" /></th>
+                                <th style="text-align: right;"><s:message code="subtotal.label" /></th>
                                 <c:if test="${puedeEditar}">
                                     <th><s:message code="acciones.label" /></th>
                                 </c:if>
@@ -96,7 +96,7 @@
                                     <td>${salida.folio}</td>
                                     <td>${salida.fechaCreacion}</td>
                                     <td style="text-align: right;">${salida.iva}</td>
-                                    <td style="text-align: right;">${salida.total}</td>
+                                    <td style="text-align: right;">${salida.subtotal}</td>
                                     <c:if test="${puedeEditar}">
                                         <td>
                                             <a href="<c:url value='/inventario/factura/salida/elimina/${factura.id}/${salida.id}' />" class="btn btn-mini btn-danger"><i class="icon-remove icon-white"></i></a>
@@ -145,13 +145,13 @@
                             </div>
                         </form>
                     </c:if>
-                    <table class="table table-striped">
+                    <table class="table table-striped table-hover">
                         <thead>
                             <tr>
                                 <th><s:message code="folio.label" /></th>
                                 <th><s:message code="fechaFactura.label" /></th>
                                 <th style="text-align: right;"><s:message code="iva.label" /></th>
-                                <th style="text-align: right;"><s:message code="total.label" /></th>
+                                <th style="text-align: right;"><s:message code="subtotal.label" /></th>
                                 <c:if test="${puedeEditar}">
                                     <th><s:message code="acciones.label" /></th>
                                 </c:if>
@@ -163,7 +163,7 @@
                                     <td>${entrada.folio}</td>
                                     <td>${entrada.fechaFactura}</td>
                                     <td style="text-align: right;">${entrada.iva}</td>
-                                    <td style="text-align: right;">${entrada.total}</td>
+                                    <td style="text-align: right;">${entrada.subtotal}</td>
                                     <c:if test="${puedeEditar}">
                                         <td>
                                             <a href="<c:url value='/inventario/factura/entrada/elimina/${factura.id}/${entrada.id}' />" class="btn btn-mini btn-danger"><i class="icon-remove icon-white"></i></a>
@@ -228,7 +228,9 @@
                 $(document).ready(function() {
                     $('input#nuevaSalida')
                         .autocomplete({
-                            source: "<c:url value='/inventario/factura/buscaSalida' />",
+                            source: function(request, response) {
+                                $.getJSON("<c:url value='/inventario/factura/buscaSalida' />", {term:request.term, facturaId: ${factura.id}}, response);
+                            },
                             select: function(event, ui) {
                                 $("input#salidaId").val(ui.item.id);
                                 $("input#nuevaSalida").val(ui.item.nombre);
@@ -239,7 +241,9 @@
                         
                     $('input#nuevaEntrada')
                         .autocomplete({
-                            source: "<c:url value='/inventario/factura/buscaEntrada' />",
+                            source: function(request, response) {
+                                $.getJSON("<c:url value='/inventario/factura/buscaEntrada' />", {term:request.term, facturaId: ${factura.id}}, response);
+                            },
                             select: function(event, ui) {
                                 $("input#entradaId").val(ui.item.id);
                                 $("input#nuevaEntrada").val(ui.item.nombre);

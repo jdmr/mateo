@@ -23,6 +23,7 @@
  */
 package mx.edu.um.mateo.general.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import mx.edu.um.mateo.contabilidad.dao.CentroCostoDao;
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.general.dao.OrganizacionDao;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -44,7 +47,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -57,16 +65,20 @@ public class OrganizacionController extends BaseController {
 
     @Autowired
     private OrganizacionDao organizacionDao;
+    
+    @Autowired
+    private CentroCostoDao centroCostoDao;
 
+    @SuppressWarnings("unchecked")
     @RequestMapping
-    public String lista(HttpServletRequest request, HttpServletResponse response,
+    public String lista(HttpServletRequest request,
+            HttpServletResponse response,
             @RequestParam(required = false) String filtro,
             @RequestParam(required = false) Long pagina,
             @RequestParam(required = false) String tipo,
             @RequestParam(required = false) String correo,
             @RequestParam(required = false) String order,
-            @RequestParam(required = false) String sort,
-            Model modelo) {
+            @RequestParam(required = false) String sort, Model modelo) {
         log.debug("Mostrando lista de organizaciones");
         Map<String, Object> params = new HashMap<>();
         if (StringUtils.isNotBlank(filtro)) {
@@ -84,7 +96,9 @@ public class OrganizacionController extends BaseController {
             params.put("reporte", true);
             params = organizacionDao.lista(params);
             try {
-                generaReporte(tipo, (List<Organizacion>) params.get("organizaciones"), response, "organizaciones", Constantes.ADMIN, null);
+                generaReporte(tipo,
+                        (List<Organizacion>) params.get("organizaciones"),
+                        response, "organizaciones", Constantes.ADMIN, null);
                 return null;
             } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -97,9 +111,17 @@ public class OrganizacionController extends BaseController {
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<Organizacion>) params.get("organizaciones"), request, "organizaciones", Constantes.ADMIN, null);
+                enviaCorreo(correo,
+                        (List<Organizacion>) params.get("organizaciones"),
+                        request, "organizaciones", Constantes.ADMIN, null);
                 modelo.addAttribute("message", "lista.enviada.message");
-                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("organizacion.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+                modelo.addAttribute(
+                        "messageAttrs",
+                        new String[]{
+                            messageSource.getMessage(
+                            "organizacion.lista.label", null,
+                            request.getLocale()),
+                            ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
@@ -131,7 +153,10 @@ public class OrganizacionController extends BaseController {
     }
 
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpSession session, @Valid Organizacion organizacion, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String crea(HttpSession session, @Valid Organizacion organizacion,
+            BindingResult bindingResult, Errors errors, Model modelo,
+            RedirectAttributes redirectAttributes,
+            @RequestParam(value = "cuentaId", required = false) String centroDeCostoId) {
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
             return "admin/organizacion/nuevo";
@@ -142,18 +167,25 @@ public class OrganizacionController extends BaseController {
             if (ambiente.obtieneUsuario() != null) {
                 usuario = ambiente.obtieneUsuario();
             }
+            if (StringUtils.isNotBlank(centroDeCostoId)) {
+                organizacion.setCentroCostoId(centroDeCostoId);
+            }
             organizacion = organizacionDao.crea(organizacion, usuario);
 
             ambiente.actualizaSesion(session, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al organizacion", e);
-            errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
-            errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
+            errors.rejectValue("codigo", "campo.duplicado.message",
+                    new String[]{"codigo"}, null);
+            errors.rejectValue("nombre", "campo.duplicado.message",
+                    new String[]{"nombre"}, null);
             return "admin/organizacion/nuevo";
         }
 
-        redirectAttributes.addFlashAttribute("message", "organizacion.creada.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{organizacion.getNombre()});
+        redirectAttributes.addFlashAttribute("message",
+                "organizacion.creada.message");
+        redirectAttributes.addFlashAttribute("messageAttrs",
+                new String[]{organizacion.getNombre()});
 
         return "redirect:/admin/organizacion/ver/" + organizacion.getId();
     }
@@ -167,7 +199,10 @@ public class OrganizacionController extends BaseController {
     }
 
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpSession session, @Valid Organizacion organizacion, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String actualiza(HttpSession session,
+            @Valid Organizacion organizacion, BindingResult bindingResult,
+            Errors errors, Model modelo, RedirectAttributes redirectAttributes,
+            @RequestParam(value = "cuentaId", required = false) String centroDeCostoId) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
             return "admin/organizacion/edita";
@@ -178,43 +213,81 @@ public class OrganizacionController extends BaseController {
             if (ambiente.obtieneUsuario() != null) {
                 usuario = ambiente.obtieneUsuario();
             }
+            if (StringUtils.isNotBlank(centroDeCostoId)) {
+                organizacion.setCentroCostoId(centroDeCostoId);
+            }
             organizacion = organizacionDao.actualiza(organizacion, usuario);
 
             ambiente.actualizaSesion(session, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al organizacion", e);
-            errors.rejectValue("codigo", "campo.duplicado.message", new String[]{"codigo"}, null);
-            errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
+            errors.rejectValue("codigo", "campo.duplicado.message",
+                    new String[]{"codigo"}, null);
+            errors.rejectValue("nombre", "campo.duplicado.message",
+                    new String[]{"nombre"}, null);
             return "admin/organizacion/nuevo";
         }
 
-        redirectAttributes.addFlashAttribute("message", "organizacion.actualizada.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{organizacion.getNombre()});
+        redirectAttributes.addFlashAttribute("message",
+                "organizacion.actualizada.message");
+        redirectAttributes.addFlashAttribute("messageAttrs",
+                new String[]{organizacion.getNombre()});
 
         return "redirect:/admin/organizacion/ver/" + organizacion.getId();
     }
 
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpSession session, @RequestParam Long id, Model modelo, @ModelAttribute Organizacion organizacion, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String elimina(HttpSession session, @RequestParam Long id,
+            Model modelo, @ModelAttribute Organizacion organizacion,
+            BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina organizacion");
         try {
             String nombre = organizacionDao.elimina(id);
 
             ambiente.actualizaSesion(session);
 
-            redirectAttributes.addFlashAttribute("message", "organizacion.eliminada.message");
-            redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
+            redirectAttributes.addFlashAttribute("message",
+                    "organizacion.eliminada.message");
+            redirectAttributes.addFlashAttribute("messageAttrs",
+                    new String[]{nombre});
         } catch (UltimoException e) {
             log.error("No se pudo eliminar el organizacion " + id, e);
-            bindingResult.addError(new ObjectError("organizacion", new String[]{"ultima.organizacion.no.eliminada.message"}, null, null));
+            bindingResult
+                    .addError(new ObjectError(
+                    "organizacion",
+                    new String[]{"ultima.organizacion.no.eliminada.message"},
+                    null, null));
             return "admin/organizacion/ver";
         } catch (Exception e) {
             log.error("No se pudo eliminar el organizacion " + id, e);
-            bindingResult.addError(new ObjectError("organizacion", new String[]{"organizacion.no.eliminada.message"}, null, null));
+            bindingResult.addError(new ObjectError("organizacion",
+                    new String[]{"organizacion.no.eliminada.message"}, null,
+                    null));
             return "admin/organizacion/ver";
         }
 
         return "redirect:/admin/organizacion";
     }
 
+    @RequestMapping(value = "/centrosDeCosto", params = "term", produces = "application/json")
+    public @ResponseBody
+    List<Map<String, String>> centrosDeCosto(HttpServletRequest request,
+            @RequestParam("term") String filtro) {
+        log.debug("Buscando Centros de Costo por {}", filtro);
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre,
+                    request.getParameterMap().get(nombre));
+        }
+
+        List<CentroCosto> centrosDeCosto = centroCostoDao.busca(filtro, ambiente.obtieneUsuario());
+        List<Map<String, String>> resultados = new ArrayList<>();
+        for (CentroCosto centroCosto : centrosDeCosto) {
+            Map<String, String> map = new HashMap<>();
+            map.put("id", centroCosto.getId().getIdCosto());
+            map.put("value", centroCosto.getNombreCompleto());
+            resultados.add(map);
+        }
+
+        return resultados;
+    }
 }

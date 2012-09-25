@@ -26,11 +26,13 @@ package mx.edu.um.mateo.contabilidad.dao.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import mx.edu.um.mateo.contabilidad.dao.EjercicioDao;
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.contabilidad.model.EjercicioPK;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
+
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Query;
@@ -74,18 +76,23 @@ public class EjercicioDaoHibernate extends BaseDao implements EjercicioDao {
             params.put("offset", 0);
         }
         Criteria criteria = currentSession().createCriteria(Ejercicio.class);
-        Criteria countCriteria = currentSession().createCriteria(Ejercicio.class);
+        Criteria countCriteria = currentSession().createCriteria(
+                Ejercicio.class);
 
         if (params.containsKey("organizacion")) {
-            criteria.add(Restrictions.eq("id.organizacion.id", params.get("organizacion")));
-            countCriteria.add(Restrictions.eq("id.organizacion.id", params.get("organizacion")));
+            criteria.add(Restrictions.eq("id.organizacion.id",
+                    params.get("organizacion")));
+            countCriteria.add(Restrictions.eq("id.organizacion.id",
+                    params.get("organizacion")));
         }
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("id.idEjercicio", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("nombre", filtro,
+                    MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("id.idEjercicio", filtro,
+                    MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -115,7 +122,8 @@ public class EjercicioDaoHibernate extends BaseDao implements EjercicioDao {
 
     @Override
     public Ejercicio obtiene(EjercicioPK id) {
-        Ejercicio ejercicio = (Ejercicio) currentSession().get(Ejercicio.class, id);
+        Ejercicio ejercicio = (Ejercicio) currentSession().get(Ejercicio.class,
+                id);
         return ejercicio;
     }
 
@@ -123,7 +131,8 @@ public class EjercicioDaoHibernate extends BaseDao implements EjercicioDao {
     public Ejercicio crea(Ejercicio ejercicio, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
-            ejercicio.getId().setOrganizacion(usuario.getEmpresa().getOrganizacion());
+            ejercicio.getId().setOrganizacion(
+                    usuario.getEmpresa().getOrganizacion());
         }
         session.save(ejercicio);
         session.flush();
@@ -147,7 +156,8 @@ public class EjercicioDaoHibernate extends BaseDao implements EjercicioDao {
     public Ejercicio actualiza(Ejercicio ejercicio, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
-            ejercicio.getId().setOrganizacion(usuario.getEmpresa().getOrganizacion());
+            ejercicio.getId().setOrganizacion(
+                    usuario.getEmpresa().getOrganizacion());
         }
         try {
             // Actualiza la ejercicio
@@ -160,7 +170,8 @@ public class EjercicioDaoHibernate extends BaseDao implements EjercicioDao {
                 session.flush();
             } catch (Exception ex) {
                 log.error("No se pudo actualizar la ejercicio", ex);
-                throw new RuntimeException("No se pudo actualizar la ejercicio", ex);
+                throw new RuntimeException(
+                        "No se pudo actualizar la ejercicio", ex);
             }
         }
         return ejercicio;
@@ -172,5 +183,12 @@ public class EjercicioDaoHibernate extends BaseDao implements EjercicioDao {
         String nombre = ejercicio.getNombre();
         currentSession().delete(ejercicio);
         return nombre;
+    }
+
+    @Override
+    public List<Ejercicio> lista(Long organizacionId) {
+        Query query = currentSession().createQuery("select e from Ejercicio e where e.id.organizacion.id = :organizacionId");
+        query.setLong("organizacionId", organizacionId);
+        return query.list();
     }
 }

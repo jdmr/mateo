@@ -26,7 +26,16 @@ package mx.edu.um.mateo.activos.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
 import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.general.model.Empresa;
 import org.hibernate.validator.constraints.NotBlank;
@@ -39,32 +48,38 @@ import org.hibernate.validator.constraints.NotBlank;
 @Table(name = "reubicaciones_activo")
 public class ReubicacionActivo implements Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = -8138985945224150169L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Version
     private Integer version;
     @NotBlank
-    @Column(nullable = false, length=64)
+    @Column(nullable = false, length = 64)
     private String creador;
-    @Column(length=200)
+    @Column(length = 200)
     private String comentarios;
     @ManyToOne(optional = false)
     private Activo activo;
     @ManyToOne(optional = false)
     private CentroCosto centroCosto;
     @ManyToOne(optional = false)
+    private CentroCosto centroCostoAnterior;
+    @ManyToOne(optional = false)
     private Empresa empresa;
     @Temporal(TemporalType.DATE)
     @Column(nullable = false)
     private Date fecha;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false, name="date_created")
+    @Column(nullable = false, name = "date_created")
     private Date fechaCreacion;
 
     public ReubicacionActivo() {
     }
-    
+
     public ReubicacionActivo(Activo activo, Date fecha) {
         this.activo = activo;
         this.fecha = fecha;
@@ -196,6 +211,20 @@ public class ReubicacionActivo implements Serializable {
         this.fechaCreacion = fechaCreacion;
     }
 
+    /**
+     * @return the centroCostoAnterior
+     */
+    public CentroCosto getCentroCostoAnterior() {
+        return centroCostoAnterior;
+    }
+
+    /**
+     * @param centroCostoAnterior the centroCostoAnterior to set
+     */
+    public void setCentroCostoAnterior(CentroCosto centroCostoAnterior) {
+        this.centroCostoAnterior = centroCostoAnterior;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -228,6 +257,8 @@ public class ReubicacionActivo implements Serializable {
 
     @Override
     public String toString() {
-        return "ReubicacionActivo{" + "creador=" + creador + ", comentarios=" + comentarios + ", activo=" + activo + ", centroCosto=" + centroCosto + ", fecha=" + fecha + '}';
+        return "ReubicacionActivo{" + "creador=" + creador + ", comentarios="
+                + comentarios + ", activo=" + activo + ", centroCosto="
+                + centroCosto + ", fecha=" + fecha + '}';
     }
 }

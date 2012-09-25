@@ -23,6 +23,9 @@
  */
 package mx.edu.um.mateo.general.web;
 
+import java.util.List;
+import mx.edu.um.mateo.contabilidad.dao.EjercicioDao;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.general.dao.OrganizacionDao;
 import mx.edu.um.mateo.general.dao.RolDao;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
@@ -66,6 +69,8 @@ public class UsuarioControllerTest {
     private RolDao rolDao;
     @Autowired
     private WebApplicationContext wac;
+    @Autowired
+    private EjercicioDao ejercicioDao;
     private MockMvc mockMvc;
 
     public UsuarioControllerTest() {
@@ -115,6 +120,8 @@ public class UsuarioControllerTest {
                 break actualizaUsuario;
             }
         }
+        List<Ejercicio> ejercicios = ejercicioDao.lista(organizacion.getId());
+        usuario.setEjercicio(ejercicios.get(0));
         usuario = usuarioDao.crea(usuario, almacenId, new String[]{rol.getAuthority()});
         Long id = usuario.getId();
         this.mockMvc.perform(get("/admin/usuario/ver/"+id))
@@ -125,10 +132,12 @@ public class UsuarioControllerTest {
                 ;
     }
 
-    // TODO: Arreglar prueba
+    @Test
     public void debieraCrearUsuario() throws Exception {
         Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
         organizacion = organizacionDao.crea(organizacion);
+        List<Ejercicio> ejercicios = ejercicioDao.lista(organizacion.getId());
+        Ejercicio ejercicio = ejercicios.get(0);
         Rol rol = new Rol("ROLE_USER");
         rolDao.crea(rol);
         Long almacenId = 0l;
@@ -142,11 +151,13 @@ public class UsuarioControllerTest {
         this.mockMvc.perform(post("/admin/usuario/crea")
                 .sessionAttr("almacenId", almacenId)
                 .param("username", "test--01@test.com")
+                .param("correo", "test--01@test.com")
                 .param("nombre", "TEST--01")
                 .param("apellido","TEST--01")
+                .param("enviaCorreo", "false")
+                .param("ejercicio.id.idEjercicio", ejercicio.getId().getIdEjercicio())
                 )
                 .andExpect(status().isOk())
-                .andExpect(redirectedUrl("/admin/usuario/ver/1"))
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message","usuario.creado.message"))
                 ;

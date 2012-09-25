@@ -18,7 +18,7 @@
 
         <c:if test="${productos != null}">
             <h2><s:message code="producto.lista.label" /></h2>
-            <table id="productos" class="table table-striped">
+            <table id="productos" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th><s:message code="sku.label" /></th>
@@ -50,7 +50,7 @@
             
         <c:if test="${productosCancelados != null}">
             <h2><s:message code="producto.con.historia.label" /></h2>
-            <table id="productos" class="table table-striped">
+            <table id="productos" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th><s:message code="sku.label" /></th>
@@ -82,7 +82,7 @@
             
         <c:if test="${productosSinHistoria != null}">
             <h2><s:message code="producto.sin.historia.label" /></h2>
-            <table id="productos" class="table table-striped">
+            <table id="productos" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th><s:message code="sku.label" /></th>
@@ -114,7 +114,7 @@
             
         <c:if test="${entradas != null}">
             <h2><s:message code="entrada.lista.label" /></h2>
-            <table id="productos" class="table table-striped">
+            <table id="productos" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th><s:message code="folio.label" /></th>
@@ -144,7 +144,7 @@
             
         <c:if test="${salidas != null}">
             <h2><s:message code="salida.lista.label" /></h2>
-            <table id="productos" class="table table-striped">
+            <table id="productos" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <th><s:message code="folio.label" /></th>

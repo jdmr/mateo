@@ -25,6 +25,7 @@ package mx.edu.um.mateo.inventario.dao;
 
 import java.math.BigDecimal;
 import java.util.*;
+
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inventario.model.*;
@@ -84,7 +85,8 @@ public class SalidaDaoTest {
     /**
      * Test of lista method, of class SalidaDao.
      */
-    @Test
+    @SuppressWarnings("unchecked")
+	@Test
     public void debieraMostrarListaDeSalidas() {
         log.debug("Debiera mostrar lista de salidas");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
@@ -106,7 +108,7 @@ public class SalidaDaoTest {
         }
         Map<String, Object> params = new HashMap<>();
         params.put("almacen", almacen.getId());
-        Map result = instance.lista(params);
+        Map<String, Object> result = instance.lista(params);
         assertNotNull(result.get("salidas"));
         assertNotNull(result.get("cantidad"));
         assertEquals(10, ((List<Salida>) result.get("salidas")).size());
