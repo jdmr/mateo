@@ -29,7 +29,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -39,7 +38,6 @@ import mx.edu.um.mateo.inventario.model.HistorialProducto;
 import mx.edu.um.mateo.inventario.model.Producto;
 import mx.edu.um.mateo.inventario.model.TipoProducto;
 import mx.edu.um.mateo.inventario.model.XProducto;
-
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -217,16 +215,8 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
         Session session = currentSession();
         Producto producto = (Producto) session
                 .get(Producto.class, otro.getId());
-        producto.setVersion(otro.getVersion());
-        producto.setCodigo(otro.getCodigo());
-        producto.setDescripcion(otro.getDescripcion());
-        producto.setFraccion(otro.getFraccion());
-        producto.setIva(otro.getIva());
-        producto.setMarca(otro.getMarca());
-        producto.setNombre(otro.getNombre());
-        producto.setSku(otro.getSku());
-        producto.setTiempoEntrega(otro.getTiempoEntrega());
-        producto.setUnidadMedida(otro.getUnidadMedida());
+        BeanUtils.copyProperties(otro, producto, new String[]{"id", "version", "precioUnitario", "ultimoPrecio", "existencia", "puntoReorden", "tipoProducto", "almacen", "imagenes", "fechaCreacion", "fechaInactivo", "inactivo"
+                });
         producto.setTipoProducto((TipoProducto) session.get(TipoProducto.class,
                 otro.getTipoProducto().getId()));
         if (otro.getInactivo()
@@ -244,6 +234,9 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
             producto.getImagenes().clear();
             producto.getImagenes().add(otro.getImagenes().get(0));
             session.delete(imagen);
+            session.flush();
+        } else {
+           producto.getImagenes().add(otro.getImagenes().get(0));
         }
         session.update(producto);
         audita(producto, usuario, Constantes.ACTUALIZAR, fecha);
@@ -453,5 +446,16 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
         }
         currentSession().flush();
         log.debug("Se arreglaron {} de {}", cont, productos.size());
+    }
+
+    @Override
+    public String eliminaImagen(Long productoId, Usuario usuario) {
+        log.debug("Elimina imagenes de producto {}", productoId);
+        Producto producto = (Producto) currentSession().get(Producto.class, productoId);
+        String nombre = producto.getNombre();
+        producto.getImagenes().clear();
+        currentSession().update(producto);
+        currentSession().flush();
+        return nombre;
     }
 }
