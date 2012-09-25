@@ -161,7 +161,7 @@ public class ConceptoController extends BaseController {
             //concepto = conceptoManager.crea(concepto, usuario);
             conceptoManager.graba(concepto);
 
-            ambiente.actualizaSesion(request, usuario);
+            ambiente.actualizaSesion(request.getSession(), usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al concepto", e);
             /**
@@ -208,7 +208,7 @@ public class ConceptoController extends BaseController {
             //concepto = conceptoManager.graba(concepto, usuario);
             conceptoManager.graba(concepto);
 
-            ambiente.actualizaSesion(request, usuario);
+            ambiente.actualizaSesion(request.getSession(), usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el concepto", e);
             errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
@@ -229,7 +229,7 @@ public class ConceptoController extends BaseController {
             //String nombre = conceptoManager.elimina(id, empresaId);
              String nombre = conceptoManager.elimina(id);
 
-            ambiente.actualizaSesion(request);
+            ambiente.actualizaSesion(request.getSession());
 
             redirectAttributes.addFlashAttribute("message", "concepto.eliminado.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});

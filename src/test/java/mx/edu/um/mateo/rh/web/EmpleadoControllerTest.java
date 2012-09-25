@@ -43,8 +43,8 @@ public class EmpleadoControllerTest extends BaseTest {
     @Autowired
     private WebApplicationContext wac;
     private MockMvc mockMvc;
-    @Autowired
-    private EmpleadoDao empleadoDao;
+//    @Autowired
+//    private EmpleadoDao empleadoDao;
 
     public EmpleadoControllerTest() {
     }
