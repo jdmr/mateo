@@ -25,7 +25,6 @@ package mx.edu.um.mateo.general.model;
 
 import java.io.Serializable;
 import java.util.Objects;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,136 +34,130 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
-
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
-
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- * 
+ *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
-@Table(name = "departamentos", uniqueConstraints = { @UniqueConstraint(columnNames = {
-		"empresa_id", "nombre" }) })
+@Table(name = "departamentos", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {
+        "empresa_id", "nombre"})})
 public class Departamento implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4581820814072530102L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	@Version
-	private Integer version;
-	@NotBlank
-	@Column(nullable = false, length = 64)
-	private String nombre;
-	@ManyToOne(optional = false)
-	private CuentaMayor cuenta;
-	@ManyToOne(optional = false)
-	private Empresa empresa;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -4581820814072530102L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Version
+    private Integer version;
+    @NotBlank
+    @Column(nullable = false, length = 64)
+    private String nombre;
+    @ManyToOne(optional = false)
+    private CuentaMayor cuenta;
+    @ManyToOne(optional = false)
+    private Empresa empresa;
 
-	public Departamento() {
-	}
+    public Departamento() {
+    }
 
-	/**
-	 * @return the id
-	 */
-	public Long getId() {
-		return id;
-	}
+    /**
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(Long id) {
-		this.id = id;
-	}
+    /**
+     * @param id the id to set
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	/**
-	 * @return the version
-	 */
-	public Integer getVersion() {
-		return version;
-	}
+    /**
+     * @return the version
+     */
+    public Integer getVersion() {
+        return version;
+    }
 
-	/**
-	 * @param version
-	 *            the version to set
-	 */
-	public void setVersion(Integer version) {
-		this.version = version;
-	}
+    /**
+     * @param version the version to set
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 
-	/**
-	 * @return the nombre
-	 */
-	public String getNombre() {
-		return nombre;
-	}
+    /**
+     * @return the nombre
+     */
+    public String getNombre() {
+        return nombre;
+    }
 
-	/**
-	 * @param nombre
-	 *            the nombre to set
-	 */
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+    /**
+     * @param nombre the nombre to set
+     */
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-	/**
-	 * @return the cuenta
-	 */
-	public CuentaMayor getCuenta() {
-		return cuenta;
-	}
+    /**
+     * @return the cuenta
+     */
+    public CuentaMayor getCuenta() {
+        return cuenta;
+    }
 
-	/**
-	 * @param cuenta
-	 *            the cuenta to set
-	 */
-	public void setCuenta(CuentaMayor cuenta) {
-		this.cuenta = cuenta;
-	}
+    /**
+     * @param cuenta the cuenta to set
+     */
+    public void setCuenta(CuentaMayor cuenta) {
+        this.cuenta = cuenta;
+    }
 
-	/**
-	 * @return the empresa
-	 */
-	public Empresa getEmpresa() {
-		return empresa;
-	}
+    /**
+     * @return the empresa
+     */
+    public Empresa getEmpresa() {
+        return empresa;
+    }
 
-	/**
-	 * @param empresa
-	 *            the empresa to set
-	 */
-	public void setEmpresa(Empresa empresa) {
-		this.empresa = empresa;
-	}
+    /**
+     * @param empresa the empresa to set
+     */
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final Departamento other = (Departamento) obj;
-		if (!Objects.equals(this.nombre, other.nombre)) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Departamento other = (Departamento) obj;
+        if (!Objects.equals(this.nombre, other.nombre)) {
+            return false;
+        }
+        return true;
+    }
 
-	@Override
-	public int hashCode() {
-		int hash = 7;
-		hash = 23 * hash + Objects.hashCode(this.id);
-		hash = 23 * hash + Objects.hashCode(this.version);
-		hash = 23 * hash + Objects.hashCode(this.nombre);
-		return hash;
-	}
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 23 * hash + Objects.hashCode(this.id);
+        hash = 23 * hash + Objects.hashCode(this.version);
+        hash = 23 * hash + Objects.hashCode(this.nombre);
+        return hash;
+    }
 }

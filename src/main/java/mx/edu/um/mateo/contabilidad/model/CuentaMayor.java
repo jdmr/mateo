@@ -25,239 +25,227 @@ package mx.edu.um.mateo.contabilidad.model;
 
 import java.io.Serializable;
 import java.util.Objects;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
-
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
- * 
+ *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Entity
 @Table(name = "cont_ctamayor")
 public class CuentaMayor implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6640176472960675938L;
-	@Id
-	private CtaMayorPK id;
-	@Version
-	private Integer version;
-	@NotBlank
-	@Column(length = 60, nullable = false)
-	private String nombre;
-	@NotBlank
-	@Column(name = "nombrefiscal", length = 60, nullable = false)
-	private String nombreFiscal;
-	@Column(length = 2, nullable = false)
-	private String detalle;
-	@NotBlank
-	@Column(length = 1, nullable = false)
-	private String aviso;
-	@NotBlank
-	@Column(length = 1, nullable = false)
-	private String auxiliar;
-	@NotBlank
-	@Column(length = 2, nullable = false)
-	private String iva;
-	@NotNull
-	@Column(name = "pctiva", nullable = false)
-	private Long pctIVA;
-	@NotBlank
-	@Column(length = 2, nullable = false)
-	private String detaller;
+    /**
+     *
+     */
+    private static final long serialVersionUID = -6640176472960675938L;
+    @Id
+    private CtaMayorPK id;
+    @Version
+    private Integer version;
+    @NotBlank
+    @Column(length = 60, nullable = false)
+    private String nombre;
+    @NotBlank
+    @Column(name = "nombrefiscal", length = 60, nullable = false)
+    private String nombreFiscal;
+    @Column(length = 2, nullable = false)
+    private String detalle;
+    @NotBlank
+    @Column(length = 1, nullable = false)
+    private String aviso;
+    @NotBlank
+    @Column(length = 1, nullable = false)
+    private String auxiliar;
+    @NotBlank
+    @Column(length = 2, nullable = false)
+    private String iva;
+    @NotNull
+    @Column(name = "pctiva", nullable = false)
+    private Long pctIVA;
+    @NotBlank
+    @Column(length = 2, nullable = false)
+    private String detaller;
 
-	public CuentaMayor() {
-	}
+    public CuentaMayor() {
+    }
 
-	/**
-	 * @return the id
-	 */
-	public CtaMayorPK getId() {
-		return id;
-	}
+    /**
+     * @return the id
+     */
+    public CtaMayorPK getId() {
+        return id;
+    }
 
-	/**
-	 * @param id
-	 *            the id to set
-	 */
-	public void setId(CtaMayorPK id) {
-		this.id = id;
-	}
+    /**
+     * @param id the id to set
+     */
+    public void setId(CtaMayorPK id) {
+        this.id = id;
+    }
 
-	/**
-	 * @return the version
-	 */
-	public Integer getVersion() {
-		return version;
-	}
+    /**
+     * @return the version
+     */
+    public Integer getVersion() {
+        return version;
+    }
 
-	/**
-	 * @param version
-	 *            the version to set
-	 */
-	public void setVersion(Integer version) {
-		this.version = version;
-	}
+    /**
+     * @param version the version to set
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
 
-	/**
-	 * @return the nombre
-	 */
-	public String getNombre() {
-		return nombre;
-	}
+    /**
+     * @return the nombre
+     */
+    public String getNombre() {
+        return nombre;
+    }
 
-	/**
-	 * @param nombre
-	 *            the nombre to set
-	 */
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+    /**
+     * @param nombre the nombre to set
+     */
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-	/**
-	 * @return the nombreFiscal
-	 */
-	public String getNombreFiscal() {
-		return nombreFiscal;
-	}
+    /**
+     * @return the nombreFiscal
+     */
+    public String getNombreFiscal() {
+        return nombreFiscal;
+    }
 
-	/**
-	 * @param nombreFiscal
-	 *            the nombreFiscal to set
-	 */
-	public void setNombreFiscal(String nombreFiscal) {
-		this.nombreFiscal = nombreFiscal;
-	}
+    /**
+     * @param nombreFiscal the nombreFiscal to set
+     */
+    public void setNombreFiscal(String nombreFiscal) {
+        this.nombreFiscal = nombreFiscal;
+    }
 
-	/**
-	 * @return the detalle
-	 */
-	public String getDetalle() {
-		return detalle;
-	}
+    /**
+     * @return the detalle
+     */
+    public String getDetalle() {
+        return detalle;
+    }
 
-	/**
-	 * @param detalle
-	 *            the detalle to set
-	 */
-	public void setDetalle(String detalle) {
-		this.detalle = detalle;
-	}
+    /**
+     * @param detalle the detalle to set
+     */
+    public void setDetalle(String detalle) {
+        this.detalle = detalle;
+    }
 
-	/**
-	 * @return the aviso
-	 */
-	public String getAviso() {
-		return aviso;
-	}
+    /**
+     * @return the aviso
+     */
+    public String getAviso() {
+        return aviso;
+    }
 
-	/**
-	 * @param aviso
-	 *            the aviso to set
-	 */
-	public void setAviso(String aviso) {
-		this.aviso = aviso;
-	}
+    /**
+     * @param aviso the aviso to set
+     */
+    public void setAviso(String aviso) {
+        this.aviso = aviso;
+    }
 
-	/**
-	 * @return the auxiliar
-	 */
-	public String getAuxiliar() {
-		return auxiliar;
-	}
+    /**
+     * @return the auxiliar
+     */
+    public String getAuxiliar() {
+        return auxiliar;
+    }
 
-	/**
-	 * @param auxiliar
-	 *            the auxiliar to set
-	 */
-	public void setAuxiliar(String auxiliar) {
-		this.auxiliar = auxiliar;
-	}
+    /**
+     * @param auxiliar the auxiliar to set
+     */
+    public void setAuxiliar(String auxiliar) {
+        this.auxiliar = auxiliar;
+    }
 
-	/**
-	 * @return the iva
-	 */
-	public String getIva() {
-		return iva;
-	}
+    /**
+     * @return the iva
+     */
+    public String getIva() {
+        return iva;
+    }
 
-	/**
-	 * @param iva
-	 *            the iva to set
-	 */
-	public void setIva(String iva) {
-		this.iva = iva;
-	}
+    /**
+     * @param iva the iva to set
+     */
+    public void setIva(String iva) {
+        this.iva = iva;
+    }
 
-	/**
-	 * @return the pctIVA
-	 */
-	public Long getPctIVA() {
-		return pctIVA;
-	}
+    /**
+     * @return the pctIVA
+     */
+    public Long getPctIVA() {
+        return pctIVA;
+    }
 
-	/**
-	 * @param pctIVA
-	 *            the pctIVA to set
-	 */
-	public void setPctIVA(Long pctIVA) {
-		this.pctIVA = pctIVA;
-	}
+    /**
+     * @param pctIVA the pctIVA to set
+     */
+    public void setPctIVA(Long pctIVA) {
+        this.pctIVA = pctIVA;
+    }
 
-	/**
-	 * @return the detaller
-	 */
-	public String getDetaller() {
-		return detaller;
-	}
+    /**
+     * @return the detaller
+     */
+    public String getDetaller() {
+        return detaller;
+    }
 
-	/**
-	 * @param detaller
-	 *            the detaller to set
-	 */
-	public void setDetaller(String detaller) {
-		this.detaller = detaller;
-	}
+    /**
+     * @param detaller the detaller to set
+     */
+    public void setDetaller(String detaller) {
+        this.detaller = detaller;
+    }
 
-	@Override
-	public int hashCode() {
-		int hash = 7;
-		hash = 73 * hash + Objects.hashCode(this.id);
-		hash = 73 * hash + Objects.hashCode(this.version);
-		hash = 73 * hash + Objects.hashCode(this.nombre);
-		return hash;
-	}
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 73 * hash + Objects.hashCode(this.id);
+        hash = 73 * hash + Objects.hashCode(this.version);
+        hash = 73 * hash + Objects.hashCode(this.nombre);
+        return hash;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final CuentaMayor other = (CuentaMayor) obj;
-		if (!Objects.equals(this.id, other.id)) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final CuentaMayor other = (CuentaMayor) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        return true;
+    }
 
-	@Override
-	public String toString() {
-		return "CtaMayor{" + "id=" + id + ", version=" + version + ", nombre="
-				+ nombre + ", nombreFiscal=" + nombreFiscal + ", detalle="
-				+ detalle + ", aviso=" + aviso + ", auxiliar=" + auxiliar
-				+ ", iva=" + iva + ", pctIVA=" + pctIVA + ", detaller="
-				+ detaller + '}';
-	}
+    @Override
+    public String toString() {
+        return "CtaMayor{" + "id=" + id + ", version=" + version + ", nombre="
+                + nombre + ", nombreFiscal=" + nombreFiscal + ", detalle="
+                + detalle + ", aviso=" + aviso + ", auxiliar=" + auxiliar
+                + ", iva=" + iva + ", pctIVA=" + pctIVA + ", detaller="
+                + detaller + '}';
+    }
 }

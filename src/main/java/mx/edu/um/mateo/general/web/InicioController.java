@@ -21,33 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package mx.edu.um.mateo.general.web;
 
+import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * 
+ *
  * @author jdmr
  */
 @Controller
 public class InicioController {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(InicioController.class);
+    private static final Logger log = LoggerFactory
+            .getLogger(InicioController.class);
 
-	@RequestMapping({ "/", "/inicio" })
-	public String inicio() {
-		log.debug("Cargando pagina de inicio");
-		return "inicio/index";
-	}
+    @RequestMapping({"/", "/inicio"})
+    public String inicio(HttpServletRequest request) {
+        log.debug("Cargando pagina de inicio");
+        if (request.isUserInRole("ROLE_JEFE")) {
+            return "redirect:/jefe";
+        }
+        return "inicio/index";
+    }
 
-	@RequestMapping("/login/auth")
-	public String otraEntrada() {
-		log.debug("Entrando por entrada anterior");
-		return "redirect:/inicio";
-	}
+    @RequestMapping("/login/auth")
+    public String otraEntrada() {
+        log.debug("Entrando por entrada anterior");
+        return "redirect:/inicio";
+    }
 }

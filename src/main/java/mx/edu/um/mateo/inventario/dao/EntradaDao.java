@@ -25,7 +25,6 @@ package mx.edu.um.mateo.inventario.dao;
 
 import java.util.List;
 import java.util.Map;
-
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inventario.model.Cancelacion;
 import mx.edu.um.mateo.inventario.model.Entrada;
@@ -45,7 +44,7 @@ public interface EntradaDao {
 
 	public Map<String, Object> lista(Map<String, Object> params);
 
-	public List<Entrada> buscaEntradasPorFactura(Map<String, Object> params);
+	public List<Entrada> buscaEntradasParaFactura(Map<String, Object> params);
 
 	public Entrada obtiene(Long id);
 

@@ -33,6 +33,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -97,6 +98,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de activos con params {}", params);
         if (params == null) {
@@ -121,6 +123,9 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         Criteria criteria = currentSession().createCriteria(Activo.class);
         Criteria countCriteria = currentSession().createCriteria(Activo.class);
 
+        criteria.createAlias("tipoActivo", "ta");
+        countCriteria.createAlias("tipoActivo", "ta");
+
         if (params.containsKey("empresa")) {
             criteria.createCriteria("empresa").add(
                     Restrictions.idEq(params.get("empresa")));
@@ -128,18 +133,16 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                     Restrictions.idEq(params.get("empresa")));
         }
 
-        if (params.containsKey("tipoActivoId")) {
-            criteria.createCriteria("tipoActivo").add(
-                    Restrictions.idEq(params.get("tipoActivoId")));
-            countCriteria.createCriteria("tipoActivo").add(
-                    Restrictions.idEq(params.get("tipoActivoId")));
+        if (params.containsKey("tipoActivoIds")) {
+            criteria.add(Restrictions.in("ta.id", (List) params.get("tipoActivoIds")));
+            countCriteria.add(Restrictions.in("ta.id", (List) params.get("tipoActivoIds")));
         }
 
         if (params.containsKey("cuentaId")) {
-            criteria.createCriteria("cuenta").add(
-                    Restrictions.idEq(params.get("cuentaId")));
-            countCriteria.createCriteria("cuenta").add(
-                    Restrictions.idEq(params.get("cuentaId")));
+            criteria.createCriteria("centroCosto").add(
+                    Restrictions.eq("id.idCosto", params.get("cuentaId")));
+            countCriteria.createCriteria("centroCosto").add(
+                    Restrictions.eq("id.idCosto", params.get("cuentaId")));
         }
 
         if (params.containsKey("proveedorId")) {
@@ -259,6 +262,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         }
 
         if (params.containsKey("order")) {
+            criteria.addOrder(Order.asc("ta.cuenta.id.idCtaMayor"));
             String campo = (String) params.get("order");
             if (params.get("sort").equals("desc")) {
                 criteria.addOrder(Order.desc(campo));
@@ -266,6 +270,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                 criteria.addOrder(Order.asc(campo));
             }
         } else {
+            criteria.addOrder(Order.asc("ta.cuenta.id.idCtaMayor"));
             criteria.addOrder(Order.desc("folio"));
         }
 
@@ -311,6 +316,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Activo obtiene(Long id) {
         Activo activo = (Activo) currentSession().get(Activo.class, id);
         return activo;
@@ -411,7 +417,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         log.trace("DepreciacionMensual: {}", depreciacionMensual);
 
         // depreciacion acumulada
-        BigDecimal depreciacionAcumulada = BigDecimal.ZERO;
+        BigDecimal depreciacionAcumulada;
         Long meses = 0L;
         if ((fechaCompra.before(fecha) && !activo.getInactivo())
                 || (fechaCompra.before(fecha) && activo.getInactivo() && activo
@@ -424,6 +430,8 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         if (meses < activo.getVidaUtil()) {
             depreciacionAcumulada = depreciacionMensual
                     .multiply(new BigDecimal(meses));
+        } else {
+            depreciacionAcumulada = activo.getMoi();
         }
         log.trace("DepreciacionAcumulada: {}", depreciacionAcumulada);
 
@@ -723,18 +731,6 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public List<CentroCosto> centrosDeCosto(Usuario usuario) {
-        Criteria criteria = currentSession().createCriteria(CentroCosto.class);
-        criteria.add(Restrictions.eq("id.ejercicio.id.organizacion.id", usuario
-                .getEjercicio().getId().getOrganizacion().getId()));
-        criteria.add(Restrictions.eq("id.ejercicio.id.idEjercicio", usuario
-                .getEjercicio().getId().getIdEjercicio()));
-        criteria.addOrder(Order.asc("id.idCosto"));
-        return criteria.list();
-    }
-
-    @Override
     public void subeImagen(Activo activo, Usuario usuario) {
         log.debug("Subiendo imagen");
         Date fecha = new Date();
@@ -749,13 +745,12 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         log.debug("Reubicando activo {}", reubicacion.getActivo());
         Date fecha = new Date();
 
-        CCostoPK pk = new CCostoPK(usuario.getEjercicio(), reubicacion
-                .getCentroCosto().getId().getIdCosto());
-        CentroCosto centroCosto = (CentroCosto) currentSession().load(
-                CentroCosto.class, pk);
+        CentroCosto centroCosto = reubicacion.getCentroCosto();
 
         Activo activo = reubicacion.getActivo();
         currentSession().refresh(activo);
+        reubicacion.setCentroCostoAnterior(activo.getCentroCosto());
+
         activo.setCentroCosto(centroCosto);
         activo.setFechaModificacion(fecha);
         activo.setFechaReubicado(reubicacion.getFecha());
@@ -1428,6 +1423,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
 
     @Override
     @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
     public Map<String, Object> depreciacionAcumuladaPorCentroDeCosto(
             Map<String, Object> params) {
         Usuario usuario = (Usuario) params.get("usuario");
@@ -1459,7 +1455,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         Map<String, Map<String, Object>> mapa1 = new TreeMap<>();
         Query query = currentSession()
                 .createQuery(
-                "select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha");
+                "select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha and a.fechaReubicado is null");
         query.setLong("empresaId", usuario.getEmpresa().getId());
         query.setDate("fecha", fecha);
         List<Activo> activos = query.list();
@@ -1467,45 +1463,47 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             log.trace("Depreciando activo {}", activo.getId());
             activo = this.deprecia(activo, fecha);
 
-            Map<String, Object> mapa2 = mapa1
-                    .get(activo.getCentroCostoCuenta());
-            Map<String, BigDecimal> mapa3;
-            if (mapa2 == null) {
-                mapa2 = new HashMap<>();
-                mapa3 = new HashMap<>();
-                for (Map<String, Object> tipoActivo : tiposDeActivo) {
-                    mapa3.put((String) tipoActivo.get("cuenta"),
-                            BigDecimal.ZERO);
+            this.depreciacionAcumuladaPorCentroDeCosto(activo, mc, mapa1, tiposDeActivo, tiposDeActivoMap);
+        }
+
+        // Busca activos reubicados
+        query = currentSession()
+                .createQuery(
+                "select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha and a.fechaReubicado != null");
+        query.setLong("empresaId", usuario.getEmpresa().getId());
+        query.setDate("fecha", fecha);
+        activos = query.list();
+        for (Activo activo : activos) {
+            query = currentSession().createQuery("select r from ReubicacionActivo r where r.activo.id = :activoId order by r.fecha");
+            query.setLong("activoId", activo.getId());
+            List<ReubicacionActivo> reubicaciones = query.list();
+            Date fechaAnterior = null;
+            boolean bandera1 = true;
+            for (ReubicacionActivo reubicacion : reubicaciones) {
+                if (reubicacion.getFecha().before(fecha)) {
+                    activo.setCentroCosto(reubicacion.getCentroCostoAnterior());
+                    if (fechaAnterior != null) {
+                        activo.setFechaCompra(fechaAnterior);
+                    }
+                    this.deprecia(activo, reubicacion.getFecha());
+                    fechaAnterior = reubicacion.getFecha();
+                } else {
+                    if (fechaAnterior != null) {
+                        activo.setFechaCompra(fechaAnterior);
+                    }
+                    activo.setCentroCosto(reubicacion.getCentroCostoAnterior());
+                    this.deprecia(activo, fecha);
+                    bandera1 = false;
                 }
-                mapa3.put("TOTAL", BigDecimal.ZERO);
-                mapa2.put("totales", mapa3);
-                mapa2.put("cuenta", activo.getCentroCostoCuenta());
-                mapa2.put("nombre", activo.getCentroCostoNombre());
-                mapa1.put(activo.getCentroCostoCuenta(), mapa2);
+
+                this.depreciacionAcumuladaPorCentroDeCosto(activo, mc, mapa1, tiposDeActivo, tiposDeActivoMap);
             }
 
-            mapa3 = (Map<String, BigDecimal>) mapa2.get("totales");
-
-            BigDecimal cantidad = mapa3.get(activo.getTipoActivoCuenta());
-            cantidad = cantidad.add(activo.getDepreciacionAcumulada(), mc);
-            mapa3.put(activo.getTipoActivoCuenta(), cantidad);
-
-            Map<String, Object> tipoActivo = (Map<String, Object>) tiposDeActivoMap
-                    .get(activo.getTipoActivoCuenta());
-            BigDecimal total = (BigDecimal) tipoActivo.get("total");
-            total = total.add(activo.getDepreciacionAcumulada(), mc);
-            tipoActivo.put("total", total);
-
-            // Totales
-            cantidad = mapa3.get("TOTAL");
-            cantidad = cantidad.add(activo.getDepreciacionAcumulada(), mc);
-            mapa3.put("TOTAL", cantidad);
-
-            tipoActivo = (Map<String, Object>) tiposDeActivoMap.get("TOTAL");
-            total = (BigDecimal) tipoActivo.get("total");
-            total = total.add(activo.getDepreciacionAcumulada(), mc);
-            tipoActivo.put("total", total);
-
+            if (bandera1) {
+                activo.setFechaCompra(activo.getFechaReubicado());
+                this.deprecia(activo, fecha);
+                this.depreciacionAcumuladaPorCentroDeCosto(activo, mc, mapa1, tiposDeActivo, tiposDeActivoMap);
+            }
         }
 
         if (log.isTraceEnabled()) {
@@ -1519,8 +1517,50 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         return params;
     }
 
+    private void depreciacionAcumuladaPorCentroDeCosto(Activo activo, MathContext mc, Map<String, Map<String, Object>> mapa1, List<Map<String, Object>> tiposDeActivo, Map<String, Map<String, Object>> tiposDeActivoMap) {
+        Map<String, Object> mapa2 = mapa1
+                .get(activo.getCentroCostoCuenta());
+        Map<String, BigDecimal> mapa3;
+        if (mapa2 == null) {
+            mapa2 = new HashMap<>();
+            mapa3 = new HashMap<>();
+            for (Map<String, Object> tipoActivo : tiposDeActivo) {
+                mapa3.put((String) tipoActivo.get("cuenta"),
+                        BigDecimal.ZERO);
+            }
+            mapa3.put("TOTAL", BigDecimal.ZERO);
+            mapa2.put("totales", mapa3);
+            mapa2.put("cuenta", activo.getCentroCostoCuenta());
+            mapa2.put("nombre", activo.getCentroCostoNombre());
+            mapa1.put(activo.getCentroCostoCuenta(), mapa2);
+        }
+
+        mapa3 = (Map<String, BigDecimal>) mapa2.get("totales");
+
+        BigDecimal cantidad = mapa3.get(activo.getTipoActivoCuenta());
+        cantidad = cantidad.add(activo.getDepreciacionAcumulada(), mc);
+        mapa3.put(activo.getTipoActivoCuenta(), cantidad);
+
+        Map<String, Object> tipoActivo = (Map<String, Object>) tiposDeActivoMap
+                .get(activo.getTipoActivoCuenta());
+        BigDecimal total = (BigDecimal) tipoActivo.get("total");
+        total = total.add(activo.getDepreciacionAcumulada(), mc);
+        tipoActivo.put("total", total);
+
+        // Totales
+        cantidad = mapa3.get("TOTAL");
+        cantidad = cantidad.add(activo.getDepreciacionAcumulada(), mc);
+        mapa3.put("TOTAL", cantidad);
+
+        tipoActivo = (Map<String, Object>) tiposDeActivoMap.get("TOTAL");
+        total = (BigDecimal) tipoActivo.get("total");
+        total = total.add(activo.getDepreciacionAcumulada(), mc);
+        tipoActivo.put("total", total);
+    }
+
     @Override
     @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
     public Map<String, Object> depreciacionAcumuladaPorCentroDeCostoDetalle(
             Map<String, Object> params) {
         MathContext mc = new MathContext(16, RoundingMode.HALF_UP);
@@ -1546,34 +1586,92 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                 .getEjercicio().getId().getOrganizacion().getId()));
         criteria.add(Restrictions.eq("centroCosto.id.idCosto", centroCostoId));
         criteria.add(Restrictions.le("fechaCompra", fecha));
+        criteria.add(Restrictions.isNull("fechaReubicado"));
         List<Activo> activos = criteria.list();
         for (Activo activo : activos) {
             log.trace("Depreciando activo {}", activo.getId());
             activo = this.deprecia(activo, fecha);
 
-            BigDecimal total = totales.get("ACUMULADA");
-            total = total.add(activo.getDepreciacionAcumulada(), mc);
-            totales.put("ACUMULADA", total);
+            this.depreciacionAcumuladaPorCentroDeCostoDetalle(activo, mc, totales);
+        }
 
-            total = totales.get("MENSUAL");
-            total = total.add(activo.getDepreciacionMensual(), mc);
-            totales.put("MENSUAL", total);
+        // busca reubicados
+        Query query = currentSession().createQuery(
+                "select a from ReubicacionActivo ra inner join ra.activo a where ra.empresa.id = :empresaId and (ra.centroCosto.id.idCosto = :centroCostoId or ra.centroCostoAnterior.id.idCosto = :centroCostoId) and a.fechaCompra < :fecha group by a");
+        query.setLong("empresaId", usuario.getEmpresa().getId());
+        query.setString("centroCostoId", centroCostoId);
+        query.setDate("fecha", fecha);
+        List<Activo> reubicados = query.list();
+        for (Activo activo : reubicados) {
+            log.trace("Depreciando reubicado {}", activo.getId());
+            query = currentSession().createQuery("select r from ReubicacionActivo r where r.activo.id = :activoId order by r.fecha");
+            query.setLong("activoId", activo.getId());
+            List<ReubicacionActivo> reubicaciones = query.list();
+            Date fechaAnterior = null;
+            boolean bandera1 = true;
+            for (ReubicacionActivo reubicacion : reubicaciones) {
+                boolean seDeprecio = false;
+                if (reubicacion.getFecha().before(fecha) && reubicacion.getCentroCostoAnterior().getId().getIdCosto().equals(centroCostoId)) {
+                    if (fechaAnterior != null) {
+                        activo.setFechaCompra(fechaAnterior);
+                    }
+                    activo.setCentroCosto(reubicacion.getCentroCostoAnterior());
+                    this.deprecia(activo, reubicacion.getFecha());
+                    activos.add(activo);
+                    seDeprecio = true;
+                } else if (reubicacion.getCentroCostoAnterior().getId().getIdCosto().equals(centroCostoId)) {
+                    if (fechaAnterior != null) {
+                        activo.setFechaCompra(fechaAnterior);
+                    }
+                    activo.setCentroCosto(reubicacion.getCentroCostoAnterior());
+                    this.deprecia(activo, fecha);
+                    activos.add(activo);
+                    seDeprecio = true;
+                    bandera1 = false;
+                } else {
+                    activo.setCentroCosto(reubicacion.getCentroCostoAnterior());
+                }
+                fechaAnterior = reubicacion.getFecha();
 
-            total = totales.get("ANUAL");
-            total = total.add(activo.getDepreciacionAnual(), mc);
-            totales.put("ANUAL", total);
+                if (seDeprecio) {
+                    this.depreciacionAcumuladaPorCentroDeCostoDetalle(activo, mc, totales);
+                }
+            }
 
-            total = totales.get("NETO");
-            total = total.add(activo.getValorNeto(), mc);
-            totales.put("NETO", total);
+            if (bandera1 && activo.getCentroCosto().getId().getIdCosto().equals(centroCostoId)) {
+                activo.setFechaCompra(activo.getFechaReubicado());
+                this.deprecia(activo, fecha);
+                activos.add(activo);
+                this.depreciacionAcumuladaPorCentroDeCostoDetalle(activo, mc, totales);
+            }
+
         }
         params.put("activos", activos);
         params.put("totales", totales);
         return params;
     }
 
+    private void depreciacionAcumuladaPorCentroDeCostoDetalle(Activo activo, MathContext mc, Map<String, BigDecimal> totales) {
+        BigDecimal total = totales.get("ACUMULADA");
+        total = total.add(activo.getDepreciacionAcumulada(), mc);
+        totales.put("ACUMULADA", total);
+
+        total = totales.get("MENSUAL");
+        total = total.add(activo.getDepreciacionMensual(), mc);
+        totales.put("MENSUAL", total);
+
+        total = totales.get("ANUAL");
+        total = total.add(activo.getDepreciacionAnual(), mc);
+        totales.put("ANUAL", total);
+
+        total = totales.get("NETO");
+        total = total.add(activo.getValorNeto(), mc);
+        totales.put("NETO", total);
+    }
+
     @Override
     @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
     public Map<String, Object> depreciacionMensualPorCentroDeCosto(
             Map<String, Object> params) {
         Usuario usuario = (Usuario) params.get("usuario");
@@ -1605,7 +1703,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         Map<String, Map<String, Object>> mapa1 = new TreeMap<>();
         Query query = currentSession()
                 .createQuery(
-                "select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha");
+                "select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha and a.fechaReubicado is null");
         query.setLong("empresaId", usuario.getEmpresa().getId());
         query.setDate("fecha", fecha);
         List<Activo> activos = query.list();
@@ -1613,45 +1711,48 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             log.trace("Depreciando activo {}", activo.getId());
             activo = this.deprecia(activo, fecha);
 
-            Map<String, Object> mapa2 = mapa1
-                    .get(activo.getCentroCostoCuenta());
-            Map<String, BigDecimal> mapa3;
-            if (mapa2 == null) {
-                mapa2 = new HashMap<>();
-                mapa3 = new HashMap<>();
-                for (Map<String, Object> tipoActivo : tiposDeActivo) {
-                    mapa3.put((String) tipoActivo.get("cuenta"),
-                            BigDecimal.ZERO);
+            this.depreciacionMensualPorCentroDeCosto(activo, mc, mapa1, tiposDeActivo, tiposDeActivoMap);
+        }
+
+        // busca reubicados
+        query = currentSession()
+                .createQuery(
+                "select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha and a.fechaReubicado != null");
+        query.setLong("empresaId", usuario.getEmpresa().getId());
+        query.setDate("fecha", fecha);
+        activos = query.list();
+        for (Activo activo : activos) {
+            log.trace("Depreciando activo {}", activo.getId());
+            query = currentSession().createQuery("select r from ReubicacionActivo r where r.activo.id = :activoId order by r.fecha");
+            query.setLong("activoId", activo.getId());
+            List<ReubicacionActivo> reubicaciones = query.list();
+            Date fechaAnterior = null;
+            boolean bandera1 = true;
+            for (ReubicacionActivo reubicacion : reubicaciones) {
+                if (reubicacion.getFecha().before(fecha)) {
+                    activo.setCentroCosto(reubicacion.getCentroCostoAnterior());
+                    if (fechaAnterior != null) {
+                        activo.setFechaCompra(fechaAnterior);
+                    }
+                    this.deprecia(activo, reubicacion.getFecha());
+                    fechaAnterior = reubicacion.getFecha();
+                } else {
+                    if (fechaAnterior != null) {
+                        activo.setFechaCompra(fechaAnterior);
+                    }
+                    activo.setCentroCosto(reubicacion.getCentroCostoAnterior());
+                    this.deprecia(activo, fecha);
+                    bandera1 = false;
                 }
-                mapa3.put("TOTAL", BigDecimal.ZERO);
-                mapa2.put("totales", mapa3);
-                mapa2.put("cuenta", activo.getCentroCostoCuenta());
-                mapa2.put("nombre", activo.getCentroCostoNombre());
-                mapa1.put(activo.getCentroCostoCuenta(), mapa2);
+
+                this.depreciacionMensualPorCentroDeCosto(activo, mc, mapa1, tiposDeActivo, tiposDeActivoMap);
             }
 
-            mapa3 = (Map<String, BigDecimal>) mapa2.get("totales");
-
-            BigDecimal cantidad = mapa3.get(activo.getTipoActivoCuenta());
-            cantidad = cantidad.add(activo.getDepreciacionMensual(), mc);
-            mapa3.put(activo.getTipoActivoCuenta(), cantidad);
-
-            Map<String, Object> tipoActivo = (Map<String, Object>) tiposDeActivoMap
-                    .get(activo.getTipoActivoCuenta());
-            BigDecimal total = (BigDecimal) tipoActivo.get("total");
-            total = total.add(activo.getDepreciacionMensual(), mc);
-            tipoActivo.put("total", total);
-
-            // Totales
-            cantidad = mapa3.get("TOTAL");
-            cantidad = cantidad.add(activo.getDepreciacionMensual(), mc);
-            mapa3.put("TOTAL", cantidad);
-
-            tipoActivo = (Map<String, Object>) tiposDeActivoMap.get("TOTAL");
-            total = (BigDecimal) tipoActivo.get("total");
-            total = total.add(activo.getDepreciacionMensual(), mc);
-            tipoActivo.put("total", total);
-
+            if (bandera1) {
+                activo.setFechaCompra(activo.getFechaReubicado());
+                this.deprecia(activo, fecha);
+                this.depreciacionMensualPorCentroDeCosto(activo, mc, mapa1, tiposDeActivo, tiposDeActivoMap);
+            }
         }
 
         if (log.isTraceEnabled()) {
@@ -1665,8 +1766,50 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
         return params;
     }
 
+    private void depreciacionMensualPorCentroDeCosto(Activo activo, MathContext mc, Map<String, Map<String, Object>> mapa1, List<Map<String, Object>> tiposDeActivo, Map<String, Map<String, Object>> tiposDeActivoMap) {
+        Map<String, Object> mapa2 = mapa1
+                .get(activo.getCentroCostoCuenta());
+        Map<String, BigDecimal> mapa3;
+        if (mapa2 == null) {
+            mapa2 = new HashMap<>();
+            mapa3 = new HashMap<>();
+            for (Map<String, Object> tipoActivo : tiposDeActivo) {
+                mapa3.put((String) tipoActivo.get("cuenta"),
+                        BigDecimal.ZERO);
+            }
+            mapa3.put("TOTAL", BigDecimal.ZERO);
+            mapa2.put("totales", mapa3);
+            mapa2.put("cuenta", activo.getCentroCostoCuenta());
+            mapa2.put("nombre", activo.getCentroCostoNombre());
+            mapa1.put(activo.getCentroCostoCuenta(), mapa2);
+        }
+
+        mapa3 = (Map<String, BigDecimal>) mapa2.get("totales");
+
+        BigDecimal cantidad = mapa3.get(activo.getTipoActivoCuenta());
+        cantidad = cantidad.add(activo.getDepreciacionMensual(), mc);
+        mapa3.put(activo.getTipoActivoCuenta(), cantidad);
+
+        Map<String, Object> tipoActivo = (Map<String, Object>) tiposDeActivoMap
+                .get(activo.getTipoActivoCuenta());
+        BigDecimal total = (BigDecimal) tipoActivo.get("total");
+        total = total.add(activo.getDepreciacionMensual(), mc);
+        tipoActivo.put("total", total);
+
+        // Totales
+        cantidad = mapa3.get("TOTAL");
+        cantidad = cantidad.add(activo.getDepreciacionMensual(), mc);
+        mapa3.put("TOTAL", cantidad);
+
+        tipoActivo = (Map<String, Object>) tiposDeActivoMap.get("TOTAL");
+        total = (BigDecimal) tipoActivo.get("total");
+        total = total.add(activo.getDepreciacionMensual(), mc);
+        tipoActivo.put("total", total);
+    }
+
     @Override
     @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
     public Map<String, Object> depreciacionMensualPorCentroDeCostoDetalle(
             Map<String, Object> params) {
         MathContext mc = new MathContext(16, RoundingMode.HALF_UP);
@@ -1692,34 +1835,92 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                 .getEjercicio().getId().getOrganizacion().getId()));
         criteria.add(Restrictions.eq("centroCosto.id.idCosto", centroCostoId));
         criteria.add(Restrictions.le("fechaCompra", fecha));
+        criteria.add(Restrictions.isNull("fechaReubicado"));
         List<Activo> activos = criteria.list();
         for (Activo activo : activos) {
             log.trace("Depreciando activo {}", activo.getId());
             activo = this.deprecia(activo, fecha);
 
-            BigDecimal total = totales.get("ACUMULADA");
-            total = total.add(activo.getDepreciacionAcumulada(), mc);
-            totales.put("ACUMULADA", total);
+            this.depreciacionMensualPorCentroDeCostoDetalle(activo, mc, totales);
+        }
 
-            total = totales.get("MENSUAL");
-            total = total.add(activo.getDepreciacionMensual(), mc);
-            totales.put("MENSUAL", total);
+        // busca reubicados
+        Query query = currentSession().createQuery(
+                "select a from ReubicacionActivo ra inner join ra.activo a where ra.empresa.id = :empresaId and (ra.centroCosto.id.idCosto = :centroCostoId or ra.centroCostoAnterior.id.idCosto = :centroCostoId) and a.fechaCompra < :fecha group by a");
+        query.setLong("empresaId", usuario.getEmpresa().getId());
+        query.setString("centroCostoId", centroCostoId);
+        query.setDate("fecha", fecha);
+        List<Activo> reubicados = query.list();
+        for (Activo activo : reubicados) {
+            log.trace("Depreciando reubicado {}", activo.getId());
+            query = currentSession().createQuery("select r from ReubicacionActivo r where r.activo.id = :activoId order by r.fecha");
+            query.setLong("activoId", activo.getId());
+            List<ReubicacionActivo> reubicaciones = query.list();
+            Date fechaAnterior = null;
+            boolean bandera1 = true;
+            for (ReubicacionActivo reubicacion : reubicaciones) {
+                boolean seDeprecio = false;
+                if (reubicacion.getFecha().before(fecha) && reubicacion.getCentroCostoAnterior().getId().getIdCosto().equals(centroCostoId)) {
+                    if (fechaAnterior != null) {
+                        activo.setFechaCompra(fechaAnterior);
+                    }
+                    activo.setCentroCosto(reubicacion.getCentroCostoAnterior());
+                    this.deprecia(activo, reubicacion.getFecha());
+                    activos.add(activo);
+                    seDeprecio = true;
+                } else if (reubicacion.getCentroCostoAnterior().getId().getIdCosto().equals(centroCostoId)) {
+                    if (fechaAnterior != null) {
+                        activo.setFechaCompra(fechaAnterior);
+                    }
+                    activo.setCentroCosto(reubicacion.getCentroCostoAnterior());
+                    this.deprecia(activo, fecha);
+                    activos.add(activo);
+                    seDeprecio = true;
+                    bandera1 = false;
+                } else {
+                    activo.setCentroCosto(reubicacion.getCentroCostoAnterior());
+                }
+                fechaAnterior = reubicacion.getFecha();
 
-            total = totales.get("ANUAL");
-            total = total.add(activo.getDepreciacionAnual(), mc);
-            totales.put("ANUAL", total);
+                if (seDeprecio) {
+                    this.depreciacionMensualPorCentroDeCostoDetalle(activo, mc, totales);
+                }
+            }
 
-            total = totales.get("NETO");
-            total = total.add(activo.getValorNeto(), mc);
-            totales.put("NETO", total);
+            if (bandera1 && activo.getCentroCosto().getId().getIdCosto().equals(centroCostoId)) {
+                activo.setFechaCompra(activo.getFechaReubicado());
+                this.deprecia(activo, fecha);
+                this.depreciacionMensualPorCentroDeCostoDetalle(activo, mc, totales);
+                activos.add(activo);
+            }
+
         }
         params.put("activos", activos);
         params.put("totales", totales);
         return params;
     }
 
+    private void depreciacionMensualPorCentroDeCostoDetalle(Activo activo, MathContext mc, Map<String, BigDecimal> totales) {
+        BigDecimal total = totales.get("ACUMULADA");
+        total = total.add(activo.getDepreciacionAcumulada(), mc);
+        totales.put("ACUMULADA", total);
+
+        total = totales.get("MENSUAL");
+        total = total.add(activo.getDepreciacionMensual(), mc);
+        totales.put("MENSUAL", total);
+
+        total = totales.get("ANUAL");
+        total = total.add(activo.getDepreciacionAnual(), mc);
+        totales.put("ANUAL", total);
+
+        total = totales.get("NETO");
+        total = total.add(activo.getValorNeto(), mc);
+        totales.put("NETO", total);
+    }
+
     @Override
     @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
     public Map<String, Object> depreciacionAcumuladaPorTipoActivo(
             Map<String, Object> params) {
         Usuario usuario = (Usuario) params.get("usuario");
@@ -1798,6 +1999,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
 
     @Override
     @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
     public Map<String, Object> depreciacionAcumuladaPorTipoActivoDetalle(
             Map<String, Object> params) {
         MathContext mc = new MathContext(16, RoundingMode.HALF_UP);
@@ -1855,6 +2057,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
 
     @Override
     @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
     public Map<String, Object> reporteDIA(Integer anio, Usuario usuario) {
         Map<String, Object> resultado = new HashMap<>();
         Calendar fecha = Calendar.getInstance();
@@ -2032,10 +2235,11 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             totalComprasAcumuladas = totalDepreciacionFinal.subtract(
                     totalDepreciacionAcumulada, mc);
 
-            BigDecimal grupoValorNeto = costoFinal.subtract(depreciacionFinal,
+            BigDecimal grupoValorNeto = grupoCostoFinal.subtract(depreciacionFinal,
                     mc);
             grupo.put("valorNeto", grupoValorNeto);
             valorNeto = valorNeto.add(grupoValorNeto, mc);
+            log.debug("{} : {} : {} : {} : {}", new Object[]{tipoActivo.getNombre(), costoFinal, depreciacionFinal, grupoValorNeto, valorNeto});
         }
 
         resultado.put("lista", grupos.values());
@@ -2052,6 +2256,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public void hojaCalculoDepreciacion(Map<String, Object> params) {
         try {
             log.debug("Creando excel con depreciacion");
@@ -2117,6 +2322,304 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                 Map<String, BigDecimal> totales = (Map<String, BigDecimal>) params.get("totales");
                 row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue((totales.get("ACUMULADA")).doubleValue());
                 row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue((totales.get("MENSUAL")).doubleValue());
+            }
+
+            OutputStream out = (OutputStream) params.get("out");
+            wb.write(out);
+        } catch (IOException ex) {
+            log.error("No se pudo crear la hoja de calculo", ex);
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Map<String, Object> concentradoDepreciacionPorCentroDeCosto(Map<String, Object> params) {
+        Usuario usuario = (Usuario) params.get("usuario");
+        Query tiposDeActivoQuery = currentSession()
+                .createQuery(
+                "select new map(ta.nombre as nombre, ta.cuenta.id.idCtaMayor as cuenta, ta.id as id) from TipoActivo ta where ta.cuenta.id.ejercicio.id.idEjercicio = :ejercicioId and ta.cuenta.id.ejercicio.id.organizacion.id = :organizacionId order by ta.cuenta.id.idCtaMayor");
+        tiposDeActivoQuery.setString("ejercicioId", usuario.getEjercicio()
+                .getId().getIdEjercicio());
+        tiposDeActivoQuery.setLong("organizacionId", usuario.getEjercicio()
+                .getId().getOrganizacion().getId());
+        List<Map<String, Object>> tiposDeActivo = new ArrayList<>();
+        Map<String, Object> totalCC = new HashMap<>();
+        totalCC.put("nombre", "");
+        totalCC.put("cuenta", "TOTAL");
+        totalCC.put("id", 0);
+        totalCC.put("acumulada", BigDecimal.ZERO);
+        totalCC.put("mensual", BigDecimal.ZERO);
+        totalCC.put("anual", BigDecimal.ZERO);
+        totalCC.put("valorNeto", BigDecimal.ZERO);
+        totalCC.put("costo", BigDecimal.ZERO);
+        tiposDeActivo.add(totalCC);
+        tiposDeActivo.addAll(tiposDeActivoQuery.list());
+        Map<String, Map<String, Object>> tiposDeActivoMap = new HashMap<>();
+        tiposDeActivoMap.put("TOTAL", totalCC);
+        for (Map<String, Object> tipoActivo : tiposDeActivo) {
+            if (!tipoActivo.get("cuenta").equals("TOTAL")) {
+                tipoActivo.put("acumulada", BigDecimal.ZERO);
+                tipoActivo.put("mensual", BigDecimal.ZERO);
+                tipoActivo.put("anual", BigDecimal.ZERO);
+                tipoActivo.put("valorNeto", BigDecimal.ZERO);
+                tipoActivo.put("costo", BigDecimal.ZERO);
+                tiposDeActivoMap.put((String) tipoActivo.get("cuenta"), tipoActivo);
+            }
+        }
+        params.put("tiposDeActivo", tiposDeActivo);
+
+        Date fecha = (Date) params.get("fecha");
+
+        MathContext mc = new MathContext(16, RoundingMode.HALF_UP);
+        Map<String, Map<String, Object>> mapa1 = new TreeMap<>();
+        Query query = currentSession()
+                .createQuery(
+                "select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha and a.fechaReubicado is null");
+        query.setLong("empresaId", usuario.getEmpresa().getId());
+        query.setDate("fecha", fecha);
+        List<Activo> activos = query.list();
+        for (Activo activo : activos) {
+            log.trace("Depreciando activo {}", activo.getId());
+            activo = this.deprecia(activo, fecha);
+
+            this.concentradoDepreciacionPorCentroDeCosto(activo, mc, mapa1, tiposDeActivo, tiposDeActivoMap);
+        }
+
+        query = currentSession()
+                .createQuery(
+                "select new Activo(a.id, a.version, a.moi, a.fechaCompra, a.tipoActivo.porciento, a.tipoActivo.vidaUtil, a.inactivo, a.fechaInactivo, a.fechaReubicado, a.tipoActivo.cuenta.id.idCtaMayor, a.centroCosto.id.idCosto, a.centroCosto.nombre) from Activo a inner join a.tipoActivo where a.empresa.id = :empresaId and a.fechaCompra <= :fecha and a.fechaReubicado != null");
+        query.setLong("empresaId", usuario.getEmpresa().getId());
+        query.setDate("fecha", fecha);
+        activos = query.list();
+        for (Activo activo : activos) {
+            query = currentSession().createQuery("select r from ReubicacionActivo r where r.activo.id = :activoId order by r.fecha");
+            query.setLong("activoId", activo.getId());
+            List<ReubicacionActivo> reubicaciones = query.list();
+            Date fechaAnterior = null;
+            boolean bandera1 = true;
+            for (ReubicacionActivo reubicacion : reubicaciones) {
+                if (reubicacion.getFecha().before(fecha)) {
+                    activo.setCentroCosto(reubicacion.getCentroCostoAnterior());
+                    if (fechaAnterior != null) {
+                        activo.setFechaCompra(fechaAnterior);
+                    }
+                    this.deprecia(activo, reubicacion.getFecha());
+                    fechaAnterior = reubicacion.getFecha();
+                } else {
+                    if (fechaAnterior != null) {
+                        activo.setFechaCompra(fechaAnterior);
+                    }
+                    activo.setCentroCosto(reubicacion.getCentroCostoAnterior());
+                    this.deprecia(activo, fecha);
+                    bandera1 = false;
+                }
+
+                this.concentradoDepreciacionPorCentroDeCosto(activo, mc, mapa1, tiposDeActivo, tiposDeActivoMap);
+            }
+
+            if (bandera1) {
+                activo.setFechaCompra(activo.getFechaReubicado());
+                this.deprecia(activo, fecha);
+                this.concentradoDepreciacionPorCentroDeCosto(activo, mc, mapa1, tiposDeActivo, tiposDeActivoMap);
+            }
+        }
+
+        if (log.isTraceEnabled()) {
+            for (Map<String, Object> centroCosto : mapa1.values()) {
+                log.trace("CentroCosto: {} : {} : {}", new Object[]{centroCosto.get("cuenta"), centroCosto.get("nombre"),
+                            centroCosto.get("totales")});
+            }
+            log.trace("TiposDeActivo: {}", tiposDeActivo);
+        }
+
+        params.put("centrosDeCosto", mapa1.values());
+        return params;
+    }
+
+    private void concentradoDepreciacionPorCentroDeCosto(Activo activo, MathContext mc, Map<String, Map<String, Object>> mapa1, List<Map<String, Object>> tiposDeActivo, Map<String, Map<String, Object>> tiposDeActivoMap) {
+        Map<String, Object> mapa2 = mapa1
+                .get(activo.getCentroCostoCuenta());
+        Map<String, Map<String, BigDecimal>> mapa3;
+        if (mapa2 == null) {
+            mapa2 = new HashMap<>();
+            mapa3 = new HashMap<>();
+            for (Map<String, Object> tipoActivo : tiposDeActivo) {
+                Map<String, BigDecimal> mapa4 = new HashMap<>();
+                mapa4.put("acumulada", BigDecimal.ZERO);
+                mapa4.put("mensual", BigDecimal.ZERO);
+                mapa4.put("anual", BigDecimal.ZERO);
+                mapa4.put("valorNeto", BigDecimal.ZERO);
+                mapa4.put("costo", BigDecimal.ZERO);
+                mapa3.put((String) tipoActivo.get("cuenta"),
+                        mapa4);
+            }
+            mapa2.put("totales", mapa3);
+            mapa2.put("cuenta", activo.getCentroCostoCuenta());
+            mapa2.put("nombre", activo.getCentroCostoNombre());
+            mapa1.put(activo.getCentroCostoCuenta(), mapa2);
+        }
+
+        mapa3 = (Map<String, Map<String, BigDecimal>>) mapa2.get("totales");
+
+        Map<String, BigDecimal> mapa4 = mapa3.get(activo.getTipoActivoCuenta());
+        BigDecimal acumulada = mapa4.get("acumulada");
+        acumulada = acumulada.add(activo.getDepreciacionAcumulada(), mc);
+        mapa4.put("acumulada", acumulada);
+
+        BigDecimal mensual = mapa4.get("mensual");
+        mensual = mensual.add(activo.getDepreciacionMensual(), mc);
+        mapa4.put("mensual", mensual);
+
+        BigDecimal anual = mapa4.get("anual");
+        anual = anual.add(activo.getDepreciacionAnual(), mc);
+        mapa4.put("anual", anual);
+
+        BigDecimal valorNeto = mapa4.get("valorNeto");
+        valorNeto = valorNeto.add(activo.getValorNeto(), mc);
+        mapa4.put("valorNeto", valorNeto);
+
+        BigDecimal costo = mapa4.get("costo");
+        costo = costo.add(activo.getMoi(), mc);
+        mapa4.put("costo", costo);
+
+        Map<String, BigDecimal> total = mapa3.get("TOTAL");
+        acumulada = total.get("acumulada");
+        acumulada = acumulada.add(activo.getDepreciacionAcumulada(), mc);
+        total.put("acumulada", acumulada);
+
+        mensual = total.get("mensual");
+        mensual = mensual.add(activo.getDepreciacionMensual(), mc);
+        total.put("mensual", mensual);
+
+        anual = total.get("anual");
+        anual = anual.add(activo.getDepreciacionAnual(), mc);
+        total.put("anual", anual);
+
+        valorNeto = total.get("valorNeto");
+        valorNeto = valorNeto.add(activo.getValorNeto(), mc);
+        total.put("valorNeto", valorNeto);
+
+        costo = total.get("costo");
+        costo = costo.add(activo.getMoi(), mc);
+        total.put("costo", costo);
+
+        Map<String, Object> tipoActivo = (Map<String, Object>) tiposDeActivoMap
+                .get(activo.getTipoActivoCuenta());
+        acumulada = (BigDecimal) tipoActivo.get("acumulada");
+        acumulada = acumulada.add(activo.getDepreciacionAcumulada(), mc);
+        tipoActivo.put("acumulada", acumulada);
+
+        mensual = (BigDecimal) tipoActivo.get("mensual");
+        mensual = mensual.add(activo.getDepreciacionMensual(), mc);
+        tipoActivo.put("mensual", mensual);
+
+        anual = (BigDecimal) tipoActivo.get("anual");
+        anual = anual.add(activo.getDepreciacionAnual(), mc);
+        tipoActivo.put("anual", anual);
+
+        valorNeto = (BigDecimal) tipoActivo.get("valorNeto");
+        valorNeto = valorNeto.add(activo.getValorNeto(), mc);
+        tipoActivo.put("valorNeto", valorNeto);
+
+        costo = (BigDecimal) tipoActivo.get("costo");
+        costo = costo.add(activo.getMoi(), mc);
+        tipoActivo.put("costo", costo);
+
+        // Totales
+        tipoActivo = (Map<String, Object>) tiposDeActivoMap.get("TOTAL");
+        acumulada = (BigDecimal) tipoActivo.get("acumulada");
+        acumulada = acumulada.add(activo.getDepreciacionAcumulada(), mc);
+        tipoActivo.put("acumulada", acumulada);
+
+        tipoActivo = (Map<String, Object>) tiposDeActivoMap.get("TOTAL");
+        mensual = (BigDecimal) tipoActivo.get("mensual");
+        mensual = mensual.add(activo.getDepreciacionMensual(), mc);
+        tipoActivo.put("mensual", mensual);
+
+        tipoActivo = (Map<String, Object>) tiposDeActivoMap.get("TOTAL");
+        anual = (BigDecimal) tipoActivo.get("anual");
+        anual = anual.add(activo.getDepreciacionAnual(), mc);
+        tipoActivo.put("anual", anual);
+
+        tipoActivo = (Map<String, Object>) tiposDeActivoMap.get("TOTAL");
+        valorNeto = (BigDecimal) tipoActivo.get("valorNeto");
+        valorNeto = valorNeto.add(activo.getValorNeto(), mc);
+        tipoActivo.put("valorNeto", valorNeto);
+
+        tipoActivo = (Map<String, Object>) tiposDeActivoMap.get("TOTAL");
+        costo = (BigDecimal) tipoActivo.get("costo");
+        costo = costo.add(activo.getMoi(), mc);
+        tipoActivo.put("costo", costo);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public void hojaCalculoConcentradoDepreciacion(Map<String, Object> params) {
+        try {
+            log.debug("Creando excel con concentrado depreciacion");
+            XSSFWorkbook wb = new XSSFWorkbook();
+            int rows = 0;
+            if (params.containsKey("centrosDeCosto")) {
+                XSSFSheet sheet = wb.createSheet("CentrosDeCosto");
+                List<Map<String, Object>> tiposDeActivo = (List<Map<String, Object>>) params.get("tiposDeActivo");
+                Collection<Map<String, Object>> centrosDeCosto = (Collection<Map<String, Object>>) params.get("centrosDeCosto");
+                for (Map<String, Object> centroCosto : centrosDeCosto) {
+                    Map<String, Object> totales = (Map<String, Object>) centroCosto.get("totales");
+                    if (rows == 0) {
+                        XSSFRow row = sheet.createRow(rows++);
+                        int cols = 0;
+                        row.createCell(cols++);
+                        row.createCell(cols++);
+                        for (Map<String, Object> tipoActivo : tiposDeActivo) {
+                            log.debug("Creando encabezado de {}", tipoActivo.get("cuenta"));
+                            row.createCell(cols++).setCellValue((String) tipoActivo.get("cuenta"));
+                            row.createCell(cols++).setCellValue((String) tipoActivo.get("nombre"));
+                            row.createCell(cols++);
+                            row.createCell(cols++);
+                            row.createCell(cols++);
+                            row.createCell(cols++);
+                        }
+                        row = sheet.createRow(rows++);
+                        cols = 0;
+                        row.createCell(cols++).setCellValue("Cuenta");
+                        row.createCell(cols++).setCellValue("Nombre");
+                        for (Map<String, Object> tipoActivo : tiposDeActivo) {
+                            log.debug("Creando columnas para {}", tipoActivo.get("cuenta"));
+                            row.createCell(cols++).setCellValue("Costo");
+                            row.createCell(cols++).setCellValue("Depreciación Año");
+                            row.createCell(cols++).setCellValue("Depreciacion Anual");
+                            row.createCell(cols++).setCellValue("Depreciación Mensual");
+                            row.createCell(cols++).setCellValue("Depreciación Acumulada");
+                            row.createCell(cols++).setCellValue("Valor Neto");
+                        }
+                    }
+                    int cols = 0;
+                    XSSFRow row = sheet.createRow(rows++);
+                    row.createCell(cols++).setCellValue((String) centroCosto.get("cuenta"));
+                    row.createCell(cols++).setCellValue((String) centroCosto.get("nombre"));
+                    for (Map<String, Object> tipoActivo : tiposDeActivo) {
+                        Map<String, BigDecimal> valores = (Map<String, BigDecimal>) totales.get((String) tipoActivo.get("cuenta"));
+                        row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue((valores.get("costo")).doubleValue());
+                        row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue(0d);
+                        row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue((valores.get("anual")).doubleValue());
+                        row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue((valores.get("mensual")).doubleValue());
+                        row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue((valores.get("acumulada")).doubleValue());
+                        row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue((valores.get("valorNeto")).doubleValue());
+                    }
+                }
+
+                int cols = 0;
+                XSSFRow row = sheet.createRow(rows++);
+                row.createCell(cols++);
+                row.createCell(cols++).setCellValue("TOTAL");
+                for (Map<String, Object> tipoDeActivo : tiposDeActivo) {
+                    row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue(((BigDecimal) tipoDeActivo.get("costo")).doubleValue());
+                    row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue(0d);
+                    row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue(((BigDecimal) tipoDeActivo.get("anual")).doubleValue());
+                    row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue(((BigDecimal) tipoDeActivo.get("mensual")).doubleValue());
+                    row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue(((BigDecimal) tipoDeActivo.get("acumulada")).doubleValue());
+                    row.createCell(cols++, Cell.CELL_TYPE_NUMERIC).setCellValue(((BigDecimal) tipoDeActivo.get("valorNeto")).doubleValue());
+                }
             }
 
             OutputStream out = (OutputStream) params.get("out");

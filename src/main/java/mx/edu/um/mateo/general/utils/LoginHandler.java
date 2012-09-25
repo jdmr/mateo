@@ -40,27 +40,26 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 import org.springframework.stereotype.Component;
 
 /**
- * 
+ *
  * @author jdmr
  */
 @Component
 public class LoginHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(LoginHandler.class);
+    private static final Logger log = LoggerFactory
+            .getLogger(LoginHandler.class);
+    @Autowired
+    private Ambiente ambiente;
 
-	@Autowired
-	private Ambiente ambiente;
-
-	@Override
-	public void onAuthenticationSuccess(HttpServletRequest request,
-			HttpServletResponse response, Authentication authentication)
-			throws ServletException, IOException {
-		super.onAuthenticationSuccess(request, response, authentication);
-		String username = ((UserDetails) authentication.getPrincipal())
-				.getUsername();
-		log.debug("Se ha firmado a {}", username);
-		Usuario usuario = (Usuario) authentication.getPrincipal();
-		ambiente.actualizaSesion(request.getSession(), usuario);
-	}
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request,
+            HttpServletResponse response, Authentication authentication)
+            throws ServletException, IOException {
+        super.onAuthenticationSuccess(request, response, authentication);
+        String username = ((UserDetails) authentication.getPrincipal())
+                .getUsername();
+        log.debug("Se ha firmado a {}", username);
+        Usuario usuario = (Usuario) authentication.getPrincipal();
+        ambiente.actualizaSesion(request.getSession(), usuario);
+    }
 }

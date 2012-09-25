@@ -14,7 +14,6 @@
 
         <h1><s:message code="entrada.lista.label" /></h1>
         <hr/>
-
         <form name="filtraLista" class="form-search" method="post" action="<c:url value='/inventario/entrada' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
@@ -31,8 +30,9 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <a id="buscarFechaAnchor" href="#"><s:message code="buscar.fecha.button" /></a>
-                            <a id="buscarProveedorAnchor" href="#"><s:message code="buscar.proveedor.button" /></a>
+                            <li><a id="buscarFechaAnchor" href="#"><s:message code="buscar.fecha.button" /></a></li>
+                            <li><a id="buscarProveedorAnchor" href="#"><s:message code="buscar.proveedor.button" /></a></li>
+                            <li><a id="buscarEstatusAnchor" href="#"><s:message code="buscar.estatus.button" /></a></li>
                         </ul>
                     </div>
                 </div>
@@ -52,6 +52,44 @@
                         <input type="hidden" name="proveedorId" id="proveedorId" value="${param.proveedorId}" />
                         <input type="text" name="proveedorNombre" id="proveedorNombre" value="${param.proveedorNombre}" class="input-xxlarge" />
                     </label>
+                </div>
+                <div id="buscarEstatusDiv" class="row-fluid" style="<c:if test='${not estatus}'>display: none;</c:if> margin-top: 10px;">
+                    <div class="span2">
+                        <label class="checkbox">
+                            <input type="checkbox" name="ABIERTA" id="ABIERTA" <c:if test="${param.ABIERTA == 'on'}">checked="checked"</c:if>/>
+                            <s:message code="ABIERTA" />
+                        </label>
+                    </div>
+                    <div class="span2">
+                        <label class="checkbox">
+                            <input type="checkbox" name="CERRADA" id="CERRADA" <c:if test="${param.CERRADA == 'on'}">checked="checked"</c:if>/>
+                            <s:message code="CERRADA" />
+                        </label>
+                    </div>
+                    <div class="span2">
+                        <label class="checkbox">
+                            <input type="checkbox" name="FACTURADA" id="FACTURADA" <c:if test="${param.FACTURADA == 'on'}">checked="checked"</c:if>/>
+                            <s:message code="FACTURADA" />
+                        </label>
+                    </div>
+                    <div class="span2">
+                        <label class="checkbox">
+                            <input type="checkbox" name="PENDIENTE" id="PENDIENTE" <c:if test="${param.PENDIENTE == 'on'}">checked="checked"</c:if>/>
+                            <s:message code="PENDIENTE" />
+                        </label>
+                    </div>
+                    <div class="span2">
+                        <label class="checkbox">
+                            <input type="checkbox" name="CANCELADA" id="CANCELADA" <c:if test="${param.CANCELADA == 'on'}">checked="checked"</c:if>/>
+                            <s:message code="CANCELADA" />
+                        </label>
+                    </div>
+                    <div class="span2">
+                        <label class="checkbox">
+                            <input type="checkbox" name="DEVOLUCION" id="DEVOLUCION" <c:if test="${param.DEVOLUCION == 'on'}">checked="checked"</c:if>/>
+                            <s:message code="DEVOLUCION" />
+                        </label>
+                    </div>
                 </div>
             </div>
             <c:if test="${not empty message}">
@@ -153,6 +191,13 @@
                     e.preventDefault();
                     $("div#buscarProveedorDiv").show('slide', {direction:'up'}, 500, function() {
                         $("input#proveedorNombre").focus();
+                    });
+                });
+                
+                $("a#buscarEstatusAnchor").click(function(e) {
+                    e.preventDefault();
+                    $("div#buscarEstatusDiv").show('slide', {direction:'up'}, 500, function() {
+                        $("input#ABIERTA").focus();
                     });
                 });
             });

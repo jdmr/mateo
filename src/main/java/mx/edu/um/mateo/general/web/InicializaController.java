@@ -25,7 +25,6 @@ package mx.edu.um.mateo.general.web;
 
 import mx.edu.um.mateo.contabilidad.dao.EjercicioDao;
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
-import mx.edu.um.mateo.contabilidad.model.EjercicioPK;
 import mx.edu.um.mateo.general.dao.OrganizacionDao;
 import mx.edu.um.mateo.general.dao.ReporteDao;
 import mx.edu.um.mateo.general.dao.RolDao;
@@ -37,8 +36,6 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.inventario.model.Estatus;
-
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -46,20 +43,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * 
+ *
  * @author jdmr
  */
 @Controller
 @RequestMapping("/inicializa")
 public class InicializaController {
 
-    private static final Logger log = LoggerFactory.getLogger(InicializaController.class);
+    private static final Logger log = LoggerFactory
+            .getLogger(InicializaController.class);
     @Autowired
     private OrganizacionDao organizacionDao;
     @Autowired
@@ -78,13 +75,10 @@ public class InicializaController {
         return "/inicializa/index";
     }
 
-    @Transactional
     @RequestMapping(method = RequestMethod.POST)
     public String guarda(@RequestParam String username,
             @RequestParam String password) {
 
-
-        log.debug("Inicializando mateo...");
         Transaction transaction = null;
         try {
             transaction = currentSession().beginTransaction();
@@ -92,7 +86,6 @@ public class InicializaController {
             Organizacion organizacion = new Organizacion("UM", "UM",
                     "Universidad de Montemorelos");
             organizacion = organizacionDao.crea(organizacion);
-            
             Rol rol = new Rol("ROLE_ADMIN");
             rol = rolDao.crea(rol);
             Usuario usuario = new Usuario(username, password, "Admin", "User");
@@ -104,12 +97,10 @@ public class InicializaController {
                     break actualizaUsuario;
                 }
             }
-            
-            for (Ejercicio ejercicio : ejercicioDao.lista(organizacion.getId())) {
+            for(Ejercicio ejercicio : ejercicioDao.lista(organizacion.getId())) {
                 usuario.setEjercicio(ejercicio);
                 break;
             }
-            
             usuarioDao.crea(usuario, almacenId,
                     new String[]{rol.getAuthority()});
             rol = new Rol("ROLE_ORG");
@@ -133,11 +124,8 @@ public class InicializaController {
             transaction.commit();
         } catch (Exception e) {
             log.error("No se pudo inicializar la aplicacion", e);
-            e.printStackTrace();
             transaction.rollback();
         }
-        
-        log.debug("Termino inicializacion.");
 
         return "redirect:/";
     }
@@ -146,3 +134,5 @@ public class InicializaController {
         return sessionFactory.getCurrentSession();
     }
 }
+
+

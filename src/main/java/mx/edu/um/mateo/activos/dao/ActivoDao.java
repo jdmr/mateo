@@ -55,8 +55,6 @@ public interface ActivoDao {
 
     public void depreciar(Date fecha, Long empresaId);
 
-    public List<CentroCosto> centrosDeCosto(Usuario usuario);
-
     public void subeImagen(Activo activo, Usuario usuario);
 
     public String reubica(ReubicacionActivo reubicacion, Usuario usuario);
@@ -83,6 +81,11 @@ public interface ActivoDao {
             Map<String, Object> params);
 
     public Map<String, Object> reporteDIA(Integer anio, Usuario obtieneUsuario);
-    
+
     public void hojaCalculoDepreciacion(Map<String, Object> params);
+
+    public Map<String, Object> concentradoDepreciacionPorCentroDeCosto(
+            Map<String, Object> params);
+
+    public void hojaCalculoConcentradoDepreciacion(Map<String, Object> params);
 }

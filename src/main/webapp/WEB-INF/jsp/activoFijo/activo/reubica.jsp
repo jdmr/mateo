@@ -253,9 +253,11 @@
                             <label for="centroCostoId">
                                 <s:message code="centroCosto.label" />
                             </label>
-                            <form:select id="centroCostoId" path="centroCosto.id.idCosto" required="true" cssClass="span4" >
-                                <form:options items="${centrosDeCosto}" itemValue="id.idCosto" itemLabel="nombreCompleto" />
-                            </form:select>
+                            <select id="cuenta" name="cuenta" class="span6">
+                                <c:forEach items="${centrosDeCosto}" var="ccosto">
+                                    <option value="${ccosto.id.idCosto}" <c:if test="${centroCosto.id.idCosto == ccosto.id.idCosto}" >selected="selected"</c:if>>${ccosto.nombreCompleto}</option>
+                                </c:forEach>
+                            </select>
                             <form:errors path="centroCosto" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -278,7 +280,7 @@
         <script src="<c:url value='/js/chosen.jquery.min.js' />"></script>
         <script>
             $(document).ready(function() {
-                $("select#centroCostoId").chosen();
+                $("select#cuenta").chosen();
                 $("input#fecha").datepicker($.datepicker.regional['es']);
                 $("input#fecha").datepicker("option","firstDay",0);
                 $("input#fecha").focus();

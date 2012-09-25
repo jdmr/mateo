@@ -45,4 +45,5 @@ public class Constantes {
 	public static final String BAJA = "BAJA";
 	public static final String IMAGEN = "IMAGEN";
 	public static final String REUBICACION = "REUBICACION";
+        public static final String DEVOLUCION = "DEVOLUCION";
 }

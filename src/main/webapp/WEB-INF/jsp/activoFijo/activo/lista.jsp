@@ -6,6 +6,7 @@
 <html>
     <head>
         <title><s:message code="activo.lista.label" /></title>
+        <link rel="stylesheet" href="<c:url value='/css/chosen.css' />" type="text/css">
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -65,11 +66,17 @@
                         <input type="text" name="proveedorNombre" id="proveedorNombre" value="${param.proveedorNombre}" class="input-xxlarge" />
                     </label>
                 </div>
-                <div id="buscarTipoActivoDiv" class="row-fluid" style="<c:if test='${empty param.tipoActivoNombre}'>display: none;</c:if> margin-top: 10px;">
+                <div id="buscarTipoActivoDiv" class="row-fluid" style="<c:if test='${empty param.tipoActivoIds}'>display: none;</c:if> margin-top: 10px;">
                     <label>
                         <s:message code="tipoActivo.label" /><br/>
-                        <input type="hidden" name="tipoActivoId" id="tipoActivoId" value="${param.tipoActivoId}" />
-                        <input type="text" name="tipoActivoNombre" id="tipoActivoNombre" value="${param.tipoActivoNombre}" class="input-xxlarge" />
+                        <select name="tipoActivoIds" id="tipoActivoIds" class="input-xxlarge" multiple="true" data-placeholder="<s:message code='tipoActivo.elija.message' />">
+                            <c:forEach items="${seleccionados}" var="tipoActivo">
+                                <option value="${tipoActivo.id}" selected="selected">${tipoActivo.nombreCompleto}</option>
+                            </c:forEach>
+                            <c:forEach items="${disponibles}" var="tipoActivo">
+                                <option value="${tipoActivo.id}">${tipoActivo.nombreCompleto}</option>
+                            </c:forEach>
+                        </select>
                     </label>
                 </div>
                 <div id="buscarResponsableDiv" class="row-fluid" style="<c:if test='${empty param.responsableNombre}'>display: none;</c:if> margin-top: 10px;">
@@ -209,6 +216,7 @@
             <jsp:include page="/WEB-INF/jsp/paginacion.jsp" />
         </form>        
         <content>
+            <script src="<c:url value='/js/chosen.jquery.min.js' />"></script>
             <script src="<c:url value='/js/lista.js' />"></script>
             <script type="text/javascript">
                 $(document).ready(function() {
@@ -256,14 +264,35 @@
                         $("div#buscarBajasDiv").show('slide', {direction:'up'}, 500, function() {
                             $("input#bajas").focus();
                         });
-                    });                
-                            
+                    });
+                    
                     $("a#buscarReubicacionesAnchor").click(function(e) {
                         e.preventDefault();
                         $("div#buscarReubicacionesDiv").show('slide', {direction:'up'}, 500, function() {
                             $("input#reubicaciones").focus();
                         });
-                    });                
+                    });
+                    
+                    $('input#cuentaNombre').autocomplete({
+                        source: "<c:url value='/activoFijo/activo/centrosDeCosto' />",
+                        select: function(event, ui) {
+                            $("input#cuentaId").val(ui.item.id);
+                            $("input#cuentaNombre").focus();
+                            return false;
+                        }
+                    });
+
+                    $('input#proveedorNombre').autocomplete({
+                        source: "<c:url value='/activoFijo/activo/proveedores' />",
+                        select: function(event, ui) {
+                            $("input#proveedorId").val(ui.item.id);
+                            $("input#proveedorNombre").focus();
+                            return false;
+                        }
+                    });
+                    
+                    $('select#tipoActivoIds').chosen();
+
                 });
             </script>
         </content>

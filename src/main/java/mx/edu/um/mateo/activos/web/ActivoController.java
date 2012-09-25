@@ -43,11 +43,16 @@ import mx.edu.um.mateo.activos.dao.TipoActivoDao;
 import mx.edu.um.mateo.activos.model.Activo;
 import mx.edu.um.mateo.activos.model.BajaActivo;
 import mx.edu.um.mateo.activos.model.ReubicacionActivo;
+import mx.edu.um.mateo.activos.model.TipoActivo;
 import mx.edu.um.mateo.activos.utils.ActivoNoCreadoException;
+import mx.edu.um.mateo.contabilidad.dao.CentroCostoDao;
 import mx.edu.um.mateo.contabilidad.model.CentroCosto;
+import mx.edu.um.mateo.general.dao.ProveedorDao;
 import mx.edu.um.mateo.general.model.Imagen;
+import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.general.utils.LabelValueBean;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import org.apache.commons.lang.StringUtils;
@@ -63,6 +68,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -78,6 +84,10 @@ public class ActivoController extends BaseController {
     private ActivoDao activoDao;
     @Autowired
     private TipoActivoDao tipoActivoDao;
+    @Autowired
+    private CentroCostoDao centroCostoDao;
+    @Autowired
+    private ProveedorDao proveedorDao;
 
     @SuppressWarnings("unchecked")
     @RequestMapping
@@ -147,6 +157,20 @@ public class ActivoController extends BaseController {
 
         this.pagina(params, modelo, "activos", pagina);
 
+        List<TipoActivo> tiposDeActivo = tipoActivoDao.lista(ambiente.obtieneUsuario());
+        if (params.containsKey("tipoActivoIds")) {
+            List<Long> ids = (List<Long>) params.get("tipoActivoIds");
+            List<TipoActivo> seleccionados = new ArrayList<>();
+            for (TipoActivo tipoActivo : tiposDeActivo) {
+                if (ids.contains(tipoActivo.getId())) {
+                    seleccionados.add(tipoActivo);
+                }
+            }
+            tiposDeActivo.removeAll(seleccionados);
+            modelo.addAttribute("seleccionados", seleccionados);
+        }
+        modelo.addAttribute("disponibles", tiposDeActivo);
+
         return "activoFijo/activo/lista";
     }
 
@@ -184,8 +208,7 @@ public class ActivoController extends BaseController {
         params = tipoActivoDao.lista(params);
         modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
 
-        List<CentroCosto> centrosDeCosto = activoDao.centrosDeCosto(ambiente
-                .obtieneUsuario());
+        List<CentroCosto> centrosDeCosto = centroCostoDao.listaPorEmpresa(ambiente.obtieneUsuario());
         modelo.addAttribute("centrosDeCosto", centrosDeCosto);
 
         return "activoFijo/activo/nuevo";
@@ -222,8 +245,7 @@ public class ActivoController extends BaseController {
             params = tipoActivoDao.lista(params);
             modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
 
-            List<CentroCosto> centrosDeCosto = activoDao
-                    .centrosDeCosto(ambiente.obtieneUsuario());
+            List<CentroCosto> centrosDeCosto = centroCostoDao.listaPorEmpresa(ambiente.obtieneUsuario());
             modelo.addAttribute("centrosDeCosto", centrosDeCosto);
 
             return "activoFijo/activo/nuevo";
@@ -258,8 +280,7 @@ public class ActivoController extends BaseController {
             params = tipoActivoDao.lista(params);
             modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
 
-            List<CentroCosto> centrosDeCosto = activoDao
-                    .centrosDeCosto(ambiente.obtieneUsuario());
+            List<CentroCosto> centrosDeCosto = centroCostoDao.listaPorEmpresa(ambiente.obtieneUsuario());
             modelo.addAttribute("centrosDeCosto", centrosDeCosto);
 
             return "activoFijo/activo/nuevo";
@@ -422,8 +443,11 @@ public class ActivoController extends BaseController {
         ReubicacionActivo reubicacion = new ReubicacionActivo(activo,
                 new Date());
         modelo.addAttribute("reubicacion", reubicacion);
-        List<CentroCosto> centrosDeCosto = activoDao.centrosDeCosto(ambiente
-                .obtieneUsuario());
+
+        CentroCosto centroCosto = activo.getCentroCosto();
+        modelo.addAttribute("centroCosto", centroCosto);
+
+        List<CentroCosto> centrosDeCosto = centroCostoDao.listaPorEmpresa(ambiente.obtieneUsuario());
         modelo.addAttribute("centrosDeCosto", centrosDeCosto);
 
         return "activoFijo/activo/reubica";
@@ -432,13 +456,16 @@ public class ActivoController extends BaseController {
     @RequestMapping(value = "/reubica", method = RequestMethod.POST)
     public String reubica(Model modelo,
             @ModelAttribute ReubicacionActivo reubicacion,
-            BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+            BindingResult bindingResult, RedirectAttributes redirectAttributes,
+            @RequestParam String cuenta) {
         if (bindingResult.hasErrors()) {
             return "activoFijo/activo/reubica/"
                     + reubicacion.getActivo().getId();
         }
 
         Usuario usuario = ambiente.obtieneUsuario();
+        CentroCosto centroCosto = centroCostoDao.obtiene(cuenta, usuario);
+        reubicacion.setCentroCosto(centroCosto);
         String nombre = activoDao.reubica(reubicacion, usuario);
         redirectAttributes.addFlashAttribute("message",
                 "activo.reubica.message");
@@ -494,7 +521,7 @@ public class ActivoController extends BaseController {
                 response.setContentType("application/vnd.ms-excel");
                 response.setHeader(
                         "Content-disposition",
-                        "attachment; filename='depreciacionAcumuladaPorCentroDeCosto-"+sdf2.format(date) +".xlsx'");
+                        "attachment; filename='depreciacionAcumuladaPorCentroDeCosto-" + sdf2.format(date) + ".xlsx'");
                 params.put("out", response.getOutputStream());
                 activoDao.hojaCalculoDepreciacion(params);
                 return null;
@@ -553,7 +580,7 @@ public class ActivoController extends BaseController {
                 response.setContentType("application/vnd.ms-excel");
                 response.setHeader(
                         "Content-disposition",
-                        "attachment; filename='depreciacionMensualPorCentroDeCosto-"+sdf2.format(date) +".xlsx'");
+                        "attachment; filename='depreciacionMensualPorCentroDeCosto-" + sdf2.format(date) + ".xlsx'");
                 params.put("out", response.getOutputStream());
                 activoDao.hojaCalculoDepreciacion(params);
                 return null;
@@ -612,7 +639,7 @@ public class ActivoController extends BaseController {
                 response.setContentType("application/vnd.ms-excel");
                 response.setHeader(
                         "Content-disposition",
-                        "attachment; filename='depreciacionAcumuladaYMensualPorGrupo-"+sdf2.format(date) +".xlsx'");
+                        "attachment; filename='depreciacionAcumuladaYMensualPorGrupo-" + sdf2.format(date) + ".xlsx'");
                 params.put("out", response.getOutputStream());
                 activoDao.hojaCalculoDepreciacion(params);
                 return null;
@@ -671,5 +698,92 @@ public class ActivoController extends BaseController {
             modelo.addAttribute("year", nf.format(year));
         }
         return "activoFijo/activo/dia";
+    }
+
+    @RequestMapping("/concentrado/depreciacionPorCentroDeCosto")
+    public String concentradoDepreciacionPorCentroDeCosto(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Model modelo,
+            @RequestParam(required = false) String fecha,
+            @RequestParam(required = false) Byte hojaCalculo) throws ParseException, IOException {
+        log.debug("Concentrado de Depreciacion por Centro de Costo {}", fecha);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("dd-MM-yyyy");
+        if (fecha != null) {
+            Date date = sdf.parse(fecha);
+            Map<String, Object> params = new HashMap<>();
+            params.put("usuario", ambiente.obtieneUsuario());
+            params.put("fecha", date);
+            params = activoDao.concentradoDepreciacionPorCentroDeCosto(params);
+            if (hojaCalculo == 1) {
+                response.setContentType("application/vnd.ms-excel");
+                response.setHeader(
+                        "Content-disposition",
+                        "attachment; filename='concentradoDepreciacionPorCentroDeCosto-" + sdf2.format(date) + ".xlsx'");
+                params.put("out", response.getOutputStream());
+                activoDao.hojaCalculoConcentradoDepreciacion(params);
+                return null;
+            }
+            modelo.addAllAttributes(params);
+            modelo.addAttribute("fecha", fecha);
+            modelo.addAttribute("fechaParam", sdf2.format(date));
+        } else {
+            modelo.addAttribute("fecha", sdf.format(new Date()));
+            modelo.addAttribute("fechaParam", sdf2.format(new Date()));
+
+        }
+        return "activoFijo/activo/concentradoDepreciacionPorCentroDeCosto";
+    }
+
+    @RequestMapping(value = "/centrosDeCosto", params = "term", produces = "application/json")
+    public @ResponseBody
+    List<Map<String, String>> centrosDeCosto(HttpServletRequest request,
+            @RequestParam("term") String filtro) {
+        log.debug("Buscando Centros de Costo por {}", filtro);
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre,
+                    request.getParameterMap().get(nombre));
+        }
+
+        List<CentroCosto> centrosDeCosto = centroCostoDao.buscaPorEmpresa(filtro, ambiente.obtieneUsuario());
+        List<Map<String, String>> resultados = new ArrayList<>();
+        for (CentroCosto centroCosto : centrosDeCosto) {
+            Map<String, String> map = new HashMap<>();
+            map.put("id", centroCosto.getId().getIdCosto());
+            map.put("value", centroCosto.getNombreCompleto());
+            resultados.add(map);
+        }
+
+        return resultados;
+    }
+
+    @SuppressWarnings("unchecked")
+    @RequestMapping(value = "/proveedores", params = "term", produces = "application/json")
+    public @ResponseBody
+    List<LabelValueBean> proveedores(HttpServletRequest request,
+            @RequestParam("term") String filtro) {
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre,
+                    request.getParameterMap().get(nombre));
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", request.getSession().getAttribute("empresaId"));
+        params.put("filtro", filtro);
+        params = proveedorDao.lista(params);
+        List<LabelValueBean> valores = new ArrayList<>();
+        List<Proveedor> proveedores = (List<Proveedor>) params
+                .get("proveedores");
+        for (Proveedor proveedor : proveedores) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(proveedor.getNombre());
+            sb.append(" | ");
+            sb.append(proveedor.getRfc());
+            sb.append(" | ");
+            sb.append(proveedor.getNombreCompleto());
+            valores.add(new LabelValueBean(proveedor.getId(), sb.toString(),
+                    proveedor.getNombre()));
+        }
+        return valores;
     }
 }
