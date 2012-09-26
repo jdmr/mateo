@@ -494,6 +494,9 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
     @Override
     public LoteEntrada creaLote(LoteEntrada lote)
             throws ProductoNoSoportaFraccionException, NoEstaAbiertaException {
+        log.debug("Creando lote {}", lote);
+        lote.setProducto((Producto) currentSession().get(Producto.class, lote.getProducto().getId()));
+        lote.setEntrada((Entrada) currentSession().get(Entrada.class, lote.getEntrada().getId()));
         if (lote.getEntrada().getEstatus().getNombre()
                 .equals(Constantes.ABIERTA)) {
             if (!lote.getProducto().getFraccion()) {

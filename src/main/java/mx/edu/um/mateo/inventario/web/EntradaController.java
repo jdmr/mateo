@@ -32,11 +32,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
 import mx.edu.um.mateo.general.dao.ProveedorDao;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -56,7 +54,6 @@ import mx.edu.um.mateo.inventario.utils.NoEstaCerradaException;
 import mx.edu.um.mateo.inventario.utils.NoSePuedeCerrarEnCeroException;
 import mx.edu.um.mateo.inventario.utils.NoSePuedeCerrarException;
 import mx.edu.um.mateo.inventario.utils.ProductoNoSoportaFraccionException;
-
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -653,13 +650,6 @@ public class EntradaController extends BaseController {
                 modelo.addAttribute("message", "lote.sin.producto.message");
                 return "inventario/entrada/lote";
             }
-            Producto producto = productoDao.obtiene(new Long(request
-                    .getParameter("producto.id")));
-            Entrada entrada = entradaDao.obtiene(new Long(request
-                    .getParameter("entrada.id")));
-            lote.setProducto(producto);
-            lote.setEntrada(entrada);
-            lote.setFechaCreacion(new Date());
             lote = entradaDao.creaLote(lote);
         } catch (NoEstaAbiertaException e) {
             log.error("No se pudo cerrar la entrada", e);
