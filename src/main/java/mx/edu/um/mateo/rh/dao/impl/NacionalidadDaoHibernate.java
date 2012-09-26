@@ -7,16 +7,14 @@ package mx.edu.um.mateo.rh.dao.impl;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
+import mx.edu.um.mateo.general.dao.BaseDao;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
+import mx.edu.um.mateo.rh.dao.NacionalidadDao;
 import mx.edu.um.mateo.rh.model.Nacionalidad;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.criterion.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,20 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class NacionalidadDaoHibernate {
+public class NacionalidadDaoHibernate extends BaseDao implements NacionalidadDao{
 
-    private static final Logger log = LoggerFactory.getLogger(NacionalidadDaoHibernate.class);
-    @Autowired
-    private SessionFactory sessionFactory;
-
-    public NacionalidadDaoHibernate() {
-        log.info("Nueva instancia de ColegioDao");
-    }
-
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
-
+    
+    @Override
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de nacionalidad con params {}", params);
         if (params == null) {
@@ -68,7 +56,6 @@ public class NacionalidadDaoHibernate {
             String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);
             Disjunction propiedades = Restrictions.disjunction();
             propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("apPaterno", filtro, MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -94,40 +81,40 @@ public class NacionalidadDaoHibernate {
         return params;
     }
 
+    @Override
     public Nacionalidad obtiene(Long id) {
         log.debug("Obtiene nacionalidad con id = {}", id);
         Nacionalidad nacionalidad = (Nacionalidad) currentSession().get(Nacionalidad.class, id);
         return nacionalidad;
     }
 
-    public Nacionalidad crea(Nacionalidad nacionalidad) {
-        log.debug("Creando nacionalidad : {}", nacionalidad);
-        currentSession().save(nacionalidad);
+   
+    
+    @Override
+    public Nacionalidad graba(final Nacionalidad nacionalidad, Usuario usuario) {
+        Session session = currentSession();
+        if (usuario != null) {
+            nacionalidad.setEmpresa(usuario.getEmpresa());
+        }
+        currentSession().saveOrUpdate(nacionalidad);
+        currentSession().merge(nacionalidad);
         currentSession().flush();
-        return nacionalidad;
+       return nacionalidad;
+        
     }
 
-    public Nacionalidad actualiza(Nacionalidad nacionalidad) {
-        log.debug("Actualizando nacionalidad {}", nacionalidad);
+    
 
-        //trae el objeto de la DB 
-        Nacionalidad nueva = (Nacionalidad) currentSession().get(Nacionalidad.class, nacionalidad.getId());
-        //actualiza el objeto
-        BeanUtils.copyProperties(nacionalidad, nueva);
-        //lo guarda en la BD
-
-        currentSession().update(nueva);
-        currentSession().flush();
-        return nueva;
-    }
-
+    @Override
     public String elimina(Long id) throws UltimoException {
         log.debug("Eliminando nacionalidad con id {}", id);
         Nacionalidad nacionalidad = obtiene(id);
         nacionalidad.setStatus("I");
-        currentSession().save(nacionalidad);
+        currentSession().delete(nacionalidad);
         currentSession().flush();
         String nombre = nacionalidad.getNombre().toString();
         return nombre;
     }
+
+   
 }

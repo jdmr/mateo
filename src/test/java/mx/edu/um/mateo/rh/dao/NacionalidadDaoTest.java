@@ -7,7 +7,8 @@ package mx.edu.um.mateo.rh.dao;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
-import mx.edu.um.mateo.rh.dao.impl.NacionalidadDaoHibernate;
+import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.rh.model.Nacionalidad;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -27,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author developer
+ * @author zorch
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
@@ -35,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class NacionalidadDaoTest {
 
     @Autowired
-    private NacionalidadDaoHibernate nacionalidadDao;
+    private NacionalidadDao instance;
     private static final Logger log = LoggerFactory.getLogger(ColegioDaoTest.class);
     @Autowired
     private SessionFactory sessionFactory;
@@ -68,15 +69,20 @@ public class NacionalidadDaoTest {
      */
     @Test
     public void testLista() {
+        Organizacion organizacion= new Organizacion("tst-01", "test-02", "test-03");
+        currentSession().save(organizacion);
+        Empresa empresa = new Empresa("tst01", "test-02", "test-03", "000000000001", organizacion);
+        currentSession().save(empresa);
         for (int i = 0; i < 20; i++) {
             Nacionalidad nacionalidad = new Nacionalidad();
             nacionalidad.setNombre("mexicana " + i);
             nacionalidad.setStatus("A");
-            nacionalidadDao.crea(nacionalidad);
+            nacionalidad.setEmpresa(empresa);
+            instance.graba(nacionalidad, null);
 
         }
         Map<String, Object> params = null;
-        Map result = nacionalidadDao.lista(params);
+        Map <String, Object>  result = instance.lista(params);
         assertNotNull(result.get(Constantes.CONTAINSKEY_NACIONALIDADES));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
         assertEquals(10, ((List<Nacionalidad>) result.get(Constantes.CONTAINSKEY_NACIONALIDADES)).size());
@@ -88,59 +94,83 @@ public class NacionalidadDaoTest {
     /**
      * Test of obtiene method, of class NacionalidadDao.
      */
+    
     @Test
     public void testObtiene() {
+        Organizacion organizacion = new Organizacion("tst-01", "test-02", "test-03");
+        currentSession().save(organizacion);
+        Empresa empresa = new Empresa("tst01", "test-02", "test-03", "000000000001", organizacion);
+        currentSession().save(empresa);
         Nacionalidad nacionalidad = new Nacionalidad();
         nacionalidad.setNombre("mexicana");
         nacionalidad.setStatus("A");
-        nacionalidadDao.crea(nacionalidad);
+        nacionalidad.setEmpresa(empresa);
+        instance.graba(nacionalidad, null);
         assertNotNull(nacionalidad.getId());
-        Nacionalidad prueba = nacionalidadDao.obtiene(nacionalidad.getId());
+        Nacionalidad prueba = instance.obtiene(nacionalidad.getId());
         assertEquals(prueba.getNombre(), nacionalidad.getNombre());
     }
 
     /**
      * Test of crea method, of class NacionalidadDao.
      */
+    
     @Test
     public void testCrea() {
-        System.out.println("crea");
+        Organizacion organizacion = new Organizacion("tst-01", "test-02", "test-03");
+        currentSession().save(organizacion);
+        Empresa empresa = new Empresa("tst01", "test-02", "test-03", "000000000001", organizacion);
+        currentSession().save(empresa);
         Nacionalidad nacionalidad = new Nacionalidad();
         nacionalidad.setNombre("mexicana");
         nacionalidad.setStatus("A");
-        nacionalidadDao.crea(nacionalidad);
+        nacionalidad.setEmpresa(empresa);
+        instance.graba(nacionalidad,null);
         assertNotNull(nacionalidad.getId());
     }
 
     /**
      * Test of actualiza method, of class NacionalidadDao.
      */
+    
     @Test
     public void testActualiza() {
-        System.out.println("actualiza");
+        Organizacion organizacion = new Organizacion("tst-01", "test-02", "test-03");
+        currentSession().save(organizacion);
+        Empresa empresa = new Empresa("tst01", "test-02", "test-03", "000000000001", organizacion);
+        currentSession().save(empresa);
         Nacionalidad nacionalidad = new Nacionalidad();
         nacionalidad.setNombre("mexicana");
         nacionalidad.setStatus("A");
-        nacionalidadDao.crea(nacionalidad);
+        nacionalidad.setEmpresa(empresa);
+        instance.graba(nacionalidad,null);
         assertNotNull(nacionalidad.getId());
         String nombre = "prueba";
         nacionalidad.setNombre(nombre);
-        Nacionalidad prueba = nacionalidadDao.actualiza(nacionalidad);
+        Nacionalidad prueba = instance.graba(nacionalidad,null);
         assertEquals(prueba.getNombre(), nacionalidad.getNombre());
     }
 
     /**
      * Test of elimina method, of class NacionalidadDao.
      */
+    
     @Test
     public void testElimina() throws Exception {
-        System.out.println("elimina");
+       
+        Organizacion organizacion = new Organizacion("tst-01", "test-02", "test-03");
+        currentSession().save(organizacion);
+        Empresa empresa = new Empresa("tst01", "test-02", "test-03", "000000000001", organizacion);
+        currentSession().save(empresa);
         Nacionalidad nacionalidad = new Nacionalidad();
         nacionalidad.setNombre("mexicana");
         nacionalidad.setStatus("A");
-        nacionalidadDao.crea(nacionalidad);
+        nacionalidad.setEmpresa(empresa);
+        instance.graba(nacionalidad,null);
         assertNotNull(nacionalidad.getId());
-        String prueba = nacionalidadDao.elimina(nacionalidad.getId());
+        String prueba = instance.elimina(nacionalidad.getId());
         assertEquals(prueba, nacionalidad.getNombre());
     }
+
+    
 }

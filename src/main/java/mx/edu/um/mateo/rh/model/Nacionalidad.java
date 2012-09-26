@@ -5,17 +5,22 @@
 package mx.edu.um.mateo.rh.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import mx.edu.um.mateo.general.model.Empresa;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *
- * @author developer
+ * @author zorch
  */
 @Entity
 @Table(name="nacionalidad")
@@ -25,10 +30,52 @@ public class Nacionalidad implements Serializable {
     private Long id;
     @Version
     private Integer version;
-    @Column
+    @NotBlank
+    @Column(nullable= false, length=50)
     private String nombre;
-    @Column
+    @Length
+    @Column(nullable=false, length=2)
     private String status;
+    @ManyToOne(optional=false)
+    private Empresa empresa;
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.id);
+        hash = 37 * hash + Objects.hashCode(this.version);
+        hash = 37 * hash + Objects.hashCode(this.nombre);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Nacionalidad other = (Nacionalidad) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.version, other.version)) {
+            return false;
+        }
+        if (!Objects.equals(this.nombre, other.nombre)) {
+            return false;
+        }
+        return true;
+    }
+
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
+    }
 
     public Nacionalidad() {
     }
