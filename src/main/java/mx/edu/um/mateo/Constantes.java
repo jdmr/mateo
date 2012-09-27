@@ -74,6 +74,7 @@ public class Constantes {
 	public static final String CONTAINSKEY_RESULTADOS = "resultados";
 	public static final String CONTAINSKEY_AUXILIARES = "auxiliares";
 	public static final String CONTAINSKEY_LIBROS = "libros";
+	public static final String CONTAINSKEY_COLEGIOS = "colegios";
 
 	/**
 	 * Valores para el los addAttribute para las clases
@@ -86,6 +87,7 @@ public class Constantes {
 	public static final String ADDATTRIBUTE_RESULTADO = "resultado";
 	public static final String ADDATTRIBUTE_AUXILIAR = "auxiliar";
 	public static final String ADDATTRIBUTE_LIBRO = "libro";
+	public static final String ADDATTRIBUTE_COLEGIO = "colegio";
 
 	/**
 	 * Valores para el los path's para las clases
