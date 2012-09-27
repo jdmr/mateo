@@ -25,12 +25,10 @@ package mx.edu.um.mateo.activos.dao;
 
 import java.io.OutputStream;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.activos.model.Activo;
 import mx.edu.um.mateo.activos.model.BajaActivo;
 import mx.edu.um.mateo.activos.model.ReubicacionActivo;
-import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.general.model.Usuario;
 
 /**
@@ -88,4 +86,6 @@ public interface ActivoDao {
             Map<String, Object> params);
 
     public void hojaCalculoConcentradoDepreciacion(Map<String, Object> params);
+    
+    public String eliminaImagen(Long activoId, Long imagenId, Usuario usuario);
 }

@@ -21,71 +21,69 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package mx.edu.um.mateo.rh.dao.impl;
 
 import java.util.List;
-
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.rh.dao.SeccionDao;
 import mx.edu.um.mateo.rh.model.Seccion;
-
 import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 
+ *
  * @author osoto
  */
-@Transactional
 @Repository
+@Transactional
 public class SeccionDaoHibernate extends BaseDao implements SeccionDao {
 
-	/**
-	 * @see mx.edu.um.rh.dao.SeccionDao#getSeccions(mx.edu.um.rh.model.Seccion)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Seccion> getSecciones(final Seccion seccion) {
-		return currentSession().createCriteria(Seccion.class).list();
+    /**
+     * @see mx.edu.um.rh.dao.SeccionDao#getSeccions(mx.edu.um.rh.model.Seccion)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    @Transactional(readOnly = true)
+    public List<Seccion> getSecciones(final Seccion seccion) {
+        return currentSession().createCriteria(Seccion.class).list();
 
-	}
+    }
 
-	/**
-	 * @see mx.edu.um.rh.dao.SeccionDao#getSeccion(Integer id)
-	 */
-	@Override
-	public Seccion getSeccion(final Integer id) {
-		Seccion seccion = (Seccion) currentSession().get(Seccion.class, id);
-		if (seccion == null) {
-			log.warn("uh oh, seccion with id '" + id + "' not found...");
-			throw new ObjectRetrievalFailureException(Seccion.class, id);
-		}
+    /**
+     * @see mx.edu.um.rh.dao.SeccionDao#getSeccion(Integer id)
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Seccion getSeccion(final Integer id) {
+        Seccion seccion = (Seccion) currentSession().get(Seccion.class, id);
+        if (seccion == null) {
+            log.warn("uh oh, seccion with id '" + id + "' not found...");
+            throw new ObjectRetrievalFailureException(Seccion.class, id);
+        }
 
-		return seccion;
-	}
+        return seccion;
+    }
 
-	/**
-	 * @see mx.edu.um.rh.dao.SeccionDao#saveSeccion(Seccion seccion)
-	 */
-	@Override
-	public void saveSeccion(final Seccion seccion) {
-		if (seccion.getId() == null) {
-			getSession().save(seccion);
-		} else {
-			log.debug("{}", seccion);
-			getSession().merge(seccion);
-		}
+    /**
+     * @see mx.edu.um.rh.dao.SeccionDao#saveSeccion(Seccion seccion)
+     */
+    @Override
+    public void saveSeccion(final Seccion seccion) {
+        if (seccion.getId() == null) {
+            getSession().save(seccion);
+        } else {
+            log.debug("{}", seccion);
+            getSession().merge(seccion);
+        }
 
-	}
+    }
 
-	/**
-	 * @see mx.edu.um.rh.dao.SeccionDao#removeSeccion(Integer id)
-	 */
-	@Override
-	public void removeSeccion(final Integer id) {
-		currentSession().delete(getSeccion(id));
-	}
-
+    /**
+     * @see mx.edu.um.rh.dao.SeccionDao#removeSeccion(Integer id)
+     */
+    @Override
+    public void removeSeccion(final Integer id) {
+        currentSession().delete(getSeccion(id));
+    }
 }

@@ -26,15 +26,12 @@ package mx.edu.um.mateo.inventario.web;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
 import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -43,13 +40,10 @@ import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inventario.dao.ProductoDao;
 import mx.edu.um.mateo.inventario.dao.TipoProductoDao;
 import mx.edu.um.mateo.inventario.model.Producto;
-import mx.edu.um.mateo.inventario.model.XProducto;
-
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -272,7 +266,6 @@ public class ProductoController extends BaseController {
         return "inventario/producto/edita";
     }
 
-    @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(
             HttpServletRequest request,
@@ -289,6 +282,7 @@ public class ProductoController extends BaseController {
 
         try {
             if (archivo != null && !archivo.isEmpty()) {
+                log.debug("SUBIENDO ARCHIVO: {}", archivo.getOriginalFilename());
                 Imagen imagen = new Imagen(archivo.getOriginalFilename(),
                         archivo.getContentType(), archivo.getSize(),
                         archivo.getBytes());
@@ -334,7 +328,6 @@ public class ProductoController extends BaseController {
         return "redirect:/inventario/producto/ver/" + producto.getId();
     }
 
-    @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id,
             Model modelo, @ModelAttribute Producto producto,
@@ -385,5 +378,24 @@ public class ProductoController extends BaseController {
         log.debug("Arreglando descripciones");
         productoDao.arreglaDescripciones();
         return "redirect:/inventario/producto";
+    }
+
+    @RequestMapping(value = "/imagen/elimina/{id}")
+    public String eliminaImagen(HttpServletRequest request,
+            @PathVariable Long id, RedirectAttributes redirectAttributes) {
+        log.debug("Elimina imagen de producto {id}");
+        try {
+            String nombre = productoDao.eliminaImagen(id, ambiente.obtieneUsuario());
+
+            redirectAttributes.addFlashAttribute("message",
+                    "producto.imagen.eliminado.message");
+            redirectAttributes.addFlashAttribute("messageAttrs",
+                    new String[]{nombre});
+        } catch (Exception e) {
+            log.error("No se pudo eliminar la producto " + id, e);
+            return "inventario/producto/ver";
+        }
+
+        return "redirect:/inventario/producto/ver/"+id;
     }
 }
