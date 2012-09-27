@@ -69,6 +69,7 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de usuarios con params {}", params);
         if (params == null) {
@@ -136,12 +137,14 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Usuario obtiene(Long id) {
         Usuario usuario = (Usuario) currentSession().get(Usuario.class, id);
         return usuario;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Usuario obtiene(String username) {
         Query query = currentSession().createQuery(
                 "select u from Usuario u where u.username = :username");
@@ -150,6 +153,7 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Usuario obtienePorOpenId(String openId) {
         log.debug("Buscando usuario por openId {}", openId);
         Query query = currentSession().createQuery(
@@ -159,6 +163,7 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Usuario obtienePorCorreo(String correo) {
         log.debug("Buscando usuario por correo {}", correo);
         Query query = currentSession().createQuery(
@@ -257,13 +262,13 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
             Rol rol = (Rol) query.uniqueResult();
             nuevoUsuario.addRol(rol);
         }
-        
+
         log.debug("Asignando centros de costo {}", centrosDeCostoIds);
         nuevoUsuario.getCentrosDeCosto().clear();
         Set<CentroCosto> centrosDeCosto = obtieneCentrosDeCosto(nuevoUsuario.getEjercicio(), centrosDeCostoIds);
         log.debug("CentrosDeCosto: {}", centrosDeCosto);
         nuevoUsuario.setCentrosDeCosto(centrosDeCosto);
-        
+
         try {
             currentSession().update(nuevoUsuario);
             currentSession().flush();
@@ -284,6 +289,7 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
     }
 
     @Override
+    @Transactional(rollbackFor = {UltimoException.class})
     public String elimina(Long id) throws UltimoException {
         Usuario usuario = obtiene(id);
         Criteria criteria = currentSession().createCriteria(Usuario.class);
@@ -305,6 +311,7 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
 
     @SuppressWarnings("unchecked")
     @Override
+    @Transactional(readOnly = true)
     public List<Rol> roles() {
         log.debug("Obteniendo lista de roles");
         Query query = currentSession().createQuery("select r from Rol r order by r.prioridad");
@@ -313,6 +320,7 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
 
     @SuppressWarnings("unchecked")
     @Override
+    @Transactional(readOnly = true)
     public List<Almacen> obtieneAlmacenes() {
         List<Almacen> almacenes;
         if (springSecurityUtils.ifAnyGranted("ROLE_ADMIN")) {
@@ -371,6 +379,7 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
 
     @SuppressWarnings("unchecked")
     @Override
+    @Transactional(readOnly = true)
     public List<Ejercicio> obtieneEjercicios(Long organizacionId) {
         Query query = currentSession()
                 .createQuery(
@@ -380,6 +389,7 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CentroCosto> obtieneCentrosDeCosto(Ejercicio ejercicio) {
         Query query = currentSession().createQuery(
                 "select cc from CentroCosto cc "
@@ -390,8 +400,9 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
         query.setString("ejercicioId", ejercicio.getId().getIdEjercicio());
         return query.list();
     }
-    
+
     @Override
+    @Transactional(readOnly = true)
     public Set<CentroCosto> obtieneCentrosDeCosto(Ejercicio ejercicio, String[] centrosDeCostoIds) {
         Criteria criteria = currentSession().createCriteria(CentroCosto.class);
         criteria.add(Restrictions.eq("id.ejercicio", ejercicio));

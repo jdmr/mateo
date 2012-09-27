@@ -71,6 +71,7 @@ public class TipoActivoDaoHibernate extends BaseDao implements TipoActivoDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de tipos de activos con params {}", params);
         if (params == null) {
@@ -136,6 +137,7 @@ public class TipoActivoDaoHibernate extends BaseDao implements TipoActivoDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TipoActivo obtiene(Long id) {
         return (TipoActivo) currentSession().get(TipoActivo.class, id);
     }
@@ -266,6 +268,7 @@ public class TipoActivoDaoHibernate extends BaseDao implements TipoActivoDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<TipoActivo> lista(Usuario usuario) {
         Query query = currentSession().createQuery("select ta from TipoActivo ta where ta.empresa.id = :empresaId order by ta.cuenta.id.idCtaMayor");
         query.setLong("empresaId", usuario.getEmpresa().getId());

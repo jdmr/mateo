@@ -88,6 +88,7 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de entradas con params {}", params);
         if (params == null) {
@@ -179,7 +180,7 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
             }
             criteria.add(propiedades);
             countCriteria.add(propiedades);
-            
+
             if (params.containsKey(Constantes.DEVOLUCION)) {
                 criteria.add(Restrictions.eq("devolucion", Boolean.TRUE));
                 countCriteria.add(Restrictions.eq("devolucion", Boolean.TRUE));
@@ -224,6 +225,7 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
 
     @SuppressWarnings("unchecked")
     @Override
+    @Transactional(readOnly = true)
     public List<Entrada> buscaEntradasParaFactura(Map<String, Object> params) {
         log.debug("Buscando lista de entradas con params {}", params);
         if (params == null) {
@@ -280,11 +282,13 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Entrada obtiene(Long id) {
         return (Entrada) currentSession().get(Entrada.class, id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Entrada carga(Long id) {
         return (Entrada) currentSession().load(Entrada.class, id);
     }
@@ -318,11 +322,13 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class})
     public Entrada actualiza(Entrada entrada) throws NoEstaAbiertaException {
         return this.actualiza(entrada, null);
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class})
     public Entrada actualiza(Entrada otraEntrada, Usuario usuario)
             throws NoEstaAbiertaException {
         Entrada entrada = (Entrada) currentSession().get(Entrada.class,
@@ -354,6 +360,7 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class, NoSePuedeCerrarException.class, NoCuadraException.class, NoSePuedeCerrarEnCeroException.class})
     public String pendiente(Long entradaId, Usuario usuario)
             throws NoSePuedeCerrarException, NoCuadraException,
             NoSePuedeCerrarEnCeroException, NoEstaAbiertaException {
@@ -394,6 +401,7 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
     }
 
     @Override
+    @Transactional(rollbackFor = {NoSePuedeCerrarException.class, NoCuadraException.class, NoSePuedeCerrarEnCeroException.class, NoEstaAbiertaException.class})
     public String cierra(Long entradaId, Usuario usuario)
             throws NoSePuedeCerrarException, NoCuadraException,
             NoSePuedeCerrarEnCeroException, NoEstaAbiertaException {
@@ -404,6 +412,7 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
     }
 
     @Override
+    @Transactional(rollbackFor = {NoSePuedeCerrarException.class, NoCuadraException.class, NoSePuedeCerrarEnCeroException.class, NoEstaAbiertaException.class})
     public Entrada cierra(Entrada entrada, Usuario usuario)
             throws NoSePuedeCerrarException, NoCuadraException,
             NoSePuedeCerrarEnCeroException, NoEstaAbiertaException {
@@ -440,6 +449,7 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
     }
 
     @Override
+    @Transactional(rollbackFor = {NoSePuedeCerrarException.class})
     public Entrada cierraPendiente(Entrada entrada, Usuario usuario)
             throws NoSePuedeCerrarException {
         Entrada pendiente = (Entrada) currentSession().get(Entrada.class,
@@ -470,11 +480,13 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class})
     public String elimina(Long id) throws NoEstaAbiertaException {
         return this.elimina(id, null);
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class})
     public String elimina(Long id, Usuario usuario)
             throws NoEstaAbiertaException {
         Entrada entrada = obtiene(id);
@@ -492,6 +504,7 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class, ProductoNoSoportaFraccionException.class})
     public LoteEntrada creaLote(LoteEntrada lote)
             throws ProductoNoSoportaFraccionException, NoEstaAbiertaException {
         log.debug("Creando lote {}", lote);
@@ -524,6 +537,7 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class})
     public Long eliminaLote(Long id) throws NoEstaAbiertaException {
         log.debug("Eliminando lote {}", id);
         LoteEntrada lote = (LoteEntrada) currentSession().get(
@@ -674,6 +688,7 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
 
     @SuppressWarnings("unchecked")
     @Override
+    @Transactional(readOnly = true)
     public Map<String, Object> preCancelacion(Long id, Usuario usuario)
             throws NoEstaCerradaException {
         log.info("{} mando llamar precancelacion de entrada {}", usuario, id);
@@ -784,6 +799,7 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
 
     @SuppressWarnings("unchecked")
     @Override
+    @Transactional(rollbackFor = {NoEstaCerradaException.class})
     public Cancelacion cancelar(Long id, Usuario usuario, String comentarios)
             throws NoEstaCerradaException {
         log.info("{} esta cancelando entrada {}", usuario, id);

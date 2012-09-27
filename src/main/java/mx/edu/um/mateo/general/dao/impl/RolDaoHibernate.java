@@ -26,41 +26,41 @@ package mx.edu.um.mateo.general.dao.impl;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.dao.RolDao;
 import mx.edu.um.mateo.general.model.Rol;
-
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 
+ *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Repository
 @Transactional
 public class RolDaoHibernate extends BaseDao implements RolDao {
 
-	public RolDaoHibernate() {
-		log.info("Nueva instancia de RolDao");
-	}
+    public RolDaoHibernate() {
+        log.info("Nueva instancia de RolDao");
+    }
 
-	@Override
-	public Rol obtiene(Long id) {
-		Rol rol = (Rol) currentSession().get(Rol.class, id);
-		return rol;
-	}
+    @Override
+    @Transactional(readOnly = true)
+    public Rol obtiene(Long id) {
+        Rol rol = (Rol) currentSession().get(Rol.class, id);
+        return rol;
+    }
 
-	@Override
-	public Rol obtiene(String nombre) {
-		Query query = currentSession().createQuery(
-				"select r from Rol r where authority = ?");
-		Rol rol = (Rol) query.uniqueResult();
-		return rol;
-	}
+    @Override
+    @Transactional(readOnly = true)
+    public Rol obtiene(String nombre) {
+        Query query = currentSession().createQuery(
+                "select r from Rol r where authority = ?");
+        Rol rol = (Rol) query.uniqueResult();
+        return rol;
+    }
 
-	@Override
-	public Rol crea(Rol rol) {
-		currentSession().save(rol);
-		return rol;
-	}
-
+    @Override
+    public Rol crea(Rol rol) {
+        currentSession().save(rol);
+        return rol;
+    }
 }

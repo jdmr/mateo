@@ -59,7 +59,7 @@
                         </div>
                     </div>
                 </c:if>
-                <c:if test="${entrada.devolucion || entrada.tipoCambio}">
+                <c:if test="${entrada.devolucion || entrada.tipoCambio != null}">
                     <div class="row-fluid" style="padding-bottom: 10px;">
                         <div class="span4">
                             <h4><s:message code="devolucion.label" /></h4>
