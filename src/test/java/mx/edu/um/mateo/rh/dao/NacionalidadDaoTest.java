@@ -12,11 +12,7 @@ import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.rh.model.Nacionalidad;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.junit.After;
-import org.junit.AfterClass;
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -28,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author zorch
+ * @author Zorch
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
@@ -45,30 +41,11 @@ public class NacionalidadDaoTest {
         return sessionFactory.getCurrentSession();
     }
 
-    public NacionalidadDaoTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
-    /**
-     * Test of lista method, of class NacionalidadDao.
+     /**
+     * Test del metodo de lista,de la clase nacionalidadDao.
      */
     @Test
-    public void testLista() {
+    public void testObtenerListaDeNacionalidades() {
         Organizacion organizacion= new Organizacion("tst-01", "test-02", "test-03");
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst01", "test-02", "test-03", "000000000001", organizacion);
@@ -147,8 +124,7 @@ public class NacionalidadDaoTest {
         assertNotNull(nacionalidad.getId());
         String nombre = "prueba";
         nacionalidad.setNombre(nombre);
-        Nacionalidad prueba = instance.graba(nacionalidad,null);
-        assertEquals(prueba.getNombre(), nacionalidad.getNombre());
+       assertEquals("prueba", nacionalidad.getNombre());
     }
 
     /**

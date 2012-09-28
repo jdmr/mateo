@@ -212,7 +212,7 @@ public class CategoriaController extends BaseController{
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "categoria.graba.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{categoria.getNombre()});
         
-        return "redirect:" + Constantes.PATH_CATEGORIA_VER + "/" + categoria.getId();
+        return "redirect:" + Constantes.PATH_CATEGORIA_LISTA + "/" ;
     }
     
     @RequestMapping("/edita/{id}")

@@ -9,18 +9,18 @@ import java.util.Map;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.rh.dao.NacionalidadDao;
 import mx.edu.um.mateo.rh.model.Nacionalidad;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.*;
+import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author nujev
+ * @author Zorch
  */
 @Repository
 @Transactional
@@ -29,7 +29,7 @@ public class NacionalidadDaoHibernate extends BaseDao implements NacionalidadDao
     
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
-        log.debug("Buscando lista de nacionalidad con params {}", params);
+        log.debug("Buscando lista de nacionalidades con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
@@ -85,13 +85,18 @@ public class NacionalidadDaoHibernate extends BaseDao implements NacionalidadDao
     public Nacionalidad obtiene(Long id) {
         log.debug("Obtiene nacionalidad con id = {}", id);
         Nacionalidad nacionalidad = (Nacionalidad) currentSession().get(Nacionalidad.class, id);
+        if(nacionalidad==null){
+            log.warn("uh oh, la categoria con el id"+id+"no se encontro...");
+            throw new ObjectRetrievalFailureException(Nacionalidad.class, id);
+            
+        }
         return nacionalidad;
     }
 
    
     
     @Override
-    public Nacionalidad graba(final Nacionalidad nacionalidad, Usuario usuario) {
+    public void graba(final Nacionalidad nacionalidad, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
             nacionalidad.setEmpresa(usuario.getEmpresa());
@@ -99,14 +104,14 @@ public class NacionalidadDaoHibernate extends BaseDao implements NacionalidadDao
         currentSession().saveOrUpdate(nacionalidad);
         currentSession().merge(nacionalidad);
         currentSession().flush();
-       return nacionalidad;
+      
         
     }
 
     
 
     @Override
-    public String elimina(Long id) throws UltimoException {
+    public String elimina( Long id)  {
         log.debug("Eliminando nacionalidad con id {}", id);
         Nacionalidad nacionalidad = obtiene(id);
         nacionalidad.setStatus("I");

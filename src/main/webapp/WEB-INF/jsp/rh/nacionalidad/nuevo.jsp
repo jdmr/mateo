@@ -5,19 +5,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="categoria.nuevo.label" /></title>
+        <title><s:message code="nacionalidad.nuevo.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="categoria" />
+            <jsp:param name="menu" value="nacionalidad" />
         </jsp:include>
 
-        <div id="nuevo-categoria" class="content scaffold-list" role="main">
-            <h1><s:message code="categoria.nuevo.label" /></h1>
+        <div id="nuevo-nacionalidad" class="content scaffold-list" role="main">
+            <h1><s:message code="nacionalidad.nuevo.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/rh/categoria'/>"><i class="icon-list icon-white"></i> <s:message code='categoria.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/rh/nacionalidad'/>"><i class="icon-list icon-white"></i> <s:message code='nacionalidad.lista.label' /></a>
             </p>
-            <form:form commandName="categoria" action="crea" method="post">
+            <form:form commandName="nacionalidad" action="crea" method="post">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -28,7 +28,7 @@
                 </form:errors>
 
                 <fieldset>
-                    <s:bind path="categoria.nombre">
+                    <s:bind path="nacionalidad.nombre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombre">
                                 <s:message code="nombre.label" />
@@ -38,7 +38,7 @@
                             <form:errors path="nombre" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="categoria.status">
+                    <s:bind path="nacionalidad.status">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="status">
                                 <s:message code="status.label" />
@@ -50,8 +50,8 @@
                     </s:bind>
                 </fieldset>
                 <p class="well" style="margin-top: 10px;">
-                    <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/rh/categoria'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="cresar" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
+                    <a class="btn btn-large" href="<s:url value='/rh/nacionalidad'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>

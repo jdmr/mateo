@@ -6,7 +6,6 @@ package mx.edu.um.mateo.rh.dao;
 
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.rh.model.Nacionalidad;
 
 /**
@@ -27,18 +26,18 @@ public interface NacionalidadDao {
      * @param id
      * @return 
      */
-    public Nacionalidad obtiene(Long id);
+    public Nacionalidad obtiene(final Long id);
 
     /**
      * graba informacion sobre una nacionalidad 
      * @param nacionalidad the object to be saved
      */  
-    public Nacionalidad graba(Nacionalidad nacionalidad, Usuario usuario);
+    public void graba(Nacionalidad nacionalidad, Usuario usuario);
 
      /**
      * elimina una nacionalidad de la base de datos mediante el id
      * @param id el id de nacionalidad
      */
-    public String elimina(Long id) throws UltimoException;
+    public String elimina(final Long id) ;
     
 }
