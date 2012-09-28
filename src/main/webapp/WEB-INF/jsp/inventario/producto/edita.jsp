@@ -117,7 +117,7 @@
                                                 <s:message code="unidadMedida.label" />
                                                 <span class="required-indicator">*</span>
                                             </label>
-                                            <form:input path="unidadMedida" maxlength="32" required="true" cssClass="span6" />
+                                            <form:input path="unidadMedida" maxlength="32" required="true" cssClass="span12" />
                                             <form:errors path="unidadMedida" cssClass="alert alert-error" />
                                         </div>
                                     </s:bind>

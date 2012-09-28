@@ -8,9 +8,12 @@ import mx.edu.um.mateo.rh.dao.CategoriaDao;
 import mx.edu.um.mateo.rh.model.Categoria;
 import mx.edu.um.mateo.rh.service.CategoriaManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Component
+
+@Transactional
+@Service
 public class CategoriaManagerImpl extends BaseDao implements CategoriaManager {
     @Autowired
     private CategoriaDao dao;

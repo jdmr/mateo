@@ -30,7 +30,6 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.dao.ReporteDao;
 import mx.edu.um.mateo.general.model.Empresa;
@@ -44,7 +43,6 @@ import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
-
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -104,12 +102,14 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public JasperReport obtieneReporteAdministrativo(String nombre) {
         Reporte reporte = buscaReporteAdminstrativo(nombre);
         return reporte.getReporte();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public JasperReport obtieneReportePorOrganizacion(String nombre,
             Long organizacionId) {
         log.debug("nombre=" + nombre);
@@ -119,6 +119,7 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public JasperReport obtieneReportePorEmpresa(String nombre, Long empresaId) {
         Reporte reporte = buscaReportePorEmpresa(nombre, empresaId);
 
@@ -126,6 +127,7 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public JasperReport obtieneReportePorAlmacen(String nombre, Long almacenId) {
         Reporte reporte = buscaReportePorAlmacen(nombre, almacenId);
 

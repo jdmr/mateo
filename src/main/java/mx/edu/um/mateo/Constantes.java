@@ -79,7 +79,8 @@ public class Constantes {
     public static final String CONTAINSKEY_COLEGIOS = "colegios";
     public static final String CONTAINSKEY_NACIONALIDADES = "nacionalidades";
     public static final String CONTAINSKEY_CATEGORIAS = "categorias";
-   /**
+    public static final String CONTAINSKEY_CONCEPTOS = "conceptos";
+    /**
      * Valores para el los addAttribute para las clases
      */
 //      Valores para el los addAttribute para las clases
@@ -94,6 +95,7 @@ public class Constantes {
     public static final String ADDATTRIBUTE_CATEGORIA = "categoria";
     public static final String ADDATTRIBUTE_NACIONALIDAD = "nacionalidad";
     
+
     /**
      * Valores para el los path's para las clases
      */
@@ -161,6 +163,7 @@ public class Constantes {
     public static final String PATH_COLEGIO_CREA = "/rh/colegio/crea";
     public static final String PATH_COLEGIO_ACTUALIZA = "/rh/colegio/actualiza";
     public static final String PATH_COLEGIO_ELIMINA = "/rh/colegio/elimina";
+
     public static final String CATEGORIA_LIST = "categoriaList";
     public static final String PATH_CATEGORIA = "/rh/categoria";
     public static final String PATH_CATEGORIA_LISTA = "/rh/categoria/lista";
@@ -183,5 +186,14 @@ public class Constantes {
     public static final String PATH_NACIONALIDAD_ELIMINA = "/rh/nacionalidad/elimina";
     public static final String NACIONALIDAD_FORM = "nacionalidadForm";
     
+
+
+    
+    /**   
+     * Valores para los conceptos
+     */
+    public static final String CONCEPTO_LIST = "conceptoList";
+    public static final String CONCEPTO_KEY = "concepto";
+ 
 
 }

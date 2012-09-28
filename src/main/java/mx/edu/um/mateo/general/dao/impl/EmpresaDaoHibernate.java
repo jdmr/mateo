@@ -24,10 +24,7 @@
 package mx.edu.um.mateo.general.dao.impl;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import mx.edu.um.mateo.contabilidad.model.CentroCosto;
-import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.dao.EmpresaDao;
 import mx.edu.um.mateo.general.dao.ReporteDao;
@@ -70,6 +67,7 @@ public class EmpresaDaoHibernate extends BaseDao implements EmpresaDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de empresas con params {}", params);
         if (params == null) {
@@ -136,6 +134,7 @@ public class EmpresaDaoHibernate extends BaseDao implements EmpresaDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Empresa obtiene(Long id) {
         Empresa empresa = (Empresa) currentSession().get(Empresa.class, id);
         return empresa;

@@ -8,6 +8,8 @@
         <li<c:if test="${param.menu eq 'empleado'}"> class="active"</c:if>><a href="<s:url value='/rh/empleado'/>" ><s:message code="empleado.label" /></a></li>
         <li<c:if test="${param.menu eq 'categoria'}"> class="active"</c:if>><a href="<s:url value='/rh/categoria'/>" ><s:message code="categoria.label" /></a></li>
         <li<c:if test="${param.menu eq 'nacionalidad'}"> class="active"</c:if>><a href="<s:url value='/rh/nacionalidad'/>" ><s:message code="nacionalidad.label" /></a></li>
+        <li<c:if test="${param.menu eq 'concepto'}"> class="active"</c:if>><a href="<s:url value='/rh/concepto'/>" ><s:message code="concepto.label" /></a></li>
+
     </ul>
 </nav>
     

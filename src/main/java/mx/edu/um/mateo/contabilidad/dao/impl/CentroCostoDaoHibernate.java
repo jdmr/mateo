@@ -58,6 +58,7 @@ public class CentroCostoDaoHibernate implements CentroCostoDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CentroCosto obtiene(String centroDeCostoId, Usuario usuario) {
         Ejercicio ejercicio = usuario.getEjercicio();
         CCostoPK pk = new CCostoPK(ejercicio, centroDeCostoId);
@@ -65,6 +66,7 @@ public class CentroCostoDaoHibernate implements CentroCostoDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CentroCosto> busca(String filtro, Usuario usuario) {
         Ejercicio ejercicio = usuario.getEjercicio();
         Criteria criteria = currentSession().createCriteria(CentroCosto.class);
@@ -78,6 +80,7 @@ public class CentroCostoDaoHibernate implements CentroCostoDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CentroCosto> buscaPorOrganizacion(String filtro, Usuario usuario) {
         Ejercicio ejercicio = usuario.getEjercicio();
         Organizacion organizacion = usuario.getEmpresa().getOrganizacion();
@@ -101,6 +104,7 @@ public class CentroCostoDaoHibernate implements CentroCostoDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CentroCosto> buscaPorEmpresa(String filtro, Usuario usuario) {
         Ejercicio ejercicio = usuario.getEjercicio();
         Empresa empresa = usuario.getEmpresa();
@@ -124,6 +128,7 @@ public class CentroCostoDaoHibernate implements CentroCostoDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CentroCosto> listaPorEmpresa(Usuario usuario) {
         Ejercicio ejercicio = usuario.getEjercicio();
         Empresa empresa = usuario.getEmpresa();

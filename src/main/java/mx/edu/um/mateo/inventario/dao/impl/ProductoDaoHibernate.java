@@ -64,6 +64,7 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de productos con params {}", params);
         if (params == null) {
@@ -149,6 +150,7 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
 
     @SuppressWarnings("unchecked")
     @Override
+    @Transactional(readOnly = true)
     public List<Producto> listaParaSalida(String filtro, Long almacenId) {
         Criteria criteria = currentSession().createCriteria(Producto.class);
         criteria.createCriteria("almacen").add(Restrictions.idEq(almacenId));
@@ -178,6 +180,7 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Producto obtiene(Long id) {
         return (Producto) currentSession().get(Producto.class, id);
     }
@@ -235,8 +238,9 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
             producto.getImagenes().add(otro.getImagenes().get(0));
             session.delete(imagen);
             session.flush();
-        } else {
-           producto.getImagenes().add(otro.getImagenes().get(0));
+
+        } else if (otro.getImagenes() != null && otro.getImagenes().size() > 0) {
+            producto.getImagenes().add(otro.getImagenes().get(0));
         }
         session.update(producto);
         audita(producto, usuario, Constantes.ACTUALIZAR, fecha);
@@ -365,6 +369,7 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
 
     @SuppressWarnings("unchecked")
     @Override
+    @Transactional(readOnly = true)
     public Map<String, Object> obtieneHistorial(Map<String, Object> params) {
         List<Producto> resultado = new ArrayList<>();
         if (params.containsKey("fecha") && params.containsKey("almacen")) {
