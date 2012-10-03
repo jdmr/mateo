@@ -20,6 +20,8 @@ public interface ColegioDao  {
      * @return colegio populated colegio object
      */
     public Colegio getColegio(final Long id);
+    
+    public void updateColegio(Colegio colegio);
 
     /**
      * Saves a colegio's information
@@ -31,6 +33,6 @@ public interface ColegioDao  {
      * Removes a colegio from the database by id
      * @param id the colegio's id
      */
-    public void removeColegio(final Long id);
+    public String removeColegio(final Long id);
 }
 

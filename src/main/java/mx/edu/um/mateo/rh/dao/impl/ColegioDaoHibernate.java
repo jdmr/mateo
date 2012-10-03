@@ -113,13 +113,19 @@ public class ColegioDaoHibernate extends BaseDao implements ColegioDao {
         currentSession().save(colegio);
     }
 
+    @Override
+    public void updateColegio(final Colegio colegio) {
+        currentSession().update(colegio);
+    }
     /**
      * @see mx.edu.um.rh.dao.ColegioDao#removeColegio(Integer id)
      */
     @Override
-    public void removeColegio(final Long id) {
-        Colegio colegio = getColegio(id);
+    public String removeColegio(final Long id) {
+       Colegio colegio = this.getColegio(id);
+        String nombre = colegio.getNombre();
         currentSession().delete(colegio);
-                
+        currentSession().flush();
+        return nombre;
     }
 }

@@ -48,7 +48,7 @@
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="status" maxlength="2" required="true" />
-                            <form:errors path="staus" cssClass="alert alert-error" />
+                            <form:errors path="status" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                 </fieldset>

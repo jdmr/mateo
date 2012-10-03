@@ -59,6 +59,7 @@
                     <c:forEach items="${colegios}" var="colegio" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/rh/colegio/ver/${colegio.id}' />">${colegio.nombre}</a></td>                            
+                            <td>${colegio.status}</td>
                         </tr>
                     </c:forEach>
                 </tbody>
