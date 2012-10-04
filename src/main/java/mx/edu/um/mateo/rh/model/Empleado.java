@@ -16,25 +16,32 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 import mx.edu.um.mateo.general.model.Empresa;
 import org.hibernate.validator.constraints.Length;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.stereotype.Repository;
+import org.hibernate.validator.constraints.Range;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
+import org.springframework.validation.Validator;
 
 /**
  *
  * @author develop
  */
-@Repository
+@Entity
 @Table(name = "empleados",
 uniqueConstraints = {
     @UniqueConstraint(columnNames = {"clave"})})
-public class Empleado implements Serializable {
+public class Empleado implements Serializable, Validator {
 
     private static final long serialVersionUID = 6001011125338853446L;
     @Id
@@ -66,8 +73,9 @@ public class Empleado implements Serializable {
     @NotBlank
     @Column(nullable = false, length = 2)
     private String status;
-    @NotBlank
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @DateTimeFormat(pattern="dd/MM/yyyy",iso=ISO.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column
     private Date fechaNacimiento;
     @NotBlank
     @Column(nullable = false, length = 30)
@@ -80,17 +88,19 @@ public class Empleado implements Serializable {
     @NotBlank
     @Column(length = 15)
     private String imms;
-    @NotEmpty
-    @Size(min = 2, max = 3)
+    @Digits(integer=3,fraction=0,message="El escalafon debe ser un numero de minimo 2 digitos y maximo 3!")
     @Column(nullable = false)
     private Integer escalafon;
-    @NotEmpty
-    @Size(min = 2, max = 3)
+    @Range(min=0, max=100, message="El turno no puede ser mayor al 100%!")
     @Column(nullable = false)
     private Integer turno;
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @DateTimeFormat(pattern="dd/MM/yyyy",iso=ISO.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column
     private Date fechaAlta;
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @DateTimeFormat(pattern="dd/MM/yyyy",iso=ISO.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column
     private Date fechaBaja;
     @Column(name = "experiencia_fuera_um")
     private BigDecimal experienciaFueraUm;
@@ -118,7 +128,9 @@ public class Empleado implements Serializable {
     @Length(max = 100)
     @Column(length = 100)
     private String conyuge;
-    @Temporal(javax.persistence.TemporalType.DATE)
+    @DateTimeFormat(pattern="dd/MM/yyyy",iso=ISO.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column
     private Date fechaMatrimonio;
     @Column(name = "finado_padre", nullable = false)
     private Boolean finadoPadre;
@@ -484,5 +496,21 @@ public class Empleado implements Serializable {
         hash = 13 * hash + (this.version != null ? this.version.hashCode() : 0);
         hash = 13 * hash + (this.clave != null ? this.clave.hashCode() : 0);
         return hash;
+    }
+
+    @Override
+    public boolean supports(Class<?> type) {
+        return Empleado.class.equals(type);
+    }
+
+    @Override
+    public void validate(Object o, Errors e) {
+        ValidationUtils.rejectIfEmpty(e, "name", "name.empty");
+        Empleado emp = (Empleado) o;
+        if (emp.getEscalafon() < 0) {
+            e.rejectValue("escalafon", "negativeValue");
+        } else if (emp.getEscalafon() > 200) {
+            e.rejectValue("escalafon", "exageratedValue");
+        }
     }
 }

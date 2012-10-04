@@ -31,7 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import javax.persistence.Entity;
 import mx.edu.um.mateo.Constants;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -46,13 +45,14 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.orm.ObjectRetrievalFailureException;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author Omar Soto <osoto@um.edu.mx>
  */
-@Entity
+@Repository
 @Transactional
 public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
 
@@ -123,6 +123,8 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
+        
+        log.debug("Elementos en lista de empleados {}", params.get(Constants.EMPLEADO_LIST));
 
         return params;
     }
@@ -142,7 +144,8 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
         if (usuario != null) {
             empleado.setEmpresa(usuario.getEmpresa());
         }
-        session.save(empleado);
+        session.saveOrUpdate(empleado);
+        session.merge(empleado);
         session.flush();
         return empleado;
     }

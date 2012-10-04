@@ -1,13 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package mx.edu.um.mateo.rh.dao;
 
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
-
 import mx.edu.um.mateo.rh.model.Empleado;
 
 /**

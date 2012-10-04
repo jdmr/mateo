@@ -58,7 +58,7 @@ public class SolicitudVacaciones implements Serializable {
 	private Integer id;
 	@Version
 	private Integer version;
-	@ManyToOne(optional = false)
+	//@ManyToOne(optional = false)
 	private Empleado empleado;
 	@Column(name = "dias_vacaciones", nullable = false)
 	private Integer diasVacaciones;
