@@ -33,13 +33,10 @@ import java.util.Locale;
 import java.util.Map;
 import javax.persistence.Entity;
 import mx.edu.um.mateo.Constants;
-
 import mx.edu.um.mateo.general.dao.BaseDao;
-import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.rh.dao.EmpleadoDao;
 import mx.edu.um.mateo.rh.model.Empleado;
-
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
@@ -166,6 +163,7 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
 
         if (empleado != null) {
             if (empleado.getClave() != null && empleado.getFechaNacimiento() != null) {
+
                 Criteria sql = getSession().createCriteria(Empleado.class);
                 sql.add(Restrictions.like("clave", empleado.getClave() + "%"));
 
@@ -222,24 +220,29 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
      * @see mx.edu.um.mateo.rh.dao.EmpleadoDao#getEmpleado(Empleado empleado)
      */
     @Override
+    @Transactional(readOnly = true)
     public Empleado getEmpleado(final Empleado empleado) {
         Empleado emp = new Empleado();
 
         if (empleado != null) {
             Criteria sql = getSession().createCriteria(Empleado.class);
-            //Buscar por id
+
+            // Buscar por id
             if (empleado.getId() != null) {
                 sql.add(Restrictions.idEq(empleado.getId()));
-            } //Buscar por clave
-            else if (empleado.getClave() != null && !"".equals(empleado.getClave())) {
+            } // Buscar por clave
+            else if (empleado.getClave() != null
+                    && !"".equals(empleado.getClave())) {
                 sql.add(Restrictions.eq("clave", empleado.getClave()));
             }
             emp = (Empleado) sql.uniqueResult();
 
         }
         if (emp == null) {
-            //log.warn ("uh oh, empleado with id '" + empleado.getId () + "' not found...");
-            throw new ObjectRetrievalFailureException(Empleado.class, empleado.getId());
+            log.warn("uh oh, empleado with id '" + empleado.getId()
+                    + "' not found...");
+            throw new ObjectRetrievalFailureException(Empleado.class,
+                    empleado.getId());
         }
         return emp;
     }
@@ -249,11 +252,7 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
      */
     @Override
     public void saveEmpleado(final Empleado empleado) {
-
-        Boolean flag = false;
         currentSession().saveOrUpdate(empleado);
-
-
     }
 
     /**
@@ -270,14 +269,18 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
      * mx.edu.um.mateo.rh.dao.EmpleadoDao#searchEmpleado(mx.edu.um.mateo.rh.model.Empleado)
      */
     @Override
-    public List searchEmpleado(Empleado empleado) {
+    @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
+    public List<Empleado> searchEmpleado(Empleado empleado) {
         Criteria criteria = null;
-        List empleados = null;
+        List<Empleado> empleados = null;
+
         criteria = getSession().createCriteria(Empleado.class);
 
         if (empleado.getClave() != null && !"".equals(empleado.getClave())) {
             criteria.add(Restrictions.ilike("clave", empleado.getClave() + "%"));
         }
+
         if (empleado.getApPaterno() != null && !"".equals(empleado.getApPaterno())) {
             criteria.add(Restrictions.ilike("apPaterno", empleado.getApPaterno() + "%"));
         }
@@ -351,12 +354,19 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
      * mx.edu.um.mateo.rh.dao.EmpleadoDao#searchEmpleadoByClaveOrApPaterno(mx.edu.um.mateo.rh.model.Empleado)
      */
     @Override
-    public List searchEmpleadoByClaveOrApPaterno(Empleado empleado) {
-        if (empleado.getClave() != null && !"".equals(empleado.getClave())
-                && empleado.getClave().substring(0, (empleado.getClave().length() > 2) ? 2 : 1)
-                .equals("98".substring(0, (empleado.getClave().length() > 2) ? 2 : 1))) {
+    @Transactional(readOnly = true)
+    public List<Empleado> searchEmpleadoByClaveOrApPaterno(Empleado empleado) {
+        if (empleado.getClave() != null
+                && !"".equals(empleado.getClave())
+                && empleado
+                .getClave()
+                .substring(0,
+                (empleado.getClave().length() > 2) ? 2 : 1)
+                .equals("98".substring(0,
+                (empleado.getClave().length() > 2) ? 2 : 1))) {
             empleado.setApPaterno("");
-        } else if (empleado.getApPaterno() != null && !"".equals(empleado.getApPaterno())) {
+        } else if (empleado.getApPaterno() != null
+                && !"".equals(empleado.getApPaterno())) {
             empleado.setClave("");
         }
 
@@ -365,18 +375,21 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
     }
 
     /**
-     * @see
-     * mx.edu.um.mateo.rh.dao.EmpleadoDao#getEmpleadoClave(mx.edu.um.mateo.rh.model.Empleado)
+     * @see mx.edu.um.mateo.rh.dao.EmpleadoDao#getEmpleadoClave(mx.edu.um.mateo.rh.model.Empleado)
      */
     @Override
+    @Transactional(readOnly = true)
     public Empleado getEmpleadoClave(Empleado empleado) {
-        Empleado emp = (Empleado) getSession().createCriteria(Empleado.class)
-                .add(org.hibernate.criterion.Restrictions.eq("clave", empleado.getClave()))
-                .uniqueResult();
+        Empleado emp = (Empleado) getSession()
+                .createCriteria(Empleado.class)
+                .add(org.hibernate.criterion.Restrictions.eq("clave",
+                empleado.getClave())).uniqueResult();
 
         if (emp == null) {
-            //log.warn ("uh oh, empleado with clave '" + empleado.getClave () + "' not found...");
-            throw new ObjectRetrievalFailureException(Empleado.class, empleado.getClave());
+            log.warn("uh oh, empleado with clave '" + empleado.getClave()
+                    + "' not found...");
+            throw new ObjectRetrievalFailureException(Empleado.class,
+                    empleado.getClave());
         }
 
         return emp;
@@ -385,13 +398,15 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
     /**
      * @see mx.edu.um.mateo.rh.dao.EmpleadoDao#getEmpleado(java.lang.String)
      */
+    @Override
+    @Transactional(readOnly = true)
     public Empleado getEmpleado(final String clave) {
         Empleado emp = (Empleado) getSession().createCriteria(Empleado.class)
                 .add(org.hibernate.criterion.Restrictions.eq("clave", clave))
                 .uniqueResult();
 
         if (emp == null) {
-            //log.warn ("uh oh, empleado with clave '" + clave + "' not found...");
+            log.warn("uh oh, empleado with clave '" + clave + "' not found...");
             throw new ObjectRetrievalFailureException(Empleado.class, clave);
         }
 

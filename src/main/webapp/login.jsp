@@ -16,7 +16,7 @@
     <body>
         <h2><s:message code="login.title" /></h2>
         <c:if test="${not empty param.error}">
-            <h2 style="color:blue;">Favor de comunicarse a las extensiones 1054 o 1050 para que le demos acceso</h2>
+            <h2 style="color:blue;"><s:message code="login.error" /></h2>
             <p style="color:red;padding: 0 10px 10px 0;">
                 <s:message code="login.invalido" />
             </p>

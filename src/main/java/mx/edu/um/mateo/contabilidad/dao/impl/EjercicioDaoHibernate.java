@@ -26,13 +26,11 @@ package mx.edu.um.mateo.contabilidad.dao.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import mx.edu.um.mateo.contabilidad.dao.EjercicioDao;
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.contabilidad.model.EjercicioPK;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
-
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Query;
@@ -53,7 +51,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class EjercicioDaoHibernate extends BaseDao implements EjercicioDao {
 
+    public EjercicioDaoHibernate() {
+        log.info("Nueva instancia del EjercicioDao");
+    }
+
     @Override
+    @Transactional(readOnly = true)
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de ejercicios con params {}", params);
         if (params == null) {
@@ -121,6 +124,7 @@ public class EjercicioDaoHibernate extends BaseDao implements EjercicioDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Ejercicio obtiene(EjercicioPK id) {
         Ejercicio ejercicio = (Ejercicio) currentSession().get(Ejercicio.class,
                 id);
@@ -186,6 +190,7 @@ public class EjercicioDaoHibernate extends BaseDao implements EjercicioDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Ejercicio> lista(Long organizacionId) {
         Query query = currentSession().createQuery("select e from Ejercicio e where e.id.organizacion.id = :organizacionId");
         query.setLong("organizacionId", organizacionId);
