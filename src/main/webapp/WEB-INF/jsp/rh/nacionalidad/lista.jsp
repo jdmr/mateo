@@ -49,10 +49,10 @@
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="nombre" />
+                            <jsp:param name="columna" value="nacionalidad.nombre.label" />
                         </jsp:include>
                         
-                        <th><s:message code="status.label" /></th>
+                        <th><s:message code="nacionalidad.status.label" /></th>
                     </tr>
                 </thead>
                 <tbody>

@@ -35,7 +35,7 @@ public interface NacionalidadDao {
     public void graba(Nacionalidad nacionalidad, Usuario usuario);
 
      /**
-     * elimina una nacionalidad de la base de datos mediante el id
+     * Cambia el status de la nacionalidad a I
      * @param id el id de nacionalidad
      */
     public String elimina(final Long id) ;

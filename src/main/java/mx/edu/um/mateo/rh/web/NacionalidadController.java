@@ -1,26 +1,6 @@
     /*
- * The MIT License
- *
- * Copyright 2012 Universidad de Montemorelos A. C.
- * Copyright 2012 jdmr.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
  */
 package mx.edu.um.mateo.rh.web;
 
@@ -41,9 +21,15 @@ import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.web.BaseController;
-import mx.edu.um.mateo.rh.model.Categoria;
-import mx.edu.um.mateo.rh.service.CategoriaManager;
-import net.sf.jasperreports.engine.*;
+import mx.edu.um.mateo.rh.model.Nacionalidad;
+import mx.edu.um.mateo.rh.service.NacionalidadManager;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
@@ -64,7 +50,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -72,19 +62,20 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author zorch
  */
 @Controller
-@RequestMapping(Constantes.PATH_CATEGORIA)
-
-public class CategoriaController extends BaseController{
-    
-    private static final Logger log = LoggerFactory.getLogger(mx.edu.um.mateo.rh.web.CategoriaController.class);
+@RequestMapping(Constantes.PATH_NACIONALIDAD)
+public class NacionalidadController extends BaseController{
+     
+    private static final Logger log = LoggerFactory.getLogger(mx.edu.um.mateo.rh.web.NacionalidadController.class);
     @Autowired
-    private CategoriaManager categoriaManager;
+    private NacionalidadManager nacionalidadManager;
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
     private ResourceBundleMessageSource messageSource;
     @Autowired
     private Ambiente ambiente;
+    
+   
     
     @RequestMapping ({"","/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -97,7 +88,7 @@ public class CategoriaController extends BaseController{
             Usuario usuario,
             Errors errors,
             Model modelo) {
-        log.debug("Mostrando lista de categorias");
+        log.debug("Mostrando lista de nacionalidades");
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
@@ -118,9 +109,9 @@ public class CategoriaController extends BaseController{
         
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = categoriaManager.lista(params);
+            params = nacionalidadManager.lista(params);
             try {
-                generaReporte(tipo, (List<Categoria>) params.get(Constantes.CONTAINSKEY_CATEGORIAS), response);
+                generaReporte(tipo, (List<Nacionalidad>) params.get(Constantes.CONTAINSKEY_NACIONALIDADES), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -131,20 +122,20 @@ public class CategoriaController extends BaseController{
         
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = categoriaManager.lista(params);
+            params = nacionalidadManager.lista(params);
             
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<Categoria>) params.get(Constantes.CONTAINSKEY_CATEGORIAS), request);
+                enviaCorreo(correo, (List<Nacionalidad>) params.get(Constantes.CONTAINSKEY_NACIONALIDADES), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
-                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("categoria.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("nacionalidad.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-        params = categoriaManager.lista(params);
-        log.debug("params{}",params.get(Constantes.CONTAINSKEY_CATEGORIAS));
-        modelo.addAttribute(Constantes.CONTAINSKEY_CATEGORIAS, params.get(Constantes.CONTAINSKEY_CATEGORIAS));
+        params = nacionalidadManager.lista(params);
+        log.debug("params{}",params.get(Constantes.CONTAINSKEY_NACIONALIDADES));
+        modelo.addAttribute(Constantes.CONTAINSKEY_NACIONALIDADES, params.get(Constantes.CONTAINSKEY_NACIONALIDADES));
 
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
@@ -155,11 +146,11 @@ public class CategoriaController extends BaseController{
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<Categoria> categorias = (List<Categoria>) params.get(Constantes.CONTAINSKEY_CATEGORIAS);
+        List<Nacionalidad> nacionalidades = (List<Nacionalidad>) params.get(Constantes.CONTAINSKEY_NACIONALIDADES);
         Long primero = ((pagina - 1) * max) + 1;
         log.debug("primero {}",primero);
-        log.debug("Categoriasize {}",categorias.size());
-        Long ultimo = primero + (categorias.size() - 1);
+        log.debug("Nacionalidadesize {}",nacionalidades.size());
+        Long ultimo = primero + (nacionalidades.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
         log.debug("Paginacion{}", paginacion);
@@ -169,97 +160,98 @@ public class CategoriaController extends BaseController{
         log.debug("Pagina{}",pagina);
         // termina paginado
 
-        return Constantes.PATH_CATEGORIA_LISTA ;
+        return Constantes.PATH_NACIONALIDAD_LISTA ;
     }
     
+    
     @RequestMapping("/ver/{id}")
-    public String ver(@PathVariable String id, Model modelo) {
-        log.debug("Mostrando categoria {}", id);
-        Categoria categoria = categoriaManager.obtiene(id);
+    public String ver(@PathVariable Long id, Model modelo) {
+        log.debug("Mostrando nacionalidad {}", id);
+        Nacionalidad nacionalidad = nacionalidadManager.obtiene(id);
         
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_CATEGORIA, categoria);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_NACIONALIDAD, nacionalidad);
         
-        return Constantes.PATH_CATEGORIA_VER;
+        return Constantes.PATH_NACIONALIDAD_VER;
     }
     
     @RequestMapping("/nuevo")
     public String nueva(Model modelo) {
-        log.debug("Nuevo categoria");
-        Categoria categoria = new Categoria();
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_CATEGORIA, categoria);
-        return Constantes.PATH_CATEGORIA_NUEVO;
+        log.debug("Nuevo nacionalidad");
+        Nacionalidad nacionalidad = new Nacionalidad();
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_NACIONALIDAD, nacionalidad);
+        return Constantes.PATH_NACIONALIDAD_NUEVO;
     }
     
     @Transactional
     @RequestMapping(value = "/graba", method = RequestMethod.POST)
-    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid Categoria categoria, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid Nacionalidad nacionalidad, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
-            return Constantes.PATH_CATEGORIA_NUEVO;
+            return Constantes.PATH_NACIONALIDAD_NUEVO;
         }
         
         try {
             Usuario usuario = ambiente.obtieneUsuario();
-             categoriaManager.graba(categoria,usuario);
+             nacionalidadManager.graba(nacionalidad,usuario);
         } catch (ConstraintViolationException e) {
-            log.error("No se pudo grabar categoria", e);
-            return Constantes.PATH_CATEGORIA_NUEVO;
+            log.error("No se pudo crear nacionalidad", e);
+            return Constantes.PATH_NACIONALIDAD_NUEVO;
         }
         
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "categoria.graba.message");
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{categoria.getNombre()});
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "nacionalidad.graba.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nacionalidad.getNombre()});
         
-        return "redirect:" + Constantes.PATH_CATEGORIA_LISTA + "/" ;
+        return "redirect:" + Constantes.PATH_NACIONALIDAD_LISTA + "/" ;
     }
     
     @RequestMapping("/edita/{id}")
-    public String edita(@PathVariable String id, Model modelo) {
-        log.debug("Editar cuenta de categoria {}", id);
-        Categoria categoria = categoriaManager.obtiene(id);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_CATEGORIA, categoria);
-        return Constantes.PATH_CATEGORIA_EDITA;
+    public String edita(@PathVariable Long id, Model modelo) {
+        log.debug("Editar cuenta de nacionalidad {}", id);
+        Nacionalidad nacionalidad = nacionalidadManager.obtiene(id);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_NACIONALIDAD, nacionalidad);
+        return Constantes.PATH_NACIONALIDAD_EDITA;
     }
     
-      
+       
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpServletRequest request, @RequestParam String id, Model modelo, @ModelAttribute Categoria categoria, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        log.debug("Elimina cuenta de categoria");
+    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Nacionalidad nacionalidad, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        log.debug("Elimina cuenta de nacionalidad");
         try {
-           categoriaManager.elimina(id);
+           nacionalidadManager.elimina(id);
             
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "categoria.elimina.message");
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{categoria.getNombre()});
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "nacionalidad.elimina.message");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nacionalidad.getNombre()});
         } catch (Exception e) {
-            log.error("No se pudo eliminar categoria " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_CATEGORIA, new String[]{"categoria.no.elimina.message"}, null, null));
-            return Constantes.PATH_CATEGORIA_VER;
+            log.error("No se pudo eliminar nacionalidad " + id, e);
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_NACIONALIDAD, new String[]{"nacionalidad.no.elimina.message"}, null, null));
+            return Constantes.PATH_NACIONALIDAD_VER;
         }
         
-        return "redirect:" + Constantes.PATH_CATEGORIA_LISTA ;
+        return "redirect:" + Constantes.PATH_NACIONALIDAD_LISTA ;
     }
     
-    private void generaReporte(String tipo, List<Categoria> categorias, HttpServletResponse response) throws JRException, IOException {
+    private void generaReporte(String tipo, List<Nacionalidad> nacionalidades, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
         switch (tipo) {
             case "PDF":
-                archivo = generaPdf(categorias);
+                archivo = generaPdf(nacionalidades);
                 response.setContentType("application/pdf");
-                response.addHeader("Content-Disposition", "attachment; filename=Categorias.pdf");
+                response.addHeader("Content-Disposition", "attachment; filename=Nacionalidades.pdf");
                 break;
             case "CSV":
-                archivo = generaCsv(categorias);
+                archivo = generaCsv(nacionalidades);
                 response.setContentType("text/csv");
-                response.addHeader("Content-Disposition", "attachment; filename=Categorias.csv");
+                response.addHeader("Content-Disposition", "attachment; filename=Nacionalidades.csv");
                 break;
             case "XLS":
-                archivo = generaXls(categorias);
+                archivo = generaXls(nacionalidades);
                 response.setContentType("application/vnd.ms-excel");
-                response.addHeader("Content-Disposition", "attachment; filename=Categorias.xls");
+                response.addHeader("Content-Disposition", "attachment; filename=Nacionalidades.xls");
         }
         if (archivo != null) {
             response.setContentLength(archivo.length);
@@ -271,51 +263,51 @@ public class CategoriaController extends BaseController{
         
     }
     
-    private void enviaCorreo(String tipo, List<Categoria> categorias, HttpServletRequest request) throws JRException, MessagingException {
+    private void enviaCorreo(String tipo, List<Nacionalidad> nacionalidades, HttpServletRequest request) throws JRException, MessagingException {
         log.debug("Enviando correo {}", tipo);
         byte[] archivo = null;
         String tipoContenido = null;
         switch (tipo) {
             case "PDF":
-                archivo = generaPdf(categorias);
+                archivo = generaPdf(nacionalidades);
                 tipoContenido = "application/pdf";
                 break;
             case "CSV":
-                archivo = generaCsv(categorias);
+                archivo = generaCsv(nacionalidades);
                 tipoContenido = "text/csv";
                 break;
             case "XLS":
-                archivo = generaXls(categorias);
+                archivo = generaXls(nacionalidades);
                 tipoContenido = "application/vnd.ms-excel";
         }
         
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(ambiente.obtieneUsuario().getUsername());
-        String titulo = messageSource.getMessage("categoria.lista.label", null, request.getLocale());
+        String titulo = messageSource.getMessage("nacionalidad.lista.label", null, request.getLocale());
         helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
         helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
         helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
         mailSender.send(message);
     }
     
-    private byte[] generaPdf(List categorias) throws JRException {
+    private byte[] generaPdf(List nacionalidades) throws JRException {
         Map<String, Object> params = new HashMap<>();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/categorias.jrxml"));
+        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/nacionalidades.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(categorias));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(nacionalidades));
         byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
         
         return archivo;
     }
     
-    private byte[] generaCsv(List categorias) throws JRException {
+    private byte[] generaCsv(List nacionalidades) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRCsvExporter exporter = new JRCsvExporter();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/categorias.jrxml"));
+        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/nacionalidades.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(categorias));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(nacionalidades));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
         exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
         exporter.exportReport();
@@ -324,13 +316,13 @@ public class CategoriaController extends BaseController{
         return archivo;
     }
     
-    private byte[] generaXls(List categorias) throws JRException {
+    private byte[] generaXls(List nacionalidades) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRXlsExporter exporter = new JRXlsExporter();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/categorias.jrxml"));
+        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/nacionalidades.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(categorias));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(nacionalidades));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
         exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
         exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);

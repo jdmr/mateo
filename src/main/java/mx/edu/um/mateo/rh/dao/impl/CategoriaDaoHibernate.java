@@ -46,7 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CategoriaDaoHibernate extends BaseDao implements CategoriaDao {
 
     /**
-     * @see mx.edu.um.mateo.rh.dao.CategoriaDao#lista(java.util.Map)
+     * @see mx.edu.um.mateo.rh.dao.CategoriaDao#lista(java.util.Map) 
      *
      */
     @Override
@@ -110,7 +110,7 @@ public class CategoriaDaoHibernate extends BaseDao implements CategoriaDao {
     }
 
     /**
-     * @see mx.edu.um.rh.dao.CategoriaDao#obtiene(Integer id)
+     * @see mx.edu.um.mateo.rh.service.CategoriaManager#obtiene(java.lang.String) 
      */
     @Override
     public Categoria obtiene(final Integer id) {
@@ -124,7 +124,7 @@ public class CategoriaDaoHibernate extends BaseDao implements CategoriaDao {
     }
 
     /**
-     * @see mx.edu.um.rh.dao.CategoriaDao#Graba(Categoria categoria)
+     *  @see mx.edu.um.mateo.rh.service.CategoriaManager#graba(mx.edu.um.mateo.rh.model.Categoria, mx.edu.um.mateo.general.model.Usuario) 
      */
     @Override
     public void graba(final Categoria categoria, Usuario usuario) {
@@ -150,7 +150,7 @@ public class CategoriaDaoHibernate extends BaseDao implements CategoriaDao {
     }
 
     /**
-     * @see mx.edu.um.rh.dao.CategoriaDao#elimina(Long id)
+     *  @see mx.edu.um.mateo.rh.service.CategoriaManager#elimina(java.lang.String) 
      */
     @Override
     public String elimina(final Integer id) {

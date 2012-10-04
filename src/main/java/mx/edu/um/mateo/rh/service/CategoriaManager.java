@@ -14,26 +14,26 @@ import mx.edu.um.mateo.rh.model.Categoria;
  */
 public interface CategoriaManager {
     /**
-     * Retrieves all of the Categorias
+     * Regresa todas las categorias
      */
     public Map<String, Object> lista(Map<String, Object> params);
 
     /**
-     * Gets Categoria's information based on id.
-     * @param id the Categoria's id
-     * @return Categoria populated categoria object
+     * Obtiene las categorias basandose en su id
+     * @param id el id de la categoria
+     * @return regresa la categoria que obtuvo mediante el id
      */
     public Categoria obtiene(final String id);
 
     /**
-     * Saves a Categoria's information
-     * @param categoria the object to be saved
+     * Graba la informacion de la categoria
+     * @param categoria el objeto que sera grabado
      */
     public void graba(Categoria categoria, Usuario usuario);
 
     /**
-     * Removes a Categoria from the database by id
-     * @param id the categoria's id
+     * Elimina la categoria de la base de datos mediante su id
+     * @param id el id de la categoria
      */
     public String elimina(final String id);
 }

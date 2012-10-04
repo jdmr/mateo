@@ -17,7 +17,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/rh/nacionalidad'/>"><i class="icon-list icon-white"></i> <s:message code='nacionalidad.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="/rh/nacionalidad/actualiza" />
+            <c:url var="actualizaUrl" value="/rh/nacionalidad/graba" />
             <form:form commandName="nacionalidad" action="${actualizaUrl}" method="post">
                 <form:hidden path="id" />
                 <form:hidden path="version" />
@@ -34,7 +34,7 @@
                     <s:bind path="nacionalidad.nombre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombre">
-                                <s:message code="nombre.label" />
+                                <s:message code="nacionalidad.nombre.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="nombre" maxlength="128" required="true" cssClass="span3" />
@@ -44,7 +44,7 @@
                     <s:bind path="nacionalidad.status">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="status">
-                                <s:message code="status.label" />
+                                <s:message code="nacionalidad.status.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="status" maxlength="128" required="true" cssClass="span3" />

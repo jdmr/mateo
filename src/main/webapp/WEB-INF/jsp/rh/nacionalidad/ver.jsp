@@ -32,13 +32,13 @@
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span4">
-                        <h4><s:message code="nombre.label" /></h4>
+                        <h4><s:message code="nacionalidad.nombre.label" /></h4>
                         <h3>${nacionalidad.nombre}</h3>
                     </div>
                 </div>
 
                 <div class="span4">
-                        <h4><s:message code="status.label" /></h4>
+                        <h4><s:message code="nacionalidad.status.label" /></h4>
                         <h3>${nacionalidad.status}</h3>
                     </div>
                 </div>

@@ -26,6 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class NacionalidadDaoHibernate extends BaseDao implements NacionalidadDao{
 
+    /**
+     *@see mx.edu.um.mateo.rh.dao.NacionalidadDao#lista(java.util.Map)  
+     */
     
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
@@ -81,6 +84,9 @@ public class NacionalidadDaoHibernate extends BaseDao implements NacionalidadDao
         return params;
     }
 
+    /**
+     * @see mx.edu.um.mateo.rh.dao.NacionalidadDao#obtiene(java.lang.Long) 
+     */
     @Override
     public Nacionalidad obtiene(Long id) {
         log.debug("Obtiene nacionalidad con id = {}", id);
@@ -94,7 +100,9 @@ public class NacionalidadDaoHibernate extends BaseDao implements NacionalidadDao
     }
 
    
-    
+    /**
+     *@see mx.edu.um.mateo.rh.dao.NacionalidadDao#graba(mx.edu.um.mateo.rh.model.Nacionalidad, mx.edu.um.mateo.general.model.Usuario)   
+     */
     @Override
     public void graba(final Nacionalidad nacionalidad, Usuario usuario) {
         Session session = currentSession();
@@ -109,7 +117,9 @@ public class NacionalidadDaoHibernate extends BaseDao implements NacionalidadDao
     }
 
     
-
+/**
+ *@see mx.edu.um.mateo.rh.dao.NacionalidadDao#elimina(java.lang.Long)  
+ */
     @Override
     public String elimina( Long id)  {
         log.debug("Eliminando nacionalidad con id {}", id);

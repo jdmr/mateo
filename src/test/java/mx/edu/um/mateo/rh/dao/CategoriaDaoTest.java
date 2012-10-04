@@ -11,6 +11,7 @@ import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.rh.model.Categoria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -56,14 +57,14 @@ public class CategoriaDaoTest {
             categoria.setStatus("AC");
             categoria.setEmpresa(empresa);
             instance.graba(categoria, null);
-            //assertNotNull(c.getId());
+            assertNotNull(categoria.getId());
         }
          Map<String, Object> params= new HashMap<>();
          params.put("empresa",empresa.getId());
          Map<String, Object> result=instance.lista(params);
         
         //assertNotNull((List)params.get(Constantes.CATEGORIA_LIST));
-        //assertEquals((List)params.get(Constantes.CATEGORIA_LIST).size);
+        
         
     }
 
@@ -81,7 +82,7 @@ public class CategoriaDaoTest {
         currentSession().save(categoria);
         
         Categoria categoria1= instance.obtiene(categoria.getId());
-        //assertEquals(categoria.getId(),categoria1.getId());
+        assertEquals(categoria.getId(),categoria1.getId());
         
        
     }
@@ -97,9 +98,9 @@ public class CategoriaDaoTest {
         categoria.setEmpresa(empresa);
         currentSession().save(categoria);
         
-        //assertNotNull(categoria.getId());
-        //assertEquals(categoria.getNombre(),"Test1");
-        //assertEquals(categoria.getStatus(), "AC");
+        assertNotNull(categoria.getId());
+        assertEquals(categoria.getNombre(),"Test1");
+        assertEquals(categoria.getStatus(), "AC");
         
         
         
@@ -117,9 +118,9 @@ public class CategoriaDaoTest {
         currentSession().save(categoria);
         currentSession().delete(categoria);
         
-//        assertNotNull(categoria.getId());
-        //assertEquals(categoria.getNombre(),"Test1");
-        //assertEquals(categoria.getStatus(), "AC");
+        assertNotNull(categoria.getId());
+        assertEquals(categoria.getNombre(),"Test1");
+        assertEquals(categoria.getStatus(), "AC");
         
     }
 }

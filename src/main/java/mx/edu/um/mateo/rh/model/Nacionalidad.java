@@ -30,7 +30,7 @@ public class Nacionalidad implements Serializable {
     private Long id;
     @Version
     private Integer version;
-    @NotBlank
+    @NotBlank(message="")
     @Column(nullable= false, length=50)
     private String nombre;
     @Length(max=2)
@@ -116,11 +116,13 @@ public class Nacionalidad implements Serializable {
         this.status = status;
     }
 
-    
     @Override
     public String toString() {
-        return "Nacionalidades{" + "id=" + id + ", version=" + version + '}';
+        return "Nacionalidad{" + "id=" + id + ", version=" + version + ", nombre=" + nombre + ", status=" + status + ", empresa=" + empresa.getId() + '}';
     }
+
+    
+   
     
     
     

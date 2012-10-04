@@ -15,9 +15,9 @@
         <div id="nuevo-categoria" class="content scaffold-list" role="main">
             <h1><s:message code="categoria.nuevo.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/rh/categoria'/>"><i class="icon-list icon-white"></i> <s:message code='categoria.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/rh/categoria/'/>"><i class="icon-list icon-white"></i> <s:message code='categoria.lista.label' /></a>
             </p>
-            <form:form commandName="categoria" action="crea" method="post">
+            <form:form commandName="categoria" action="graba" method="post">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -31,7 +31,7 @@
                     <s:bind path="categoria.nombre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombre">
-                                <s:message code="nombre.label" />
+                                <s:message code="categoria.nombre.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="nombre" maxlength="128" required="true" cssClass="span3" />
@@ -41,7 +41,7 @@
                     <s:bind path="categoria.status">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="status">
-                                <s:message code="status.label" />
+                                <s:message code="categoria.status.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="status" maxlength="2" required="true" cssClass="span3" />

@@ -22,14 +22,14 @@ public interface CategoriaDao{
     public Categoria obtiene(final Integer id);
 
     /**
-     * Saves a categoria's information
-     * @param categoria the object to be saved
+     * Guarda la informacion de la categoria
+     * @param categoria el objeto que sera guardado
      */    
     public void graba(Categoria categoria, Usuario usuario);
 
     /**
-     * Removes a categoria from the database by id
-     * @param id the categoria's id
+     * Borra la categoria de la base de datos mediante el id
+     * @param id id de la categoria
      */
     public String elimina(final Integer id);
 

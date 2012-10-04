@@ -2,6 +2,7 @@
 package mx.edu.um.mateo.rh.service.impl;
 
 import java.util.Map;
+import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.rh.dao.CategoriaDao;
@@ -22,7 +23,7 @@ public class CategoriaManagerImpl extends BaseDao implements CategoriaManager {
     
 
     /**
-     * @see mx.edu.um.rh.service.CategoriaManager#lista(mx.edu.um.rh.model.Categoria)
+     *  @see mx.edu.um.mateo.rh.service.CategoriaManager#lista(java.util.Map) 
      */
     
     @Override
@@ -31,7 +32,7 @@ public class CategoriaManagerImpl extends BaseDao implements CategoriaManager {
     }
 
     /**
-     * @see mx.edu.um.rh.service.CategoriaManager#obtiene(String id)
+     *  @see mx.edu.um.mateo.rh.service.CategoriaManager#obtiene(java.lang.String) 
      */
     
     
@@ -41,15 +42,18 @@ public class CategoriaManagerImpl extends BaseDao implements CategoriaManager {
     }
 
     /**
-     * @see mx.edu.um.rh.service.CategoriaManager#graba(Categoria categoria)
+     * @see mx.edu.um.mateo.rh.service.CategoriaManager#graba(mx.edu.um.mateo.rh.model.Categoria, mx.edu.um.mateo.general.model.Usuario) 
      */
     @Override
     public void graba(Categoria categoria, Usuario usuario) {
+        if(categoria.getId()==null){
+            categoria.setStatus(Constantes.STATUS_ACTIVO);
+        }
         dao.graba(categoria, usuario);
     }
 
     /**
-     * @see mx.edu.um.rh.service.CategoriaManager#elimina(String id)
+     *  @see mx.edu.um.mateo.rh.service.CategoriaManager#elimina(java.lang.String) 
      */
     @Override
     public String elimina(final String id) {
