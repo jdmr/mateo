@@ -24,10 +24,8 @@
 package mx.edu.um.mateo.general.service;
 
 import java.util.List;
-
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Usuario;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
