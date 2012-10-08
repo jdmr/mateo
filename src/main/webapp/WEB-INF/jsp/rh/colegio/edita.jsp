@@ -17,7 +17,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/rh/colegio'/>"><i class="icon-list icon-white"></i> <s:message code='colegio.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="/rh/colegio/actualiza" />
+            <c:url var="actualizaUrl" value="/rh/colegio/graba" />
             <form:form commandName="colegio" method="post" action="${actualizaUrl}">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">

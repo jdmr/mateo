@@ -21,13 +21,13 @@ public interface ColegioDao  {
      */
     public Colegio getColegio(final Long id);
     
-    public void updateColegio(Colegio colegio);
+    public void grabaColegio(Colegio colegio);
 
     /**
      * Saves a colegio's information
      * @param colegio the object to be saved
      */    
-    public void saveColegio(Colegio colegio);
+    
 
     /**
      * Removes a colegio from the database by id

@@ -23,7 +23,6 @@ public Map<String, Object> lista(Map<String, Object> params) ;
      */
     public void saveColegio(Colegio colegio);
     
-    public void updateColegio(Colegio colegio);
 
     /**
      * Removes a colegio from the database by id

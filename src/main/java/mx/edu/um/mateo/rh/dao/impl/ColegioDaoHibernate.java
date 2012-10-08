@@ -109,14 +109,10 @@ public class ColegioDaoHibernate extends BaseDao implements ColegioDao {
      * @see mx.edu.um.rh.dao.ColegioDao#saveColegio(Colegio colegio)
      */
     @Override
-    public void saveColegio(final Colegio colegio) {
-        currentSession().save(colegio);
+    public void grabaColegio(final Colegio colegio) {
+        currentSession().saveOrUpdate(colegio);
     }
 
-    @Override
-    public void updateColegio(final Colegio colegio) {
-        currentSession().update(colegio);
-    }
     /**
      * @see mx.edu.um.rh.dao.ColegioDao#removeColegio(Integer id)
      */

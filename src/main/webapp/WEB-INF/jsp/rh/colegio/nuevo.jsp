@@ -17,7 +17,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/rh/colegio'/>"><i class="icon-list icon-white"></i> <s:message code='colegio.lista.label' /></a>
             </p>
-            <form:form commandName="colegio" action="crea" method="post">
+            <form:form commandName="colegio" action="graba" method="post">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>

@@ -122,7 +122,7 @@ public class ColegioController extends BaseController {
 
         this.pagina(params, modelo, mx.edu.um.mateo.Constantes.CONTAINSKEY_COLEGIOS, pagina);
 
-        return "rh/colegio/lista";
+        return mx.edu.um.mateo.Constantes.PATH_COLEGIO_LISTA;
     }
 
     @RequestMapping("/ver/{id}")
@@ -132,7 +132,7 @@ public class ColegioController extends BaseController {
 
          modelo.addAttribute(mx.edu.um.mateo.Constantes.ADDATTRIBUTE_COLEGIO, colegio);
 
-        return "rh/colegio/ver";
+        return mx.edu.um.mateo.Constantes.PATH_COLEGIO_VER;
     }
 
     @RequestMapping("/nuevo")
@@ -140,11 +140,11 @@ public class ColegioController extends BaseController {
         log.debug("Nuevo colegio");
         Colegio colegio = new Colegio();
         modelo.addAttribute(mx.edu.um.mateo.Constantes.ADDATTRIBUTE_COLEGIO, colegio);
-        return "rh/colegio/nuevo";
+        return mx.edu.um.mateo.Constantes.PATH_COLEGIO_NUEVO;
     }
 
-    @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Colegio colegio, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    @RequestMapping(value = "/graba", method = RequestMethod.POST)
+    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid Colegio colegio, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
@@ -153,7 +153,7 @@ public class ColegioController extends BaseController {
             for (ObjectError error : bindingResult.getAllErrors()) {
                 log.debug("Error: {}", error);
             }
-            return "rh/colegio/nuevo";
+            return mx.edu.um.mateo.Constantes.PATH_COLEGIO_NUEVO;
         }
 
         try {
@@ -169,13 +169,13 @@ public class ColegioController extends BaseController {
              */
             
             errors.rejectValue("nombre", "colegio.errors.creado", e.toString());
-            return "rh/colegio/nuevo";
+            return mx.edu.um.mateo.Constantes.PATH_COLEGIO_NUEVO;
         }
 
         redirectAttributes.addFlashAttribute("message", "colegio.creado.message");
         redirectAttributes.addFlashAttribute("messageAttrs", new String[]{colegio.getNombre()});
 
-        return "redirect:/rh/colegio/ver/" + colegio.getId();
+        return "redirect:" + mx.edu.um.mateo.Constantes.PATH_COLEGIO;
     }
 
     @RequestMapping("/edita/{id}")
@@ -186,39 +186,39 @@ public class ColegioController extends BaseController {
         } catch (ObjectRetrievalFailureException ex) {
             log.error("No se pudo obtener al colegio", ex);
             errors.rejectValue("colegio", "registro.noEncontrado", new String[]{"colegio"}, null);
-            return "rh/colegio";
+            return mx.edu.um.mateo.Constantes.PATH_COLEGIO;
         }
         modelo.addAttribute(mx.edu.um.mateo.Constantes.ADDATTRIBUTE_COLEGIO, colegio);
-        return "rh/colegio/edita";
+        return mx.edu.um.mateo.Constantes.PATH_COLEGIO_EDITA;
     }
 
-    @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, @Valid Colegio colegio, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            log.error("Hubo algun error en la forma, regresando");
-            for (ObjectError error : bindingResult.getAllErrors()) {
-                log.debug("Error: {}", error);
-            }
-            return "rh/colegio/edita";
-        }
-
-        try {
-            Usuario usuario = ambiente.obtieneUsuario();
-            //colegio = colegioManager.saveColegio(colegio, usuario);
-            colegioManager.updateColegio(colegio);
-           
-            ambiente.actualizaSesion(request.getSession(), usuario);
-        } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear el colegio", e);
-            errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
-            return "rh/colegio/edita";
-        }
-
-        redirectAttributes.addFlashAttribute("message", "colegio.actualizado.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{colegio.getNombre()});
-
-        return "redirect:/rh/colegio/ver/" + colegio.getId();
-    }
+//    @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
+//    public String actualiza(HttpServletRequest request, @Valid Colegio colegio, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+//        if (bindingResult.hasErrors()) {
+//            log.error("Hubo algun error en la forma, regresando");
+//            for (ObjectError error : bindingResult.getAllErrors()) {
+//                log.debug("Error: {}", error);
+//            }
+//            return "rh/colegio/edita";
+//        }
+//
+//        try {
+//            Usuario usuario = ambiente.obtieneUsuario();
+//            //colegio = colegioManager.saveColegio(colegio, usuario);
+//            colegioManager.updateColegio(colegio);
+//           
+//            ambiente.actualizaSesion(request.getSession(), usuario);
+//        } catch (ConstraintViolationException e) {
+//            log.error("No se pudo crear el colegio", e);
+//            errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
+//            return "rh/colegio/edita";
+//        }
+//
+//        redirectAttributes.addFlashAttribute("message", "colegio.actualizado.message");
+//        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{colegio.getNombre()});
+//
+//        return "redirect:/rh/colegio/ver/" + colegio.getId();
+//    }
 
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Colegio colegio, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
@@ -235,9 +235,9 @@ public class ColegioController extends BaseController {
          catch (Exception e) {
             log.error("No se pudo eliminar el colegio " + id, e);
             bindingResult.addError(new ObjectError("colegio", new String[]{"colegio.no.eliminado.message"}, null, null));
-            return "rh/colegio/ver";
+            return mx.edu.um.mateo.Constantes.PATH_COLEGIO_VER;
         }
 
-        return "redirect:/rh/colegio";
+        return "redirect:" + mx.edu.um.mateo.Constantes.PATH_COLEGIO;
     }
 }

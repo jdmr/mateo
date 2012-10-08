@@ -46,13 +46,10 @@ public class ColegioManagerImpl implements ColegioManager {
      */
     @Override
     public void saveColegio(Colegio colegio) {
-        dao.saveColegio(colegio);
+        dao.grabaColegio(colegio);
     }
     
-    @Override
-      public void updateColegio(Colegio colegio){
-        dao.updateColegio(colegio);
-    }
+   
 
     /**
      * @see mx.edu.um.rh.service.ColegioManager#removeColegio(String id)
