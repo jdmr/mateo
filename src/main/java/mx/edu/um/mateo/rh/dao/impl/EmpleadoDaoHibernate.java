@@ -145,7 +145,7 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
             empleado.setEmpresa(usuario.getEmpresa());
         }
         session.saveOrUpdate(empleado);
-        session.merge(empleado);
+//        session.merge(empleado);
         session.flush();
         return empleado;
     }

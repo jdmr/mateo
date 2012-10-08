@@ -26,7 +26,6 @@ package mx.edu.um.mateo.rh.dao;
 import java.math.BigDecimal;
 import java.util.*;
 import mx.edu.um.mateo.Constants;
-
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.rh.model.Empleado;
@@ -76,7 +75,7 @@ public class EmpleadoDaoTest {
             Empleado empleado = new Empleado("test0" + (i+10), "test", "test", "test", "M", "address", "A",
                     "curp", "rfc", "cuenta", "imss", 10, 100, BigDecimal.ZERO, "mo", "ife", "ra",
                     Boolean.TRUE, "padre", "madre", "C", "Conyugue", Boolean.TRUE, Boolean.TRUE,
-                    "iglesia", "responsabiliad");
+                    "iglesia", "responsabilidad", empresa);
             instance.graba(empleado);
         }
         Map<String, Object> params = new HashMap<>();
@@ -87,8 +86,8 @@ public class EmpleadoDaoTest {
         /**
          * TODO No pasan estos assert porque no graba ningun empleado, aunque los test de crea y actualiza no marcan error alguno
          */
-        //assertEquals(10, ((List<Empleado>) result.get(Constants.EMPLEADO_LIST)).size());
-        //assertEquals(20, ((Long) result.get("cantidad")).intValue());
+        assertEquals(10, ((List<Empleado>) result.get(Constants.EMPLEADO_LIST)).size());
+        assertEquals(20, ((Long) result.get("cantidad")).intValue());
     }
 
     /**
@@ -104,7 +103,7 @@ public class EmpleadoDaoTest {
         Empleado empleado = new Empleado("test001", "test", "test", "test", "M", "address", "A",
                 "curp", "rfc", "cuenta", "imss", 10, 100, BigDecimal.ZERO, "mo", "ife", "ra",
                 Boolean.TRUE, "padre", "madre", "Ca", "Conyugue", Boolean.TRUE, Boolean.TRUE,
-                "iglesia", "responsabiliad");
+                "iglesia", "responsabilidad", empresa);
         instance.graba(empleado);
         Long id = empleado.getId();
         Empleado result = instance.obtiene(id);
@@ -138,7 +137,7 @@ public class EmpleadoDaoTest {
         Empleado empleado = new Empleado("test001", "test", "test", "test", "M", "address", "A",
                 "curp", "rfc", "cuenta", "imss", 10, 100, BigDecimal.ZERO, "mo", "ife", "ra",
                 Boolean.TRUE, "padre", "madre", "Ca", "Conyugue", Boolean.TRUE, Boolean.TRUE,
-                "iglesia", "responsabiliad");
+                "iglesia", "responsabilidad", empresa);
         instance.graba(empleado);
         assertNotNull(empleado);
         assertNotNull(empleado.getId());
@@ -172,7 +171,7 @@ public class EmpleadoDaoTest {
         Empleado empleado = new Empleado("test001", "test", "test", "test", "M", "address", "A",
                 "curp", "rfc", "cuenta", "imss", 10, 100, BigDecimal.ZERO, "mo", "ife", "ra",
                 Boolean.TRUE, "padre", "madre", "C", "Conyugue", Boolean.TRUE, Boolean.TRUE,
-                "iglesia", "responsabiliad");
+                "iglesia", "responsabilidad", empresa);
         instance.graba(empleado);
         assertNotNull(empleado);
         assertNotNull(empleado.getId());

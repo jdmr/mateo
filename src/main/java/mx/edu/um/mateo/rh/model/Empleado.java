@@ -7,7 +7,6 @@ package mx.edu.um.mateo.rh.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,9 +22,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
 import mx.edu.um.mateo.general.model.Empresa;
 import org.hibernate.validator.constraints.Length;
-
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -49,7 +46,7 @@ public class Empleado implements Serializable, Validator {
     private Long id;
     @Version
     private Integer version;
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Empresa empresa;
     @NotBlank(message = "La clave del empleado es un campo requerido")
     @Size(min = 7, max = 7, message = "La clave del empleado debe contener una longitud de 7 caracteres")
@@ -153,7 +150,7 @@ public class Empleado implements Serializable, Validator {
             String modalidad, String ife, String rango, Boolean adventista,
             String padre, String madre, String estadoCivil, String conyuge,
             Boolean finadoPadre, Boolean finadoMadre, String iglesia,
-            String responsabilidad) {
+            String responsabilidad, Empresa empresa) {
         this.clave = clave;
         this.nombre = nombre;
         this.apPaterno = apPaterno;
@@ -184,6 +181,7 @@ public class Empleado implements Serializable, Validator {
         this.finadoMadre = finadoMadre;
         this.iglesia = iglesia;
         this.responsabilidad = responsabilidad;
+        this.empresa = empresa;
     }
 
     public String getApMaterno() {
