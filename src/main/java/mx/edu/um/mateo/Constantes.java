@@ -5,7 +5,7 @@
 package mx.edu.um.mateo;
 
 /**
- * 
+ *
  * @author nujev
  */
 public class Constantes {
@@ -49,7 +49,6 @@ public class Constantes {
     public static final String DECIMAL_PATTERN = "###,###,###,##0.00";
     public static final String CURRENCY_PATTERN = "$###,###,##0.00";
     public static final String PERCENTAGE_PATTERN = "#.00%";
-    
     /**
      * Valores para el los containsKey
      */
@@ -75,23 +74,18 @@ public class Constantes {
     public static final String CONTAINSKEY_RESULTADOS = "resultados";
     public static final String CONTAINSKEY_AUXILIARES = "auxiliares";
     public static final String CONTAINSKEY_LIBROS = "libros";
-    public static final String CONTAINSKEY_DEPENDIENTES = "dependientes";
-    public static final String CONTAINSKEY_ESTUDIOSEMPLEADO = "estudiosEmpleado";
     public static final String CONTAINSKEY_COLEGIOS = "colegios";
-    public static final String CONTAINSKEY_NACIONALIDADES = "nacionalidades";
-    public static final String CONTAINSKEY_CONCEPTOS = "conceptos";
     /**
      * Valores para el los addAttribute para las clases
      */
-//      Valores para el los addAttribute para las clases
     public static final String ADDATTRIBUTE_MAYOR = "mayor";
     public static final String ADDATTRIBUTE_EMPLEADO = "empleado";
-    public static final String ADDATTRIBUTE_DEPENDIENTE = "dependiente";
-    public static final String ADDATTRIBUTE_ESTUDIOSEMPLEADO = "estudioEmpleado";
     public static final String ADDATTRIBUTE_RESULTADO = "resultado";
     public static final String ADDATTRIBUTE_AUXILIAR = "auxiliar";
     public static final String ADDATTRIBUTE_LIBRO = "libro";
     public static final String ADDATTRIBUTE_COLEGIO = "colegio";
+    public static final String ADDATTRIBUTE_DEPENDIENTE = "dependiente";
+    public static final String ADDATTRIBUTE_ESTUDIOSEMPLEADO = "estudioEmpleado";
     /**
      * Valores para el los path's para las clases
      */
@@ -159,11 +153,13 @@ public class Constantes {
     public static final String PATH_COLEGIO_CREA = "/rh/colegio/crea";
     public static final String PATH_COLEGIO_ACTUALIZA = "/rh/colegio/actualiza";
     public static final String PATH_COLEGIO_ELIMINA = "/rh/colegio/elimina";
-    
-    /**   
+    public static final String CONTAINSKEY_DEPENDIENTES = "dependientes";
+    public static final String CONTAINSKEY_ESTUDIOSEMPLEADO = "estudiosEmpleado";
+    public static final String CONTAINSKEY_NACIONALIDADES = "nacionalidades";
+    public static final String CONTAINSKEY_CONCEPTOS = "conceptos";
+    /**
      * Valores para los conceptos
      */
     public static final String CONCEPTO_LIST = "conceptoList";
     public static final String CONCEPTO_KEY = "concepto";
- 
 }
