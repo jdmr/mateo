@@ -15,7 +15,7 @@
         <h1><s:message code="concepto.lista.label" /></h1>
         <hr/>
 
-        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/rh/conceptos' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/rh/concepto' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
@@ -49,16 +49,16 @@
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="concepto.nombre" />
+                            <jsp:param name="columna" value="nombre" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="concepto.descripcion" />
+                            <jsp:param name="columna" value="descripcion" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="concepto.tags" />
+                            <jsp:param name="columna" value="tags" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="concepto.status" />
+                            <jsp:param name="columna" value="status" />
                         </jsp:include>
                         <th><s:message code="empresa.label" /></th>
                     </tr>

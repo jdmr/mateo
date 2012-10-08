@@ -21,6 +21,7 @@
             <form:form commandName="concepto" action="${actualizaUrl}" method="post">
                 <form:hidden path="id" />
                 <form:hidden path="version" />
+                <form:hidden path="status" />
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -34,11 +35,31 @@
                     <s:bind path="concepto.nombre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombre">
-                                <s:message code="nombre.label" />
+                                <s:message code="concepto.nombre.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="nombre" maxlength="128" required="true" cssClass="span3" />
+                            <form:input path="nombre" maxlength="60" required="true" cssClass="span3" />
                             <form:errors path="nombre" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="concepto.descripcion">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="descripcion">
+                                <s:message code="concepto.descripcion.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="descripcion" maxlength="120" required="true" cssClass="span3" />
+                            <form:errors path="descripcion" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="concepto.tags">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="tags">
+                                <s:message code="concepto.tags.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="tags" maxlength="100" required="true" cssClass="span3" />
+                            <form:errors path="tags" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                 </fieldset>

@@ -64,10 +64,7 @@ public class ConceptoDaoHibernate extends BaseDao implements ConceptoDao {
             String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
             propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("nombreCompleto", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("rfc", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("correo", filtro, MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("contacto", filtro, MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("descripcion", filtro, MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
