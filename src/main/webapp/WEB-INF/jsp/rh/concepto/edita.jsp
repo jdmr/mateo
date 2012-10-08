@@ -5,20 +5,20 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="concepto.nuevo.label" /></title>
+        <title><s:message code="concepto.edita.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
             <jsp:param name="menu" value="concepto" />
         </jsp:include>
 
-        <div id="nuevo-almacen" class="content scaffold-list" role="main">
+        <div id="nuevo-concepto" class="content scaffold-list" role="main">
             <h1><s:message code="concepto.nuevo.label" /></h1>
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/rh/concepto'/>"><i class="icon-list icon-white"></i> <s:message code='concepto.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="/rh/concepto/actualiza" />
-            <form:form commandName="almacen" action="${actualizaUrl}" method="post">
+            <c:url var="actualizaUrl" value="/rh/concepto/graba" />
+            <form:form commandName="concepto" action="${actualizaUrl}" method="post">
                 <form:hidden path="id" />
                 <form:hidden path="version" />
                 <form:errors path="*">
@@ -45,7 +45,7 @@
 
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="actualizarBtn" class="btn btn-primary btn-large" id="actualizar" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='actualizar.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/rh/concepto/ver/${almacen.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <a class="btn btn-large" href="<s:url value='/rh/concepto/ver/${concepto.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>

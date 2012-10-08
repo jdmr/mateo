@@ -157,6 +157,7 @@ public class Constantes {
     public static final String ADDATTRIBUTE_DEPENDIENTE = "dependiente";
     public static final String ADDATTRIBUTE_ESTUDIOSEMPLEADO = "estudioEmpleado";
     public static final String ADDATTRIBUTE_COLEGIO = "colegio";
+    public static final String ADDATTRIBUTE_CONCEPTO = "concepto";
     /**
      * Valores para el los path's para las clases
      */
@@ -190,5 +191,12 @@ public class Constantes {
      */
     public static final String CONCEPTO_LIST = "conceptoList";
     public static final String CONCEPTO_KEY = "concepto";
- 
+    public static final String PATH_CONCEPTO = "/rh/concepto";
+    public static final String PATH_CONCEPTO_LISTA = "rh/concepto/lista";
+    public static final String PATH_CONCEPTO_VER = "/rh/concepto/ver";
+    public static final String PATH_CONCEPTO_NUEVO = "/rh/concepto/nuevo";
+    public static final String PATH_CONCEPTO_EDITA = "/rh/concepto/edita";
+    public static final String PATH_CONCEPTO_CREA = "/rh/concepto/crea";
+    public static final String PATH_CONCEPTO_ACTUALIZA = "/rh/concepto/actualiza";
+    public static final String PATH_CONCEPTO_ELIMINA = "/rh/concepto/elimina";
 }

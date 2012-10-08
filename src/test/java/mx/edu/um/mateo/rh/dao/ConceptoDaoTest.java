@@ -4,13 +4,12 @@
  */
 package mx.edu.um.mateo.rh.dao;
 
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
-import mx.edu.um.mateo.Constantes;
+import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
-import mx.edu.um.mateo.rh.dao.impl.ConceptoDaoHibernate;
 import mx.edu.um.mateo.rh.model.Concepto;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -49,12 +48,17 @@ public class ConceptoDaoTest {
     public void testObtenerListaDeConceptos() {
         Map<String, Object> params = new TreeMap();
         Concepto c = null;
+         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
         for (int i = 0; i < 5; i++) {
             c = new Concepto();
             c.setDescripcion("test" + i);
             c.setNombre("a"+i);
             c.setStatus("A");
             c.setTags("tag");
+            c.setEmpresa(empresa);
             currentSession().save(c);
             //assertNotNull(c.getId());
         }
@@ -81,14 +85,23 @@ public class ConceptoDaoTest {
 
     @Test
     public void testGrabaConcepto() {
+        log.debug("entrando a graba concepto");
         Concepto concepto = new Concepto();
         concepto.setDescripcion("test");
         concepto.setNombre("a");
         concepto.setStatus("A");
         concepto.setTags("tag");
-        conceptoDao.graba(concepto);
+        conceptoDao.graba(concepto, null);
         //assertNotNull(concepto.getId());
-               
+        if(concepto.getId()==null){
+            log.error("no graba");
+        }
+        log.debug("concepto{}",concepto.getId());
+        try {
+            log.debug("concepto{}",conceptoDao.obtiene(concepto.getId()));
+        } catch (ObjectRetrievalFailureException ex) {
+            java.util.logging.Logger.getLogger(ConceptoDaoTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Test

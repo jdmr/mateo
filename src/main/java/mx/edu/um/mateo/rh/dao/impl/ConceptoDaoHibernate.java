@@ -5,28 +5,30 @@
 package mx.edu.um.mateo.rh.dao.impl;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.dao.BaseDao;
-import mx.edu.um.mateo.general.model.Proveedor;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.rh.dao.ConceptoDao;
 import mx.edu.um.mateo.rh.model.Concepto;
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.criterion.*;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author AMDA
  */
-@Component
+@Repository
+@Transactional
 public class ConceptoDaoHibernate extends BaseDao implements ConceptoDao {
 
    /**
-     * @see mx.edu.um.mateo.rh.dao.ConceptoDao#lista(java.util.Map) 
-     */
+    * @see mx.edu.um.mateo.rh.dao.ConceptoDao#lista(java.util.Map) 
+    */
     @Override
     public Map<String, Object> lista(Map<String, Object> params){
         
@@ -108,10 +110,16 @@ public class ConceptoDaoHibernate extends BaseDao implements ConceptoDao {
     /**
      * @see mx.edu.um.mateo.rh.dao.ConceptoDao#graba(mx.edu.um.mateo.rh.model.Concepto)  
      */    
-    public void graba(final Concepto concepto) {
+    @Override
+    public void graba(final Concepto concepto, Usuario usuario) {
+        Session session = currentSession();
+		if (usuario != null) {
+			concepto.setEmpresa(usuario.getEmpresa());
+		}
         currentSession().saveOrUpdate(concepto);
-        currentSession().merge(concepto);
+//        currentSession().merge(concepto);
         currentSession().flush();
+        log.debug("concepto{}",concepto);
     }
 
     /**

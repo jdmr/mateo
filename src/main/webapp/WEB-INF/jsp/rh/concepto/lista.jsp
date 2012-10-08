@@ -49,16 +49,28 @@
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="nombre" />
+                            <jsp:param name="columna" value="concepto.nombre" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="concepto.descripcion" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="concepto.tags" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="concepto.status" />
                         </jsp:include>
                         <th><s:message code="empresa.label" /></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${almacenes}" var="concepto" varStatus="status">
+                    <c:forEach items="${conceptoList}" var="concepto" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/rh/conceptos/ver/${concepto.id}' />">${concepto.nombre}</a></td>
-                            <td>${concepto.empresa.nombre}</td>
+                            <td><a href="<c:url value='/rh/concepto/ver/${concepto.id}' />">${concepto.nombre}</a></td>
+                            <td>${concepto.descripcion}</td>
+                             <td>${concepto.tags}</td>
+                              <td>${concepto.status}</td>
+                               <td>${concepto.empresa.nombre}</td>
                         </tr>
                     </c:forEach>
                 </tbody>
