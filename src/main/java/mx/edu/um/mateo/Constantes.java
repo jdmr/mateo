@@ -165,5 +165,11 @@ public class Constantes {
      */
     public static final String CONCEPTO_LIST = "conceptoList";
     public static final String CONCEPTO_KEY = "concepto";
+    
+     /**   
+     * Valores para dependientes
+     */
+    public static final String DEPENDIENTE_LIST = "dependienteList";
+    public static final String DEPENDIENTE_KEY = "dependienteForm";
  
 }

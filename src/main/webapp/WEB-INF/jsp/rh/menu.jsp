@@ -7,6 +7,7 @@
         <li<c:if test="${param.menu eq 'principal'}"> class="active"</c:if>><a href="<c:url value='/rh' />"><s:message code="rh.label" /></a></li>
         <li<c:if test="${param.menu eq 'empleado'}"> class="active"</c:if>><a href="<s:url value='/rh/empleado'/>" ><s:message code="empleado.label" /></a></li>
         <li<c:if test="${param.menu eq 'concepto'}"> class="active"</c:if>><a href="<s:url value='/rh/concepto'/>" ><s:message code="concepto.label" /></a></li>
+        <li<c:if test="${param.menu eq 'dependiente'}"> class="active"</c:if>><a href="<s:url value='/rh/dependiente'/>" ><s:message code="dependiente.label" /></a></li>
     </ul>
 </nav>
     

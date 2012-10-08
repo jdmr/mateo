@@ -34,41 +34,51 @@
                     <s:bind path="dependiente.nombre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombre">
-                                <s:message code="nombre.label" />
+                                <s:message code="dependiente.nombre.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="nombre" maxlength="128" required="true" />
                             <form:errors path="nombre" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="dependiente.apPaterno">
+                    <s:bind path="dependiente.fechaNacimiento">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="apPaterno">
-                                <s:message code="apPaterno.label" />
+                            <label for="fechaNacimiento">
+                                <s:message code="dependiente.fechaNacimiento.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="apPaterno" maxlength="128" required="true" />
-                            <form:errors path="apPaterno" cssClass="alert alert-error" />
+                            <form:input path="fechaNacimiento" maxlength="128" required="true" />
+                            <form:errors path="fechaNacimiento" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="dependiente.apMaterno">
+                    <s:bind path="dependiente.estudios">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="apMaterno">
-                                <s:message code="apMaterno.label" />
+                            <label for="estudios">
+                                <s:message code="dependiente.estudios.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="apMaterno" maxlength="128" required="true" />
-                            <form:errors path="apMaterno" cssClass="alert alert-error" />
+                            <form:input path="estudios" maxlength="128" required="true" />
+                            <form:errors path="estudios" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-              
-                <s:bind path="dependiente.tipoDependiente">
+                    <s:bind path="dependiente.grado">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="tipoDependiente">
-                                <s:message code="tipoDependiente.label" />
+                            <label for="grado">
+                                <s:message code="dependiente.grado.label" />
                                 <span class="required-indicator">*</span>
-                                <form:select id="tipoDependiente.id" path="tipoDependiente.descripcion" items="${dependientes}" itemLabel="descripcion" itemValue="id" />
-                                <form:errors path="tipoDependiente" cssClass="alert alert-error" />
+                            </label>
+                            <form:input path="grado" maxlength="128" required="true" />
+                            <form:errors path="grado" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="dependiente.version">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="version">
+                                <s:message code="dependiente.version.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="version" maxlength="128" required="true" />
+                            <form:errors path="version" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                 </fieldset>

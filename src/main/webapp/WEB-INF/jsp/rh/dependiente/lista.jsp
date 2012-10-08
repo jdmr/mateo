@@ -48,19 +48,19 @@
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="nombre" />
+                            <jsp:param name="columna" value="dependiente.nombre" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="apPaterno" />
+                            <jsp:param name="columna" value="dependiente.fechaNacimiento" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="apMaterno" />
+                            <jsp:param name="columna" value="dependiente.estudios" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="clave" />
+                            <jsp:param name="columna" value="dependiente.grado" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="tipoDependiente" />
+                            <jsp:param name="columna" value="dependiente.version" />
                         </jsp:include>
                     </tr>
                 </thead>
@@ -68,9 +68,9 @@
                     <c:forEach items="${dependientes}" var="dependiente" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/rh/dependiente/ver/${dependiente.id}' />">${dependiente.nombre}</a></td>
-                            <td>${dependiente.apPaterno}</td>
-                            <td>${dependiente.apMaterno}</td>
-                            <td>${dependiente.tipoDependiente}</td>
+                            <td>${dependiente.fechaNacimiento}</td>
+                            <td>${dependiente.estudios}</td>
+                            <td>${dependiente.grado}</td>
                         </tr>
                     </c:forEach>
                 </tbody>

@@ -30,22 +30,27 @@
             <form:form commandName="dependiente" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="nombre.label" /></div>
+                    <div class="span1"><s:message code="dependiente.nombre.label" /></div>
                     <div class="span11">${dependiente.nombre}</div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="apPaterno.label" /></div>
+                    <div class="span1"><s:message code="dependiente.fechaNacimiento.label" /></div>
                     <div class="span11">${dependiente.apPaterno}</div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="apMaterno.label" /></div>
+                    <div class="span1"><s:message code="dependiente.estudios.label" /></div>
                     <div class="span11">${dependiente.apMaterno}</div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="tipoDependiente.label" /></div>
+                    <div class="span1"><s:message code="dependiente.grado.label" /></div>
+                    <div class="span11">${dependiente.tipoDependiente}</div>
+                </div>
+                
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="dependiente.version.label" /></div>
                     <div class="span11">${dependiente.tipoDependiente}</div>
                 </div>
 
