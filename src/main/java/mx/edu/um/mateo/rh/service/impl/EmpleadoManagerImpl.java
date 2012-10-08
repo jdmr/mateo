@@ -6,7 +6,9 @@ package mx.edu.um.mateo.rh.service.impl;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import mx.edu.um.mateo.general.service.BaseManager;
+import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.rh.dao.EmpleadoDao;
 import mx.edu.um.mateo.rh.model.Empleado;
 import mx.edu.um.mateo.rh.service.EmpleadoManager;
@@ -29,21 +31,34 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
     private EmpleadoDao dao;
     
     /**
-     * @see mx.edu.um.rh.service.EmpleadoManager#getEmpleados(mx.edu.um.rh.model.Empleado)
+     * @see mx.edu.um.mateo.mateo.rh.service.EmpleadoManager#lista(java.util.Map) 
+     */
+    public Map<String, Object> lista(Map<String, Object> params){
+        return dao.lista(params);
+    }
+    /**
+     * @see mx.edu.um.mateo.mateo.rh.service.EmpleadoManager#
+     */
+    public Empleado obtiene(Long id) throws ObjectRetrievalFailureException{
+        return dao.obtiene(id);
+    }
+    
+    /**
+     * @see mx.edu.um.mateo.rh.service.EmpleadoManager#getEmpleados(mx.edu.um.rh.model.Empleado)
      */
     public List getEmpleados(final Empleado empleado) {
         return dao.searchEmpleado(empleado);
     }
 
     /**
-     * @see mx.edu.um.rh.service.EmpleadoManager#getEmpleado(String id)
+     * @see mx.edu.um.mateo.rh.service.EmpleadoManager#getEmpleado(String id)
      */
     public Empleado getEmpleado(final Empleado empleado) {
         return dao.getEmpleado(empleado);
     }
 
     /**
-     * @see mx.edu.um.rh.service.EmpleadoManager#saveEmpleado(Empleado empleado)
+     * @see mx.edu.um.mateo.rh.service.EmpleadoManager#saveEmpleado(Empleado empleado)
      */
     public void saveEmpleado(Empleado empleado) {
     	if(empleado.getId() == null){
@@ -58,12 +73,19 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
     }
 
     /**
-     * @see mx.edu.um.rh.service.EmpleadoManager#removeEmpleado(String id)
+     * @see mx.edu.um.mateo.rh.service.EmpleadoManager#removeEmpleado(mx.edu.um.mateo.rh.model.Empleado) 
      */
     public void removeEmpleado(final Empleado empleado) {
         //dao.removeEmpleado(empleado);
         
     }
+    /**
+     * @see mx.edu.um.mateo.rh.service.EmpleadoManager#elimina(java.lang.Long) 
+     */
+    public String elimina(Long id){
+        return "";
+    }
+    
     public String getNuevaClave(final Empleado empleado){
     	if(empleado.getClave()==null || empleado.getClave().length() == 3){
     		Integer clave = new Integer(0);
@@ -107,7 +129,7 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
     	return dao.getEmpleadoClave(empleado);
     }
          /**
-      * @see mx.edu.um.rh.service.SolicitudSalidaManager#getDiasVacacionesActuales(SolicitudSalida solicitudSalida) throws Exception
+      * @see mx.edu.um.mateo.rh.service.SolicitudSalidaManager#getDiasVacacionesActuales(SolicitudSalida solicitudSalida) throws Exception
      */
     public void saveDiasVacacionesActuales(Empleado empleado, User user) throws Exception {
 
@@ -162,7 +184,7 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
 
 
    /**
-      * @see mx.edu.um.rh.service.EmpleadoManager#getDiasVacacionesNuevoEmpleado(mx.edu.um.rh.model.Empleado)
+      * @see mx.edu.um.mateo.rh.service.EmpleadoManager#getDiasVacacionesNuevoEmpleado(mx.edu.um.rh.model.Empleado)
      */
 //public Integer getDiasVacacionesNuevoEmpleado(Empleado empleado) throws Exception {
 //
@@ -209,7 +231,7 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
 
 
     /**
-     * @see mx.edu.um.rh.service.EmpleadoManager#getEmpleadosActivosByContabilidad(mx.edu.um.rh.model.EmpleadoPuesto)
+     * @see mx.edu.um.mateo.rh.service.EmpleadoManager#getEmpleadosActivosByContabilidad(mx.edu.um.rh.model.EmpleadoPuesto)
      * @param puesto
      * @return
      * @throws java.lang.Exception

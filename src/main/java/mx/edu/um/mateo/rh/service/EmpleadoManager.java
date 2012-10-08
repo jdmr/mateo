@@ -5,6 +5,8 @@
 package mx.edu.um.mateo.rh.service;
 
 import java.util.List;
+import java.util.Map;
+import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.rh.model.Empleado;
 import org.springframework.security.core.userdetails.User;
 
@@ -14,6 +16,18 @@ import org.springframework.security.core.userdetails.User;
  * @author osoto@um.edu.mxs
  */
 public interface EmpleadoManager {
+    /**
+     * Regresa la lista de empleados dependiendo los parametros de filtro
+     * @param params
+     * @return 
+     */
+    public Map<String, Object> lista(Map<String, Object> params);
+    /**
+     * Regresa al empleado correspondiente al id
+     * @param id
+     * @return 
+     */
+    public Empleado obtiene(Long id) throws ObjectRetrievalFailureException;
     /**
      * Retrieves all of the empleados
      */
@@ -33,10 +47,16 @@ public interface EmpleadoManager {
     public void saveEmpleado (Empleado empleado);
     
     /**
-     * Removes a empleado from the database by id
+     * El empleado nunca se borra....
      * @param id the empleado's id
      */
     public void removeEmpleado (final Empleado empleado);
+    /**
+     * El empleado nunca se borra...
+     * @param id 
+     * @return
+     */
+    public String elimina (final Long id);
     
     /**
      * Gets empleado's information based on id.

@@ -83,9 +83,6 @@ public class EmpleadoDaoTest {
         Map<String, Object> result = instance.lista(params);
         assertNotNull(result.get(Constants.EMPLEADO_LIST));
         assertNotNull(result.get("cantidad"));
-        /**
-         * TODO No pasan estos assert porque no graba ningun empleado, aunque los test de crea y actualiza no marcan error alguno
-         */
         assertEquals(10, ((List<Empleado>) result.get(Constants.EMPLEADO_LIST)).size());
         assertEquals(20, ((Long) result.get("cantidad")).intValue());
     }
