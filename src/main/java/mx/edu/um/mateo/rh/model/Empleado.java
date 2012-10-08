@@ -35,7 +35,7 @@ import org.springframework.validation.Validator;
 
 /**
  *
- * @author develop
+ * @author osoto@um.edu.mx
  */
 @Entity
 @Table(name = "empleados",
