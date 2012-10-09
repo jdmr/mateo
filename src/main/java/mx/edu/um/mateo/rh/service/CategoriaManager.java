@@ -35,6 +35,6 @@ public interface CategoriaManager {
      * Elimina la categoria de la base de datos mediante su id
      * @param id el id de la categoria
      */
-    public String elimina(final String id);
+    public String elimina(final Long id);
 }
  

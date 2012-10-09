@@ -226,7 +226,7 @@ public class CategoriaController extends BaseController{
       
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpServletRequest request, @RequestParam String id, Model modelo, @ModelAttribute Categoria categoria, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Categoria categoria, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina cuenta de categoria");
         try {
            categoriaManager.elimina(id);

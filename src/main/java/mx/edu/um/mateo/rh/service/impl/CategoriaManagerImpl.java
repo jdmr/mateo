@@ -38,7 +38,7 @@ public class CategoriaManagerImpl extends BaseDao implements CategoriaManager {
     
     @Override
     public Categoria obtiene(final String id) {
-        return dao.obtiene(new Integer(id));
+        return dao.obtiene(new Long(id));
     }
 
     /**
@@ -56,9 +56,11 @@ public class CategoriaManagerImpl extends BaseDao implements CategoriaManager {
      *  @see mx.edu.um.mateo.rh.service.CategoriaManager#elimina(java.lang.String) 
      */
     @Override
-    public String elimina(final String id) {
-        String nombre = dao.elimina(new Integer(id));
-        return nombre;
+    public String elimina(final Long id) {
+        Categoria categoria = dao.obtiene(new Long(id));
+        categoria.setStatus(Constantes.STATUS_INACTIVO);
+         return categoria.getNombre();
+        
         
     }
 

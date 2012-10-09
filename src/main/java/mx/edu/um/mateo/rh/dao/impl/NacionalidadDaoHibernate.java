@@ -52,8 +52,8 @@ public class NacionalidadDaoHibernate extends BaseDao implements NacionalidadDao
         if (!params.containsKey(Constantes.CONTAINSKEY_OFFSET)) {
             params.put(Constantes.CONTAINSKEY_OFFSET, 0);
         }
-        Criteria criteria = currentSession().createCriteria(Nacionalidad.class);
-        Criteria countCriteria = currentSession().createCriteria(Nacionalidad.class);
+        Criteria criteria = currentSession().createCriteria(Nacionalidad.class).add(Restrictions.eq("status",Constantes.STATUS_ACTIVO));
+        Criteria countCriteria = currentSession().createCriteria(Nacionalidad.class).add(Restrictions.eq("status",Constantes.STATUS_ACTIVO));
 
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
             String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);

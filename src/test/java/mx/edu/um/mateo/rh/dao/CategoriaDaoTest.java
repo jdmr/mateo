@@ -54,10 +54,10 @@ public class CategoriaDaoTest {
             
             
             categoria.setNombre("Categoria"+i);
-            categoria.setStatus("AC");
+            categoria.setStatus("A");
             categoria.setEmpresa(empresa);
             instance.graba(categoria, null);
-            assertNotNull(categoria.getId());
+           assertNotNull(categoria.getId());
         }
          Map<String, Object> params= new HashMap<>();
          params.put("empresa",empresa.getId());

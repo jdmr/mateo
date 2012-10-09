@@ -21,6 +21,7 @@
             <form:form commandName="nacionalidad" action="${actualizaUrl}" method="post">
                 <form:hidden path="id" />
                 <form:hidden path="version" />
+                <form:hidden path="status" />
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -41,16 +42,7 @@
                             <form:errors path="nombre" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="nacionalidad.status">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="status">
-                                <s:message code="nacionalidad.status.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="status" maxlength="128" required="true" cssClass="span3" />
-                            <form:errors path="status" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+                  
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">

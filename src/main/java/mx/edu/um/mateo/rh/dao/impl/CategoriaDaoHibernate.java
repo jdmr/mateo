@@ -71,8 +71,9 @@ public class CategoriaDaoHibernate extends BaseDao implements CategoriaDao {
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(Categoria.class);
-        Criteria countCriteria = currentSession().createCriteria(Categoria.class);
+        Criteria criteria = currentSession().createCriteria(Categoria.class).add(Restrictions.eq("status",Constantes.STATUS_ACTIVO));
+        Criteria countCriteria = currentSession().createCriteria(Categoria.class).add(Restrictions.eq("status",Constantes.STATUS_ACTIVO));
+        
 
         if (params.containsKey("empresa")) {
             criteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
@@ -113,7 +114,7 @@ public class CategoriaDaoHibernate extends BaseDao implements CategoriaDao {
      * @see mx.edu.um.mateo.rh.service.CategoriaManager#obtiene(java.lang.String) 
      */
     @Override
-    public Categoria obtiene(final Integer id) {
+    public Categoria obtiene(final Long id) {
         Categoria categoria = (Categoria) currentSession().get(Categoria.class, id);
         if (categoria == null) {
             log.warn("uh oh, categoria with id '" + id + "' not found...");
@@ -153,7 +154,7 @@ public class CategoriaDaoHibernate extends BaseDao implements CategoriaDao {
      *  @see mx.edu.um.mateo.rh.service.CategoriaManager#elimina(java.lang.String) 
      */
     @Override
-    public String elimina(final Integer id) {
+    public String elimina(final Long id) {
         log.debug("Eliminando la categoria {}", id);
         Categoria categoria = this.obtiene(id);
         String nombre = categoria.getNombre();

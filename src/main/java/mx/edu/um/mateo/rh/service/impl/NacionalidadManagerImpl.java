@@ -62,7 +62,7 @@ public class NacionalidadManagerImpl implements NacionalidadManager{
     @Override
     public String elimina(final Long id) {
         Nacionalidad nacionalidad= dao.obtiene(id);
-        nacionalidad.setStatus(mx.edu.um.mateo.Constantes.STATUS_INACTIVO);
+        nacionalidad.setStatus(Constantes.STATUS_INACTIVO);
         dao.graba(nacionalidad, null);
         return nacionalidad.getNombre();
     }

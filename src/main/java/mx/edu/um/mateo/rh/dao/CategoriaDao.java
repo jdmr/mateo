@@ -19,7 +19,7 @@ public interface CategoriaDao{
      * @param id
      * @return 
      */
-    public Categoria obtiene(final Integer id);
+    public Categoria obtiene(final Long id);
 
     /**
      * Guarda la informacion de la categoria
@@ -31,7 +31,7 @@ public interface CategoriaDao{
      * Borra la categoria de la base de datos mediante el id
      * @param id id de la categoria
      */
-    public String elimina(final Integer id);
+    public String elimina(final Long id);
 
 }
 

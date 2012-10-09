@@ -20,13 +20,13 @@ import org.hibernate.validator.constraints.NotBlank;
 public class Categoria implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     @NotBlank
     @Column(nullable = false, length = 50)
     private String nombre;
     @Version
     private Integer version;
-    @Length(max=2)
+   
     @Column(nullable=false, length=2)
     private String status; 
     @ManyToOne(optional=false)
@@ -55,14 +55,14 @@ public class Categoria implements Serializable {
     /**
      * @return the id
      */
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

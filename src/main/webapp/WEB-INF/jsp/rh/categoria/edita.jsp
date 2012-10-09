@@ -20,6 +20,7 @@
             <c:url var="actualizaUrl" value="/rh/categoria/graba" />
             <form:form commandName="categoria" action="${actualizaUrl}" method="post">
                 <form:hidden path="id" />
+                <form:hidden path="status" />
                 <form:hidden path="version" />
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
@@ -41,16 +42,7 @@
                             <form:errors path="nombre" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="categoria.status">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="status">
-                                <s:message code="categoria.status.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="status" maxlength="128" required="true" cssClass="span3" />
-                            <form:errors path="status" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+                   
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">

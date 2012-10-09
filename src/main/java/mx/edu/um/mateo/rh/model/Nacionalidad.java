@@ -33,7 +33,7 @@ public class Nacionalidad implements Serializable {
     @NotBlank(message="")
     @Column(nullable= false, length=50)
     private String nombre;
-    @Length(max=2)
+    
     @Column(nullable=false, length=2)
     private String status;
     @ManyToOne(optional=false)
