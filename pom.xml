@@ -9,7 +9,7 @@
     <packaging>war</packaging>
 
     <name>mateo</name>
-
+    <description>ERP</description>
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
