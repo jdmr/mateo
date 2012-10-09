@@ -17,7 +17,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/rh/empleado'/>"><i class="icon-list icon-white"></i> <s:message code='empleado.lista.label' /></a>
             </p>
-            <form:form commandName="empleado" action="crea" method="post">
+            <form:form commandName="empleado" action="graba" method="post">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -200,14 +200,14 @@
                     </s:bind>
                     <s:bind path="empleado.adventista">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="adventista">
+                            <label for="adventista">
                                 <s:message code="adventista.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="adventista" maxlength="128" required="true" />
+                            <form:checkbox path="adventista" cssClass="span3" />
                             <form:errors path="adventista" cssClass="alert alert-error" />
                         </div>
-                    </s:bind>
+                    </s:bind> 
                     <s:bind path="empleado.padre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="padre">

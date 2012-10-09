@@ -7,6 +7,7 @@ package mx.edu.um.mateo.rh.service.impl;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.Constants;
 import mx.edu.um.mateo.general.service.BaseManager;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.rh.dao.EmpleadoDao;
@@ -64,9 +65,8 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
     	if(empleado.getId() == null){
     		Empleado emp = new Empleado();
     		emp.setClave(empleado.getClave());
-    		//log.debug("Nuevo Empleado");
     		empleado.setClave(this.getNuevaClave(emp));
-    		//log.debug("Clave "+empleado.getClave());
+                empleado.setStatus(Constants.STATUS_ACTIVO);
     	}
     	//log.debug(empleado);
     	dao.saveEmpleado(empleado);
