@@ -69,6 +69,7 @@ public class OrganizacionDaoHibernate extends BaseDao implements OrganizacionDao
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de organizaciones con params {}", params);
         if (params == null) {
@@ -127,6 +128,7 @@ public class OrganizacionDaoHibernate extends BaseDao implements OrganizacionDao
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Organizacion obtiene(Long id) {
         Organizacion organizacion = (Organizacion) currentSession().get(
                 Organizacion.class, id);

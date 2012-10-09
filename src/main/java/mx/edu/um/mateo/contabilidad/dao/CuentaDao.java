@@ -24,52 +24,15 @@
 package mx.edu.um.mateo.contabilidad.dao;
 
 import java.util.List;
-
 import mx.edu.um.mateo.contabilidad.model.Cuenta;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 /**
- * 
+ *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
-@Repository
-@Transactional
-public class CuentaDao {
+public interface CuentaDao {
 
-	private static final Logger log = LoggerFactory.getLogger(CuentaDao.class);
-	@Autowired
-	private SessionFactory sessionFactory;
+    public List<Cuenta> departamentos(Long organizacionId, String ejercicioId);
 
-	private Session currentSession() {
-		return sessionFactory.getCurrentSession();
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Cuenta> departamentos(Long organizacionId) {
-		log.debug("departamentos");
-		Query query = currentSession()
-				.createQuery(
-						"select c from Cuenta c where c.organizacion.id = :organizacionId and c.centroCosto is true order by c.nombre");
-		query.setLong("organizacionId", organizacionId);
-		return query.list();
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<Cuenta> tiposDeActivo(Long organizacionId) {
-		log.debug("tipos de activo");
-		Query query = currentSession()
-				.createQuery(
-						"select c from Cuenta c where c.organizacion.id = :organizacionId and c.centroCosto is false order by c.nombre");
-		query.setLong("organizacionId", organizacionId);
-		return query.list();
-	}
-
+    public List<Cuenta> tiposDeActivo(Long organizacionId, String ejercicioId);
 }

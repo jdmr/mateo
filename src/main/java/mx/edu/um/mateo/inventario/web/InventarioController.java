@@ -24,9 +24,7 @@
 package mx.edu.um.mateo.inventario.web;
 
 import java.util.Date;
-
 import mx.edu.um.mateo.inventario.dao.ProductoDao;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,28 +32,28 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * 
+ *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Controller
 @RequestMapping("/inventario")
 public class InventarioController {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(InventarioController.class);
-	@Autowired
-	private ProductoDao productoDao;
+    private static final Logger log = LoggerFactory
+            .getLogger(InventarioController.class);
+    @Autowired
+    private ProductoDao productoDao;
 
-	@RequestMapping
-	public String index() {
-		log.debug("Mostrando indice de inventarios");
-		return "inventario/index";
-	}
+    @RequestMapping
+    public String index() {
+        log.debug("Mostrando indice de inventarios");
+        return "inventario/index";
+    }
 
-	@RequestMapping("/historial")
-	public String historial() {
-		log.debug("Buscando historial de hoy");
-		productoDao.guardaHistorial(new Date());
-		return "redirect:/inventario";
-	}
+    @RequestMapping("/historial")
+    public String historial() {
+        log.debug("Buscando historial de hoy");
+        productoDao.guardaHistorial(new Date());
+        return "redirect:/inventario";
+    }
 }

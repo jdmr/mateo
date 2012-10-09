@@ -87,6 +87,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de salidas con params {}", params);
         if (params == null) {
@@ -231,6 +232,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
 
     @SuppressWarnings("unchecked")
     @Override
+    @Transactional(readOnly = true)
     public List<Salida> buscaSalidasParaFactura(Map<String, Object> params) {
         log.debug("Buscando lista de salidas con params {}", params);
         if (params == null) {
@@ -292,11 +294,13 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Salida obtiene(Long id) {
         return (Salida) currentSession().get(Salida.class, id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Salida carga(Long id) {
         return (Salida) currentSession().load(Salida.class, id);
     }
@@ -331,11 +335,13 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class})
     public Salida actualiza(Salida salida) throws NoEstaAbiertaException {
         return this.actualiza(salida, null);
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class})
     public Salida actualiza(Salida otraSalida, Usuario usuario)
             throws NoEstaAbiertaException {
         Salida salida = (Salida) currentSession().get(Salida.class,
@@ -369,6 +375,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class, NoHayExistenciasSuficientes.class, NoSePuedeCerrarException.class})
     public String cierra(Long salidaId, Usuario usuario)
             throws NoSePuedeCerrarException, NoHayExistenciasSuficientes,
             NoEstaAbiertaException {
@@ -378,6 +385,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class, NoHayExistenciasSuficientes.class, NoSePuedeCerrarException.class})
     public Salida cierra(Salida salida, Usuario usuario)
             throws NoSePuedeCerrarException, NoHayExistenciasSuficientes,
             NoEstaAbiertaException {
@@ -441,6 +449,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class})
     public String elimina(Long id) throws NoEstaAbiertaException {
         Salida salida = obtiene(id);
         if (salida.getEstatus().getNombre().equals(Constantes.ABIERTA)) {
@@ -458,6 +467,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class, ProductoNoSoportaFraccionException.class})
     public LoteSalida creaLote(LoteSalida lote)
             throws ProductoNoSoportaFraccionException, NoEstaAbiertaException {
         if (lote.getSalida().getEstatus().getNombre()
@@ -497,6 +507,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class})
     public Long eliminaLote(Long id) throws NoEstaAbiertaException {
         log.debug("Eliminando lote {}", id);
         LoteSalida lote = (LoteSalida) currentSession().get(LoteSalida.class,
@@ -576,6 +587,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
 
     @SuppressWarnings("unchecked")
     @Override
+    @Transactional(readOnly = true)
     public Map<String, Object> preCancelacion(Long id, Usuario usuario)
             throws NoEstaCerradaException {
         log.info("{} mando llamar precancelacion de salida {}", usuario, id);
@@ -685,6 +697,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
 
     @SuppressWarnings("unchecked")
     @Override
+    @Transactional(rollbackFor = {NoEstaCerradaException.class})
     public Cancelacion cancelar(Long id, Usuario usuario, String comentarios)
             throws NoEstaCerradaException {
         log.info("{} esta cancelando salida {}", usuario, id);

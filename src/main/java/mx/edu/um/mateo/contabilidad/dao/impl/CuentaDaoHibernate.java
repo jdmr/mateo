@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package mx.edu.um.mateo.general.dao.impl;
+package mx.edu.um.mateo.contabilidad.dao.impl;
 
+import java.util.List;
+import mx.edu.um.mateo.contabilidad.dao.CuentaDao;
+import mx.edu.um.mateo.contabilidad.model.Cuenta;
 import mx.edu.um.mateo.general.dao.BaseDao;
-import mx.edu.um.mateo.general.dao.RolDao;
-import mx.edu.um.mateo.general.model.Rol;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,31 +37,31 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class RolDaoHibernate extends BaseDao implements RolDao {
+public class CuentaDaoHibernate extends BaseDao implements CuentaDao {
 
-    public RolDaoHibernate() {
-        log.info("Nueva instancia de RolDao");
-    }
-
-    @Override
+    @SuppressWarnings("unchecked")
     @Transactional(readOnly = true)
-    public Rol obtiene(Long id) {
-        Rol rol = (Rol) currentSession().get(Rol.class, id);
-        return rol;
+    @Override
+    public List<Cuenta> departamentos(Long organizacionId, String ejercicioId) {
+        log.debug("departamentos");
+        Query query = currentSession()
+                .createQuery(
+                "select c from CuentaMayor c where c.id.ejercicio.id.organizacion.id = :organizacionId and c.id.ejercicio.id.idEjercicio = :ejercicioId order by c.id.idCtaMayor");
+        query.setLong("organizacionId", organizacionId);
+        query.setString("ejercicioId", ejercicioId);
+        return query.list();
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
     @Transactional(readOnly = true)
-    public Rol obtiene(String nombre) {
-        Query query = currentSession().createQuery(
-                "select r from Rol r where authority = ?");
-        Rol rol = (Rol) query.uniqueResult();
-        return rol;
-    }
-
     @Override
-    public Rol crea(Rol rol) {
-        currentSession().save(rol);
-        return rol;
+    public List<Cuenta> tiposDeActivo(Long organizacionId, String ejercicioId) {
+        log.debug("tipos de activo");
+        Query query = currentSession()
+                .createQuery(
+                "select c from CuentaMayor c where c.id.ejercicio.id.organizacion.id = :organizacionId and c.id.ejercicio.id.idEjercicio = :ejercicioId order by c.id.idCtaMayor");
+        query.setLong("organizacionId", organizacionId);
+        query.setString("ejercicioId", ejercicioId);
+        return query.list();
     }
 }
