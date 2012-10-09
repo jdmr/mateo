@@ -5,7 +5,7 @@
 package mx.edu.um.mateo;
 
 /**
- * 
+ *
  * @author nujev
  */
 public class Constantes {
@@ -74,28 +74,24 @@ public class Constantes {
     public static final String CONTAINSKEY_RESULTADOS = "resultados";
     public static final String CONTAINSKEY_AUXILIARES = "auxiliares";
     public static final String CONTAINSKEY_LIBROS = "libros";
-    public static final String CONTAINSKEY_DEPENDIENTES = "dependientes";
-    public static final String CONTAINSKEY_ESTUDIOSEMPLEADO = "estudiosEmpleado";
     public static final String CONTAINSKEY_COLEGIOS = "colegios";
     public static final String CONTAINSKEY_NACIONALIDADES = "nacionalidades";
     public static final String CONTAINSKEY_CATEGORIAS = "categorias";
     public static final String CONTAINSKEY_CONCEPTOS = "conceptos";
+
     /**
      * Valores para el los addAttribute para las clases
      */
-//      Valores para el los addAttribute para las clases
     public static final String ADDATTRIBUTE_MAYOR = "mayor";
     public static final String ADDATTRIBUTE_EMPLEADO = "empleado";
-    public static final String ADDATTRIBUTE_DEPENDIENTE = "dependiente";
-    public static final String ADDATTRIBUTE_ESTUDIOSEMPLEADO = "estudioEmpleado";
     public static final String ADDATTRIBUTE_RESULTADO = "resultado";
     public static final String ADDATTRIBUTE_AUXILIAR = "auxiliar";
     public static final String ADDATTRIBUTE_LIBRO = "libro";
     public static final String ADDATTRIBUTE_COLEGIO = "colegio";
     public static final String ADDATTRIBUTE_CATEGORIA = "categoria";
     public static final String ADDATTRIBUTE_NACIONALIDAD = "nacionalidad";
-    
-
+    public static final String ADDATTRIBUTE_DEPENDIENTE = "dependiente";
+    public static final String ADDATTRIBUTE_ESTUDIOSEMPLEADO = "estudioEmpleado";
     /**
      * Valores para el los path's para las clases
      */
@@ -188,8 +184,10 @@ public class Constantes {
     
 
 
-    
-    /**   
+    public static final String CONTAINSKEY_DEPENDIENTES = "dependientes";
+    public static final String CONTAINSKEY_ESTUDIOSEMPLEADO = "estudiosEmpleado";
+
+    /**
      * Valores para los conceptos
      */
     public static final String CONCEPTO_LIST = "conceptoList";

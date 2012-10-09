@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package mx.edu.um.mateo.inventario.web;
+/*package mx.edu.um.mateo.inventario.web;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -58,7 +58,7 @@ import org.springframework.web.context.WebApplicationContext;
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+/*@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = GenericWebXmlContextLoader.class, locations = {
     "classpath:mateo.xml",
     "classpath:security.xml",
@@ -146,4 +146,4 @@ public class TipoProductoControllerTest extends BaseTest {
         return sessionFactory.getCurrentSession();
     }
     
-}
+}*/
