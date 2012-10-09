@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package mx.edu.um.mateo.rh.model;
 
 import java.util.Objects;
@@ -54,6 +53,7 @@ public class Colegio {
     /**
      * @return the nombre
      */
+
     public String getNombre() {
         return nombre;
     }
@@ -68,23 +68,29 @@ public class Colegio {
     /**
      * @return the status
      */
+
     public String getStatus() {
         return status;
     }
 
+
     /**
      * @param status the status to set
      */
+
     public void setStatus(String status) {
         this.status = status;
     }
 
+
     /**
      * @return the version
      */
+
     public Integer getVersion() {
         return version;
     }
+
 
     @Override
     public String toString() {
@@ -94,6 +100,7 @@ public class Colegio {
     /**
      * @param version the version to set
      */
+
     public void setVersion(Integer version) {
         this.version = version;
     }

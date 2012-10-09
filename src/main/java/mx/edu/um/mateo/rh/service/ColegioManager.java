@@ -1,6 +1,5 @@
 
 package mx.edu.um.mateo.rh.service;
-
 import java.util.Map;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.rh.model.Colegio;
