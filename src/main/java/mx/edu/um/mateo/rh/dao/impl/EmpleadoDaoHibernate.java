@@ -48,10 +48,12 @@ import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+
 /**
  *
  * @author Omar Soto <osoto@um.edu.mx>
  */
+
 @Repository
 @Transactional
 public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {

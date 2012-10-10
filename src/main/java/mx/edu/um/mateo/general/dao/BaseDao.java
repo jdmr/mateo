@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public abstract class BaseDao {
+
 	protected final transient Logger log = LoggerFactory.getLogger(getClass());
 	@Autowired
 	@Qualifier("sessionFactory")
@@ -50,4 +51,5 @@ public abstract class BaseDao {
 	protected Session getSession() {
 		return sessionFactory.getCurrentSession();
 	}
+
 }
