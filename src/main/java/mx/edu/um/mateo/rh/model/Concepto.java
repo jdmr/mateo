@@ -16,7 +16,7 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 @Table(name = "cont_concepto")
 public class Concepto implements Comparable {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
