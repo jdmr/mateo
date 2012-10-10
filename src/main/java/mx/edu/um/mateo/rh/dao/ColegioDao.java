@@ -1,4 +1,3 @@
-
 package mx.edu.um.mateo.rh.dao;
 
 import java.util.Map;
@@ -35,4 +34,5 @@ public interface ColegioDao  {
      */
     public String removeColegio(final Long id);
 }
+
 
