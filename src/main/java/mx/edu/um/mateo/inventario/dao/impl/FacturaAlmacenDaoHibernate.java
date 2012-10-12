@@ -74,6 +74,7 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de facturas con params {}", params);
         if (params == null) {
@@ -168,11 +169,13 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements
     }
 
     @Override
+    @Transactional(readOnly = true)
     public FacturaAlmacen obtiene(Long id) {
         return (FacturaAlmacen) currentSession().get(FacturaAlmacen.class, id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public FacturaAlmacen carga(Long id) {
         return (FacturaAlmacen) currentSession().load(FacturaAlmacen.class, id);
     }
@@ -206,12 +209,14 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class})
     public FacturaAlmacen actualiza(FacturaAlmacen factura)
             throws NoEstaAbiertaException {
         return this.actualiza(factura, null);
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class})
     public FacturaAlmacen actualiza(FacturaAlmacen otraFactura, Usuario usuario)
             throws NoEstaAbiertaException {
         FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(
@@ -240,6 +245,7 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class, NoSePuedeCerrarException.class, NoSePuedeCerrarEnCeroException.class})
     public String cierra(Long facturaId, Usuario usuario)
             throws NoSePuedeCerrarException, NoSePuedeCerrarEnCeroException,
             NoEstaAbiertaException {
@@ -250,6 +256,7 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class, NoSePuedeCerrarException.class, NoSePuedeCerrarEnCeroException.class})
     public FacturaAlmacen cierra(FacturaAlmacen factura, Usuario usuario)
             throws NoSePuedeCerrarException, NoSePuedeCerrarEnCeroException,
             NoEstaAbiertaException {
@@ -308,6 +315,7 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements
     }
 
     @Override
+    @Transactional(rollbackFor = {NoSePuedeCancelarException.class, NoEstaCerradaException.class})
     public FacturaAlmacen cancelar(Long id, Usuario usuario)
             throws NoEstaCerradaException, NoSePuedeCancelarException {
         FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(
@@ -355,11 +363,13 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class})
     public String elimina(Long id) throws NoEstaAbiertaException {
         return this.elimina(id, null);
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class})
     public String elimina(Long id, Usuario usuario)
             throws NoEstaAbiertaException {
         FacturaAlmacen factura = obtiene(id);
@@ -484,6 +494,7 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class})
     public FacturaAlmacen agregaSalida(Long facturaId, Long salidaId) throws NoEstaAbiertaException {
         FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(
                 FacturaAlmacen.class, facturaId);
@@ -502,6 +513,7 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class})
     public FacturaAlmacen agregaEntrada(Long facturaId, Long entradaId) throws NoEstaAbiertaException {
         FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(
                 FacturaAlmacen.class, facturaId);
@@ -521,6 +533,7 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class})
     public FacturaAlmacen eliminaSalida(Long facturaId, Long salidaId) throws NoEstaAbiertaException {
         log.debug("Eliminando salida {} de factura {}", salidaId, facturaId);
         FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(
@@ -542,6 +555,7 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements
     }
 
     @Override
+    @Transactional(rollbackFor = {NoEstaAbiertaException.class})
     public FacturaAlmacen eliminaEntrada(Long facturaId, Long entradaId) throws NoEstaAbiertaException {
         log.debug("Eliminando entrada {} de factura {}", entradaId, facturaId);
         FacturaAlmacen factura = (FacturaAlmacen) currentSession().get(
@@ -563,16 +577,22 @@ public class FacturaAlmacenDaoHibernate extends BaseDao implements
 
     @SuppressWarnings("unchecked")
     @Override
+    @Transactional(readOnly = true)
     public List<Salida> salidas(Long facturaId) {
         Query query = currentSession()
                 .createQuery(
-                "select new Salida() from Salida s inner join s.facturaAlmacen fa where fa.id = :facturaId");
+                "select s from Salida s inner join s.facturaAlmacen fa where fa.id = :facturaId");
         query.setLong("facturaId", facturaId);
         return query.list();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Entrada> entradas(Long facturaId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Query query = currentSession()
+                .createQuery(
+                "select e from Entrada e inner join e.facturaAlmacen fa where fa.id = :facturaId");
+        query.setLong("facturaId", facturaId);
+        return query.list();
     }
 }

@@ -868,7 +868,7 @@ public class Constants {
 	/**
 	 * The request scope attribute that holds the empleado form.
 	 */
-	public static final String EMPLEADO_KEY = "empleadoForm";
+	public static final String EMPLEADO_KEY = "empleado";
 	/**
 	 * The request scope attribute that holds the empleado list
 	 */

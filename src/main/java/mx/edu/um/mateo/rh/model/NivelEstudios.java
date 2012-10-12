@@ -4,7 +4,6 @@
  */
 package mx.edu.um.mateo.rh.model;
 
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -23,6 +22,13 @@ public class NivelEstudios implements Comparable{
     private String nombre;
     private Integer version;
     private Map <Integer,NivelEstudios> niveles;
+    
+    public static final Integer PRIMARIA = 1;
+    public static final Integer SECUNDARIA = 2;
+    public static final Integer PREPARATORIA = 3;
+    public static final Integer LICENCIATURA = 4;
+    public static final Integer MAESTRIA = 5;
+    public static final Integer DOCTORADO = 6;
 
     public NivelEstudios() {
     }
@@ -114,12 +120,11 @@ public class NivelEstudios implements Comparable{
         return -1;
     }
     
-    
     /**
      * @param nivel obtiene el nivel 
      * @return 
      */
-    public NivelEstudios Obtener(Integer nivel){
+    public NivelEstudios obtener(Integer nivel){
         return niveles.get(nivel);
     }
     /**

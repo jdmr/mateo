@@ -215,6 +215,14 @@ public class CuentaMayor implements Serializable {
     public void setDetaller(String detaller) {
         this.detaller = detaller;
     }
+    
+    public String getNombreCompleto() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(id.getIdCtaMayor());
+        sb.append(" | ");
+        sb.append(nombre);
+        return sb.toString();
+    }
 
     @Override
     public int hashCode() {

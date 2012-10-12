@@ -30,8 +30,9 @@ public class ConceptoDaoHibernate extends BaseDao implements ConceptoDao {
     * @see mx.edu.um.mateo.rh.dao.ConceptoDao#lista(java.util.Map) 
     */
     @Override
-    public Map<String, Object> lista(Map<String, Object> params){
-        
+    @Transactional(readOnly = true)
+    public Map<String, Object> lista(Map<String, Object> params) {
+
         log.debug("Buscando lista de proveedores con params {}", params);
         if (params == null) {
             params = new HashMap<>();
@@ -88,13 +89,15 @@ public class ConceptoDaoHibernate extends BaseDao implements ConceptoDao {
         params.put("cantidad", (Long) countCriteria.list().get(0));
 
         return params;
-        
+
     }
 
     /**
-     * @see mx.edu.um.mateo.rh.dao.ConceptoDao#obtiene(java.lang.Integer) 
+     * @see mx.edu.um.mateo.rh.dao.ConceptoDao#obtiene(java.lang.Integer)
      */
-    public Concepto obtiene (final Long id) throws ObjectRetrievalFailureException {
+    @Override
+    @Transactional(readOnly = true)
+    public Concepto obtiene(final Long id) throws ObjectRetrievalFailureException {
         Concepto concepto = (Concepto) currentSession().get(Concepto.class, id);
         if (concepto == null) {
             log.warn("uh oh, concepto with id '" + id + "' not found...");
@@ -120,17 +123,14 @@ public class ConceptoDaoHibernate extends BaseDao implements ConceptoDao {
     }
 
     /**
-     * @see mx.edu.um.mateo.rh.dao.ConceptoDao#elimina(java.lang.Integer) 
+     * @see mx.edu.um.mateo.rh.dao.ConceptoDao#elimina(java.lang.Integer)
      */
     @Override
     public String elimina(final Long id) throws ObjectRetrievalFailureException {
-        Concepto concepto = this.obtiene(id); 
+        Concepto concepto = this.obtiene(id);
         String nombre = concepto.getNombre();
         currentSession().delete(concepto);
         currentSession().flush();
         return nombre;
     }
-    
-  
 }
-

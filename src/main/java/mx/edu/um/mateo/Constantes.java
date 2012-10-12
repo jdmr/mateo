@@ -5,7 +5,7 @@
 package mx.edu.um.mateo;
 
 /**
- * 
+ *
  * @author nujev
  */
 public class Constantes {
@@ -149,7 +149,9 @@ public class Constantes {
     public static final String CONTAINSKEY_ESTUDIOSEMPLEADO = "estudiosEmpleado";
     public static final String CONTAINSKEY_COLEGIOS = "colegios";
     public static final String CONTAINSKEY_NACIONALIDADES = "nacionalidades";
+    public static final String CONTAINSKEY_CATEGORIAS = "categorias";
     public static final String CONTAINSKEY_CONCEPTOS = "conceptos";
+
     /**
      * Valores para el los addAttribute para las clases
      */
@@ -158,6 +160,8 @@ public class Constantes {
     public static final String ADDATTRIBUTE_ESTUDIOSEMPLEADO = "estudioEmpleado";
     public static final String ADDATTRIBUTE_COLEGIO = "colegio";
     public static final String ADDATTRIBUTE_CONCEPTO = "concepto";
+    public static final String ADDATTRIBUTE_CATEGORIA = "categoria";
+    public static final String ADDATTRIBUTE_NACIONALIDAD = "nacionalidad";
     /**
      * Valores para el los path's para las clases
      */
@@ -185,8 +189,30 @@ public class Constantes {
     public static final String PATH_COLEGIO_CREA = "/rh/colegio/crea";
     public static final String PATH_COLEGIO_ACTUALIZA = "/rh/colegio/actualiza";
     public static final String PATH_COLEGIO_ELIMINA = "/rh/colegio/elimina";
+
+    public static final String CATEGORIA_LIST = "categoriaList";
+    public static final String PATH_CATEGORIA = "/rh/categoria";
+    public static final String PATH_CATEGORIA_LISTA = "/rh/categoria/lista";
+    public static final String PATH_CATEGORIA_VER = "/rh/categoria/ver";
+    public static final String PATH_CATEGORIA_NUEVO = "/rh/categoria/nuevo";
+    public static final String PATH_CATEGORIA_EDITA = "/rh/categoria/edita";
+    public static final String PATH_CATEGORIA_CREA = "/rh/categoria/crea";
+    public static final String PATH_CATEGORIA_ACTUALIZA = "/rh/categoria/actualiza";
+    public static final String PATH_CATEGORIA_ELIMINA = "/rh/categoria/elimina";
+    public static final String CATEGORIA_FORM = "categoriaForm";
     
-    /**   
+     public static final String NACIONALIDAD_LIST = "nacionalidadList";
+    public static final String PATH_NACIONALIDAD = "/rh/nacionalidad";
+    public static final String PATH_NACIONALIDAD_LISTA = "/rh/nacionalidad/lista";
+    public static final String PATH_NACIONALIDAD_VER = "/rh/nacionalidad/ver";
+    public static final String PATH_NACIONALIDAD_NUEVO = "/rh/nacionalidad/nuevo";
+    public static final String PATH_NACIONALIDAD_EDITA = "/rh/nacionalidad/edita";
+    public static final String PATH_NACIONALIDAD_CREA = "/rh/nacionalidad/crea";
+    public static final String PATH_NACIONALIDAD_ACTUALIZA = "/rh/nacionalidad/actualiza";
+    public static final String PATH_NACIONALIDAD_ELIMINA = "/rh/nacionalidad/elimina";
+    public static final String NACIONALIDAD_FORM = "nacionalidadForm";
+
+    /**
      * Valores para los conceptos
      */
     public static final String CONCEPTO_LIST = "conceptoList";
