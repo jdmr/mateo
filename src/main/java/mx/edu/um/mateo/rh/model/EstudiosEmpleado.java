@@ -27,7 +27,7 @@ public class EstudiosEmpleado implements Serializable {
     @Column
     private String nombreEstudios;
     @Column
-    private NivelEstudios nivelEstudios;
+    private Integer nivelEstudios;
     @Column
     private Short titulado;
     @Temporal(javax.persistence.TemporalType.DATE)
@@ -128,14 +128,14 @@ public class EstudiosEmpleado implements Serializable {
      * @hibernate.many-to-one column="nivel_estudios_id" not-null="true" outer-join="false"
      * @return the nivelEstudios
      */
-    public NivelEstudios getNivelEstudios() {
+    public Integer getNivelEstudios() {
         return nivelEstudios;
     }
 
     /**
      * @param nivelEstudios the nivelEstudios to set
      */
-    public void setNivelEstudios(NivelEstudios nivelEstudios) {
+    public void setNivelEstudios(Integer nivelEstudios) {
         this.nivelEstudios = nivelEstudios;
     }
 

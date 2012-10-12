@@ -22,6 +22,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.server.MockMvc;
@@ -48,7 +49,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 })
 @Transactional
 public class EstudiosEmpleadoControllerTest extends BaseTest {
-
+    
+    @Autowired
+    @Qualifier
+    private NivelEstudios nivelEstudios;
+    
     @Autowired
     private EstudiosEmpleadoDao estudiosEmpleadoDao;
     
@@ -90,7 +95,7 @@ public class EstudiosEmpleadoControllerTest extends BaseTest {
             EstudiosEmpleado estudiosEmpleado = new EstudiosEmpleado();
             estudiosEmpleado.setFechaCaptura(new Date());
             estudiosEmpleado.setFechaTitulacion(new Date());
-            estudiosEmpleado.setNivelEstudios(NivelEstudios.MAESTRIA);
+            estudiosEmpleado.setNivelEstudios(nivelEstudios.obtener(NivelEstudios.MAESTRIA).getId());
             estudiosEmpleado.setNombreEstudios("maestria");
             estudiosEmpleado.setStatus("A");
             estudiosEmpleado.setTitulado(Short.MIN_VALUE);
