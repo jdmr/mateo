@@ -5,6 +5,7 @@
 package mx.edu.um.mateo.rh.model;
 
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import org.slf4j.Logger;
@@ -111,6 +112,21 @@ public class NivelEstudios implements Comparable{
             return this.getId().compareTo(c.getId());
         }
         return -1;
+    }
+    
+    
+    /**
+     * @param nivel obtiene el nivel 
+     * @return 
+     */
+    public NivelEstudios Obtener(Integer nivel){
+        return niveles.get(nivel);
+    }
+    /**
+     * @return regresa la lista
+     */
+    public List lista(){
+        return (List)niveles.values();
     }
     
 }
