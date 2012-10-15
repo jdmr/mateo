@@ -10,7 +10,17 @@ package mx.edu.um.mateo.rh.model;
  */
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import org.hibernate.validator.constraints.NotBlank;
 
+
+@Entity
+@Table(name = "tipoDependiente")
 
 public enum TipoDependiente {
 //    BECA_RECTORIA(1,"Beca Rectoria"),
@@ -25,13 +35,17 @@ public enum TipoDependiente {
     HIJA(2, "Hija"),
     ESPOSA(3, "Esposa"),
     ESPOSO(4, "Esposo");
-    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String descripcion;
+    
+     @NotBlank
+    @Column(nullable = false, length = 50)
+     private String nombre;
 
-    private TipoDependiente(Integer id, String descripcion){
+    private TipoDependiente(Integer id, String nombre){
         this.id = id;
-        this.descripcion = descripcion;
+        this.nombre = nombre;
     }
 
     /**
@@ -52,14 +66,14 @@ public enum TipoDependiente {
      * @return the descripcion
      */
     public String getDescripcion() {
-        return descripcion;
+        return nombre;
     }
 
     /**
      * @param descripcion the descripcion to set
      */
     public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+        this.nombre = descripcion;
     }
 
     public static TipoDependiente valueOf(Integer id){

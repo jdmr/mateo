@@ -17,7 +17,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/rh/dependiente'/>"><i class="icon-list icon-white"></i> <s:message code='dependiente.lista.label' /></a>
             </p>
-            <form:form commandName="dependiente" action="crea" method="post">
+            <form:form commandName="dependiente" action="graba" method="post">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -38,24 +38,24 @@
                             <form:errors path="nombre" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="dependiente.apPaterno">
+                    <s:bind path="dependiente.fechaNac">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="apPaterno">
-                                <s:message code="apPaterno.label" />
+                            <label for="fechaNac">
+                                <s:message code="fechaNacimiento.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="apPaterno" maxlength="128" required="true" />
-                            <form:errors path="apPaterno" cssClass="alert alert-error" />
+                            <form:input path="fechaNac" maxlength="128" required="true" />
+                            <form:errors path="fechaNac" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="dependiente.apMaterno">
+                    <s:bind path="dependiente.status">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="apMaterno">
-                                <s:message code="apMaterno.label" />
+                            <label for="status">
+                                <s:message code="status.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="apMaterno" maxlength="128" required="true" />
-                            <form:errors path="apMaterno" cssClass="alert alert-error" />
+                            <form:input path="status" maxlength="128" required="true" />
+                            <form:errors path="status" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                    <s:bind path="dependiente.tipoDependiente">

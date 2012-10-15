@@ -78,6 +78,7 @@ public class Constantes {
     public static final String CONTAINSKEY_NACIONALIDADES = "nacionalidades";
     public static final String CONTAINSKEY_CATEGORIAS = "categorias";
     public static final String CONTAINSKEY_CONCEPTOS = "conceptos";
+    public static final String CONTAINSKEY_DEPENDIENTES = "dependientes";
 
     /**
      * Valores para el los addAttribute para las clases
@@ -184,7 +185,6 @@ public class Constantes {
     
 
 
-    public static final String CONTAINSKEY_DEPENDIENTES = "dependientes";
     public static final String CONTAINSKEY_ESTUDIOSEMPLEADO = "estudiosEmpleado";
 
     /**

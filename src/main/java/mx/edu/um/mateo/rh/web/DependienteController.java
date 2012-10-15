@@ -40,9 +40,11 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
-import mx.edu.um.mateo.rh.dao.DependienteDao;
+import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.rh.model.Dependiente;
 import mx.edu.um.mateo.rh.model.TipoDependiente;
+import mx.edu.um.mateo.rh.service.DependienteManager;
+import mx.edu.um.mateo.rh.service.EmpleadoManager;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -73,19 +75,21 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping(Constantes.PATH_DEPENDIENTE)
-public class DependienteController {
+public class DependienteController extends BaseController{
 
     private static final Logger log = LoggerFactory.getLogger(mx.edu.um.mateo.rh.web.DependienteController.class);
     @Autowired
-    private DependienteDao dependienteDao;
+    private DependienteManager dependienteManager;
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
     private ResourceBundleMessageSource messageSource;
     @Autowired
     private Ambiente ambiente;
+    @Autowired
+    private EmpleadoManager empleadoManager;
 
-    @RequestMapping
+    @RequestMapping({"","/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
             @RequestParam(required = false) Long pagina,
@@ -115,7 +119,7 @@ public class DependienteController {
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = dependienteDao.lista(params);
+            params = dependienteManager.lista(params);
             try {
                 generaReporte(tipo, (List<Dependiente>) params.get(Constantes.CONTAINSKEY_DEPENDIENTES), response);
                 return null;
@@ -128,7 +132,7 @@ public class DependienteController {
 
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = dependienteDao.lista(params);
+            params = dependienteManager.lista(params);
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
@@ -139,7 +143,7 @@ public class DependienteController {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-        params = dependienteDao.lista(params);
+        params = dependienteManager.lista(params);
         modelo.addAttribute(Constantes.CONTAINSKEY_DEPENDIENTES, params.get(Constantes.CONTAINSKEY_DEPENDIENTES));
         
         List tiposDeDependientes = TipoDependiente.getTipos();
@@ -167,7 +171,7 @@ public class DependienteController {
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando dependiente {}", id);
-        Dependiente dependiente = dependienteDao.obtiene(id);
+        Dependiente dependiente = dependienteManager.obtiene(id);
 
         modelo.addAttribute(Constantes.ADDATTRIBUTE_DEPENDIENTE, dependiente);
 
@@ -184,9 +188,19 @@ public class DependienteController {
         return Constantes.PATH_DEPENDIENTE_NUEVO;
     }
 
+    
+    @RequestMapping("/edita/{id}")
+    public String edita(@PathVariable Long id, Model modelo) {
+        log.debug("Editar cuenta de dependiente {}", id);
+        Dependiente dependiente = dependienteManager.obtiene(id);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_DEPENDIENTE, dependiente);
+        List tiposDeDependientes = TipoDependiente.getTipos();
+        modelo.addAttribute(Constantes.CONTAINSKEY_DEPENDIENTES, tiposDeDependientes);
+        return Constantes.PATH_DEPENDIENTE_EDITA;
+    }
     @Transactional
-    @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Dependiente dependiente, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    @RequestMapping(value = "/graba", method = RequestMethod.POST)
+    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid Dependiente dependiente, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
@@ -194,52 +208,21 @@ public class DependienteController {
             log.debug("Hubo algun error en la forma, regresando");
             return Constantes.PATH_DEPENDIENTE_NUEVO;
         }
-
+        
         try {
-            List tiposDeDependientes = TipoDependiente.getTipos();
-            modelo.addAttribute(Constantes.CONTAINSKEY_DEPENDIENTES, tiposDeDependientes);
-            dependiente = dependienteDao.crea(dependiente);
+               
+            
+            //Aqui quedaba para agregar el empleado//
+             dependienteManager.graba(dependiente);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear dependiente", e);
             return Constantes.PATH_DEPENDIENTE_NUEVO;
         }
-
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "dependiente.creado.message");
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{dependiente.getTipoDependiente().toString()});
-
-        return "redirect:" + Constantes.PATH_DEPENDIENTE_VER + "/" + dependiente.getId();
-    }
-
-    @RequestMapping("/edita/{id}")
-    public String edita(@PathVariable Long id, Model modelo) {
-        log.debug("Editar cuenta de dependiente {}", id);
-        Dependiente dependiente = dependienteDao.obtiene(id);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_DEPENDIENTE, dependiente);
-        List tiposDeDependientes = TipoDependiente.getTipos();
-        modelo.addAttribute(Constantes.CONTAINSKEY_DEPENDIENTES, tiposDeDependientes);
-        return Constantes.PATH_DEPENDIENTE_EDITA;
-    }
-
-    @Transactional
-    @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, @Valid Dependiente dependiente, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            log.error("Hubo algun error en la forma, regresando");
-            return Constantes.PATH_DEPENDIENTE_EDITA;
-        }
-        try {
-            List tiposDeDependientes = TipoDependiente.getTipos();
-            modelo.addAttribute(Constantes.CONTAINSKEY_DEPENDIENTES, tiposDeDependientes);
-            dependiente = dependienteDao.actualiza(dependiente);
-        } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear la cuenta de dependiente", e);
-            return Constantes.PATH_DEPENDIENTE_NUEVO;
-        }
-
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "dependiente.actualizado.message");
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{dependiente.getTipoDependiente().toString()});
-
-        return "redirect:" + Constantes.PATH_DEPENDIENTE_VER + "/" + dependiente.getId();
+        
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "dependiente.graba.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{dependiente.getNombre()});
+        
+        return "redirect:" + Constantes.PATH_DEPENDIENTE_LISTA + "/" ;
     }
 
     @Transactional
@@ -247,7 +230,7 @@ public class DependienteController {
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Dependiente dependiente, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina cuenta de dependiente");
         try {
-            String nombre = dependienteDao.elimina(id);
+            String nombre = dependienteManager.elimina(id);
 
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "dependiente.eliminado.message");
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
@@ -309,7 +292,6 @@ public class DependienteController {
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(ambiente.obtieneUsuario().getUsername());
         String titulo = messageSource.getMessage("dependiente.lista.label", null, request.getLocale());
         helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
         helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);

@@ -35,13 +35,13 @@
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="apPaterno.label" /></div>
-                    <div class="span11">${dependiente.apPaterno}</div>
+                    <div class="span1"><s:message code="status.label" /></div>
+                    <div class="span11">${dependiente.status}</div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="apMaterno.label" /></div>
-                    <div class="span11">${dependiente.apMaterno}</div>
+                    <div class="span1"><s:message code="fechaNacimiento.label" /></div>
+                    <div class="span11">${dependiente.fechaNac}</div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
