@@ -23,30 +23,24 @@
  */
 package mx.edu.um.mateo.rh.web;
 
-import mx.edu.um.mateo.inventario.web.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.general.utils.ReporteException;
-import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.general.web.BaseController;
-import mx.edu.um.mateo.inventario.dao.AlmacenDao;
-import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.rh.model.Concepto;
 import mx.edu.um.mateo.rh.service.ConceptoManager;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
@@ -59,7 +53,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author AMDA
  */
 @Controller
-@RequestMapping("/rh/concepto")
+@RequestMapping(mx.edu.um.mateo.Constantes.PATH_CONCEPTO)
 public class ConceptoController extends BaseController {
 
     @Autowired
@@ -81,7 +75,7 @@ public class ConceptoController extends BaseController {
         log.debug("Mostrando lista de conceptos");
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
-//        params.put("empresa", empresaId);
+        params.put("empresa", empresaId);
         if (StringUtils.isNotBlank(filtro)) {
             params.put("filtro", filtro);
         }
@@ -122,17 +116,17 @@ public class ConceptoController extends BaseController {
 
         this.pagina(params, modelo, mx.edu.um.mateo.Constantes.CONCEPTO_LIST, pagina);
 
-        return "rh/concepto/lista";
+        return mx.edu.um.mateo.Constantes.PATH_CONCEPTO_LISTA;
     }
 
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) throws ObjectRetrievalFailureException {
-        log.debug("Mostrando proveedor {}", id);
+        log.debug("Mostrando concepto {}", id);
         Concepto concepto = conceptoManager.obtiene(id);
-
+        log.debug("Mostrando concepto {}", concepto);
          modelo.addAttribute(mx.edu.um.mateo.Constantes.CONCEPTO_KEY, concepto);
 
-        return "rh/concepto/ver";
+        return mx.edu.um.mateo.Constantes.PATH_CONCEPTO_VER;
     }
 
     @RequestMapping("/nuevo")
@@ -140,11 +134,11 @@ public class ConceptoController extends BaseController {
         log.debug("Nuevo concepto");
         Concepto concepto = new Concepto();
         modelo.addAttribute(mx.edu.um.mateo.Constantes.CONCEPTO_KEY, concepto);
-        return "rh/concepto/nuevo";
+        return mx.edu.um.mateo.Constantes.PATH_CONCEPTO_NUEVO;
     }
-
-    @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Concepto concepto, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    @Transactional
+    @RequestMapping(value = "/graba", method = RequestMethod.POST)
+    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid Concepto concepto, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
@@ -153,13 +147,13 @@ public class ConceptoController extends BaseController {
             for (ObjectError error : bindingResult.getAllErrors()) {
                 log.debug("Error: {}", error);
             }
-            return "rh/concepto/nuevo";
+            return mx.edu.um.mateo.Constantes.PATH_CONCEPTO_NUEVO;
         }
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
-            //concepto = conceptoManager.crea(concepto, usuario);
-            conceptoManager.graba(concepto);
+            conceptoManager.graba(concepto, usuario);
+            log.debug("concepto{}", concepto);
 
             ambiente.actualizaSesion(request.getSession(), usuario);
         } catch (ConstraintViolationException e) {
@@ -169,56 +163,31 @@ public class ConceptoController extends BaseController {
              */
             
             errors.rejectValue("nombre", "concepto.errors.creado", e.toString());
-            return "rh/concepto/nuevo";
+            return mx.edu.um.mateo.Constantes.PATH_CONCEPTO_NUEVO;
         }
 
         redirectAttributes.addFlashAttribute("message", "concepto.creado.message");
         redirectAttributes.addFlashAttribute("messageAttrs", new String[]{concepto.getNombre()});
 
-        return "redirect:/rh/concepto/ver/" + concepto.getId();
+        //return "redirect:/rh/concepto/ver/" + concepto.getId();
+        log.debug("concepto{}",concepto);
+         return "redirect:" + mx.edu.um.mateo.Constantes.PATH_CONCEPTO;
     }
 
     @RequestMapping("/edita/{id}")
-    public String edita(@PathVariable Long id, Model modelo, Errors errors) {
+    public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Edita concepto {}", id);
         Concepto concepto;
         try {
             concepto = conceptoManager.obtiene(id);
         } catch (ObjectRetrievalFailureException ex) {
             log.error("No se pudo obtener al concepto", ex);
-            errors.rejectValue("concepto", "registro.noEncontrado", new String[]{"concepto"}, null);
-            return "rh/concepto";
+           // errors.rejectValue("concepto", "registro.noEncontrado", new String[]{"concepto"}, null);
+            return mx.edu.um.mateo.Constantes.PATH_CONCEPTO;
         }
         modelo.addAttribute(mx.edu.um.mateo.Constantes.CONCEPTO_KEY, concepto);
-        return "rh/concepto/edita";
-    }
-
-    @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, @Valid Concepto concepto, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            log.error("Hubo algun error en la forma, regresando");
-            for (ObjectError error : bindingResult.getAllErrors()) {
-                log.debug("Error: {}", error);
-            }
-            return "rh/concepto/edita";
-        }
-
-        try {
-            Usuario usuario = ambiente.obtieneUsuario();
-            //concepto = conceptoManager.graba(concepto, usuario);
-            conceptoManager.graba(concepto);
-
-            ambiente.actualizaSesion(request.getSession(), usuario);
-        } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear el concepto", e);
-            errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
-            return "rh/concepto/edita";
-        }
-
-        redirectAttributes.addFlashAttribute("message", "concepto.actualizado.message");
-        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{concepto.getNombre()});
-
-        return "redirect:/rh/concepto/ver/" + concepto.getId();
+        
+        return mx.edu.um.mateo.Constantes.PATH_CONCEPTO_EDITA;
     }
 
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
@@ -237,9 +206,9 @@ public class ConceptoController extends BaseController {
          catch (Exception e) {
             log.error("No se pudo eliminar el concepto " + id, e);
             bindingResult.addError(new ObjectError("concepto", new String[]{"concepto.no.eliminado.message"}, null, null));
-            return "rh/concepto/ver";
+            return mx.edu.um.mateo.Constantes.PATH_CONCEPTO_VER;
         }
 
-        return "redirect:/rh/concepto";
+        return "redirect:" + mx.edu.um.mateo.Constantes.PATH_CONCEPTO;
     }
 }
