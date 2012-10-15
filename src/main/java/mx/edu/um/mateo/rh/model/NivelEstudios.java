@@ -4,88 +4,134 @@
  */
 package mx.edu.um.mateo.rh.model;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
 /**
  *
- * @author develop
+ * @author semdariobarbaamaya
  */
-import java.util.ArrayList;
-import java.util.List;
-
-
-public enum NivelEstudios {
-//    BECA_RECTORIA(1,"Beca Rectoria"),
-//    PLAN_PROMOCIONAL_EDUCACION(2,"Plan Promocional Educacional"),
-//    BECAS_ESPECIALES_VRF(3,"Becas Especiales VRF"),
-//    PLANES_ESPECIALES_UNIONES(4,"Planes Especiales Uniones"),
-//    BECAS_EDUCATIVAS_HOSPITAL(5,"Becas Educativas HLC"),
-//    BECAS_MUNICIPALES(6,"Becas Municipales"),
-//    OTROS(10,"Otros");
-    UNKNOWN(0,"Todas"),
-    PRIMARIA(1, "Primaria"),
-    SECUNDARIA(2, "secundaria"),
-    PREPARATORIA(3, "Preparatoria"),
-    LICENCIATURA(4, "Licenciatura"),
-    MAESTRIA(5, "Maestria"),
-    DOCTORADO(6, "Doctorado");
-    
+@Component
+public class NivelEstudios implements Comparable{
+    Logger log = LoggerFactory.getLogger(getClass());
     private Integer id;
-    private String descripcion;
+    private String nombre;
+    private Integer version;
+    private Map <Integer,NivelEstudios> niveles;
+    
+    public static final Integer PRIMARIA = 1;
+    public static final Integer SECUNDARIA = 2;
+    public static final Integer PREPARATORIA = 3;
+    public static final Integer LICENCIATURA = 4;
+    public static final Integer MAESTRIA = 5;
+    public static final Integer DOCTORADO = 6;
 
-    private NivelEstudios(Integer id, String descripcion){
-        this.id = id;
-        this.descripcion = descripcion;
+    public NivelEstudios() {
     }
 
-    /**
-     * @return the id
-     */
+    public NivelEstudios(Integer id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+    
     public Integer getId() {
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
     public void setId(Integer id) {
         this.id = id;
     }
 
-    /**
-     * @return the descripcion
-     */
-    public String getDescripcion() {
-        return descripcion;
+    public String getNombre() {
+        return nombre;
     }
 
-    /**
-     * @param descripcion the descripcion to set
-     */
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public static NivelEstudios valueOf(Integer id){
-        switch(id){
-            case 1 : return PRIMARIA;
-            case 2 : return SECUNDARIA;
-            case 3 : return PREPARATORIA;
-            case 4 : return LICENCIATURA;
-            case 5 : return MAESTRIA;
-            case 6 : return DOCTORADO;
-            default: return UNKNOWN;
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.id);
+        hash = 29 * hash + Objects.hashCode(this.nombre);
+        hash = 29 * hash + Objects.hashCode(this.version);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
         }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final NivelEstudios other = (NivelEstudios) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.nombre, other.nombre)) {
+            return false;
+        }
+        if (!Objects.equals(this.version, other.version)) {
+            return false;
+        }
+        return true;
     }
 
-    public static List getNiveles(){
-        List list = new ArrayList();
-        list.add(NivelEstudios.valueOf(0));
-        list.add(NivelEstudios.valueOf(1));
-        list.add(NivelEstudios.valueOf(2));
-        list.add(NivelEstudios.valueOf(3));
-        list.add(NivelEstudios.valueOf(4));
-        list.add(NivelEstudios.valueOf(5));
-        list.add(NivelEstudios.valueOf(6));
-        
-        return list;
+    @Override
+    public String toString() {
+        return "NivelEstudios{" + "id=" + id + ", nombre=" + nombre + ", version=" + version + '}';
     }
+
+    /**
+     * @return the niveles
+     */
+    public Map <Integer,NivelEstudios> getNiveles() {
+        return niveles;
+    }
+
+    /**
+     * @param niveles the niveles to set
+     */
+    public void setNiveles(Map <Integer,NivelEstudios> niveles) {
+        log.debug("asignando nivel{}", niveles.size());
+        this.niveles = niveles;
+    }
+    
+    public int compareTo(Object o) {
+        if (o instanceof NivelEstudios) {
+            NivelEstudios c = (NivelEstudios) o;
+            return this.getId().compareTo(c.getId());
+        }
+        return -1;
+    }
+    
+    /**
+     * @param nivel obtiene el nivel 
+     * @return 
+     */
+    public NivelEstudios obtener(Integer nivel){
+        return niveles.get(nivel);
+    }
+    /**
+     * @return regresa la lista
+     */
+    public List lista(){
+        return (List)niveles.values();
+    }
+    
 }
