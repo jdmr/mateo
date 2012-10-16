@@ -5,15 +5,11 @@
 package mx.edu.um.mateo.rh.dao.impl;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.dao.BaseDao;
-import mx.edu.um.mateo.inventario.model.TipoProducto;
 import mx.edu.um.mateo.rh.dao.DependienteDao;
-import mx.edu.um.mateo.rh.dao.SeccionDao;
 import mx.edu.um.mateo.rh.model.Dependiente;
-import mx.edu.um.mateo.rh.model.Seccion;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.*;

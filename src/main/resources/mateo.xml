@@ -41,6 +41,47 @@
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
     
+    <bean id="primaria" class="mx.edu.um.mateo.rh.model.NivelEstudios">
+        <constructor-arg value="1"/>
+        <constructor-arg value="Primaria"/>
+    </bean>  
+    <bean id="secundaria" class="mx.edu.um.mateo.rh.model.NivelEstudios">
+        <constructor-arg value="2"/>
+        <constructor-arg value="Secundaria"/>
+    </bean>  
+    <bean id="preparatoria" class="mx.edu.um.mateo.rh.model.NivelEstudios">
+        <constructor-arg value="3"/>
+        <constructor-arg value="Preparatoria"/>
+    </bean>  
+    <bean id="licenciatura" class="mx.edu.um.mateo.rh.model.NivelEstudios">
+        <constructor-arg value="4"/>
+        <constructor-arg value="Licenciatura"/>
+    </bean>  
+    <bean id="maestria" class="mx.edu.um.mateo.rh.model.NivelEstudios">
+        <constructor-arg value="5"/>
+        <constructor-arg value="Maestria"/>
+    </bean>  
+    <bean id="doctorado" class="mx.edu.um.mateo.rh.model.NivelEstudios">
+        <constructor-arg value="6"/>
+        <constructor-arg value="Doctorado"/>
+    </bean>  
+    
+    <bean id="nivelEstudios" class="mx.edu.um.mateo.rh.model.NivelEstudios">
+        <property name="niveles">
+            <map>
+                <entry key="1" value-ref="primaria"/>
+                <entry key="2" value-ref="secundaria"/>
+                <entry key="3" value-ref="preparatoria"/>
+                <entry key="4" value-ref="licenciatura"/>
+                <entry key="5" value-ref="maestria"/>
+                <entry key="6" value-ref="doctorado"/>
+            </map>
+                    
+        </property>
+    </bean>
+    
+    
+    
     <tx:annotation-driven />
 
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">

@@ -27,9 +27,9 @@ public class EmpleadoEstudios implements Comparable, Serializable {
     @NotBlank
     @Column(nullable = false, length = 75, unique = true)
     private String nombreEstudios;
-//    @NotBlank
-//    @Column(nullable = false,name = "nivel_estudios_id")
-//    private NivelEstudios nivelEstudios; 
+    @NotBlank
+    @Column(nullable = false,name = "nivel_estudios_id")
+    private Integer nivelEstudios; 
     @NotBlank
     private Short titulado;
     @Temporal(TemporalType.DATE)
@@ -39,7 +39,6 @@ public class EmpleadoEstudios implements Comparable, Serializable {
     @Column(nullable = false, length = 2)
     private String status;
     @ManyToOne
-    @Column(name="user_captura_id")
     private Usuario userCaptura;
     @Temporal(TemporalType.DATE)
     @Column(nullable = false,name="fecha_captura")

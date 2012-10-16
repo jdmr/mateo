@@ -32,7 +32,7 @@ import org.springframework.validation.Validator;
 
 /**
  *
- * @author develop
+ * @author osoto@um.edu.mx
  */
 @Entity
 @Table(name = "empleados",
@@ -48,9 +48,9 @@ public class Empleado implements Serializable, Validator {
     private Integer version;
     @ManyToOne(optional = false)
     private Empresa empresa;
-    @NotBlank(message = "La clave del empleado es un campo requerido")
+    //@NotBlank(message = "La clave del empleado es un campo requerido")
     @Size(min = 7, max = 7, message = "La clave del empleado debe contener una longitud de 7 caracteres")
-    @Column(nullable = false, length = 7)
+    @Column(nullable = true, length = 7)
     private String clave;
     @NotBlank
     @Column(nullable = false, length = 100)
@@ -67,7 +67,6 @@ public class Empleado implements Serializable, Validator {
     @NotBlank
     @Column(nullable = false, length = 200)
     private String direccion;
-    @NotBlank
     @Column(nullable = false, length = 2)
     private String status;
     @DateTimeFormat(pattern="dd/MM/yyyy",iso=ISO.DATE)

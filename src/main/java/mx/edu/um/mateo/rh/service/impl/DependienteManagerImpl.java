@@ -4,15 +4,11 @@
  */
 package mx.edu.um.mateo.rh.service.impl;
 
-import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
-import mx.edu.um.mateo.Constants;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.rh.dao.DependienteDao;
-import mx.edu.um.mateo.rh.dao.SeccionDao;
 import mx.edu.um.mateo.rh.model.Dependiente;
-import mx.edu.um.mateo.rh.model.Seccion;
 import mx.edu.um.mateo.rh.service.DependienteManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

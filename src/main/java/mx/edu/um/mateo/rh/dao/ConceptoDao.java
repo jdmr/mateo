@@ -4,8 +4,8 @@
  */
 package mx.edu.um.mateo.rh.dao;
 
-import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.rh.model.Concepto;
 
@@ -16,9 +16,9 @@ import mx.edu.um.mateo.rh.model.Concepto;
 public interface ConceptoDao {
     
     /**
-     * Regresa un lista de conceptos
+     * Regresa una lista de conceptos
      * @param params
-     * @return  Map<String, Object>
+     * @return 
      */
     public Map<String, Object> lista(Map<String, Object> params);
 
@@ -34,7 +34,7 @@ public interface ConceptoDao {
      * Graba un concepto
      * @param concepto 
      */    
-    public void graba(Concepto concepto);
+    public void graba(Concepto concepto, Usuario usuario);
 
     /**
      * Elimina el concepto

@@ -8,7 +8,7 @@ import mx.edu.um.mateo.rh.model.Empleado;
 
 /**
  *
- * @author nujev
+ * @author osoto@um.edu.mx
  */
 public interface EmpleadoDao {
 

@@ -147,6 +147,5 @@ public class Dependiente implements Comparable, Serializable {
         }
         return -1;
     }
-
     
 }
