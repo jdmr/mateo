@@ -20,7 +20,6 @@ public class NivelEstudios implements Comparable{
     Logger log = LoggerFactory.getLogger(getClass());
     private Integer id;
     private String nombre;
-    private Integer version;
     private Map <Integer,NivelEstudios> niveles;
     
     public static final Integer PRIMARIA = 1;
@@ -54,20 +53,13 @@ public class NivelEstudios implements Comparable{
         this.nombre = nombre;
     }
 
-    public Integer getVersion() {
-        return version;
-    }
 
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
 
     @Override
     public int hashCode() {
         int hash = 7;
         hash = 29 * hash + Objects.hashCode(this.id);
         hash = 29 * hash + Objects.hashCode(this.nombre);
-        hash = 29 * hash + Objects.hashCode(this.version);
         return hash;
     }
 
@@ -86,15 +78,12 @@ public class NivelEstudios implements Comparable{
         if (!Objects.equals(this.nombre, other.nombre)) {
             return false;
         }
-        if (!Objects.equals(this.version, other.version)) {
-            return false;
-        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "NivelEstudios{" + "id=" + id + ", nombre=" + nombre + ", version=" + version + '}';
+        return "NivelEstudios{" + "id=" + id + ", nombre=" + nombre + '}';
     }
 
     /**
