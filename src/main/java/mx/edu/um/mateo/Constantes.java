@@ -171,5 +171,11 @@ public class Constantes {
      */
     public static final String DEPENDIENTE_LIST = "dependienteList";
     public static final String DEPENDIENTE_KEY = "dependienteForm";
+    
+    /**   
+     * Valores para empleadoestudios
+     */
+    public static final String EMPLEADOESTUDIOS_LIST = "empleadoestudiosList";
+    public static final String EMPLEADOESTUDIOS_KEY = "empleadoestudiosForm";
  
 }
