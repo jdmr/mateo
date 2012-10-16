@@ -131,7 +131,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${empleados}" var="empleado" varStatus="status">
+                    <c:forEach items="${empleadoList}" var="empleado" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/rh/empleado/ver/${empleado.id}' />">${empleado.nombre}</a></td>
                             <td>${empleado.apPaterno}</td>

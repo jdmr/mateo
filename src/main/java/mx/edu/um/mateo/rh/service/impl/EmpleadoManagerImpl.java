@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.Constants;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.service.BaseManager;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.rh.dao.EmpleadoDao;
@@ -59,9 +60,9 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
     }
 
     /**
-     * @see mx.edu.um.mateo.rh.service.EmpleadoManager#saveEmpleado(Empleado empleado)
+     * @see mx.edu.um.mateo.rh.service.EmpleadoManager#saveEmpleado(mx.edu.um.mateo.rh.model.Empleado, mx.edu.um.mateo.general.model.Usuario) 
      */
-    public void saveEmpleado(Empleado empleado) {
+    public void saveEmpleado(Empleado empleado, Usuario usuario) {
     	if(empleado.getId() == null){
     		Empleado emp = new Empleado();
     		emp.setClave(empleado.getClave());
@@ -69,7 +70,7 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
                 empleado.setStatus(Constants.STATUS_ACTIVO);
     	}
     	//log.debug(empleado);
-    	dao.saveEmpleado(empleado);
+    	dao.saveEmpleado(empleado, usuario);
     }
 
     /**

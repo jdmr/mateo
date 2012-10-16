@@ -152,8 +152,7 @@ public class EmpleadoController extends BaseController {
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
-            //empleado = empleadoManager.crea(empleado, usuario);
-            empleadoManager.saveEmpleado(empleado);
+            empleadoManager.saveEmpleado(empleado, usuario);
 
             ambiente.actualizaSesion(request.getSession(), usuario);
         } catch (ConstraintViolationException e) {

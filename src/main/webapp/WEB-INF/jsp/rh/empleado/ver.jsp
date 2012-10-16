@@ -117,7 +117,7 @@
                     <div class="span11">${empleado.responsabilidad}</div>
                 </div>
                    <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="fiandoPadre.label" /></div>
+                    <div class="span1"><s:message code="finadoPadre.label" /></div>
                     <div class="span11"><form:checkbox path="finadoPadre" disabled="true" /></div>
                 </div>
                    <div class="row-fluid" style="padding-bottom: 10px;">

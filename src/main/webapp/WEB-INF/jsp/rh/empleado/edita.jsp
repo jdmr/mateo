@@ -17,7 +17,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/rh/empleado'/>"><i class="icon-list icon-white"></i> <s:message code='empleado.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="/rh/empleado/actualiza" />
+            <c:url var="actualizaUrl" value="/rh/empleado/graba" />
             <form:form commandName="empleado" method="post" action="${actualizaUrl}">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">

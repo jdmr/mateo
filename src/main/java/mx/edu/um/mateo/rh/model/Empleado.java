@@ -48,9 +48,9 @@ public class Empleado implements Serializable, Validator {
     private Integer version;
     @ManyToOne(optional = false)
     private Empresa empresa;
-    //@NotBlank(message = "La clave del empleado es un campo requerido")
+    @NotBlank(message = "La clave del empleado es un campo requerido")
     @Size(min = 7, max = 7, message = "La clave del empleado debe contener una longitud de 7 caracteres")
-    @Column(nullable = true, length = 7)
+    @Column(nullable = false, length = 7)
     private String clave;
     @NotBlank
     @Column(nullable = false, length = 100)

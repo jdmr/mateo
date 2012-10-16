@@ -174,7 +174,7 @@
                                 <s:message code="modalidad.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="modalidad" maxlength="3" required="true" />
+                            <form:input path="modalidad" maxlength="2" required="true" />
                             <form:errors path="modalidad" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
