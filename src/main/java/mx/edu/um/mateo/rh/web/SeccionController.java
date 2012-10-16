@@ -16,8 +16,10 @@ import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.Constants;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
+import mx.edu.um.mateo.rh.model.Seccion;
 import mx.edu.um.mateo.rh.model.Seccion;
 import mx.edu.um.mateo.rh.service.SeccionManager;
 
@@ -38,203 +40,164 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- * 
+ *
  * @author osoto
  */
 @Controller
-@RequestMapping("/rh/secciones")
+@RequestMapping("/rh/seccion")
 public class SeccionController extends BaseController {
 
-	@Autowired
-	private SeccionManager mgr;
+    @Autowired
+    private SeccionManager seccionManager;
 
-	@SuppressWarnings("unchecked")
-	@RequestMapping
-	public String lista(HttpServletRequest request,
-			HttpServletResponse response,
-			@RequestParam(required = false) String filtro,
-			@RequestParam(required = false) Long pagina,
-			@RequestParam(required = false) String tipo,
-			@RequestParam(required = false) String correo,
-			@RequestParam(required = false) String order,
-			@RequestParam(required = false) String sort, Usuario usuario,
-			Errors errors, Model modelo) {
-		log.debug("Mostrando secciones {}");
+//    @SuppressWarnings("unchecked")
+    @RequestMapping
+    public String lista(HttpServletRequest request, HttpServletResponse response,
+            @RequestParam(required = false) String filtro,
+            @RequestParam(required = false) Long pagina,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) String sort,
+            Model modelo) {
+        log.debug("Mostrando lista de secciones");
+        Map<String, Object> params = new HashMap<>();
+        Long empresaId = (Long) request.getSession().getAttribute("empresaId");
+//        params.put("empresa", empresaId);
+        if (StringUtils.isNotBlank(filtro)) {
+            params.put("filtro", filtro);
+        }
+        if (StringUtils.isNotBlank(order)) {
+            params.put("order", order);
+            params.put("sort", sort);
+        }
+        if (pagina != null) {
+            params.put("pagina", pagina);
+        }
 
-		Map<String, Object> params = new HashMap<>();
-		Seccion seccion = null;
+        if (StringUtils.isNotBlank(tipo)) {
+            params.put("reporte", true);
+            params = seccionManager.getLista(params);
+            try {
+                generaReporte(tipo, (List<Seccion>) params.get(mx.edu.um.mateo.Constantes.CONTAINSKEY_SECCIONES), response, "secciones", mx.edu.um.mateo.general.utils.Constantes.EMP, empresaId);
+                return null;
+            } catch (ReporteException e) {
+                log.error("No se pudo generar el reporte", e);
+            }
+        }
 
-		Long organizacionId = (Long) request.getSession().getAttribute(
-				"organizacionId");
-		params.put("organizacion", organizacionId);
-		if (StringUtils.isNotBlank(filtro)) {
-			params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
-		}
-		if (StringUtils.isNotBlank(order)) {
-			params.put(Constantes.CONTAINSKEY_ORDER, order);
-			params.put(Constantes.CONTAINSKEY_SORT, sort);
-		}
+        if (StringUtils.isNotBlank(correo)) {
+            params.put("reporte", true);
+            params = seccionManager.getLista(params);
 
-		if (StringUtils.isNotBlank(tipo)) {
-			params.put(Constantes.CONTAINSKEY_REPORTE, true);
-			params = mgr.getSecciones(seccion);
-			try {
-				generaReporte(tipo,
-						(List<Seccion>) params.get(Constants.SECCION_LIST),
-						response, Constants.SECCION_LIST,
-						mx.edu.um.mateo.general.utils.Constantes.ORG,
-						organizacionId);
-				return null;
-			} catch (ReporteException e) {
-				log.error("No se pudo generar el reporte", e);
-				params.remove(Constantes.CONTAINSKEY_REPORTE);
-				// errors.reject("error.generar.reporte");
-			}
-		}
+            params.remove("reporte");
+            try {
+                enviaCorreo(correo, (List<Seccion>) params.get(mx.edu.um.mateo.Constantes.CONTAINSKEY_SECCIONES), request, "secciones", mx.edu.um.mateo.general.utils.Constantes.EMP, empresaId);
+                modelo.addAttribute("message", "lista.enviada.message");
+                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("seccion.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+            } catch (ReporteException e) {
+                log.error("No se pudo enviar el reporte por correo", e);
+            }
+        }
+        params = seccionManager.getLista(params);
 
-		if (StringUtils.isNotBlank(correo)) {
-			params.put(Constantes.CONTAINSKEY_REPORTE, true);
-			params = mgr.getSecciones(seccion);
+        modelo.addAttribute(mx.edu.um.mateo.Constantes.CONTAINSKEY_SECCIONES, params.get(mx.edu.um.mateo.Constantes.CONTAINSKEY_SECCIONES));
 
-			params.remove(Constantes.CONTAINSKEY_REPORTE);
-			try {
-				enviaCorreo(correo,
-						(List<CuentaMayor>) params.get(Constants.SECCION_LIST),
-						request, Constants.SECCION_LIST,
-						mx.edu.um.mateo.general.utils.Constantes.ORG,
-						organizacionId);
-				modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE,
-						"lista.enviada.message");
-				modelo.addAttribute(
-						Constantes.CONTAINSKEY_MESSAGE_ATTRS,
-						new String[] {
-								messageSource.getMessage("mayores.lista.label",
-										null, request.getLocale()),
-								ambiente.obtieneUsuario().getUsername() });
-			} catch (ReporteException e) {
-				log.error("No se pudo enviar el reporte por correo", e);
-			}
-		}
+        this.pagina(params, modelo, mx.edu.um.mateo.Constantes.CONTAINSKEY_SECCIONES, pagina);
 
-		params = mgr.getSecciones(seccion);
+        return mx.edu.um.mateo.Constantes.PATH_SECCION_LISTA;
+    }
 
-		modelo.addAttribute(Constants.CATEGORIA_LIST, mgr.getSecciones(seccion));
 
-		this.pagina(params, modelo, Constants.SECCION_LIST, pagina);
+    @RequestMapping("/ver/{id}")
+    public String ver(@PathVariable Long id, Model modelo) throws ObjectRetrievalFailureException {
+        log.debug("Mostrando proveedor {}", id);
+        Seccion seccion = seccionManager.getSeccion(id);
 
-		return "/rh/seccion/lista";
-	}
+         modelo.addAttribute(mx.edu.um.mateo.Constantes.ADDATTRIBUTE_SECCION, seccion);
 
-	@RequestMapping("/ver/{id}")
-	public String ver(@PathVariable Long id, Model modelo) {
-		log.debug("Mostrando seccion {}", id);
+        return mx.edu.um.mateo.Constantes.PATH_SECCION_VER;
+    }
 
-		Seccion seccion = mgr.getSeccion(id.toString());
+    @RequestMapping("/nuevo")
+    public String nuevo(Model modelo) {
+        log.debug("Nuevo seccion");
+        Seccion seccion = new Seccion();
+        modelo.addAttribute(mx.edu.um.mateo.Constantes.ADDATTRIBUTE_SECCION, seccion);
+        return mx.edu.um.mateo.Constantes.PATH_SECCION_NUEVO;
+    }
 
-		modelo.addAttribute(Constants.SECCION_LIST, seccion);
+    @RequestMapping(value = "/graba", method = RequestMethod.POST)
+    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid Seccion seccion, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
+        }
+        if (bindingResult.hasErrors()) {
+            log.debug("Hubo algun error en la forma, regresando");
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                log.debug("Error: {}", error);
+            }
+            return mx.edu.um.mateo.Constantes.PATH_SECCION_NUEVO;
+        }
 
-		return "/rh/seccion/ver";
-	}
+        try {
+            Usuario usuario = ambiente.obtieneUsuario();
+            //seccion = seccionManager.crea(seccion, usuario);
+            seccionManager.grabaSeccion(seccion);
 
-	@RequestMapping("/nueva")
-	public String nueva(Model modelo) {
-		log.debug("Nueva seccion");
+            ambiente.actualizaSesion(request.getSession(), usuario);
+        } catch (ConstraintViolationException e) {
+            log.error("No se pudo crear al seccion", e);
+            /**
+             * TODO CORREGIR MENSAJE DE ERROR
+             */
+            
+            errors.rejectValue("nombre", "seccion.errors.creado", e.toString());
+            return mx.edu.um.mateo.Constantes.PATH_SECCION_NUEVO;
+        }
 
-		Seccion seccion = new Seccion();
-		modelo.addAttribute(Constants.SECCION_LIST, seccion);
-		return "/rh/seccion/nueva";
-	}
+        redirectAttributes.addFlashAttribute("message", "seccion.creado.message");
+        redirectAttributes.addFlashAttribute("messageAttrs", new String[]{seccion.getNombre()});
 
-	@Transactional
-	@RequestMapping(value = "/crea", method = RequestMethod.POST)
-	public String crea(HttpServletRequest request,
-			HttpServletResponse response, @Valid Seccion seccion,
-			BindingResult bindingResult, Errors errors, Model modelo,
-			RedirectAttributes redirectAttributes) {
-		for (String nombre : request.getParameterMap().keySet()) {
-			log.debug("Param: {} : {}", nombre,
-					request.getParameterMap().get(nombre));
-		}
-		if (bindingResult.hasErrors()) {
-			log.debug("Hubo algun error en la forma, regresando");
-			return "/rh/seccion/nueva";
-		}
+        return "redirect:" + mx.edu.um.mateo.Constantes.PATH_SECCION;
+    }
 
-		try {
-			mgr.saveSeccion(seccion);
-		} catch (ConstraintViolationException e) {
-			log.error("No se pudo crear la seccion", e);
-			return "/rh/seccion/nueva";
-		}
+    @RequestMapping("/edita/{id}")
+    public String edita(@PathVariable Long id, HttpServletRequest request, @Valid Seccion seccion, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+        log.debug("Edita seccion {}", id);
+        try {
+            seccion = seccionManager.getSeccion(id);
+        } catch (ObjectRetrievalFailureException ex) {
+            log.error("No se pudo obtener al seccion", ex);
+            errors.rejectValue("seccion", "registro.noEncontrado", new String[]{"seccion"}, null);
+            return mx.edu.um.mateo.Constantes.PATH_SECCION;
+        }
+        modelo.addAttribute(mx.edu.um.mateo.Constantes.ADDATTRIBUTE_SECCION, seccion);
+        return mx.edu.um.mateo.Constantes.PATH_SECCION_EDITA;
+    }
 
-		redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE,
-				"seccion.creada.message");
-		redirectAttributes.addFlashAttribute(
-				Constantes.CONTAINSKEY_MESSAGE_ATTRS,
-				new String[] { seccion.getNombre() });
+    @Transactional
+    @RequestMapping(value = "/elimina", method = RequestMethod.POST)
+    public String elimina(HttpServletRequest request, @RequestParam Long id,
+            Model modelo, @ModelAttribute Seccion seccion,
+            BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        log.debug("Elimina seccion");
+        try {
+            seccionManager.removeSeccion(id);
 
-		return "redirect:" + "/rh/seccion/ver" + "/" + seccion.getId();
-	}
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE,
+                    "seccion.eliminado.message");
+            redirectAttributes.addFlashAttribute(
+                    Constantes.CONTAINSKEY_MESSAGE_ATTRS,
+                    new String[]{seccion.getNombre()});
+        } catch (Exception e) {
+            log.error("No se pudo eliminar la seccion " + id, e);
+            bindingResult.addError(new ObjectError("seccion",
+                    new String[]{"seccion.no.eliminado.message"},
+                    null, null));
+            return "/rh/seccion/ver";
+        }
 
-	@RequestMapping("/edita/{id}")
-	public String edita(@PathVariable Long id, Model modelo) {
-		log.debug("Editar cuenta de mayor {}", id);
-		Seccion seccion = mgr.getSeccion(id.toString());
-
-		modelo.addAttribute(Constants.SECCION_LIST, seccion);
-
-		return "/rh/seccion/edita";
-	}
-
-	@Transactional
-	@RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-	public String actualiza(HttpServletRequest request, @Valid Seccion seccion,
-			BindingResult bindingResult, Errors errors, Model modelo,
-			RedirectAttributes redirectAttributes) {
-		if (bindingResult.hasErrors()) {
-			log.error("Hubo algun error en la forma, regresando");
-			return "/rh/seccion/edita";
-		}
-		try {
-			mgr.saveSeccion(seccion);
-		} catch (ConstraintViolationException e) {
-			log.error("No se pudo crear la seccion", e);
-			return "/rh/seccion/nueva";
-		}
-
-		redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE,
-				"seccion.actualizada.message");
-		redirectAttributes.addFlashAttribute(
-				Constantes.CONTAINSKEY_MESSAGE_ATTRS,
-				new String[] { seccion.getNombre() });
-
-		return "redirect:" + "/rh/seccion/ver" + "/" + seccion.getId();
-	}
-
-	@Transactional
-	@RequestMapping(value = "/elimina", method = RequestMethod.POST)
-	public String elimina(HttpServletRequest request, @RequestParam Long id,
-			Model modelo, @ModelAttribute Seccion seccion,
-			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-		log.debug("Elimina seccion");
-		try {
-			mgr.removeSeccion(id.toString());
-
-			redirectAttributes
-					.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE,
-							"seccion.eliminada.message");
-			redirectAttributes.addFlashAttribute(
-					Constantes.CONTAINSKEY_MESSAGE_ATTRS,
-					new String[] { seccion.getNombre() });
-		} catch (Exception e) {
-			log.error("No se pudo eliminar la seccion " + id, e);
-			bindingResult
-					.addError(new ObjectError("seccion",
-							new String[] { "seccion.no.eliminada.message" },
-							null, null));
-			return "/rh/seccion/ver";
-		}
-
-		return "redirect:" + "/rh/seccion/ver";
-	}
+        return "redirect:" + "/rh/seccion";
+    }
 }

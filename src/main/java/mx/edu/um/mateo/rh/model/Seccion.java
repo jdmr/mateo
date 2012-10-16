@@ -5,6 +5,7 @@
 package mx.edu.um.mateo.rh.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,17 +30,25 @@ public class Seccion implements Serializable {
 	private static final long serialVersionUID = 8291747354060833386L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
 	@NotBlank
 	@Column(nullable = false, length = 50)
 	private String nombre;
+        @Column(nullable = false, length = 50)
+        private String categoriaId;
+        @Column (nullable = false, length = 24)
+        private Float rangoAcademico;
+        @Column (nullable = false, length = 6, precision= 2)
+        private Float maximo;
+        @Column (nullable = false, length = 6, precision= 2)
+        private Float minimo;
 	@Version
-	private Integer version;
+	private Long version;
 
 	/**
 	 * @return the id
 	 */
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -47,7 +56,7 @@ public class Seccion implements Serializable {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -66,10 +75,42 @@ public class Seccion implements Serializable {
 		this.nombre = nombre;
 	}
 
+        public String getCategoriaId() {
+            return categoriaId;
+        }
+
+        public void setCategoriaId(String categoriaId) {
+            this.categoriaId = categoriaId;
+        }
+
+        public Float getMaximo() {
+            return maximo;
+        }
+
+        public void setMaximo(Float maximo) {
+            this.maximo = maximo;
+        }
+
+        public Float getMinimo() {
+            return minimo;
+        }
+
+        public void setMinimo(Float minimo) {
+            this.minimo = minimo;
+        }
+
+        public Float getRangoAcademico() {
+            return rangoAcademico;
+        }
+
+        public void setRangoAcademico(Float rangoAcademico) {
+            this.rangoAcademico = rangoAcademico;
+        }
+
 	/**
 	 * @return the version
 	 */
-	public Integer getVersion() {
+	public Long getVersion() {
 		return version;
 	}
 
@@ -77,7 +118,7 @@ public class Seccion implements Serializable {
 	 * @param version
 	 *            the version to set
 	 */
-	public void setVersion(Integer version) {
+	public void setVersion(Long version) {
 		this.version = version;
 	}
 

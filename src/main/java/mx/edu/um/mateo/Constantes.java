@@ -75,6 +75,7 @@ public class Constantes {
     public static final String CONTAINSKEY_AUXILIARES = "auxiliares";
     public static final String CONTAINSKEY_LIBROS = "libros";
     public static final String CONTAINSKEY_COLEGIOS = "colegios";
+    public static final String CONTAINSKEY_SECCIONES = "secciones";
     /**
      * Valores para el los addAttribute para las clases
      */
@@ -86,7 +87,8 @@ public class Constantes {
     public static final String ADDATTRIBUTE_COLEGIO = "colegio";
     public static final String ADDATTRIBUTE_DEPENDIENTE = "dependiente";
     public static final String ADDATTRIBUTE_ESTUDIOSEMPLEADO = "estudioEmpleado";
-    /**
+    public static final String ADDATTRIBUTE_SECCION = "seccion";
+/**
      * Valores para el los path's para las clases
      */
     public static final String PATH_CUENTA_MAYOR = "/contabilidad/mayor";
@@ -153,6 +155,14 @@ public class Constantes {
     public static final String PATH_COLEGIO_CREA = "/rh/colegio/crea";
     public static final String PATH_COLEGIO_ACTUALIZA = "/rh/colegio/actualiza";
     public static final String PATH_COLEGIO_ELIMINA = "/rh/colegio/elimina";
+    public static final String PATH_SECCION = "/rh/seccion";
+    public static final String PATH_SECCION_LISTA = "/rh/seccion/lista";
+    public static final String PATH_SECCION_VER = "/rh/seccion/ver";
+    public static final String PATH_SECCION_NUEVO = "/rh/seccion/nuevo";
+    public static final String PATH_SECCION_EDITA = "/rh/seccion/edita";
+    public static final String PATH_SECCION_CREA = "/rh/seccion/crea";
+    public static final String PATH_SECCION_ACTUALIZA = "/rh/seccion/actualiza";
+    public static final String PATH_SECCION_ELIMINA = "/rh/colegio/elimina";
     public static final String CONTAINSKEY_DEPENDIENTES = "dependientes";
     public static final String CONTAINSKEY_ESTUDIOSEMPLEADO = "estudiosEmpleado";
     public static final String CONTAINSKEY_NACIONALIDADES = "nacionalidades";

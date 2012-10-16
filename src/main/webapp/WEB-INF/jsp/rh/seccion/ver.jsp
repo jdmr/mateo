@@ -33,8 +33,22 @@
                     <div class="span1"><s:message code="nombre.label" /></div>
                     <div class="span11">${seccion.nombre}</div>
                 </div>
-
-                
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="categoriaId.label" /></div>
+                    <div class="span11">${seccion.categoriaId}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="rangoAcademico.label" /></div>
+                    <div class="span11">${seccion.rangoAcademico}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="minimo.label" /></div>
+                    <div class="span11">${seccion.minimo}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="maximo.label" /></div>
+                    <div class="span11">${seccion.maximo}</div>
+                </div>
                 <p class="well">
                     <a href="<c:url value='/rh/seccion/edita/${seccion.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
                     <form:hidden path="id" />

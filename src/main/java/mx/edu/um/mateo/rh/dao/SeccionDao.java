@@ -5,6 +5,7 @@
 package mx.edu.um.mateo.rh.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import mx.edu.um.mateo.rh.model.Seccion;
 
@@ -16,8 +17,8 @@ public interface SeccionDao {
 	/**
 	 * Retrieves all of the seccions
 	 */
-	public List<Seccion> getSecciones(Seccion seccion);
-
+        
+        public Map<String, Object> Lista(Map<String, Object> params);
 	/**
 	 * Gets seccion's information based on primary key. An
 	 * ObjectRetrievalFailureException Runtime Exception is thrown if nothing is
@@ -27,7 +28,7 @@ public interface SeccionDao {
 	 *            the seccion's id
 	 * @return seccion populated seccion object
 	 */
-	public Seccion getSeccion(final Integer id);
+	public Seccion getSeccion(final Long id);
 
 	/**
 	 * Saves a seccion's information
@@ -35,7 +36,7 @@ public interface SeccionDao {
 	 * @param seccion
 	 *            the object to be saved
 	 */
-	public void saveSeccion(Seccion seccion);
+	public void grabaSeccion(Seccion seccion);
 
 	/**
 	 * Removes a seccion from the database by id
@@ -43,6 +44,6 @@ public interface SeccionDao {
 	 * @param id
 	 *            the seccion's id
 	 */
-	public void removeSeccion(final Integer id);
+	public void removeSeccion(final Long id);
 
 }

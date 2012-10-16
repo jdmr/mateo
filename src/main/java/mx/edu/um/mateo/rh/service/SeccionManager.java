@@ -5,6 +5,7 @@
 package mx.edu.um.mateo.rh.service;
 
 import java.util.Map;
+import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 
 import mx.edu.um.mateo.rh.model.Seccion;
 
@@ -16,7 +17,7 @@ public interface SeccionManager {
 	/**
 	 * Retrieves all of the seccions
 	 */
-	public Map<String, Object> getSecciones(Seccion seccion);
+	public Map<String, Object> getLista(Map<String, Object> params);
 
 	/**
 	 * Gets seccion's information based on id.
@@ -25,7 +26,7 @@ public interface SeccionManager {
 	 *            the seccion's id
 	 * @return seccion populated seccion object
 	 */
-	public Seccion getSeccion(final String id);
+	public Seccion getSeccion(final Long id)throws ObjectRetrievalFailureException;
 
 	/**
 	 * Saves a seccion's information
@@ -33,7 +34,7 @@ public interface SeccionManager {
 	 * @param seccion
 	 *            the object to be saved
 	 */
-	public void saveSeccion(Seccion seccion);
+	public void grabaSeccion(Seccion seccion);
 
 	/**
 	 * Removes a seccion from the database by id
@@ -41,5 +42,5 @@ public interface SeccionManager {
 	 * @param id
 	 *            the seccion's id
 	 */
-	public void removeSeccion(final String id);
+	public void removeSeccion(final Long id);
 }

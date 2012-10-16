@@ -17,7 +17,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/rh/seccion'/>"><i class="icon-list icon-white"></i> <s:message code='seccion.lista.label' /></a>
             </p>
-            <form:form commandName="seccion" action="crea" method="post">
+            <form:form commandName="seccion" action="graba" method="post">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -36,6 +36,46 @@
                             </label>
                             <form:input path="nombre" maxlength="128" required="true" />
                             <form:errors path="nombre" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="seccion.categoriaId">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="categoriaId">
+                                <s:message code="seccion.label.categoriaId" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="categoriaId" maxlength="50" required="true" />
+                            <form:errors path="categoriaId" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="seccion.rangoAcademico">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="rangoAcademico">
+                                <s:message code="seccion.label.rangoAcademico" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="rangoAcademico" maxlength="6" required="true" />
+                            <form:errors path="rangoAcademico" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="seccion.minimo">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="minimo">
+                                <s:message code="seccion.label.minimo" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="minimo" maxlength="6" required="true" />
+                            <form:errors path="minimo" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="seccion.maximo">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="maximo">
+                                <s:message code="seccion.label.maximo" />o
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="maximo" maxlength="6" required="true" />
+                            <form:errors path="maximo" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                     
