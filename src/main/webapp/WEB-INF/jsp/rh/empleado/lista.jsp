@@ -69,10 +69,10 @@
                             <jsp:param name="columna" value="status" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="curp" />
+                            <jsp:param name="columna" value="fechaNacimiento" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="modalidad" />
+                            <jsp:param name="columna" value="curp" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="rfc" />
@@ -84,10 +84,25 @@
                             <jsp:param name="columna" value="imms" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="escalafon" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="turno" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="fechaAlta" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="modalidad" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="ife" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="rango" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="adventista" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="padre" />
@@ -102,29 +117,17 @@
                             <jsp:param name="columna" value="conyuge" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="iglesia" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="responsabilidad" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="finadoMadre" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="finadoPadre" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="adventista" />
+                            <jsp:param name="columna" value="iglesia" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="escalafon" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="turno" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="experienciaFueraUm" />
-                        </jsp:include>
+                            <jsp:param name="columna" value="responsabilidad" />
+                        </jsp:include>                        
                     </tr>
                 </thead>
                 <tbody>
@@ -137,25 +140,27 @@
                             <td>${empleado.genero}</td>
                             <td>${empleado.direccion}</td>
                             <td>${empleado.status}</td>
+                            <td>${empleado.fechaNacimiento}</td>
                             <td>${empleado.curp}</td>
-                            <td>${empleado.modalidad}</td>
                             <td>${empleado.rfc}</td>
                             <td>${empleado.cuenta}</td>
                             <td>${empleado.imms}</td>
+                            <td>${empleado.escalafon}</td>
+                            <td>${empleado.turno}</td>
+                            <td>${empleado.fechaAlta}</td>
+                            <td>${empleado.modalidad}</td>
                             <td>${empleado.ife}</td>
                             <td>${empleado.rango}</td>
+                            <td><input type="checkbox" value="" disabled="true" <c:if test="${empleado.adventista}">checked="checked"</c:if> /></td>
                             <td>${empleado.padre}</td>
                             <td>${empleado.madre}</td>
                             <td>${empleado.estadoCivil}</td>
                             <td>${empleado.conyuge}</td>
-                            <td>${empleado.iglesia}</td>
-                            <td>${empleado.responsabilidad}</td>
+                            <td>${empleado.fechaMatrimonio}</td>
                             <td><input type="checkbox" value="" disabled="true" <c:if test="${empleado.finadoMadre}">checked="checked"</c:if> /></td>
                             <td><input type="checkbox" value="" disabled="true" <c:if test="${empleado.finadoPadre}">checked="checked"</c:if> /></td>
-                            <td><input type="checkbox" value="" disabled="true" <c:if test="${empleado.adventista}">checked="checked"</c:if> /></td>
-                            <td>${empleado.escalafon}</td>
-                            <td>${empleado.turno}</td>
-                            <td>${empleado.experienciaFueraUm}</td>
+                            <td>${empleado.iglesia}</td>
+                            <td>${empleado.responsabilidad}</td>
                         </tr>
                     </c:forEach>
                 </tbody>

@@ -17,7 +17,7 @@ public interface SeccionManager {
 	/**
 	 * Retrieves all of the seccions
 	 */
-	public Map<String, Object> getLista(Map<String, Object> params);
+	public Map<String, Object> Lista(Map<String, Object> params);
 
 	/**
 	 * Gets seccion's information based on id.
@@ -26,7 +26,7 @@ public interface SeccionManager {
 	 *            the seccion's id
 	 * @return seccion populated seccion object
 	 */
-	public Seccion getSeccion(final Long id)throws ObjectRetrievalFailureException;
+	public Seccion Obtiene(final Long id)throws ObjectRetrievalFailureException;
 
 	/**
 	 * Saves a seccion's information
@@ -34,7 +34,7 @@ public interface SeccionManager {
 	 * @param seccion
 	 *            the object to be saved
 	 */
-	public void grabaSeccion(Seccion seccion);
+	public void graba(Seccion seccion);
 
 	/**
 	 * Removes a seccion from the database by id
@@ -42,5 +42,5 @@ public interface SeccionManager {
 	 * @param id
 	 *            the seccion's id
 	 */
-	public void removeSeccion(final Long id);
+	public void elimina(final Long id);
 }

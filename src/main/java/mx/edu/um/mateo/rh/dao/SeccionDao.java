@@ -28,7 +28,7 @@ public interface SeccionDao {
 	 *            the seccion's id
 	 * @return seccion populated seccion object
 	 */
-	public Seccion getSeccion(final Long id);
+	public Seccion obtiene(final Long id);
 
 	/**
 	 * Saves a seccion's information
@@ -36,7 +36,7 @@ public interface SeccionDao {
 	 * @param seccion
 	 *            the object to be saved
 	 */
-	public void grabaSeccion(Seccion seccion);
+	public void graba(Seccion seccion);
 
 	/**
 	 * Removes a seccion from the database by id
@@ -44,6 +44,6 @@ public interface SeccionDao {
 	 * @param id
 	 *            the seccion's id
 	 */
-	public void removeSeccion(final Long id);
+	public void elimina(final Long id);
 
 }

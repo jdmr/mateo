@@ -48,7 +48,7 @@ public class ColegioDaoHibernateTest {
      * Test of lista method, of class ColegioDaoHibernate.
      */
     @Test
-    public void testLista() {
+    public void Lista() {
         log.debug("lista");
         Map<String, Object> params = null;
         for (int i = 0; i <= 5; i++) {
@@ -69,7 +69,7 @@ public class ColegioDaoHibernateTest {
      * Test of getColegio method, of class ColegioDaoHibernate.
      */
     @Test
-    public void testGetColegio() {
+    public void obtiene() {
         System.out.println("getColegio");
         Colegio colegio = new Colegio();
         colegio.setNombre("Nombre");
@@ -85,7 +85,7 @@ public class ColegioDaoHibernateTest {
      * Test of saveColegio method, of class ColegioDaoHibernate.
      */
     @Test
-    public void testGrabaColegio() {
+    public void graba() {
         System.out.println("grabaColegio");
         Colegio colegio = new Colegio();
         colegio.setNombre("Nombre");
@@ -114,7 +114,7 @@ public class ColegioDaoHibernateTest {
      * Test of removeColegio method, of class ColegioDaoHibernate.
      */
     @Test
-    public void testRemoveColegio() {
+    public void elimina() {
         System.out.println("removeColegio");
         Colegio colegio = new Colegio();
         colegio.setNombre("Nombre");

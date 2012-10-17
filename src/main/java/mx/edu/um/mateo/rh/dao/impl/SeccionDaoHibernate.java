@@ -1,55 +1,27 @@
 /*
- * The MIT License
- *
- * Copyright 2012 Universidad de Montemorelos A. C.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
  */
 package mx.edu.um.mateo.rh.dao.impl;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.rh.dao.SeccionDao;
 import mx.edu.um.mateo.rh.model.Seccion;
-import mx.edu.um.mateo.rh.model.Seccion;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.*;
 import org.springframework.orm.ObjectRetrievalFailureException;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author osoto
+ * @author IrasemaBalderas
  */
-@Repository
-@Transactional
-public class SeccionDaoHibernate extends BaseDao implements SeccionDao {
+public class SeccionDaoHibernate extends BaseDao implements SeccionDao{
 
-    /**
-     * @see mx.edu.um.rh.dao.SeccionDao#getSeccions(mx.edu.um.rh.model.Seccion)
-     */
-//    @SuppressWarnings("unchecked")
     @Override
-//    @Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public Map<String, Object> Lista(Map<String, Object> params) {
         log.debug("Buscando lista de secciones con params {}", params);
         if (params == null) {
@@ -120,7 +92,7 @@ public class SeccionDaoHibernate extends BaseDao implements SeccionDao {
      */
     @Override
     @Transactional(readOnly = true)
-    public Seccion getSeccion(final Long id) {
+    public Seccion obtiene(final Long id) {
         Seccion seccion = (Seccion) currentSession().get(Seccion.class, id);
         if (seccion == null) {
             log.warn("uh oh, seccion with id '" + id + "' not found...");
@@ -134,21 +106,19 @@ public class SeccionDaoHibernate extends BaseDao implements SeccionDao {
      * @see mx.edu.um.rh.dao.SeccionDao#saveSeccion(Seccion seccion)
      */
     @Override
-    public void grabaSeccion(final Seccion seccion) {
+    public void graba(final Seccion seccion) {
         if (seccion.getId() == null) {
-            currentSession().saveOrUpdate(seccion);        
+            currentSession().saveOrUpdate(seccion);
         } else {
             log.debug("{}", seccion);
             getSession().merge(seccion);
         }
-
     }
-
-    /**
-     * @see mx.edu.um.rh.dao.SeccionDao#removeSeccion(Integer id)
-     */
-    @Override
-    public void removeSeccion(final Long id) {
-        currentSession().delete(getSeccion(id));
+        
+        @SuppressWarnings("unchecked")
+        @Transactional(readOnly = true)
+        @Override
+        public void elimina(final Long id) {
+        currentSession().delete(obtiene(id));
+        }
     }
-}

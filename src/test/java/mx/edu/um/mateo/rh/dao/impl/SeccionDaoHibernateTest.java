@@ -58,7 +58,7 @@ public class SeccionDaoHibernateTest {
             seccion.setMinimo(new Float (2));
             seccion.setCategoriaId("CategoriaId");
             seccion.setRangoAcademico(new Float (1) );
-            seccionDao.grabaSeccion(seccion);
+            seccionDao.graba(seccion);
             assertNotNull(seccion);
         }
 
@@ -79,10 +79,10 @@ public class SeccionDaoHibernateTest {
             seccion.setMinimo(new Float (2));
             seccion.setCategoriaId("CategoriaId");
             seccion.setRangoAcademico(new Float (1) );
-            seccionDao.grabaSeccion(seccion);
+            seccionDao.graba(seccion);
         currentSession().save(seccion);
         
-        Seccion seccion1 = seccionDao.getSeccion(seccion.getId());
+        Seccion seccion1 = seccionDao.obtiene(seccion.getId());
         assertEquals(seccion1.getId(), seccion.getId()); 
         //assertEquals(concepto.getId(), concepto1.getId());
     }
@@ -99,7 +99,7 @@ public class SeccionDaoHibernateTest {
             seccion.setMinimo(new Float (2));
             seccion.setCategoriaId("CategoriaId");
             seccion.setRangoAcademico(new Float (1) );
-        seccionDao.grabaSeccion(seccion);
+        seccionDao.graba(seccion);
         assertNotNull(seccion.getId());
     }
 
@@ -118,7 +118,7 @@ public class SeccionDaoHibernateTest {
         currentSession().save(seccion);
         String nombre="Nombre2";
         seccion.setNombre(nombre);
-        seccionDao.grabaSeccion(seccion);
+        seccionDao.graba(seccion);
         assertEquals(nombre, seccion.getNombre());
     }
 
@@ -136,12 +136,12 @@ public class SeccionDaoHibernateTest {
             seccion.setRangoAcademico(new Float (1) );
         currentSession().save(seccion);
         try {
-            seccionDao.removeSeccion(seccion.getId());
+            seccionDao.elimina(seccion.getId());
         } catch (ObjectRetrievalFailureException ex) {
             log.error("No existe concepto");
         }
         try {
-            seccion = seccionDao.getSeccion(seccion.getId());
+            seccion = seccionDao.obtiene(seccion.getId());
             //fail("Fallo al eliminar");
         } catch (ObjectRetrievalFailureException ex) {
             log.info("Elimino con exito");

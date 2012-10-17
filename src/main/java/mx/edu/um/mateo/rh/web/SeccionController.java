@@ -7,22 +7,16 @@ package mx.edu.um.mateo.rh.web;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
 import mx.edu.um.mateo.Constantes;
-import mx.edu.um.mateo.Constants;
-import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.rh.model.Seccion;
-import mx.edu.um.mateo.rh.model.Seccion;
 import mx.edu.um.mateo.rh.service.SeccionManager;
-
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,18 +26,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
- * @author osoto
+ * @author IrasemaBalderas
  */
-@Controller
+    @Controller
 @RequestMapping("/rh/seccion")
 public class SeccionController extends BaseController {
 
@@ -77,7 +67,7 @@ public class SeccionController extends BaseController {
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put("reporte", true);
-            params = seccionManager.getLista(params);
+            params = seccionManager.Lista(params);
             try {
                 generaReporte(tipo, (List<Seccion>) params.get(mx.edu.um.mateo.Constantes.CONTAINSKEY_SECCIONES), response, "secciones", mx.edu.um.mateo.general.utils.Constantes.EMP, empresaId);
                 return null;
@@ -88,7 +78,7 @@ public class SeccionController extends BaseController {
 
         if (StringUtils.isNotBlank(correo)) {
             params.put("reporte", true);
-            params = seccionManager.getLista(params);
+            params = seccionManager.Lista(params);
 
             params.remove("reporte");
             try {
@@ -99,7 +89,7 @@ public class SeccionController extends BaseController {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-        params = seccionManager.getLista(params);
+        params = seccionManager.Lista(params);
 
         modelo.addAttribute(mx.edu.um.mateo.Constantes.CONTAINSKEY_SECCIONES, params.get(mx.edu.um.mateo.Constantes.CONTAINSKEY_SECCIONES));
 
@@ -112,7 +102,7 @@ public class SeccionController extends BaseController {
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) throws ObjectRetrievalFailureException {
         log.debug("Mostrando proveedor {}", id);
-        Seccion seccion = seccionManager.getSeccion(id);
+        Seccion seccion = seccionManager.Obtiene(id);
 
          modelo.addAttribute(mx.edu.um.mateo.Constantes.ADDATTRIBUTE_SECCION, seccion);
 
@@ -143,7 +133,7 @@ public class SeccionController extends BaseController {
         try {
             Usuario usuario = ambiente.obtieneUsuario();
             //seccion = seccionManager.crea(seccion, usuario);
-            seccionManager.grabaSeccion(seccion);
+            seccionManager.graba(seccion);
 
             ambiente.actualizaSesion(request.getSession(), usuario);
         } catch (ConstraintViolationException e) {
@@ -166,7 +156,7 @@ public class SeccionController extends BaseController {
     public String edita(@PathVariable Long id, HttpServletRequest request, @Valid Seccion seccion, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         log.debug("Edita seccion {}", id);
         try {
-            seccion = seccionManager.getSeccion(id);
+            seccion = seccionManager.Obtiene(id);
         } catch (ObjectRetrievalFailureException ex) {
             log.error("No se pudo obtener al seccion", ex);
             errors.rejectValue("seccion", "registro.noEncontrado", new String[]{"seccion"}, null);
@@ -183,7 +173,7 @@ public class SeccionController extends BaseController {
             BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina seccion");
         try {
-            seccionManager.removeSeccion(id);
+            seccionManager.elimina(id);
 
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE,
                     "seccion.eliminado.message");
@@ -200,4 +190,6 @@ public class SeccionController extends BaseController {
 
         return "redirect:" + "/rh/seccion";
     }
-}
+ }
+    
+
