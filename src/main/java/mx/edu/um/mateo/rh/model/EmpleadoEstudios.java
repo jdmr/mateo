@@ -11,6 +11,7 @@ import javax.persistence.*;
 import mx.edu.um.mateo.general.model.Usuario;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *
@@ -18,7 +19,7 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 
 @Entity
-@Table(name = "cont_dependiente")
+@Table(name = "empleado_estudios")
 public class EmpleadoEstudios implements Comparable, Serializable {
     
     @Id
@@ -26,19 +27,18 @@ public class EmpleadoEstudios implements Comparable, Serializable {
     private Long id;
     @NotBlank
     @Column(nullable = false, length = 75, unique = true)
-    private String nombreEstudios;
-    @NotBlank
+    private String nombreEstudios;    
     @Column(nullable = false,name = "nivel_estudios_id")
     private Integer nivelEstudios; 
-    @NotBlank
-    private Short titulado;
+    //@NotBlank
+    private Boolean titulado;
     @Temporal(TemporalType.DATE)
     @Column(nullable = false,name="fecha_titulacion")
     private Date fechaTitulacion;
     @Length(max=2)
     @Column(nullable = false, length = 2)
     private String status;
-    @ManyToOne
+    
     private Usuario userCaptura;
     @Temporal(TemporalType.DATE)
     @Column(nullable = false,name="fecha_captura")
@@ -60,6 +60,14 @@ public class EmpleadoEstudios implements Comparable, Serializable {
 
     public void setFechaTitulacion(Date fechaTitulacion) {
         this.fechaTitulacion = fechaTitulacion;
+    }
+
+    public Integer getNivelEstudios() {
+        return nivelEstudios;
+    }
+
+    public void setNivelEstudios(Integer nivelEstudios) {
+        this.nivelEstudios = nivelEstudios;
     }
 
     public Long getId() {
@@ -86,11 +94,11 @@ public class EmpleadoEstudios implements Comparable, Serializable {
         this.status = status;
     }
 
-    public Short getTitulado() {
+    public Boolean getTitulado() {
         return titulado;
     }
 
-    public void setTitulado(Short titulado) {
+    public void setTitulado(Boolean titulado) {
         this.titulado = titulado;
     }
 
@@ -142,9 +150,10 @@ public class EmpleadoEstudios implements Comparable, Serializable {
 
     @Override
     public String toString() {
-        return "EmpleadoEstudios{" + "id=" + id + ", nombreEstudios=" + nombreEstudios + ", titulado=" + titulado + ", fechaTitulacion=" + fechaTitulacion + ", status=" + status + ", userCaptura=" + userCaptura + ", fechaCaptura=" + fechaCaptura + ", version=" + version + '}';
+        return "EmpleadoEstudios{" + "id=" + id + ", nombreEstudios=" + nombreEstudios + ", titulado=" + titulado + ", fechaTitulacion=" + fechaTitulacion +", nivelEstudios=" + nivelEstudios + ", status=" + status + ", userCaptura=" + userCaptura + ", fechaCaptura=" + fechaCaptura + ", version=" + version + '}';
     }
     
+    @Override
     public int compareTo(Object o) {
         if (o instanceof EmpleadoEstudios) {
             EmpleadoEstudios d = (EmpleadoEstudios) o;

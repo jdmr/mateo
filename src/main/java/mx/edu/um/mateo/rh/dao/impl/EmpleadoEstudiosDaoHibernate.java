@@ -60,6 +60,8 @@ public class EmpleadoEstudiosDaoHibernate extends BaseDao implements EmpleadoEst
                     MatchMode.ANYWHERE));
             propiedades.add(Restrictions.ilike("fechaTitulacion", filtro,
                     MatchMode.ANYWHERE));
+             propiedades.add(Restrictions.ilike("nivelEstudios", filtro,
+                    MatchMode.ANYWHERE));
             propiedades.add(Restrictions.ilike("userCaptura", filtro,
                     MatchMode.ANYWHERE));
             propiedades.add(Restrictions.ilike("fechaCaptura", filtro,
