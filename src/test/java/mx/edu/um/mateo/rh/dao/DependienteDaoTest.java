@@ -29,38 +29,38 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class DependienteDaoTest {
 
-//    @Autowired
-//    private DependienteDao instance;
-//    private static final Logger log = LoggerFactory.getLogger(DependienteDaoTest.class);
-//    @Autowired
-//    private SessionFactory sessionFactory;
-//
-//    private Session currentSession() {
-//        return sessionFactory.getCurrentSession();
-//    }
-//
-//    @Test
-//    public void testObtenerListaDeDependientes() {
-//       
-//        
-//        for (int i = 0; i < 5; i++) {
-//            Dependiente dependiente = new Dependiente();
-//            dependiente.setNombre("a"+i);
-//            dependiente.setFechaNacimiento(new Date());
-//            dependiente.setEstudios("abcdfc"+i);
-//            dependiente.setGrado(1);
-//            dependiente.setStatus("B");
-//            instance.graba(dependiente);
-//            //assertNotNull(c.getId());
-//        }
-//         Map<String, Object> params = new TreeMap<String, Object>();
-//        
-//        Map<String, Object> result = instance.lista(params);
-//      
-//        //assertNotNull((List)params.get(Constantes.CONCEPTO_LIST));
-//        //assertEquals(5,((List)params.get(Constantes.CONCEPTO_LIST)).size());
-//
-//    }
+    @Autowired
+    private DependienteDao instance;
+    private static final Logger log = LoggerFactory.getLogger(DependienteDaoTest.class);
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    private Session currentSession() {
+        return sessionFactory.getCurrentSession();
+    }
+
+    @Test
+    public void testObtenerListaDeDependientes() {
+       
+        
+        for (int i = 0; i < 5; i++) {
+            Dependiente dependiente = new Dependiente();
+            dependiente.setNombre("a"+i);
+            dependiente.setFechaNacimiento(new Date());
+            dependiente.setEstudios("abcdfc"+i);
+            dependiente.setGrado(1);
+            dependiente.setStatus("B");
+            instance.graba(dependiente);
+            //assertNotNull(c.getId());
+        }
+         Map<String, Object> params = new TreeMap<String, Object>();
+        
+        Map<String, Object> result = instance.lista(params);
+      
+        //assertNotNull((List)params.get(Constantes.CONCEPTO_LIST));
+        //assertEquals(5,((List)params.get(Constantes.CONCEPTO_LIST)).size());
+
+    }
 //
 //    @Test
 //    public void testObtieneDependiente() throws ObjectRetrievalFailureException {
