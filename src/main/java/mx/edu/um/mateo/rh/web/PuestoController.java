@@ -38,9 +38,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- * 
+ *
  * @author osoto
  */
+
 @Controller
 @RequestMapping("/rh/puestos")
 public class PuestoController extends BaseController {
