@@ -30,6 +30,7 @@ public class SeccionManagerImpl implements SeccionManager {
 	 * @see mx.edu.um.rh.service.SeccionManager#getSeccions(mx.edu.um.rh.model.Seccion)
 	 */
 	@Override
+        @Transactional(readOnly = true)
 	public Map<String, Object> Lista(Map<String, Object> params) {
 		return seccionDao.Lista(params);
 	}
@@ -38,6 +39,7 @@ public class SeccionManagerImpl implements SeccionManager {
 	 * @see mx.edu.um.rh.service.SeccionManager#getSeccion(String id)
 	 */
 	@Override
+        @Transactional(readOnly = true)
 	public Seccion Obtiene(final Long id) throws ObjectRetrievalFailureException{
 		return seccionDao.obtiene(id);
 	}
@@ -54,6 +56,7 @@ public class SeccionManagerImpl implements SeccionManager {
 	 * @see mx.edu.um.rh.service.SeccionManager#removeSeccion(String id)
 	 */
 	@Override
+//        @Transactional(readOnly = true)
 	public void elimina(final Long id) {
 		seccionDao.elimina(id);
 	}

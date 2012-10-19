@@ -41,6 +41,7 @@ public class SeccionController extends BaseController {
     private SeccionManager seccionManager;
 
 //    @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -166,7 +167,7 @@ public class SeccionController extends BaseController {
         return mx.edu.um.mateo.Constantes.PATH_SECCION_EDITA;
     }
 
-    @Transactional
+//    @Transactional(readOnly = true)
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id,
             Model modelo, @ModelAttribute Seccion seccion,

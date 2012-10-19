@@ -12,12 +12,14 @@ import mx.edu.um.mateo.rh.model.Seccion;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.*;
 import org.springframework.orm.ObjectRetrievalFailureException;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author IrasemaBalderas
  */
+@Repository
 public class SeccionDaoHibernate extends BaseDao implements SeccionDao{
 
     @Override
@@ -115,9 +117,9 @@ public class SeccionDaoHibernate extends BaseDao implements SeccionDao{
         }
     }
         
-        @SuppressWarnings("unchecked")
-        @Transactional(readOnly = true)
         @Override
+        @SuppressWarnings("unchecked")
+//        @Transactional(readOnly = true)
         public void elimina(final Long id) {
         currentSession().delete(obtiene(id));
         }
