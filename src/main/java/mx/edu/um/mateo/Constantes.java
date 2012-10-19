@@ -151,6 +151,7 @@ public class Constantes {
     public static final String CONTAINSKEY_NACIONALIDADES = "nacionalidades";
     public static final String CONTAINSKEY_CATEGORIAS = "categorias";
     public static final String CONTAINSKEY_CONCEPTOS = "conceptos";
+     public static final String CONTAINSKEY_PERDED = "perdeds";
 
     /**
      * Valores para el los addAttribute para las clases
@@ -225,4 +226,7 @@ public class Constantes {
     public static final String PATH_CONCEPTO_CREA = "/rh/concepto/crea";
     public static final String PATH_CONCEPTO_ACTUALIZA = "/rh/concepto/actualiza";
     public static final String PATH_CONCEPTO_ELIMINA = "/rh/concepto/elimina";
+    
+    public static final String PATH_PERDED = "/rh/perded";
+    public static final String PATH_PERDED_LISTA = "/rh/perded/lista";
 }
