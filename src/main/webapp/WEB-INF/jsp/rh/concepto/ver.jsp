@@ -32,20 +32,20 @@
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span4">
-                        <h4><s:message code="codigo.label" /></h4>
-                        <h3>${almacen.codigo}</h3>
+                        <h4><s:message code="nombre.label" /></h4>
+                        <h3>${concepto.nombre}</h3>
                     </div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span4">
-                        <h4><s:message code="nombre.label" /></h4>
-                        <h3>${almacen.nombre}</h3>
+                        <h4><s:message code="descripcion.label" /></h4>
+                        <h3>${concepto.descripcion}</h3>
                     </div>
                 </div>
 
                 <p class="well">
-                    <a href="<c:url value='/rh/concepto/edita/${almacen.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
+                    <a href="<c:url value='/rh/concepto/edita/${concepto.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
                     <form:hidden path="id" />
                     <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="eliminar"  onclick="return confirm('<s:message code="confirma.elimina.message" />');" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='eliminar.button'/></button>
                 </p>

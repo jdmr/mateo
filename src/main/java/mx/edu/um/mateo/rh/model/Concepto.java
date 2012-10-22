@@ -4,9 +4,9 @@
  */
 package mx.edu.um.mateo.rh.model;
 
-import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.*;
+import mx.edu.um.mateo.general.model.Empresa;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -16,7 +16,7 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 @Table(name = "cont_concepto")
 public class Concepto implements Comparable {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -33,7 +33,9 @@ public class Concepto implements Comparable {
     private String status;
     @Version
     private Integer version;
-
+    @ManyToOne
+    private Empresa empresa;
+    
     /**
      *
      */
@@ -84,6 +86,20 @@ public class Concepto implements Comparable {
 
     public Integer getVersion() {
         return this.version;
+    }
+
+    /**
+     * @return the empresa
+     */
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    /**
+     * @param empresa the empresa to set
+     */
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
     }
 
     public void setVersion(Integer version) {
