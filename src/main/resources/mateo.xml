@@ -20,6 +20,11 @@
     
     <task:annotation-driven/>
     
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+     <property name="defaultLocale" value="es"/>
+    </bean>
+    
+    
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl" >
         <property name="host" value="${mail.smtp.host}" />
         <property name="port" value="${mail.smtp.port}" />
