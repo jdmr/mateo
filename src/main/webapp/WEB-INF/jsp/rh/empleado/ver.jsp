@@ -31,6 +31,11 @@
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="nombre.label" /></div>
+                    <div class="span11">${empleado.nivelEstudios}</div>
+                </div>
+                
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="nombre.label" /></div>
                     <div class="span11">${empleado.nombre}</div>
                 </div>
 

@@ -63,9 +63,11 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
      * @see mx.edu.um.mateo.rh.service.EmpleadoManager#saveEmpleado(mx.edu.um.mateo.rh.model.Empleado, mx.edu.um.mateo.general.model.Usuario) 
      */
     public void saveEmpleado(Empleado empleado, Usuario usuario) {
+        log.debug("saveEmpleado ");
     	if(empleado.getId() == null){
     		Empleado emp = new Empleado();
-    		emp.setClave(empleado.getClave());
+    		//emp.setClave(empleado.getClave());
+    		emp.setClave(null);//aqui se envia null, pero realmente debe llamar a tipoEmpleado para traer el prefijo
     		empleado.setClave(this.getNuevaClave(emp));
                 empleado.setStatus(Constants.STATUS_ACTIVO);
     	}
@@ -88,29 +90,35 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
     }
     
     public String getNuevaClave(final Empleado empleado){
+        log.debug("getNuevaClave");
     	if(empleado.getClave()==null || empleado.getClave().length() == 3){
     		Integer clave = new Integer(0);
     		Integer tmp = new Integer(0);
     		
     		List claves = dao.searchEmpleado(empleado);
-        	
-    		//log.debug(empleado.getClave());
+                
+                if(claves.size() == 0){
+                    empleado.setClave("980");
+                }
+                
+                if(empleado.getClave() != null){
+                    log.debug("Clave del empleado {}", empleado.getClave());
+                }
     		
-    		Iterator i = claves.iterator();
-    		
+    		Iterator i = claves.iterator();    		
     		while(i.hasNext()){
     			
-    			clave = new Integer(((Empleado)i.next()).getClave().substring(3));
+    			clave = new Integer(((Empleado)i.next()).getClave().substring(3));                        
     			    			
     			if(clave - tmp == 1){
     				tmp = clave;
     			}
     			else{
-    				//log.debug(empleado.getClave()+"0000000".substring(empleado.getClave().length()+String.valueOf(tmp+1).length())+String.valueOf(tmp+1));
+    				log.debug("Nueva clave {}", empleado.getClave()+"0000000".substring(empleado.getClave().length()+String.valueOf(tmp+1).length())+String.valueOf(tmp+1));
     				return empleado.getClave()+"0000000".substring(empleado.getClave().length()+String.valueOf(tmp+1).length())+String.valueOf(tmp+1);
     			}
     		}
-            //log.debug(empleado.getClave()+"0000000".substring(empleado.getClave().length()+String.valueOf(tmp+1).length())+String.valueOf(tmp+1));
+            log.debug("Nueva clave {} ",empleado.getClave()+"0000000".substring(empleado.getClave().length()+String.valueOf(tmp+1).length())+String.valueOf(tmp+1));
             return empleado.getClave()+"0000000".substring(empleado.getClave().length()+String.valueOf(tmp+1).length())+String.valueOf(tmp+1);
     	}
     	return null;

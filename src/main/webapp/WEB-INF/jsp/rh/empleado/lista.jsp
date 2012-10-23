@@ -48,6 +48,9 @@
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="nivelEstudios" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="nombre" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
@@ -133,6 +136,7 @@
                 <tbody>
                     <c:forEach items="${empleadoList}" var="empleado" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
+                            <td>${empleado.nivelEstudios}</td>
                             <td><a href="<c:url value='/rh/empleado/ver/${empleado.id}' />">${empleado.nombre}</a></td>
                             <td>${empleado.apPaterno}</td>
                             <td>${empleado.apMaterno}</td>

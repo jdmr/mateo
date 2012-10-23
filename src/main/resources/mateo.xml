@@ -20,6 +20,16 @@
     
     <task:annotation-driven/>
     
+    <bean id="conversionService"
+      class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <list>
+                <bean class="mx.edu.um.mateo.rh.model.NivelEstudiosToStringConverterFactory"/>
+                <bean class="mx.edu.um.mateo.rh.model.StringToNivelEstudiosConverterFactory"/>
+            </list>
+        </property>
+    </bean>
+    
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl" >
         <property name="host" value="${mail.smtp.host}" />
         <property name="port" value="${mail.smtp.port}" />

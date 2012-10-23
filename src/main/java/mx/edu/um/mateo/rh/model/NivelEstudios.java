@@ -8,18 +8,9 @@ package mx.edu.um.mateo.rh.model;
  *
  * @author develop
  */
-import java.util.ArrayList;
-import java.util.List;
 
 
 public enum NivelEstudios {
-//    BECA_RECTORIA(1,"Beca Rectoria"),
-//    PLAN_PROMOCIONAL_EDUCACION(2,"Plan Promocional Educacional"),
-//    BECAS_ESPECIALES_VRF(3,"Becas Especiales VRF"),
-//    PLANES_ESPECIALES_UNIONES(4,"Planes Especiales Uniones"),
-//    BECAS_EDUCATIVAS_HOSPITAL(5,"Becas Educativas HLC"),
-//    BECAS_MUNICIPALES(6,"Becas Municipales"),
-//    OTROS(10,"Otros");
     UNKNOWN(0,"Todas"),
     PRIMARIA(1, "Primaria"),
     SECUNDARIA(2, "secundaria"),
@@ -75,17 +66,24 @@ public enum NivelEstudios {
             default: return UNKNOWN;
         }
     }
+    
+    
+//
+//    public static List getNiveles(){
+//        List list = new ArrayList();
+//        list.add(NivelEstudios.valueOf(0));
+//        list.add(NivelEstudios.valueOf(1));
+//        list.add(NivelEstudios.valueOf(2));
+//        list.add(NivelEstudios.valueOf(3));
+//        list.add(NivelEstudios.valueOf(4));
+//        list.add(NivelEstudios.valueOf(5));
+//        list.add(NivelEstudios.valueOf(6));
+//        
+//        return list;
+//    }
 
-    public static List getNiveles(){
-        List list = new ArrayList();
-        list.add(NivelEstudios.valueOf(0));
-        list.add(NivelEstudios.valueOf(1));
-        list.add(NivelEstudios.valueOf(2));
-        list.add(NivelEstudios.valueOf(3));
-        list.add(NivelEstudios.valueOf(4));
-        list.add(NivelEstudios.valueOf(5));
-        list.add(NivelEstudios.valueOf(6));
-        
-        return list;
+    @Override
+    public String toString() {
+        return "NivelEstudios{" + "descripcion=" + descripcion + '}';
     }
 }
