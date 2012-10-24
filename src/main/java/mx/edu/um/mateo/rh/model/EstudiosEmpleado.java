@@ -26,6 +26,7 @@ public class EstudiosEmpleado implements Serializable {
     private Integer version;
     @Column
     private String nombreEstudios;
+    @Enumerated(EnumType.STRING)
     @Column
     private NivelEstudios nivelEstudios;
     @Column

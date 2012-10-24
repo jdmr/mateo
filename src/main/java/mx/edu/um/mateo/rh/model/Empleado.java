@@ -186,6 +186,7 @@ public class Empleado implements Serializable, Validator {
         this.iglesia = iglesia;
         this.responsabilidad = responsabilidad;
         this.empresa = empresa;
+        this.nivelEstudios = NivelEstudios.DOCTORADO;
     }
 
     public String getApMaterno() {
