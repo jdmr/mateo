@@ -20,6 +20,10 @@
     
     <task:annotation-driven/>
     
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+     <property name="defaultLocale" value="es"/>
+    </bean>
+    
     <bean id="conversionService"
       class="org.springframework.context.support.ConversionServiceFactoryBean">
         <property name="converters">
