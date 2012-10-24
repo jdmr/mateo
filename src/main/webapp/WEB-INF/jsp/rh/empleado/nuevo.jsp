@@ -28,6 +28,18 @@
                 </form:errors>
 
                 <fieldset>
+                    <s:bind path="empleado.nivelEstudios">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="nombre">
+                                <s:message code="nivelEstudios.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:select id="nivelEstudios" path="nivelEstudios" required="true" cssClass="span3" >
+                                <form:options items="${nivelEstudiosList}" />
+                            </form:select>
+                            <form:errors path="nivelEstudios" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
                     <s:bind path="empleado.nombre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombre">
@@ -174,7 +186,7 @@
                                 <s:message code="modalidad.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="modalidad" maxlength="3" required="true" />
+                            <form:input path="modalidad" maxlength="2" required="true" />
                             <form:errors path="modalidad" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
