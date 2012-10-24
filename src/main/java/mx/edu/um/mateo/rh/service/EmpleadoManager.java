@@ -6,6 +6,7 @@ package mx.edu.um.mateo.rh.service;
 
 import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.rh.model.Empleado;
 import org.springframework.security.core.userdetails.User;
@@ -43,8 +44,9 @@ public interface EmpleadoManager {
     /**
      * Saves a empleado's information
      * @param empleado the object to be saved
+     * @param usuario the object to be saved
      */
-    public void saveEmpleado (Empleado empleado);
+    public void saveEmpleado (Empleado empleado, Usuario usuario);
     
     /**
      * El empleado nunca se borra....
