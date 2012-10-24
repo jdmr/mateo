@@ -27,7 +27,6 @@ import java.util.List;
 import mx.edu.um.mateo.contabilidad.dao.CuentaDao;
 import mx.edu.um.mateo.contabilidad.model.Cuenta;
 import mx.edu.um.mateo.general.dao.BaseDao;
-import mx.edu.um.mateo.rh.model.Seccion;
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,10 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CuentaDaoHibernate extends BaseDao implements CuentaDao {
 
-    /**
-     * @see mx.edu.um.rh.dao.SeccionDao#getSeccions(mx.edu.um.rh.model.Seccion)
-     */
-//    @SuppressWarnings("unchecked")
+    
     
     @SuppressWarnings("unchecked")
     @Transactional(readOnly = true)

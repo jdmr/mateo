@@ -7,20 +7,19 @@ package mx.edu.um.mateo.rh.web;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.Constants;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.rh.model.Puesto;
 import mx.edu.um.mateo.rh.service.PuestoManager;
-
+import mx.edu.um.mateo.rh.service.SeccionManager;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +29,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -48,7 +43,8 @@ public class PuestoController extends BaseController {
 
 	@Autowired
 	private PuestoManager mgr;
-
+        @Autowired
+	private SeccionManager SeccionManager;
 	@SuppressWarnings("unchecked")
 	@RequestMapping
 	public String lista(HttpServletRequest request,
@@ -65,9 +61,14 @@ public class PuestoController extends BaseController {
 		Map<String, Object> params = new HashMap<>();
 		Puesto puesto = null;
 
-		Long organizacionId = (Long) request.getSession().getAttribute(
-				"organizacionId");
-		params.put("organizacion", organizacionId);
+		Long empresaId = (Long) request.getSession().getAttribute(
+				"empresaId");
+		params.put("empresa", empresaId);
+                
+                Long seccionId = (Long) request.getSession().getAttribute(
+				"seccionId");
+		params.put("seccion", seccionId);
+                
 		if (StringUtils.isNotBlank(filtro)) {
 			params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
 		}
@@ -84,7 +85,7 @@ public class PuestoController extends BaseController {
 						(List<Puesto>) params.get(Constants.PUESTO_LIST),
 						response, Constants.PUESTO_LIST,
 						mx.edu.um.mateo.general.utils.Constantes.ORG,
-						organizacionId);
+						empresaId);
 				return null;
 			} catch (ReporteException e) {
 				log.error("No se pudo generar el reporte", e);
@@ -103,7 +104,7 @@ public class PuestoController extends BaseController {
 						(List<CuentaMayor>) params.get(Constants.PUESTO_LIST),
 						request, Constants.PUESTO_LIST,
 						mx.edu.um.mateo.general.utils.Constantes.ORG,
-						organizacionId);
+						empresaId);
 				modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE,
 						"lista.enviada.message");
 				modelo.addAttribute(
@@ -151,7 +152,7 @@ public class PuestoController extends BaseController {
 	public String crea(HttpServletRequest request,
 			HttpServletResponse response, @Valid Puesto puesto,
 			BindingResult bindingResult, Errors errors, Model modelo,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes) throws ObjectRetrievalFailureException {
 		for (String nombre : request.getParameterMap().keySet()) {
 			log.debug("Param: {} : {}", nombre,
 					request.getParameterMap().get(nombre));
@@ -162,7 +163,9 @@ public class PuestoController extends BaseController {
 		}
 
 		try {
-			mgr.graba(puesto, null);
+                    puesto.setSeccion(SeccionManager.Obtiene(puesto.getSeccion().getId()));
+                    mgr.graba(puesto, null);
+                        
 		} catch (ConstraintViolationException e) {
 			log.error("No se pudo crear el puesto", e);
 			return "/rh/puestos/nuevo";

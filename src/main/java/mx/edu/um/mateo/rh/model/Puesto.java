@@ -39,9 +39,7 @@ public class Puesto implements Serializable {
         @NotNull
 	@Column(nullable = false)
         private Integer categoria;
-        @NotNull
-	@Column(nullable = false)
-        private Integer seccion;
+        
         @NotNull
 	@Column(nullable = false)
         private Integer minimo;
@@ -56,11 +54,15 @@ public class Puesto implements Serializable {
 	private Long version;
         @ManyToOne
         private Empresa empresa;
+        @NotNull
+	@Column(nullable = false)
+        @ManyToOne
+        private Seccion seccion;
 
     public Puesto() {
     }
 
-    public Puesto(String descripcion, Integer categoria, Integer seccion, Integer minimo, Integer maximo, String status, Empresa empresa) {
+    public Puesto(String descripcion, Integer categoria, Seccion seccion, Integer minimo, Integer maximo, String status, Empresa empresa) {
         this.descripcion = descripcion;
         this.categoria = categoria;
         this.seccion = seccion;
@@ -98,11 +100,11 @@ public class Puesto implements Serializable {
         this.categoria = categoria;
     }
 
-    public Integer getSeccion() {
+    public Seccion getSeccion() {
         return seccion;
     }
 
-    public void setSeccion(Integer seccion) {
+    public void setSeccion(Seccion seccion) {
         this.seccion = seccion;
     }
 

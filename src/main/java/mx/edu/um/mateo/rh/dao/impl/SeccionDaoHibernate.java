@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author IrasemaBalderas
  */
+
 @Repository
 public class SeccionDaoHibernate extends BaseDao implements SeccionDao{
 
