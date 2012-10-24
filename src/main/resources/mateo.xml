@@ -79,6 +79,40 @@
                     
         </property>
     </bean>
+     <bean id="unknow" class="mx.edu.um.mateo.rh.model.TipoDependiente">
+        <constructor-arg value="1"/>
+        <constructor-arg value="Unknow"/>
+    </bean>  
+    <bean id="hijo" class="mx.edu.um.mateo.rh.model.TipoDependiente">
+        <constructor-arg value="2"/>
+        <constructor-arg value="Hijo"/>
+    </bean>  
+    <bean id="hija" class="mx.edu.um.mateo.rh.model.TipoDependiente">
+        <constructor-arg value="3"/>
+        <constructor-arg value="Hija"/>
+    </bean>  
+    <bean id="esposo" class="mx.edu.um.mateo.rh.model.TipoDependiente">
+        <constructor-arg value="4"/>
+        <constructor-arg value="Esposo"/>
+    </bean>  
+    <bean id="esposa" class="mx.edu.um.mateo.rh.model.TipoDependiente">
+        <constructor-arg value="5"/>
+        <constructor-arg value="Esposa"/>
+    </bean>  
+    
+    
+    <bean id="tipoDependiente" class="mx.edu.um.mateo.rh.model.TipoDependiente">
+        <property name="tipos">
+            <map>
+                <entry key="1" value-ref="unknow"/>
+                <entry key="2" value-ref="hijo"/>
+                <entry key="3" value-ref="hija"/>
+                <entry key="4" value-ref="esposo"/>
+                <entry key="5" value-ref="esposa"/>
+            </map>
+                    
+        </property>
+    </bean>
     
     
     
@@ -151,6 +185,15 @@
                 </props>
             </property>
         </bean>
+        
+       <bean id="conversionService"
+        class="org.springframework.context.support.ConversionServiceFactoryBean">
+         <property name="converters">
+          <!-- Converters can be a list of converter or a ConverterFactory -->
+            <bean class="mx.edu.um.mateo.rh.utils.StringEnumConverterFactory"/>
+        </property>
+        </bean>        
+        
     </beans>    
         
 </beans>

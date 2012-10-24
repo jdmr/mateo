@@ -61,9 +61,10 @@ public class DependienteDaoTest {
         assertNotNull(empleado.getId());
         for(int i=0; i<20; i++){
         Dependiente dependiente = new Dependiente();
-        dependiente.setTipoDependiente(TipoDependiente.HIJO);
+        dependiente.setTipoDependiente(TipoDependiente.ESPOSA);
         dependiente.setEmpleado(empleado);
         dependiente.setStatus("A");
+        dependiente.setNombre("test");
         currentSession().save(dependiente);
         assertNotNull(dependiente.getId());
         
@@ -91,6 +92,7 @@ public class DependienteDaoTest {
         Dependiente dependiente = new Dependiente();
         dependiente.setTipoDependiente(TipoDependiente.HIJO);
         dependiente.setEmpleado(empleado);
+        dependiente.setNombre("test");
         dependiente.setStatus("A");
         currentSession().save(dependiente);
         assertNotNull(dependiente.getId());
@@ -114,6 +116,7 @@ public class DependienteDaoTest {
         Dependiente dependiente = new Dependiente();
         dependiente.setTipoDependiente(TipoDependiente.HIJO);
         dependiente.setEmpleado(empleado);
+        dependiente.setNombre("test");
         dependiente.setStatus("A");
         currentSession().save(dependiente);
         assertNotNull(dependiente.getId());
@@ -136,6 +139,7 @@ public class DependienteDaoTest {
         Dependiente dependiente = new Dependiente();
         dependiente.setTipoDependiente(TipoDependiente.HIJO);
         dependiente.setStatus("A");
+        dependiente.setNombre("test");
         dependiente.setEmpleado(empleado);
         dependienteDao.graba(dependiente);
         assertNotNull(dependiente.getId());
@@ -145,7 +149,7 @@ public class DependienteDaoTest {
         dependienteDao.graba(dependiente);
         Dependiente dependiente1 = dependienteDao.obtiene(dependiente.getId());
         assertNotNull(dependiente1);
-        assertEquals(TipoDependiente.ESPOSO, dependiente1.getTipoDependiente());
+        assertEquals(TipoDependiente.ESPOSO, dependiente1.getTipoDependiente().getId());
     }
     @Test
     public void TestEliminarDependiente()throws Exception{
@@ -165,6 +169,7 @@ public class DependienteDaoTest {
         dependiente.setTipoDependiente(TipoDependiente.HIJO);
         dependiente.setEmpleado(empleado);
         dependiente.setStatus("A");
+        dependiente.setNombre("test");
         dependienteDao.graba(dependiente);
         assertNotNull(dependiente.getId());
         String tipo=dependienteDao.elimina(dependiente.getId());

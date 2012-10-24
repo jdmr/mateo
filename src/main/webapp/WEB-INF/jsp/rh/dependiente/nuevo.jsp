@@ -54,7 +54,7 @@
                                 <s:message code="status.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="status" maxlength="128" required="true" />
+                            <form:input path="status" maxlength="2" required="true" />
                             <form:errors path="status" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -63,8 +63,12 @@
                                 <label for="tipoDependiente">
                                 <s:message code="tipoDependiente.label" />
                                 <span class="required-indicator">*</span>
-                                <form:select id="tipoDependiente.id" path="tipoDependiente.descripcion" items="${dependientes}" itemLabel="descripcion" itemValue="id" />
-                                <form:errors path="tipoDependiente" cssClass="alert alert-error" />
+                                <select name="tipoDependiente" >
+                                    <c:forEach items= "${tiposDependiente}" var= "TD">
+                                        <option value ="${TD.id} "><c:out value="${TD.descripcion}" /></option>
+                                    </c:forEach>
+                                </select>
+                                
                         </div>
                     </s:bind>
                 </fieldset>

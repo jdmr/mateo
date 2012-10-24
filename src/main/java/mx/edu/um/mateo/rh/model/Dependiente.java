@@ -26,6 +26,7 @@ public class Dependiente implements Serializable {
     private String status;
     @Version
     private Integer version;
+    @Enumerated(EnumType.ORDINAL)
     @Column
     private TipoDependiente tipoDependiente;
     @NotBlank
@@ -135,6 +136,8 @@ public class Dependiente implements Serializable {
         return "Dependiente{" + "id=" + id + ", tipoDependiente=" + tipoDependiente + ", nombre=" + nombre +
                 ", fechaNac=" + fechaNac +", status=" + status + ", empleadp="+empleado.getId()+'}';
     }
+
+   
  
     
     

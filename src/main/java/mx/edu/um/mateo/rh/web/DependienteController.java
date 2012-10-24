@@ -45,6 +45,7 @@ import mx.edu.um.mateo.rh.model.Dependiente;
 import mx.edu.um.mateo.rh.model.TipoDependiente;
 import mx.edu.um.mateo.rh.service.DependienteManager;
 import mx.edu.um.mateo.rh.service.EmpleadoManager;
+import mx.edu.um.mateo.rh.utils.EnumEditors;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -66,8 +67,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import sun.beans.editors.EnumEditor;
 
 /**
  *
@@ -89,6 +92,12 @@ public class DependienteController extends BaseController{
     @Autowired
     private EmpleadoManager empleadoManager;
 
+// @InitBinder
+// public void initBinder(WebDataBinder binder) {
+//   
+//  binder.registerCustomEditor(TipoDependiente.class,
+//    new EnumEditors(TipoDependiente.class));
+// }
     @RequestMapping({"","/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -145,9 +154,7 @@ public class DependienteController extends BaseController{
         }
         params = dependienteManager.lista(params);
         modelo.addAttribute(Constantes.CONTAINSKEY_DEPENDIENTES, params.get(Constantes.CONTAINSKEY_DEPENDIENTES));
-        
-        List tiposDeDependientes = TipoDependiente.getTipos();
-        modelo.addAttribute(Constantes.CONTAINSKEY_DEPENDIENTES, tiposDeDependientes);
+        modelo.addAttribute(Constantes.TIPOS_DEPENDIENTE, TipoDependiente.lista());
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
         Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
@@ -182,8 +189,7 @@ public class DependienteController extends BaseController{
     public String nueva(Model modelo) {
         log.debug("Nuevo dependiente");
         Dependiente dependiente = new Dependiente();
-        List tiposDeDependientes = TipoDependiente.getTipos();
-        modelo.addAttribute(Constantes.CONTAINSKEY_DEPENDIENTES, tiposDeDependientes);
+        modelo.addAttribute(Constantes.TIPOS_DEPENDIENTE, TipoDependiente.lista());
         modelo.addAttribute(Constantes.ADDATTRIBUTE_DEPENDIENTE, dependiente);
         return Constantes.PATH_DEPENDIENTE_NUEVO;
     }
@@ -194,8 +200,7 @@ public class DependienteController extends BaseController{
         log.debug("Editar cuenta de dependiente {}", id);
         Dependiente dependiente = dependienteManager.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_DEPENDIENTE, dependiente);
-        List tiposDeDependientes = TipoDependiente.getTipos();
-        modelo.addAttribute(Constantes.CONTAINSKEY_DEPENDIENTES, tiposDeDependientes);
+        modelo.addAttribute(Constantes.TIPOS_DEPENDIENTE, TipoDependiente.lista());
         return Constantes.PATH_DEPENDIENTE_EDITA;
     }
     @Transactional
@@ -213,7 +218,9 @@ public class DependienteController extends BaseController{
                
             
             //Aqui quedaba para agregar el empleado//
+            
              dependienteManager.graba(dependiente);
+             
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear dependiente", e);
             return Constantes.PATH_DEPENDIENTE_NUEVO;
@@ -344,4 +351,9 @@ public class DependienteController extends BaseController{
 
         return archivo;
     }
+    
+    
+    
+    //Pruebas con El enum!!!
+ 
 }
