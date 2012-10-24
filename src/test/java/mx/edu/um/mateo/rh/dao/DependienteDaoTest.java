@@ -149,7 +149,7 @@ public class DependienteDaoTest {
         dependienteDao.graba(dependiente);
         Dependiente dependiente1 = dependienteDao.obtiene(dependiente.getId());
         assertNotNull(dependiente1);
-        assertEquals(TipoDependiente.ESPOSO, dependiente1.getTipoDependiente().getId());
+        assertEquals(TipoDependiente.ESPOSO, dependiente1.getTipoDependiente().toString());
     }
     @Test
     public void TestEliminarDependiente()throws Exception{

@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -48,10 +50,13 @@ public class Empleado implements Serializable, Validator {
     private Integer version;
     @ManyToOne(optional = false)
     private Empresa empresa;
-    //@NotBlank(message = "La clave del empleado es un campo requerido")
+    @NotBlank
     @Size(min = 7, max = 7, message = "La clave del empleado debe contener una longitud de 7 caracteres")
-    @Column(nullable = true, length = 7)
+    @Column(nullable = false, length = 7)
     private String clave;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private NivelEstudios nivelEstudios;
     @NotBlank
     @Column(nullable = false, length = 100)
     private String nombre;
@@ -181,6 +186,7 @@ public class Empleado implements Serializable, Validator {
         this.iglesia = iglesia;
         this.responsabilidad = responsabilidad;
         this.empresa = empresa;
+        this.nivelEstudios = NivelEstudios.DOCTORADO;
     }
 
     public String getApMaterno() {
@@ -509,5 +515,19 @@ public class Empleado implements Serializable, Validator {
         } else if (emp.getEscalafon() > 200) {
             e.rejectValue("escalafon", "exageratedValue");
         }
+    }
+
+    /**
+     * @return the nivelEstudios
+     */
+    public NivelEstudios getNivelEstudios() {
+        return nivelEstudios;
+    }
+
+    /**
+     * @param nivelEstudios the nivelEstudios to set
+     */
+    public void setNivelEstudios(NivelEstudios nivelEstudios) {
+        this.nivelEstudios = nivelEstudios;
     }
 }
