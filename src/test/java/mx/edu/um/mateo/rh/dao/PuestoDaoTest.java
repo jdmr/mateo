@@ -9,6 +9,7 @@ import java.util.Map;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.rh.model.Puesto;
+import mx.edu.um.mateo.rh.model.Seccion;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Test;
@@ -48,10 +49,17 @@ public class PuestoDaoTest {
         log.debug("Debiera mostrar lista de puestos");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
+        Seccion seccion = new Seccion();
+        seccion.setCategoriaId("1");
+        seccion.setMaximo(Float.NaN);
+        seccion.setMinimo(Float.NaN);
+        seccion.setNombre("nombre");
+        seccion.setRangoAcademico(Float.NaN);
+        currentSession().save(seccion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         for (Integer i = 0; i < 20; i++) {
-            Puesto puesto = new Puesto("test" + i.toString(), i, i, i, i, "a", empresa);
+            Puesto puesto = new Puesto("test" + i.toString(), i, seccion, i, i, "a", empresa);
             instance.graba(puesto, null);
         }
         Map<String, Object> params = new HashMap<>();
