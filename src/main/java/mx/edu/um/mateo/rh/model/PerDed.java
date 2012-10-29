@@ -60,7 +60,7 @@ public class PerDed implements Serializable{
     @Column
     private Integer version;
     
-     @ManyToOne(optional=false)
+    @ManyToOne(optional=false)
     private Empresa empresa;
 
     public Empresa getEmpresa() {

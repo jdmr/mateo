@@ -56,6 +56,8 @@ public class PerDedDaoTest {
             
             perded.setNombre("Categoria"+i);
             perded.setStatus("A");
+            perded.setClave("T" + i);
+            perded.setNaturaleza("N");
             perded.setEmpresa(empresa);
             instance.graba(perded, null);
            assertNotNull(perded.getId());
@@ -79,6 +81,8 @@ public class PerDedDaoTest {
         PerDed perded = new PerDed();
         perded.setNombre("Test1");
         perded.setStatus("AC");
+         perded.setClave("T");
+         perded.setNaturaleza("N");
         perded.setEmpresa(empresa);
         currentSession().save(perded);
         
@@ -96,6 +100,8 @@ public class PerDedDaoTest {
         PerDed perded= new PerDed();
         perded.setNombre("Test1");
         perded.setStatus("AC");
+         perded.setClave("T");
+         perded.setNaturaleza("N");
         perded.setEmpresa(empresa);
         currentSession().save(perded);
         
@@ -115,6 +121,8 @@ public class PerDedDaoTest {
         PerDed perded= new PerDed();
         perded.setNombre("Test1");
         perded.setStatus("AC");
+         perded.setClave("T");
+         perded.setNaturaleza("N");
         perded.setEmpresa(empresa);
         currentSession().save(perded);
         currentSession().delete(perded);
