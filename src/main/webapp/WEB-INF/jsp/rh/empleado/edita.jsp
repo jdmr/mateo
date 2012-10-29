@@ -17,7 +17,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/rh/empleado'/>"><i class="icon-list icon-white"></i> <s:message code='empleado.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="/rh/empleado/actualiza" />
+            <c:url var="actualizaUrl" value="/rh/empleado/graba" />
             <form:form commandName="empleado" method="post" action="${actualizaUrl}">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
@@ -32,6 +32,18 @@
                 <form:hidden path="status" />
 
                 <fieldset>
+                    <s:bind path="empleado.nivelEstudios">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="nombre">
+                                <s:message code="nivelEstudios.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:select id="nivelEstudios" path="nivelEstudios" required="true" cssClass="span3" >
+                                <form:options items="${nivelEstudiosList}" />
+                            </form:select>
+                            <form:errors path="nivelEstudios" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
                     <s:bind path="empleado.nombre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombre">

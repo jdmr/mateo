@@ -207,7 +207,6 @@ public class ActivoController extends BaseController {
         params.put("reporte", true);
         params = tipoActivoDao.lista(params);
         modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
-
         List<CentroCosto> centrosDeCosto = centroCostoDao.listaPorEmpresa(ambiente.obtieneUsuario());
         modelo.addAttribute("centrosDeCosto", centrosDeCosto);
 

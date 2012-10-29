@@ -257,6 +257,16 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
      */
     @Override
     public void saveEmpleado(final Empleado empleado) {
+        this.saveEmpleado(empleado, null);
+    }
+    /**
+     * @see mx.edu.um.mateo.rh.dao.EmpleadoDao#saveEmpleado(mx.edu.um.mateo.rh.model.Empleado, mx.edu.um.mateo.general.model.Usuario) 
+     */
+    @Override
+    public void saveEmpleado(final Empleado empleado, Usuario usuario) {
+        if (usuario != null) {
+            empleado.setEmpresa(usuario.getEmpresa());
+        }
         currentSession().saveOrUpdate(empleado);
     }
 

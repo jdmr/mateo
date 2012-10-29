@@ -53,6 +53,14 @@ public interface EmpleadoDao {
      * @param empleado the object to be saved
      */
     public void saveEmpleado(Empleado empleado);
+    
+    /**
+     * Saves a empleado's information
+     *
+     * @param empleado the object to be saved
+     * @param usuario the object that contains Empresa
+     */
+    public void saveEmpleado(Empleado empleado, Usuario usuario);
 
     /**
      * An employee cannot be deleted Removes a empleado from the database by id

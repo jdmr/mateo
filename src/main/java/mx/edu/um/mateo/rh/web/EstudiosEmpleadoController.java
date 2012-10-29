@@ -28,6 +28,8 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +57,6 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -76,10 +77,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping(Constantes.PATH_ESTUDIOSEMPLEADO)
 public class EstudiosEmpleadoController {
     
-    @Autowired
-    @Qualifier("nivelEstudios")
-    private NivelEstudios nivelEstudios;
-
     private static final Logger log = LoggerFactory.getLogger(mx.edu.um.mateo.rh.web.EstudiosEmpleadoController.class);
     @Autowired
     private EstudiosEmpleadoDao estudiosEmpleadoDao;
@@ -144,7 +141,7 @@ public class EstudiosEmpleadoController {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-        List nivelesEstudios = nivelEstudios.lista();
+        List nivelesEstudios = Arrays.asList(NivelEstudios.values());
         modelo.addAttribute(Constantes.CONTAINSKEY_ESTUDIOSEMPLEADO, nivelesEstudios);
         params = estudiosEmpleadoDao.lista(params);
         modelo.addAttribute(Constantes.CONTAINSKEY_ESTUDIOSEMPLEADO, params.get(Constantes.CONTAINSKEY_ESTUDIOSEMPLEADO));
@@ -183,7 +180,7 @@ public class EstudiosEmpleadoController {
     public String nueva(Model modelo) {
         log.debug("Nuevo estudiosEmpleado");
         EstudiosEmpleado estudiosEmpleado = new EstudiosEmpleado();
-        List nivelesEstudios = nivelEstudios.lista();
+        List nivelesEstudios = Arrays.asList(NivelEstudios.values());
         modelo.addAttribute(Constantes.CONTAINSKEY_ESTUDIOSEMPLEADO, nivelesEstudios);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_ESTUDIOSEMPLEADO, estudiosEmpleado);
         return Constantes.PATH_ESTUDIOSEMPLEADO_NUEVO;
@@ -201,7 +198,7 @@ public class EstudiosEmpleadoController {
         }
 
         try {
-            List nivelesEstudios = nivelEstudios.lista();
+            List nivelesEstudios = Arrays.asList(NivelEstudios.values());
             modelo.addAttribute(Constantes.CONTAINSKEY_ESTUDIOSEMPLEADO, nivelesEstudios);
             log.debug("estudiosEmpleado "+ estudiosEmpleado.toString());
             estudiosEmpleado = estudiosEmpleadoDao.crea(estudiosEmpleado);
@@ -232,7 +229,7 @@ public class EstudiosEmpleadoController {
             return Constantes.PATH_ESTUDIOSEMPLEADO_EDITA;
         }
         try {
-            List nivelesEstudios = nivelEstudios.lista();
+            List nivelesEstudios = Arrays.asList(NivelEstudios.values());
             modelo.addAttribute(Constantes.CONTAINSKEY_ESTUDIOSEMPLEADO, nivelesEstudios);
             estudiosEmpleado = estudiosEmpleadoDao.actualiza(estudiosEmpleado);
         } catch (ConstraintViolationException e) {

@@ -36,6 +36,7 @@ import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.rh.model.Empleado;
+import mx.edu.um.mateo.rh.model.NivelEstudios;
 import mx.edu.um.mateo.rh.service.EmpleadoManager;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
@@ -134,6 +135,7 @@ public class EmpleadoController extends BaseController {
         log.debug("Nuevo empleado");
         Empleado empleado = new Empleado();
         modelo.addAttribute(mx.edu.um.mateo.Constants.EMPLEADO_KEY, empleado);
+        modelo.addAttribute(Constants.NIVELESTUDIOS_LIST, NivelEstudios.values());
         return mx.edu.um.mateo.Constantes.PATH_EMPLEADO_NUEVO;
     }
 
@@ -152,8 +154,7 @@ public class EmpleadoController extends BaseController {
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
-            //empleado = empleadoManager.crea(empleado, usuario);
-            empleadoManager.saveEmpleado(empleado);
+            empleadoManager.saveEmpleado(empleado, usuario);
 
             ambiente.actualizaSesion(request.getSession(), usuario);
         } catch (ConstraintViolationException e) {
