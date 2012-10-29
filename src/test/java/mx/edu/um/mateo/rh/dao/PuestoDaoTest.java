@@ -50,6 +50,11 @@ public class PuestoDaoTest {
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         Seccion seccion = new Seccion();
+        seccion.setCategoriaId("1");
+        seccion.setMaximo(Float.NaN);
+        seccion.setMinimo(Float.NaN);
+        seccion.setNombre("nombre");
+        seccion.setRangoAcademico(Float.NaN);
         currentSession().save(seccion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);

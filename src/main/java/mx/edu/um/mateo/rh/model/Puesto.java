@@ -5,18 +5,9 @@
 package mx.edu.um.mateo.rh.model;
 
 import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Version;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.general.model.Empresa;
-
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -52,11 +43,9 @@ public class Puesto implements Serializable {
         private Double rangoAcademico;
 	@Version
 	private Long version;
-        @ManyToOne
+        @ManyToOne(optional=false)
         private Empresa empresa;
-        @NotNull
-	@Column(nullable = false)
-        @ManyToOne
+        @ManyToOne(optional=false)
         private Seccion seccion;
 
     public Puesto() {
