@@ -6,7 +6,6 @@ package mx.edu.um.mateo.rh.model;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.management.relation.Role;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,22 +13,23 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import mx.edu.um.mateo.contabilidad.model.CentroCosto;
-import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.Empresa;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *
  * @author semdariobarbaamaya
  */
 @Entity
-@Table(name = "perdeds")
+@Table(name = "perded")
 public class PerDed implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     @Column(nullable = false, length = 6, unique = true)
     private String clave;
+    @NotBlank
     @Column(nullable = false, length = 50, unique = true)
     private String nombre;
     @Column(nullable = false, length = 1)

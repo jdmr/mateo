@@ -51,8 +51,12 @@
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="nombre" />
                         </jsp:include>
-                        
-                        <th><s:message code="status.label" /></th>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="clave" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="naturaleza" />
+                        </jsp:include>
                     </tr>
                 </thead>
                 <tbody>
@@ -60,7 +64,8 @@
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/rh/perded/ver/${perded.id}' />">${perded.nombre}</a></td>
                             
-                            <td>${perded.status}</td>
+                            <td>${perded.clave}</td>
+                            <td>${perded.naturaleza}</td>
                         </tr>
                     </c:forEach>
                 </tbody>

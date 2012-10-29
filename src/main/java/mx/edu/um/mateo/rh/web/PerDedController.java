@@ -17,10 +17,12 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.web.BaseController;
+import mx.edu.um.mateo.rh.model.Categoria;
 import mx.edu.um.mateo.rh.model.PerDed;
 import mx.edu.um.mateo.rh.service.PerDedManager;
 import net.sf.jasperreports.engine.JRException;
@@ -37,6 +39,7 @@ import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +47,17 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 /**
@@ -153,6 +163,79 @@ public class PerDedController extends BaseController{
 
         return Constantes.PATH_PERDED_LISTA ;
     }
+     
+      @RequestMapping("/ver/{id}")
+    public String ver(@PathVariable String id, Model modelo) {
+        log.debug("Mostrando perded {}", id);
+        PerDed perded = perdedManager.obtiene(id);
+        
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_PERDED, perded);
+        
+        return Constantes.PATH_PERDED_VER;
+    }
+      @RequestMapping("/nuevo")
+    public String nuevo(Model modelo) {
+        log.debug("Nuevo perded");
+        PerDed perded = new PerDed();
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_PERDED, perded);
+        return Constantes.PATH_PERDED_NUEVO;
+    }
+      
+    @Transactional
+    @RequestMapping(value = "/graba", method = RequestMethod.POST)
+    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid PerDed perded, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
+        }
+        if (bindingResult.hasErrors()) {
+            log.debug("Hubo algun error en la forma, regresando");
+            perded = new PerDed();
+            modelo.addAttribute(Constantes.ADDATTRIBUTE_PERDED, perded);
+            return Constantes.PATH_PERDED_NUEVO;
+        }
+        
+        try {
+            Usuario usuario = ambiente.obtieneUsuario();
+             perdedManager.graba(perded,usuario);
+        } catch (ConstraintViolationException e) {
+            log.error("No se pudo grabar perded", e);
+            perded = new PerDed();
+            modelo.addAttribute(Constantes.ADDATTRIBUTE_PERDED, perded);
+            return Constantes.PATH_PERDED_NUEVO;
+        }
+        
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "perded.graba.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{perded.getNombre()});
+        
+        return "redirect:" + Constantes.PATH_PERDED_LISTA + "/" ;
+    }
+    
+    @RequestMapping("/edita/{id}")
+    public String edita(@PathVariable String id, Model modelo) {
+        log.debug("Editar cuenta de perded {}", id);
+        PerDed perded = perdedManager.obtiene(id);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_PERDED, perded);
+        return Constantes.PATH_PERDED_EDITA;
+    }
+    
+    @Transactional
+    @RequestMapping(value = "/elimina", method = RequestMethod.POST)
+    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute PerDed perded, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        log.debug("Elimina cuenta de perded");
+        try {
+           perdedManager.elimina(id);
+            
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "perded.elimina.message");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{perded.getNombre()});
+        } catch (Exception e) {
+            log.error("No se pudo eliminar perded " + id, e);
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_PERDED, new String[]{"perded.no.elimina.message"}, null, null));
+            return Constantes.PATH_PERDED_VER;
+        }
+        
+        return "redirect:" + Constantes.PATH_PERDED_LISTA ;
+    }
+     
      private void generaReporte(String tipo, List<PerDed> perded, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;

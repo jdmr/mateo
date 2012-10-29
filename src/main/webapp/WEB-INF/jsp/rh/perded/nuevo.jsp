@@ -38,6 +38,26 @@
                             <form:errors path="nombre" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
+                    <s:bind path="perded.clave">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="clave">
+                                <s:message code="perded.clave.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="clave" maxlength="6" required="true" cssClass="span3" />
+                            <form:errors path="nombre" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="perded.naturaleza">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="naturaleza">
+                                <s:message code="perded.naturaleza.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="naturaleza" maxlength="1" required="true" cssClass="span3" />
+                            <form:errors path="nombre" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
                     
                 </fieldset>
                 <p class="well" style="margin-top: 10px;">

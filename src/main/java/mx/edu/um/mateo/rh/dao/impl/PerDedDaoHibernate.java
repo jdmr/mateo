@@ -92,7 +92,7 @@ public class PerDedDaoHibernate extends BaseDao implements PerDedDao{
     }
 
     /**
-     * @see mx.edu.um.mateo.rh.service.CategoriaManager#obtiene(java.lang.String) 
+     * @see mx.edu.um.mateo.rh.service.PerDedManager#obtiene(java.lang.String) 
      */
     @Override
     public PerDed obtiene(final Long id) {
@@ -106,7 +106,7 @@ public class PerDedDaoHibernate extends BaseDao implements PerDedDao{
     }
 
     /**
-     *  @see mx.edu.um.mateo.rh.service.CategoriaManager#graba(mx.edu.um.mateo.rh.model.Categoria, mx.edu.um.mateo.general.model.Usuario) 
+     *  @see mx.edu.um.mateo.rh.service.PerDedManager#graba(mx.edu.um.mateo.rh.model.PerDed, mx.edu.um.mateo.general.model.Usuario) 
      */
     @Override
     public void graba(final PerDed perded, Usuario usuario) {
@@ -121,7 +121,7 @@ public class PerDedDaoHibernate extends BaseDao implements PerDedDao{
     }
 
     /**
-     *  @see mx.edu.um.mateo.rh.service.CategoriaManager#elimina(java.lang.String) 
+     *  @see mx.edu.um.mateo.rh.service.PerDedManager#elimina(java.lang.String) 
      */
     @Override
     public String elimina(final Long id) {

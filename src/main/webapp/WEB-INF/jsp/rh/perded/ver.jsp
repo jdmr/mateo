@@ -36,12 +36,19 @@
                         <h3>${perded.nombre}</h3>
                     </div>
                 </div>
-
-                <div class="span4">
-                        <h4><s:message code="perded.status.label" /></h4>
-                        <h3>${perded.status}</h3>
+                    <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span4">
+                        <h4><s:message code="perded.clave.label" /></h4>
+                        <h3>${perded.clave}</h3>
                     </div>
                 </div>
+                    <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span4">
+                        <h4><s:message code="perded.naturaleza.label" /></h4>
+                        <h3>${perded.naturaleza}</h3>
+                    </div>
+                </div>
+
 
                 <p class="well">
                     <a href="<c:url value='/rh/perded/edita/${perded.id}' />" class="btn btn-primary"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>

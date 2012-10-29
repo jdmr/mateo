@@ -151,7 +151,7 @@ public class Constantes {
     public static final String CONTAINSKEY_NACIONALIDADES = "nacionalidades";
     public static final String CONTAINSKEY_CATEGORIAS = "categorias";
     public static final String CONTAINSKEY_CONCEPTOS = "conceptos";
-     public static final String CONTAINSKEY_PERDED = "perdeds";
+    public static final String CONTAINSKEY_PERDED = "perdeds";
 
     /**
      * Valores para el los addAttribute para las clases
@@ -163,6 +163,7 @@ public class Constantes {
     public static final String ADDATTRIBUTE_CONCEPTO = "concepto";
     public static final String ADDATTRIBUTE_CATEGORIA = "categoria";
     public static final String ADDATTRIBUTE_NACIONALIDAD = "nacionalidad";
+    public static final String ADDATTRIBUTE_PERDED = "perded";
     /**
      * Valores para el los path's para las clases
      */
@@ -229,4 +230,8 @@ public class Constantes {
     
     public static final String PATH_PERDED = "/rh/perded";
     public static final String PATH_PERDED_LISTA = "/rh/perded/lista";
+    public static final String PATH_PERDED_VER = "/rh/perded/ver";
+    public static final String PATH_PERDED_NUEVO = "/rh/perded/nuevo";
+    public static final String PATH_PERDED_EDITA = "/rh/perded/edita";
+    public static final String PATH_PERDED_GRABA = "/rh/perded/graba";
 }
