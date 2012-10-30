@@ -146,6 +146,7 @@ public class Constantes {
      * Valores para el los containsKey para las clases
      */
     public static final String CONTAINSKEY_DEPENDIENTES = "dependientes";
+    public static final String TIPOS_DEPENDIENTE = "tiposDependiente";
     public static final String CONTAINSKEY_ESTUDIOSEMPLEADO = "estudiosEmpleado";
     public static final String CONTAINSKEY_COLEGIOS = "colegios";
     public static final String CONTAINSKEY_SECCIONES = "secciones";
@@ -224,6 +225,7 @@ public class Constantes {
     public static final String PATH_NACIONALIDAD_ACTUALIZA = "/rh/nacionalidad/actualiza";
     public static final String PATH_NACIONALIDAD_ELIMINA = "/rh/nacionalidad/elimina";
     public static final String NACIONALIDAD_FORM = "nacionalidadForm";
+
 
     /**
      * Valores para los conceptos

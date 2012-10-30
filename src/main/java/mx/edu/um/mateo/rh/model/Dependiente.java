@@ -6,32 +6,85 @@ package mx.edu.um.mateo.rh.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.*;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *
- * @author develop
+ * @author zorch
  */
 @Entity
 @Table(name = "dependiente")
 public class Dependiente implements Serializable {
+
+   
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable=false, length=2)
+    private String status;
     @Version
     private Integer version;
-    @Column
+    @Enumerated(EnumType.STRING)
+    @Column(nullable=false)
     private TipoDependiente tipoDependiente;
-    @Column
+    @NotBlank
+    @Column(nullable= false, length=50)
     private String nombre;
-    @Column
-    private String apPaterno;
-    @Column
-    private String apMaterno;
     @Column
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date fechaNac;
+     @ManyToOne(optional=false)
+    private Empleado empleado;
 
+    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+     
+     @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 23 * hash + Objects.hashCode(this.id);
+        hash = 23 * hash + Objects.hashCode(this.version);
+        hash = 23 * hash + Objects.hashCode(this.nombre);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Dependiente other = (Dependiente) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.version, other.version)) {
+            return false;
+        }
+        if (!Objects.equals(this.nombre, other.nombre)) {
+            return false;
+        }
+        return true;
+    }
+
+    public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
+    }
+     
     public Dependiente() {
     }
     
@@ -62,23 +115,7 @@ public class Dependiente implements Serializable {
         this.version = version;
     }
 
-    public String getApellidoM() {
-        return apMaterno;
-    }
-
-    public void setApellidoM(String apellidoM) {
-        this.apMaterno = apellidoM;
-    }
-
-    public String getApellidoP() {
-        return apPaterno;
-    }
-
-    public void setApellidoP(String apellidoP) {
-        this.apPaterno = apellidoP;
-    }
-
-    public Date getFechaNac() {
+   public Date getFechaNac() {
         return fechaNac;
     }
 
@@ -97,8 +134,10 @@ public class Dependiente implements Serializable {
     @Override
     public String toString() {
         return "Dependiente{" + "id=" + id + ", tipoDependiente=" + tipoDependiente + ", nombre=" + nombre +
-                ", apellidoP=" + apPaterno + ", apellidoM=" + apMaterno + ", fechaNac=" + fechaNac + '}';
+                ", fechaNac=" + fechaNac +", status=" + status + ", empleadp="+empleado.getId()+'}';
     }
+
+   
  
     
     
