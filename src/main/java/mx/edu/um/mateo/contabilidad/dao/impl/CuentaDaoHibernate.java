@@ -39,6 +39,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CuentaDaoHibernate extends BaseDao implements CuentaDao {
 
+    
+    
     @SuppressWarnings("unchecked")
     @Transactional(readOnly = true)
     @Override
@@ -52,10 +54,9 @@ public class CuentaDaoHibernate extends BaseDao implements CuentaDao {
         return query.list();
     }
 
-    @SuppressWarnings("unchecked")
-    @Transactional(readOnly = true)
-    @Override
-    public List<Cuenta> tiposDeActivo(Long organizacionId, String ejercicioId) {
+    
+
+        public List<Cuenta> tiposDeActivo(Long organizacionId, String ejercicioId) {
         log.debug("tipos de activo");
         Query query = currentSession()
                 .createQuery(

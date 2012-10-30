@@ -83,6 +83,13 @@ public class PuestoDaoHibernate extends BaseDao implements PuestoDao {
 			countCriteria.createCriteria("empresa").add(
 					Restrictions.idEq(params.get("empresa")));
 		}
+                if (params.containsKey("seccion")) {
+			criteria.createCriteria("seccion").add(
+					Restrictions.idEq(params.get("seccion")));
+			countCriteria.createCriteria("seccion").add(
+					Restrictions.idEq(params.get("seccion")));
+		}
+
 
 		if (params.containsKey("filtro")) {
 			String filtro = (String) params.get("filtro");
