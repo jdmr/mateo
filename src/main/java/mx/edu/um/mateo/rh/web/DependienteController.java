@@ -38,14 +38,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.Constantes;
+import mx.edu.um.mateo.Constants;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.rh.model.Dependiente;
 import mx.edu.um.mateo.rh.model.TipoDependiente;
 import mx.edu.um.mateo.rh.service.DependienteManager;
 import mx.edu.um.mateo.rh.service.EmpleadoManager;
-import mx.edu.um.mateo.rh.utils.EnumEditors;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -67,10 +68,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import sun.beans.editors.EnumEditor;
 
 /**
  *
@@ -154,7 +153,7 @@ public class DependienteController extends BaseController{
         }
         params = dependienteManager.lista(params);
         modelo.addAttribute(Constantes.CONTAINSKEY_DEPENDIENTES, params.get(Constantes.CONTAINSKEY_DEPENDIENTES));
-        modelo.addAttribute(Constantes.TIPOS_DEPENDIENTE, TipoDependiente.lista());
+       
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
         Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
@@ -176,7 +175,7 @@ public class DependienteController extends BaseController{
     }
 
     @RequestMapping("/ver/{id}")
-    public String ver(@PathVariable Long id, Model modelo) {
+    public String ver(@PathVariable Long id, Model modelo) throws ObjectRetrievalFailureException{
         log.debug("Mostrando dependiente {}", id);
         Dependiente dependiente = dependienteManager.obtiene(id);
 
@@ -189,7 +188,7 @@ public class DependienteController extends BaseController{
     public String nueva(Model modelo) {
         log.debug("Nuevo dependiente");
         Dependiente dependiente = new Dependiente();
-        modelo.addAttribute(Constantes.TIPOS_DEPENDIENTE, TipoDependiente.lista());
+        modelo.addAttribute(Constants.TIPODEPENDIENTE_KEY, TipoDependiente.values());//NO ESTOI SEGURO
         modelo.addAttribute(Constantes.ADDATTRIBUTE_DEPENDIENTE, dependiente);
         return Constantes.PATH_DEPENDIENTE_NUEVO;
     }
@@ -200,7 +199,7 @@ public class DependienteController extends BaseController{
         log.debug("Editar cuenta de dependiente {}", id);
         Dependiente dependiente = dependienteManager.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_DEPENDIENTE, dependiente);
-        modelo.addAttribute(Constantes.TIPOS_DEPENDIENTE, TipoDependiente.lista());
+        modelo.addAttribute(Constants.TIPODEPENDIENTE_KEY, TipoDependiente.values());
         return Constantes.PATH_DEPENDIENTE_EDITA;
     }
     @Transactional

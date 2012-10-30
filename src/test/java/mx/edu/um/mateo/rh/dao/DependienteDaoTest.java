@@ -61,7 +61,7 @@ public class DependienteDaoTest {
         assertNotNull(empleado.getId());
         for(int i=0; i<20; i++){
         Dependiente dependiente = new Dependiente();
-        dependiente.setTipoDependiente(TipoDependiente.ESPOSA);
+        dependiente.setTipoDependiente(TipoDependiente.HIJA);
         dependiente.setEmpleado(empleado);
         dependiente.setStatus("A");
         dependiente.setNombre("test");
@@ -149,7 +149,7 @@ public class DependienteDaoTest {
         dependienteDao.graba(dependiente);
         Dependiente dependiente1 = dependienteDao.obtiene(dependiente.getId());
         assertNotNull(dependiente1);
-        assertEquals(TipoDependiente.ESPOSO, dependiente1.getTipoDependiente().toString());
+        assertEquals(TipoDependiente.ESPOSO, dependiente.getTipoDependiente());
     }
     @Test
     public void TestEliminarDependiente()throws Exception{

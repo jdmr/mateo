@@ -63,12 +63,12 @@
                                 <label for="tipoDependiente">
                                 <s:message code="tipoDependiente.label" />
                                 <span class="required-indicator">*</span>
-                                <select name="tipoDependiente" >
-                                    <c:forEach items= "${tiposDependiente}" var= "TD">
-                                        <option value ="${TD.id} "><c:out value="${TD.descripcion}" /></option>
-                                    </c:forEach>
-                                </select>
-                                
+                                </label>
+                                <form:select id="tipoDependiente" path="tipoDependiente" required="true" cssClass="span3" >
+                                    <form:options items= "${tipoDependiente}" />
+                                </form:select>
+                                <form:errors path="tipoDependiente" cssClass="alert alert-error" />
+                                     
                         </div>
                     </s:bind>
                 </fieldset>

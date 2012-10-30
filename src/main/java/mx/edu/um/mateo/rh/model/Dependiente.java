@@ -26,8 +26,8 @@ public class Dependiente implements Serializable {
     private String status;
     @Version
     private Integer version;
-    @Enumerated(EnumType.ORDINAL)
-    @Column
+    @Enumerated(EnumType.STRING)
+    @Column(nullable=false)
     private TipoDependiente tipoDependiente;
     @NotBlank
     @Column(nullable= false, length=50)

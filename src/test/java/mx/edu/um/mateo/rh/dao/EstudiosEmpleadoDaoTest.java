@@ -162,7 +162,7 @@ public class EstudiosEmpleadoDaoTest {
          EstudiosEmpleado estudiosEmpleado = new EstudiosEmpleado();
         estudiosEmpleado.setFechaCaptura(new Date());
         estudiosEmpleado.setFechaTitulacion(new Date());
-        estudiosEmpleado.setNivelEstudios(NivelEstudios.MAESTRIA);
+        estudiosEmpleado.setNivelEstudios(NivelEstudios.DOCTORADO);
         estudiosEmpleado.setNombreEstudios("maestria");
         estudiosEmpleado.setStatus("A");
         estudiosEmpleado.setTitulado(Short.MIN_VALUE);
