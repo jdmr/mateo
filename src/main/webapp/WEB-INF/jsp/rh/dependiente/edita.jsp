@@ -41,24 +41,15 @@
                             <form:errors path="nombre" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="dependiente.apPaterno">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="apPaterno">
-                                <s:message code="apPaterno.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="apPaterno" maxlength="128" required="true" />
-                            <form:errors path="apPaterno" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+                   
                     <s:bind path="dependiente.apMaterno">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="apMaterno">
-                                <s:message code="apMaterno.label" />
+                            <label for="fechaNac">
+                                <s:message code="fechaNacimiento.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="apMaterno" maxlength="128" required="true" />
-                            <form:errors path="apMaterno" cssClass="alert alert-error" />
+                            <form:input path="fechaNac" maxlength="128" required="true" />
+                            <form:errors path="fechaNac" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
               
