@@ -30,7 +30,7 @@ public class Dependiente implements Serializable {
     @Column(nullable=false)
     private TipoDependiente tipoDependiente;
     @NotBlank
-    @Column(nullable= false, length=50)
+    @Column(nullable= false, length=200)
     private String nombre;
     @Column
     @Temporal(javax.persistence.TemporalType.DATE)

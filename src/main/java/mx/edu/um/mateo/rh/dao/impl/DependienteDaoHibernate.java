@@ -28,8 +28,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class DependienteDaoHibernate extends BaseDao implements DependienteDao{
     
-
-    @Override
+    /**
+     * @see mx.edu.um.mateo.rh.dao.DependienteDao#lista(java.util.Map)   
+     */
+   @Override
    public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de dependiente con params {}", params);
         if (params == null) {
@@ -84,6 +86,9 @@ public class DependienteDaoHibernate extends BaseDao implements DependienteDao{
         return params;
     }
 
+   /**
+     * @see mx.edu.um.mateo.rh.dao.DependienteDao#obtiene(java.lang.Long) 
+     */
     @Override
     public Dependiente obtiene(Long id) {
         log.debug("Obtiene dependiente con id = {}", id);
@@ -91,6 +96,9 @@ public class DependienteDaoHibernate extends BaseDao implements DependienteDao{
         return dependiente;
     }
 
+    /**
+     * @see mx.edu.um.mateo.rh.dao.DependienteDao#graba(mx.edu.um.mateo.rh.model.Dependiente)  
+     */
     @Override
     public void graba(Dependiente dependiente) {
           Session session = currentSession();
@@ -101,6 +109,9 @@ public class DependienteDaoHibernate extends BaseDao implements DependienteDao{
     }
         
 
+    /**
+     * @see mx.edu.um.mateo.rh.dao.DependienteDao#elimina(java.lang.Long)  
+     */
     @Override
     public String elimina(Long id)  {
         log.debug("Eliminando dependiente con id {}", id);

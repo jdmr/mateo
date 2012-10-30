@@ -26,7 +26,7 @@ public class DependienteManagerImpl implements DependienteManager{
     private DependienteDao dao;
 
      /**
-     *@see mx.edu.um.mateo.rh.service.NacionalidadManager#lista(java.util.Map)  
+     *@see mx.edu.um.mateo.rh.service.DependienteManager#lista(java.util.Map)   
      */
     
     @Override
@@ -35,7 +35,7 @@ public class DependienteManagerImpl implements DependienteManager{
     }
 
     /**
-     * @see mx.edu.um.mateo.rh.service.NacionalidadManager#obtiene(java.lang.Long) 
+     * @see mx.edu.um.mateo.rh.service.DependienteManager#obtiene(java.lang.Long)  
      */
     @Override
     public Dependiente obtiene(final Long id) {
@@ -43,7 +43,7 @@ public class DependienteManagerImpl implements DependienteManager{
     }
 
     /**
-     * @see mx.edu.um.mateo.rh.service.NacionalidadManager#graba(mx.edu.um.mateo.rh.model.Nacionalidad, mx.edu.um.mateo.general.model.Usuario) 
+     * @see mx.edu.um.mateo.rh.service.DependienteManager#graba(mx.edu.um.mateo.rh.model.Dependiente) 
      */
     
     @Override
@@ -55,7 +55,7 @@ public class DependienteManagerImpl implements DependienteManager{
     }
 
     /**
-     * @see mx.edu.um.mateo.rh.service.NacionalidadManager#elimina(java.lang.Long) 
+     * @see mx.edu.um.mateo.rh.service.DependienteManager#elimina(java.lang.Long)  
      */
     
     

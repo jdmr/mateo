@@ -47,7 +47,7 @@ public class DependienteDaoTest {
     }
 
     @Test
-    public void TestObtenerListaDependiente() {
+    public void testObtenerListaDependiente() {
         log.debug("Deberia obtener una lista de Dependientes");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
@@ -77,7 +77,7 @@ public class DependienteDaoTest {
         assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
     @Test 
-    public void TestObtiene() {
+    public void testObtiene() {
          log.debug("Deberia obtener un Dependiente");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
@@ -100,7 +100,7 @@ public class DependienteDaoTest {
         assertEquals(prueba.getNombre(), dependiente.getNombre());
     }
     @Test
-    public void TestCrearDependiente() {
+    public void testCrearDependiente() {
     
         log.debug("Deberia crear Dependiente");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
@@ -124,7 +124,7 @@ public class DependienteDaoTest {
     }
 
     @Test
-    public void TestActualizarDependiente() {
+    public void testActualizarDependiente() {
         log.debug("Deberia actulizar Dependiente");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
@@ -152,7 +152,7 @@ public class DependienteDaoTest {
         assertEquals(TipoDependiente.ESPOSO, dependiente.getTipoDependiente());
     }
     @Test
-    public void TestEliminarDependiente()throws Exception{
+    public void testEliminarDependiente()throws Exception{
         log.debug("Deberia eliminar Dependiente");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
