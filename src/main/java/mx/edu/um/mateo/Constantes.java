@@ -146,23 +146,28 @@ public class Constantes {
      * Valores para el los containsKey para las clases
      */
     public static final String CONTAINSKEY_DEPENDIENTES = "dependientes";
+    public static final String TIPOS_DEPENDIENTE = "tiposDependiente";
     public static final String CONTAINSKEY_ESTUDIOSEMPLEADO = "estudiosEmpleado";
     public static final String CONTAINSKEY_COLEGIOS = "colegios";
+    public static final String CONTAINSKEY_SECCIONES = "secciones";
     public static final String CONTAINSKEY_NACIONALIDADES = "nacionalidades";
     public static final String CONTAINSKEY_CATEGORIAS = "categorias";
     public static final String CONTAINSKEY_CONCEPTOS = "conceptos";
+    public static final String CONTAINSKEY_PERDED = "perdeds";
 
     /**
      * Valores para el los addAttribute para las clases
      */
-//      Valores para el los addAttribute para las clases
     public static final String ADDATTRIBUTE_DEPENDIENTE = "dependiente";
     public static final String ADDATTRIBUTE_ESTUDIOSEMPLEADO = "estudioEmpleado";
+    public static final String ADDATTRIBUTE_SECCION = "seccion";
+
     public static final String ADDATTRIBUTE_COLEGIO = "colegio";
     public static final String ADDATTRIBUTE_CONCEPTO = "concepto";
     public static final String ADDATTRIBUTE_CATEGORIA = "categoria";
     public static final String ADDATTRIBUTE_NACIONALIDAD = "nacionalidad";
-    /**
+    public static final String ADDATTRIBUTE_PERDED = "perded";
+    /*
      * Valores para el los path's para las clases
      */
     public static final String PATH_DEPENDIENTE = "/rh/dependiente";
@@ -189,6 +194,15 @@ public class Constantes {
     public static final String PATH_COLEGIO_CREA = "/rh/colegio/crea";
     public static final String PATH_COLEGIO_ACTUALIZA = "/rh/colegio/actualiza";
     public static final String PATH_COLEGIO_ELIMINA = "/rh/colegio/elimina";
+    public static final String PATH_SECCION = "/rh/seccion";
+    public static final String PATH_SECCION_LISTA = "/rh/seccion/lista";
+    public static final String PATH_SECCION_VER = "/rh/seccion/ver";
+    public static final String PATH_SECCION_NUEVO = "/rh/seccion/nueva";
+    public static final String PATH_SECCION_EDITA = "/rh/seccion/edita";
+    public static final String PATH_SECCION_CREA = "/rh/seccion/crea";
+    public static final String PATH_SECCION_ACTUALIZA = "/rh/seccion/actualiza";
+    public static final String PATH_SECCION_ELIMINA = "/rh/colegio/elimina";
+    
 
     public static final String CATEGORIA_LIST = "categoriaList";
     public static final String PATH_CATEGORIA = "/rh/categoria";
@@ -212,6 +226,7 @@ public class Constantes {
     public static final String PATH_NACIONALIDAD_ELIMINA = "/rh/nacionalidad/elimina";
     public static final String NACIONALIDAD_FORM = "nacionalidadForm";
 
+
     /**
      * Valores para los conceptos
      */
@@ -225,4 +240,11 @@ public class Constantes {
     public static final String PATH_CONCEPTO_CREA = "/rh/concepto/crea";
     public static final String PATH_CONCEPTO_ACTUALIZA = "/rh/concepto/actualiza";
     public static final String PATH_CONCEPTO_ELIMINA = "/rh/concepto/elimina";
+    
+    public static final String PATH_PERDED = "/rh/perded";
+    public static final String PATH_PERDED_LISTA = "/rh/perded/lista";
+    public static final String PATH_PERDED_VER = "/rh/perded/ver";
+    public static final String PATH_PERDED_NUEVO = "/rh/perded/nuevo";
+    public static final String PATH_PERDED_EDITA = "/rh/perded/edita";
+    public static final String PATH_PERDED_GRABA = "/rh/perded/graba";
 }

@@ -27,7 +27,7 @@
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block <c:choose><c:when test='${not empty messageStyle}'>${messageStyle}</c:when><c:otherwise>alert-success</c:otherwise></c:choose> fade in" role="status">
-                    <a class="close" data-dismiss="alert">×</a>
+                            <a class="close" data-dismiss="alert">×</a>
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
@@ -44,18 +44,34 @@
                 </s:bind>
             </c:if>
 
-            <table id="lista" class="table table-striped table-hover">
+            <table id="lista" class="table table-striped">
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="nombre" />
                         </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="categoriaId" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="rangoAcademico" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="minimo" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="maximo" />
+                        </jsp:include>
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${seccions}" var="seccion" varStatus="status">
+                    <c:forEach items="${secciones}" var="seccion" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/rh/seccion/ver/${seccion.id}' />">${seccion.nombre}</a></td>                            
+                            <td><a href="<c:url value='/rh/seccion/ver/${seccion.id}' />">${seccion.nombre}</a></td>  
+                            <td>${seccion.categoriaId}</td>
+                            <td>${seccion.rangoAcademico}</td>
+                            <td>${seccion.minimo}</td>
+                            <td>${seccion.maximo}</td>
                         </tr>
                     </c:forEach>
                 </tbody>

@@ -119,7 +119,7 @@ public class Categoria implements Serializable {
 
     @Override
     public String toString() {
-        return "Categoria{" + "id=" + id + ", nombre=" + nombre + ", version=" + version + '}';
+        return "Categoria{" + "id=" + id + ", nombre=" + nombre + ", version=" + version + ", empresa="+empresa.getId()+'}';
     }
     
     

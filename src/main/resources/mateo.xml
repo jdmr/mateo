@@ -30,6 +30,8 @@
             <list>
                 <bean class="mx.edu.um.mateo.rh.model.NivelEstudiosToStringConverterFactory"/>
                 <bean class="mx.edu.um.mateo.rh.model.StringToNivelEstudiosConverterFactory"/>
+                <bean class="mx.edu.um.mateo.rh.utils.StringToTipoDependienteEnumConverterFactory"/>
+                <bean class="mx.edu.um.mateo.rh.utils.TipoDependienteToStringEnumConverterFactory"/>
             </list>
         </property>
     </bean>
@@ -53,8 +55,9 @@
     
     <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory" />
-    </bean>    
+    </bean>
     
+   
     
     <tx:annotation-driven />
 
@@ -125,6 +128,15 @@
                 </props>
             </property>
         </bean>
+        
+       <bean id="conversionService"
+        class="org.springframework.context.support.ConversionServiceFactoryBean">
+         <property name="converters">
+          <!-- Converters can be a list of converter or a ConverterFactory -->
+            <bean class="mx.edu.um.mateo.rh.utils.StringToTipoDependienteEnumConverterFactory"/>
+        </property>
+        </bean>        
+        
     </beans>    
         
 </beans>

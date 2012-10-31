@@ -209,6 +209,7 @@ public class EntradaDaoHibernate extends BaseDao implements EntradaDao {
             }
         } else {
             criteria.addOrder(Order.asc("est.prioridad"));
+            criteria.addOrder(Order.desc("fechaModificacion"));
         }
 
         if (!params.containsKey("reporte")) {
