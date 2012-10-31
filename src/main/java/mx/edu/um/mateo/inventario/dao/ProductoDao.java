@@ -65,4 +65,6 @@ public interface ProductoDao {
     public void arreglaDescripciones();
     
     public String eliminaImagen(Long productoId, Usuario usuario);
+    
+    public List<Map<String, Object>> revisaEntradas(String fechaString, Usuario usuario);
 }
