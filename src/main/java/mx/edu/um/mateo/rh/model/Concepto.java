@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.rh.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.*;
 import mx.edu.um.mateo.general.model.Empresa;
@@ -15,7 +16,7 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Entity
 @Table(name = "cont_concepto")
-public class Concepto implements Comparable {
+public class Concepto implements Comparable,Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
