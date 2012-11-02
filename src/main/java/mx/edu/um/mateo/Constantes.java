@@ -153,6 +153,7 @@ public class Constantes {
     public static final String CONTAINSKEY_CATEGORIAS = "categorias";
     public static final String CONTAINSKEY_CONCEPTOS = "conceptos";
     public static final String CONTAINSKEY_PERDED = "perdeds";
+    public static final String CONTAINSKEY_EMPLEADOPUESTO = "empleadopuesto";
 
     /**
      * Valores para el los addAttribute para las clases
@@ -166,6 +167,7 @@ public class Constantes {
     public static final String ADDATTRIBUTE_CATEGORIA = "categoria";
     public static final String ADDATTRIBUTE_NACIONALIDAD = "nacionalidad";
     public static final String ADDATTRIBUTE_PERDED = "perded";
+    public static final String ADDATTRIBUTE_EMPLEADOPUESTO = "empleadopuesto";
     /*
      * Valores para el los path's para las clases
      */
