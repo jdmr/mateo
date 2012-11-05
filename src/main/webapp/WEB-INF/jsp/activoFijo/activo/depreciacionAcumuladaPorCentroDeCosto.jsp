@@ -37,7 +37,7 @@
             <table id="lista" class="table table-striped table-hover">
                 <thead>
                     <tr>
-
+                        <th><s:message code="cuenta.label" /></th>
                         <th><s:message code="centroCosto.label" /></th>
 
                         <c:forEach items="${tiposDeActivo}" var="tipoDeActivo">
@@ -49,6 +49,7 @@
                 <tbody>
                     <c:forEach items="${centrosDeCosto}" var="centroDeCosto" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
+                            <td>${centroDeCosto.cuenta}</td>
                             <td><a href="<c:url value='/activoFijo/activo/depreciacionAcumuladaPorCentroDeCosto/${centroDeCosto.cuenta}/${fechaParam}' />">${centroDeCosto.nombre}</a></td>
                             <c:forEach items="${tiposDeActivo}" var="tipoDeActivo">
                                 <td style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="${centroDeCosto.totales[tipoDeActivo.cuenta]}" /></td>
@@ -58,6 +59,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
+                        <th>&nbsp;</th>
                         <th>&nbsp;</th>
                         <c:forEach items="${tiposDeActivo}" var="tipoDeActivo">
                             <th style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="${tipoDeActivo.total}" /></th>
