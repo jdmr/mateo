@@ -428,7 +428,7 @@ public class SalidaDaoHibernate extends BaseDao implements SalidaDao {
                 Estatus estatus = (Estatus) query.uniqueResult();
                 salida.setEstatus(estatus);
                 salida.setFolio(getFolio(salida.getAlmacen()));
-                salida.setAtendio(usuario.getApellido() + ", "
+                salida.setAtendio(usuario.getApPaterno() + ", "+usuario.getApMaterno()+","
                         + usuario.getNombre());
                 salida.setFechaModificacion(fecha);
 
