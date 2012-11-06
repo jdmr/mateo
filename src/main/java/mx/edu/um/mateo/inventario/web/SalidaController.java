@@ -297,7 +297,7 @@ public class SalidaController extends BaseController {
             Cliente cliente = clienteDao.obtiene(new Long(request
                     .getParameter("cliente.id")));
             salida.setCliente(cliente);
-            salida.setAtendio(usuario.getApellido() + ", "
+            salida.setAtendio(usuario.getApPaterno() + ", "+usuario.getApMaterno() + ", "
                     + usuario.getNombre());
             salida = salidaDao.crea(salida, usuario);
         } catch (ConstraintViolationException e) {
@@ -353,7 +353,7 @@ public class SalidaController extends BaseController {
             Cliente cliente = clienteDao.obtiene(new Long(request
                     .getParameter("cliente.id")));
             salida.setCliente(cliente);
-            salida.setAtendio(usuario.getApellido() + ", "
+            salida.setAtendio(usuario.getApPaterno() + ", "+usuario.getApMaterno() + ", "
                     + usuario.getNombre());
             salida = salidaDao.actualiza(salida, usuario);
         } catch (NoEstaAbiertaException e) {

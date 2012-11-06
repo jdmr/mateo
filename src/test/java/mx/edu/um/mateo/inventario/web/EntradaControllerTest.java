@@ -132,7 +132,7 @@ public class EntradaControllerTest extends BaseTest {
         currentSession().save(estatus);
         Proveedor proveedor = new Proveedor("tst-01", "test-01", "test-00000001", empresa);
         currentSession().save(proveedor);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
