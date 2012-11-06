@@ -148,18 +148,19 @@ public class UsuarioControllerTest {
                 break actualizaUsuario;
             }
         }
-//        this.mockMvc.perform(post("/admin/usuario/crea")
-  //              .sessionAttr("almacenId", almacenId)
-    //            .param("username", "test--01@test.com")
-      //          .param("correo", "test--01@test.com")
-        //        .param("nombre", "TEST--01")
-          //      .param("apellido","TEST--01")
-            //    .param("enviaCorreo", "false")
-              //  .param("ejercicio.id.idEjercicio", ejercicio.getId().getIdEjercicio())
-                //)
-//                .andExpect(status().isOk())
-  //              .andExpect(flash().attributeExists("message"))
-    //            .andExpect(flash().attribute("message","usuario.creado.message"))
-      //          ;
+            this.mockMvc.perform(post("/admin/usuario/crea")
+                .sessionAttr("almacenId", almacenId)
+                .param("username", "test--01@test.com")
+                .param("correo", "test--01@test.com")
+                .param("nombre", "TEST--01")
+                .param("apPaterno","TEST--01")
+                .param("apMaterno","TEST--01")
+                .param("enviaCorreo", "false")
+                .param("ejercicio.id.idEjercicio", ejercicio.getId().getIdEjercicio())
+                )
+                .andExpect(status().isOk())
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(flash().attribute("message","usuario.creado.message"))
+                ;
     }
 }
