@@ -69,7 +69,7 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
         organizacion = organizacionDao.crea(organizacion);
         Rol rol = new Rol("ROLE_ADMIN");
         rol = rolDao.crea(rol);
-        Usuario usuario = new Usuario(username, password, "Admin", "User");
+        Usuario usuario = new Usuario(username, password, "Admin", "User","User");
         Long almacenId = 0l;
         actualizaUsuario:
         for (Empresa empresa : organizacion.getEmpresas()) {

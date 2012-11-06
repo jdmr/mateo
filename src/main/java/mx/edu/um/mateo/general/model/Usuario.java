@@ -30,16 +30,20 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import mx.edu.um.mateo.contabilidad.model.CentroCosto;
@@ -54,6 +58,9 @@ import org.springframework.security.core.userdetails.UserDetails;
  *
  * @author jdmr
  */
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "entity_type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("user")
 @Entity
 @Table(name = "usuarios")
 public class Usuario implements Serializable, UserDetails {
@@ -69,16 +76,16 @@ public class Usuario implements Serializable, UserDetails {
     private Integer version;
     @NotEmpty
     @Column(unique = true, nullable = false, length = 128)
-    private String username;
+    protected String username;
     @Column(nullable = false)
-    private String password;
+    protected String password;
     @Column(nullable = true, name = "open_id")
     private String openId;
     @Column(nullable = false)
     private Boolean enabled = true;
     @Column(nullable = false, name = "account_expired")
     private Boolean accountExpired = false;
-    @Column(nullable = false, name = "account_locked")
+    @Column(nullable = false, name = "account_loned")
     private Boolean accountLocked = false;
     @Column(nullable = false, name = "credentials_expired")
     private Boolean credentialsExpired = false;
@@ -87,11 +94,15 @@ public class Usuario implements Serializable, UserDetails {
     private String nombre;
     @NotEmpty
     @Column(nullable = false, length = 128)
-    private String apellido;
+    protected String apPaterno;
+    @NotEmpty
+    @Column(nullable = false, length = 128)
+    protected String apMaterno;
+    
     @Email
     @NotEmpty
     @Column(nullable = false, name = "correo")
-    private String correo;
+    protected String correo;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usuarios_roles", joinColumns = {
         @JoinColumn(name = "usuario_id")}, inverseJoinColumns =
@@ -108,22 +119,29 @@ public class Usuario implements Serializable, UserDetails {
 
     public Usuario() {
     }
+      public Usuario( String nombre, String apPaterno, String apMaterno) {
+        this.nombre = nombre;
+        this.apPaterno = apPaterno;
+        this.apMaterno = apMaterno;
+    }
 
     public Usuario(String username, String password, String nombre,
-            String apellido) {
+            String apPaterno, String apMaterno) {
         this.username = username;
         this.password = password;
         this.nombre = nombre;
-        this.apellido = apellido;
+        this.apPaterno = apPaterno;
+        this.apMaterno = apMaterno;
         this.correo = "test@test.com";
     }
 
     public Usuario(String username, String password, String nombre,
-            String apellido, String correo) {
+            String apPaterno,String apMaterno, String correo) {
         this.username = username;
         this.password = password;
         this.nombre = nombre;
-        this.apellido = apellido;
+        this.apPaterno = apPaterno;
+        this.apMaterno = apMaterno;
         this.correo = correo;
     }
 
@@ -227,20 +245,9 @@ public class Usuario implements Serializable, UserDetails {
         this.nombre = nombre;
     }
 
-    /**
-     * @return the apellido
-     */
-    public String getApellido() {
-        return apellido;
-    }
-
-    /**
-     * @param apellido the apellido to set
-     */
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
+    
+  
+    
     /**
      * @return the correo
      */
@@ -332,7 +339,31 @@ public class Usuario implements Serializable, UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
-
+    /**
+     * @param apPaterno the apPaterno to get
+     */
+       public String getApPaterno() {
+        return apPaterno;
+    }
+       /**
+     * @param apPaterno the ejercicio to set
+     */
+    public void setApPaterno(String apPaterno) {
+        this.apPaterno = apPaterno;
+    }
+    /**
+     * @param apMaterno the ejercicio to get
+     */
+    public String getApMaterno() {
+        return apMaterno;
+    }
+    /**
+     * @param apMaterno the apMaterno to set
+     */
+    public void setApMaterno(String apMaterno) {
+        this.apMaterno = apMaterno;
+    }
+    
     /**
      * @return the ejercicio
      */
@@ -385,9 +416,11 @@ public class Usuario implements Serializable, UserDetails {
         return hash;
     }
 
+ 
+
     @Override
     public String toString() {
         return "Usuario{" + "username=" + username + ", nombre=" + nombre
-                + ", apellido=" + apellido + '}';
+                + ", apPaterno=" + apPaterno + ", apMaterno=" + apMaterno + '}';
     }
 }

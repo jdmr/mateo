@@ -111,7 +111,7 @@ public class UsuarioControllerTest {
         organizacion = organizacionDao.crea(organizacion);
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
-        Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
         Long almacenId = 0l;
         actualizaUsuario:
         for (Empresa empresa : organizacion.getEmpresas()) {
@@ -148,12 +148,13 @@ public class UsuarioControllerTest {
                 break actualizaUsuario;
             }
         }
-        this.mockMvc.perform(post("/admin/usuario/crea")
+            this.mockMvc.perform(post("/admin/usuario/crea")
                 .sessionAttr("almacenId", almacenId)
                 .param("username", "test--01@test.com")
                 .param("correo", "test--01@test.com")
                 .param("nombre", "TEST--01")
-                .param("apellido","TEST--01")
+                .param("apPaterno","TEST--01")
+                .param("apMaterno","TEST--01")
                 .param("enviaCorreo", "false")
                 .param("ejercicio.id.idEjercicio", ejercicio.getId().getIdEjercicio())
                 )

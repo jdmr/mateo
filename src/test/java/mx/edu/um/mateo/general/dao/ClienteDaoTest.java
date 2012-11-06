@@ -134,7 +134,7 @@ public class ClienteDaoTest {
         roles.add(rol);
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -167,7 +167,7 @@ public class ClienteDaoTest {
         roles.add(rol);
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -207,7 +207,7 @@ public class ClienteDaoTest {
         roles.add(rol);
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);

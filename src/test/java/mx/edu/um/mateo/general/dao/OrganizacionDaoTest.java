@@ -105,7 +105,7 @@ public class OrganizacionDaoTest extends BaseTest {
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TST", "TEST01", empresa);
         currentSession().save(almacen);
-        Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -133,7 +133,7 @@ public class OrganizacionDaoTest extends BaseTest {
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TST", "TEST01", empresa);
         currentSession().save(almacen);
-        Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -169,7 +169,7 @@ public class OrganizacionDaoTest extends BaseTest {
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TST", "TEST01", empresa);
         currentSession().save(almacen);
-        Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);

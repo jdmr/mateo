@@ -217,7 +217,8 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
         nuevoUsuario.setVersion(usuario.getVersion());
         nuevoUsuario.setUsername(usuario.getUsername());
         nuevoUsuario.setNombre(usuario.getNombre());
-        nuevoUsuario.setApellido(usuario.getApellido());
+        nuevoUsuario.setApPaterno(usuario.getApPaterno());
+        nuevoUsuario.setApMaterno(usuario.getApMaterno());
         nuevoUsuario.setCorreo(usuario.getCorreo());
 
         nuevoUsuario.getRoles().clear();
@@ -250,7 +251,8 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
         nuevoUsuario.setVersion(usuario.getVersion());
         nuevoUsuario.setUsername(usuario.getUsername());
         nuevoUsuario.setNombre(usuario.getNombre());
-        nuevoUsuario.setApellido(usuario.getApellido());
+        nuevoUsuario.setApPaterno(usuario.getApPaterno());
+        nuevoUsuario.setApMaterno(usuario.getApMaterno());
         nuevoUsuario.setCorreo(usuario.getCorreo());
 
         log.debug("Asignando roles {}", nombreDeRoles);
