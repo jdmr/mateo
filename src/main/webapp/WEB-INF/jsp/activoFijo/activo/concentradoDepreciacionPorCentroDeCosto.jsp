@@ -38,6 +38,7 @@
                 <thead>
                     <tr>
 
+                        <th><s:message code="cuenta.label" /></th>
                         <th><s:message code="centroCosto.label" /></th>
 
                         <c:forEach items="${tiposDeActivo}" var="tipoDeActivo">
@@ -47,6 +48,7 @@
                     </tr>
                     <tr>
 
+                        <th></th>
                         <th></th>
 
                         <c:forEach items="${tiposDeActivo}" var="tipoDeActivo">
@@ -63,6 +65,7 @@
                 <tbody>
                     <c:forEach items="${centrosDeCosto}" var="centroDeCosto">
                         <tr>
+                            <td>${centroDeCosto.cuenta}</td>
                             <td><a href="<c:url value='/activoFijo/activo/depreciacionAcumuladaPorCentroDeCosto/${centroDeCosto.cuenta}/${fechaParam}' />">${centroDeCosto.nombre}</a></td>
                             <c:forEach items="${tiposDeActivo}" var="tipoDeActivo">
                                 <td style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="${centroDeCosto.totales[tipoDeActivo.cuenta]['costo']}" /></td>
@@ -77,7 +80,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th><s:message code="total.label" /></th>
+                        <th colspan="2"><s:message code="total.label" /></th>
                         <c:forEach items="${tiposDeActivo}" var="tipoDeActivo">
                             <th style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="${tipoDeActivo.costo}" /></th>
                             <th style="text-align:right;"><fmt:formatNumber type="currency" currencySymbol="$" value="0" /></th>
@@ -89,7 +92,7 @@
                     </tr>
                     <tr>
 
-                        <th></th>
+                        <th colspan="2">&nbsp;</th>
 
                         <c:forEach items="${tiposDeActivo}" var="tipoDeActivo">
                             <th style="text-align:right;"><s:message code="costo.label" /></th>
@@ -103,7 +106,7 @@
                     </tr>
                     <tr>
 
-                        <th><s:message code="centroCosto.label" /></th>
+                        <th colspan="2"><s:message code="centroCosto.label" /></th>
 
                         <c:forEach items="${tiposDeActivo}" var="tipoDeActivo">
                             <th colspan="6">${tipoDeActivo.nombre} | ${tipoDeActivo.cuenta}</th>

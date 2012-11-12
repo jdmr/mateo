@@ -119,7 +119,7 @@ public class OrganizacionControllerTest extends BaseTest {
         organizacion = organizacionDao.crea(organizacion);
         Rol rol = new Rol("ROLE_TEST");
         rol = rolDao.crea(rol);
-        Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
         Long almacenId = 0l;
         actualizaUsuario:
         for (Empresa empresa : organizacion.getEmpresas()) {
