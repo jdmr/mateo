@@ -51,13 +51,9 @@ public class Puesto implements Serializable {
     public Puesto() {
     }
 
-    public Puesto(String descripcion, Integer categoria, Seccion seccion, Integer minimo, Integer maximo, String status, Empresa empresa) {
+    public Puesto(String descripcion,  Seccion seccion, Empresa empresa) {
         this.descripcion = descripcion;
-        this.categoria = categoria;
         this.seccion = seccion;
-        this.minimo = minimo;
-        this.maximo = maximo;
-        this.status = status;
         this.empresa = empresa;
     }
 
