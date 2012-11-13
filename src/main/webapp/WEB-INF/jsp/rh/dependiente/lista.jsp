@@ -51,25 +51,23 @@
                             <jsp:param name="columna" value="nombre" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="apPaterno" />
+                            <jsp:param name="columna" value="status" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="apMaterno" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="clave" />
+                            <jsp:param name="columna" value="fechaNacimiento" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="tipoDependiente" />
                         </jsp:include>
+                        
                     </tr>
                 </thead>
                 <tbody>
                     <c:forEach items="${dependientes}" var="dependiente" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/rh/dependiente/ver/${dependiente.id}' />">${dependiente.nombre}</a></td>
-                            <td>${dependiente.apPaterno}</td>
-                            <td>${dependiente.apMaterno}</td>
+                            <td>${dependiente.status}</td>
+                            <td>${dependiente.fechaNac}</td>
                             <td>${dependiente.tipoDependiente}</td>
                         </tr>
                     </c:forEach>

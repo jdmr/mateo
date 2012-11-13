@@ -181,7 +181,7 @@ public class EntradaDaoTest {
         currentSession().save(estatus);
         Proveedor proveedor = new Proveedor("tst-01", "test-01", "test-00000001", empresa);
         currentSession().save(proveedor);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01"); 
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -216,7 +216,7 @@ public class EntradaDaoTest {
         currentSession().save(estatus);
         Proveedor proveedor = new Proveedor("tst-01", "test-01", "test-00000001", empresa);
         currentSession().save(proveedor);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01"); 
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -257,7 +257,7 @@ public class EntradaDaoTest {
         currentSession().save(estatus2);
         Proveedor proveedor = new Proveedor("tst-01", "test-01", "test-00000001", empresa);
         currentSession().save(proveedor);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01"); 
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -302,7 +302,7 @@ public class EntradaDaoTest {
         currentSession().save(producto1);
         Producto producto2 = new Producto("TEST2", "TEST2", "TEST2", "TEST2", tipoProducto, almacen);
         currentSession().save(producto2);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01"); 
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -352,7 +352,7 @@ public class EntradaDaoTest {
         currentSession().save(estatus);
         Proveedor proveedor = new Proveedor("tst-01", "test-01", "test-00000001", empresa);
         currentSession().save(proveedor);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01"); 
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -393,7 +393,7 @@ public class EntradaDaoTest {
         currentSession().save(estatus2);
         Proveedor proveedor = new Proveedor("tst-01", "test-01", "test-00000001", empresa);
         currentSession().save(proveedor);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01"); 
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -437,7 +437,7 @@ public class EntradaDaoTest {
         Producto producto2 = new Producto("TEST2", "TEST2", "TEST2", "TEST2", tipoProducto, almacen);
         producto2.setFraccion(true);
         currentSession().save(producto2);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01"); 
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);

@@ -135,7 +135,7 @@ public class EmpresaControllerTest extends BaseTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
         usuario.setEmpresa(otraEmpresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -171,7 +171,7 @@ public class EmpresaControllerTest extends BaseTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
         usuario.setEmpresa(otraEmpresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);

@@ -335,7 +335,7 @@ public class Constants {
 	/**
 	 * The request scope attribute that holds the tipoDependiente form.
 	 */
-	public static final String TIPODEPENDIENTE_KEY = "tipoDependienteForm";
+	public static final String TIPODEPENDIENTE_KEY = "tipoDependiente";
 	/**
 	 * The request scope attribute that holds the tipoDependiente list
 	 */

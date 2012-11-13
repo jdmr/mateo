@@ -24,11 +24,15 @@
 package mx.edu.um.mateo.inventario.dao.impl;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Imagen;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -462,5 +466,33 @@ public class ProductoDaoHibernate extends BaseDao implements ProductoDao {
         currentSession().update(producto);
         currentSession().flush();
         return nombre;
+    }
+
+    @Override
+    public List<Map<String, Object>> revisaEntradas(String fechaString, Usuario usuario) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        List<Map<String, Object>> entradas = new ArrayList<>();
+        try {
+            Date fecha = sdf.parse(fechaString);
+            StringBuilder s = new StringBuilder();
+            s.append("select new map(x.entradaId as entradaId, e.folio as folio, x.productoId as productoId, p.sku as sku, count(x.productoId) as cantidad) ");
+            s.append("from XProducto x, Entrada e, Producto p ");
+            s.append("where x.entradaId = e.id and x.productoId = p.id and x.fechaCreacion >= :fecha and x.almacenId = :almacenId ");
+            s.append("group by x.entradaId, e.folio, x.productoId, p.sku ");
+            s.append("order by cantidad desc, e.folio desc");
+            Query query = currentSession().createQuery(s.toString());
+            query.setDate("fecha", fecha);
+            query.setLong("almacenId", usuario.getAlmacen().getId());
+            List<Map<String, Object>> resultados = (List<Map<String, Object>>) query.list();
+            for (Map<String, Object> resultado : resultados) {
+                if (((Long)resultado.get("cantidad")) > 1) {
+                    entradas.add(resultado);
+                }
+            }
+        } catch (ParseException e) {
+            log.error("No pude entender la fecha " + fechaString, e);
+        }
+
+        return entradas;
     }
 }

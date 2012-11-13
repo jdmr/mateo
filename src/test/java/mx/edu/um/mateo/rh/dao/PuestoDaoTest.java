@@ -123,7 +123,7 @@ public class PuestoDaoTest {
         puesto.setMinimo(i);
         puesto.setRangoAcademico(Double.NaN);
         puesto.setStatus("a");
-        Usuario usuario = new Usuario("usaername", "password", "nombre", "apellido");
+        Usuario usuario = new Usuario("usaername", "password", "nombre");
         usuario.setAlmacen(almacen);
         usuario.setEmpresa(empresa);
         currentSession().save(usuario);
@@ -151,7 +151,7 @@ public class PuestoDaoTest {
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -198,7 +198,7 @@ public class PuestoDaoTest {
         
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -254,7 +254,7 @@ public class PuestoDaoTest {
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01", "TEST-01");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
