@@ -58,7 +58,7 @@ public class EmpleadoEstudiosDaoTest {
             
             EmpleadoEstudios empleadoEstudios=new EmpleadoEstudios();
             
-            
+            empleadoEstudios.setEmpresa(empresa);
             empleadoEstudios.setNombreEstudios("EmpleadoEstudios"+i);
             empleadoEstudios.setNivelEstudios(NivelEstudios.DOCTORADO);
             empleadoEstudios.setTitulado(false);
@@ -66,6 +66,7 @@ public class EmpleadoEstudiosDaoTest {
             empleadoEstudios.setStatus("A");
             empleadoEstudios.setUserCaptura(null);
             empleadoEstudios.setFechaCaptura(new Date());
+            empleadoEstudios.setEmpresa(empresa);
             instance.graba(empleadoEstudios);
            assertNotNull(empleadoEstudios.getId());
         }
@@ -86,6 +87,7 @@ public class EmpleadoEstudiosDaoTest {
         Empresa empresa = new Empresa("tst01", "test-02", "test-03", "000000000001", organizacion);
         currentSession().save(empresa);
         EmpleadoEstudios empleadoEstudios= new EmpleadoEstudios();
+        empleadoEstudios.setEmpresa(empresa);
         empleadoEstudios.setNombreEstudios("EmpleadoEstudios");
         empleadoEstudios.setNivelEstudios(NivelEstudios.DOCTORADO);
         empleadoEstudios.setTitulado(false);
@@ -107,6 +109,7 @@ public class EmpleadoEstudiosDaoTest {
         Empresa empresa = new Empresa("tst01", "test-02", "test-03", "000000000001", organizacion);
         currentSession().save(empresa);
         EmpleadoEstudios empleadoEstudios= new EmpleadoEstudios();
+        empleadoEstudios.setEmpresa(empresa);
         empleadoEstudios.setNombreEstudios("EmpleadoEstudios");
         empleadoEstudios.setNivelEstudios(NivelEstudios.DOCTORADO);
         empleadoEstudios.setTitulado(false);
@@ -130,6 +133,7 @@ public class EmpleadoEstudiosDaoTest {
         Empresa empresa = new Empresa("tst-01", "test-02", "test-03", "000000000001", organizacion);
         currentSession().save(empresa); 
         EmpleadoEstudios empleadoEstudios= new EmpleadoEstudios();
+        empleadoEstudios.setEmpresa(empresa);
         empleadoEstudios.setNombreEstudios("EmpleadoEstudios");
         empleadoEstudios.setNivelEstudios(NivelEstudios.DOCTORADO);
         empleadoEstudios.setTitulado(false);

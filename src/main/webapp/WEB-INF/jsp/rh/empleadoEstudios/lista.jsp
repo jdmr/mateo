@@ -59,21 +59,22 @@
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="empleadoEstudios.fechaTitulacion" />
                         </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                  <%--  <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="empleadoEstudios.userCaptura" />
-                        </jsp:include>
+                        </jsp:include> --%>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="empleadoEstudios.fechaCaptura" />
                         </jsp:include>
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${dependientes}" var="empleadoEstudios" varStatus="status">
+                    <c:forEach items="${empleadoestudiosList}" var="empleadoEstudios" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/rh/empleadoEstudios/ver/${empleadoEstudios.id}' />">${empleadoEstudios.nombreEstudios}</a></td>
-                            <td>${empleadoEstudios.nombreEstudios}</td>
                             <td>${empleadoEstudios.nivelEstudios}</td>
                             <td>${empleadoEstudios.titulado}</td>
+                            <td>${empleadoEstudios.fechaTitulacion}</td>
+                            <td>${empleadoEstudios.fechaCaptura}</td>
                         </tr>
                     </c:forEach>
                 </tbody>

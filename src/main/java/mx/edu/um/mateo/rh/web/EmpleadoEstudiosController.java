@@ -58,11 +58,11 @@ public class EmpleadoEstudiosController extends BaseController {
 		log.debug("Mostrando empleadoEstudios {}");
 
 		Map<String, Object> params = new HashMap<>();
-		Dependiente dependiente = null;
+		EmpleadoEstudios empleadoEstudios = null;
 
-		Long organizacionId = (Long) request.getSession().getAttribute(
-				"organizacionId");
-		params.put("organizacion", organizacionId);
+		Long empresaId = (Long) request.getSession().getAttribute(
+				"empresaId");
+		params.put("empresa", empresaId);
 		if (StringUtils.isNotBlank(filtro)) {
 			params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
 		}
@@ -76,10 +76,10 @@ public class EmpleadoEstudiosController extends BaseController {
 			params = mgr.lista(params);
 			try {
 				generaReporte(tipo,
-						(List<Dependiente>) params.get(Constantes.EMPLEADOESTUDIOS_LIST),
+						(List<EmpleadoEstudios>) params.get(Constantes.EMPLEADOESTUDIOS_LIST),
 						response, Constantes.EMPLEADOESTUDIOS_LIST,
 						mx.edu.um.mateo.general.utils.Constantes.ORG,
-						organizacionId);
+						empresaId);
 				return null;
 			} catch (ReporteException e) {
 				log.error("No se pudo generar el reporte", e);
@@ -98,7 +98,7 @@ public class EmpleadoEstudiosController extends BaseController {
 						(List<CuentaMayor>) params.get(Constantes.EMPLEADOESTUDIOS_LIST),
 						request, Constantes.EMPLEADOESTUDIOS_LIST,
 						mx.edu.um.mateo.general.utils.Constantes.ORG,
-						organizacionId);
+						empresaId);
 				modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE,
 						"lista.enviada.message");
 				modelo.addAttribute(
@@ -114,7 +114,7 @@ public class EmpleadoEstudiosController extends BaseController {
 
 		params = mgr.lista(params);
 
-		modelo.addAttribute(Constantes.EMPLEADOESTUDIOS_LIST, mgr.lista(params));
+		modelo.addAttribute(Constantes.EMPLEADOESTUDIOS_LIST, params.get(Constantes.EMPLEADOESTUDIOS_LIST));
 
 		this.pagina(params, modelo,Constantes.EMPLEADOESTUDIOS_LIST, pagina);
 
@@ -153,13 +153,17 @@ public class EmpleadoEstudiosController extends BaseController {
 		}
 		if (bindingResult.hasErrors()) {
 			log.debug("Hubo algun error en la forma, regresando");
+                        empleadoEstudios = new EmpleadoEstudios();
 			return "/rh/empleadoEstudios/nuevo";
 		}
 
 		try {
+                    
+                        empleadoEstudios.setEmpresa(ambiente.obtieneUsuario().getEmpresa());
 			mgr.graba(empleadoEstudios);
 		} catch (ConstraintViolationException e) {
 			log.error("No se pudo crear la empleadoEstudios", e);
+                        empleadoEstudios = new EmpleadoEstudios();
 			return "/rh/empleadoEstudios/nuevo";
 		}
 
@@ -177,7 +181,7 @@ public class EmpleadoEstudiosController extends BaseController {
 		log.debug("Editar cuenta de mayor {}", id);
 		EmpleadoEstudios empleadoEstudios = mgr.obtiene(id.toString());
 
-		modelo.addAttribute(Constantes.EMPLEADOESTUDIOS_LIST, empleadoEstudios);
+		modelo.addAttribute(Constantes.EMPLEADOESTUDIOS_KEY, empleadoEstudios);
 
 		return "/rh/empleadoEstudios/edita";
 	}
@@ -189,6 +193,8 @@ public class EmpleadoEstudiosController extends BaseController {
 			RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			log.error("Hubo algun error en la forma, regresando");
+                        errors.rejectValue("nombre", "campo.duplicado.message",
+					new String[] { "nombre" }, null);
 			return "/rh/empleadoEstudios/edita";
 		}
 		try {

@@ -228,7 +228,7 @@ public class Constantes {
      * Valores para empleadoestudios
      */
     public static final String EMPLEADOESTUDIOS_LIST = "empleadoestudiosList";
-    public static final String EMPLEADOESTUDIOS_KEY = "empleadoestudiosForm";
+    public static final String EMPLEADOESTUDIOS_KEY = "empleadoEstudios";
  
     public static final String PATH_CONCEPTO = "/rh/concepto";
     public static final String PATH_CONCEPTO_LISTA = "rh/concepto/lista";

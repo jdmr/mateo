@@ -50,6 +50,11 @@ public class EmpleadoEstudiosDaoHibernate extends BaseDao implements EmpleadoEst
         Criteria criteria = currentSession().createCriteria(EmpleadoEstudios.class);
         Criteria countCriteria = currentSession().createCriteria(
                 EmpleadoEstudios.class);
+        
+        if (params.containsKey("empresa")) {
+            criteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
+            countCriteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
+        }
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");

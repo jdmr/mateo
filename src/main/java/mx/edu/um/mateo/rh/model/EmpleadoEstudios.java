@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.*;
+import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -45,6 +46,8 @@ public class EmpleadoEstudios implements Comparable, Serializable {
     private Date fechaCaptura;
     @Version
     private Integer version;
+    @ManyToOne(optional=false)
+    private Empresa empresa;
 
     public Date getFechaCaptura() {
         return fechaCaptura;
@@ -118,6 +121,14 @@ public class EmpleadoEstudios implements Comparable, Serializable {
         this.version = version;
     }
 
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -150,7 +161,7 @@ public class EmpleadoEstudios implements Comparable, Serializable {
 
     @Override
     public String toString() {
-        return "EmpleadoEstudios{" + "id=" + id + ", nombreEstudios=" + nombreEstudios + ", titulado=" + titulado + ", fechaTitulacion=" + fechaTitulacion +", nivelEstudios=" + nivelEstudios + ", status=" + status + ", userCaptura=" + userCaptura + ", fechaCaptura=" + fechaCaptura + ", version=" + version + '}';
+        return "EmpleadoEstudios{" + "id=" + id + ", nombreEstudios=" + nombreEstudios + ", titulado=" + titulado + ", fechaTitulacion=" + fechaTitulacion +", nivelEstudios=" + nivelEstudios + ", status=" + status + ", userCaptura=" + userCaptura + ", fechaCaptura=" + fechaCaptura + ", empresa" + empresa + ", version=" + version + '}';
     }
     
     @Override
