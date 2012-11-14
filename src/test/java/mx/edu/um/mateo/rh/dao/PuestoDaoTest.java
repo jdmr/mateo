@@ -49,50 +49,53 @@ public class PuestoDaoTest {
     /**
      * Test of lista method, of class PuestoDao.
      */
-//    @SuppressWarnings("unchecked")
-//    @Test
-//    public void debieraMostrarListaDePuestos() {
-//        log.debug("Debiera mostrar lista de puestos");
-//        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-//        currentSession().save(organizacion);
-//        Seccion seccion = null;
-//        for (int i = 0; i < 5; i++) {
-//            seccion = new Seccion();
-//            seccion.setId((long) i);
-//            seccion.setCategoriaId("1" + i);
-//            seccion.setMaximo(Float.NaN);
-//            seccion.setMinimo(Float.NaN);
-//            seccion.setNombre("nombre" + i);
-//            seccion.setRangoAcademico(Float.NaN);
-//            currentSession().save(seccion);
-//        }
-//        Seccion seccion2 = seccionDao.obtiene((long) 3);
-//        seccionDao.graba(seccion2);
-//        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-//        currentSession().save(empresa);
-//        Almacen almacen = new Almacen("TST", "TEST", empresa);
-//        currentSession().save(almacen);
-//        Usuario usuario = new Usuario("usaername", "password", "nombre", "apellido");
-//        usuario.setAlmacen(almacen);
-//        usuario.setEmpresa(empresa);
-//        currentSession().save(usuario);
-//        for (Integer i = 0; i < 20; i++) {
-//            Puesto puesto = new Puesto("descripcion" + i, seccion2, empresa);
-//            puesto.setCategoria(i);
-//            puesto.setMaximo(i);
-//            puesto.setMinimo(i);
-//            puesto.setRangoAcademico(Double.NaN);
-//            puesto.setStatus("a");
-//            instance.graba(puesto, usuario);
-//        }
-//        Map<String, Object> params = new HashMap<>();
-//        params.put("empresa", empresa.getId());
-//        Map<String, Object> result = instance.lista(params);
-//        assertNotNull(result.get(Constants.PUESTO_LIST));
-//        assertNotNull(result.get("cantidad"));
-//        assertEquals(10, ((List<Puesto>) result.get(Constants.PUESTO_LIST)).size());
-//        assertEquals(20, ((Long) result.get("cantidad")).intValue());
-//    }
+    @SuppressWarnings("unchecked")
+    @Test
+    public void debieraMostrarListaDePuestos() {
+        log.debug("Debiera mostrar lista de puestos");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        Seccion seccion = null;
+        for (int i = 0; i < 5; i++) {
+            seccion = new Seccion();
+            seccion.setId((long) i);
+            seccion.setCategoriaId("1" + i);
+            seccion.setMaximo(Float.NaN);
+            seccion.setMinimo(Float.NaN);
+            seccion.setNombre("nombre" + i);
+            seccion.setRangoAcademico(Float.NaN);
+            currentSession().save(seccion);
+        }
+        Seccion seccion2 = seccionDao.obtiene(seccion.getId());
+        seccionDao.graba(seccion2);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        Usuario usuario = new Usuario("usaername", "password", "nombre");
+        usuario.setCorreo("algo@um.edu.mx");
+        usuario.setUsername("test");
+        usuario.setPassword("test");
+        usuario.setAlmacen(almacen);
+        usuario.setEmpresa(empresa);
+        currentSession().save(usuario);
+        for (Integer i = 0; i < 20; i++) {
+            Puesto puesto = new Puesto("descripcion" + i, seccion2, empresa);
+            puesto.setCategoria(i);
+            puesto.setMaximo(i);
+            puesto.setMinimo(i);
+            puesto.setRangoAcademico(Double.NaN);
+            puesto.setStatus("a");
+            instance.graba(puesto, usuario);
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", empresa.getId());
+        Map<String, Object> result = instance.lista(params);
+        assertNotNull(result.get(Constants.PUESTO_LIST));
+        assertNotNull(result.get("cantidad"));
+        assertEquals(10, ((List<Puesto>) result.get(Constants.PUESTO_LIST)).size());
+        assertEquals(20, ((Long) result.get("cantidad")).intValue());
+    }
 
     /**
      * Test of obtiene method, of class PuestoDao.
@@ -102,8 +105,10 @@ public class PuestoDaoTest {
         log.debug("Debiera obtener puesto");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
+        
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
+        
         Seccion seccion = new Seccion();
         seccion.setId(new Long(1));
         seccion.setCategoriaId("x");
@@ -114,8 +119,9 @@ public class PuestoDaoTest {
         currentSession().save(seccion);
         currentSession().save(seccion);
 
-         Almacen almacen = new Almacen("TST", "TEST", empresa);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
+        
         Puesto puesto = new Puesto("tst-01", seccion, empresa);
         int i = 8;
         puesto.setCategoria(i);
@@ -123,15 +129,18 @@ public class PuestoDaoTest {
         puesto.setMinimo(i);
         puesto.setRangoAcademico(Double.NaN);
         puesto.setStatus("a");
+        
         Usuario usuario = new Usuario("usaername", "password", "nombre");
+        usuario.setCorreo("algo@um.edu.mx");
+        usuario.setUsername("test");
         usuario.setAlmacen(almacen);
         usuario.setEmpresa(empresa);
+        usuario.setPassword("test");
         currentSession().save(usuario);
         instance.graba(puesto, usuario);
         Long id = puesto.getId();
         Puesto result = instance.obtiene(id);
         assertEquals("tst-01", result.getDescripcion());
-
     }
 
     /**
@@ -151,7 +160,10 @@ public class PuestoDaoTest {
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01");
+        Usuario usuario = new Usuario("username", "password", "nombre");
+        usuario.setCorreo("algo@um.edu.mx");
+        usuario.setUsername("test");
+        usuario.setPassword("test");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -198,7 +210,10 @@ public class PuestoDaoTest {
         
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01");
+        Usuario usuario = new Usuario("username", "password", "nombre");
+        usuario.setCorreo("algo@um.edu.mx");
+        usuario.setUsername("test");
+        usuario.setPassword("test");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -254,7 +269,10 @@ public class PuestoDaoTest {
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "TEST-01", "TEST-01");
+        Usuario usuario = new Usuario("username", "password","name");
+        usuario.setCorreo("algo@um.edu.mx");
+        usuario.setUsername("test");
+        usuario.setPassword("test");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);

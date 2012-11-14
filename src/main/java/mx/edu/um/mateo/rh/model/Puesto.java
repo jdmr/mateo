@@ -47,6 +47,7 @@ public class Puesto implements Serializable {
         private Empresa empresa;
         @ManyToOne(optional=false)
         private Seccion seccion;
+        
 
     public Puesto() {
     }
