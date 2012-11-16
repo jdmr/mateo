@@ -15,7 +15,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/rh/puestos'/>"><i class="icon-list icon-white"></i> <s:message code='puesto.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="/rh/puestos/actualiza" />
+            <c:url var="actualizaUrl" value="/rh/puestos/graba" />
             <form:form commandName="puesto" action="${actualizaUrl}" method="post">
                 <form:hidden path="id" />
                 <form:hidden path="version" />
@@ -30,77 +30,61 @@
                 </form:errors>
 
                 <fieldset>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="puesto.descripcion">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="descripcion">
-                                        <s:message code="puesto.descripcion.label" />
-                                        <span class="required-indicator">*</span>
-                                    </label>
-                                    <form:input path="descripcion" maxlength="150" required="true" cssClass="span4" />
-                                </div>
-                            </s:bind>
+                    <s:bind path="descripcion">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="descripcion">
+                                <s:message code="descripcion.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="descripcion" maxlength="150" required="true" cssClass="span4" />
                         </div>
-                        <div class="span4">
-                            <s:bind path="puesto.categoria">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="categoria">
-                                        <s:message code="puesto.categoria.label" />
-                                        <span class="required-indicator">*</span>
-                                    </label>
-                                    <form:input path="categoria" maxlength="5" required="true" cssClass="span4" min="3" />
-                                </div>
-                            </s:bind>
+                    </s:bind>
+                    <s:bind path="categoria">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="categoria">
+                                <s:message code="categoria.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="categoria" maxlength="5" required="true" cssClass="span4" min="3" />
                         </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="puesto.seccion">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="seccion">
-                                        <s:message code="puesto.seccion.label" />
-                                        <span class="required-indicator">*</span>
-                                    </label>
-                                    <form:input path="seccion" maxlength="5" required="true" cssClass="span4" min="3" />
-                                </div>
-                            </s:bind>
+                    </s:bind>
+
+
+                    <s:bind path="seccion">
+                        <s:message code="seccion.label" />
+                        <span class="required-indicator">*</span>
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <div>
+                                <label for="seccion">
+                            </div>
+                            <form:select id="seccionId" path="seccion.id" items="${secciones}" itemLabel="nombre" itemValue="id" />
+                            <form:errors path="seccion" cssClass="alert alert-error" />
                         </div>
-                        <div class="span4">
-                            <s:bind path="puesto.minimo">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="minimo">
-                                        <s:message code="puesto.minimo.label" />
-                                    </label>
-                                    <form:input path="minimo" maxlength="5" cssClass="span4" min="2" />
-                                </div>
-                            </s:bind>
+                    </s:bind>
+                    <s:bind path="minimo">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="minimo">
+                                <s:message code="minimo.label" />
+                            </label>
+                            <form:input path="minimo" maxlength="5" cssClass="span4" min="2"/>
                         </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span8">
-                            <s:bind path="puesto.maximo">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="maximo">
-                                        <s:message code="puesto.maximo.label" />
-                                    </label>
-                                    <form:textarea path="maximo" maxlength="5" cssClass="span4" min="2" />
-                                </div>
-                            </s:bind>
+                    </s:bind>
+                    <s:bind path="maximo">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="maximo">
+                                <s:message code="maximo.label" />
+                            </label>
+                            <form:input path="maximo" maxlength="5" cssClass="span4" min="2" />
                         </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="puesto.rangoAcademico">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="rangoAcademico">
-                                        <s:message code="puesto.rangoAcademico.label" />
-                                    </label>
-                                    <form:input path="rangoAcademico" maxlength="5" cssClass="span4" min="2" />
-                                </div>
-                            </s:bind>
+                    </s:bind>
+                    <s:bind path="rangoAcademico">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="rangoAcademico">
+                                <s:message code="rangoAcademico.label" />
+                            </label>
+                            <form:input path="rangoAcademico" maxlength="5" cssClass="span4" min="2" />
                         </div>
-                    </div>
+                    </s:bind>
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">

@@ -83,7 +83,7 @@ public class EmpleadoDaoTest {
         usuario.setRoles(roles);
         currentSession().save(usuario);
         Long id = usuario.getId();
-        assertNotNull(id);
+        assertNotNull(id); 
 
         
         for (int i = 0; i < 20; i++) {
