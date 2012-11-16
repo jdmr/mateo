@@ -86,7 +86,7 @@ public class Usuario implements Serializable, UserDetails {
     private Boolean enabled = true;
     @Column(nullable = false, name = "account_expired")
     private Boolean accountExpired = false;
-    @Column(nullable = false, name = "account_loned")
+    @Column(nullable = false, name = "account_locked")
     private Boolean accountLocked = false;
     @Column(nullable = false, name = "credentials_expired")
     private Boolean credentialsExpired = false;
