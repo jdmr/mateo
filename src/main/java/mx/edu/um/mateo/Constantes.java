@@ -4,6 +4,8 @@
  */
 package mx.edu.um.mateo;
 
+import java.math.BigDecimal;
+
 /**
  *
  * @author nujev
@@ -247,4 +249,230 @@ public class Constantes {
     public static final String PATH_PERDED_NUEVO = "/rh/perded/nuevo";
     public static final String PATH_PERDED_EDITA = "/rh/perded/edita";
     public static final String PATH_PERDED_GRABA = "/rh/perded/graba";
+    
+    
+    
+    //Colportores Constantes
+    //
+   //    Session
+
+    /**
+     * Variable en session donde se guarda la Union Actual de Usuario
+     */
+    public static final String SESSION_UNION = "union";
+    /**
+     * Variable en session donde se guarda la Asociacion Actual de Usuario
+     */
+    public static final String SESSION_ASOCIACION = "asociacion";
+    /**
+     * Variable en session donde se guarda la Temporada Colportor activa del
+     * colportor en caso que el colportor no tenga una temporada activa el valor
+     * de esta sera null
+     */
+    public static final String SESSION_TEMPORADA_COLPORTOR = "temporadaColportor";
+    public static final String ADMIN = "ADMIN";
+    public static final String UNI = "UNI";
+    public static final String ASO = "ASO";
+    public static final String NOMBRE = "test";
+    public static final String CLAVE = "000";
+    public static final String DIRECCION = "testd";
+    public static final String CORREO = "test@tes.tst";
+    public static final String TELEFONO = "1234567890";
+    public static final String TIPO_DOCUMENTO = "A";
+    public static final String TIPO_COLPORTOR = "1";
+    public static final String FOLIO = "test";
+    public static final String FECHA = "dd/MM/yyyy";
+    public static final BigDecimal IMPORTE = new BigDecimal("0.0");
+    public static final String OBSERVACIONES = "test teste";
+    public static final String CALLE = "test";
+    public static final String COLONIA = "test";
+    public static final String MUNICIPIO = "testmu";
+    public static final String MATRICULA = "1070980";
+    public static final String DEPOSITO_CAJA = "Deposito_Caja";
+    public static final String DEPOSITO_BANCO = "Deposito_Banco";
+    public static final String DIEZMO = "Diezmo";
+    public static final String NOTAS_DE_COMPRA = "Notas_De_Compra";
+    public static final String BOLETIN = "Boletín";
+    public static final String INFORME = "Informe";
+    public static final String TOTALBOLETIN = "Total_Boletin";
+    public static final String TOTALDIEZMOS = "Total_Diezmos";
+    public static final String TOTALDEPOSITOS = "Total_Depositos";
+    public static final String ALCANZADO = "Alcanzado";
+    public static final String OBJETIVO = "Objetivo";
+    public static final String FIDELIDAD = "Fidelidad";
+    public static final String TIEMPO_COMPLETO = "Tiempo_Completo";
+    public static final String TIEMPO_PARCIAL = "Tiempo_Parcial";
+    public static final String ESTUDIANTE = "Estudiante";
+   
+    /**
+     * Valores para el los containsKey
+     * 
+     * ROLES *****
+     
+     
+     */
+    public static final String ROL_ADMINISTRADOR = "ROLE_ADMIN";
+    public static final String ROLES = "roles";
+    public static final String ROLE_USER = "ROLE_USER";
+    public static final String ROLE_ASO = "ROLE_ASO";
+    public static final String ROLE_COL = "ROLE_COL";
+    public static final String ROLE_TEST = "ROLE_TEST";
+    
+    public static final String UNION_ID = "unionId";
+    public static final String ASOCIACION_ID = "asociacionId";
+    public static final String OPEN_ID = "openId";
+    public static final String ALMACEN_ID = "almacenId";
+    
+    public static final String TIPO_DOCUMENTO_PDF = "PDF";
+    public static final String TIPO_DOCUMENTO_CSV = "CSV";
+    public static final String TIPO_DOCUMENTO_XLS = "XLS";
+    
+     /**
+     * Valores para el los containsKey para las clases
+     */
+    public static final String CONTAINSKEY_UNIONES = "uniones";
+    public static final String CONTAINSKEY_COLPORTORES = "colportores";
+    public static final String CONTAINSKEY_DOCUMENTOS = "documentos";
+    public static final String CONTAINSKEY_COLEGIOS_COLPORTOR = "colegios";
+    public static final String CONTAINSKEY_CLIENTES = "clientes";
+    public static final String CONTAINSKEY_ASOCIACIONES = "asociaciones";
+    public static final String CONTAINSKEY_ASOCIADOS = "asociados";
+    public static final String CONTAINSKEY_TEMPORADAS = "temporadas";
+    public static final String CONTAINSKEY_TEMPORADACOLPORTORES = "temporadaColportores";
+    public static final String CONTAINSKEY_ALMACENES = "almacenes";
+    public static final String CONTAINSKEY_PAISES = "paises";
+    public static final String CONTAINSKEY_ESTADOS = "estados";
+    public static final String CONTAINSKEY_CIUDADES = "ciudades";
+    public static final String CONTAINSKEY_USUARIOS = "usuarios";
+    public static final String CONTAINSKEY_TEMPORADACOLPORTOR = "temporadaColportor";
+    /**
+     * Valores para el los addAttribute para las clases
+     */
+    public static final String ADDATTRIBUTE_USUARIO = "usuario";
+    public static final String ADDATTRIBUTE_UNION = "union";
+    public static final String ADDATTRIBUTE_COLPORTOR = "colportor";
+    public static final String ADDATTRIBUTE_DOCUMENTO = "documento";
+    public static final String ADDATTRIBUTE_COLEGIO_COLPORTOR = "colegio";
+    public static final String ADDATTRIBUTE_CLIENTE = "cliente";
+    public static final String ADDATTRIBUTE_ASOCIACION = "asociacion";
+    public static final String ADDATTRIBUTE_ASOCIADO = "asociado";
+    public static final String ADDATTRIBUTE_TEMPORADA = "temporada";
+    public static final String ADDATTRIBUTE_TEMPORADACOLPORTOR = "temporadaColportor";
+    public static final String ADDATTRIBUTE_ALMACEN = "almacen";
+    public static final String ADDATTRIBUTE_PAIS = "pais";
+    public static final String ADDATTRIBUTE_ESTADO = "estado";
+    public static final String ADDATTRIBUTE_CIUDAD = "ciudad";
+    public static final String ADDATTRIBUTE_NOMBRE = "nombre";
+    public static final String ADDATTRIBUTE_CLAVE = "clave";
+    public static final String ADDATTRIBUTE_STATUS = "status";
+
+    
+    /**
+     * Valores para el los path's para las clases
+     */
+    public static final String PATH_UNION = "/admin/union";
+    public static final String PATH_UNION_LISTA = "admin/union/lista";
+    public static final String PATH_UNION_VER = "/admin/union/ver";
+    public static final String PATH_UNION_NUEVA = "admin/union/nueva";
+    public static final String PATH_UNION_EDITA = "admin/union/edita";
+    public static final String PATH_UNION_CREA = "/admin/union/crea";
+    public static final String PATH_UNION_ACTUALIZA = "/admin/union/actualiza";
+    public static final String PATH_UNION_ELIMINA = "/admin/union/elimina";
+    public static final String PATH_ASOCIACION = "/admin/asociacion";
+    public static final String PATH_ASOCIACION_LISTA = "/admin/asociacion/lista";
+    public static final String PATH_ASOCIACION_VER = "/admin/asociacion/ver";
+    public static final String PATH_ASOCIACION_NUEVA = "/admin/asociacion/nueva";
+    public static final String PATH_ASOCIACION_EDITA = "/admin/asociacion/edita";
+    public static final String PATH_ASOCIACION_CREA = "/admin/asociacion/crea";
+    public static final String PATH_ASOCIACION_ACTUALIZA = "/admin/asociacion/actualiza";
+    public static final String PATH_ASOCIACION_ELIMINA = "/admin/asociacion/elimina";
+    public static final String PATH_COLPORTOR = "/colportor";
+    public static final String PATH_COLPORTOR_LISTA = "colportor/lista";
+    public static final String PATH_COLPORTOR_VER = "/colportor/ver";
+    public static final String PATH_COLPORTOR_NUEVO = "colportor/nuevo";
+    public static final String PATH_COLPORTOR_EDITA = "colportor/edita";
+    public static final String PATH_COLPORTOR_CREA = "/colportor/crea";
+    public static final String PATH_COLPORTOR_ACTUALIZA = "/colportor/actualiza";
+    public static final String PATH_COLPORTOR_ELIMINA = "/colportor/elimina";
+    public static final String PATH_DOCUMENTO = "/documento";
+    public static final String PATH_DOCUMENTO_LISTA = "/documento/lista";
+    public static final String PATH_DOCUMENTO_VER = "/documento/ver";
+    public static final String PATH_DOCUMENTO_NUEVO = "/documento/nuevo";
+    public static final String PATH_DOCUMENTO_EDITA = "/documento/edita";
+    public static final String PATH_DOCUMENTO_CREA = "/documento/crea";
+    public static final String PATH_DOCUMENTO_ACTUALIZA = "/documento/actualiza";
+    public static final String PATH_DOCUMENTO_ELIMINA = "/documento/elimina";
+    public static final String PATH_COLEGIO_COLPORTOR = "/colegio";
+    public static final String PATH_COLEGIO_LISTA_COLPORTOR = "colegio/lista";
+    public static final String PATH_COLEGIO_VER_COLPORTOR = "/colegio/ver";
+    public static final String PATH_COLEGIO_NUEVO_COLPORTOR = "colegio/nuevo";
+    public static final String PATH_COLEGIO_EDITA_COLPORTOR = "colegio/edita";
+    public static final String PATH_COLEGIO_CREA_COLPORTOR = "/colegio/crea";
+    public static final String PATH_COLEGIO_ACTUALIZA_COLPORTOR = "/colegio/actualiza";
+    public static final String PATH_COLEGIO_ELIMINA_COLPORTOR = "/colegio/elimina";
+    public static final String PATH_CLIENTE = "/cliente";
+    public static final String PATH_CLIENTE_LISTA = "cliente/lista";
+    public static final String PATH_CLIENTE_VER = "/cliente/ver";
+    public static final String PATH_CLIENTE_NUEVO = "cliente/nuevo";
+    public static final String PATH_CLIENTE_EDITA = "cliente/edita";
+    public static final String PATH_CLIENTE_CREA = "/cliente/crea";
+    public static final String PATH_CLIENTE_ACTUALIZA = "/cliente/actualiza";
+    public static final String PATH_CLIENTE_ELIMINA = "/cliente/elimina";
+    public static final String PATH_ASOCIADO = "/asociado";
+    public static final String PATH_ASOCIADO_LISTA = "/asociado/lista";
+    public static final String PATH_ASOCIADO_VER = "/asociado/ver";
+    public static final String PATH_ASOCIADO_NUEVO = "/asociado/nuevo";
+    public static final String PATH_ASOCIADO_EDITA = "/asociado/edita";
+    public static final String PATH_ASOCIADO_CREA = "/asociado/crea";
+    public static final String PATH_ASOCIADO_ACTUALIZA = "/asociado/actualiza";
+    public static final String PATH_ASOCIADO_ELIMINA = "/asociado/elimina";
+    public static final String PATH_TEMPORADA = "/temporada";
+    public static final String PATH_TEMPORADA_LISTA = "/temporada/lista";
+    public static final String PATH_TEMPORADA_VER = "/temporada/ver";
+    public static final String PATH_TEMPORADA_NUEVA = "/temporada/nueva";
+    public static final String PATH_TEMPORADA_EDITA = "/temporada/edita";
+    public static final String PATH_TEMPORADA_CREA = "/temporada/crea";
+    public static final String PATH_TEMPORADA_ACTUALIZA = "/temporada/actualiza";
+    public static final String PATH_TEMPORADA_ELIMINA = "/temporada/elimina";
+    public static final String PATH_TEMPORADACOLPORTOR = "/temporadaColportor";
+    public static final String PATH_TEMPORADACOLPORTOR_LISTA = "/temporadaColportor/lista";
+    public static final String PATH_TEMPORADACOLPORTOR_VER = "/temporadaColportor/ver";
+    public static final String PATH_TEMPORADACOLPORTOR_NUEVA = "/temporadaColportor/nueva";
+    public static final String PATH_TEMPORADACOLPORTOR_EDITA = "/temporadaColportor/edita";
+    public static final String PATH_TEMPORADACOLPORTOR_CREA = "/temporadaColportor/crea";
+    public static final String PATH_TEMPORADACOLPORTOR_ACTUALIZA = "/temporadaColportor/actualiza";
+    public static final String PATH_TEMPORADACOLPORTOR_ELIMINA = "/temporadaColportor/elimina";
+    public static final String PATH_ALMACEN = "/almacen";
+    public static final String PATH_ALMACEN_LISTA = "/almacen/lista";
+    public static final String PATH_ALMACEN_VER = "/almacen/ver";
+    public static final String PATH_ALMACEN_NUEVO = "/almacen/nuevo";
+    public static final String PATH_ALMACEN_EDITA = "/almacen/edita";
+    public static final String PATH_ALMACEN_CREA = "/almacen/crea";
+    public static final String PATH_ALMACEN_ACTUALIZA = "/almacen/actualiza";
+    public static final String PATH_ALMACEN_ELIMINA = "/almacen/elimina";
+    public static final String PATH_PAIS = "/pais";
+    public static final String PATH_PAIS_LISTA = "pais/lista";
+    public static final String PATH_PAIS_VER = "/pais/ver";
+    public static final String PATH_PAIS_NUEVA = "/pais/nueva";
+    public static final String PATH_PAIS_EDITA = "/pais/edita";
+    public static final String PATH_PAIS_CREA = "/pais/crea";
+    public static final String PATH_PAIS_ACTUALIZA = "/pais/actualiza";
+    public static final String PATH_PAIS_ELIMINA = "/pais/elimina";
+    public static final String PATH_ESTADO = "/estado";
+    public static final String PATH_ESTADO_LISTA = "estado/lista";
+    public static final String PATH_ESTADO_VER = "/estado/ver";
+    public static final String PATH_ESTADO_NUEVA = "/estado/nueva";
+    public static final String PATH_ESTADO_EDITA = "/estado/edita";
+    public static final String PATH_ESTADO_CREA = "/estado/crea";
+    public static final String PATH_ESTADO_ACTUALIZA = "/estado/actualiza";
+    public static final String PATH_ESTADO_ELIMINA = "/estado/elimina";
+    public static final String PATH_CIUDAD = "/ciudad";
+    public static final String PATH_CIUDAD_LISTA = "ciudad/lista";
+    public static final String PATH_CIUDAD_VER = "/ciudad/ver";
+    public static final String PATH_CIUDAD_NUEVA = "/ciudad/nueva";
+    public static final String PATH_CIUDAD_EDITA = "/ciudad/edita";
+    public static final String PATH_CIUDAD_CREA = "/ciudad/crea";
+    public static final String PATH_CIUDAD_ACTUALIZA = "/ciudad/actualiza";
+    public static final String PATH_CIUDAD_ELIMINA = "/ciudad/elimina";
+
 }

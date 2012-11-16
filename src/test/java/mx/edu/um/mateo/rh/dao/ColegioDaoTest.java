@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.rh.model.Colegio;
-import mx.edu.um.mateo.rh.model.EstudiosEmpleado;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.*;
