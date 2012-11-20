@@ -14,7 +14,7 @@
         <h1><s:message code="puesto.lista.label" /></h1>
         <hr/>
 
-        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/rh/puesto' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/rh/puestos' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
@@ -25,9 +25,9 @@
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
-            <c:if test="${not empty message}">
-                <div class="alert alert-block alert-success fade in" role="status">
-                    <a class="close" data-dismiss="alert">×</a>
+             <c:if test="${not empty message}">
+                <div class="alert alert-block <c:choose><c:when test='${not empty messageStyle}'>${messageStyle}</c:when><c:otherwise>alert-success</c:otherwise></c:choose> fade in" role="status">
+                            <a class="close" data-dismiss="alert">×</a>
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
@@ -48,38 +48,34 @@
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="puesto.descripcion" />
+                            <jsp:param name="columna" value="descripcion" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="puesto.categoria" />
+                            <jsp:param name="columna" value="categoria" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="puesto.seccion" />
+                            <jsp:param name="columna" value="seccion" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="puesto.minimo" />
+                            <jsp:param name="columna" value="minimo" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="puesto.maximo" />
+                            <jsp:param name="columna" value="maximo" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="puesto.status" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="puesto.rangoAcademico" />
+                            <jsp:param name="columna" value="rangoAcademico" />
                         </jsp:include>
                         <th><s:message code="empresa.label" /></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${puestos}" var="puesto" varStatus="status">
+                    <c:forEach items="${puestoList}" var="puesto" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/rh/puesto/ver/${puesto.id}' />">${puesto.descripcion}</a></td>
+                            <td><a href="<c:url value='/rh/puestos/ver/${puesto.id}' />">${puesto.descripcion}</a></td>
                             <td>${puesto.categoria}</td>
-                            <td>${puesto.seccion}</td>
-                            <td>${puesto.minima}</td>
-                            <td>${puesto.maxima}</td>
-                            <td>${puesto.status}</td>
+                            <td>${puesto.seccion.nombre}</td>
+                            <td>${puesto.minimo}</td>
+                            <td>${puesto.maximo}</td>
                             <td>${puesto.rangoAcademico}</td>
                             <td>${puesto.empresa.nombre}</td>
                         </tr>
