@@ -25,7 +25,7 @@ package mx.edu.um.mateo.rh.dao;
 
 import java.math.BigDecimal;
 import java.util.*;
-import mx.edu.um.mateo.Constants;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.rh.model.Empleado;
@@ -100,9 +100,9 @@ public class EmpleadoDaoTest {
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", empresa.getId());
         Map<String, Object> result = instance.lista(params);
-        assertNotNull(result.get(Constants.EMPLEADO_LIST));
+        assertNotNull(result.get(Constantes.EMPLEADO_LIST));
         assertNotNull(result.get("cantidad"));
-        assertEquals(10, ((List<Empleado>) result.get(Constants.EMPLEADO_LIST)).size());
+        assertEquals(10, ((List<Empleado>) result.get(Constantes.EMPLEADO_LIST)).size());
         assertEquals(20, ((Long) result.get("cantidad")).intValue());
     }
 

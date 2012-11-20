@@ -6,7 +6,7 @@ package mx.edu.um.mateo.rh.dao;
 
 import java.util.HashMap;
 import java.util.Map;
-import mx.edu.um.mateo.Constantes;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.rh.model.EstudiosEmpleado;
 import mx.edu.um.mateo.rh.model.EstudiosEmpleado;

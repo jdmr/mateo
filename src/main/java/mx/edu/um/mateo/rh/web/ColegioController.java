@@ -97,7 +97,7 @@ public class ColegioController extends BaseController {
             params.put("reporte", true);
             params = colegioManager.lista(params);
             try {
-                generaReporte(tipo, (List<Colegio>) params.get(mx.edu.um.mateo.Constantes.CONTAINSKEY_COLEGIOS), response, "colegios", Constantes.EMP, empresaId);
+                generaReporte(tipo, (List<Colegio>) params.get(Constantes.CONTAINSKEY_COLEGIOS), response, "colegios", Constantes.EMP, empresaId);
                 return null;
             } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -110,7 +110,7 @@ public class ColegioController extends BaseController {
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<Colegio>) params.get(mx.edu.um.mateo.Constantes.CONTAINSKEY_COLEGIOS), request, "colegios", Constantes.EMP, empresaId);
+                enviaCorreo(correo, (List<Colegio>) params.get(Constantes.CONTAINSKEY_COLEGIOS), request, "colegios", Constantes.EMP, empresaId);
                 modelo.addAttribute("message", "lista.enviada.message");
                 modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("colegio.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
@@ -118,11 +118,11 @@ public class ColegioController extends BaseController {
             }
         }
         params = colegioManager.lista(params);
-        modelo.addAttribute(mx.edu.um.mateo.Constantes.CONTAINSKEY_COLEGIOS, params.get(mx.edu.um.mateo.Constantes.CONTAINSKEY_COLEGIOS));
+        modelo.addAttribute(Constantes.CONTAINSKEY_COLEGIOS, params.get(Constantes.CONTAINSKEY_COLEGIOS));
 
-        this.pagina(params, modelo, mx.edu.um.mateo.Constantes.CONTAINSKEY_COLEGIOS, pagina);
+        this.pagina(params, modelo, Constantes.CONTAINSKEY_COLEGIOS, pagina);
 
-        return mx.edu.um.mateo.Constantes.PATH_COLEGIO_LISTA;
+        return Constantes.PATH_COLEGIO_LISTA;
     }
 
     @RequestMapping("/ver/{id}")
@@ -130,17 +130,17 @@ public class ColegioController extends BaseController {
         log.debug("Mostrando proveedor {}", id);
         Colegio colegio = colegioManager.obtiene(id);
 
-         modelo.addAttribute(mx.edu.um.mateo.Constantes.ADDATTRIBUTE_COLEGIO, colegio);
+         modelo.addAttribute(Constantes.ADDATTRIBUTE_COLEGIO, colegio);
 
-        return mx.edu.um.mateo.Constantes.PATH_COLEGIO_VER;
+        return Constantes.PATH_COLEGIO_VER;
     }
 
     @RequestMapping("/nuevo")
     public String nuevo(Model modelo) {
         log.debug("Nuevo colegio");
         Colegio colegio = new Colegio();
-        modelo.addAttribute(mx.edu.um.mateo.Constantes.ADDATTRIBUTE_COLEGIO, colegio);
-        return mx.edu.um.mateo.Constantes.PATH_COLEGIO_NUEVO;
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_COLEGIO, colegio);
+        return Constantes.PATH_COLEGIO_NUEVO;
     }
 
     @RequestMapping(value = "/graba", method = RequestMethod.POST)
@@ -153,7 +153,7 @@ public class ColegioController extends BaseController {
             for (ObjectError error : bindingResult.getAllErrors()) {
                 log.debug("Error: {}", error);
             }
-            return mx.edu.um.mateo.Constantes.PATH_COLEGIO_NUEVO;
+            return Constantes.PATH_COLEGIO_NUEVO;
         }
 
         try {
@@ -169,13 +169,13 @@ public class ColegioController extends BaseController {
              */
             
             errors.rejectValue("nombre", "colegio.errors.creado", e.toString());
-            return mx.edu.um.mateo.Constantes.PATH_COLEGIO_NUEVO;
+            return Constantes.PATH_COLEGIO_NUEVO;
         }
 
         redirectAttributes.addFlashAttribute("message", "colegio.creado.message");
         redirectAttributes.addFlashAttribute("messageAttrs", new String[]{colegio.getNombre()});
 
-        return "redirect:" + mx.edu.um.mateo.Constantes.PATH_COLEGIO;
+        return "redirect:" + Constantes.PATH_COLEGIO;
     }
 
     @RequestMapping("/edita/{id}")
@@ -186,10 +186,10 @@ public class ColegioController extends BaseController {
         } catch (ObjectRetrievalFailureException ex) {
             log.error("No se pudo obtener al colegio", ex);
             errors.rejectValue("colegio", "registro.noEncontrado", new String[]{"colegio"}, null);
-            return mx.edu.um.mateo.Constantes.PATH_COLEGIO;
+            return Constantes.PATH_COLEGIO;
         }
-        modelo.addAttribute(mx.edu.um.mateo.Constantes.ADDATTRIBUTE_COLEGIO, colegio);
-        return mx.edu.um.mateo.Constantes.PATH_COLEGIO_EDITA;
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_COLEGIO, colegio);
+        return Constantes.PATH_COLEGIO_EDITA;
     }
 
 //    @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
@@ -235,9 +235,9 @@ public class ColegioController extends BaseController {
          catch (Exception e) {
             log.error("No se pudo eliminar el colegio " + id, e);
             bindingResult.addError(new ObjectError("colegio", new String[]{"colegio.no.eliminado.message"}, null, null));
-            return mx.edu.um.mateo.Constantes.PATH_COLEGIO_VER;
+            return Constantes.PATH_COLEGIO_VER;
         }
 
-        return "redirect:" + mx.edu.um.mateo.Constantes.PATH_COLEGIO;
+        return "redirect:" + Constantes.PATH_COLEGIO;
     }
 }
