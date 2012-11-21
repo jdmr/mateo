@@ -5,7 +5,7 @@
 package mx.edu.um.mateo.rh.dao;
 
 import java.util.*;
-import mx.edu.um.mateo.Constants;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
@@ -91,9 +91,9 @@ public class PuestoDaoTest {
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", empresa.getId());
         Map<String, Object> result = instance.lista(params);
-        assertNotNull(result.get(Constants.PUESTO_LIST));
+        assertNotNull(result.get(Constantes.PUESTO_LIST));
         assertNotNull(result.get("cantidad"));
-        assertEquals(10, ((List<Puesto>) result.get(Constants.PUESTO_LIST)).size());
+        assertEquals(10, ((List<Puesto>) result.get(Constantes.PUESTO_LIST)).size());
         assertEquals(20, ((Long) result.get("cantidad")).intValue());
     }
 

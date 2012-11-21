@@ -6,7 +6,7 @@ package mx.edu.um.mateo.rh.dao.impl;
 
 import java.util.List;
 import java.util.Map;
-import mx.edu.um.mateo.Constantes;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.rh.dao.ColegioDao;
 import mx.edu.um.mateo.rh.model.Colegio;
 import org.hibernate.Session;

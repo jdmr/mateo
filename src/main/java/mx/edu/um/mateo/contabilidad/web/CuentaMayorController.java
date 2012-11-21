@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import mx.edu.um.mateo.Constantes;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.contabilidad.dao.CuentaMayorDao;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -100,7 +100,7 @@ public class CuentaMayorController extends BaseController {
 						(List<CuentaMayor>) params
 								.get(Constantes.CONTAINSKEY_MAYORES), response,
 						Constantes.CONTAINSKEY_MAYORES,
-						mx.edu.um.mateo.general.utils.Constantes.ORG,
+						Constantes.ORG,
 						organizacionId);
 				return null;
 			} catch (ReporteException e) {
@@ -120,7 +120,7 @@ public class CuentaMayorController extends BaseController {
 						(List<CuentaMayor>) params
 								.get(Constantes.CONTAINSKEY_MAYORES), request,
 						Constantes.CONTAINSKEY_MAYORES,
-						mx.edu.um.mateo.general.utils.Constantes.ORG,
+						Constantes.ORG,
 						organizacionId);
 				modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE,
 						"lista.enviada.message");
