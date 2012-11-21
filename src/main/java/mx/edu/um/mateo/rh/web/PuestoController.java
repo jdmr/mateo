@@ -10,8 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import mx.edu.um.mateo.Constantes;
-import mx.edu.um.mateo.Constants;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
@@ -86,9 +85,9 @@ public class PuestoController extends BaseController {
             params = mgr.lista(params);
             try {
                 generaReporte(tipo,
-                        (List<Puesto>) params.get(Constants.PUESTO_LIST),
-                        response, Constants.PUESTO_LIST,
-                        mx.edu.um.mateo.general.utils.Constantes.ORG,
+                        (List<Puesto>) params.get(Constantes.PUESTO_LIST),
+                        response, Constantes.PUESTO_LIST,
+                        Constantes.ORG,
                         empresaId);
                 return null;
             } catch (ReporteException e) {
@@ -105,9 +104,9 @@ public class PuestoController extends BaseController {
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
                 enviaCorreo(correo,
-                        (List<CuentaMayor>) params.get(Constants.PUESTO_LIST),
-                        request, Constants.PUESTO_LIST,
-                        mx.edu.um.mateo.general.utils.Constantes.ORG,
+                        (List<CuentaMayor>) params.get(Constantes.PUESTO_LIST),
+                        request, Constantes.PUESTO_LIST,
+                        Constantes.ORG,
                         empresaId);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE,
                         "lista.enviada.message");
@@ -124,9 +123,9 @@ public class PuestoController extends BaseController {
 
         params = mgr.lista(params);
 
-        modelo.addAttribute(Constants.PUESTO_LIST, params.get(Constants.PUESTO_LIST));
+        modelo.addAttribute(Constantes.PUESTO_LIST, params.get(Constantes.PUESTO_LIST));
 
-        this.pagina(params, modelo, Constants.PUESTO_LIST, pagina);
+        this.pagina(params, modelo, Constantes.PUESTO_LIST, pagina);
 
         log.debug("params {}", params.toString());
         return "/rh/puestos/lista";
@@ -138,7 +137,7 @@ public class PuestoController extends BaseController {
 
         Puesto puesto = mgr.obtiene(id);
 
-        modelo.addAttribute(Constants.PUESTO_KEY, puesto);
+        modelo.addAttribute(Constantes.PUESTO_KEY, puesto);
 
         return "/rh/puestos/ver";
     }
@@ -148,9 +147,9 @@ public class PuestoController extends BaseController {
         log.debug("Nuevo puesto");
         Map<String, Object> params = new HashMap<>();
         Puesto puesto = new Puesto();
-        modelo.addAttribute(Constants.PUESTO_KEY, puesto);
+        modelo.addAttribute(Constantes.PUESTO_KEY, puesto);
         params = SeccionManager.Lista(params);
-        //modelo.addAttribute(Constants.SECCION_LIST, params.get(Constants.SECCION_LIST));
+        //modelo.addAttribute(Constantes.SECCION_LIST, params.get(Constantes.SECCION_LIST));
         List<Seccion> listaSeccion = (List) params.get(Constantes.CONTAINSKEY_SECCIONES);
         log.debug("Secciones***" + listaSeccion.size());
         modelo.addAttribute(Constantes.CONTAINSKEY_SECCIONES, listaSeccion);
@@ -172,7 +171,7 @@ public class PuestoController extends BaseController {
             log.debug("Hubo algun error en la forma, regresando");
             Map<String, Object> params = new HashMap<>();
             params = SeccionManager.Lista(params);
-            //modelo.addAttribute(Constants.SECCION_LIST, params.get(Constants.SECCION_LIST));
+            //modelo.addAttribute(Constantes.SECCION_LIST, params.get(Constantes.SECCION_LIST));
             List<Seccion> listaSeccion = (List) params.get(Constantes.CONTAINSKEY_SECCIONES);
             log.debug("Secciones***" + listaSeccion.size());           
             modelo.addAttribute(Constantes.CONTAINSKEY_SECCIONES, listaSeccion);
@@ -183,7 +182,7 @@ public class PuestoController extends BaseController {
         try {
             Map<String, Object> params = new HashMap<>();
             params = SeccionManager.Lista(params);
-            //modelo.addAttribute(Constants.SECCION_LIST, params.get(Constants.SECCION_LIST));
+            //modelo.addAttribute(Constantes.SECCION_LIST, params.get(Constantes.SECCION_LIST));
             List<Seccion> listaSeccion = (List) params.get(Constantes.CONTAINSKEY_SECCIONES);
             log.debug("Secciones***" + listaSeccion.size());
             modelo.addAttribute(Constantes.CONTAINSKEY_SECCIONES, listaSeccion);
@@ -211,13 +210,13 @@ public class PuestoController extends BaseController {
         log.debug("Editar el puesto {}", id);
         Map<String, Object> params = new HashMap<>();
         params = SeccionManager.Lista(params);
-        //modelo.addAttribute(Constants.SECCION_LIST, params.get(Constants.SECCION_LIST));
+        //modelo.addAttribute(Constantes.SECCION_LIST, params.get(Constantes.SECCION_LIST));
         List<Seccion> listaSeccion = (List) params.get(Constantes.CONTAINSKEY_SECCIONES);
         log.debug("Secciones***" + listaSeccion.size());
         modelo.addAttribute(Constantes.CONTAINSKEY_SECCIONES, listaSeccion);
         Puesto puesto = mgr.obtiene(id);
 
-        modelo.addAttribute(Constants.PUESTO_KEY, puesto);
+        modelo.addAttribute(Constantes.PUESTO_KEY, puesto);
 
         return "/rh/puestos/edita";
     }

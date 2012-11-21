@@ -25,7 +25,7 @@ package mx.edu.um.mateo.rh.dao.impl;
 
 import java.util.HashMap;
 import java.util.Map;
-import mx.edu.um.mateo.Constants;
+import mx.edu.um.mateo.general.utils.Constantes;
 
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -122,7 +122,7 @@ public class PuestoDaoHibernate extends BaseDao implements PuestoDao {
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put(Constants.PUESTO_LIST, criteria.list());
+        params.put(Constantes.PUESTO_LIST, criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));

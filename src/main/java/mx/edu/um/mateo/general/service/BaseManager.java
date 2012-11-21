@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import mx.edu.um.mateo.Constants;
+import mx.edu.um.mateo.general.utils.Constantes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
 public class BaseManager {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
-    protected Locale local = new java.util.Locale (Constants.LOCALE_LANGUAGE, Constants.LOCALE_COUNTRY, Constants.LOCALE_VARIANT);
-    protected SimpleDateFormat sdf = new SimpleDateFormat (Constants.DATE_SHORT_HUMAN_PATTERN, local);
+    protected Locale local = new java.util.Locale (Constantes.LOCALE_LANGUAGE, Constantes.LOCALE_COUNTRY, Constantes.LOCALE_VARIANT);
+    protected SimpleDateFormat sdf = new SimpleDateFormat (Constantes.DATE_SHORT_HUMAN_PATTERN, local);
     protected DecimalFormat df = (DecimalFormat)NumberFormat.getCurrencyInstance (local);
     protected Calendar gcFecha = new GregorianCalendar(local);
 }

@@ -28,7 +28,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import mx.edu.um.mateo.Constants;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.rh.model.SolicitudVacaciones;
 
 import org.junit.Ignore;
@@ -60,19 +60,19 @@ public class SolicitudVacacionesDaoTest {
         
     	SolicitudVacaciones solicitudVacaciones = new SolicitudVacaciones();
     	List<SolicitudVacaciones> list;
-    	solicitudVacaciones.setStatus(Constants.SOLICITUDSALIDA_STATUS_RECIBIDO);
+    	solicitudVacaciones.setStatus(Constantes.SOLICITUDSALIDA_STATUS_RECIBIDO);
     	list = dao.getSolicitudVacacionesByFechaInicial(solicitudVacaciones);
     	assertEquals(2, list.size());
     	
-    	solicitudVacaciones.setStatus(Constants.SOLICITUDSALIDA_STATUS_RECHAZADO);
+    	solicitudVacaciones.setStatus(Constantes.SOLICITUDSALIDA_STATUS_RECHAZADO);
     	list =  dao.getSolicitudVacacionesByFechaInicial(solicitudVacaciones);
     	assertEquals(14, list.size());
     	
-    	solicitudVacaciones.setStatus(Constants.SOLICITUDSALIDA_STATUS_AUTORIZADO);
+    	solicitudVacaciones.setStatus(Constantes.SOLICITUDSALIDA_STATUS_AUTORIZADO);
     	list =  dao.getSolicitudVacacionesByFechaInicial(solicitudVacaciones);
     	assertEquals(6, list.size());
     	
-    	solicitudVacaciones.setStatus(Constants.SOLICITUDSALIDA_STATUS_TODOS);
+    	solicitudVacaciones.setStatus(Constantes.SOLICITUDSALIDA_STATUS_TODOS);
     	list =  dao.getSolicitudVacacionesByFechaInicial(solicitudVacaciones);
     	assertEquals(22, list.size());
     }

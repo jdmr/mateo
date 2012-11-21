@@ -5,7 +5,7 @@
 package mx.edu.um.mateo.rh.service.impl;
 
 import java.util.Map;
-import mx.edu.um.mateo.Constantes;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.rh.dao.ConceptoDao;
