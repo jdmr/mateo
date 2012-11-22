@@ -18,7 +18,6 @@ import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.rh.model.EmpleadoEstudios;
 import mx.edu.um.mateo.rh.model.NivelEstudios;
-import mx.edu.um.mateo.rh.model.TipoDependiente;
 import mx.edu.um.mateo.rh.service.EmpleadoEstudiosManager;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;

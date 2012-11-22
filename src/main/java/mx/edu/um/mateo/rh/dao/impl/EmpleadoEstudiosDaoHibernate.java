@@ -130,6 +130,7 @@ public class EmpleadoEstudiosDaoHibernate extends BaseDao implements EmpleadoEst
 	public String elimina(final Long id) {
             EmpleadoEstudios empleadoEstudios = obtiene(id);
 		currentSession().delete(empleadoEstudios);
+                currentSession().flush();
                 return empleadoEstudios.getNombreEstudios();
                 
 	}

@@ -48,6 +48,16 @@ public class EmpleadoEstudios implements Comparable, Serializable {
     private Integer version;
     @ManyToOne(optional=false)
     private Empresa empresa;
+    @ManyToOne(optional=false)
+    private Empleado empleado;
+
+    public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
+    }
 
     public Date getFechaCaptura() {
         return fechaCaptura;
@@ -162,7 +172,7 @@ public class EmpleadoEstudios implements Comparable, Serializable {
 
     @Override
     public String toString() {
-        return "EmpleadoEstudios{" + "id=" + id + ", nombreEstudios=" + nombreEstudios + ", titulado=" + titulado + ", fechaTitulacion=" + fechaTitulacion +", nivelEstudios=" + nivelEstudios + ", status=" + status + ", userCaptura=" + userCaptura + ", fechaCaptura=" + fechaCaptura + ", empresa" + empresa + ", version=" + version + '}';
+        return "EmpleadoEstudios{" + "id=" + id +", Empleado" + empleado.getId() + ", nombreEstudios=" + nombreEstudios + ", titulado=" + titulado + ", fechaTitulacion=" + fechaTitulacion +", nivelEstudios=" + nivelEstudios + ", status=" + status + ", userCaptura=" + userCaptura + ", fechaCaptura=" + fechaCaptura + ", empresa" + empresa + ", version=" + version + '}';
     }
     
     @Override

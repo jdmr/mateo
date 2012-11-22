@@ -8,7 +8,6 @@ import java.util.Map;
 import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.rh.dao.CategoriaDao;
 import mx.edu.um.mateo.rh.dao.EmpleadoEstudiosDao;
 import mx.edu.um.mateo.rh.model.Categoria;
 import mx.edu.um.mateo.rh.model.EmpleadoEstudios;

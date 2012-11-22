@@ -4,15 +4,23 @@
  */
 package mx.edu.um.mateo.rh.dao;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
+import mx.edu.um.mateo.general.model.Rol;
+import mx.edu.um.mateo.inventario.model.Almacen;
+import mx.edu.um.mateo.rh.model.Empleado;
 import mx.edu.um.mateo.rh.model.EmpleadoEstudios;
 import mx.edu.um.mateo.rh.model.NivelEstudios;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -21,8 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  *
@@ -52,12 +58,28 @@ public class EmpleadoEstudiosDaoTest {
         currentSession().save(organizacion);
         Empresa empresa = new Empresa( "test01","test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
+            "curp","RFCSTRI", "Cuenta", "imss",
+            10, 1,new BigDecimal (1),"SI", "ife","A",
+            "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
+                "responsabilidad","password");        
+        empleado.setAlmacen(almacen);
+        empleado.setEmpresa(empresa);
+        empleado.setRoles(roles);
+        currentSession().save(empleado);
         for(int i=0; i<5; i++){
             
             
             EmpleadoEstudios empleadoEstudios=new EmpleadoEstudios();
             
             empleadoEstudios.setEmpresa(empresa);
+            empleadoEstudios.setEmpleado(empleado);
             empleadoEstudios.setNombreEstudios("EmpleadoEstudios"+i);
             empleadoEstudios.setNivelEstudios(NivelEstudios.MAESTRIA);
             empleadoEstudios.setTitulado(false);
@@ -85,7 +107,23 @@ public class EmpleadoEstudiosDaoTest {
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst01", "test-02", "test-03", "000000000001", organizacion);
         currentSession().save(empresa);
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
+            "curp","RFCSTRI", "Cuenta", "imss",
+            10, 1,new BigDecimal (1),"SI", "ife","A",
+            "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
+                "responsabilidad","password");
+        empleado.setAlmacen(almacen);
+        empleado.setEmpresa(empresa);
+        empleado.setRoles(roles);
+        currentSession().save(empleado);
         EmpleadoEstudios empleadoEstudios= new EmpleadoEstudios();
+        empleadoEstudios.setEmpleado(empleado);
         empleadoEstudios.setEmpresa(empresa);
         empleadoEstudios.setNombreEstudios("EmpleadoEstudios");
         empleadoEstudios.setNivelEstudios(NivelEstudios.SECUNDARIA);
@@ -107,7 +145,23 @@ public class EmpleadoEstudiosDaoTest {
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst01", "test-02", "test-03", "000000000001", organizacion);
         currentSession().save(empresa);
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
+            "curp","RFCSTRI", "Cuenta", "imss",
+            10, 1,new BigDecimal (1),"SI", "ife","A",
+            "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
+                "responsabilidad","password");
+        empleado.setAlmacen(almacen);
+        empleado.setEmpresa(empresa);
+        empleado.setRoles(roles);
+        currentSession().save(empleado);
         EmpleadoEstudios empleadoEstudios= new EmpleadoEstudios();
+        empleadoEstudios.setEmpleado(empleado);
         empleadoEstudios.setEmpresa(empresa);
         empleadoEstudios.setNombreEstudios("EmpleadoEstudios");
         empleadoEstudios.setNivelEstudios(NivelEstudios.PREPARATORIA);
@@ -131,7 +185,23 @@ public class EmpleadoEstudiosDaoTest {
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-02", "test-03", "000000000001", organizacion);
         currentSession().save(empresa); 
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
+            "curp","RFCSTRI", "Cuenta", "imss",
+            10, 1,new BigDecimal (1),"SI", "ife","A",
+            "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
+                "responsabilidad","password");
+        empleado.setAlmacen(almacen);
+        empleado.setEmpresa(empresa);
+        empleado.setRoles(roles);
+        currentSession().save(empleado);
         EmpleadoEstudios empleadoEstudios= new EmpleadoEstudios();
+        empleadoEstudios.setEmpleado(empleado);
         empleadoEstudios.setEmpresa(empresa);
         empleadoEstudios.setNombreEstudios("EmpleadoEstudios");
         empleadoEstudios.setNivelEstudios(NivelEstudios.LICENCIATURA);
