@@ -53,7 +53,8 @@ public class RolDaoHibernate extends BaseDao implements RolDao {
     @Transactional(readOnly = true)
     public Rol obtiene(String nombre) {
         Query query = currentSession().createQuery(
-                "select r from Rol r where authority = ?");
+                "select r from Rol r where authority =:Rol");
+        query.setString("Rol", nombre);
         Rol rol = (Rol) query.uniqueResult();
         return rol;
     }
