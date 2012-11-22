@@ -14,6 +14,7 @@
         <li<c:if test="${param.menu eq 'dependiente'}"> class="active"</c:if>><a href="<s:url value='/rh/dependiente'/>" ><s:message code="dependiente.label" /></a></li>
         <li<c:if test="${param.menu eq 'perded'}"> class="active"</c:if>><a href="<s:url value='/rh/perded'/>" ><s:message code="perded.label" /></a></li>
         <li<c:if test="${param.menu eq 'seccion'}"> class="active"</c:if>><a href="<s:url value='/rh/seccion'/>" ><s:message code="seccion.label" /></a></li>
+        <li<c:if test="${param.menu eq 'empleadopuesto'}"> class="active"</c:if>><a href="<s:url value='/rh/empleadopuesto'/>" ><s:message code="empleadopuesto.label" /></a></li>
     </ul>
 </nav>
     
