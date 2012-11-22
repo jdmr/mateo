@@ -234,6 +234,19 @@ public class Constantes {
      */
     public static final String CONCEPTO_LIST = "conceptoList";
     public static final String CONCEPTO_KEY = "concepto";
+    
+     /**   
+     * Valores para dependientes
+     */
+    public static final String DEPENDIENTE_LIST = "dependienteList";
+    public static final String DEPENDIENTE_KEY = "dependienteForm";
+    
+    /**   
+     * Valores para empleadoestudios
+     */
+    public static final String EMPLEADOESTUDIOS_LIST = "empleadoestudiosList";
+    public static final String EMPLEADOESTUDIOS_KEY = "empleadoEstudios";
+ 
     public static final String PATH_CONCEPTO = "/rh/concepto";
     public static final String PATH_CONCEPTO_LISTA = "rh/concepto/lista";
     public static final String PATH_CONCEPTO_VER = "/rh/concepto/ver";
