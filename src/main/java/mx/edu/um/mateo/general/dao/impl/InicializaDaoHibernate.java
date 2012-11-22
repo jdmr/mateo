@@ -23,6 +23,9 @@
  */
 package mx.edu.um.mateo.general.dao.impl;
 
+import java.lang.String;
+import java.math.BigDecimal;
+import java.util.HashSet;
 import mx.edu.um.mateo.contabilidad.dao.EjercicioDao;
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.general.dao.BaseDao;
@@ -36,8 +39,11 @@ import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.inventario.dao.AlmacenDao;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.inventario.model.Estatus;
+import mx.edu.um.mateo.rh.model.Empleado;
+import mx.edu.um.mateo.rh.service.EmpleadoManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,6 +66,10 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
     private UsuarioDao usuarioDao;
     @Autowired
     private RolDao rolDao;
+    @Autowired
+    private EmpleadoManager empleadoManager;
+    @Autowired
+    private AlmacenDao almacenDao;
 
     @Override
     public void inicializa(String username, String password) {
@@ -69,6 +79,13 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
         organizacion = organizacionDao.crea(organizacion);
         Rol rol = new Rol("ROLE_ADMIN");
         rol = rolDao.crea(rol);
+        rol = new Rol("ROLE_ORG");
+        rolDao.crea(rol);
+        rol = new Rol("ROLE_EMP");
+        rolDao.crea(rol);
+        rol = new Rol("ROLE_USER");
+        rolDao.crea(rol);
+
         Usuario usuario = new Usuario(username, password, "Admin", "User","User");
         Long almacenId = 0l;
         actualizaUsuario:
@@ -78,19 +95,35 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
                 break actualizaUsuario;
             }
         }
+        
+        Almacen almacen=almacenDao.obtiene(almacenId);
+        
+        
         for (Ejercicio ejercicio : ejercicioDao.lista(organizacion.getId())) {
             usuario.setEjercicio(ejercicio);
             break;
         }
-        usuarioDao.crea(usuario, almacenId,
-                new String[]{rol.getAuthority()});
-        rol = new Rol("ROLE_ORG");
-        rolDao.crea(rol);
-        rol = new Rol("ROLE_EMP");
-        rolDao.crea(rol);
-        rol = new Rol("ROLE_USER");
-        rolDao.crea(rol);
-
+        String[] roles = new String[]{new Rol("ROLE_ADMIN").getAuthority(), (new Rol("ROLE_EMP")).getAuthority()};
+        usuarioDao.crea(usuario, almacenId,roles);
+         
+         //grabando empleado
+          usuario = new Empleado( "test", "apPaterno","apMaterno",username + "@um.edu.mx",username,"1080506", Boolean.TRUE,"M", "Direccion","A",
+            "curp","RFCSTRI", "Cuenta", "imss",
+            10, 1,new BigDecimal (1),"SI", "ife","A",
+            "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
+                "responsabilidad",password);
+         HashSet rolesEmp = new HashSet();
+        rolesEmp.add(rolDao.obtiene("ROLE_ADMIN"));
+        rolesEmp.add(rolDao.obtiene("ROLE_EMP"));
+         usuario.setAlmacen(almacen);
+        usuario.setEmpresa(almacen.getEmpresa());
+        usuario.setRoles(rolesEmp);
+        for (Ejercicio ejercicio : ejercicioDao.lista(organizacion.getId())) {
+            usuario.setEjercicio(ejercicio);
+            break;
+        }
+         empleadoManager.saveEmpleado((Empleado)usuario, usuario); 
+        
         Estatus estatus = new Estatus(Constantes.ABIERTA, 100);
         currentSession().save(estatus);
         estatus = new Estatus(Constantes.PENDIENTE, 200);

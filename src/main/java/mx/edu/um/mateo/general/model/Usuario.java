@@ -371,6 +371,11 @@ public class Usuario implements Serializable, UserDetails {
     public void setCentrosDeCosto(Set<CentroCosto> centrosDeCosto) {
         this.centrosDeCosto = centrosDeCosto;
     }
+    
+    public String getNombreCompleto() {
+        return nombre+" "+ apPaterno+" "+apMaterno;
+    }
+    
 
     @Override
     public boolean equals(Object obj) {
