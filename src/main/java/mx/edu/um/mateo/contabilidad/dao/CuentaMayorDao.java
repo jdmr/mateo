@@ -3,7 +3,7 @@ package mx.edu.um.mateo.contabilidad.dao;
 import java.util.HashMap;
 import java.util.Map;
 
-import mx.edu.um.mateo.Constantes;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;

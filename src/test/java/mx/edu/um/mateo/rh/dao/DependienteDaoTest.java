@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import mx.edu.um.mateo.Constantes;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;

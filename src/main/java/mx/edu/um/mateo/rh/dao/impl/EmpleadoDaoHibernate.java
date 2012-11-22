@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import mx.edu.um.mateo.Constants;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.rh.dao.EmpleadoDao;
@@ -126,12 +126,12 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put(Constants.EMPLEADO_LIST, criteria.list());
+        params.put(Constantes.EMPLEADO_LIST, criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
         
-        log.debug("Elementos en lista de empleados {}", params.get(Constants.EMPLEADO_LIST));
+        log.debug("Elementos en lista de empleados {}", params.get(Constantes.EMPLEADO_LIST));
 
         return params;
     }

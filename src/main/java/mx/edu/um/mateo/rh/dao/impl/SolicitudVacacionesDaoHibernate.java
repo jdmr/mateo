@@ -25,7 +25,7 @@ package mx.edu.um.mateo.rh.dao.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import mx.edu.um.mateo.Constants;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.rh.dao.SolicitudVacacionesDao;
 import mx.edu.um.mateo.rh.model.SolicitudVacaciones;
@@ -98,8 +98,8 @@ public class SolicitudVacacionesDaoHibernate extends BaseDao implements
             final SolicitudVacaciones solicitudVacaciones) {
         Criteria sql = getSession().createCriteria(SolicitudVacaciones.class);
         ArrayList<String> list = new ArrayList<>();
-        list.add(Constants.SOLICITUDSALIDA_STATUS_ACTIVO);
-        list.add(Constants.SOLICITUDSALIDA_STATUS_ENVIADO);
+        list.add(Constantes.SOLICITUDSALIDA_STATUS_ACTIVO);
+        list.add(Constantes.SOLICITUDSALIDA_STATUS_ENVIADO);
 
         // Not se usa para agregar a la lista culquier cosa que no sea el
         // par�metro especificado.
@@ -118,7 +118,7 @@ public class SolicitudVacacionesDaoHibernate extends BaseDao implements
         }
 
         if (!solicitudVacaciones.getStatus().equals(
-                Constants.SOLICITUDSALIDA_STATUS_TODOS)) {
+                Constantes.SOLICITUDSALIDA_STATUS_TODOS)) {
             sql.add(Restrictions.like("status", solicitudVacaciones.getStatus()));
         }
 
@@ -246,8 +246,8 @@ public class SolicitudVacacionesDaoHibernate extends BaseDao implements
                 ssalidaInicial.getFechaInicial(),
                 ssalidaFinal.getFechaInicial())));
         sql.add(Restrictions.or(Restrictions.eq("status",
-                Constants.SOLICITUDSALIDA_STATUS_AUTORIZADO), Restrictions.eq(
-                "status", Constants.SOLICITUDSALIDA_STATUS_PRIMA_VACACIONAL)));
+                Constantes.SOLICITUDSALIDA_STATUS_AUTORIZADO), Restrictions.eq(
+                "status", Constantes.SOLICITUDSALIDA_STATUS_PRIMA_VACACIONAL)));
         sql.addOrder(Order.asc("fechaInicial"));
         return sql.list();
     }

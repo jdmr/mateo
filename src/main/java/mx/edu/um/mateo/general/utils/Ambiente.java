@@ -25,7 +25,6 @@ package mx.edu.um.mateo.general.utils;
 
 import java.util.Iterator;
 import javax.servlet.http.HttpSession;
-import mx.edu.um.mateo.Constants;
 
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.rh.dao.EmpleadoDao;
@@ -78,7 +77,7 @@ public class Ambiente {
                 
                 if(esEmpleado()){
                     log.debug("ES UN EMPLEADO EMPLEADO");
-                    session.setAttribute(Constants.EMPLEADO_KEY, dao.obtiene(usuario.getId()));
+                    session.setAttribute(Constantes.EMPLEADO_KEY, dao.obtiene(usuario.getId()));
                 }
                 
 	}

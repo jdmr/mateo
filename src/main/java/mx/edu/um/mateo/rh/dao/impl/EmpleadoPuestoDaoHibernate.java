@@ -6,9 +6,9 @@ package mx.edu.um.mateo.rh.dao.impl;
 
 import java.util.HashMap;
 import java.util.Map;
-import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.rh.dao.EmpleadoPuestoDao;
 import mx.edu.um.mateo.rh.model.EmpleadoPuesto;
 import org.hibernate.Criteria;
@@ -83,7 +83,7 @@ public class EmpleadoPuestoDaoHibernate extends BaseDao implements EmpleadoPuest
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put(Constantes.CONTAINSKEY_EMPLEADOPUESTO, criteria.list());
+        params.put(Constantes.EMPLEADOPUESTO_LIST, criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
