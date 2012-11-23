@@ -15,7 +15,7 @@
         <div id="ver-empleado" class="content scaffold-list" role="main">
             <h1><s:message code="datosEmpleado.label" /></h1>
 
-            <c:if test="${not empty message}">
+             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
                     <a class="close" data-dismiss="alert">×</a>
                     <s:message code="${message}" arguments="${messageAttrs}" />
