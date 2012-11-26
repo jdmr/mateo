@@ -7,7 +7,7 @@ package mx.edu.um.mateo.rh.dao;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import mx.edu.um.mateo.Constantes;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.rh.model.EstudiosEmpleado;
 import mx.edu.um.mateo.rh.model.NivelEstudios;
@@ -72,7 +72,7 @@ public class EstudiosEmpleadoDaoTest {
         EstudiosEmpleado estudiosEmpleado = new EstudiosEmpleado();
         estudiosEmpleado.setFechaCaptura(new Date());
         estudiosEmpleado.setFechaTitulacion(new Date());
-        estudiosEmpleado.setNivelEstudios(NivelEstudios.MAESTRIA);
+        estudiosEmpleado.setNivelEstudios(NivelEstudios.PRIMARIA);
         estudiosEmpleado.setNombreEstudios("maestria");
         estudiosEmpleado.setStatus("A");
         estudiosEmpleado.setTitulado(Short.MIN_VALUE);
@@ -115,7 +115,7 @@ public class EstudiosEmpleadoDaoTest {
         EstudiosEmpleado estudiosEmpleado = new EstudiosEmpleado();
         estudiosEmpleado.setFechaCaptura(new Date());
         estudiosEmpleado.setFechaTitulacion(new Date());
-        estudiosEmpleado.setNivelEstudios(NivelEstudios.MAESTRIA);
+        estudiosEmpleado.setNivelEstudios(NivelEstudios.SECUNDARIA);
         estudiosEmpleado.setNombreEstudios("maestria");
         estudiosEmpleado.setStatus("A");
         estudiosEmpleado.setTitulado(Short.MIN_VALUE);
@@ -162,7 +162,7 @@ public class EstudiosEmpleadoDaoTest {
          EstudiosEmpleado estudiosEmpleado = new EstudiosEmpleado();
         estudiosEmpleado.setFechaCaptura(new Date());
         estudiosEmpleado.setFechaTitulacion(new Date());
-        estudiosEmpleado.setNivelEstudios(NivelEstudios.MAESTRIA);
+        estudiosEmpleado.setNivelEstudios(NivelEstudios.DOCTORADO);
         estudiosEmpleado.setNombreEstudios("maestria");
         estudiosEmpleado.setStatus("A");
         estudiosEmpleado.setTitulado(Short.MIN_VALUE);

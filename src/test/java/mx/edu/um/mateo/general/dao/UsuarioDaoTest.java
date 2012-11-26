@@ -86,7 +86,7 @@ public class UsuarioDaoTest {
         currentSession().save(almacen);
 
         for (int i = 0; i < 20; i++) {
-            Usuario usuario = new Usuario("test-" + i + "@test.com", "test-" + i, "TEST " + i, "TEST");
+           Usuario usuario = new Usuario("bugs"+i+"@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
             usuario.setEmpresa(empresa);
             usuario.setAlmacen(almacen);
             usuario.setRoles(roles);
@@ -118,7 +118,7 @@ public class UsuarioDaoTest {
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TST", "TEST01", empresa);
         currentSession().save(almacen);
-        Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -129,7 +129,7 @@ public class UsuarioDaoTest {
         Usuario result = instance.obtiene(id);
         assertEquals(usuario, result);
         assertTrue(result.getRoles().contains(rol));
-        assertEquals("test-01@test.com",usuario.getUsername());
+        assertEquals("bugs@um.edu.mx",usuario.getUsername());
     }
 
     /**
@@ -152,7 +152,7 @@ public class UsuarioDaoTest {
         currentSession().save(ejercicio);
         currentSession().flush();
 
-        Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
         usuario.setEjercicio(ejercicio);
         usuario = instance.crea(usuario, almacen.getId(), new String[]{rol.getAuthority()});
         Long id = usuario.getId();
@@ -175,7 +175,7 @@ public class UsuarioDaoTest {
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TST", "TEST01", empresa);
         currentSession().save(almacen);
-        Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -205,7 +205,7 @@ public class UsuarioDaoTest {
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TST", "TEST01", empresa);
         currentSession().save(almacen);
-        Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -241,7 +241,7 @@ public class UsuarioDaoTest {
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TST", "TEST01", empresa);
         currentSession().save(almacen);
-        Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -269,12 +269,12 @@ public class UsuarioDaoTest {
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TST", "TEST01", empresa);
         currentSession().save(almacen);
-        Usuario usuario = new Usuario("test-01@test.com", "test-01", "TEST1", "TEST");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
         currentSession().save(usuario);
-        usuario = new Usuario("test-02@test.com", "test-02", "TEST2", "TEST2");
+        usuario = new Usuario("test-02@test.com", "test-02", "TEST2", "TEST2","TEST2");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
@@ -309,15 +309,15 @@ public class UsuarioDaoTest {
         currentSession().save(almacen2);
 
         for (int i = 0; i < 20; i++) {
-            Usuario usuario = new Usuario("test-a" + i + "@test.com", "test-" + i, "TEST " + i, "TEST");
+            Usuario usuario = new Usuario("bugs"+i+"@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
             usuario.setEmpresa(empresa);
             usuario.setAlmacen(almacen);
             usuario.setRoles(roles);
             currentSession().save(usuario);
         }
 
-        for (int i = 0; i < 30; i++) {
-            Usuario usuario = new Usuario("test-b" + i + "@test.com", "test-" + i, "TEST " + i, "TEST");
+        for (int i = 20; i < 50; i++) {
+            Usuario usuario = new Usuario("bugs"+i+"@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
             usuario.setEmpresa(empresa2);
             usuario.setAlmacen(almacen2);
             usuario.setRoles(roles);

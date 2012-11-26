@@ -7,7 +7,7 @@ package mx.edu.um.mateo.rh.service.impl;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import mx.edu.um.mateo.Constants;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.service.BaseManager;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
@@ -69,7 +69,7 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
     		//emp.setClave(empleado.getClave());
     		emp.setClave(null);//aqui se envia null, pero realmente debe llamar a tipoEmpleado para traer el prefijo
     		empleado.setClave(this.getNuevaClave(emp));
-                empleado.setStatus(Constants.STATUS_ACTIVO);
+                empleado.setStatus(Constantes.STATUS_ACTIVO);
     	}
     	//log.debug(empleado);
     	dao.saveEmpleado(empleado, usuario);

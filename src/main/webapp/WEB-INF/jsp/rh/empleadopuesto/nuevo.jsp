@@ -5,19 +5,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="seccion.nuevo.label" /></title>
+        <title><s:message code="empleadopuesto.nuevo.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="seccion" />
+            <jsp:param name="menu" value="empleadopuesto" />
         </jsp:include>
 
-        <div id="nuevo-seccion" class="content scaffold-list" role="main">
-            <h1><s:message code="seccion.nuevo.label" /></h1>
+        <div id="nuevo-perded" class="content scaffold-list" role="main">
+            <h1><s:message code="empleadopuesto.nuevo.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/rh/seccion'/>"><i class="icon-list icon-white"></i> <s:message code='seccion.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/rh/empleadopuesto/'/>"><i class="icon-list icon-white"></i> <s:message code='empleadopuesto.lista.label' /></a>
             </p>
-            <form:form commandName="seccion" action="crea" method="post">
+            <form:form commandName="empleadopuesto" action="graba" method="post">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -28,31 +28,29 @@
                 </form:errors>
 
                 <fieldset>
-                    <s:bind path="seccion.nombre">
+                    <s:bind path="empleadopuesto.puesto">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="nombre">
-                                <s:message code="nombre.label" />
+                            <label for="puesto">
+                                <s:message code="empleadopuesto.puesto.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="nombre" maxlength="128" required="true" />
-                            <form:errors path="nombre" cssClass="alert alert-error" />
+                            <form:input path="puesto" maxlength="128" required="true" cssClass="span3" />
+                            <form:errors path="puesto" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    
                 </fieldset>
-
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/rh/seccion'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <a class="btn btn-large" href="<s:url value='/rh/empleadopuesto'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>
-    <content>
-        <script>
-            $(document).ready(function() {
-                $('input#nombre').focus();
-            });
-        </script>                    
-    </content>
-</body>
+        <content>
+            <script>
+                $(document).ready(function() {
+                    $('input#nombre').focus();
+                });
+            </script>                    
+        </content>
+    </body>
 </html>

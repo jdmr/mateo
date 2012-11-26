@@ -398,4 +398,12 @@ public class ProductoController extends BaseController {
 
         return "redirect:/inventario/producto/ver/"+id;
     }
+    
+    @RequestMapping("/revisaEntradas/{fechaString}")
+    public String revisaEntradas(Model modelo, @PathVariable String fechaString) {
+        log.debug("Revisando entradas");
+        List<Map<String,Object>> entradas = productoDao.revisaEntradas(fechaString, ambiente.obtieneUsuario());
+        modelo.addAttribute("entradas", entradas);
+        return "inventario/producto/revisaEntradas";
+    }
 }

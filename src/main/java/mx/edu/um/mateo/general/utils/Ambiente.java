@@ -23,12 +23,16 @@
  */
 package mx.edu.um.mateo.general.utils;
 
+import java.util.Iterator;
 import javax.servlet.http.HttpSession;
 
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.rh.dao.EmpleadoDao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -40,6 +44,9 @@ import org.springframework.stereotype.Component;
 public class Ambiente {
 
 	private static final Logger log = LoggerFactory.getLogger(Ambiente.class);
+        
+        @Autowired
+        private EmpleadoDao dao;
 
 	public void actualizaSesion(HttpSession session) {
 		Usuario usuario = obtieneUsuario();
@@ -66,6 +73,13 @@ public class Ambiente {
 			session.setAttribute("ejercicioId", usuario.getEjercicio().getId()
 					.getIdEjercicio());
 		}
+                
+                
+                if(esEmpleado()){
+                    log.debug("ES UN EMPLEADO EMPLEADO");
+                    session.setAttribute(Constantes.EMPLEADO_KEY, dao.obtiene(usuario.getId()));
+                }
+                
 	}
 
 	public Usuario obtieneUsuario() {
@@ -73,4 +87,41 @@ public class Ambiente {
 				.getAuthentication().getPrincipal();
 		return usuario;
 	}
+        
+        public Boolean esEmpleado(){
+            log.debug("EMPLEADO EN SECION");
+            boolean esEmpleado = false;
+            GrantedAuthority ga = null;
+            Usuario usuario = obtieneUsuario();
+            Iterator it = usuario.getAuthorities().iterator();    
+            while (it.hasNext()) {
+            ga = (GrantedAuthority) it.next();
+            log.debug((ga).getAuthority());
+                if ((ga).getAuthority().equals("ROLE_EMP")) {
+                esEmpleado = true;
+                break;
+                }
+            }
+            return esEmpleado;
+        }
+        
+        
+        public boolean esColportor() {
+        log.debug("COLPORTOR EN SECION");
+        boolean esColportor = false;
+        GrantedAuthority ga = null;
+        Usuario usuario = obtieneUsuario();
+        Iterator it = usuario.getAuthorities().iterator();
+        while (it.hasNext()) {
+            ga = (GrantedAuthority) it.next();
+
+            if ((ga).getAuthority().equals("ROLE_COL")) {
+                esColportor = true;
+                break;
+            }
+
+        }
+
+        return esColportor;
+    }
 }

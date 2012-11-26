@@ -17,7 +17,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/rh/seccion'/>"><i class="icon-list icon-white"></i> <s:message code='seccion.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="/rh/seccion/actualiza" />
+            <c:url var="actualizaUrl" value="/rh/seccion/graba" />
             <form:form commandName="seccion" method="post" action="${actualizaUrl}">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
@@ -39,6 +39,38 @@
                             </label>
                             <form:input path="nombre" maxlength="128" required="true" />
                             <form:errors path="nombre" cssClass="alert alert-error" />
+                        </div>
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="categoriaId">
+                                <s:message code="categoriaId.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="categoriaId" maxlength="128" required="true" />
+                            <form:errors path="categoriaId" cssClass="alert alert-error" />
+                        </div>
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="rangoAcademico">
+                                <s:message code="rangoAcademico.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="rangoAcademico" maxlength="128" required="true" />
+                            <form:errors path="rangoAcademico" cssClass="alert alert-error" />
+                        </div>
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="minimo">
+                                <s:message code="minimo.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="minimo" maxlength="128" required="true" />
+                            <form:errors path="minimo" cssClass="alert alert-error" />
+                        </div>
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="maximo">
+                                <s:message code="maximo.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="maximo" maxlength="128" required="true" />
+                            <form:errors path="maximo" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                 </fieldset>

@@ -5,18 +5,9 @@
 package mx.edu.um.mateo.rh.model;
 
 import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Version;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.general.model.Empresa;
-
 import org.hibernate.validator.constraints.NotBlank;
 
 /**
@@ -39,9 +30,7 @@ public class Puesto implements Serializable {
         @NotNull
 	@Column(nullable = false)
         private Integer categoria;
-        @NotNull
-	@Column(nullable = false)
-        private Integer seccion;
+        
         @NotNull
 	@Column(nullable = false)
         private Integer minimo;
@@ -54,19 +43,18 @@ public class Puesto implements Serializable {
         private Double rangoAcademico;
 	@Version
 	private Long version;
-        @ManyToOne
+        @ManyToOne(optional=false)
         private Empresa empresa;
+        @ManyToOne(optional=false)
+        private Seccion seccion;
+        
 
     public Puesto() {
     }
 
-    public Puesto(String descripcion, Integer categoria, Integer seccion, Integer minimo, Integer maximo, String status, Empresa empresa) {
+    public Puesto(String descripcion,  Seccion seccion, Empresa empresa) {
         this.descripcion = descripcion;
-        this.categoria = categoria;
         this.seccion = seccion;
-        this.minimo = minimo;
-        this.maximo = maximo;
-        this.status = status;
         this.empresa = empresa;
     }
 
@@ -98,11 +86,11 @@ public class Puesto implements Serializable {
         this.categoria = categoria;
     }
 
-    public Integer getSeccion() {
+    public Seccion getSeccion() {
         return seccion;
     }
 
-    public void setSeccion(Integer seccion) {
+    public void setSeccion(Seccion seccion) {
         this.seccion = seccion;
     }
 

@@ -102,6 +102,8 @@ public class ActivoController extends BaseController {
             Model modelo)
             throws ParseException {
         log.debug("Mostrando lista de activos");
+        modelo.addAttribute("centroCosto", ambiente.obtieneUsuario().getEmpresa().getCentroCosto());
+        
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Map<String, Object> params = this.convierteParams(request
                 .getParameterMap());
@@ -207,7 +209,6 @@ public class ActivoController extends BaseController {
         params.put("reporte", true);
         params = tipoActivoDao.lista(params);
         modelo.addAttribute("tiposDeActivo", params.get("tiposDeActivo"));
-
         List<CentroCosto> centrosDeCosto = centroCostoDao.listaPorEmpresa(ambiente.obtieneUsuario());
         modelo.addAttribute("centrosDeCosto", centrosDeCosto);
 
