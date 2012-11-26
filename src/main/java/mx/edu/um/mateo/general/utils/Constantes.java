@@ -877,7 +877,7 @@ public class Constantes {
 	/**
 	 * The request scope attribute that holds the tipoEmpleado form.
 	 */
-	public static final String TIPOEMPLEADO_KEY = "tipoEmpleadoForm";
+	public static final String TIPOEMPLEADO_KEY = "tipoEmpleado";
 	/**
 	 * The request scope attribute that holds the tipoEmpleado list
 	 */
@@ -2395,6 +2395,7 @@ public class Constantes {
     public static final String PATH_DEPENDIENTE_CREA = "/rh/dependiente/crea";
     public static final String PATH_DEPENDIENTE_ACTUALIZA = "/rh/dependiente/actualiza";
     public static final String PATH_DEPENDIENTE_ELIMINA = "/rh/dependiente/elimina";
+    
     public static final String PATH_ESTUDIOSEMPLEADO = "/rh/estudiosEmpleado";
     public static final String PATH_ESTUDIOSEMPLEADO_LISTA = "/rh/estudiosEmpleado/lista";
     public static final String PATH_ESTUDIOSEMPLEADO_VER = "/rh/estudiosEmpleado/ver";
@@ -2462,4 +2463,13 @@ public class Constantes {
     public static final String PATH_PERDED_NUEVO = "/rh/perded/nuevo";
     public static final String PATH_PERDED_EDITA = "/rh/perded/edita";
     public static final String PATH_PERDED_GRABA = "/rh/perded/graba";
+    
+    public static final String PATH_TIPOEMPLEADO = "/rh/tipoEmpleado";
+    public static final String PATH_TIPOEMPLEADO_LISTA = "/rh/tipoEmpleado/lista";
+    public static final String PATH_TIPOEMPLEADO_VER = "/rh/tipoEmpleado/ver";
+    public static final String PATH_TIPOEMPLEADO_NUEVO = "/rh/tipoEmpleado/nuevo";
+    public static final String PATH_TIPOEMPLEADO_EDITA = "/rh/tipoEmpleado/edita";
+    public static final String PATH_TIPOEMPLEADO_CREA = "/rh/tipoEmpleado/crea";
+    public static final String PATH_TIPOEMPLEADO_ACTUALIZA = "/rh/tipoEmpleado/actualiza";
+    public static final String PATH_TIPOEMPLEADO_ELIMINA = "/rh/tipoEmpleado/elimina";
 }

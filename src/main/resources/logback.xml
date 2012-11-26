@@ -19,12 +19,12 @@
             <MaxFileSize>1MB</MaxFileSize>
         </triggeringPolicy>
     </appender>
-    <logger name="mx.edu.um.mateo" level="trace"/>
+    <logger name="mx.edu.um.mateo" level="INFO"/>
     <logger name="org.springframework.orm.hibernate4" level="ERROR"/>
     <logger name="org.hibernate.engine.transaction" level="ERROR"/>
-    <logger name="org.hibernate.SQL" level="trace"/>
-     <logger name="org.springframework" level="trace"/>
-     <logger name="org.springframework.security" level="trace"/>
+    <logger name="org.hibernate.SQL" level="INFO"/>
+     <logger name="org.springframework" level="INFO"/>
+     <logger name="org.springframework.security" level="INFO"/>
      
     <!--
     <logger name="org.springframework.orm.hibernate4" level="DEBUG"/>
