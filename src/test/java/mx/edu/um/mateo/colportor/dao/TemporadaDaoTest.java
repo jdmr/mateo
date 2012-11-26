@@ -4,16 +4,13 @@
  */
 package mx.edu.um.mateo.colportor.dao;
 
-import mx.edu.um.mateo.colportor.dao.TemporadaDao;
-import mx.edu.um.mateo.colportor.dao.UnionDao;
-import mx.edu.um.mateo.colportor.dao.AsociacionDao;
 import java.util.List;
 import java.util.Map;
-import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.colportor.model.Temporada;
 import mx.edu.um.mateo.colportor.model.Union;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
+import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import static org.junit.Assert.*;

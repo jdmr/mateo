@@ -29,9 +29,9 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.model.Reporte;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.validator.constraints.NotBlank;
 
 /**

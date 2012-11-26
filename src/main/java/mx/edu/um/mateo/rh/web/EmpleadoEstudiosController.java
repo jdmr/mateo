@@ -10,10 +10,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import mx.edu.um.mateo.Constantes;
-import mx.edu.um.mateo.Constants;
 import mx.edu.um.mateo.contabilidad.model.CuentaMayor;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.rh.model.EmpleadoEstudios;
@@ -182,7 +181,7 @@ public class EmpleadoEstudiosController extends BaseController {
 		EmpleadoEstudios empleadoEstudios = mgr.obtiene(id.toString());
 
 		modelo.addAttribute(Constantes.EMPLEADOESTUDIOS_KEY, empleadoEstudios);
-                modelo.addAttribute(Constants.EMPLEADOESTUDIOS_LIST, NivelEstudios.values());
+                modelo.addAttribute(Constantes.EMPLEADOESTUDIOS_LIST, NivelEstudios.values());
 		return "/rh/empleadoEstudios/edita";
 	}
 

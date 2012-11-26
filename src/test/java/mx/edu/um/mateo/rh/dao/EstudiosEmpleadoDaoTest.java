@@ -7,7 +7,7 @@ package mx.edu.um.mateo.rh.dao;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import mx.edu.um.mateo.Constantes;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.rh.model.EstudiosEmpleado;
 import mx.edu.um.mateo.rh.model.NivelEstudios;

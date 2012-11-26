@@ -25,13 +25,13 @@ package mx.edu.um.mateo.general.utils;
 
 import java.util.Iterator;
 import javax.servlet.http.HttpSession;
-import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.colportor.dao.AsociacionDao;
 import mx.edu.um.mateo.colportor.dao.TemporadaColportorDao;
 import mx.edu.um.mateo.colportor.dao.UnionDao;
 import mx.edu.um.mateo.colportor.dao.UsuarioDao;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.rh.dao.EmpleadoDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +49,9 @@ public class Ambiente {
    
 
     private static final Logger log = LoggerFactory.getLogger(Ambiente.class);
+        
+    @Autowired
+    private EmpleadoDao dao;
     @Autowired
     private UsuarioDao usuarioDao;
     @Autowired
@@ -83,7 +86,11 @@ public class Ambiente {
             session.setAttribute("almacenId", usuario.getAlmacen().getId());
             session.setAttribute("ejercicioId", usuario.getEjercicio().getId()
                     .getIdEjercicio());
-
+            if(esEmpleado()){
+                    log.debug("ES UN EMPLEADO EMPLEADO");
+                    session.setAttribute(Constantes.EMPLEADO_KEY, dao.obtiene(usuario.getId()));
+                }
+            
             if (esAsociado() || esColportor()) {
                 session.setAttribute(Constantes.SESSION_UNION, unionDao.obtiene(usuario.getAsociacion().getUnion().getId()));
                 session.setAttribute(Constantes.SESSION_ASOCIACION,asociacionDao.obtiene(usuario.getAsociacion().getId()));
@@ -106,6 +113,24 @@ public class Ambiente {
         return usuario;
     }
 
+    
+    public Boolean esEmpleado(){
+            log.debug("EMPLEADO EN SECION");
+            boolean esEmpleado = false;
+            GrantedAuthority ga = null;
+            Usuario usuario = obtieneUsuario();
+            Iterator it = usuario.getAuthorities().iterator();    
+            while (it.hasNext()) {
+            ga = (GrantedAuthority) it.next();
+            log.debug((ga).getAuthority());
+                if ((ga).getAuthority().equals("ROLE_EMP")) {
+                esEmpleado = true;
+                break;
+                }
+            }
+            return esEmpleado;
+        }
+    
     public boolean esAsociado() {
         boolean esAsociado = false;
         GrantedAuthority ga = null;
@@ -131,7 +156,6 @@ public class Ambiente {
         Iterator it = usuario.getAuthorities().iterator();
         while (it.hasNext()) {
             ga = (GrantedAuthority) it.next();
-
             if ((ga).getAuthority().equals("ROLE_COL")) {
                 esColportor = true;
                 break;
@@ -142,3 +166,9 @@ public class Ambiente {
         return esColportor;
     }
 }
+
+                
+                
+                
+
+	

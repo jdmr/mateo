@@ -9,7 +9,6 @@ import mx.edu.um.mateo.colportor.model.Asociado;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.colportor.utils.FaltaAsociacionException;
 import org.hibernate.*;
 import org.hibernate.criterion.*;
@@ -20,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.SpringSecurityUtils;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 

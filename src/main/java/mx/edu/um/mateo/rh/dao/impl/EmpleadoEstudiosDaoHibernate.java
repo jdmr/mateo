@@ -6,10 +6,11 @@ package mx.edu.um.mateo.rh.dao.impl;
 
 import java.util.HashMap;
 import java.util.Map;
-import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.dao.BaseDao;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.rh.dao.EmpleadoEstudiosDao;
 import mx.edu.um.mateo.rh.model.EmpleadoEstudios;
+import mx.edu.um.mateo.rh.model.Seccion;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.*;

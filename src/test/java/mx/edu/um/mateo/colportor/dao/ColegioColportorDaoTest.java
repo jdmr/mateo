@@ -6,10 +6,10 @@ package mx.edu.um.mateo.colportor.dao;
 
 import java.util.List;
 import java.util.Map;
-import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.colportor.model.ColegioColportor;
 import mx.edu.um.mateo.colportor.test.BaseTest;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
+import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import static org.junit.Assert.*;

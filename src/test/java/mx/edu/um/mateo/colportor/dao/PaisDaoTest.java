@@ -4,12 +4,11 @@
  */
 package mx.edu.um.mateo.colportor.dao;
 
-import mx.edu.um.mateo.colportor.dao.PaisDao;
 import java.util.List;
 import java.util.Map;
-import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.colportor.model.Pais;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
+import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.*;

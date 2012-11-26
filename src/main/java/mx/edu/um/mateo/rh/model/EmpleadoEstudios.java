@@ -172,7 +172,7 @@ public class EmpleadoEstudios implements Comparable, Serializable {
 
     @Override
     public String toString() {
-        return "EmpleadoEstudios{" + "id=" + id +", Empleado" + empleado.getId() + ", nombreEstudios=" + nombreEstudios + ", titulado=" + titulado + ", fechaTitulacion=" + fechaTitulacion +", nivelEstudios=" + nivelEstudios + ", status=" + status + ", userCaptura=" + userCaptura + ", fechaCaptura=" + fechaCaptura + ", empresa" + empresa + ", version=" + version + '}';
+        return "EmpleadoEstudios{" + "id=" + id +", Empleado" + ", nombreEstudios=" + nombreEstudios + ", titulado=" + titulado + ", fechaTitulacion=" + fechaTitulacion +", nivelEstudios=" + nivelEstudios + ", status=" + status + ", userCaptura=" + userCaptura + ", fechaCaptura=" + fechaCaptura + ", empresa" + empresa + ", version=" + version + '}';
     }
     
     @Override

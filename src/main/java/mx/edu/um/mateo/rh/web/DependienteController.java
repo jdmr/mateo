@@ -37,8 +37,7 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import mx.edu.um.mateo.Constantes;
-import mx.edu.um.mateo.Constants;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
@@ -188,7 +187,7 @@ public class DependienteController extends BaseController{
     public String nueva(Model modelo) {
         log.debug("Nuevo dependiente");
         Dependiente dependiente = new Dependiente();
-        modelo.addAttribute(Constants.TIPODEPENDIENTE_KEY, TipoDependiente.values());//NO ESTOI SEGURO
+        modelo.addAttribute(Constantes.TIPODEPENDIENTE_KEY, TipoDependiente.values());//NO ESTOI SEGURO
         modelo.addAttribute(Constantes.ADDATTRIBUTE_DEPENDIENTE, dependiente);
         return Constantes.PATH_DEPENDIENTE_NUEVO;
     }
@@ -199,7 +198,7 @@ public class DependienteController extends BaseController{
         log.debug("Editar cuenta de dependiente {}", id);
         Dependiente dependiente = dependienteManager.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_DEPENDIENTE, dependiente);
-        modelo.addAttribute(Constants.TIPODEPENDIENTE_LIST, TipoDependiente.values());
+        modelo.addAttribute(Constantes.TIPODEPENDIENTE_LIST, TipoDependiente.values());
         return Constantes.PATH_DEPENDIENTE_EDITA;
     }
     @Transactional

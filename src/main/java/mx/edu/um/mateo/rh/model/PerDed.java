@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import mx.edu.um.mateo.general.model.Empresa;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -49,7 +50,7 @@ public class PerDed implements Serializable{
     //private CentroCosto contabilidad;
     //private CuentaMayor cuentaMayor;
     //private Concepto concepto;
-    @Column
+    @Column(nullable = false, length = 2)
     private String status;
     /**
      * Lista de atributos que configuran la percepcion/deduccion
@@ -57,7 +58,7 @@ public class PerDed implements Serializable{
     
 //    private Set <Atributo>atributos;
 //    private Set formulas;
-    @Column
+    @Version
     private Integer version;
     
     @ManyToOne(optional=false)

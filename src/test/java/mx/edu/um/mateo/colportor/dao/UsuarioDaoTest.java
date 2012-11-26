@@ -29,7 +29,6 @@
 package mx.edu.um.mateo.colportor.dao;
 
 import java.util.*;
-import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.colportor.model.Union;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
@@ -37,6 +36,7 @@ import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

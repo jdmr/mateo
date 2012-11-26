@@ -10,8 +10,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import mx.edu.um.mateo.Constantes;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
@@ -70,7 +70,7 @@ public class SeccionController extends BaseController {
             params.put("reporte", true);
             params = seccionManager.Lista(params);
             try {
-                generaReporte(tipo, (List<Seccion>) params.get(mx.edu.um.mateo.Constantes.CONTAINSKEY_SECCIONES), response, "secciones", mx.edu.um.mateo.general.utils.Constantes.EMP, empresaId);
+                generaReporte(tipo, (List<Seccion>) params.get(Constantes.CONTAINSKEY_SECCIONES), response, "secciones", Constantes.EMP, empresaId);
                 return null;
             } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -83,7 +83,7 @@ public class SeccionController extends BaseController {
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<Seccion>) params.get(mx.edu.um.mateo.Constantes.CONTAINSKEY_SECCIONES), request, "secciones", mx.edu.um.mateo.general.utils.Constantes.EMP, empresaId);
+                enviaCorreo(correo, (List<Seccion>) params.get(Constantes.CONTAINSKEY_SECCIONES), request, "secciones", Constantes.EMP, empresaId);
                 modelo.addAttribute("message", "lista.enviada.message");
                 modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("seccion.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
@@ -92,11 +92,11 @@ public class SeccionController extends BaseController {
         }
         params = seccionManager.Lista(params);
 
-        modelo.addAttribute(mx.edu.um.mateo.Constantes.CONTAINSKEY_SECCIONES, params.get(mx.edu.um.mateo.Constantes.CONTAINSKEY_SECCIONES));
+        modelo.addAttribute(Constantes.CONTAINSKEY_SECCIONES, params.get(Constantes.CONTAINSKEY_SECCIONES));
 
-        this.pagina(params, modelo, mx.edu.um.mateo.Constantes.CONTAINSKEY_SECCIONES, pagina);
+        this.pagina(params, modelo, Constantes.CONTAINSKEY_SECCIONES, pagina);
 
-        return mx.edu.um.mateo.Constantes.PATH_SECCION_LISTA;
+        return Constantes.PATH_SECCION_LISTA;
     }
 
 
@@ -105,17 +105,17 @@ public class SeccionController extends BaseController {
         log.debug("Mostrando proveedor {}", id);
         Seccion seccion = seccionManager.Obtiene(id);
 
-         modelo.addAttribute(mx.edu.um.mateo.Constantes.ADDATTRIBUTE_SECCION, seccion);
+         modelo.addAttribute(Constantes.ADDATTRIBUTE_SECCION, seccion);
 
-        return mx.edu.um.mateo.Constantes.PATH_SECCION_VER;
+        return Constantes.PATH_SECCION_VER;
     }
 
     @RequestMapping("/nuevo")
     public String nuevo(Model modelo) {
         log.debug("Nuevo seccion");
         Seccion seccion = new Seccion();
-        modelo.addAttribute(mx.edu.um.mateo.Constantes.ADDATTRIBUTE_SECCION, seccion);
-        return mx.edu.um.mateo.Constantes.PATH_SECCION_NUEVO;
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_SECCION, seccion);
+        return Constantes.PATH_SECCION_NUEVO;
     }
 
     @RequestMapping(value = "/graba", method = RequestMethod.POST)
@@ -128,7 +128,7 @@ public class SeccionController extends BaseController {
             for (ObjectError error : bindingResult.getAllErrors()) {
                 log.debug("Error: {}", error);
             }
-            return mx.edu.um.mateo.Constantes.PATH_SECCION_NUEVO;
+            return Constantes.PATH_SECCION_NUEVO;
         }
 
         try {
@@ -144,13 +144,13 @@ public class SeccionController extends BaseController {
              */
             
             errors.rejectValue("nombre", "seccion.errors.creado", e.toString());
-            return mx.edu.um.mateo.Constantes.PATH_SECCION_NUEVO;
+            return Constantes.PATH_SECCION_NUEVO;
         }
 
         redirectAttributes.addFlashAttribute("message", "seccion.creado.message");
         redirectAttributes.addFlashAttribute("messageAttrs", new String[]{seccion.getNombre()});
 
-        return "redirect:" + mx.edu.um.mateo.Constantes.PATH_SECCION;
+        return "redirect:" + Constantes.PATH_SECCION;
     }
 
     @RequestMapping("/edita/{id}")
@@ -161,10 +161,10 @@ public class SeccionController extends BaseController {
         } catch (ObjectRetrievalFailureException ex) {
             log.error("No se pudo obtener al seccion", ex);
             errors.rejectValue("seccion", "registro.noEncontrado", new String[]{"seccion"}, null);
-            return mx.edu.um.mateo.Constantes.PATH_SECCION;
+            return Constantes.PATH_SECCION;
         }
-        modelo.addAttribute(mx.edu.um.mateo.Constantes.ADDATTRIBUTE_SECCION, seccion);
-        return mx.edu.um.mateo.Constantes.PATH_SECCION_EDITA;
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_SECCION, seccion);
+        return Constantes.PATH_SECCION_EDITA;
     }
 
 //    @Transactional(readOnly = true)
