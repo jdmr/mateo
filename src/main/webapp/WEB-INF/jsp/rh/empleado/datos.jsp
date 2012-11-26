@@ -11,6 +11,7 @@
         <jsp:include page="../menu.jsp" >
             <jsp:param name="menu" value="empleado" />
         </jsp:include>
+        
 
         <div id="ver-empleado" class="content scaffold-list" role="main">
             <h1><s:message code="datosEmpleado.label" /></h1>
