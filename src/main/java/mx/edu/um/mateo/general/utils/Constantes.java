@@ -1973,7 +1973,7 @@ public class Constantes {
 	public static final String NIVELESTUDIOS_LIST = "nivelEstudiosList";
 	// NivelEstudios-END
 	// EmpleadoEstudios-START
-	public static final String EMPLEADOESTUDIOS_KEY = "empleadoEstudiosForm";
+	public static final String EMPLEADOESTUDIOS_KEY = "empleadoEstudios";
 	public static final String EMPLEADOESTUDIOS_LIST = "empleadoEstudiosList";
 	// EmpleadoEstudios-END
 	// EmpleadoEventos-START

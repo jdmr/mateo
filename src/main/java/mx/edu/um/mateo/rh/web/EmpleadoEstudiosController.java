@@ -15,6 +15,7 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
+import mx.edu.um.mateo.rh.model.Empleado;
 import mx.edu.um.mateo.rh.model.EmpleadoEstudios;
 import mx.edu.um.mateo.rh.model.NivelEstudios;
 import mx.edu.um.mateo.rh.service.EmpleadoEstudiosManager;
@@ -159,6 +160,7 @@ public class EmpleadoEstudiosController extends BaseController {
 		try {
                     
                         empleadoEstudios.setEmpresa(ambiente.obtieneUsuario().getEmpresa());
+                        empleadoEstudios.setEmpleado((Empleado)request.getSession().getAttribute(Constantes.EMPLEADO_KEY));
 			mgr.graba(empleadoEstudios);
 		} catch (ConstraintViolationException e) {
 			log.error("No se pudo crear la empleadoEstudios", e);
