@@ -29,7 +29,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
@@ -121,12 +120,13 @@ public class EmpleadoController extends BaseController {
     }
 
     @RequestMapping("/ver/{id}")
-    public String ver(@PathVariable Long id, Model modelo) throws ObjectRetrievalFailureException {
+    public String ver(HttpServletRequest request, @PathVariable Long id, Model modelo) throws ObjectRetrievalFailureException {
         log.debug("Mostrando empleado {}", id);
         Empleado empleado = empleadoManager.obtiene(id);
-
-         modelo.addAttribute(Constantes.EMPLEADO_KEY, empleado);
-
+        modelo.addAttribute(Constantes.EMPLEADO_KEY, empleado);
+         
+        request.getSession().setAttribute(Constantes.EMPLEADO_KEY, empleado);
+        
         return Constantes.PATH_EMPLEADO_VER;
     }
 
@@ -200,7 +200,6 @@ public class EmpleadoController extends BaseController {
             bindingResult.addError(new ObjectError("empleado", new String[]{"empleado.no.eliminado.message"}, null, null));
             return Constantes.PATH_EMPLEADO_VER;
         }
-
         return "redirect:" + Constantes.PATH_EMPLEADO;
     }
 }

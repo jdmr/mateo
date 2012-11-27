@@ -2324,6 +2324,7 @@ public class Constantes {
 	public static final String PATH_EMPLEADO_CREA = "/rh/empleado/crea";
 	public static final String PATH_EMPLEADO_ACTUALIZA = "/rh/empleado/actualiza";
 	public static final String PATH_EMPLEADO_ELIMINA = "/rh/empleado/elimina";
+        
 	public static final String PATH_CUENTA_RESULTADO = "/contabilidad/resultado";
 	public static final String PATH_CUENTA_RESULTADO_LISTA = "/contabilidad/resultado/lista";
 	public static final String PATH_CUENTA_RESULTADO_VER = "/contabilidad/resultado/ver";
