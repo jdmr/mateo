@@ -19,7 +19,7 @@
             <MaxFileSize>1MB</MaxFileSize>
         </triggeringPolicy>
     </appender>
-    <logger name="mx.edu.um.mateo" level="INFO"/>
+    <logger name="mx.edu.um.mateo" level="debug"/>
     <logger name="org.springframework.orm.hibernate4" level="ERROR"/>
     <logger name="org.hibernate.engine.transaction" level="ERROR"/>
     <logger name="org.hibernate.SQL" level="INFO"/>

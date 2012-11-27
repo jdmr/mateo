@@ -6,20 +6,25 @@ package mx.edu.um.mateo.rh.model;
 
 import java.util.Objects;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 import mx.edu.um.mateo.general.model.Organizacion;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+
+
 
 /**
  *
  * @author osoto
  */
 @Entity
-@Table(name="tipo_empleado", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"prefijo"})}))
+//@Table(name="tipo_empleado", uniqueConstraints = {
+//    @UniqueConstraint(columnNames = {"prefijo"})}))
 public class TipoEmpleado {
     private static final long serialVersionUID = 6001011125338853446L;
     @Id
@@ -29,8 +34,12 @@ public class TipoEmpleado {
     private Integer version;
     @ManyToOne
     private Organizacion organizacion;
+    @NotBlank
+    @Length(min=3, max=3)
     @Column(nullable=false,unique=true)
     private String prefijo;
+    @NotBlank
+    @Length(max=128)
     @Column(nullable=false)
     private String descripcion;
 
