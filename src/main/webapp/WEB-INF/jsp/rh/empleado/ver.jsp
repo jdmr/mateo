@@ -147,7 +147,7 @@
                 </div>
                 <p class="well">
                     <a href="<c:url value='/rh/empleado/edita/${empleado.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
-                    <a href="<c:url value='/rh/empleado/datos/${empleado.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="datos.button" /></a>
+                    <a href="<c:url value='/rh/empleado/datos/${empleado.id}' />" class="btn btn-primary btn-large"><i class=" icon-info-sign icon-white"></i> <s:message code="datos.button" /></a>
                     <form:hidden path="id" />
                     <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="eliminar"  onclick="return confirm('<s:message code="confirma.elimina.message" />');" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='eliminar.button'/></button>
                 </p>
