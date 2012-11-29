@@ -207,6 +207,7 @@ public class EmpleadoController extends BaseController {
     @RequestMapping("/datos/{id}")
     public String datos(@PathVariable Long id, Model modelo) throws ObjectRetrievalFailureException {
         log.debug("Mostrando empleado {}", id);
+        
         Empleado empleado = empleadoManager.obtiene(id);
 
         modelo.addAttribute(Constantes.EMPLEADO_KEY, empleado);
