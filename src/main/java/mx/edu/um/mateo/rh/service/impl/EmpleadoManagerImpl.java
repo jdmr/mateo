@@ -4,16 +4,18 @@
  */
 package mx.edu.um.mateo.rh.service.impl;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.service.BaseManager;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.rh.dao.EmpleadoDao;
 import mx.edu.um.mateo.rh.model.Empleado;
 import mx.edu.um.mateo.rh.service.EmpleadoManager;
+import mx.edu.um.mateo.rh.service.TipoEmpleadoManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
@@ -31,6 +33,8 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
     
     @Autowired
     private EmpleadoDao dao;
+    @Autowired
+    private TipoEmpleadoManager teMgr;
     
     /**
      * @see mx.edu.um.mateo.mateo.rh.service.EmpleadoManager#lista(java.util.Map) 
@@ -66,8 +70,7 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
         log.debug("saveEmpleado ");
     	if(empleado.getId() == null){
     		Empleado emp = new Empleado();
-    		//emp.setClave(empleado.getClave());
-    		emp.setClave(null);//aqui se envia null, pero realmente debe llamar a tipoEmpleado para traer el prefijo
+                emp.setClave(teMgr.obtiene(empleado.getTipoEmpleado().getId()).getPrefijo());
     		empleado.setClave(this.getNuevaClave(emp));
                 empleado.setStatus(Constantes.STATUS_ACTIVO);
     	}
@@ -97,7 +100,7 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
     		
     		List claves = dao.searchEmpleado(empleado);
                 
-                if(claves.size() == 0){
+                if(claves.isEmpty()){
                     empleado.setClave("980");
                 }
                 
@@ -109,7 +112,8 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
     		while(i.hasNext()){
     			
     			clave = new Integer(((Empleado)i.next()).getClave().substring(3));                        
-    			    			
+    			    		
+                        log.debug("Clave {} - tmp{} = {}", new Object[]{clave, tmp, clave-tmp});
     			if(clave - tmp == 1){
     				tmp = clave;
     			}

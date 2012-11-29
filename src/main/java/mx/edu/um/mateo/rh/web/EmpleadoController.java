@@ -35,7 +35,6 @@ import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.rh.model.Empleado;
-import mx.edu.um.mateo.rh.model.NivelEstudios;
 import mx.edu.um.mateo.rh.service.EmpleadoManager;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
@@ -45,7 +44,11 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -135,7 +138,6 @@ public class EmpleadoController extends BaseController {
         log.debug("Nuevo empleado");
         Empleado empleado = new Empleado();
         modelo.addAttribute( Constantes.EMPLEADO_KEY, empleado);
-        modelo.addAttribute(Constantes.NIVELESTUDIOS_LIST, NivelEstudios.values());
         return Constantes.PATH_EMPLEADO_NUEVO;
     }
 
