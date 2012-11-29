@@ -23,7 +23,6 @@
  */
 package mx.edu.um.mateo.rh.web;
 
-import mx.edu.um.mateo.general.web.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +35,7 @@ import mx.edu.um.mateo.general.model.Cliente;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ReporteException;
+import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.rh.model.TipoEmpleado;
 import mx.edu.um.mateo.rh.service.TipoEmpleadoManager;
 
