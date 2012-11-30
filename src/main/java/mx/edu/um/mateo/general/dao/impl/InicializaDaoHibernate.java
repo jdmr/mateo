@@ -43,6 +43,7 @@ import mx.edu.um.mateo.inventario.dao.AlmacenDao;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.inventario.model.Estatus;
 import mx.edu.um.mateo.rh.model.Empleado;
+import mx.edu.um.mateo.rh.model.TipoEmpleado;
 import mx.edu.um.mateo.rh.service.EmpleadoManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -105,24 +106,31 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
         }
         String[] roles = new String[]{new Rol("ROLE_ADMIN").getAuthority(), (new Rol("ROLE_EMP")).getAuthority()};
         usuarioDao.crea(usuario, almacenId,roles);
+        
+        TipoEmpleado tipoEmpleado = new TipoEmpleado();
+        tipoEmpleado.setOrganizacion(organizacion);
+        tipoEmpleado.setDescripcion("Denominacional");
+        tipoEmpleado.setPrefijo("980");
+        currentSession().save(tipoEmpleado);
          
          //grabando empleado
-          usuario = new Empleado( "test", "apPaterno","apMaterno",username + "@um.edu.mx",username,"1080506", Boolean.TRUE,"M", "Direccion","A",
-            "curp","RFCSTRI", "Cuenta", "imss",
-            10, 1,new BigDecimal (1),"SI", "ife","A",
-            "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
-                "responsabilidad",password);
+        usuario = new Empleado("test", "apPaterno", "apMaterno", username + "@um.edu.mx", username, "1080506", Boolean.TRUE, "M", "Direccion", "A",
+                "curp", "RFCSTRI", "Cuenta", "imss",
+                10, 1, new BigDecimal(1), "SI", "ife", "A",
+                "padre", "madre", "A", "conyuge", Boolean.FALSE, Boolean.TRUE, "iglesia",
+                "responsabilidad", password, tipoEmpleado);
+          
          HashSet rolesEmp = new HashSet();
         rolesEmp.add(rolDao.obtiene("ROLE_ADMIN"));
         rolesEmp.add(rolDao.obtiene("ROLE_EMP"));
-         usuario.setAlmacen(almacen);
+        usuario.setAlmacen(almacen);
         usuario.setEmpresa(almacen.getEmpresa());
         usuario.setRoles(rolesEmp);
         for (Ejercicio ejercicio : ejercicioDao.lista(organizacion.getId())) {
             usuario.setEjercicio(ejercicio);
             break;
         }
-         empleadoManager.saveEmpleado((Empleado)usuario, usuario); 
+        empleadoManager.saveEmpleado((Empleado) usuario, usuario);
         
         Estatus estatus = new Estatus(Constantes.ABIERTA, 100);
         currentSession().save(estatus);

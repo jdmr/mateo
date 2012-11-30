@@ -112,7 +112,7 @@ public class Empleado extends Usuario {
     @Length(max = 100)
     @Column(length = 100)
     private String responsabilidad;    
-    @ManyToOne(optional=false)
+    @ManyToOne
     private TipoEmpleado tipoEmpleado;
 
     public Empleado() {
@@ -125,7 +125,7 @@ public class Empleado extends Usuario {
             String modalidad, String ife, String rango,
             String padre, String madre, String estadoCivil, String conyuge,
             Boolean finadoPadre, Boolean finadoMadre, String iglesia,
-            String responsabilidad, String password) {
+            String responsabilidad, String password, TipoEmpleado tipoEmpleado) {
         super(nombre, apPaterno, apMaterno); 
         this.clave = clave;
         this.correo=correo;
@@ -157,6 +157,7 @@ public class Empleado extends Usuario {
         this.finadoMadre = finadoMadre;
         this.iglesia = iglesia;
         this.responsabilidad = responsabilidad;
+        this.tipoEmpleado = tipoEmpleado;
         
     }
 

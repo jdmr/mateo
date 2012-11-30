@@ -19,6 +19,7 @@ import mx.edu.um.mateo.rh.model.Dependiente;
 import mx.edu.um.mateo.rh.model.Empleado;
 import mx.edu.um.mateo.rh.model.Nacionalidad;
 import mx.edu.um.mateo.rh.model.TipoDependiente;
+import mx.edu.um.mateo.rh.model.TipoEmpleado;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.*;
@@ -46,6 +47,8 @@ public class DependienteDaoTest {
     private static final Logger log = LoggerFactory.getLogger(DependienteDaoTest.class);
     @Autowired
     private SessionFactory sessionFactory;
+    @Autowired
+    private TipoEmpleadoDao tipoEmpleadoDao;
 
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
@@ -71,12 +74,17 @@ public class DependienteDaoTest {
         currentSession().save(usuario);
         Long id = usuario.getId();
         assertNotNull(id);
+        TipoEmpleado tipoEmpleado = new TipoEmpleado();
+        tipoEmpleado.setOrganizacion(organizacion);
+        tipoEmpleado.setDescripcion("Denominacional");
+        tipoEmpleado.setPrefijo("980");
+        currentSession().save(tipoEmpleado);
 
         Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
             "curp","RFCSTRI", "Cuenta", "imss",
             10, 1,new BigDecimal (1),"SI", "ife","A",
             "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
-                "responsabilidad","password");
+                "responsabilidad","password", tipoEmpleado);
         empleado.setAlmacen(almacen);
         empleado.setEmpresa(empresa);
         empleado.setRoles(roles);
@@ -120,11 +128,18 @@ public class DependienteDaoTest {
         Long id = usuario.getId();
         assertNotNull(id);
 
+        TipoEmpleado tipoEmpleado = new TipoEmpleado();
+        tipoEmpleado.setOrganizacion(organizacion);
+        tipoEmpleado.setDescripcion("Denominacional");
+        tipoEmpleado.setPrefijo("980");
+        currentSession().save(tipoEmpleado);
+
         Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
             "curp","RFCSTRI", "Cuenta", "imss",
             10, 1,new BigDecimal (1),"SI", "ife","A",
             "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
-                "responsabilidad","password");
+                "responsabilidad","password", tipoEmpleado);
+        
         empleado.setAlmacen(almacen);
         empleado.setEmpresa(empresa);
         empleado.setRoles(roles);
@@ -162,11 +177,18 @@ public class DependienteDaoTest {
         Long id = usuario.getId();
         assertNotNull(id);
 
+        TipoEmpleado tipoEmpleado = new TipoEmpleado();
+        tipoEmpleado.setOrganizacion(organizacion);
+        tipoEmpleado.setDescripcion("Denominacional");
+        tipoEmpleado.setPrefijo("980");
+        currentSession().save(tipoEmpleado);
+
         Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
             "curp","RFCSTRI", "Cuenta", "imss",
             10, 1,new BigDecimal (1),"SI", "ife","A",
             "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
-                "responsabilidad","password");
+                "responsabilidad","password", tipoEmpleado);
+        
         empleado.setAlmacen(almacen);
         empleado.setEmpresa(empresa);
         empleado.setRoles(roles);
@@ -203,11 +225,18 @@ public class DependienteDaoTest {
         Long id = usuario.getId();
         assertNotNull(id);
 
-       Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
+        TipoEmpleado tipoEmpleado = new TipoEmpleado();
+        tipoEmpleado.setOrganizacion(organizacion);
+        tipoEmpleado.setDescripcion("Denominacional");
+        tipoEmpleado.setPrefijo("980");
+        currentSession().save(tipoEmpleado);
+
+        Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
             "curp","RFCSTRI", "Cuenta", "imss",
             10, 1,new BigDecimal (1),"SI", "ife","A",
             "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
-                "responsabilidad","password");
+                "responsabilidad","password", tipoEmpleado);
+        
         empleado.setAlmacen(almacen);
         empleado.setEmpresa(empresa);
         empleado.setRoles(roles);
@@ -249,11 +278,18 @@ public class DependienteDaoTest {
         Long id = usuario.getId();
         assertNotNull(id);
 
-       Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
+        TipoEmpleado tipoEmpleado = new TipoEmpleado();
+        tipoEmpleado.setOrganizacion(organizacion);
+        tipoEmpleado.setDescripcion("Denominacional");
+        tipoEmpleado.setPrefijo("980");
+        currentSession().save(tipoEmpleado);
+
+        Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
             "curp","RFCSTRI", "Cuenta", "imss",
             10, 1,new BigDecimal (1),"SI", "ife","A",
             "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
-                "responsabilidad","password");
+                "responsabilidad","password", tipoEmpleado);
+        
         empleado.setAlmacen(almacen);
         empleado.setEmpresa(empresa);
         empleado.setRoles(roles);

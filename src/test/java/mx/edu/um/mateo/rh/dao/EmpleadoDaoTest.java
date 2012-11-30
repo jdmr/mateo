@@ -29,6 +29,7 @@ import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.rh.model.Empleado;
+import mx.edu.um.mateo.rh.model.TipoEmpleado;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import static org.junit.Assert.*;
@@ -84,19 +85,25 @@ public class EmpleadoDaoTest {
         currentSession().save(usuario);
         Long id = usuario.getId();
         assertNotNull(id); 
-
+        TipoEmpleado tipoEmpleado = new TipoEmpleado();
+        tipoEmpleado.setOrganizacion(organizacion);
+        tipoEmpleado.setDescripcion("Denominacional");
+        tipoEmpleado.setPrefijo("980");
+        currentSession().save(tipoEmpleado);
         
         for (int i = 0; i < 20; i++) {
+
             Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo"+i+"@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
             "curp","RFCSTRI", "Cuenta", "imss",
             10, 1,new BigDecimal (1),"SI", "ife","A",
             "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
-                "responsabilidad","password");
-        empleado.setAlmacen(almacen);
-        empleado.setEmpresa(empresa);
-        empleado.setRoles(roles);
-        instance.graba(empleado);
+                "responsabilidad","password", tipoEmpleado);
+            empleado.setAlmacen(almacen);
+            empleado.setEmpresa(empresa);
+            empleado.setRoles(roles);
+            instance.graba(empleado);
         }
+        
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", empresa.getId());
         Map<String, Object> result = instance.lista(params);
@@ -130,11 +137,18 @@ public class EmpleadoDaoTest {
         Long id = usuario.getId();
         assertNotNull(id);
 
+        TipoEmpleado tipoEmpleado = new TipoEmpleado();
+        tipoEmpleado.setOrganizacion(organizacion);
+        tipoEmpleado.setDescripcion("Denominacional");
+        tipoEmpleado.setPrefijo("980");
+        currentSession().save(tipoEmpleado);
+
         Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
             "curp","RFCSTRI", "Cuenta", "imss",
             10, 1,new BigDecimal (1),"SI", "ife","A",
             "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
-                "responsabilidad","password");
+                "responsabilidad","password", tipoEmpleado);
+        
         empleado.setAlmacen(almacen);
         empleado.setEmpresa(empresa);
         empleado.setRoles(roles);
@@ -167,11 +181,18 @@ public class EmpleadoDaoTest {
         Long id = usuario.getId();
         assertNotNull(id);
 
+        TipoEmpleado tipoEmpleado = new TipoEmpleado();
+        tipoEmpleado.setOrganizacion(organizacion);
+        tipoEmpleado.setDescripcion("Denominacional");
+        tipoEmpleado.setPrefijo("980");
+        currentSession().save(tipoEmpleado);
+
         Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
             "curp","RFCSTRI", "Cuenta", "imss",
             10, 1,new BigDecimal (1),"SI", "ife","A",
             "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
-                "responsabilidad","password");
+                "responsabilidad","password", tipoEmpleado);
+        
         empleado.setAlmacen(almacen);
         empleado.setEmpresa(empresa);
         empleado.setRoles(roles);
@@ -205,11 +226,18 @@ public class EmpleadoDaoTest {
         Long id = usuario.getId();
         assertNotNull(id);
 
+        TipoEmpleado tipoEmpleado = new TipoEmpleado();
+        tipoEmpleado.setOrganizacion(organizacion);
+        tipoEmpleado.setDescripcion("Denominacional");
+        tipoEmpleado.setPrefijo("980");
+        currentSession().save(tipoEmpleado);
+
         Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
             "curp","RFCSTRI", "Cuenta", "imss",
             10, 1,new BigDecimal (1),"SI", "ife","A",
             "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
-                "responsabilidad","password");
+                "responsabilidad","password", tipoEmpleado);
+        
         empleado.setAlmacen(almacen);
         empleado.setEmpresa(empresa);
         empleado.setRoles(roles);
