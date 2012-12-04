@@ -73,12 +73,11 @@ public class EmpleadoEstudiosDaoTest {
         empleado.setEmpresa(empresa);
         empleado.setRoles(roles);
         currentSession().save(empleado);
-        for(int i=0; i<5; i++){
+        for(int i=0; i<2; i++){
             
             
             EmpleadoEstudios empleadoEstudios=new EmpleadoEstudios();
             
-            empleadoEstudios.setEmpresa(empresa);
             empleadoEstudios.setEmpleado(empleado);
             empleadoEstudios.setNombreEstudios("EmpleadoEstudios"+i);
             empleadoEstudios.setNivelEstudios(NivelEstudios.MAESTRIA);
@@ -87,12 +86,12 @@ public class EmpleadoEstudiosDaoTest {
             empleadoEstudios.setStatus("A");
             empleadoEstudios.setUserCaptura(null);
             empleadoEstudios.setFechaCaptura(new Date());
-            empleadoEstudios.setEmpresa(empresa);
             instance.graba(empleadoEstudios);
            assertNotNull(empleadoEstudios.getId());
         }
          Map<String, Object> params= new HashMap<>();
          params.put("empresa",empresa.getId());
+         params.put("empleado",empleado);
          Map<String, Object> result=instance.lista(params);
         
         //assertNotNull((List)params.get(Constantes.CATEGORIA_LIST));
@@ -124,7 +123,6 @@ public class EmpleadoEstudiosDaoTest {
         currentSession().save(empleado);
         EmpleadoEstudios empleadoEstudios= new EmpleadoEstudios();
         empleadoEstudios.setEmpleado(empleado);
-        empleadoEstudios.setEmpresa(empresa);
         empleadoEstudios.setNombreEstudios("EmpleadoEstudios");
         empleadoEstudios.setNivelEstudios(NivelEstudios.SECUNDARIA);
         empleadoEstudios.setTitulado(false);
@@ -162,7 +160,6 @@ public class EmpleadoEstudiosDaoTest {
         currentSession().save(empleado);
         EmpleadoEstudios empleadoEstudios= new EmpleadoEstudios();
         empleadoEstudios.setEmpleado(empleado);
-        empleadoEstudios.setEmpresa(empresa);
         empleadoEstudios.setNombreEstudios("EmpleadoEstudios");
         empleadoEstudios.setNivelEstudios(NivelEstudios.PREPARATORIA);
         empleadoEstudios.setTitulado(false);
@@ -202,7 +199,6 @@ public class EmpleadoEstudiosDaoTest {
         currentSession().save(empleado);
         EmpleadoEstudios empleadoEstudios= new EmpleadoEstudios();
         empleadoEstudios.setEmpleado(empleado);
-        empleadoEstudios.setEmpresa(empresa);
         empleadoEstudios.setNombreEstudios("EmpleadoEstudios");
         empleadoEstudios.setNivelEstudios(NivelEstudios.LICENCIATURA);
         empleadoEstudios.setTitulado(false);

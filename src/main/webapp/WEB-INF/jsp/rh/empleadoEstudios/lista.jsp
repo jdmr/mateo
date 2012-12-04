@@ -13,7 +13,7 @@
 
         <h1><s:message code="empleadoEstudios.lista.label" /></h1>
         <hr/>
-
+        
         <form name="filtraLista" class="form-search" method="post" action="<c:url value='/rh/empleadoEstudios' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
@@ -68,7 +68,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${empleadoestudiosList}" var="empleadoEstudios" varStatus="status">
+                    <c:forEach items="${empleadoEstudiosList}" var="empleadoEstudios" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/rh/empleadoEstudios/ver/${empleadoEstudios.id}' />">${empleadoEstudios.nombreEstudios}</a></td>
                             <td>${empleadoEstudios.nivelEstudios}</td>

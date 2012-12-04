@@ -33,7 +33,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
- * @author AMDA
+ * @author zorch
  */
 
 @Controller
@@ -59,7 +59,10 @@ public class EmpleadoEstudiosController extends BaseController {
 
 		Map<String, Object> params = new HashMap<>();
 		EmpleadoEstudios empleadoEstudios = null;
-
+                
+                Empleado empleadoId = (Empleado) request.getSession().getAttribute(Constantes.EMPLEADO_KEY);
+		params.put("empleado", empleadoId);
+                
 		Long empresaId = (Long) request.getSession().getAttribute(
 				"empresaId");
 		params.put("empresa", empresaId);
@@ -159,7 +162,6 @@ public class EmpleadoEstudiosController extends BaseController {
 
 		try {
                     
-                        empleadoEstudios.setEmpresa(ambiente.obtieneUsuario().getEmpresa());
                         empleadoEstudios.setEmpleado((Empleado)request.getSession().getAttribute(Constantes.EMPLEADO_KEY));
 			mgr.graba(empleadoEstudios);
 		} catch (ConstraintViolationException e) {
@@ -174,7 +176,7 @@ public class EmpleadoEstudiosController extends BaseController {
 				Constantes.CONTAINSKEY_MESSAGE_ATTRS,
 				new String[] { empleadoEstudios.getNombreEstudios() });
 
-		return "redirect:" + "/rh/empleadoEstudios/ver" + "/" + empleadoEstudios.getId();
+		return "redirect:" + "/rh/empleadoEstudios/";
 	}
 
 	@RequestMapping("/edita/{id}")
@@ -194,11 +196,12 @@ public class EmpleadoEstudiosController extends BaseController {
 			RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			log.error("Hubo algun error en la forma, regresando");
-                        errors.rejectValue("nombre", "campo.duplicado.message",
-					new String[] { "nombre" }, null);
+                        errors.rejectValue("nombreEstudios", "campo.duplicado.message",
+					new String[] { "nombreEstudios" }, null);
 			return "/rh/empleadoEstudios/edita";
 		}
 		try {
+                    empleadoEstudios.setEmpleado((Empleado)request.getSession().getAttribute(Constantes.EMPLEADO_KEY));
 			mgr.graba(empleadoEstudios);
 		} catch (ConstraintViolationException e) {
 			log.error("No se pudo crear empleadoEstudios", e);
@@ -211,7 +214,7 @@ public class EmpleadoEstudiosController extends BaseController {
 				Constantes.CONTAINSKEY_MESSAGE_ATTRS,
 				new String[] { empleadoEstudios.getNombreEstudios() });
 
-		return "redirect:" + "/rh/empleadoEstudios/ver" + "/" + empleadoEstudios.getId();
+		return "redirect:" + "/rh/empleadoEstudios/";
 	}
 
 	@Transactional

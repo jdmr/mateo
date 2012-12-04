@@ -29,6 +29,7 @@
                 </form:errors>
                 <form:hidden path="id" />
                 <form:hidden path="version" />
+                <form:hidden path="status" />
 
                 <fieldset>
                     <s:bind path="empleadoEstudios.nombreEstudios">
@@ -37,18 +38,21 @@
                                 <s:message code="empleadoEstudios.nombreEstudios.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="nombreEstudios" maxlength="128" required="true" />
+                            <form:input path="nombreEstudios" maxlength="75" required="true" />
                             <form:errors path="nombreEstudios" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                     <s:bind path="empleadoEstudios.nivelEstudios">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="nivelEstudios">
-                                <s:message code="empleadoEstudios.nivelEstudios.label" />
+                                <label for="nivelEstudios">
+                                <s:message code="nivelEstudios.label" />
                                 <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="nivelEstudios" maxlength="128" required="true" />
-                            <form:errors path="nivelEstudios" cssClass="alert alert-error" />
+                                </label>
+                                <form:select id="nivelEstudios" path="nivelEstudios" required="true" cssClass="span3" >
+                                    <form:options items= "${nivelEstudios}" />
+                                </form:select>
+                                <form:errors path="nivelEstudios" cssClass="alert alert-error" />
+                                     
                         </div>
                     </s:bind>
                     <s:bind path="empleadoEstudios.titulado">
@@ -57,7 +61,7 @@
                                 <s:message code="empleadoEstudios.titulado.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="titulado" maxlength="100" required="true" />
+                            <form:checkbox path="titulado" cssClass="span3" />
                             <form:errors path="titulado" cssClass="alert alert-error" />
                         </div>
                     </s:bind>

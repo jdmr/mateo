@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.*;
-import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
@@ -26,7 +25,7 @@ public class EmpleadoEstudios implements Comparable, Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank
-    @Column(nullable = false, length = 75, unique = true)
+    @Column(nullable = false, length = 75)
     private String nombreEstudios;    
     @Enumerated(EnumType.STRING)
     @Column(nullable = false,name = "nivel_estudios")
@@ -46,10 +45,26 @@ public class EmpleadoEstudios implements Comparable, Serializable {
     private Date fechaCaptura;
     @Version
     private Integer version;
-    @ManyToOne(optional=false)
-    private Empresa empresa;
+    
     @ManyToOne(optional=false)
     private Empleado empleado;
+    
+    public EmpleadoEstudios(){
+    }
+
+    public EmpleadoEstudios(Long id, String nombreEstudios, NivelEstudios nivelEstudios, Boolean titulado, Date fechaTitulacion, String status, Usuario userCaptura, Date fechaCaptura, Integer version, Empleado empleado) {
+        this.id = id;
+        this.nombreEstudios = nombreEstudios;
+        this.nivelEstudios = nivelEstudios;
+        this.titulado = titulado;
+        this.fechaTitulacion = fechaTitulacion;
+        this.status = status;
+        this.userCaptura = userCaptura;
+        this.fechaCaptura = fechaCaptura;
+        this.version = version;
+        this.empleado = empleado;
+        
+    }
 
     public Empleado getEmpleado() {
         return empleado;
@@ -132,13 +147,7 @@ public class EmpleadoEstudios implements Comparable, Serializable {
         this.version = version;
     }
 
-    public Empresa getEmpresa() {
-        return empresa;
-    }
-
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
-    }
+   
 
     @Override
     public boolean equals(Object obj) {
@@ -172,7 +181,7 @@ public class EmpleadoEstudios implements Comparable, Serializable {
 
     @Override
     public String toString() {
-        return "EmpleadoEstudios{" + "id=" + id +", Empleado" + ", nombreEstudios=" + nombreEstudios + ", titulado=" + titulado + ", fechaTitulacion=" + fechaTitulacion +", nivelEstudios=" + nivelEstudios + ", status=" + status + ", userCaptura=" + userCaptura + ", fechaCaptura=" + fechaCaptura + ", empresa" + empresa + ", version=" + version + '}';
+        return "EmpleadoEstudios{" + "id=" + id +", Empleado" + ", nombreEstudios=" + nombreEstudios + ", titulado=" + titulado + ", fechaTitulacion=" + fechaTitulacion +", nivelEstudios=" + nivelEstudios + ", status=" + status + ", userCaptura=" + userCaptura + ", fechaCaptura=" + fechaCaptura  + ", version=" + version + '}';
     }
     
     @Override

@@ -9,9 +9,11 @@ import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.rh.dao.EmpleadoEstudiosDao;
+import mx.edu.um.mateo.rh.model.Empleado;
 import mx.edu.um.mateo.rh.model.EmpleadoEstudios;
 import mx.edu.um.mateo.rh.model.Seccion;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.*;
 import org.springframework.orm.ObjectRetrievalFailureException;
@@ -52,10 +54,17 @@ public class EmpleadoEstudiosDaoHibernate extends BaseDao implements EmpleadoEst
         Criteria countCriteria = currentSession().createCriteria(
                 EmpleadoEstudios.class);
         
-        if (params.containsKey("empresa")) {
-            criteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
-            countCriteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
+        
+        if (params.containsKey("empleado")) {
+            countCriteria.createCriteria("empleado").add(Restrictions.idEq(((Empleado)params.get("empleado")).getId()));
         }
+        
+        Query sql= getSession().createQuery("select new mx.edu.um.mateo.rh.model.EmpleadoEstudios(ee.id,"
+                + "ee.nombreEstudios, ee.nivelEstudios, ee.titulado, ee.fechaTitulacion, "
+                + "ee.status, ee.userCaptura, ee.fechaCaptura, ee.version, ee.empleado) "
+                + "from EmpleadoEstudios ee inner join ee.empleado e "
+                + "where e.id= :empleado");
+        sql.setLong("empleado",((Empleado) params.get("empleado")).getId());
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
@@ -68,8 +77,8 @@ public class EmpleadoEstudiosDaoHibernate extends BaseDao implements EmpleadoEst
                     MatchMode.ANYWHERE));
              propiedades.add(Restrictions.ilike("nivelEstudios", filtro,
                     MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("userCaptura", filtro,
-                    MatchMode.ANYWHERE));
+//            propiedades.add(Restrictions.ilike("userCaptura", filtro,
+//                    MatchMode.ANYWHERE));
             propiedades.add(Restrictions.ilike("fechaCaptura", filtro,
                     MatchMode.ANYWHERE));
             criteria.add(propiedades);
@@ -89,7 +98,7 @@ public class EmpleadoEstudiosDaoHibernate extends BaseDao implements EmpleadoEst
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put(Constantes.EMPLEADOESTUDIOS_LIST, criteria.list());
+        params.put(Constantes.EMPLEADOESTUDIOS_LIST, sql.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
