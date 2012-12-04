@@ -58,6 +58,7 @@ public class EmpleadoController extends BaseController {
 
     @Autowired
     private EmpleadoManager empleadoManager;
+    
 
     public EmpleadoController() {
         log.info("Se ha creado una nueva instancia de EmpleadoController");
@@ -123,6 +124,7 @@ public class EmpleadoController extends BaseController {
     public String ver(HttpServletRequest request, @PathVariable Long id, Model modelo) throws ObjectRetrievalFailureException {
         log.debug("Mostrando empleado {}", id);
         Empleado empleado = empleadoManager.obtiene(id);
+
         modelo.addAttribute(Constantes.EMPLEADO_KEY, empleado);
          
         request.getSession().setAttribute(Constantes.EMPLEADO_KEY, empleado);
@@ -134,7 +136,7 @@ public class EmpleadoController extends BaseController {
     public String nuevo(Model modelo) {
         log.debug("Nuevo empleado");
         Empleado empleado = new Empleado();
-        modelo.addAttribute( Constantes.EMPLEADO_KEY, empleado);
+        modelo.addAttribute(Constantes.EMPLEADO_KEY, empleado);
         modelo.addAttribute(Constantes.NIVELESTUDIOS_LIST, NivelEstudios.values());
         return Constantes.PATH_EMPLEADO_NUEVO;
     }
@@ -194,12 +196,22 @@ public class EmpleadoController extends BaseController {
 
             redirectAttributes.addFlashAttribute("message", "empleado.eliminado.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
-        }
-         catch (Exception e) {
+        } catch (Exception e) {
             log.error("No se pudo eliminar el empleado " + id, e);
             bindingResult.addError(new ObjectError("empleado", new String[]{"empleado.no.eliminado.message"}, null, null));
             return Constantes.PATH_EMPLEADO_VER;
         }
         return "redirect:" + Constantes.PATH_EMPLEADO;
+    }
+
+    @RequestMapping("/datos/{id}")
+    public String datos(@PathVariable Long id, Model modelo) throws ObjectRetrievalFailureException {
+        log.debug("Mostrando empleado {}", id);
+        
+        Empleado empleado = empleadoManager.obtiene(id);
+
+        modelo.addAttribute(Constantes.EMPLEADO_KEY, empleado);
+
+        return "/rh/empleado/datos";
     }
 }
