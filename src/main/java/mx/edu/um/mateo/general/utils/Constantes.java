@@ -312,7 +312,7 @@ public class Constantes {
 	/**
 	 * The request scope attribute that holds the comunicacion form.
 	 */
-	public static final String EMPLEADOPUESTO_KEY = "empleadoPuestoForm";
+	public static final String EMPLEADOPUESTO_KEY = "empleadoPuesto";
 	/**
 	 * The request scope attribute that holds the comunicacion list
 	 */
@@ -2463,4 +2463,10 @@ public class Constantes {
     public static final String PATH_PERDED_NUEVO = "/rh/perded/nuevo";
     public static final String PATH_PERDED_EDITA = "/rh/perded/edita";
     public static final String PATH_PERDED_GRABA = "/rh/perded/graba";
+    
+    public static final String PATH_EMPLEADOPUESTO = "/rh/empleadoPuesto";
+    public static final String PATH_EMPLEADOPUESTO_LISTA = "/rh/empleadoPuesto/lista";
+    public static final String PATH_EMPLEADOPUESTO_VER = "/rh/empleadoPuesto/ver";
+    public static final String PATH_EMPLEADOPUESTO_NUEVO = "/rh/empleadoPuesto/nuevo";
+    public static final String PATH_EMPLEADOPUESTO_EDITA = "/rh/empleadoPuesto/edita";
 }
