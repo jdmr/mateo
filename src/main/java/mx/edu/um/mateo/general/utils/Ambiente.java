@@ -25,10 +25,13 @@ package mx.edu.um.mateo.general.utils;
 
 import java.util.Iterator;
 import javax.servlet.http.HttpSession;
-
+import mx.edu.um.mateo.colportor.dao.AsociacionDao;
+import mx.edu.um.mateo.colportor.dao.TemporadaColportorDao;
+import mx.edu.um.mateo.colportor.dao.UnionDao;
+import mx.edu.um.mateo.colportor.dao.UsuarioDao;
+import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.rh.dao.EmpleadoDao;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,58 +40,81 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 /**
- * 
+ *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 @Component
 public class Ambiente {
+    
+   
 
-	private static final Logger log = LoggerFactory.getLogger(Ambiente.class);
+    private static final Logger log = LoggerFactory.getLogger(Ambiente.class);
         
-        @Autowired
-        private EmpleadoDao dao;
+    @Autowired
+    private EmpleadoDao dao;
+    @Autowired
+    private UsuarioDao usuarioDao;
+    @Autowired
+    private TemporadaColportorDao tempColportorDao;
+    @Autowired
+    private AsociacionDao asociacionDao;
+    @Autowired
+    private UnionDao unionDao;
+    
 
-	public void actualizaSesion(HttpSession session) {
-		Usuario usuario = obtieneUsuario();
-		this.actualizaSesion(session, usuario);
-	}
+    public void actualizaSesion(HttpSession session) {
+        Usuario usuario = obtieneUsuario();
+        this.actualizaSesion(session, usuario);
+    }
 
-	public void actualizaSesion(HttpSession session, Usuario usuario) {
-		log.debug("Actualizando sesion");
-		if (usuario != null) {
-			if (usuario.getEjercicio() != null) {
-				session.setAttribute("ejercicioLabel", usuario.getEjercicio()
-						.getId().getIdEjercicio());
-			}
-			session.setAttribute("organizacionLabel", usuario.getEmpresa()
-					.getOrganizacion().getNombre());
-			session.setAttribute("empresaLabel", usuario.getEmpresa()
-					.getNombre());
-			session.setAttribute("almacenLabel", usuario.getAlmacen()
-					.getNombre());
-			session.setAttribute("organizacionId", usuario.getEmpresa()
-					.getOrganizacion().getId());
-			session.setAttribute("empresaId", usuario.getEmpresa().getId());
-			session.setAttribute("almacenId", usuario.getAlmacen().getId());
-			session.setAttribute("ejercicioId", usuario.getEjercicio().getId()
-					.getIdEjercicio());
-		}
-                
-                
-                if(esEmpleado()){
+    public void actualizaSesion(HttpSession session, Usuario usuario) {
+        log.debug("Actualizando sesion");
+        if (usuario != null) {
+            if (usuario.getEjercicio() != null) {
+                session.setAttribute("ejercicioLabel", usuario.getEjercicio()
+                        .getId().getIdEjercicio());
+            }
+            session.setAttribute("organizacionLabel", usuario.getEmpresa()
+                    .getOrganizacion().getNombre());
+            session.setAttribute("empresaLabel", usuario.getEmpresa()
+                    .getNombre());
+            session.setAttribute("almacenLabel", usuario.getAlmacen()
+                    .getNombre());
+            session.setAttribute("organizacionId", usuario.getEmpresa()
+                    .getOrganizacion().getId());
+            session.setAttribute("empresaId", usuario.getEmpresa().getId());
+            session.setAttribute("almacenId", usuario.getAlmacen().getId());
+            session.setAttribute("ejercicioId", usuario.getEjercicio().getId()
+                    .getIdEjercicio());
+            if(esEmpleado()){
                     log.debug("ES UN EMPLEADO EMPLEADO");
                     session.setAttribute(Constantes.EMPLEADO_KEY, dao.obtiene(usuario.getId()));
                 }
-                
-	}
+            
+            if (esAsociado() || esColportor()) {
+                session.setAttribute(Constantes.SESSION_UNION, unionDao.obtiene(usuario.getAsociacion().getUnion().getId()));
+                session.setAttribute(Constantes.SESSION_ASOCIACION,asociacionDao.obtiene(usuario.getAsociacion().getId()));
+                if (esColportor()) {
+                    Colportor colportor = (Colportor) usuario;
+                    session.setAttribute(Constantes.SESSION_TEMPORADA_COLPORTOR, tempColportorDao.obtiene(colportor));
+                } else {
+                    if (session.getAttribute(Constantes.SESSION_TEMPORADA_COLPORTOR) != null) {
+                        session.removeAttribute(Constantes.SESSION_TEMPORADA_COLPORTOR);
+                    }
+                }
+            }
 
-	public Usuario obtieneUsuario() {
-		Usuario usuario = (Usuario) SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal();
-		return usuario;
-	}
-        
-        public Boolean esEmpleado(){
+        }
+    }
+
+    public Usuario obtieneUsuario() {
+        Usuario usuario = (Usuario) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        return usuario;
+    }
+
+    
+    public Boolean esEmpleado(){
             log.debug("EMPLEADO EN SECION");
             boolean esEmpleado = false;
             GrantedAuthority ga = null;
@@ -104,9 +130,25 @@ public class Ambiente {
             }
             return esEmpleado;
         }
-        
-        
-        public boolean esColportor() {
+    
+    public boolean esAsociado() {
+        boolean esAsociado = false;
+        GrantedAuthority ga = null;
+        Usuario usuario = obtieneUsuario();
+        Iterator it = usuario.getAuthorities().iterator();
+        while (it.hasNext()) {
+            ga = (GrantedAuthority) it.next();
+
+            if ((ga).getAuthority().equals("ROLE_ASO")) {
+                esAsociado = true;
+                break;
+            }
+
+        }
+        return esAsociado;
+    }
+
+    public boolean esColportor() {
         log.debug("COLPORTOR EN SECION");
         boolean esColportor = false;
         GrantedAuthority ga = null;
@@ -114,7 +156,6 @@ public class Ambiente {
         Iterator it = usuario.getAuthorities().iterator();
         while (it.hasNext()) {
             ga = (GrantedAuthority) it.next();
-
             if ((ga).getAuthority().equals("ROLE_COL")) {
                 esColportor = true;
                 break;
@@ -125,3 +166,9 @@ public class Ambiente {
         return esColportor;
     }
 }
+
+                
+                
+                
+
+	
