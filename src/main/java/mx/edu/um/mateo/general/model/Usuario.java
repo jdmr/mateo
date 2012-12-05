@@ -24,8 +24,29 @@
 package mx.edu.um.mateo.general.model;
 
 import java.io.Serializable;
-import java.util.*;
-import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Version;
+import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.inventario.model.Almacen;
@@ -96,6 +117,16 @@ public class Usuario implements Serializable, UserDetails {
     private Ejercicio ejercicio;
     @ManyToMany
     private Set<CentroCosto> centrosDeCosto;
+    @ManyToOne(optional = true)
+    private Asociacion asociacion;
+
+    public Asociacion getAsociacion() {
+        return asociacion;
+    }
+
+    public void setAsociacion(Asociacion asociacion) {
+        this.asociacion = asociacion;
+    }
 
     public Usuario() {
     }

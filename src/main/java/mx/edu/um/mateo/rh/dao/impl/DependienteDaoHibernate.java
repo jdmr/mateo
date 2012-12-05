@@ -33,6 +33,7 @@ public class DependienteDaoHibernate extends BaseDao implements DependienteDao{
      */
    @Override
    public Map<String, Object> lista(Map<String, Object> params) {
+
         log.debug("Buscando lista de dependiente con params {}", params);
         if (params == null) {
             params = new HashMap<>();
@@ -65,6 +66,7 @@ public class DependienteDaoHibernate extends BaseDao implements DependienteDao{
             countCriteria.add(propiedades);
         }
 
+
         if (params.containsKey(Constantes.CONTAINSKEY_ORDER)) {
             String campo = (String) params.get(Constantes.CONTAINSKEY_ORDER);
             if (params.get(Constantes.CONTAINSKEY_SORT).equals(Constantes.CONTAINSKEY_DESC)) {
@@ -74,6 +76,7 @@ public class DependienteDaoHibernate extends BaseDao implements DependienteDao{
             }
         }
 
+
         if (!params.containsKey(Constantes.CONTAINSKEY_REPORTE)) {
             criteria.setFirstResult((Integer) params.get(Constantes.CONTAINSKEY_OFFSET));
             criteria.setMaxResults((Integer) params.get(Constantes.CONTAINSKEY_MAX));
@@ -82,6 +85,7 @@ public class DependienteDaoHibernate extends BaseDao implements DependienteDao{
 
         countCriteria.setProjection(Projections.rowCount());
         params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));
+
 
         return params;
     }

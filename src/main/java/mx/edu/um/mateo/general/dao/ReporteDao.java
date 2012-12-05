@@ -24,6 +24,8 @@
 package mx.edu.um.mateo.general.dao;
 
 import java.util.List;
+import mx.edu.um.mateo.colportor.model.Asociacion;
+import mx.edu.um.mateo.colportor.model.Union;
 
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
@@ -38,6 +40,14 @@ import net.sf.jasperreports.engine.JasperReport;
  */
 public interface ReporteDao {
 
+        public JasperReport obtieneReportePorAsociacion(String nombre, Long asociacionId);
+        
+        public JasperReport obtieneReportePorUnion(String nombre, Long unionId);
+            
+        public Reporte buscaReportePorAsociacion(String nombre, Long asociacionId);
+        
+        public Reporte buscaReportePorUnion(String nombre, Long unionId);
+                
 	public JasperReport obtieneReporteAdministrativo(String nombre);
 
 	public JasperReport obtieneReportePorOrganizacion(String nombre,
@@ -48,8 +58,15 @@ public interface ReporteDao {
 	public JasperReport obtieneReportePorAlmacen(String nombre, Long almacenId);
 
 	public void inicializa();
+        
+        
+       
 
 	public List<Reporte> inicializaReportes(List<String> nombres);
+         
+        public void inicializaAsociacion(Asociacion asociacion);
+        
+        public void inicializaUnion(Union union);
 
 	public void inicializaOrganizacion(Organizacion organizacion);
 

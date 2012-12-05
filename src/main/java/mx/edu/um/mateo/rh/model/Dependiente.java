@@ -134,7 +134,7 @@ public class Dependiente implements Serializable {
     @Override
     public String toString() {
         return "Dependiente{" + "id=" + id + ", tipoDependiente=" + tipoDependiente + ", nombre=" + nombre +
-                ", fechaNac=" + fechaNac +", status=" + status + ", empleadp="+empleado.getId()+'}';
+                ", fechaNac=" + fechaNac +", status=" + status + ", empleado="+empleado.getId()+'}';
     }
 
    

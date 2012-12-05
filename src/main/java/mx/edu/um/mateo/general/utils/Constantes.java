@@ -59,6 +59,15 @@ public class Constantes {
 	public static final String DATE_USER_FORMAT = "(dd-mm-yyyy)";
 	public static final String NOW = "now";
 	// Constantes de la session
+        
+          /**
+        * Variable en session donde se guarda la Union Actual de Usuario
+        */
+        public static final String SESSION_UNION = "union";
+        /**
+        * Variable en session donde se guarda la Asociacion Actual de Usuario
+        */
+        public static final String SESSION_ASOCIACION = "asociacion";
 	public static final String SESSION_EJERCICIO = "id_ejercicio";
 	public static final String SESSION_CCOSTO = "id_ccosto";
 	public static final String SESSION_LIBRO = "id_libro";
@@ -85,7 +94,18 @@ public class Constantes {
 	public static final String CONTABILIDAD_COV = "2.01";
 	// Universidad por default
 	public static final String UNIVERSIDAD_ALMA_MATER = "UNIVERSIDAD DE MONTEMORELOS, A.C.";
-	// Valores de origen
+	//  Valores para Test Colportores
+        public static final String CLAVE = "000";
+        public static final String TELEFONO = "1234567890";
+        public static final String MUNICIPIO = "testmu";
+        public static final String CALLE = "test";
+        public static final String COLONIA = "test"; 
+        public static final String NOMBRE = "test";
+        public static final String TIPO_DOCUMENTO = "A";
+        public static final String FOLIO = "test";
+        public static final BigDecimal IMPORTE = new BigDecimal("0.0");
+        public static final String OBSERVACIONES = "test teste";
+        // Valores de origen
 	public static final String ORIGEN = "origen";
 	public static final String ORIGEN_EMPLEADO = "empleado";
 	public static final String ORIGEN_NOMINA = "nomina";
@@ -189,6 +209,14 @@ public class Constantes {
 	public static final String ROLE_RH_ADMIN_NOMINA = "RHAdminNomina";
 	public static final String ROLE_NOMINA_ADMIN = "NOMAdmin";
 	public static final String ROLE_NOMINA_OPERSS = "NOMOperSS";
+        public static final String ROL_ADMINISTRADOR = "ROLE_ADMIN";
+        public static final String ROLE_TEST = "ROLE_TEST";
+        public static final String ROLE_ASO = "ROLE_ASO";
+        public static final String ROLE_COL = "ROLE_COL";
+        // Constantes Open Id
+        public static final String OPEN_ID = "openId";
+        public static final String UNION_ID = "unionId";
+        public static final String ASOCIACION_ID = "asociacionId";
 	// Constantes globales
 	public static final String GLOBAL_YES = "S";
 	public static final String GLOBAL_NO = "N";
@@ -1885,6 +1913,8 @@ public class Constantes {
 	public static final String CLIENTECOLPORTOR_LIST = "clienteColportorList";
 	// ClienteColportor-END
 	// SolicitudPermiso-START
+        
+        public static final String SESSION_TEMPORADA_COLPORTOR = "temporadaColportor";
 	/**
 	 * The request scope attribute that holds the solicitudPermiso form.
 	 */
@@ -1943,7 +1973,7 @@ public class Constantes {
 	public static final String NIVELESTUDIOS_LIST = "nivelEstudiosList";
 	// NivelEstudios-END
 	// EmpleadoEstudios-START
-	public static final String EMPLEADOESTUDIOS_KEY = "empleadoEstudiosForm";
+	public static final String EMPLEADOESTUDIOS_KEY = "empleadoEstudios";
 	public static final String EMPLEADOESTUDIOS_LIST = "empleadoEstudiosList";
 	// EmpleadoEstudios-END
 	// EmpleadoEventos-START
@@ -2291,6 +2321,7 @@ public class Constantes {
 	public static final String CONTAINSKEY_EMPLEADOS = "empleados";
 	public static final String CONTAINSKEY_RESULTADOS = "resultados";
 	public static final String CONTAINSKEY_AUXILIARES = "auxiliares";
+        public static final String CONTAINSKEY_ASOCIACIONES = "asociaciones";
 	public static final String CONTAINSKEY_LIBROS = "libros";
 
 	/**
@@ -2301,9 +2332,13 @@ public class Constantes {
 
 	public static final String ADDATTRIBUTE_MAYOR = "mayor";
 	public static final String ADDATTRIBUTE_EMPLEADO = "empleado";
-	public static final String ADDATTRIBUTE_RESULTADO = "resultado";
+       	public static final String ADDATTRIBUTE_RESULTADO = "resultado";
 	public static final String ADDATTRIBUTE_AUXILIAR = "auxiliar";
 	public static final String ADDATTRIBUTE_LIBRO = "libro";
+        public static final String ADDATTRIBUTE_UNION = "union";
+        public static final String ADDATTRIBUTE_NOMBRE = "nombre";
+        public static final String ADDATTRIBUTE_ASOCIACION = "asociacion";
+        public static final String ADDATTRIBUTE_ASOCIADO = "asociado";
 
 	/**
 	 * Valores para el los path's para las clases
@@ -2372,6 +2407,17 @@ public class Constantes {
     public static final String CONTAINSKEY_CATEGORIAS = "categorias";
     public static final String CONTAINSKEY_CONCEPTOS = "conceptos";
     public static final String CONTAINSKEY_PERDED = "perdeds";
+    public static final String CONTAINSKEY_ASOCIADOS = "asociados";
+    public static final String CONTAINSKEY_CIUDADES = "ciudades";
+    public static final String CONTAINSKEY_COLPORTORES = "colportores";
+    public static final String CONTAINSKEY_DOCUMENTOS = "documentos";
+    public static final String CONTAINSKEY_ESTADOS = "estados";
+    public static final String CONTAINSKEY_PAISES = "paises";
+    public static final String CONTAINSKEY_TEMPORADACOLPORTORES = "temporadaColportores";
+    public static final String CONTAINSKEY_TEMPORADAS = "temporadas";
+    public static final String CONTAINSKEY_UNIONES = "uniones";
+    public static final String CONTAINSKEY_USUARIOS = "usuarios";
+    public static final String CONTAINSKEY_COLEGIOS_COLPORTOR = "colegios";
 
     /**
      * Valores para el los addAttribute para las clases
@@ -2379,7 +2425,7 @@ public class Constantes {
     public static final String ADDATTRIBUTE_DEPENDIENTE = "dependiente";
     public static final String ADDATTRIBUTE_ESTUDIOSEMPLEADO = "estudioEmpleado";
     public static final String ADDATTRIBUTE_SECCION = "seccion";
-
+    public static final String ADDATTRIBUTE_STATUS = "status";
     public static final String ADDATTRIBUTE_COLEGIO = "colegio";
     public static final String ADDATTRIBUTE_CONCEPTO = "concepto";
     public static final String ADDATTRIBUTE_CATEGORIA = "categoria";
