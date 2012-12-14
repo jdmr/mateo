@@ -2503,4 +2503,15 @@ public class Constantes {
     public static final String PATH_ASOCIACION_ACTUALIZA = "/admin/asociacion/actualiza";
     public static final String PATH_ASOCIACION_ELIMINA = "/admin/asociacion/elimina";
     public static final String UNI = "UNI";
+    /**
+     * Valores para los Union Colportor
+     */
+    public static final String PATH_UNION = "/admin/union";
+    public static final String PATH_UNION_LISTA = "admin/union/lista";
+    public static final String PATH_UNION_VER = "/admin/union/ver";
+    public static final String PATH_UNION_NUEVA = "admin/union/nueva";
+    public static final String PATH_UNION_EDITA = "admin/union/edita";
+    public static final String PATH_UNION_CREA = "/admin/union/crea";
+    public static final String PATH_UNION_ACTUALIZA = "/admin/union/actualiza";
+    public static final String PATH_UNION_ELIMINA = "/admin/union/elimina";
 }
