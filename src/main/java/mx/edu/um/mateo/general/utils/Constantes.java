@@ -2556,4 +2556,22 @@ public class Constantes {
      */
     public static final String TIPO_COLPORTOR = "1";
     public static final String MATRICULA = "1070980";
+    /**
+     * Valores para los Temporada Colportor
+     */
+    public static final String PATH_TEMPORADA = "/temporada";
+    public static final String PATH_TEMPORADA_LISTA = "/temporada/lista";
+    public static final String PATH_TEMPORADA_VER = "/temporada/ver";
+    public static final String PATH_TEMPORADA_NUEVA = "/temporada/nueva";
+    public static final String PATH_TEMPORADA_EDITA = "/temporada/edita";
+    public static final String PATH_TEMPORADA_CREA = "/temporada/crea";
+    public static final String PATH_TEMPORADA_ACTUALIZA = "/temporada/actualiza";
+    public static final String PATH_TEMPORADA_ELIMINA = "/temporada/elimina";
+    public static final String ADDATTRIBUTE_TEMPORADA = "temporada";
+    /**
+     * Valores para la exportacion Colportor
+     */
+    public static final String TIPO_DOCUMENTO_PDF = "PDF";
+    public static final String TIPO_DOCUMENTO_CSV = "CSV";
+    public static final String TIPO_DOCUMENTO_XLS = "XLS";
 }
