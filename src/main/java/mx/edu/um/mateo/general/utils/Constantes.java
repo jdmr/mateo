@@ -2574,4 +2574,15 @@ public class Constantes {
     public static final String TIPO_DOCUMENTO_PDF = "PDF";
     public static final String TIPO_DOCUMENTO_CSV = "CSV";
     public static final String TIPO_DOCUMENTO_XLS = "XLS";
+    /**
+     * Valores para Colegio Colportor
+     */
+    public static final String PATH_COLEGIO_COLPORTOR = "/colegio";
+    public static final String PATH_COLEGIO_COLPORTOR_LISTA = "colegio/lista";
+    public static final String PATH_COLEGIO_COLPORTOR_VER = "/colegio/ver";
+    public static final String PATH_COLEGIO_COLPORTOR_NUEVO = "colegio/nuevo";
+    public static final String PATH_COLEGIO_COLPORTOR_EDITA = "colegio/edita";
+    public static final String PATH_COLEGIO_COLPORTOR_CREA = "/colegio/crea";
+    public static final String PATH_COLEGIO_COLPORTOR_ACTUALIZA = "/colegio/actualiza";
+    public static final String PATH_COLEGIO_COLPORTOR_ELIMINA = "/colegio/elimina";
 }
