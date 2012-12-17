@@ -2597,4 +2597,16 @@ public class Constantes {
     public static final String PATH_CIUDAD_ACTUALIZA = "/ciudad/actualiza";
     public static final String PATH_CIUDAD_ELIMINA = "/ciudad/elimina";
     public static final String ADDATTRIBUTE_CIUDAD = "ciudad";
+    /**
+     * Valores para Estado Colportor
+     */
+    public static final String PATH_ESTADO = "/estado";
+    public static final String PATH_ESTADO_LISTA = "estado/lista";
+    public static final String PATH_ESTADO_VER = "/estado/ver";
+    public static final String PATH_ESTADO_NUEVA = "/estado/nueva";
+    public static final String PATH_ESTADO_EDITA = "/estado/edita";
+    public static final String PATH_ESTADO_CREA = "/estado/crea";
+    public static final String PATH_ESTADO_ACTUALIZA = "/estado/actualiza";
+    public static final String PATH_ESTADO_ELIMINA = "/estado/elimina";
+    public static final String ADDATTRIBUTE_ESTADO = "estado";
 }
