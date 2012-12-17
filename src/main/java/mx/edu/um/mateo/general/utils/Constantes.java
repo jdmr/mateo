@@ -2502,7 +2502,13 @@ public class Constantes {
     public static final String PATH_ASOCIACION_CREA = "/admin/asociacion/crea";
     public static final String PATH_ASOCIACION_ACTUALIZA = "/admin/asociacion/actualiza";
     public static final String PATH_ASOCIACION_ELIMINA = "/admin/asociacion/elimina";
+    /**
+     * Variable en session donde se guarda la Temporada Colportor activa del
+     * colportor en caso que el colportor no tenga una temporada activa el valor
+     * de esta sera null
+     */
     public static final String UNI = "UNI";
+    public static final String ASO = "ASO";
     /**
      * Valores para los Union Colportor
      */
@@ -2514,4 +2520,23 @@ public class Constantes {
     public static final String PATH_UNION_CREA = "/admin/union/crea";
     public static final String PATH_UNION_ACTUALIZA = "/admin/union/actualiza";
     public static final String PATH_UNION_ELIMINA = "/admin/union/elimina";
+    /**
+     * Valores para los Union Colportor
+     */
+    public static final String PATH_ASOCIADO = "/asociado";
+    public static final String PATH_ASOCIADO_LISTA = "/asociado/lista";
+    public static final String PATH_ASOCIADO_VER = "/asociado/ver";
+    public static final String PATH_ASOCIADO_NUEVO = "/asociado/nuevo";
+    public static final String PATH_ASOCIADO_EDITA = "/asociado/edita";
+    public static final String PATH_ASOCIADO_CREA = "/asociado/crea";
+    public static final String PATH_ASOCIADO_ACTUALIZA = "/asociado/actualiza";
+    public static final String PATH_ASOCIADO_ELIMINA = "/asociado/elimina";
+    /**
+     * Valores para el los containsKey
+     *
+     * ROLES *****
+     *
+     *
+     */
+    public static final String ROLES = "roles";
 }
