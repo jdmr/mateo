@@ -2510,7 +2510,7 @@ public class Constantes {
     public static final String UNI = "UNI";
     public static final String ASO = "ASO";
     /**
-     * Valores para los Union Colportor
+     * Valores para las Uniones Colportor
      */
     public static final String PATH_UNION = "/admin/union";
     public static final String PATH_UNION_LISTA = "admin/union/lista";
@@ -2521,7 +2521,7 @@ public class Constantes {
     public static final String PATH_UNION_ACTUALIZA = "/admin/union/actualiza";
     public static final String PATH_UNION_ELIMINA = "/admin/union/elimina";
     /**
-     * Valores para los Union Colportor
+     * Valores para los Asociados Colportor
      */
     public static final String PATH_ASOCIADO = "/asociado";
     public static final String PATH_ASOCIADO_LISTA = "/asociado/lista";
@@ -2539,4 +2539,21 @@ public class Constantes {
      *
      */
     public static final String ROLES = "roles";
+    /**
+     * Valores para los Colportores Colportor
+     */
+    public static final String PATH_COLPORTOR = "/colportor";
+    public static final String PATH_COLPORTOR_LISTA = "colportor/lista";
+    public static final String PATH_COLPORTOR_VER = "/colportor/ver";
+    public static final String PATH_COLPORTOR_NUEVO = "colportor/nuevo";
+    public static final String PATH_COLPORTOR_EDITA = "colportor/edita";
+    public static final String PATH_COLPORTOR_CREA = "/colportor/crea";
+    public static final String PATH_COLPORTOR_ACTUALIZA = "/colportor/actualiza";
+    public static final String PATH_COLPORTOR_ELIMINA = "/colportor/elimina";
+    public static final String ADDATTRIBUTE_COLPORTOR = "colportor";
+    /**
+     * Valores para los Tipo Colportor Colportor
+     */
+    public static final String TIPO_COLPORTOR = "1";
+    public static final String MATRICULA = "1070980";
 }
