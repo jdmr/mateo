@@ -2585,4 +2585,16 @@ public class Constantes {
     public static final String PATH_COLEGIO_COLPORTOR_CREA = "/colegio/crea";
     public static final String PATH_COLEGIO_COLPORTOR_ACTUALIZA = "/colegio/actualiza";
     public static final String PATH_COLEGIO_COLPORTOR_ELIMINA = "/colegio/elimina";
+    /**
+     * Valores para Ciudad Colportor
+     */
+    public static final String PATH_CIUDAD = "/ciudad";
+    public static final String PATH_CIUDAD_LISTA = "ciudad/lista";
+    public static final String PATH_CIUDAD_VER = "/ciudad/ver";
+    public static final String PATH_CIUDAD_NUEVA = "/ciudad/nueva";
+    public static final String PATH_CIUDAD_EDITA = "/ciudad/edita";
+    public static final String PATH_CIUDAD_CREA = "/ciudad/crea";
+    public static final String PATH_CIUDAD_ACTUALIZA = "/ciudad/actualiza";
+    public static final String PATH_CIUDAD_ELIMINA = "/ciudad/elimina";
+    public static final String ADDATTRIBUTE_CIUDAD = "ciudad";
 }
