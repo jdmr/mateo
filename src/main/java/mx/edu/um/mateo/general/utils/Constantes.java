@@ -2621,4 +2621,16 @@ public class Constantes {
     public static final String PATH_PAIS_ACTUALIZA = "/pais/actualiza";
     public static final String PATH_PAIS_ELIMINA = "/pais/elimina";
     public static final String ADDATTRIBUTE_PAIS = "pais";
+    /**
+     * Valores para Temporada Colportor Colportor
+     */
+    public static final String PATH_TEMPORADACOLPORTOR = "/temporadaColportor";
+    public static final String PATH_TEMPORADACOLPORTOR_LISTA = "/temporadaColportor/lista";
+    public static final String PATH_TEMPORADACOLPORTOR_VER = "/temporadaColportor/ver";
+    public static final String PATH_TEMPORADACOLPORTOR_NUEVA = "/temporadaColportor/nueva";
+    public static final String PATH_TEMPORADACOLPORTOR_EDITA = "/temporadaColportor/edita";
+    public static final String PATH_TEMPORADACOLPORTOR_CREA = "/temporadaColportor/crea";
+    public static final String PATH_TEMPORADACOLPORTOR_ACTUALIZA = "/temporadaColportor/actualiza";
+    public static final String PATH_TEMPORADACOLPORTOR_ELIMINA = "/temporadaColportor/elimina";
+    public static final String ADDATTRIBUTE_TEMPORADACOLPORTOR = "temporadaColportor";
 }
