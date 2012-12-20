@@ -29,7 +29,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import mx.edu.um.mateo.Constants;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
@@ -59,6 +58,7 @@ public class EmpleadoController extends BaseController {
 
     @Autowired
     private EmpleadoManager empleadoManager;
+    
 
     public EmpleadoController() {
         log.info("Se ha creado una nueva instancia de EmpleadoController");
@@ -92,7 +92,7 @@ public class EmpleadoController extends BaseController {
             params.put("reporte", true);
             params = empleadoManager.lista(params);
             try {
-                generaReporte(tipo, (List<Empleado>) params.get(mx.edu.um.mateo.Constants.EMPLEADO_LIST), response, "empleados", Constantes.EMP, empresaId);
+                generaReporte(tipo, (List<Empleado>) params.get(Constantes.EMPLEADO_LIST), response, "empleados", Constantes.EMP, empresaId);
                 return null;
             } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -105,7 +105,7 @@ public class EmpleadoController extends BaseController {
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<Empleado>) params.get(mx.edu.um.mateo.Constants.EMPLEADO_LIST), request, "empleados", Constantes.EMP, empresaId);
+                enviaCorreo(correo, (List<Empleado>) params.get(Constantes.EMPLEADO_LIST), request, "empleados", Constantes.EMP, empresaId);
                 modelo.addAttribute("message", "lista.enviada.message");
                 modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("empleado.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
@@ -113,30 +113,32 @@ public class EmpleadoController extends BaseController {
             }
         }
         params = empleadoManager.lista(params);
-        modelo.addAttribute(mx.edu.um.mateo.Constants.EMPLEADO_LIST, params.get(mx.edu.um.mateo.Constants.EMPLEADO_LIST));
+        modelo.addAttribute(Constantes.EMPLEADO_LIST, params.get(Constantes.EMPLEADO_LIST));
 
-        this.pagina(params, modelo, mx.edu.um.mateo.Constants.EMPLEADO_LIST, pagina);
+        this.pagina(params, modelo, Constantes.EMPLEADO_LIST, pagina);
 
-        return mx.edu.um.mateo.Constantes.PATH_EMPLEADO_LISTA;
+        return Constantes.PATH_EMPLEADO_LISTA;
     }
 
     @RequestMapping("/ver/{id}")
-    public String ver(@PathVariable Long id, Model modelo) throws ObjectRetrievalFailureException {
+    public String ver(HttpServletRequest request, @PathVariable Long id, Model modelo) throws ObjectRetrievalFailureException {
         log.debug("Mostrando empleado {}", id);
         Empleado empleado = empleadoManager.obtiene(id);
 
-         modelo.addAttribute(Constants.EMPLEADO_KEY, empleado);
-
-        return mx.edu.um.mateo.Constantes.PATH_EMPLEADO_VER;
+        modelo.addAttribute(Constantes.EMPLEADO_KEY, empleado);
+         
+        request.getSession().setAttribute(Constantes.EMPLEADO_KEY, empleado);
+        
+        return Constantes.PATH_EMPLEADO_VER;
     }
 
     @RequestMapping("/nuevo")
     public String nuevo(Model modelo) {
         log.debug("Nuevo empleado");
         Empleado empleado = new Empleado();
-        modelo.addAttribute(mx.edu.um.mateo.Constants.EMPLEADO_KEY, empleado);
-        modelo.addAttribute(Constants.NIVELESTUDIOS_LIST, NivelEstudios.values());
-        return mx.edu.um.mateo.Constantes.PATH_EMPLEADO_NUEVO;
+        modelo.addAttribute(Constantes.EMPLEADO_KEY, empleado);
+        modelo.addAttribute(Constantes.NIVELESTUDIOS_LIST, NivelEstudios.values());
+        return Constantes.PATH_EMPLEADO_NUEVO;
     }
 
     @RequestMapping(value = "/graba", method = RequestMethod.POST)
@@ -149,7 +151,7 @@ public class EmpleadoController extends BaseController {
             for (ObjectError error : bindingResult.getAllErrors()) {
                 log.debug("Error: {}", error);
             }
-            return mx.edu.um.mateo.Constantes.PATH_EMPLEADO_NUEVO;
+            return Constantes.PATH_EMPLEADO_NUEVO;
         }
 
         try {
@@ -160,13 +162,13 @@ public class EmpleadoController extends BaseController {
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al empleado", e);
             errors.rejectValue("nombre", "empleado.errors.creado", e.toString());
-            return mx.edu.um.mateo.Constantes.PATH_EMPLEADO_NUEVO;
+            return Constantes.PATH_EMPLEADO_NUEVO;
         }
 
         redirectAttributes.addFlashAttribute("message", "empleado.creado.message");
         redirectAttributes.addFlashAttribute("messageAttrs", new String[]{empleado.getNombre()});
 
-        return "redirect:" + mx.edu.um.mateo.Constantes.PATH_EMPLEADO;
+        return "redirect:" + Constantes.PATH_EMPLEADO;
     }
 
     @RequestMapping("/edita/{id}")
@@ -177,10 +179,10 @@ public class EmpleadoController extends BaseController {
         } catch (ObjectRetrievalFailureException ex) {
             log.error("No se pudo obtener al empleado", ex);
             errors.rejectValue("empleado", "registro.noEncontrado", new String[]{"empleado"}, null);
-            return mx.edu.um.mateo.Constantes.PATH_EMPLEADO;
+            return Constantes.PATH_EMPLEADO;
         }
-        modelo.addAttribute(mx.edu.um.mateo.Constants.EMPLEADO_KEY, empleado);
-        return mx.edu.um.mateo.Constantes.PATH_EMPLEADO_EDITA;
+        modelo.addAttribute(Constantes.EMPLEADO_KEY, empleado);
+        return Constantes.PATH_EMPLEADO_EDITA;
     }
 
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
@@ -194,13 +196,22 @@ public class EmpleadoController extends BaseController {
 
             redirectAttributes.addFlashAttribute("message", "empleado.eliminado.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
-        }
-         catch (Exception e) {
+        } catch (Exception e) {
             log.error("No se pudo eliminar el empleado " + id, e);
             bindingResult.addError(new ObjectError("empleado", new String[]{"empleado.no.eliminado.message"}, null, null));
-            return mx.edu.um.mateo.Constantes.PATH_EMPLEADO_VER;
+            return Constantes.PATH_EMPLEADO_VER;
         }
+        return "redirect:" + Constantes.PATH_EMPLEADO;
+    }
 
-        return "redirect:" + mx.edu.um.mateo.Constantes.PATH_EMPLEADO;
+    @RequestMapping("/datos/{id}")
+    public String datos(@PathVariable Long id, Model modelo) throws ObjectRetrievalFailureException {
+        log.debug("Mostrando empleado {}", id);
+        
+        Empleado empleado = empleadoManager.obtiene(id);
+
+        modelo.addAttribute(Constantes.EMPLEADO_KEY, empleado);
+
+        return "/rh/empleado/datos";
     }
 }

@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import mx.edu.um.mateo.Constants;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.rh.dao.EmpleadoDao;
@@ -44,7 +44,9 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.ObjectRetrievalFailureException;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +59,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
+    
+     @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * @see mx.edu.um.mateo.rh.dao.EmpleadoDao#lista(java.util.Map)
@@ -121,12 +126,12 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put(Constants.EMPLEADO_LIST, criteria.list());
+        params.put(Constantes.EMPLEADO_LIST, criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
         
-        log.debug("Elementos en lista de empleados {}", params.get(Constants.EMPLEADO_LIST));
+        log.debug("Elementos en lista de empleados {}", params.get(Constantes.EMPLEADO_LIST));
 
         return params;
     }
@@ -267,6 +272,8 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
         if (usuario != null) {
             empleado.setEmpresa(usuario.getEmpresa());
         }
+        usuario.setPassword(passwordEncoder.encodePassword(
+                usuario.getPassword(), usuario.getUsername()));
         currentSession().saveOrUpdate(empleado);
     }
 

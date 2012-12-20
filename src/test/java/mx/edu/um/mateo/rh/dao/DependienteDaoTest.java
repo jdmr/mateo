@@ -5,11 +5,16 @@
 package mx.edu.um.mateo.rh.dao;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import mx.edu.um.mateo.Constantes;
+import java.util.Set;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
+import mx.edu.um.mateo.general.model.Rol;
+import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.rh.model.Dependiente;
 import mx.edu.um.mateo.rh.model.Empleado;
 import mx.edu.um.mateo.rh.model.Nacionalidad;
@@ -53,10 +58,28 @@ public class DependienteDaoTest {
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Empleado empleado = new Empleado("test001", "test", "test", "test", "M", "address", "A",
-                "curp", "rfc", "cuenta", "imss", 10, 100, BigDecimal.ZERO, "mo", "ife", "ra",
-                Boolean.TRUE, "padre", "madre", "Ca", "Conyugue", Boolean.TRUE, Boolean.TRUE,
-                "iglesia", "responsabilidad",empresa);
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
+        Long id = usuario.getId();
+        assertNotNull(id);
+
+        Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
+            "curp","RFCSTRI", "Cuenta", "imss",
+            10, 1,new BigDecimal (1),"SI", "ife","A",
+            "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
+                "responsabilidad","password");
+        empleado.setAlmacen(almacen);
+        empleado.setEmpresa(empresa);
+        empleado.setRoles(roles);
         currentSession().save(empleado);
         assertNotNull(empleado.getId());
         for(int i=0; i<20; i++){
@@ -79,14 +102,32 @@ public class DependienteDaoTest {
     @Test 
     public void testObtiene() {
          log.debug("Deberia obtener un Dependiente");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+           Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Empleado empleado = new Empleado("test001", "test", "test", "test", "M", "address", "A",
-                "curp", "rfc", "cuenta", "imss", 10, 100, BigDecimal.ZERO, "mo", "ife", "ra",
-                Boolean.TRUE, "padre", "madre", "Ca", "Conyugue", Boolean.TRUE, Boolean.TRUE,
-                "iglesia", "responsabilidad",empresa);
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
+        Long id = usuario.getId();
+        assertNotNull(id);
+
+        Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
+            "curp","RFCSTRI", "Cuenta", "imss",
+            10, 1,new BigDecimal (1),"SI", "ife","A",
+            "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
+                "responsabilidad","password");
+        empleado.setAlmacen(almacen);
+        empleado.setEmpresa(empresa);
+        empleado.setRoles(roles);
         currentSession().save(empleado);
         assertNotNull(empleado.getId());
         Dependiente dependiente = new Dependiente();
@@ -103,14 +144,32 @@ public class DependienteDaoTest {
     public void testCrearDependiente() {
     
         log.debug("Deberia crear Dependiente");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+           Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Empleado empleado = new Empleado("test001", "test", "test", "test", "M", "address", "A",
-                "curp", "rfc", "cuenta", "imss", 10, 100, BigDecimal.ZERO, "mo", "ife", "ra",
-                Boolean.TRUE, "padre", "madre", "Ca", "Conyugue", Boolean.TRUE, Boolean.TRUE,
-                "iglesia", "responsabilidad",empresa);
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
+        Long id = usuario.getId();
+        assertNotNull(id);
+
+        Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
+            "curp","RFCSTRI", "Cuenta", "imss",
+            10, 1,new BigDecimal (1),"SI", "ife","A",
+            "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
+                "responsabilidad","password");
+        empleado.setAlmacen(almacen);
+        empleado.setEmpresa(empresa);
+        empleado.setRoles(roles);
         currentSession().save(empleado);
         assertNotNull(empleado.getId());
         Dependiente dependiente = new Dependiente();
@@ -126,14 +185,32 @@ public class DependienteDaoTest {
     @Test
     public void testActualizarDependiente() {
         log.debug("Deberia actulizar Dependiente");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+           Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Empleado empleado = new Empleado("test001", "test", "test", "test", "M", "address", "A",
-                "curp", "rfc", "cuenta", "imss", 10, 100, BigDecimal.ZERO, "mo", "ife", "ra",
-                Boolean.TRUE, "padre", "madre", "Ca", "Conyugue", Boolean.TRUE, Boolean.TRUE,
-                "iglesia", "responsabilidad",empresa);
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
+        Long id = usuario.getId();
+        assertNotNull(id);
+
+       Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
+            "curp","RFCSTRI", "Cuenta", "imss",
+            10, 1,new BigDecimal (1),"SI", "ife","A",
+            "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
+                "responsabilidad","password");
+        empleado.setAlmacen(almacen);
+        empleado.setEmpresa(empresa);
+        empleado.setRoles(roles);
         currentSession().save(empleado);
         assertNotNull(empleado.getId());
         Dependiente dependiente = new Dependiente();
@@ -154,14 +231,32 @@ public class DependienteDaoTest {
     @Test
     public void testEliminarDependiente()throws Exception{
         log.debug("Deberia eliminar Dependiente");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+           Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
-        Empleado empleado = new Empleado("test001", "test", "test", "test", "M", "address", "A",
-                "curp", "rfc", "cuenta", "imss", 10, 100, BigDecimal.ZERO, "mo", "ife", "ra",
-                Boolean.TRUE, "padre", "madre", "Ca", "Conyugue", Boolean.TRUE, Boolean.TRUE,
-                "iglesia", "responsabilidad",empresa);
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
+        Long id = usuario.getId();
+        assertNotNull(id);
+
+       Empleado empleado = new Empleado( "test", "apPaterno","apMaterno","correo@um.edu.mx","username","1080506", Boolean.TRUE,"M", "Direccion","A",
+            "curp","RFCSTRI", "Cuenta", "imss",
+            10, 1,new BigDecimal (1),"SI", "ife","A",
+            "padre", "madre", "A", "conyuge",Boolean.FALSE, Boolean.TRUE, "iglesia",
+                "responsabilidad","password");
+        empleado.setAlmacen(almacen);
+        empleado.setEmpresa(empresa);
+        empleado.setRoles(roles);
         currentSession().save(empleado);
         assertNotNull(empleado.getId());
         

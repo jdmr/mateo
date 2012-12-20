@@ -6,6 +6,7 @@ package mx.edu.um.mateo.rh.dao.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.rh.dao.SeccionDao;
 import mx.edu.um.mateo.rh.model.Seccion;
@@ -101,7 +102,6 @@ public class SeccionDaoHibernate extends BaseDao implements SeccionDao{
             log.warn("uh oh, seccion with id '" + id + "' not found...");
             throw new ObjectRetrievalFailureException(Seccion.class, id);
         }
-
         return seccion;
     }
 

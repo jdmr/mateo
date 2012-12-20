@@ -4,96 +4,84 @@
  */
 package mx.edu.um.mateo.rh.model;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
-import javax.persistence.Version;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Size;
-import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Usuario;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
-import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
-import org.springframework.validation.Validator;
 
 /**
  *
  * @author osoto@um.edu.mx
  */
 @Entity
-@Table(name = "empleados",
-uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"clave"})})
-public class Empleado implements Serializable, Validator {
+@DiscriminatorValue("empleado")
+public class Empleado extends Usuario {
 
     private static final long serialVersionUID = 6001011125338853446L;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Version
-    private Integer version;
-    @ManyToOne(optional = false)
-    private Empresa empresa;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
+//    @Version
+//    private Integer version;
+//    @ManyToOne(optional = false)
+//    private Empresa empresa;
     @NotBlank
     @Size(min = 7, max = 7, message = "La clave del empleado debe contener una longitud de 7 caracteres")
-    @Column(nullable = false, length = 7)
+    @Column(length = 7)
     private String clave;
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column
     private NivelEstudios nivelEstudios;
+//    @NotBlank
+//    @Column(nullable = false, length = 100)
+//    private String nombre;
+//    @NotBlank
+//    @Column(nullable = false, length = 100)
+//    private String apPaterno;
+//    @NotBlank
+//    @Column(nullable = false, length = 100)
+//    private String apMaterno;
     @NotBlank
-    @Column(nullable = false, length = 100)
-    private String nombre;
-    @NotBlank
-    @Column(nullable = false, length = 100)
-    private String apPaterno;
-    @NotBlank
-    @Column(nullable = false, length = 100)
-    private String apMaterno;
-    @NotBlank
-    @Column(nullable = false, length = 1)
+    @Column( length = 1)
     private String genero;
     @NotBlank
-    @Column(nullable = false, length = 200)
+    @Column( length = 200)
     private String direccion;
-    @Column(nullable = false, length = 2)
+    @Column(length = 2)
     private String status;
     @DateTimeFormat(pattern="dd/MM/yyyy",iso=ISO.DATE)
     @Temporal(TemporalType.TIMESTAMP)
     @Column
     private Date fechaNacimiento;
     @NotBlank
-    @Column(nullable = false, length = 30)
+    @Column( length = 30)
     private String curp;
     @NotBlank
-    @Column(nullable = false, length = 15)
+    @Column( length = 15)
     private String rfc;
-    @Column(nullable = false, length = 16)
+    @Column(length = 16)
     private String cuenta;
     @NotBlank
     @Column(length = 15)
     private String imms;
     @Digits(integer=3,fraction=0,message="El escalafon debe ser un numero de minimo 2 digitos y maximo 3!")
-    @Column(nullable = false)
+    @Column
     private Integer escalafon;
     @Range(min=0, max=100, message="El turno no puede ser mayor al 100%!")
-    @Column(nullable = false)
+    @Column
     private Integer turno;
     @DateTimeFormat(pattern="dd/MM/yyyy",iso=ISO.DATE)
     @Temporal(TemporalType.TIMESTAMP)
@@ -106,25 +94,25 @@ public class Empleado implements Serializable, Validator {
     @Column(name = "experiencia_fuera_um")
     private BigDecimal experienciaFueraUm;
     @NotBlank
-    @Column(length = 2, nullable = false)
+    @Column(length = 2)
     private String modalidad;
     @Length(max = 15)
     @Column(length = 15)
     private String ife;
     @NotBlank
     @Length(max = 2)
-    @Column(length = 2, nullable = false)
+    @Column(length = 2)
     private String rango;
-    @Column(nullable = false)
+    @Column
     private Boolean adventista;
     @Length(max = 100)
-    @Column(length = 100, nullable = false)
+    @Column(length = 100)
     private String padre;
     @Length(max = 100)
-    @Column(length = 100, nullable = false)
+    @Column(length = 100)
     private String madre;
     @Length(max = 2)
-    @Column(length = 2, nullable = false)
+    @Column(length = 2)
     private String estadoCivil;
     @Length(max = 100)
     @Column(length = 100)
@@ -133,32 +121,36 @@ public class Empleado implements Serializable, Validator {
     @Temporal(TemporalType.TIMESTAMP)
     @Column
     private Date fechaMatrimonio;
-    @Column(name = "finado_padre", nullable = false)
+    @Column(name = "finado_padre")
     private Boolean finadoPadre;
-    @Column(name = "finado_madre", nullable = false)
+    @Column(name = "finado_madre")
     private Boolean finadoMadre;
     @Length(max = 100)
-    @Column(length = 100, nullable = false)
+    @Column(length = 100)
     private String iglesia;
     @Length(max = 100)
-    @Column(length = 100, nullable = false)
+    @Column(length = 100)
     private String responsabilidad;
 
     public Empleado() {
     }
 
-    public Empleado(String clave, String nombre, String apPaterno,
-            String apMaterno, String genero, String direccion, String status,
-            String curp, String rfc, String cuenta, String imms,
+    public Empleado(String nombre,String apPaterno, String apMaterno,String correo, String username, String clave, 
+            Boolean adventista,String genero, String direccion, String status,
+            String curp, String rfc, String cuenta, String imms, 
             Integer escalafon, Integer turno, BigDecimal experienciaFueraUm,
-            String modalidad, String ife, String rango, Boolean adventista,
+            String modalidad, String ife, String rango,
             String padre, String madre, String estadoCivil, String conyuge,
             Boolean finadoPadre, Boolean finadoMadre, String iglesia,
-            String responsabilidad, Empresa empresa) {
+            String responsabilidad, String password) {
+        super(nombre, apPaterno, apMaterno); 
         this.clave = clave;
-        this.nombre = nombre;
-        this.apPaterno = apPaterno;
-        this.apMaterno = apMaterno;
+        this.correo=correo;
+        this.username=correo;
+        this.password=password;
+//        this.nombre = nombre;
+//        this.apPaterno = apPaterno;
+//        this.apMaterno = apMaterno;
         this.genero = genero;
         this.fechaNacimiento = new Date();
         this.direccion = direccion;
@@ -185,25 +177,25 @@ public class Empleado implements Serializable, Validator {
         this.finadoMadre = finadoMadre;
         this.iglesia = iglesia;
         this.responsabilidad = responsabilidad;
-        this.empresa = empresa;
+//        this.empresa = empresa;
         this.nivelEstudios = NivelEstudios.DOCTORADO;
     }
 
-    public String getApMaterno() {
-        return apMaterno;
-    }
-
-    public void setApMaterno(String apMaterno) {
-        this.apMaterno = apMaterno;
-    }
-
-    public String getApPaterno() {
-        return apPaterno;
-    }
-
-    public void setApPaterno(String apPaterno) {
-        this.apPaterno = apPaterno;
-    }
+//    public String getApMaterno() {
+//        return apMaterno;
+//    }
+//
+//    public void setApMaterno(String apMaterno) {
+//        this.apMaterno = apMaterno;
+//    }
+//
+//    public String getApPaterno() {
+//        return apPaterno;
+//    }
+//
+//    public void setApPaterno(String apPaterno) {
+//        this.apPaterno = apPaterno;
+//    }
 
     public String getClave() {
         return clave;
@@ -413,21 +405,21 @@ public class Empleado implements Serializable, Validator {
         this.turno = turno;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+//    public Long getId() {
+//        return id;
+//    }
+//
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
+//
+//    public String getNombre() {
+//        return nombre;
+//    }
+//
+//    public void setNombre(String nombre) {
+//        this.nombre = nombre;
+//    }
 
     public String getStatus() {
         return status;
@@ -437,32 +429,31 @@ public class Empleado implements Serializable, Validator {
         this.status = status;
     }
 
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    /**
-     * @return the empresa
-     */
-    public Empresa getEmpresa() {
-        return empresa;
-    }
-
-    /**
-     * @param empresa the empresa to set
-     */
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
-    }
+//    public Integer getVersion() {
+//        return version;
+//    }
+//
+//    public void setVersion(Integer version) {
+//        this.version = version;
+//    }
+//
+//    /**
+//     * @return the empresa
+//     */
+//    public Empresa getEmpresa() {
+//        return empresa;
+//    }
+//
+//    /**
+//     * @param empresa the empresa to set
+//     */
+//    public void setEmpresa(Empresa empresa) {
+//        this.empresa = empresa;
+//    }
 
     @Override
     public String toString() {
-        return "Empleado{" + "id=" + id + ", version=" + version + ", clave=" + clave + ", nombre=" + nombre + ", "
-                + "apPaterno=" + apPaterno + ", apMaterno=" + apMaterno + ", genero=" + genero + ", direccion=" 
+        return "Empleado{" + ", clave=" + clave + ", genero=" + genero + ", direccion=" 
                 + direccion + ", status=" + status + ", fechaNacimiento=" + fechaNacimiento + ", curp=" + curp 
                 + ", rfc=" + rfc + ", cuenta=" + cuenta + ", imms=" + imms + ", escalafon=" + escalafon + ", turno=" 
                 + turno + ", fechaAlta=" + fechaAlta + ", fechaBaja=" + fechaBaja + ", experienciaFueraUm=" 
@@ -481,10 +472,7 @@ public class Empleado implements Serializable, Validator {
             return false;
         }
         final Empleado other = (Empleado) obj;
-        if (this.id != other.id
-                && (this.id == null || !this.id.equals(other.id))) {
-            return false;
-        }
+        
         if ((this.clave == null) ? (other.clave != null) : !this.clave
                 .equals(other.clave)) {
             return false;
@@ -495,29 +483,13 @@ public class Empleado implements Serializable, Validator {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 13 * hash + (this.id != null ? this.id.hashCode() : 0);
-        hash = 13 * hash + (this.version != null ? this.version.hashCode() : 0);
+//        hash = 13 * hash + (this.id != null ? this.id.hashCode() : 0);
+//        hash = 13 * hash + (this.version != null ? this.version.hashCode() : 0);
         hash = 13 * hash + (this.clave != null ? this.clave.hashCode() : 0);
         return hash;
     }
 
-    @Override
-    public boolean supports(Class<?> type) {
-        return Empleado.class.equals(type);
-    }
-
-    @Override
-    public void validate(Object o, Errors e) {
-        ValidationUtils.rejectIfEmpty(e, "name", "name.empty");
-        Empleado emp = (Empleado) o;
-        if (emp.getEscalafon() < 0) {
-            e.rejectValue("escalafon", "negativeValue");
-        } else if (emp.getEscalafon() > 200) {
-            e.rejectValue("escalafon", "exageratedValue");
-        }
-    }
-
-    /**
+     /**
      * @return the nivelEstudios
      */
     public NivelEstudios getNivelEstudios() {

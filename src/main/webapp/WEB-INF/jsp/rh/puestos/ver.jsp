@@ -30,44 +30,32 @@
             <form:form commandName="puesto" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span4">
-                        <h4><s:message code="puesto.descripcion.label" /></h4>
-                        <h3>${puesto.descripcion}</h3>
-                    </div>
-                    <div class="span4">
-                        <h4><s:message code="puesto.categoria.label" /></h4>
-                        <h3>${puesto.categoria}</h3>
-                    </div>
+                    <div><s:message code="descripcion.label" /></div>
+                    <div>${puesto.descripcion}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div><s:message code="categoria.label" /></div>
+                    <div>${puesto.categoria}</div>
                 </div>
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span4">
-                        <h4><s:message code="puesto.seccion.label" /></h4>
-                        <h3>${puesto.seccion}</h3>
-                    </div>
-                    <div class="span4">
-                        <h4><s:message code="puesto.minimo.label" /></h4>
-                        <h3>${puesto.minimo}</h3>
-                    </div>
+                    <div><s:message code="seccion.label" /></div>
+                    <div>${puesto.seccion.nombre}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div><s:message code="minimo.label" /></div>
+                    <div>${puesto.minimo}</div>
                 </div>
 
-                <c:if test="${not empty puesto.maximo}">
-                    <div class="row-fluid" style="padding-bottom: 10px;">
-                        <div class="span8">
-                            <h4><s:message code="puesto.maximo.label" /></h4>
-                            <h3>${puesto.maximo}</h3>
-                        </div>
-                    </div>
-                </c:if>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div><s:message code="maximo.label" /></div>
+                    <div>${puesto.maximo}</div>
+                </div>
 
-                <c:if test="${not empty puesto.rangoAcademico}">
-                    <div class="row-fluid" style="padding-bottom: 10px;">
-                        <div class="span4">
-                            <h4><s:message code="puesto.rangoAcademico.label" /></h4>
-                            <h3>${puesto.rangoAcademico}</h3>
-                        </div>
-                    </div>
-                </c:if>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div><s:message code="rangoAcademico.label" /></div>
+                    <div>${puesto.rangoAcademico}</div>
+                </div>
 
 
                 <p class="well">
