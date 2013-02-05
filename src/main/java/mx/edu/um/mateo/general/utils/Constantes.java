@@ -2633,4 +2633,40 @@ public class Constantes {
     public static final String PATH_TEMPORADACOLPORTOR_ACTUALIZA = "/temporadaColportor/actualiza";
     public static final String PATH_TEMPORADACOLPORTOR_ELIMINA = "/temporadaColportor/elimina";
     public static final String ADDATTRIBUTE_TEMPORADACOLPORTOR = "temporadaColportor";
+    /**
+     * Valores para Documentos
+     */
+    public static final String PATH_DOCUMENTO = "/documento";
+    public static final String PATH_DOCUMENTO_LISTA = "/documento/lista";
+    public static final String PATH_DOCUMENTO_VER = "/documento/ver";
+    public static final String PATH_DOCUMENTO_NUEVO = "/documento/nuevo";
+    public static final String PATH_DOCUMENTO_EDITA = "/documento/edita";
+    public static final String PATH_DOCUMENTO_CREA = "/documento/crea";
+    public static final String PATH_DOCUMENTO_ACTUALIZA = "/documento/actualiza";
+    public static final String PATH_DOCUMENTO_ELIMINA = "/documento/elimina";
+    public static final String ADDATTRIBUTE_DOCUMENTO = "documento";
+    /**
+     * Valores para Tipos de Documento
+     *
+     */
+    public static final String BOLETIN = "Boletín";
+    public static final String DIEZMO = "Diezmo";
+    public static final String DEPOSITO_CAJA = "Deposito_Caja";
+    public static final String DEPOSITO_BANCO = "Deposito_Banco";
+    public static final String NOTAS_DE_COMPRA = "Notas_De_Compra";
+    public static final String INFORME = "Informe";
+    /**
+     * Valores Totales para Tipos de Documento
+     *
+     */
+    public static final String TOTALBOLETIN = "Total_Boletin";
+    public static final String TOTALDIEZMOS = "Total_Diezmos";
+    public static final String TOTALDEPOSITOS = "Total_Depositos";
+    /**
+     * Valores para Tabla de Porcentajes
+     *
+     */
+    public static final String OBJETIVO = "Objetivo";
+    public static final String ALCANZADO = "Alcanzado";
+    public static final String FIDELIDAD = "Fidelidad";
 }
