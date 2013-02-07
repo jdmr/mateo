@@ -39,5 +39,5 @@ public interface TipoBecasDao {
      * Removes a tipoBeca from the database by id
      * @param id the tipoBeca's id
      */
-    public void removeTipoBeca(final Integer id);
+    public String removeTipoBeca(final Integer id);
 }
