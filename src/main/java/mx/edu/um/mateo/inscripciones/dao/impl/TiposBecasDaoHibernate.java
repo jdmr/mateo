@@ -5,7 +5,6 @@
 package mx.edu.um.mateo.inscripciones.dao.impl;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.inscripciones.dao.TipoBecasDao;
@@ -33,11 +32,7 @@ public class TiposBecasDaoHibernate extends BaseDao implements TipoBecasDao{
     /**
      * @see mx.edu.um.afe.dao.TipoAFEBecaDao#getTiposBeca(mx.edu.um.afe.model.TipoAFEBeca)
      */
-//    @Override
-//    public List getTiposBeca(final TiposBecas tipoBeca) {
-//        return getHibernateTemplate().find("from TipoAFEBeca");
-//
-//    }
+
  @Override
     public Map<String, Object> getTiposBeca(Map<String, Object> params) {
         log.debug("Buscando lista de Tipos de Becas con params {}", params);
@@ -60,8 +55,8 @@ public class TiposBecasDaoHibernate extends BaseDao implements TipoBecasDao{
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(Colegio.class);
-        Criteria countCriteria = currentSession().createCriteria(Colegio.class);
+        Criteria criteria = currentSession().createCriteria(TiposBecas.class);
+        Criteria countCriteria = currentSession().createCriteria(TiposBecas.class);
 
         if (params.containsKey("tiposBeca")) {
             criteria.createCriteria("tiposBeca").add(
@@ -130,10 +125,12 @@ public class TiposBecasDaoHibernate extends BaseDao implements TipoBecasDao{
      * @see mx.edu.um.afe.dao.TipoAFEBecaDao#removeTipoBeca(Integer id)
      */
     @Override
-    public void removeTipoBeca(final Integer id) {
+    public String removeTipoBeca(final Integer id) {
        TiposBecas tiposBecas = this.getTipoBeca(id);
-        currentSession().delete(tiposBecas);
+       String descripcion = tiposBecas.getDescripcion(); 
+       currentSession().delete(tiposBecas);
         currentSession().flush();
+        return descripcion;
         
     }
 
