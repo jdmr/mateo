@@ -5,6 +5,7 @@
 package mx.edu.um.mateo.inscripciones.dao;
 
 import java.util.List;
+import java.util.Map;
 import mx.edu.um.mateo.inscripciones.model.TiposBecas;
 
 /**
@@ -16,7 +17,7 @@ public interface TipoBecasDao {
     /**
      * Retrieves all of the TipoBeca
      */
-    public List getTiposBeca(TiposBecas tipoBeca);
+    public Map<String, Object> getTiposBeca(Map<String, Object> params);
 
     /**
      * Gets tipoBeca's information based on primary key. An
