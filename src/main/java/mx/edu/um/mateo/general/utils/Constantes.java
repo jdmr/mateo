@@ -2454,6 +2454,7 @@ public class Constantes {
     public static final String CONTAINSKEY_UNIONES = "uniones";
     public static final String CONTAINSKEY_USUARIOS = "usuarios";
     public static final String CONTAINSKEY_COLEGIOS_COLPORTOR = "colegios";
+    public static final String CONTAINSKEY_TIPOSBECAS= "tiposBecas";
     /**
      * Valores para el los addAttribute para las clases
      */
@@ -2753,4 +2754,19 @@ public class Constantes {
     public static final String OBJETIVO = "Objetivo";
     public static final String ALCANZADO = "Alcanzado";
     public static final String FIDELIDAD = "Fidelidad";
+    
+    /**
+     * Valores para Tabla de Porcentajes
+     *
+     */
+    
+    public static final String PATH_TIPOSBECAS = "/inscripciones/tiposBecas";
+    public static final String PATH_TIPOSBECAS_LISTA = "/inscripciones/tiposBecas/lista";
+    public static final String PATH_TIPOSBECAS_VER = "/inscripciones/tiposBecas/ver";
+    public static final String PATH_TIPOSBECAS_NUEVO = "/inscripciones/tiposBecas/nuevo";
+    public static final String PATH_TIPOSBECAS_EDITA = "/inscripciones/tiposBecas/edita";
+    public static final String PATH_TIPOSBECAS_GRABA = "/inscripciones/tiposBecas/graba";
+    public static final String PATH_TIPOSBECAS_ACTUALIZA = "/inscripciones/tiposBecas/actualiza";
+    public static final String PATH_TIPOSBECAS_ELIMINA = "/inscripciones/tiposBecas/elimina";
+    public static final String ADDATTRIBUTE_TIPOSBECAS = "tipoBeca";  
 }
