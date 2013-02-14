@@ -12,7 +12,7 @@ import mx.edu.um.mateo.inscripciones.model.TiposBecas;
  *
  * @author develop
  */
-public interface TipoBecasDao {
+public interface TiposBecasDao {
 
     /**
      * Retrieves all of the TipoBeca

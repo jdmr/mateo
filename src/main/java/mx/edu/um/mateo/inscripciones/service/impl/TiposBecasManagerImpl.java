@@ -6,7 +6,7 @@ package mx.edu.um.mateo.inscripciones.service.impl;
 
 import java.util.List;
 import java.util.Map;
-import mx.edu.um.mateo.inscripciones.dao.TipoBecasDao;
+import mx.edu.um.mateo.inscripciones.dao.TiposBecasDao;
 import mx.edu.um.mateo.inscripciones.model.TiposBecas;
 import mx.edu.um.mateo.inscripciones.service.TiposBecasManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TiposBecasManagerImpl implements TiposBecasManager{
     @Autowired
-     private TipoBecasDao dao;
+     private TiposBecasDao dao;
 
    
    
