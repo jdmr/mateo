@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.inscripciones.dao.TipoBecasDao;
+import mx.edu.um.mateo.inscripciones.dao.TiposBecasDao;
 import mx.edu.um.mateo.inscripciones.model.TiposBecas;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -46,7 +46,7 @@ import org.springframework.web.context.WebApplicationContext;
 public class TiposBecasControllerTest extends BaseTest {
 
     @Autowired
-    private TipoBecasDao tipoBecasDao;
+    private TiposBecasDao tipoBecasDao;
     private static final Logger log = LoggerFactory.getLogger(TiposBecasControllerTest.class);
     @Autowired
     private WebApplicationContext wac;

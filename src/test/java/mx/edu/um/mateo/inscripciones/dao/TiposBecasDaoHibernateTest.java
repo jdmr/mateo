@@ -35,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TiposBecasDaoHibernateTest {
 
     @Autowired
-    private TipoBecasDao instance;
+    private TiposBecasDao instance;
     private static final Logger log = LoggerFactory.getLogger(TiposBecasDaoHibernateTest.class);
     @Autowired
     private SessionFactory sessionFactory;

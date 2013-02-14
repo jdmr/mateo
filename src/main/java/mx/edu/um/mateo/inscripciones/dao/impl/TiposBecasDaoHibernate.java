@@ -7,7 +7,7 @@ package mx.edu.um.mateo.inscripciones.dao.impl;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
-import mx.edu.um.mateo.inscripciones.dao.TipoBecasDao;
+import mx.edu.um.mateo.inscripciones.dao.TiposBecasDao;
 import mx.edu.um.mateo.inscripciones.model.TiposBecas;
 import mx.edu.um.mateo.rh.model.Colegio;
 import org.hibernate.Criteria;
@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class TiposBecasDaoHibernate extends BaseDao implements TipoBecasDao{
+public class TiposBecasDaoHibernate extends BaseDao implements TiposBecasDao{
 
 
     /**

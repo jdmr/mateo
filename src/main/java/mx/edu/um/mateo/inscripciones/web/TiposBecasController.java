@@ -67,7 +67,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping(Constantes.PATH_TIPOSBECAS)
 public class TiposBecasController extends BaseController {
 
-    private static final Logger log = LoggerFactory.getLogger(mx.edu.um.mateo.rh.web.NacionalidadController.class);
+    private static final Logger log = LoggerFactory.getLogger(mx.edu.um.mateo.inscripciones.web.TiposBecasController.class);
     @Autowired
     private TiposBecasManager tiposBecasManager;
     @Autowired
@@ -87,7 +87,7 @@ public class TiposBecasController extends BaseController {
             Usuario usuario,
             Errors errors,
             Model modelo) {
-        log.debug("Mostrando lista de nacionalidades");
+        log.debug("Mostrando lista de tipos de Becas");
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
@@ -127,7 +127,7 @@ public class TiposBecasController extends BaseController {
             try {
                 enviaCorreo(correo, (List<TiposBecas>) params.get(Constantes.CONTAINSKEY_TIPOSBECAS), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
-                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("tipoBeca.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("tiposBecas.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
@@ -159,7 +159,7 @@ public class TiposBecasController extends BaseController {
         log.debug("Pagina{}",pagina);
         // termina paginado
 
-        return Constantes.PATH_TIPOSBECAS_LISTA;
+        return  Constantes.PATH_TIPOSBECAS_LISTA;
     }
     
     
@@ -202,7 +202,7 @@ public class TiposBecasController extends BaseController {
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "tiposBecas.graba.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{tiposBecas.getDescripcion()});
         
-        return "redirect:" + Constantes.PATH_NACIONALIDAD_LISTA + "/" ;
+        return "redirect:" + Constantes.PATH_TIPOSBECAS_LISTA + "/" ;
     }
     
     @RequestMapping("/edita/{id}")
