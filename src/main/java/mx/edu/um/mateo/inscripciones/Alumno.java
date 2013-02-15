@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
 import javax.persistence.Version;
 
 /**
@@ -51,6 +52,7 @@ public class Alumno implements Serializable{
     @Column(name="sexo", nullable=false, insertable=false, updatable=false)
     private String genero;
     @Column(name="f_nacimiento", length=7, insertable=false, updatable=false)
+    @Temporal(javax.persistence.TemporalType.DATE)
     protected Date fNacimiento;
 
     public Alumno() {
@@ -66,6 +68,15 @@ public class Alumno implements Serializable{
                 this.apMaterno = apPaterno;
 		this.apPaterno = apMaterno;
 		
+		
+   }
+   public Alumno(String matricula, String nombre, String apPaterno, String apMaterno,
+			AlumnoAcademico academico) {
+		this.matricula = matricula;
+		this.nombre = nombre;
+		this.apMaterno = apPaterno;
+		this.apPaterno = apMaterno;
+		this.academico = academico;
 		
    }
     

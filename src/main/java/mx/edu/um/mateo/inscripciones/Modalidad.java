@@ -34,6 +34,11 @@ public class Modalidad implements Serializable{
                 this.nombre = nombre;
                 this.enLinea = enLinea;
     }
+    public Modalidad(Integer id,String nombre, String enLinea) {
+                this.nombre = nombre;
+                this.id=id;
+                this.enLinea = enLinea;
+    }
        
 
     public Integer getId() {

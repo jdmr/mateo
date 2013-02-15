@@ -22,16 +22,22 @@
     <logger name="mx.edu.um.mateo" level="trace"/>
     <logger name="org.springframework.orm.hibernate4" level="ERROR"/>
     <logger name="org.hibernate.engine.transaction" level="ERROR"/>
+    <logger name="org.springframework" level="trace"/>
+    <logger name="org.springframework.security" level="trace"/>
+    <logger name="org.hibernate" level="trace"/>
+    
+   
     <!--
+    <logger name="org.springframework.orm.hibernate4" level="DEBUG"/>
+    <logger name="org.hibernate.type" level="TRACE"/>
+    <logger name="org.springframework" level="DEBUG"/>
     <logger name="org.hibernate.SQL" level="trace"/>
     <logger name="org.hibernate.type" level="trace"/>
     
      <logger name="org.springframework" level="trace"/>
      <logger name="org.springframework.security" level="trace"/>
      
-    <logger name="org.springframework.orm.hibernate4" level="DEBUG"/>
-    <logger name="org.hibernate.type" level="TRACE"/>
-    <logger name="org.springframework" level="DEBUG"/>
+  
     -->
     <root level="INFO">
         <appender-ref ref="stdout"/>

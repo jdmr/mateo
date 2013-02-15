@@ -15,6 +15,8 @@ public interface AlumnoDao {
         
     public Map<String, Object> lista(Map<String, Object> params);
         
-    public Alumno obtiene(Long id);
+    public Alumno obtiene(String matricula);
+
+    
 
 }

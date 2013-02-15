@@ -22,7 +22,7 @@ import javax.persistence.Table;
 public class AlumnoAcademico implements Serializable{
     @Id
     @GeneratedValue(strategy= GenerationType.TABLE)
-    private String matricula;
+    private String codigo_personal;
     @Column(name="modalidad_id", nullable=false)
     private Modalidad modalidad;
     @Column(name="tipo_alumno")
@@ -35,16 +35,20 @@ public class AlumnoAcademico implements Serializable{
 		this.modalidad = modalidad;
                 this.tipoAlumno = tipoAlumno;
 		
-		
-		
    }
 
-    public String getMatricula() {
-        return matricula;
+      public AlumnoAcademico(String codigo_personal, Modalidad modalidad, Integer tipoAlumno) {
+                this.codigo_personal=codigo_personal;
+		this.modalidad = modalidad;
+                this.tipoAlumno = tipoAlumno;
+		
+   }
+    public String getCodigo_personal() {
+        return codigo_personal;
     }
 
-    public void setMatricula(String matricula) {
-        this.matricula = matricula;
+    public void setCodigo_personal(String codigo_personal) {
+        this.codigo_personal = codigo_personal;
     }
 
     public Modalidad getModalidad() {
@@ -66,7 +70,7 @@ public class AlumnoAcademico implements Serializable{
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 97 * hash + Objects.hashCode(this.matricula);
+        hash = 97 * hash + Objects.hashCode(this.codigo_personal);
         hash = 97 * hash + Objects.hashCode(this.modalidad);
         hash = 97 * hash + Objects.hashCode(this.tipoAlumno);
         return hash;
@@ -81,7 +85,7 @@ public class AlumnoAcademico implements Serializable{
             return false;
         }
         final AlumnoAcademico other = (AlumnoAcademico) obj;
-        if (!Objects.equals(this.matricula, other.matricula)) {
+        if (!Objects.equals(this.codigo_personal, other.codigo_personal)) {
             return false;
         }
         if (!Objects.equals(this.modalidad, other.modalidad)) {
@@ -95,7 +99,7 @@ public class AlumnoAcademico implements Serializable{
     
     @Override
     public String toString() {
-        return "AlumnoAcademico{" + "matricula=" + matricula + ", modalidad=" + modalidad + ", tipoAlumno=" + tipoAlumno + '}';
+        return "AlumnoAcademico{" + "codigo_personal=" + codigo_personal + ", modalidad=" + modalidad + ", tipoAlumno=" + tipoAlumno + '}';
     }
   
 }

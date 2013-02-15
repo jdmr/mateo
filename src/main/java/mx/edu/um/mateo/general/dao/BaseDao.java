@@ -41,11 +41,13 @@ public abstract class BaseDao {
 	@Autowired
 	@Qualifier("sessionFactory")
 	private SessionFactory sessionFactory;
+	
 
 	@Transactional
 	protected Session currentSession() {
 		return sessionFactory.getCurrentSession();
 	}
+	
 
 	@Transactional
 	protected Session getSession() {
