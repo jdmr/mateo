@@ -58,11 +58,11 @@ public class TiposBecasDaoHibernate extends BaseDao implements TiposBecasDao{
         Criteria criteria = currentSession().createCriteria(TiposBecas.class);
         Criteria countCriteria = currentSession().createCriteria(TiposBecas.class);
 
-        if (params.containsKey("tiposBeca")) {
-            criteria.createCriteria("tiposBeca").add(
-                    Restrictions.idEq(params.get("tiposBeca")));
-            countCriteria.createCriteria("tiposBeca").add(
-                    Restrictions.idEq(params.get("tiposBeca")));
+        if (params.containsKey("empresa")) {
+            criteria.createCriteria("empresa").add(
+                    Restrictions.idEq(params.get("empresa")));
+            countCriteria.createCriteria("empresa").add(
+                    Restrictions.idEq(params.get("empresa")));
         }
 
         if (params.containsKey("filtro")) {
