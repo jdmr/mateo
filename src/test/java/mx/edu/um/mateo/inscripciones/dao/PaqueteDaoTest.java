@@ -83,7 +83,7 @@ public class PaqueteDaoTest {
             paquete.setMatricula(new Double("3.6"));
             paquete.setNombre("Test");
             paquete.setEmpresa(empresa);
-            instance.savePaquete(paquete);
+            currentSession().save(paquete);
 //        currentSession().save(paquete);
         }
 
@@ -113,7 +113,7 @@ public class PaqueteDaoTest {
         paquete.setMatricula(new Double("3.6"));
         paquete.setNombre(nombre);
         paquete.setEmpresa(empresa);
-        instance.savePaquete(paquete);
+        currentSession().save(paquete);
         assertNotNull(paquete.getId());
         Paquete paquete1 = instance.getPaquete(paquete.getId());
         assertEquals(paquete.getNombre(), paquete1.getNombre());
@@ -138,7 +138,7 @@ public class PaqueteDaoTest {
         paquete.setMatricula(new Double("3.6"));
         paquete.setNombre(nombre);
         paquete.setEmpresa(empresa);
-        instance.savePaquete(paquete);
+        currentSession().save(paquete);
         assertNotNull(paquete.getId());
     }
 
@@ -160,7 +160,7 @@ public class PaqueteDaoTest {
         paquete.setMatricula(new Double("3.6"));
         paquete.setNombre(nombre);
         paquete.setEmpresa(empresa);
-        instance.savePaquete(paquete);
+        currentSession().save(paquete);
         assertNotNull(paquete.getId());
         String descripcion = instance.removePaquete(paquete.getId());
         assertEquals(paquete.getDescripcion(), descripcion);

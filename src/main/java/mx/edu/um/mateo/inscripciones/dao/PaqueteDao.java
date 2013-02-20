@@ -5,6 +5,7 @@
 package mx.edu.um.mateo.inscripciones.dao;
 
 import java.util.Map;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inscripciones.model.Paquete;
 import mx.edu.um.mateo.inscripciones.model.TiposBecas;
 
@@ -29,7 +30,7 @@ public interface PaqueteDao {
      * Saves a paquete's information
      * @param paquete the object to be saved
      */    
-    public void savePaquete(Paquete paquete);
+    public void graba(Paquete paquete, Usuario usuario);
 
     /**
      * Removes a paquete from the database by id
