@@ -4,7 +4,6 @@
  */
 package mx.edu.um.mateo.inscripciones.web;
 
-import mx.edu.um.mateo.rh.web.RhController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
