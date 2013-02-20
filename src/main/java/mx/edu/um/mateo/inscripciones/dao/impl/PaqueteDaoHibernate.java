@@ -9,8 +9,10 @@ import mx.edu.um.mateo.inscripciones.model.Paquete;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inscripciones.model.TiposBecas;
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -113,11 +115,16 @@ public class PaqueteDaoHibernate extends BaseDao implements PaqueteDao{
     /**
      * @see mx.edu.um.afe.dao.TipoAFEBecaDao#saveTipoBeca(TipoAFEBeca tipoBeca)
      */    
-    @Override
-    public void savePaquete(final Paquete paquete) {
+   public void graba(final Paquete paquete, Usuario usuario) {
+        Session session = currentSession();
+        if (usuario != null) {
+            paquete.setEmpresa(usuario.getEmpresa());
+        }
         currentSession().saveOrUpdate(paquete);
-    }
+        currentSession().merge(paquete);
+        currentSession().flush();
 
+    }
     /**
      * @see mx.edu.um.afe.dao.TipoAFEBecaDao#removeTipoBeca(Integer id)
      */
