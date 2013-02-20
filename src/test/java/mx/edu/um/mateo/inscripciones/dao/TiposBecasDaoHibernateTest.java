@@ -95,7 +95,7 @@ public class TiposBecasDaoHibernateTest {
         tiposBecas.setStatus("a");
         tiposBecas.setTope(new BigDecimal(350));
         tiposBecas.setEmpresa(empresa);
-        instance.saveTipoBeca(tiposBecas);
+        currentSession().save(tiposBecas);
         assertNotNull(tiposBecas.getId());
         TiposBecas prueba = instance.getTipoBeca(tiposBecas.getId());
         assertEquals(prueba.getDescripcion(), tiposBecas.getDescripcion());
@@ -120,7 +120,7 @@ public class TiposBecasDaoHibernateTest {
         tiposBecas.setStatus("a");
         tiposBecas.setTope(new BigDecimal(350));
         tiposBecas.setEmpresa(empresa);
-        instance.saveTipoBeca(tiposBecas);
+        currentSession().save(tiposBecas);
         assertNotNull(tiposBecas.getId());
     }
 
@@ -143,11 +143,11 @@ public class TiposBecasDaoHibernateTest {
         tiposBecas.setStatus("a");
         tiposBecas.setTope(new BigDecimal(350));
         tiposBecas.setEmpresa(empresa);
-        instance.saveTipoBeca(tiposBecas);
+        currentSession().save(tiposBecas);
         assertNotNull(tiposBecas.getId());
         String descripcion = "prueba";
         tiposBecas.setDescripcion(descripcion);
-        instance.saveTipoBeca(tiposBecas);
+        currentSession().save(tiposBecas);
         assertEquals("prueba", tiposBecas.getDescripcion());
     }
 
@@ -170,7 +170,7 @@ public class TiposBecasDaoHibernateTest {
         tiposBecas.setStatus("a");
         tiposBecas.setTope(new BigDecimal(350));
         tiposBecas.setEmpresa(empresa);
-        instance.saveTipoBeca(tiposBecas);
+        currentSession().save(tiposBecas);
         assertNotNull(tiposBecas.getId());
         String descripcion = instance.removeTipoBeca(tiposBecas.getId());
         assertEquals(descripcion, tiposBecas.getDescripcion());

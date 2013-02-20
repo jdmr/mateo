@@ -6,6 +6,7 @@ package mx.edu.um.mateo.inscripciones.service.impl;
 
 import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inscripciones.dao.TiposBecasDao;
 import mx.edu.um.mateo.inscripciones.model.TiposBecas;
 import mx.edu.um.mateo.inscripciones.service.TiposBecasManager;
@@ -41,8 +42,8 @@ public class TiposBecasManagerImpl implements TiposBecasManager{
 
   
     @Override
-    public void saveTipoBeca(TiposBecas tipoBeca) {
-        dao.saveTipoBeca(tipoBeca);
+    public void graba(TiposBecas tipoBeca, Usuario usuario) {
+        dao.graba(tipoBeca, usuario);
     }
 
    

@@ -7,10 +7,13 @@ package mx.edu.um.mateo.inscripciones.dao.impl;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inscripciones.dao.TiposBecasDao;
 import mx.edu.um.mateo.inscripciones.model.TiposBecas;
 import mx.edu.um.mateo.rh.model.Colegio;
+import mx.edu.um.mateo.rh.model.PerDed;
 import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -117,10 +120,16 @@ public class TiposBecasDaoHibernate extends BaseDao implements TiposBecasDao{
      * @see mx.edu.um.afe.dao.TipoAFEBecaDao#saveTipoBeca(TipoAFEBeca tipoBeca)
      */    
     @Override
-    public void saveTipoBeca(final TiposBecas tipoBeca) {
-        currentSession().saveOrUpdate(tipoBeca);
-    }
+     public void graba(final TiposBecas tiposBecas, Usuario usuario) {
+        Session session = currentSession();
+        if (usuario != null) {
+            tiposBecas.setEmpresa(usuario.getEmpresa());
+        }
+        currentSession().saveOrUpdate(tiposBecas);
+        currentSession().merge(tiposBecas);
+        currentSession().flush();
 
+    }
     /**
      * @see mx.edu.um.afe.dao.TipoAFEBecaDao#removeTipoBeca(Integer id)
      */
