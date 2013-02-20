@@ -6,6 +6,7 @@ package mx.edu.um.mateo.inscripciones.dao;
 
 import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inscripciones.model.TiposBecas;
 
 /**
@@ -33,7 +34,7 @@ public interface TiposBecasDao {
      * Saves a tipoBeca's information
      * @param tipoBeca the object to be saved
      */    
-    public void saveTipoBeca(TiposBecas tipoBeca);
+    public void graba(TiposBecas tipoBeca, Usuario usuario);
 
     /**
      * Removes a tipoBeca from the database by id

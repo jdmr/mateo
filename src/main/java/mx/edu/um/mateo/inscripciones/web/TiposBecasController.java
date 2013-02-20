@@ -76,7 +76,8 @@ public class TiposBecasController extends BaseController {
     private ResourceBundleMessageSource messageSource;
     @Autowired
     private Ambiente ambiente;
-      @RequestMapping ({"","/lista"})
+
+    @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
             @RequestParam(required = false) Long pagina,
@@ -105,7 +106,7 @@ public class TiposBecasController extends BaseController {
             params.put(Constantes.CONTAINSKEY_ORDER, order);
             params.put(Constantes.CONTAINSKEY_SORT, sort);
         }
-        
+
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = tiposBecasManager.getTiposBeca(params);
@@ -118,11 +119,11 @@ public class TiposBecasController extends BaseController {
                 //errors.reject("error.generar.reporte");
             }
         }
-        
+
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = tiposBecasManager.getTiposBeca(params);
-            
+
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
                 enviaCorreo(correo, (List<TiposBecas>) params.get(Constantes.CONTAINSKEY_TIPOSBECAS), request);
@@ -133,7 +134,7 @@ public class TiposBecasController extends BaseController {
             }
         }
         params = tiposBecasManager.getTiposBeca(params);
-        log.debug("params{}",params.get(Constantes.CONTAINSKEY_TIPOSBECAS));
+        log.debug("params{}", params.get(Constantes.CONTAINSKEY_TIPOSBECAS));
         modelo.addAttribute(Constantes.CONTAINSKEY_TIPOSBECAS, params.get(Constantes.CONTAINSKEY_TIPOSBECAS));
 
         // inicia paginado
@@ -147,64 +148,75 @@ public class TiposBecasController extends BaseController {
         } while (i++ < cantidadDePaginas);
         List<Nacionalidad> nacionalidades = (List<Nacionalidad>) params.get(Constantes.CONTAINSKEY_TIPOSBECAS);
         Long primero = ((pagina - 1) * max) + 1;
-        log.debug("primero {}",primero);
-        log.debug("Nacionalidadesize {}",nacionalidades.size());
+        log.debug("primero {}", primero);
+        log.debug("Nacionalidadesize {}", nacionalidades.size());
         Long ultimo = primero + (nacionalidades.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
         log.debug("Paginacion{}", paginacion);
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
-        log.debug("paginas{}",paginas);
+        log.debug("paginas{}", paginas);
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
-        log.debug("Pagina{}",pagina);
+        log.debug("Pagina{}", pagina);
         // termina paginado
 
-        return  Constantes.PATH_TIPOSBECAS_LISTA;
+        return Constantes.PATH_TIPOSBECAS_LISTA;
     }
-    
-    
+
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable String id, Model modelo) {
         log.debug("Mostrando Tipos de Becas {}", id);
         TiposBecas tiposBecas = tiposBecasManager.getTipoBeca(id);
-        
+
         modelo.addAttribute(Constantes.ADDATTRIBUTE_TIPOSBECAS, tiposBecas);
-        
+
         return Constantes.PATH_TIPOSBECAS_VER;
     }
-    
+
     @RequestMapping("/nuevo")
-    public String nueva(Model modelo) {
+    public String nueva(HttpServletRequest request, Model modelo) {
         log.debug("Nuevo tipo de Beca");
         TiposBecas tiposBecas = new TiposBecas();
+        modelo.addAttribute("tipoBeca", tiposBecas);
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", request.getSession()
+                .getAttribute("empresaId"));
+        params.put("reporte", true);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_TIPOSBECAS, tiposBecas);
         return Constantes.PATH_TIPOSBECAS_NUEVO;
+      
+
+		
     }
-    
+
     @Transactional
     @RequestMapping(value = "/graba", method = RequestMethod.POST)
-    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid TiposBecas  tiposBecas, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid TiposBecas tiposBecas, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
+            Map<String, Object> params = new HashMap<>();
+            params.put("empresa", request.getSession()
+                    .getAttribute("empresaId"));
             return Constantes.PATH_TIPOSBECAS_NUEVO;
         }
-        
+
         try {
-             tiposBecasManager.saveTipoBeca(tiposBecas);
+            Usuario usuario = ambiente.obtieneUsuario();
+            tiposBecasManager.graba(tiposBecas,usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el tipo de Beca", e);
             return Constantes.PATH_TIPOSBECAS_NUEVO;
         }
-        
+
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "tiposBecas.graba.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{tiposBecas.getDescripcion()});
-        
-        return "redirect:" + Constantes.PATH_TIPOSBECAS_LISTA + "/" ;
+
+        return "redirect:" + Constantes.PATH_TIPOSBECAS_LISTA + "/";
     }
-    
+
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable String id, Model modelo) {
         log.debug("Editar cuenta de tipos de becas {}", id);
@@ -212,15 +224,14 @@ public class TiposBecasController extends BaseController {
         modelo.addAttribute(Constantes.ADDATTRIBUTE_TIPOSBECAS, tiposBecas);
         return Constantes.PATH_TIPOSBECAS_EDITA;
     }
-    
-       
+
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam String id, Model modelo, @ModelAttribute TiposBecas tiposBecas, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina cuenta de tipos de becas");
         try {
-           tiposBecasManager.removeTipoBeca(id);
-            
+            tiposBecasManager.removeTipoBeca(id);
+
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "tiposBecas.elimina.message");
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{tiposBecas.getDescripcion()});
         } catch (Exception e) {
@@ -228,10 +239,10 @@ public class TiposBecasController extends BaseController {
             bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_TIPOSBECAS, new String[]{"tiposBecas.no.elimina.message"}, null, null));
             return Constantes.PATH_TIPOSBECAS_VER;
         }
-        
-        return "redirect:" + Constantes.PATH_TIPOSBECAS_LISTA ;
+
+        return "redirect:" + Constantes.PATH_TIPOSBECAS_LISTA;
     }
-    
+
     private void generaReporte(String tipo, List<TiposBecas> tiposBecas, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
@@ -258,9 +269,9 @@ public class TiposBecasController extends BaseController {
                 bos.flush();
             }
         }
-        
+
     }
-    
+
     private void enviaCorreo(String tipo, List<TiposBecas> tiposBecas, HttpServletRequest request) throws JRException, MessagingException {
         log.debug("Enviando correo {}", tipo);
         byte[] archivo = null;
@@ -278,7 +289,7 @@ public class TiposBecasController extends BaseController {
                 archivo = generaXls(tiposBecas);
                 tipoContenido = "application/vnd.ms-excel";
         }
-        
+
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(ambiente.obtieneUsuario().getUsername());
@@ -288,17 +299,17 @@ public class TiposBecasController extends BaseController {
         helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
         mailSender.send(message);
     }
-    
+
     private byte[] generaPdf(List nacionalidades) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/tiposBecas.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(nacionalidades));
         byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
-        
+
         return archivo;
     }
-    
+
     private byte[] generaCsv(List nacionalidades) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRCsvExporter exporter = new JRCsvExporter();
@@ -310,10 +321,10 @@ public class TiposBecasController extends BaseController {
         exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
         exporter.exportReport();
         byte[] archivo = byteArrayOutputStream.toByteArray();
-        
+
         return archivo;
     }
-    
+
     private byte[] generaXls(List nacionalidades) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRXlsExporter exporter = new JRXlsExporter();
@@ -331,7 +342,7 @@ public class TiposBecasController extends BaseController {
         exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
         exporter.exportReport();
         byte[] archivo = byteArrayOutputStream.toByteArray();
-        
+
         return archivo;
     }
 }
