@@ -2455,6 +2455,7 @@ public class Constantes {
     public static final String CONTAINSKEY_USUARIOS = "usuarios";
     public static final String CONTAINSKEY_COLEGIOS_COLPORTOR = "colegios";
     public static final String CONTAINSKEY_TIPOSBECAS= "tiposBecas";
+    public static final String CONTAINSKEY_PAQUETES= "paquetes";
     /**
      * Valores para el los addAttribute para las clases
      */
@@ -2756,7 +2757,7 @@ public class Constantes {
     public static final String FIDELIDAD = "Fidelidad";
     
     /**
-     * Valores para Tabla de Porcentajes
+     * Valores para Tipos de beca
      *
      */
     
@@ -2769,4 +2770,18 @@ public class Constantes {
     public static final String PATH_TIPOSBECAS_ACTUALIZA = "/inscripciones/tiposBecas/actualiza";
     public static final String PATH_TIPOSBECAS_ELIMINA = "/inscripciones/tiposBecas/elimina";
     public static final String ADDATTRIBUTE_TIPOSBECAS = "tipoBeca";  
+    /**
+     * Valores para Paquete
+     *
+     */
+    
+    public static final String PATH_PAQUETE = "/inscripciones/paquete";
+    public static final String PATH_PAQUETE_LISTA = "/inscripciones/paquete/lista";
+    public static final String PATH_PAQUETE_VER = "/inscripciones/paquete/ver";
+    public static final String PATH_PAQUETE_NUEVO = "/inscripciones/paquete/nuevo";
+    public static final String PATH_PAQUETE_EDITA = "/inscripciones/paquete/edita";
+    public static final String PATH_PAQUETE_GRABA = "/inscripciones/paquete/graba";
+    public static final String PATH_PAQUETE_ACTUALIZA = "/inscripciones/paquete/actualiza";
+    public static final String PATH_PAQUETE_ELIMINA = "/inscripciones/paquete/elimina";
+    public static final String ADDATTRIBUTE_PAQUETE = "paquete";  
 }
