@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import mx.edu.um.mateo.general.model.Empresa;
 
 /**
@@ -24,6 +25,8 @@ public class Paquete {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Version
+    private Integer version;
     @Column(nullable = false, length = 50)
     private String nombre;
     @Column(nullable = false, length = 250)
@@ -160,6 +163,14 @@ public class Paquete {
 
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
     
 }
