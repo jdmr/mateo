@@ -198,7 +198,7 @@ public class DependienteController extends BaseController{
         log.debug("Editar cuenta de dependiente {}", id);
         Dependiente dependiente = dependienteManager.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_DEPENDIENTE, dependiente);
-        modelo.addAttribute(Constantes.TIPODEPENDIENTE_KEY, TipoDependiente.values());
+        modelo.addAttribute(Constantes.TIPODEPENDIENTE_LIST, TipoDependiente.values());
         return Constantes.PATH_DEPENDIENTE_EDITA;
     }
     @Transactional

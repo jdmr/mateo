@@ -11,7 +11,6 @@ package mx.edu.um.mateo.rh.model;
 
 
 public enum NivelEstudios {
-    UNKNOWN(0,"Todas"),
     PRIMARIA(1, "Primaria"),
     SECUNDARIA(2, "secundaria"),
     PREPARATORIA(3, "Preparatoria"),
@@ -57,13 +56,12 @@ public enum NivelEstudios {
 
     public static NivelEstudios valueOf(Integer id){
         switch(id){
-            case 1 : return PRIMARIA;
             case 2 : return SECUNDARIA;
             case 3 : return PREPARATORIA;
             case 4 : return LICENCIATURA;
             case 5 : return MAESTRIA;
-            case 6 : return DOCTORADO;
-            default: return UNKNOWN;
+            case 6: return DOCTORADO;
+            default: return PRIMARIA;
         }
     }
     

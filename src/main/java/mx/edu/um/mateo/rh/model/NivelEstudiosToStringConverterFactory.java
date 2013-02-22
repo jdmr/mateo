@@ -13,7 +13,7 @@ import org.springframework.core.convert.converter.ConverterFactory;
  */
 public class NivelEstudiosToStringConverterFactory implements ConverterFactory<NivelEstudios, String>{
  
-	@SuppressWarnings("unchecked")
+	//@SuppressWarnings("unchecked")
 	@Override
 	public <T extends String> Converter<NivelEstudios, T> getConverter(Class<T> arg0) {		
 		return (Converter<NivelEstudios, T>)new NivelEstudiosToStringConverter();
