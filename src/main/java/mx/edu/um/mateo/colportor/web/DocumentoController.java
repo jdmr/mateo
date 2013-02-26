@@ -217,12 +217,12 @@ public class DocumentoController {
         modelo.addAttribute(Constantes.CONTAINSKEY_TEMPORADAS, params.get(Constantes.CONTAINSKEY_TEMPORADAS));
 
         List<Documento> lista = (List) params.get(Constantes.CONTAINSKEY_DOCUMENTOS);
+        log.debug("Items en lista {}", lista.size());
         Iterator<Documento> iter = lista.iterator();
 
         List<Temporada> listaTemporada = (List) params.get(Constantes.CONTAINSKEY_TEMPORADAS);
 
         Map<String, Object> temporadas = temporadaDao.lista(null);
-        log.debug("Temporadas {}", temporadas.get(Constantes.CONTAINSKEY_TEMPORADAS));
         modelo.addAttribute(Constantes.CONTAINSKEY_TEMPORADAS, temporadas.get(Constantes.CONTAINSKEY_TEMPORADAS));
 
         Documento doc = null;
@@ -233,16 +233,14 @@ public class DocumentoController {
         BigDecimal objetivo = new BigDecimal(temporadaColportorTmp.getObjetivo());
         BigDecimal fidelidad = new BigDecimal("0");
         BigDecimal alcanzado = new BigDecimal("0");
-
-
-
+        
         while (iter.hasNext()) {
-            doc = iter.next();
+            doc = iter.next();            
             switch (doc.getTipoDeDocumento()) {
                 case Constantes.BOLETIN: {
-//                    log.debug("importe {}", doc.getImporte());
+                    log.debug("{} importe {}", doc.getId(), doc.getImporte());
                     totalBoletin = totalBoletin.add(doc.getImporte());
-//                    log.debug("totalBoletin{}" + totalBoletin, totalBoletin);
+                    log.debug("totalBoletin {}", totalBoletin);
                     break;
 
                 }
@@ -255,22 +253,22 @@ public class DocumentoController {
                 }
 
                 case Constantes.DEPOSITO_CAJA: {
-//                    log.debug("importe {}", doc.getImporte());
+                    log.debug("importe {}", doc.getImporte());
                     totalDepositos = totalDepositos.add(doc.getImporte());
-//                   log.debug("totalDepositos {}", totalDepositos);
+                   log.debug("totalDepositos {}", totalDepositos);
                     break;
                 }
 
                 case Constantes.DEPOSITO_BANCO: {
-//                    log.debug("importe {}", doc.getImporte());
+                    log.debug("importe {}", doc.getImporte());
                     totalDepositos = totalDepositos.add(doc.getImporte());
-//                   log.debug("totalDepositos {}", totalDepositos);
+                   log.debug("totalDepositos {}", totalDepositos);
                     break;
                 }
                 case Constantes.NOTAS_DE_COMPRA: {
-//                    log.debug("importe {}", doc.getImporte());
+                    log.debug("importe {}", doc.getImporte());
                     totalDepositos = totalDepositos.add(doc.getImporte());
-//                    log.debug("totalDepositos {}", totalDepositos);
+                    log.debug("totalDepositos {}", totalDepositos);
                     break;
 
                 }
@@ -285,9 +283,11 @@ public class DocumentoController {
         modelo.addAttribute(Constantes.OBJETIVO, objetivo);
         
         if (objetivo.compareTo(new BigDecimal("0")) > 0) {
+            log.debug("% alcanzado = [totalBoletin {} / objetivo {}] = {}", new Object []{totalBoletin, objetivo, totalBoletin.divide(objetivo, 6, RoundingMode.HALF_EVEN).multiply(new BigDecimal("100"))});
             alcanzado = totalBoletin.divide(objetivo, 6, RoundingMode.HALF_EVEN).multiply(new BigDecimal("100"));
         }
         if (totalBoletin.compareTo(new BigDecimal("0")) > 0) {
+            log.debug("fidelidad = [totalDiezmos {} / totalBoletin {}] = {}");
             fidelidad = totalDiezmos.divide(totalBoletin.movePointLeft(1), 6, RoundingMode.HALF_EVEN).multiply(new BigDecimal("100"));
         }
         modelo.addAttribute(Constantes.ALCANZADO, alcanzado.setScale(2, BigDecimal.ROUND_HALF_EVEN));
@@ -454,6 +454,7 @@ public class DocumentoController {
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "documento.actualizado.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{documentos.getFolio()});
 
+        log.debug("Id del documento actualizado {}", documentos.getId());
         return "redirect:" + Constantes.PATH_DOCUMENTO_VER + "/" + documentos.getId();
     }
 

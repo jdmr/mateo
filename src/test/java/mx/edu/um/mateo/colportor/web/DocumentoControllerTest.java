@@ -532,6 +532,7 @@ public class DocumentoControllerTest extends BaseTest {
     @Test
     public void debieraMostrarListaVaciaDeDocumentosDeColportorAlAsociado() throws Exception {
         log.debug("Debiera monstrar lista de documentos de un colportor al asociado");
+        log.debug("Debiera monstrar lista de documentos de un colportor al asociado");
         Union union = new Union("test");
         union.setStatus(Constantes.STATUS_ACTIVO);
         currentSession().save(union);
@@ -561,59 +562,111 @@ public class DocumentoControllerTest extends BaseTest {
         currentSession().save(asociacion);
         assertNotNull(asociacion.getId());
         
-        Asociado asociado = new Asociado("test22@test.com", "test", "test", "test", "test",
+        Usuario asociado = new Asociado("test22@test.com", "test", "test", "test", "test",
                 "1", Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE,
                 Constantes.COLONIA, Constantes.MUNICIPIO);
         asociado.setEmpresa(empresa);
         asociado.setAlmacen(almacen);
         asociado.setAsociacion(asociacion);
+        asociado.setRoles(roles);
         currentSession().save(asociado);
         assertNotNull(asociado.getId());
         
         this.authenticate(asociado, asociado.getPassword(), new ArrayList(asociado.getAuthorities()));
-        
-        this.mockMvc.perform(get(Constantes.PATH_DOCUMENTO))
-                .andExpect(status().isOk())
-                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_DOCUMENTO_LISTA + ".jsp"));
-    }
 
-    //@Test
-    public void debieraMostrarListaDeDocumentosDeColportorAlAsociado() throws Exception {
-        log.debug("Debiera monstrar lista de documentos de un colportor al asociado");
-        Union union = new Union("test");
-        union = unionDao.crea(union);
-        Rol rol = new Rol("ROLE_ASO");
-        rol = rolDao.crea(rol);
-        Usuario usuario = new Asociado("test@um.edu.mx", "test", "test", "test", "test", "A", "98745", "8262630900", "test", "test", "tset");
-        Long asociacionId = 0l;
-        actualizaUsuario:
-        for (Asociacion asociacion : union.getAsociaciones()) {
-            asociacionId = asociacion.getId();
-            break actualizaUsuario;
-        }
-        usuario = usuarioDao.crea(usuario, asociacionId, new String[]{rol.getAuthority()});
-        Long id = usuario.getId();
-        assertNotNull(id);
-        this.authenticate(usuario, usuario.getPassword(), new ArrayList(usuario.getAuthorities()));
-
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
-        Colportor colportorTmp = null;
-        
         TemporadaColportor temporadaColportor = null;
         Temporada temporada = new Temporada("test");
         temporada.setAsociacion(asociacion);
         currentSession().save(temporada);
+
         ColegioColportor colegio = new ColegioColportor("test3", Constantes.STATUS_ACTIVO);
         currentSession().save(colegio);
-        colportorTmp = new Colportor("test@test.com", "test", "test", "test",
+        Colportor colportorTmp = new Colportor("test@test.com", "test", "test", "test",
                 "test", "1234", Constantes.STATUS_ACTIVO, "8262652626", "test", "test",
                 "10706", "test", "test001", new Date());
+        colportorTmp.setEmpresa(empresa);
+        colportorTmp.setAlmacen(almacen);
+        colportorTmp.setRoles(roles);
         colportorTmp.setAsociacion(asociacion);
         currentSession().save(colportorTmp);
         assertNotNull(colportorTmp.getId());
         
-        temporadaColportor = new TemporadaColportor(colportorTmp, asociacion, usuario, temporada, union, colegio);
+        temporadaColportor = new TemporadaColportor(colportorTmp, asociacion, asociado, temporada, union, colegio);
+        temporadaColportor.setStatus(Constantes.STATUS_ACTIVO);
+        temporadaColportor.setObjetivo("11250");
+        temporadaColportor.setObservaciones("Observaciones");
+        temporadaColportor.setFecha(new Date());
+        temporadaColportorDao.crea(temporadaColportor);
+        assertNotNull(temporadaColportor);
+        log.debug("TemporadaColportor" + temporadaColportor);
+
+        this.mockMvc.perform(get(Constantes.PATH_DOCUMENTO_LISTA))
+                .andExpect(status().isOk())
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_DOCUMENTO_LISTA + ".jsp"));
+    }
+
+    @Test
+    public void debieraMostrarListaDeDocumentosDeColportorAlAsociado() throws Exception {
+        log.debug("Debiera monstrar lista de documentos de un colportor al asociado");
+        Union union = new Union("test");
+        union.setStatus(Constantes.STATUS_ACTIVO);
+        currentSession().save(union);
+        assertNotNull(union.getId());
+        
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        assertNotNull(organizacion.getId());
+        
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        assertNotNull(empresa.getId());
+        
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        assertNotNull(almacen.getId());
+        
+        Set<Rol> roles = new HashSet<>();
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        roles.add(rol);
+        rol = new Rol("ROLE_ASO");
+        currentSession().save(rol);
+        roles.add(rol);
+        
+        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
+        currentSession().save(asociacion);
+        assertNotNull(asociacion.getId());
+        
+        Usuario asociado = new Asociado("test22@test.com", "test", "test", "test", "test",
+                "1", Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE,
+                Constantes.COLONIA, Constantes.MUNICIPIO);
+        asociado.setEmpresa(empresa);
+        asociado.setAlmacen(almacen);
+        asociado.setAsociacion(asociacion);
+        asociado.setRoles(roles);
+        currentSession().save(asociado);
+        assertNotNull(asociado.getId());
+        
+        this.authenticate(asociado, asociado.getPassword(), new ArrayList(asociado.getAuthorities()));
+
+        TemporadaColportor temporadaColportor = null;
+        Temporada temporada = new Temporada("test");
+        temporada.setAsociacion(asociacion);
+        currentSession().save(temporada);
+
+        ColegioColportor colegio = new ColegioColportor("test3", Constantes.STATUS_ACTIVO);
+        currentSession().save(colegio);
+        Colportor colportorTmp = new Colportor("test@test.com", "test", "test", "test",
+                "test", "1234", Constantes.STATUS_ACTIVO, "8262652626", "test", "test",
+                "10706", "test", "test001", new Date());
+        colportorTmp.setEmpresa(empresa);
+        colportorTmp.setAlmacen(almacen);
+        colportorTmp.setRoles(roles);
+        colportorTmp.setAsociacion(asociacion);
+        currentSession().save(colportorTmp);
+        assertNotNull(colportorTmp.getId());
+        
+        temporadaColportor = new TemporadaColportor(colportorTmp, asociacion, asociado, temporada, union, colegio);
         temporadaColportor.setStatus(Constantes.STATUS_ACTIVO);
         temporadaColportor.setObjetivo("11250");
         temporadaColportor.setObservaciones("Observaciones");
@@ -630,6 +683,7 @@ public class DocumentoControllerTest extends BaseTest {
             documentoDao.crea(documento);
             assertNotNull(documento);
         }
+        
         this.mockMvc.perform(get(Constantes.PATH_DOCUMENTO_LISTA)
                 .sessionAttr("colportorTmp", colportorTmp))
                 .andExpect(status().isOk()).andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_DOCUMENTO_LISTA + ".jsp"))
@@ -639,163 +693,330 @@ public class DocumentoControllerTest extends BaseTest {
                 .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINA));
     }
 
-    //@Test
+    @Test
     public void deberiaMostrarDocumentosDelaClaveDelColportorAlAsociado() throws Exception {
         log.debug("Mostrando documentos de un colportor seleccionado por su clave");
         Union union = new Union("test");
-        union = unionDao.crea(union);
-        Rol rol = new Rol("ROLE_ASO");
-        rol = rolDao.crea(rol);
-        Usuario usuario = new Asociado("test@um.edu.mx", "test", "test", "test", "test", "A", "98745", "8262630900", "test", "test", "tset");
-        Long asociacionId = 0l;
-        actualizaUsuario:
-        for (Asociacion asociacion : union.getAsociaciones()) {
-            asociacionId = asociacion.getId();
-            break actualizaUsuario;
-        }
-        usuario = usuarioDao.crea(usuario, asociacionId, new String[]{rol.getAuthority()});
-        Long id = usuario.getId();
-        assertNotNull(id);
-        this.authenticate(usuario, usuario.getPassword(), new ArrayList(usuario.getAuthorities()));
-
+        union.setStatus(Constantes.STATUS_ACTIVO);
+        currentSession().save(union);
+        assertNotNull(union.getId());
+        
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        assertNotNull(organizacion.getId());
+        
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        assertNotNull(empresa.getId());
+        
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        assertNotNull(almacen.getId());
+        
+        Set<Rol> roles = new HashSet<>();
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        roles.add(rol);
+        rol = new Rol("ROLE_ASO");
+        currentSession().save(rol);
+        roles.add(rol);
+        
         Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
         currentSession().save(asociacion);
-        Colportor colportor = null;
-        TemporadaColportor temporadaColportor = null;
-        String clave = "12345";
+        assertNotNull(asociacion.getId());
         
+        Usuario asociado = new Asociado("test22@test.com", "test", "test", "test", "test",
+                "1", Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE,
+                Constantes.COLONIA, Constantes.MUNICIPIO);
+        asociado.setEmpresa(empresa);
+        asociado.setAlmacen(almacen);
+        asociado.setAsociacion(asociacion);
+        asociado.setRoles(roles);
+        currentSession().save(asociado);
+        assertNotNull(asociado.getId());
+        
+        this.authenticate(asociado, asociado.getPassword(), new ArrayList(asociado.getAuthorities()));
+
+        TemporadaColportor temporadaColportor = null;
         Temporada temporada = new Temporada("test");
         temporada.setAsociacion(asociacion);
         currentSession().save(temporada);
+
         ColegioColportor colegio = new ColegioColportor("test3", Constantes.STATUS_ACTIVO);
         currentSession().save(colegio);
-        for (int i = 0; i < 10; i++) {
-            colportor = new Colportor("test" + i + "@test.com", "test", "test", "test",
-                    "test", "1234" + i, Constantes.STATUS_ACTIVO, "8262652626", "test", "test",
-                    "10706" + i, "test", "test001", new Date());
-            colportor.setAsociacion(asociacion);
-            currentSession().save(colportor);
-            assertNotNull(colportor.getId());
-            temporadaColportor = new TemporadaColportor(colportor, asociacion, usuario, temporada, union, colegio);
-            temporadaColportor.setStatus(Constantes.STATUS_ACTIVO);
-            temporadaColportor.setObjetivo("11250");
-            temporadaColportor.setObservaciones("Observaciones");
-            temporadaColportor.setFecha(new Date());
-            temporadaColportorDao.crea(temporadaColportor);
-            assertNotNull(temporadaColportor);
-            log.debug("TemporadaColportor" + temporadaColportor);
+        
+        Colportor colportorTmp = new Colportor("test@test.com", "test", "test", "test",
+                "test", "1234", Constantes.STATUS_ACTIVO, "8262652626", "test", "test",
+                "10706", "test", "test001", new Date());
+        colportorTmp.setEmpresa(empresa);
+        colportorTmp.setAlmacen(almacen);
+        colportorTmp.setRoles(roles);
+        colportorTmp.setAsociacion(asociacion);
+        currentSession().save(colportorTmp);
+        assertNotNull(colportorTmp.getId());
+        
+        temporadaColportor = new TemporadaColportor(colportorTmp, asociacion, asociado, temporada, union, colegio);
+        temporadaColportor.setStatus(Constantes.STATUS_ACTIVO);
+        temporadaColportor.setObjetivo("11250");
+        temporadaColportor.setObservaciones("Observaciones");
+        temporadaColportor.setFecha(new Date());
+        temporadaColportorDao.crea(temporadaColportor);
+        assertNotNull(temporadaColportor.getId());
+        
+        Documento documento = null;
+        for (int i = 0; i < 8; i++) {
+            documento = new Documento(Constantes.TIPO_DOCUMENTO, Constantes.FOLIO,
+                    new Date(), Constantes.IMPORTE, Constantes.OBSERVACIONES, null);
+            documento.setTemporadaColportor(temporadaColportor);
+            documentoDao.crea(documento);
+            assertNotNull(documento);
         }
+        
+        colportorTmp = new Colportor("test2@test.com", "test2", "test2", "test2",
+                "test", "5678", Constantes.STATUS_ACTIVO, "8262652626", "test", "test",
+                "10706", "test", "test001", new Date());
+        colportorTmp.setEmpresa(empresa);
+        colportorTmp.setAlmacen(almacen);
+        colportorTmp.setRoles(roles);
+        colportorTmp.setAsociacion(asociacion);
+        currentSession().save(colportorTmp);
+        assertNotNull(colportorTmp.getId());
+        
+        temporadaColportor = new TemporadaColportor(colportorTmp, asociacion, asociado, temporada, union, colegio);
+        temporadaColportor.setStatus(Constantes.STATUS_ACTIVO);
+        temporadaColportor.setObjetivo("11250");
+        temporadaColportor.setObservaciones("Observaciones");
+        temporadaColportor.setFecha(new Date());
+        temporadaColportorDao.crea(temporadaColportor);
+        assertNotNull(temporadaColportor.getId());
+       
+        for (int i = 0; i < 5; i++) {
+            documento = new Documento(Constantes.TIPO_DOCUMENTO, Constantes.FOLIO,
+                    new Date(), Constantes.IMPORTE, Constantes.OBSERVACIONES, null);
+            documento.setTemporadaColportor(temporadaColportor);
+            documentoDao.crea(documento);
+            assertNotNull(documento);
+        }
+        
         this.mockMvc.perform(get(Constantes.PATH_DOCUMENTO)
-                .param("clave", clave))
+                .param("clave", "5678"))
                 .andExpect(request().sessionAttribute("temporadaColportorTmp", temporadaColportor))
                 .andExpect(status().isOk())
-                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_DOCUMENTO_LISTA + ".jsp"));
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_DOCUMENTO_LISTA + ".jsp"))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_DOCUMENTOS))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINAS))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINA));
     }
 
-    //@Test
+    @Test
     public void deberiaMostrarDocumentosDelaClaveDeVariosColportoresAlAsociado() throws Exception {
         log.debug("Mostrando documentos de un colportor seleccionado por su clave");
         Union union = new Union("test");
-        union = unionDao.crea(union);
-        Rol rol = new Rol("ROLE_ASO");
-        rol = rolDao.crea(rol);
-        Usuario usuario = new Asociado("test@um.edu.mx", "test", "test", "test", "test", "A", "98745", "8262630900", "test", "test", "tset");
-        Long asociacionId = 0l;
-        actualizaUsuario:
-        for (Asociacion asociacion : union.getAsociaciones()) {
-            asociacionId = asociacion.getId();
-            break actualizaUsuario;
-        }
-        usuario = usuarioDao.crea(usuario, asociacionId, new String[]{rol.getAuthority()});
-        Long id = usuario.getId();
-        assertNotNull(id);
-        this.authenticate(usuario, usuario.getPassword(), new ArrayList(usuario.getAuthorities()));
-
+        union.setStatus(Constantes.STATUS_ACTIVO);
+        currentSession().save(union);
+        assertNotNull(union.getId());
+        
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        assertNotNull(organizacion.getId());
+        
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        assertNotNull(empresa.getId());
+        
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        assertNotNull(almacen.getId());
+        
+        Set<Rol> roles = new HashSet<>();
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        roles.add(rol);
+        rol = new Rol("ROLE_ASO");
+        currentSession().save(rol);
+        roles.add(rol);
+        
         Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
         currentSession().save(asociacion);
-        Colportor colportor = null;
+        assertNotNull(asociacion.getId());
+        
+        Usuario asociado = new Asociado("test22@test.com", "test", "test", "test", "test",
+                "1", Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE,
+                Constantes.COLONIA, Constantes.MUNICIPIO);
+        asociado.setEmpresa(empresa);
+        asociado.setAlmacen(almacen);
+        asociado.setAsociacion(asociacion);
+        asociado.setRoles(roles);
+        currentSession().save(asociado);
+        assertNotNull(asociado.getId());
+        
+        this.authenticate(asociado, asociado.getPassword(), new ArrayList(asociado.getAuthorities()));
+
         TemporadaColportor temporadaColportor = null;
-        String clave = "12345";
-        String clave2 = "12346";
         Temporada temporada = new Temporada("test");
         temporada.setAsociacion(asociacion);
         currentSession().save(temporada);
+
         ColegioColportor colegio = new ColegioColportor("test3", Constantes.STATUS_ACTIVO);
         currentSession().save(colegio);
-        for (int i = 0; i < 10; i++) {
-            colportor = new Colportor("test" + i + "@test.com", "test", "test", "test",
-                    "test", "1234" + i, Constantes.STATUS_ACTIVO, "8262652626", "test", "test",
-                    "10706" + i, "test", "test001", new Date());
-            colportor.setAsociacion(asociacion);
-            currentSession().save(colportor);
-            assertNotNull(colportor.getId());
-            temporadaColportor = new TemporadaColportor(colportor, asociacion, usuario, temporada, union, colegio);
-            temporadaColportor.setStatus(Constantes.STATUS_ACTIVO);
-            temporadaColportor.setObjetivo("11250");
-            temporadaColportor.setObservaciones("Observaciones");
-            temporadaColportor.setFecha(new Date());
-            temporadaColportorDao.crea(temporadaColportor);
-            assertNotNull(temporadaColportor);
-            log.debug("TemporadaColportor" + temporadaColportor);
+        
+        Colportor colportorTmp = new Colportor("test@test.com", "test", "test", "test",
+                "test", "1234", Constantes.STATUS_ACTIVO, "8262652626", "test", "test",
+                "10706", "test", "test001", new Date());
+        colportorTmp.setEmpresa(empresa);
+        colportorTmp.setAlmacen(almacen);
+        colportorTmp.setRoles(roles);
+        colportorTmp.setAsociacion(asociacion);
+        currentSession().save(colportorTmp);
+        assertNotNull(colportorTmp.getId());
+        
+        temporadaColportor = new TemporadaColportor(colportorTmp, asociacion, asociado, temporada, union, colegio);
+        temporadaColportor.setStatus(Constantes.STATUS_ACTIVO);
+        temporadaColportor.setObjetivo("11250");
+        temporadaColportor.setObservaciones("Observaciones");
+        temporadaColportor.setFecha(new Date());
+        temporadaColportorDao.crea(temporadaColportor);
+        assertNotNull(temporadaColportor.getId());
+        
+        Documento documento = null;
+        for (int i = 0; i < 8; i++) {
+            documento = new Documento(Constantes.TIPO_DOCUMENTO, Constantes.FOLIO,
+                    new Date(), Constantes.IMPORTE, Constantes.OBSERVACIONES, null);
+            documento.setTemporadaColportor(temporadaColportor);
+            documentoDao.crea(documento);
+            assertNotNull(documento);
         }
+        
+        colportorTmp = new Colportor("test2@test.com", "test2", "test2", "test2",
+                "test", "5678", Constantes.STATUS_ACTIVO, "8262652626", "test", "test",
+                "10706", "test", "test001", new Date());
+        colportorTmp.setEmpresa(empresa);
+        colportorTmp.setAlmacen(almacen);
+        colportorTmp.setRoles(roles);
+        colportorTmp.setAsociacion(asociacion);
+        currentSession().save(colportorTmp);
+        assertNotNull(colportorTmp.getId());
+        
+        temporadaColportor = new TemporadaColportor(colportorTmp, asociacion, asociado, temporada, union, colegio);
+        temporadaColportor.setStatus(Constantes.STATUS_ACTIVO);
+        temporadaColportor.setObjetivo("11250");
+        temporadaColportor.setObservaciones("Observaciones");
+        temporadaColportor.setFecha(new Date());
+        temporadaColportorDao.crea(temporadaColportor);
+        assertNotNull(temporadaColportor.getId());
+       
+        for (int i = 0; i < 5; i++) {
+            documento = new Documento(Constantes.TIPO_DOCUMENTO, Constantes.FOLIO,
+                    new Date(), Constantes.IMPORTE, Constantes.OBSERVACIONES, null);
+            documento.setTemporadaColportor(temporadaColportor);
+            documentoDao.crea(documento);
+            assertNotNull(documento);
+        }
+        
         this.mockMvc.perform(get(Constantes.PATH_DOCUMENTO)
-                .param("clave", clave))
+                .param("clave", "5678"))
                 .andExpect(request().sessionAttribute("temporadaColportorTmp", temporadaColportor))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("claveTmp", clave))
-                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_DOCUMENTO_LISTA + ".jsp"));
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_DOCUMENTO_LISTA + ".jsp"))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_DOCUMENTOS))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINAS))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINA));
         log.debug("termino Primera llamada");
 
 
         this.mockMvc.perform(get(Constantes.PATH_DOCUMENTO)
-                .param("clave", clave2)).andExpect(request()
-                .sessionAttribute("temporadaColportorTmp", temporadaColportor))
-                .andExpect(status().isOk()).andExpect(model().attribute("claveTmp", clave2))
-                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_DOCUMENTO_LISTA + ".jsp"));
+                .param("clave", "1234"))
+                .andExpect(request().sessionAttribute("temporadaColportorTmp", temporadaColportor))
+                .andExpect(status().isOk())
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_DOCUMENTO_LISTA + ".jsp"))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_DOCUMENTOS))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINAS))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINA));
         log.debug("termino Segunda llamada");
 
     }
 
-    //@Test
+    @Test
     public void debieraMostrarDocumento() throws Exception {
         log.debug("Debiera mostrar documento");
-         Union union = new Union("test");
+        Union union = new Union("test");
         union.setStatus(Constantes.STATUS_ACTIVO);
         currentSession().save(union);
+        assertNotNull(union.getId());
         
-        Asociacion asociacion = new Asociacion("test", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion); 
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        assertNotNull(organizacion.getId());
         
-        Usuario colportor = new Colportor("test--1@test.com", "test", "test", "test", "test", "test", Constantes.STATUS_ACTIVO,
-                    "8262652626", "test", "test", "10706" , "test", "test001", new Date());
-        colportor.setAsociacion(asociacion);
-        currentSession().save(colportor);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        assertNotNull(empresa.getId());
         
-        Asociado asociado = new Asociado("test@test.com", "test", "test", "test", "test", 
-                   Constantes.STATUS_ACTIVO, Constantes.CLAVE, Constantes.TELEFONO,Constantes.CALLE,Constantes.COLONIA,
-                   Constantes.MUNICIPIO);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        assertNotNull(almacen.getId());
+        
+        Set<Rol> roles = new HashSet<>();
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        roles.add(rol);
+        rol = new Rol("ROLE_ASO");
+        currentSession().save(rol);
+        roles.add(rol);
+        
+        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
+        currentSession().save(asociacion);
+        assertNotNull(asociacion.getId());
+        
+        Usuario asociado = new Asociado("test22@test.com", "test", "test", "test", "test",
+                "1", Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE,
+                Constantes.COLONIA, Constantes.MUNICIPIO);
+        asociado.setEmpresa(empresa);
+        asociado.setAlmacen(almacen);
         asociado.setAsociacion(asociacion);
+        asociado.setRoles(roles);
         currentSession().save(asociado);
+        assertNotNull(asociado.getId());
         
-        Temporada temporada = new Temporada ("test");
+        this.authenticate(asociado, asociado.getPassword(), new ArrayList(asociado.getAuthorities()));
+
+        TemporadaColportor temporadaColportor = null;
+        Temporada temporada = new Temporada("test");
         temporada.setAsociacion(asociacion);
         currentSession().save(temporada);
+
         ColegioColportor colegio = new ColegioColportor("test3", Constantes.STATUS_ACTIVO);
         currentSession().save(colegio);
-           TemporadaColportor temporadacolportor = new TemporadaColportor(Constantes.STATUS_ACTIVO,"11250","TEST");
-            temporadacolportor.setColportor((Colportor)colportor);
-            temporadacolportor.setAsociacion(asociacion);
-            temporadacolportor.setAsociado(asociado);
-            temporadacolportor.setTemporada(temporada);
-            temporadacolportor.setUnion(union);
-            temporadacolportor.setColegioColportor(colegio);
-            currentSession().save(temporadacolportor);
-            assertNotNull(temporadacolportor);
-        Documento documento = new Documento(Constantes.TIPO_DOCUMENTO, Constantes.FOLIO, new Date(), Constantes.IMPORTE, 
-                Constantes.OBSERVACIONES, null);
-        documento.setTemporadaColportor(temporadacolportor);
-        documento = documentoDao.crea(documento);
-        assertNotNull(documento);
+        
+        Usuario colportorTmp = new Colportor("test@test.com", "test", "test", "test",
+                "test", "1234", Constantes.STATUS_ACTIVO, "8262652626", "test", "test",
+                "10706", "test", "test001", new Date());
+        colportorTmp.setEmpresa(empresa);
+        colportorTmp.setAlmacen(almacen);
+        colportorTmp.setRoles(roles);
+        colportorTmp.setAsociacion(asociacion);
+        currentSession().save(colportorTmp);
+        assertNotNull(colportorTmp.getId());
+        
+        temporadaColportor = new TemporadaColportor((Colportor)colportorTmp, asociacion, asociado, temporada, union, colegio);
+        temporadaColportor.setStatus(Constantes.STATUS_ACTIVO);
+        temporadaColportor.setObjetivo("11250");
+        temporadaColportor.setObservaciones("Observaciones");
+        temporadaColportor.setFecha(new Date());
+        temporadaColportorDao.crea(temporadaColportor);
+        assertNotNull(temporadaColportor.getId());
+        
+        Documento documento = null;
+        for (int i = 0; i < 1; i++) {
+            documento = new Documento(Constantes.TIPO_DOCUMENTO, Constantes.FOLIO,
+                    new Date(), Constantes.IMPORTE, Constantes.OBSERVACIONES, null);
+            documento.setTemporadaColportor(temporadaColportor);
+            documentoDao.crea(documento);
+            assertNotNull(documento);
+        }
 
         this.mockMvc.perform(get(Constantes.PATH_DOCUMENTO_VER + "/" + documento.getId()))
                 .andExpect(status().isOk())
@@ -803,66 +1024,76 @@ public class DocumentoControllerTest extends BaseTest {
                 .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_DOCUMENTO));
     }
 
-    //@Test
+    @Test
     public void debieraCrearDocumento() throws Exception {
         log.debug("Debiera crear documento");
 
-        // this.mockMvc.perform(post(Constantes.PATH_DOCUMENTO_CREA).param("tipoDeDocumento", Constantes.TIPO_DOCUMENTO)).andExpect(status().isOk()).andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE)).andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "documento.creado.message"));
-
-        Organizacion organizacion = new Organizacion("TEST01", "TEST01", "TEST01");
-        organizacion = organizacionDao.crea(organizacion);
-        
         Union union = new Union("test");
-        union = unionDao.crea(union);
-        Rol rol = new Rol("ROLE_COL");
-        rol = rolDao.crea(rol);
-        Usuario usuario = new Colportor("test@test.com", "test", "test", "test", "test", "test", Constantes.STATUS_ACTIVO,
-                "8262652626", "test", "test", "10706", "test", "test001", new Date());
-        Long asociacionId = 0l;
-        actualizaUsuario:
-        for (Asociacion asociacion : union.getAsociaciones()) {
-            asociacionId = asociacion.getId();
-            break actualizaUsuario;
-        }
+        union.setStatus(Constantes.STATUS_ACTIVO);
+        currentSession().save(union);
+        assertNotNull(union.getId());
         
-        Long almacenId = 0l;
-        actualizaUsuario:
-        for (Empresa empresa : organizacion.getEmpresas()) {
-            for (Almacen almacen : empresa.getAlmacenes()) {
-                almacenId = almacen.getId();
-                break actualizaUsuario;
-            }
-        }
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        assertNotNull(organizacion.getId());
         
-        usuario = usuarioDao.crea(usuario, asociacionId, new String[]{rol.getAuthority()});
-        Long id = usuario.getId();
-        assertNotNull(id);
-        this.authenticate(usuario, usuario.getPassword(), new ArrayList(usuario.getAuthorities()));
-
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        assertNotNull(empresa.getId());
+        
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        assertNotNull(almacen.getId());
+        
+        Set<Rol> roles = new HashSet<>();
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        roles.add(rol);
+        rol = new Rol("ROLE_ASO");
+        currentSession().save(rol);
+        roles.add(rol);
+        
         Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
         currentSession().save(asociacion);
-        Asociado asociado = new Asociado("test@um.edu.mx", "test", "test", "test", "test", "A", "98745", "8262630900", "test", "test", "tset");
-        asociado.setAsociacion(asociacion);
-        currentSession().save(asociado);
-        Colportor colportorTmp = (Colportor) usuario;
+        assertNotNull(asociacion.getId());
         
+        Usuario asociado = new Asociado("test22@test.com", "test", "test", "test", "test",
+                "1", Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE,
+                Constantes.COLONIA, Constantes.MUNICIPIO);
+        asociado.setEmpresa(empresa);
+        asociado.setAlmacen(almacen);
+        asociado.setAsociacion(asociacion);
+        asociado.setRoles(roles);
+        currentSession().save(asociado);
+        assertNotNull(asociado.getId());       
+
         TemporadaColportor temporadaColportor = null;
         Temporada temporada = new Temporada("test");
         temporada.setAsociacion(asociacion);
         currentSession().save(temporada);
+
         ColegioColportor colegio = new ColegioColportor("test3", Constantes.STATUS_ACTIVO);
         currentSession().save(colegio);
+        
+        Usuario colportorTmp = new Colportor("test@test.com", "test", "test", "test",
+                "test", "1234", Constantes.STATUS_ACTIVO, "8262652626", "test", "test",
+                "10706", "test", "test001", new Date());
+        colportorTmp.setEmpresa(empresa);
+        colportorTmp.setAlmacen(almacen);
+        colportorTmp.setRoles(roles);
         colportorTmp.setAsociacion(asociacion);
         currentSession().save(colportorTmp);
         assertNotNull(colportorTmp.getId());
-        temporadaColportor = new TemporadaColportor(colportorTmp, asociacion, asociado, temporada, union, colegio);
+        
+        this.authenticate(colportorTmp, colportorTmp.getPassword(), new ArrayList(asociado.getAuthorities()));
+        
+        temporadaColportor = new TemporadaColportor((Colportor)colportorTmp, asociacion, asociado, temporada, union, colegio);
         temporadaColportor.setStatus(Constantes.STATUS_ACTIVO);
         temporadaColportor.setObjetivo("11250");
         temporadaColportor.setObservaciones("Observaciones");
         temporadaColportor.setFecha(new Date());
         temporadaColportorDao.crea(temporadaColportor);
-        assertNotNull(temporadaColportor);
-        log.debug("TemporadaColportor" + temporadaColportor.getId().toString());
+        assertNotNull(temporadaColportor.getId());
 
         this.mockMvc.perform(post(Constantes.PATH_DOCUMENTO_CREA).
                 param("tipoDeDocumento", Constantes.TIPO_DOCUMENTO).
@@ -873,62 +1104,80 @@ public class DocumentoControllerTest extends BaseTest {
                 .sessionAttr("colportorTmp", colportorTmp))
                 .andExpect(request().sessionAttribute("temporadaColportorPrueba", temporadaColportor.getId().toString()))
                 .andExpect(status().isOk()).andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-
-                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "documento.creado.message"));
-
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "documento.creado.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_DOCUMENTO_VER + "/1"));
     }
 
-    //@Test
+    @Test
     public void debieraActualizarDocumento() throws Exception {
         log.debug("Debiera actualizar documento");
         Union union = new Union("test");
-        union = unionDao.crea(union);
-        Rol rol = new Rol("ROLE_COL");
-        rol = rolDao.crea(rol);
-        Usuario usuario = new Colportor("test@test.com", "test", "test", "test", "test", "test", Constantes.STATUS_ACTIVO,
-                "8262652626", "test", "test", "10706", "test", "test001", new Date());
-        Long asociacionId = 0l;
-        actualizaUsuario:
-        for (Asociacion asociacion : union.getAsociaciones()) {
-            asociacionId = asociacion.getId();
-            break actualizaUsuario;
-        }
-        usuario = usuarioDao.crea(usuario, asociacionId, new String[]{rol.getAuthority()});
-        Long id = usuario.getId();
-        assertNotNull(id);
-        this.authenticate(usuario, usuario.getPassword(), new ArrayList(usuario.getAuthorities()));
-
+        union.setStatus(Constantes.STATUS_ACTIVO);
+        currentSession().save(union);
+        assertNotNull(union.getId());
+        
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        assertNotNull(organizacion.getId());
+        
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        assertNotNull(empresa.getId());
+        
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        assertNotNull(almacen.getId());
+        
+        Set<Rol> roles = new HashSet<>();
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        roles.add(rol);
+        rol = new Rol("ROLE_ASO");
+        currentSession().save(rol);
+        roles.add(rol);
+        
         Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
         currentSession().save(asociacion);
-        Asociado asociado = new Asociado("test@um.edu.mx", "test", "test", "test", "test", "A", "98745", "8262630900", "test", "test", "tset");
-        asociado.setAsociacion(asociacion);
-        currentSession().save(asociado);
-        Colportor colportorTmp = (Colportor) usuario;
+        assertNotNull(asociacion.getId());
         
+        Usuario asociado = new Asociado("test22@test.com", "test", "test", "test", "test",
+                "1", Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE,
+                Constantes.COLONIA, Constantes.MUNICIPIO);
+        asociado.setEmpresa(empresa);
+        asociado.setAlmacen(almacen);
+        asociado.setAsociacion(asociacion);
+        asociado.setRoles(roles);
+        currentSession().save(asociado);
+        assertNotNull(asociado.getId());       
+
         TemporadaColportor temporadaColportor = null;
         Temporada temporada = new Temporada("test");
         temporada.setAsociacion(asociacion);
         currentSession().save(temporada);
+
         ColegioColportor colegio = new ColegioColportor("test3", Constantes.STATUS_ACTIVO);
         currentSession().save(colegio);
+        
+        Usuario colportorTmp = new Colportor("test@test.com", "test", "test", "test",
+                "test", "1234", Constantes.STATUS_ACTIVO, "8262652626", "test", "test",
+                "10706", "test", "test001", new Date());
+        colportorTmp.setEmpresa(empresa);
+        colportorTmp.setAlmacen(almacen);
+        colportorTmp.setRoles(roles);
         colportorTmp.setAsociacion(asociacion);
         currentSession().save(colportorTmp);
         assertNotNull(colportorTmp.getId());
-        temporadaColportor = new TemporadaColportor(colportorTmp, asociacion, asociado, temporada, union, colegio);
+        
+        this.authenticate(colportorTmp, colportorTmp.getPassword(), new ArrayList(asociado.getAuthorities()));
+        
+        temporadaColportor = new TemporadaColportor((Colportor)colportorTmp, asociacion, asociado, temporada, union, colegio);
         temporadaColportor.setStatus(Constantes.STATUS_ACTIVO);
         temporadaColportor.setObjetivo("11250");
         temporadaColportor.setObservaciones("Observaciones");
         temporadaColportor.setFecha(new Date());
         temporadaColportorDao.crea(temporadaColportor);
-        assertNotNull(temporadaColportor);
-        log.debug("TemporadaColportor" + temporadaColportor.getId().toString());
-        Documento documento = new Documento(Constantes.TIPO_DOCUMENTO, Constantes.FOLIO, new Date(), Constantes.IMPORTE, 
-                Constantes.OBSERVACIONES, null);
-        documento.setTemporadaColportor(temporadaColportor);
-        documento = documentoDao.crea(documento);
-        assertNotNull(documento);
+        assertNotNull(temporadaColportor.getId());
 
-        //this.mockMvc.perform(post(Constantes.PATH_DOCUMENTO_ACTUALIZA).param("id", documento.getId().toString()).param("version", documento.getVersion().toString()).param("tipoDeDocumento", documento.getTipoDeDocumento())).andExpect(status().isOk()).andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE)).andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "documento.actualizado.message"));
         this.mockMvc.perform(post(Constantes.PATH_DOCUMENTO_CREA).
                 param("tipoDeDocumento", Constantes.TIPO_DOCUMENTO).
                 param("folio", Constantes.FOLIO).
@@ -936,54 +1185,105 @@ public class DocumentoControllerTest extends BaseTest {
                 param("fecha", "05/05/2010").
                 param("observaciones", Constantes.OBSERVACIONES)
                 .sessionAttr("colportorTmp", colportorTmp))
-                .andExpect(status().isOk())
-                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
                 .andExpect(request().sessionAttribute("temporadaColportorPrueba", temporadaColportor.getId().toString()))
-                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "documento.creado.message"));
+                .andExpect(status().isOk()).andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "documento.creado.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_DOCUMENTO_VER + "/1"));
+        
+        this.mockMvc.perform(post(Constantes.PATH_DOCUMENTO_ACTUALIZA).
+                param("id", "1").
+                param("version", "0").
+                param("tipoDeDocumento", Constantes.TIPO_DOCUMENTO).
+                param("folio", Constantes.FOLIO).
+                param("importe", "0.0").
+                param("fecha", "05/05/2010").
+                param("observaciones", Constantes.OBSERVACIONES)
+                .sessionAttr("colportorTmp", colportorTmp))
+                //.andExpect(request().sessionAttribute("temporadaColportorPrueba", temporadaColportor.getId().toString()))
+                .andExpect(status().isOk()).andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "documento.actualizado.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_DOCUMENTO_VER + "/1"));
 
     }
 
-    //@Test
+    @Test
     public void debieraEliminarDocumento() throws Exception {
         log.debug("Debiera eliminar documento");
         Union union = new Union("test");
         union.setStatus(Constantes.STATUS_ACTIVO);
         currentSession().save(union);
-
-        Asociacion asociacion = new Asociacion("test", Constantes.STATUS_ACTIVO, union);
+        assertNotNull(union.getId());
+        
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        assertNotNull(organizacion.getId());
+        
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        assertNotNull(empresa.getId());
+        
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        assertNotNull(almacen.getId());
+        
+        Set<Rol> roles = new HashSet<>();
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        roles.add(rol);
+        rol = new Rol("ROLE_ASO");
+        currentSession().save(rol);
+        roles.add(rol);
+        
+        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
         currentSession().save(asociacion);
-
-        Usuario colportor = new Colportor("test--1@test.com", "test", "test", "test", "test", "test", Constantes.STATUS_ACTIVO,
-                "8262652626", "test", "test", "10706", "test", "test001", new Date());
-        colportor.setAsociacion(asociacion);
-        currentSession().save(colportor);
-
-        Asociado asociado = new Asociado("test@test.com", "test", "test", "test", "test",
-                Constantes.STATUS_ACTIVO, Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE, Constantes.COLONIA,
-                Constantes.MUNICIPIO);
+        assertNotNull(asociacion.getId());
+        
+        Usuario asociado = new Asociado("test22@test.com", "test", "test", "test", "test",
+                "1", Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE,
+                Constantes.COLONIA, Constantes.MUNICIPIO);
+        asociado.setEmpresa(empresa);
+        asociado.setAlmacen(almacen);
         asociado.setAsociacion(asociacion);
+        asociado.setRoles(roles);
         currentSession().save(asociado);
+        assertNotNull(asociado.getId());
+        
+        this.authenticate(asociado, asociado.getPassword(), new ArrayList(asociado.getAuthorities()));
 
+        TemporadaColportor temporadaColportor = null;
         Temporada temporada = new Temporada("test");
         temporada.setAsociacion(asociacion);
         currentSession().save(temporada);
+
         ColegioColportor colegio = new ColegioColportor("test3", Constantes.STATUS_ACTIVO);
         currentSession().save(colegio);
-        TemporadaColportor temporadacolportor = new TemporadaColportor(Constantes.STATUS_ACTIVO, "11250", "TEST");
-        temporadacolportor.setColportor((Colportor) colportor);
-        temporadacolportor.setAsociacion(asociacion);
-        temporadacolportor.setAsociado(asociado);
-        temporadacolportor.setTemporada(temporada);
-        temporadacolportor.setUnion(union);
-        temporadacolportor.setColegioColportor(colegio);
-        currentSession().save(temporadacolportor);
-        assertNotNull(temporadacolportor);
-
-        Documento documento = new Documento(Constantes.TIPO_DOCUMENTO, Constantes.FOLIO, new Date(), Constantes.IMPORTE,
-                Constantes.OBSERVACIONES, null);
-        documento.setTemporadaColportor(temporadacolportor);
-        documentoDao.crea(documento);
-        assertNotNull(documento);
+        
+        Usuario colportorTmp = new Colportor("test@test.com", "test", "test", "test",
+                "test", "1234", Constantes.STATUS_ACTIVO, "8262652626", "test", "test",
+                "10706", "test", "test001", new Date());
+        colportorTmp.setEmpresa(empresa);
+        colportorTmp.setAlmacen(almacen);
+        colportorTmp.setRoles(roles);
+        colportorTmp.setAsociacion(asociacion);
+        currentSession().save(colportorTmp);
+        assertNotNull(colportorTmp.getId());
+        
+        temporadaColportor = new TemporadaColportor((Colportor)colportorTmp, asociacion, asociado, temporada, union, colegio);
+        temporadaColportor.setStatus(Constantes.STATUS_ACTIVO);
+        temporadaColportor.setObjetivo("11250");
+        temporadaColportor.setObservaciones("Observaciones");
+        temporadaColportor.setFecha(new Date());
+        temporadaColportorDao.crea(temporadaColportor);
+        assertNotNull(temporadaColportor.getId());
+        
+        Documento documento = null;
+        for (int i = 0; i < 1; i++) {
+            documento = new Documento(Constantes.TIPO_DOCUMENTO, Constantes.FOLIO,
+                    new Date(), Constantes.IMPORTE, Constantes.OBSERVACIONES, null);
+            documento.setTemporadaColportor(temporadaColportor);
+            documentoDao.crea(documento);
+            assertNotNull(documento);
+        }
 
         this.mockMvc.perform(post(Constantes.PATH_DOCUMENTO_ELIMINA)
                 .param("id", documento.getId().toString()))
@@ -991,91 +1291,118 @@ public class DocumentoControllerTest extends BaseTest {
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
                 .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "documento.eliminado.message"));
     }
-    //@Test
+    
+    @Test
     public void deberiaProbarTablaDeTotales() throws Exception{
         log.debug("Deberia probar tabla de resultados de acuerdo a los documentos creados");
-   
-          Union union = new Union("test");
-        union = unionDao.crea(union);
-        Rol rol = new Rol("ROLE_ASO");
-        rol = rolDao.crea(rol);
-        Usuario usuario = new Asociado("test@um.edu.mx", "test", "test", "test", "test", "A", "98745", "8262630900", "test", "test", "tset");
-        Long asociacionId = 0l;
-        actualizaUsuario:
-        for (Asociacion asociacion : union.getAsociaciones()) {
-            asociacionId = asociacion.getId();
-            break actualizaUsuario;
-        }
-        usuario = usuarioDao.crea(usuario, asociacionId, new String[]{rol.getAuthority()});
-        Long id = usuario.getId();
-        assertNotNull(id);
-        this.authenticate(usuario, usuario.getPassword(), new ArrayList(usuario.getAuthorities()));
+        
+        Union union = new Union("test");
+        union.setStatus(Constantes.STATUS_ACTIVO);
+        currentSession().save(union);
+        assertNotNull(union.getId());
+
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        assertNotNull(organizacion.getId());
+
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        assertNotNull(empresa.getId());
+
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        assertNotNull(almacen.getId());
+
+        Set<Rol> roles = new HashSet<>();
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        roles.add(rol);
+        rol = new Rol("ROLE_ASO");
+        currentSession().save(rol);
+        roles.add(rol);
 
         Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
         currentSession().save(asociacion);
-        Colportor colportorTmp = null;
-        
+        assertNotNull(asociacion.getId());
+
+        Usuario asociado = new Asociado("test22@test.com", "test", "test", "test", "test",
+                "1", Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE,
+                Constantes.COLONIA, Constantes.MUNICIPIO);
+        asociado.setEmpresa(empresa);
+        asociado.setAlmacen(almacen);
+        asociado.setAsociacion(asociacion);
+        asociado.setRoles(roles);
+        currentSession().save(asociado);
+        assertNotNull(asociado.getId());
+
+        this.authenticate(asociado, asociado.getPassword(), new ArrayList(asociado.getAuthorities()));
+
         TemporadaColportor temporadaColportor = null;
         Temporada temporada = new Temporada("test");
         temporada.setAsociacion(asociacion);
         currentSession().save(temporada);
+
         ColegioColportor colegio = new ColegioColportor("test3", Constantes.STATUS_ACTIVO);
         currentSession().save(colegio);
-        colportorTmp = new Colportor("test@test.com", "test", "test", "test",
+
+        Usuario colportorTmp = new Colportor("test@test.com", "test", "test", "test",
                 "test", "1234", Constantes.STATUS_ACTIVO, "8262652626", "test", "test",
                 "10706", "test", "test001", new Date());
+        colportorTmp.setEmpresa(empresa);
+        colportorTmp.setAlmacen(almacen);
+        colportorTmp.setRoles(roles);
         colportorTmp.setAsociacion(asociacion);
         currentSession().save(colportorTmp);
         assertNotNull(colportorTmp.getId());
-        
-        temporadaColportor = new TemporadaColportor(colportorTmp, asociacion, usuario, temporada, union, colegio);
+
+        temporadaColportor = new TemporadaColportor((Colportor) colportorTmp, asociacion, asociado, temporada, union, colegio);
         temporadaColportor.setStatus(Constantes.STATUS_ACTIVO);
         temporadaColportor.setObjetivo("11250");
         temporadaColportor.setObservaciones("Observaciones");
         temporadaColportor.setFecha(new Date());
         temporadaColportorDao.crea(temporadaColportor);
-        assertNotNull(temporadaColportor);
-        log.debug("TemporadaColportor" + temporadaColportor);
-        
-            for (int i = 0; i < 20; i++) {
-            Documento documento = new Documento(Constantes.BOLETIN, Constantes.FOLIO,
+        assertNotNull(temporadaColportor.getId());
+
+        Documento documento = null;
+        for (int i = 0; i < 20; i++) {
+            documento = new Documento(Constantes.BOLETIN, Constantes.FOLIO,
                     new Date(), new BigDecimal("500"), Constantes.OBSERVACIONES, null);
             documento.setTemporadaColportor(temporadaColportor);
             documentoDao.crea(documento);
-            }
-            
-            for (int i = 0; i < 20; i++) {
-            Documento documento = new Documento(Constantes.DIEZMO, Constantes.FOLIO,
+        }
+
+        for (int i = 0; i < 20; i++) {
+            documento = new Documento(Constantes.DIEZMO, Constantes.FOLIO,
                     new Date(), new BigDecimal("50"), Constantes.OBSERVACIONES, null);
             documento.setTemporadaColportor(temporadaColportor);
             documentoDao.crea(documento);
-            }
-            
-            for (int i = 0; i < 20; i++) {
-            Documento documento = new Documento(Constantes.DEPOSITO_CAJA, Constantes.FOLIO,
-                    new Date(), new BigDecimal("100"), Constantes.OBSERVACIONES, null);
-            documento.setTemporadaColportor(temporadaColportor);
-            documentoDao.crea(documento);
-            }
-            
-            for (int i = 0; i < 20; i++) {
-            Documento documento = new Documento(Constantes.DEPOSITO_BANCO, Constantes.FOLIO,
-                    new Date(), new BigDecimal("100"), Constantes.OBSERVACIONES, null);
-            documento.setTemporadaColportor(temporadaColportor);
-            documentoDao.crea(documento);
-            }
+        }
 
-            for (int i = 0; i < 20; i++) {
-            Documento documento = new Documento(Constantes.NOTAS_DE_COMPRA, Constantes.FOLIO,
+        for (int i = 0; i < 20; i++) {
+            documento = new Documento(Constantes.DEPOSITO_CAJA, Constantes.FOLIO,
                     new Date(), new BigDecimal("100"), Constantes.OBSERVACIONES, null);
             documento.setTemporadaColportor(temporadaColportor);
             documentoDao.crea(documento);
-            }
-            this.mockMvc.perform(get(Constantes.PATH_DOCUMENTO_LISTA)
+        }
+
+        for (int i = 0; i < 20; i++) {
+            documento = new Documento(Constantes.DEPOSITO_BANCO, Constantes.FOLIO,
+                    new Date(), new BigDecimal("100"), Constantes.OBSERVACIONES, null);
+            documento.setTemporadaColportor(temporadaColportor);
+            documentoDao.crea(documento);
+        }
+
+        for (int i = 0; i < 20; i++) {
+            documento = new Documento(Constantes.NOTAS_DE_COMPRA, Constantes.FOLIO,
+                    new Date(), new BigDecimal("100"), Constantes.OBSERVACIONES, null);
+            documento.setTemporadaColportor(temporadaColportor);
+            documentoDao.crea(documento);
+        }
+        this.mockMvc.perform(get(Constantes.PATH_DOCUMENTO_LISTA)
                 .sessionAttr("colportorTmp", colportorTmp)) //                .andExpect(request().sessionAttribute("temporadaColportorPrueba", temporadaColportor.getId().toString()))
                 .andExpect(model().attribute(Constantes.FIDELIDAD, new BigDecimal("100.000000").setScale(2, BigDecimal.ROUND_HALF_EVEN)))
-                .andExpect(model().attribute(Constantes.ALCANZADO,new BigDecimal("88.888888").setScale(2, BigDecimal.ROUND_HALF_EVEN) ))
-                .andExpect(view().name(Constantes.PATH_DOCUMENTO_LISTA))    
+                .andExpect(model().attribute(Constantes.ALCANZADO, new BigDecimal("88.888888").setScale(2, BigDecimal.ROUND_HALF_EVEN)))
+                .andExpect(view().name(Constantes.PATH_DOCUMENTO_LISTA))
                 .andExpect(status().isOk());
     }
 }
