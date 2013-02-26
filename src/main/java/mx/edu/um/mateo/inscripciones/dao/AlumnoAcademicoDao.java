@@ -4,7 +4,7 @@
  */
 package mx.edu.um.mateo.inscripciones.dao;
 
-import mx.edu.um.mateo.inscripciones.AlumnoAcademico;
+import mx.edu.um.mateo.inscripciones.model.AlumnoAcademico;
 
 /**
  *

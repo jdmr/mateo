@@ -2,14 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.inscripciones.dao.impl;
+package mx.edu.um.mateo.inscripciones.dao;
 
 import java.util.HashMap;
 import java.util.Map;
 import static org.junit.Assert.assertTrue; 
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.inscripciones.Alumno;
-import mx.edu.um.mateo.inscripciones.dao.AlumnoDao;
+import mx.edu.um.mateo.inscripciones.model.Alumno;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;

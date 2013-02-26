@@ -7,16 +7,19 @@ package mx.edu.um.mateo.inscripciones.dao.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sql.DataSource;
 import mx.edu.um.mateo.general.dao.BaseDao;
-import mx.edu.um.mateo.inscripciones.Alumno;
+import mx.edu.um.mateo.inscripciones.model.Alumno;
 import mx.edu.um.mateo.inscripciones.dao.AlumnoDao;
 import org.springframework.transaction.annotation.Transactional;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.inscripciones.AlumnoAcademico;
-import mx.edu.um.mateo.inscripciones.Modalidad;
+import mx.edu.um.mateo.inscripciones.model.AlumnoAcademico;
+import mx.edu.um.mateo.inscripciones.model.Modalidad;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -39,7 +42,7 @@ public class AlumnoDaoHibernate extends BaseDao implements AlumnoDao{
     public Map<String, Object> lista(Map<String, Object> params) {
         
         //Trallendo de la base de datos.
-        log.debug("Migrando datos de tipo de activos");
+        log.debug("Listado de Alumnos");
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -71,7 +74,19 @@ public class AlumnoDaoHibernate extends BaseDao implements AlumnoDao{
             }}catch(Exception e){
                 log.error("{}", e);
                 
+            }finally{
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                log.error("{}", ex);
+                stmt=null;
+                conn=null;
+                rs=null;
             }
+            
+        }
         
         //Haciendo el metodo lista despues de trabajo de traer de la base de datos
 //        
@@ -137,7 +152,7 @@ public class AlumnoDaoHibernate extends BaseDao implements AlumnoDao{
    @Override
     @Transactional(readOnly = true)
     public Alumno obtiene(String matricula) {
-       log.debug("Migrando datos de tipo de activos");
+       log.debug("Obteniendo un alumno");
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -147,8 +162,12 @@ public class AlumnoDaoHibernate extends BaseDao implements AlumnoDao{
             stmt = conn.prepareStatement("select ap.NOMBRE,ap.CODIGO_PERSONAL, ap.APELLIDO_PATERNO, ap.APELLIDO_MATERNO, aa.TIPO_ALUMNO, aa.MODALIDAD_ID, m.nombre_modalidad ,m.MODALIDAD_ID, m.ENLINEA \n" +
 "from enoc.alum_personal ap, enoc.alum_academico aa, enoc.cat_modalidad m where ap.CODIGO_PERSONAL=aa.CODIGO_PERSONAL and aa.MODALIDAD_ID=m.MODALIDAD_ID \n" +
 "and (ap.CODIGO_PERSONAL =  ? )");
+            stmt.setString(1, matricula);
+            log.debug("Provando conexion");
             rs = stmt.executeQuery();
-            while (rs.next()) {
+            log.debug("Ejecutando Query");
+            if(rs.next()) {
+                log.debug("Entrando al Metodo");
                 String nombre = rs.getString("NOMBRE");
                 String apellido_materno = rs.getString("apellido_materno");
                 String apellido_paterno = rs.getString("apellido_paterno");
@@ -164,8 +183,20 @@ public class AlumnoDaoHibernate extends BaseDao implements AlumnoDao{
                 
             }}catch(Exception e){
                 
-                
+                log.error("{}",e);
+            }finally{
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                log.error("{}", ex);
+                stmt=null;
+                conn=null;
+                rs=null;
             }
+            
+        }
         return alumno;
     }
   

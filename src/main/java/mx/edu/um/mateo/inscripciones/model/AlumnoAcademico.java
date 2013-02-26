@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.inscripciones;
+package mx.edu.um.mateo.inscripciones.model;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -21,7 +21,6 @@ import javax.persistence.Table;
 @Table(name="alum_academico", schema="enoc")
 public class AlumnoAcademico implements Serializable{
     @Id
-    @GeneratedValue(strategy= GenerationType.TABLE)
     private String codigo_personal;
     @Column(name="modalidad_id", nullable=false)
     private Modalidad modalidad;

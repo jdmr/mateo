@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.inscripciones;
+package mx.edu.um.mateo.inscripciones.model;
 
 import java.io.Serializable;
 import java.util.Objects;

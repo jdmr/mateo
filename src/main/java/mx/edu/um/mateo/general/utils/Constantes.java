@@ -2441,6 +2441,7 @@ public class Constantes {
     public static final String CONTAINSKEY_USUARIOS = "usuarios";
     public static final String CONTAINSKEY_COLEGIOS_COLPORTOR = "colegios";
     public static final String CONTAINSKEY_TIPOSBECAS= "tiposBecas";
+    public static final String CONTAINSKEY_AFECONVENIO= "afeConvenios";
     /**
      * Valores para el los addAttribute para las clases
      */
@@ -2718,4 +2719,15 @@ public class Constantes {
     public static final String PATH_TIPOSBECAS_ACTUALIZA = "/inscripciones/tiposBecas/actualiza";
     public static final String PATH_TIPOSBECAS_ELIMINA = "/inscripciones/tiposBecas/elimina";
     public static final String ADDATTRIBUTE_TIPOSBECAS = "tipoBeca";  
+    
+    
+    public static final String PATH_AFECONVENIO = "/inscripciones/afeConvenio";
+    public static final String PATH_AFECONVENIO_LISTA = "/inscripciones/afeConvenio/lista";
+    public static final String PATH_AFECONVENIO_VER = "/inscripciones/afeConvenio/ver";
+    public static final String PATH_AFECONVENIO_NUEVO = "/inscripciones/afeConvenio/nuevo";
+    public static final String PATH_AFECONVENIO_EDITA = "/inscripciones/afeConvenio/edita";
+    public static final String PATH_AFECONVENIO_GRABA = "/inscripciones/afeConvenio/graba";
+    public static final String PATH_AFECONVENIO_ACTUALIZA = "/inscripciones/afeConvenio/actualiza";
+    public static final String PATH_AFECONVENIO_ELIMINA = "/inscripciones/afeConvenio/elimina";
+    public static final String ADDATTRIBUTE_AFECONVENIO = "afeConvenio";  
 }

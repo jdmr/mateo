@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.inscripciones;
+package mx.edu.um.mateo.inscripciones.model;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -26,11 +26,6 @@ import javax.persistence.Version;
 
 
 public class Alumno implements Serializable{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Version
-    private Integer version;
     @ManyToOne(optional=false)
     private AlumnoAcademico academico;
     @Column(name="bautizado")
@@ -39,6 +34,7 @@ public class Alumno implements Serializable{
     protected String telefono;
     @Column(name="email", length=50)
     protected String email;
+    @Id
     @Column(name="codigo_personal", length=7)
     protected String matricula;
     @Column(nullable=false, length=40, insertable=false, updatable=false)
@@ -171,27 +167,13 @@ public class Alumno implements Serializable{
         this.fNacimiento = fNacimiento;
     }
 
-    public Integer getVersion() {
-        return version;
-    }
+  
 
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+  
 
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 83 * hash + Objects.hashCode(this.id);
-        hash = 83 * hash + Objects.hashCode(this.version);
         hash = 83 * hash + Objects.hashCode(this.matricula);
         return hash;
     }
@@ -205,12 +187,7 @@ public class Alumno implements Serializable{
             return false;
         }
         final Alumno other = (Alumno) obj;
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!Objects.equals(this.version, other.version)) {
-            return false;
-        }
+      
         if (!Objects.equals(this.matricula, other.matricula)) {
             return false;
         }
@@ -219,7 +196,7 @@ public class Alumno implements Serializable{
 
     @Override
     public String toString() {
-        return "Alumno{" + "id=" + id + ", version=" + version + ", academico=" + academico + ", bautizado=" + bautizado + ", telefono=" + telefono + ", email=" + email + ", matricula=" + matricula + ", nombre=" + nombre + ", apPaterno=" + apPaterno + ", apMaterno=" + apMaterno + ", estadoCivil=" + estadoCivil + ", genero=" + genero + ", fNacimiento=" + fNacimiento + '}';
+        return "Alumno{" +  ", academico=" + academico + ", bautizado=" + bautizado + ", telefono=" + telefono + ", email=" + email + ", matricula=" + matricula + ", nombre=" + nombre + ", apPaterno=" + apPaterno + ", apMaterno=" + apMaterno + ", estadoCivil=" + estadoCivil + ", genero=" + genero + ", fNacimiento=" + fNacimiento + '}';
     }
     
     

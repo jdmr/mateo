@@ -5,7 +5,7 @@
 package mx.edu.um.mateo.inscripciones.dao;
 
 import java.util.Map;
-import mx.edu.um.mateo.inscripciones.Alumno;
+import mx.edu.um.mateo.inscripciones.model.Alumno;
 
 /**
  *
