@@ -11,8 +11,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import mx.edu.um.mateo.general.model.Empresa;
 
 /**
  *
@@ -43,6 +45,8 @@ public class TiposBecas {
     private Boolean perteneceAlumno; //true si la beca es del alumno, y no de la plaza de un departamento
     @Column
     private Boolean soloPostgrado; //true si la beca es solo para alumnos de postgrado
+     @ManyToOne(optional = false)
+    private Empresa empresa;
 
     public TiposBecas() {
     }
@@ -57,8 +61,12 @@ public class TiposBecas {
         this.perteneceAlumno=perteneceAlumno;
         this.soloPostgrado=soloPostgrado;
 }
+
+   
+
 //    private CentroCosto centroCosto;
 //    private CtaMayor ctaMayor;
+
     /**
      * @return the id
      */
@@ -147,7 +155,7 @@ public class TiposBecas {
     }
 
     /**
-     * 
+     *
      * @return the perteneceAlumno
      */
     public Boolean getPerteneceAlumno() {
@@ -163,7 +171,7 @@ public class TiposBecas {
 
     /**
      * @return the soloPostgrado
-     * 
+     *
      */
     public Boolean getSoloPostgrado() {
         return soloPostgrado;
@@ -266,4 +274,13 @@ public class TiposBecas {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
+    }
+    
 }

@@ -20,11 +20,11 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.general.web.BaseController;
+import mx.edu.um.mateo.inscripciones.model.Paquete;
 import mx.edu.um.mateo.inscripciones.model.TiposBecas;
+import mx.edu.um.mateo.inscripciones.service.PaqueteManager;
 import mx.edu.um.mateo.inscripciones.service.TiposBecasManager;
 import mx.edu.um.mateo.rh.model.Nacionalidad;
-import mx.edu.um.mateo.rh.service.NacionalidadManager;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -64,20 +64,19 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author develop
  */
 @Controller
-@RequestMapping(Constantes.PATH_TIPOSBECAS)
-public class TiposBecasController extends BaseController {
-
-    private static final Logger log = LoggerFactory.getLogger(mx.edu.um.mateo.inscripciones.web.TiposBecasController.class);
+@RequestMapping(Constantes.PATH_PAQUETE)
+public class PaqueteController {
+     private static final Logger log = LoggerFactory.getLogger(PaqueteController.class);
     @Autowired
-    private TiposBecasManager tiposBecasManager;
+    private PaqueteManager paqueteManager;
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
     private ResourceBundleMessageSource messageSource;
     @Autowired
     private Ambiente ambiente;
-
-    @RequestMapping({"", "/lista"})
+    
+   @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
             @RequestParam(required = false) Long pagina,
@@ -109,9 +108,9 @@ public class TiposBecasController extends BaseController {
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = tiposBecasManager.getTiposBeca(params);
+            params = paqueteManager.getPaquetes(params);
             try {
-                generaReporte(tipo, (List<TiposBecas>) params.get(Constantes.CONTAINSKEY_TIPOSBECAS), response);
+                generaReporte(tipo, (List<Paquete>) params.get(Constantes.CONTAINSKEY_PAQUETES), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -122,20 +121,20 @@ public class TiposBecasController extends BaseController {
 
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = tiposBecasManager.getTiposBeca(params);
+            params = paqueteManager.getPaquetes(params);
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<TiposBecas>) params.get(Constantes.CONTAINSKEY_TIPOSBECAS), request);
+                enviaCorreo(correo, (List<Paquete>) params.get(Constantes.CONTAINSKEY_PAQUETES), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
-                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("tiposBecas.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("paquete.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-        params = tiposBecasManager.getTiposBeca(params);
-        log.debug("params{}", params.get(Constantes.CONTAINSKEY_TIPOSBECAS));
-        modelo.addAttribute(Constantes.CONTAINSKEY_TIPOSBECAS, params.get(Constantes.CONTAINSKEY_TIPOSBECAS));
+        params = paqueteManager.getPaquetes(params);
+        log.debug("params{}", params.get(Constantes.CONTAINSKEY_PAQUETES));
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAQUETES, params.get(Constantes.CONTAINSKEY_PAQUETES));
 
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
@@ -146,11 +145,11 @@ public class TiposBecasController extends BaseController {
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<Nacionalidad> nacionalidades = (List<Nacionalidad>) params.get(Constantes.CONTAINSKEY_TIPOSBECAS);
+        List<Paquete> paquetes = (List<Paquete>) params.get(Constantes.CONTAINSKEY_PAQUETES);
         Long primero = ((pagina - 1) * max) + 1;
         log.debug("primero {}", primero);
-        log.debug("Nacionalidadesize {}", nacionalidades.size());
-        Long ultimo = primero + (nacionalidades.size() - 1);
+        log.debug("paquetes {}", paquetes.size());
+        Long ultimo = primero + (paquetes.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
         log.debug("Paginacion{}", paginacion);
@@ -160,30 +159,30 @@ public class TiposBecasController extends BaseController {
         log.debug("Pagina{}", pagina);
         // termina paginado
 
-        return Constantes.PATH_TIPOSBECAS_LISTA;
+        return Constantes.PATH_PAQUETE_LISTA;
     }
 
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable String id, Model modelo) {
         log.debug("Mostrando Tipos de Becas {}", id);
-        TiposBecas tiposBecas = tiposBecasManager.getTipoBeca(id);
+        Paquete paquete = paqueteManager.getPaquete(id);
 
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_TIPOSBECAS, tiposBecas);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_PAQUETE, paquete);
 
-        return Constantes.PATH_TIPOSBECAS_VER;
+        return Constantes.PATH_PAQUETE_VER;
     }
 
     @RequestMapping("/nuevo")
     public String nueva(HttpServletRequest request, Model modelo) {
         log.debug("Nuevo tipo de Beca");
-        TiposBecas tiposBecas = new TiposBecas();
-        modelo.addAttribute("tipoBeca", tiposBecas);
+        Paquete paquete = new Paquete();
+        modelo.addAttribute("tipoBeca", paquete);
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", request.getSession()
                 .getAttribute("empresaId"));
         params.put("reporte", true);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_TIPOSBECAS, tiposBecas);
-        return Constantes.PATH_TIPOSBECAS_NUEVO;
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_PAQUETE, paquete);
+        return Constantes.PATH_PAQUETE_NUEVO;
       
 
 		
@@ -191,7 +190,7 @@ public class TiposBecasController extends BaseController {
 
     @Transactional
     @RequestMapping(value = "/graba", method = RequestMethod.POST)
-    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid TiposBecas tiposBecas, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid Paquete paquete, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
@@ -200,67 +199,67 @@ public class TiposBecasController extends BaseController {
             Map<String, Object> params = new HashMap<>();
             params.put("empresa", request.getSession()
                     .getAttribute("empresaId"));
-            return Constantes.PATH_TIPOSBECAS_NUEVO;
+            return Constantes.PATH_PAQUETE_NUEVO;
         }
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
-            tiposBecasManager.graba(tiposBecas,usuario);
+            paqueteManager.graba(paquete,usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el tipo de Beca", e);
-            return Constantes.PATH_TIPOSBECAS_NUEVO;
+            return Constantes.PATH_PAQUETE_NUEVO;
         }
 
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "tiposBecas.graba.message");
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{tiposBecas.getDescripcion()});
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "paquete.graba.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{paquete.getDescripcion()});
 
-        return "redirect:" + Constantes.PATH_TIPOSBECAS_LISTA + "/";
+        return "redirect:" + Constantes.PATH_PAQUETE_LISTA+ "/";
     }
 
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable String id, Model modelo) {
         log.debug("Editar cuenta de tipos de becas {}", id);
-        TiposBecas tiposBecas = tiposBecasManager.getTipoBeca(id);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_TIPOSBECAS, tiposBecas);
-        return Constantes.PATH_TIPOSBECAS_EDITA;
+        Paquete paquete = paqueteManager.getPaquete(id);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_PAQUETE, paquete);
+        return Constantes.PATH_PAQUETE_EDITA;
     }
 
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpServletRequest request, @RequestParam String id, Model modelo, @ModelAttribute TiposBecas tiposBecas, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String elimina(HttpServletRequest request, @RequestParam String id, Model modelo, @ModelAttribute Paquete paquete, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina cuenta de tipos de becas");
         try {
-            tiposBecasManager.removeTipoBeca(id);
+            paqueteManager.removePaquete(id);
 
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "tiposBecas.elimina.message");
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{tiposBecas.getDescripcion()});
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "paquete.elimina.message");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{paquete.getDescripcion()});
         } catch (Exception e) {
-            log.error("No se pudo eliminar el tipo de beca " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_TIPOSBECAS, new String[]{"tiposBecas.no.elimina.message"}, null, null));
-            return Constantes.PATH_TIPOSBECAS_VER;
+            log.error("No se pudo eliminar el tipo de paquete " + id, e);
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_PAQUETE, new String[]{"paquete.no.elimina.message"}, null, null));
+            return Constantes.PATH_PAQUETE_VER;
         }
 
-        return "redirect:" + Constantes.PATH_TIPOSBECAS_LISTA;
+        return "redirect:" + Constantes.PATH_PAQUETE_LISTA;
     }
 
-    private void generaReporte(String tipo, List<TiposBecas> tiposBecas, HttpServletResponse response) throws JRException, IOException {
+    private void generaReporte(String tipo, List<Paquete> paquetes, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
         switch (tipo) {
             case "PDF":
-                archivo = generaPdf(tiposBecas);
+                archivo = generaPdf(paquetes);
                 response.setContentType("application/pdf");
-                response.addHeader("Content-Disposition", "attachment; filename=TiposBecas.pdf");
+                response.addHeader("Content-Disposition", "attachment; filename=Paquetes.pdf");
                 break;
             case "CSV":
-                archivo = generaCsv(tiposBecas);
+                archivo = generaCsv(paquetes);
                 response.setContentType("text/csv");
-                response.addHeader("Content-Disposition", "attachment; filename=TiposBecas.csv");
+                response.addHeader("Content-Disposition", "attachment; filename=Paquetes.csv");
                 break;
             case "XLS":
-                archivo = generaXls(tiposBecas);
+                archivo = generaXls(paquetes);
                 response.setContentType("application/vnd.ms-excel");
-                response.addHeader("Content-Disposition", "attachment; filename=TiposBecas.xls");
+                response.addHeader("Content-Disposition", "attachment; filename=Paquetes.xls");
         }
         if (archivo != null) {
             response.setContentLength(archivo.length);
@@ -272,51 +271,51 @@ public class TiposBecasController extends BaseController {
 
     }
 
-    private void enviaCorreo(String tipo, List<TiposBecas> tiposBecas, HttpServletRequest request) throws JRException, MessagingException {
+    private void enviaCorreo(String tipo, List<Paquete> paquetes, HttpServletRequest request) throws JRException, MessagingException {
         log.debug("Enviando correo {}", tipo);
         byte[] archivo = null;
         String tipoContenido = null;
         switch (tipo) {
             case "PDF":
-                archivo = generaPdf(tiposBecas);
+                archivo = generaPdf(paquetes);
                 tipoContenido = "application/pdf";
                 break;
             case "CSV":
-                archivo = generaCsv(tiposBecas);
+                archivo = generaCsv(paquetes);
                 tipoContenido = "text/csv";
                 break;
             case "XLS":
-                archivo = generaXls(tiposBecas);
+                archivo = generaXls(paquetes);
                 tipoContenido = "application/vnd.ms-excel";
         }
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(ambiente.obtieneUsuario().getUsername());
-        String titulo = messageSource.getMessage("tiposBecas.lista.label", null, request.getLocale());
+        String titulo = messageSource.getMessage("paquete.lista.label", null, request.getLocale());
         helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
         helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
         helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
         mailSender.send(message);
     }
 
-    private byte[] generaPdf(List nacionalidades) throws JRException {
+    private byte[] generaPdf(List paquetes) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/tiposBecas.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(nacionalidades));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(paquetes));
         byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
 
         return archivo;
     }
 
-    private byte[] generaCsv(List nacionalidades) throws JRException {
+    private byte[] generaCsv(List paquetes) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRCsvExporter exporter = new JRCsvExporter();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/tiposBecas.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(nacionalidades));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(paquetes));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
         exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
         exporter.exportReport();
@@ -325,13 +324,13 @@ public class TiposBecasController extends BaseController {
         return archivo;
     }
 
-    private byte[] generaXls(List nacionalidades) throws JRException {
+    private byte[] generaXls(List paquetes) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRXlsExporter exporter = new JRXlsExporter();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/tiposBecas.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(nacionalidades));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(paquetes));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
         exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
         exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);

@@ -5,6 +5,8 @@
 package mx.edu.um.mateo.inscripciones.web;
 
 import java.math.BigDecimal;
+import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -84,7 +86,10 @@ public class TiposBecasControllerTest extends BaseTest {
     @Test
     public void debieraMostrarListaDeTiposBecas() throws Exception {
         log.debug("Debiera mostrar lista de tipos Becas");
-
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
         for (int i = 0; i < 20; i++) {
             TiposBecas tiposBecas = new TiposBecas();
             tiposBecas.setDescripcion("test" + i);
@@ -95,6 +100,7 @@ public class TiposBecasControllerTest extends BaseTest {
             tiposBecas.setSoloPostgrado(false);
             tiposBecas.setStatus("a");
             tiposBecas.setTope(new BigDecimal(320));
+            tiposBecas.setEmpresa(empresa);
             currentSession().save(tiposBecas);
         }
 
@@ -113,6 +119,10 @@ public class TiposBecasControllerTest extends BaseTest {
     @Test
     public void debieraMostrarTipoBeca() throws Exception {
         log.debug("Debiera mostrar un tipo de beca");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
         TiposBecas tiposBecas = new TiposBecas();
         tiposBecas.setDescripcion("test");
         tiposBecas.setDiezma(true);
@@ -122,6 +132,7 @@ public class TiposBecasControllerTest extends BaseTest {
         tiposBecas.setSoloPostgrado(false);
         tiposBecas.setStatus("a");
         tiposBecas.setTope(new BigDecimal(320));
+        tiposBecas.setEmpresa(empresa);
         currentSession().save(tiposBecas);
         assertNotNull(tiposBecas.getId());
         this.mockMvc.perform(get(Constantes.PATH_TIPOSBECAS_VER + "/" + tiposBecas.getId())).
@@ -130,13 +141,16 @@ public class TiposBecasControllerTest extends BaseTest {
                 .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_TIPOSBECAS));
     }
 
-   
     /**
      * Test of elimina method, of class TiposBecasController.
      */
     @Test
-    public void testElimina()  throws Exception{
-       log.debug("Debiera mostrar un tipo de beca");
+    public void testElimina() throws Exception {
+        log.debug("Debiera mostrar un tipo de beca");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
         TiposBecas tiposBecas = new TiposBecas();
         tiposBecas.setDescripcion("test");
         tiposBecas.setDiezma(true);
@@ -146,9 +160,10 @@ public class TiposBecasControllerTest extends BaseTest {
         tiposBecas.setSoloPostgrado(false);
         tiposBecas.setStatus("a");
         tiposBecas.setTope(new BigDecimal(320));
+        tiposBecas.setEmpresa(empresa);
         currentSession().save(tiposBecas);
         assertNotNull(tiposBecas.getId());
-                this.mockMvc.perform(post(Constantes.PATH_TIPOSBECAS_ELIMINA)
+        this.mockMvc.perform(post(Constantes.PATH_TIPOSBECAS_ELIMINA)
                 .param("id", tiposBecas.getId().toString()))
                 .andExpect(status().isOk())
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
