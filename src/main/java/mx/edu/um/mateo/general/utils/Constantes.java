@@ -2784,4 +2784,11 @@ public class Constantes {
     public static final String PATH_PAQUETE_ACTUALIZA = "/inscripciones/paquete/actualiza";
     public static final String PATH_PAQUETE_ELIMINA = "/inscripciones/paquete/elimina";
     public static final String ADDATTRIBUTE_PAQUETE = "paquete";  
+    /**
+     * Valores para Prorroga
+     *
+     */
+     public static final String CONTAINSKEY_PRORROGAS= "prorrogas";
+    
+
 }
