@@ -20,13 +20,10 @@ import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
 
 /**
- * TODO 
- * Sustituir nombre de por id
- * 
- * 
+ * TODO Sustituir nombre de por id
+ *
+ *
  */
-
-
 /**
  *
  * @author develop
@@ -44,14 +41,14 @@ public class Prorroga implements Serializable {
     private String matricula;
     @Temporal(TemporalType.DATE)
     private Date fecha;
-    @Column(name="fecha_comp")
+    @Column(name = "fecha_comp")
     @Temporal(TemporalType.DATE)
     private Date fechaCompromiso;
     @Column(nullable = false, length = 100)
     private String descripcion;
     @Column(nullable = false, length = 15)
     private Double saldo;
-    @Column(name="usuario",nullable = false, length = 20)
+    @Column(name = "usuario", nullable = false, length = 20)
     private String userName;
     @Column(nullable = false, length = 2)
     private String status;
@@ -67,13 +64,12 @@ public class Prorroga implements Serializable {
 
     public Prorroga(String matricula, Date fecha,
             Date fecha_comp, String descripcion, Double saldo,
-            String userName, String status) {
+            String status) {
         this.matricula = matricula;
         this.fecha = fecha;
         this.fechaCompromiso = fecha_comp;
         this.descripcion = descripcion;
         this.saldo = saldo;
-        this.userName = userName;
         this.status = status;
     }
 
