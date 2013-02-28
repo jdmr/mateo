@@ -64,7 +64,7 @@ public class ProrrogaController extends BaseController{
     private ProrrogaManager prorrogaManager;
   
 
-    @RequestMapping({"", "/lista"})
+    @RequestMapping({"", "/lista"}) 
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
             @RequestParam(required = false) Long pagina,
