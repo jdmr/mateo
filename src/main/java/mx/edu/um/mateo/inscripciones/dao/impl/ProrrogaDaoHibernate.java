@@ -12,6 +12,7 @@ import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inscripciones.dao.ProrrogaDao;
 import mx.edu.um.mateo.inscripciones.model.Prorroga;
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -27,15 +28,14 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class ProrrogaDaoHibernate extends BaseDao implements ProrrogaDao{
-    
+public class ProrrogaDaoHibernate extends BaseDao implements ProrrogaDao {
+
     /**
-     *@see mx.edu.um.mateo.rh.dao.ProrrogaDao#lista(java.util.Map)  
+     * @see mx.edu.um.mateo.rh.dao.ProrrogaDao#lista(java.util.Map)
      */
-    
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
-          log.debug("Buscando lista de prorrogas con params {}", params);
+        log.debug("Buscando lista de prorrogas con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
@@ -55,8 +55,10 @@ public class ProrrogaDaoHibernate extends BaseDao implements ProrrogaDao{
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(Prorroga.class);
-        Criteria countCriteria = currentSession().createCriteria(Prorroga.class);
+        Criteria criteria = currentSession().createCriteria(Prorroga.class)
+                .setFetchMode("usuario", FetchMode.SELECT);
+        Criteria countCriteria = currentSession().createCriteria(Prorroga.class)
+                .setFetchMode("usuario", FetchMode.SELECT);
 
         if (params.containsKey("empresa")) {
             criteria.createCriteria("empresa").add(
@@ -101,23 +103,24 @@ public class ProrrogaDaoHibernate extends BaseDao implements ProrrogaDao{
     }
 
     /**
-     * @see mx.edu.um.mateo.rh.dao.ProrrogaDao#obtiene(java.lang.Long) 
+     * @see mx.edu.um.mateo.rh.dao.ProrrogaDao#obtiene(java.lang.Long)
      */
     @Override
     public Prorroga obtiene(Integer id) {
         log.debug("Obtiene prorroga con id = {}", id);
         Prorroga prorroga = (Prorroga) currentSession().get(Prorroga.class, id);
-        if(prorroga==null){
-            log.warn("uh oh, la prorroga con el id"+id+"no se encontro...");
+        if (prorroga == null) {
+            log.warn("uh oh, la prorroga con el id" + id + "no se encontro...");
             throw new ObjectRetrievalFailureException(Prorroga.class, id);
-            
+
         }
         return prorroga;
     }
 
-   
     /**
-     *@see mx.edu.um.mateo.rh.dao.ProrrogaDao#graba(mx.edu.um.mateo.rh.model.Prorroga, mx.edu.um.mateo.general.model.Usuario)   
+     * @see
+     * mx.edu.um.mateo.rh.dao.ProrrogaDao#graba(mx.edu.um.mateo.rh.model.Prorroga,
+     * mx.edu.um.mateo.general.model.Usuario)
      */
     @Override
     public void graba(final Prorroga prorroga, Usuario usuario) {
@@ -129,16 +132,15 @@ public class ProrrogaDaoHibernate extends BaseDao implements ProrrogaDao{
         currentSession().saveOrUpdate(prorroga);
         currentSession().merge(prorroga);
         currentSession().flush();
-      
-        
+
+
     }
 
-    
-/**
- *@see mx.edu.um.mateo.rh.dao.ProrrogaDao#elimina(java.lang.Long)  
- */
+    /**
+     * @see mx.edu.um.mateo.rh.dao.ProrrogaDao#elimina(java.lang.Long)
+     */
     @Override
-    public String elimina( Integer id)  {
+    public String elimina(Integer id) {
         log.debug("Eliminando prorroga con id {}", id);
         Prorroga prorroga = obtiene(id);
         prorroga.setStatus("I");
@@ -147,5 +149,4 @@ public class ProrrogaDaoHibernate extends BaseDao implements ProrrogaDao{
         String descripcion = prorroga.getDescripcion();
         return descripcion;
     }
-    
 }
