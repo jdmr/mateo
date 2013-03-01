@@ -18,6 +18,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * TODO Sustituir nombre de por id
@@ -39,10 +40,12 @@ public class Prorroga implements Serializable {
     private Integer version;
     @Column(nullable = false, length = 20)
     private String matricula;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     private Date fecha;
-    @Column(name = "fecha_comp")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
+    @Column(name = "fecha_comp")
     private Date fechaCompromiso;
     @Column(nullable = false, length = 100)
     private String descripcion;
