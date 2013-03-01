@@ -2515,4 +2515,14 @@ public class Constantes {
     public static final String PATH_EMPLEADOPUESTO_VER = "/rh/empleadoPuesto/ver";
     public static final String PATH_EMPLEADOPUESTO_NUEVO = "/rh/empleadoPuesto/nuevo";
     public static final String PATH_EMPLEADOPUESTO_EDITA = "/rh/empleadoPuesto/edita";
+    
+    public static final String CONTAINSKEY_PERIODOS = "periodos";
+    
+    public static final String PATH_PERIODOS = "/inscripciones/periodos";
+    public static final String PATH_PERIODOS_LISTA = "inscripciones/periodos/lista";
+    public static final String PATH_PERIODOS_VER = "inscripciones/periodos/ver";
+    public static final String PATH_PERIODOS_NUEVO = "/inscripciones/periodos/nuevo";
+    public static final String PATH_PERIODOS_EDITA = "/inscripciones/periodos/edita";
+    public static final String PATH_PERIODOS_GRABA = "/inscripciones/periodos/graba";
+    public static final String PATH_PERIODOS_CREA = "/inscripciones/periodos/crea";
 }
