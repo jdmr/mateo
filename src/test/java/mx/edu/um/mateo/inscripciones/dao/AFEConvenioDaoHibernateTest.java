@@ -56,7 +56,7 @@ public class AFEConvenioDaoHibernateTest {
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         assertNotNull(empresa.getId());
-        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10);
+        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, empresa);
         currentSession().save(tipoBeca);
         assertNotNull(tipoBeca.getId());
         Alumno alumno = alDao.obtiene("1080506");
@@ -89,7 +89,7 @@ public class AFEConvenioDaoHibernateTest {
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         assertNotNull(empresa.getId());
-        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10);
+        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, empresa);
         currentSession().save(tipoBeca);
         assertNotNull(tipoBeca.getId());
         Alumno alumno = alDao.obtiene("1080506");
@@ -109,7 +109,7 @@ public class AFEConvenioDaoHibernateTest {
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         assertNotNull(empresa.getId());
-        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10);
+        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10,empresa);
         currentSession().save(tipoBeca);
         assertNotNull(tipoBeca.getId());
         Alumno alumno = alDao.obtiene("1080506");
@@ -132,7 +132,7 @@ public class AFEConvenioDaoHibernateTest {
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         assertNotNull(empresa.getId());
-        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10);
+        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, empresa);
         currentSession().save(tipoBeca);
         assertNotNull(tipoBeca.getId());
         Alumno alumno = alDao.obtiene("1080506");

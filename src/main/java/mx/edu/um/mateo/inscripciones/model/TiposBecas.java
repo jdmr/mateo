@@ -52,15 +52,16 @@ public class TiposBecas {
     }
 
     
-    public TiposBecas(String descripcion, Boolean diezma ,BigDecimal porcentaje, BigDecimal tope, Boolean perteneceAlumno, Boolean soloPostgrado, Integer numHoras ){
+    public TiposBecas(String descripcion, Boolean diezma ,BigDecimal porcentaje, BigDecimal tope, Boolean perteneceAlumno, Boolean soloPostgrado, Integer numHoras, Empresa empresa ){
         this.descripcion=descripcion;
         this.diezma=diezma;
         this.porcentaje=porcentaje;
         this.tope=tope;
         this.numHoras=numHoras;
+        this.empresa = empresa;
         this.perteneceAlumno=perteneceAlumno;
         this.soloPostgrado=soloPostgrado;
-}
+}       
 
    
 

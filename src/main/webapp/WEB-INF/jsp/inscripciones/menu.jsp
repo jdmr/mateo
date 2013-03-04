@@ -6,6 +6,7 @@
         <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
         <li<c:if test="${param.menu eq 'principal'}"> class="active"</c:if>><a href="<c:url value='/inscripciones' />"><s:message code="inscripciones.label" /></a></li>
         <li<c:if test="${param.menu eq 'tiposBecas'}"> class="active"</c:if>><a href="<s:url value='/inscripciones/tiposBecas'/>" ><s:message code="tiposBecas.lista.label" /></a></li>
+        <li<c:if test="${param.menu eq 'convenios'}"> class="active"</c:if>><a href="<s:url value='/inscripciones/afeConvenio'/>" ><s:message code="afeConvenio.lista.label" /></a></li>
         <li<c:if test="${param.menu eq 'paquete'}"> class="active"</c:if>><a href="<s:url value='/inscripciones/paquete'/>" ><s:message code="paquete.lista.label" /></a></li>
     </ul>
 </nav>
