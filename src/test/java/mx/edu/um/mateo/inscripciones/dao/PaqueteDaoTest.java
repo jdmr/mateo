@@ -106,7 +106,7 @@ public class PaqueteDaoTest {
             paquete.setDescripcion("test");
             paquete.setEnsenanza(new Double("1.2"));
             paquete.setInternado(new Double("2.2"));
-            paquete.setMatricula(new Double("3.6"));
+            paquete.setMatricula("1110475");
             paquete.setNombre("Test");
             instance.graba(paquete, usuario);
             assertNotNull(paquete.getId());
@@ -137,7 +137,7 @@ public class PaqueteDaoTest {
         paquete.setDescripcion("test");
         paquete.setEnsenanza(new Double("1.2"));
         paquete.setInternado(new Double("2.2"));
-        paquete.setMatricula(new Double("3.6"));
+        paquete.setMatricula("1110475");
         paquete.setNombre(nombre);
         paquete.setEmpresa(empresa);
         currentSession().save(paquete);
@@ -179,7 +179,7 @@ public class PaqueteDaoTest {
         paquete.setDescripcion("test");
         paquete.setEnsenanza(new Double("1.2"));
         paquete.setInternado(new Double("2.2"));
-        paquete.setMatricula(new Double("3.6"));
+        paquete.setMatricula("1110475");
         paquete.setNombre(nombre);
         paquete.setEmpresa(empresa);
         instance.graba(paquete, usuario);
@@ -201,7 +201,7 @@ public class PaqueteDaoTest {
         paquete.setDescripcion("test");
         paquete.setEnsenanza(new Double("1.2"));
         paquete.setInternado(new Double("2.2"));
-        paquete.setMatricula(new Double("3.6"));
+        paquete.setMatricula("1110475");
         paquete.setNombre(nombre);
         paquete.setEmpresa(empresa);
         currentSession().save(paquete);
