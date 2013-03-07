@@ -5,6 +5,7 @@
 package mx.edu.um.mateo.colportor.dao;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.colportor.model.Estado;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
@@ -80,6 +81,7 @@ public class EstadoDao {
             criteria.setMaxResults((Integer) params.get(Constantes.CONTAINSKEY_MAX));
         }
         params.put(Constantes.CONTAINSKEY_ESTADOS, criteria.list());
+        log.debug("Rows returned {}",((List)params.get(Constantes.CONTAINSKEY_ESTADOS)).size());
         countCriteria.setProjection(Projections.rowCount());
         params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));
         return params;

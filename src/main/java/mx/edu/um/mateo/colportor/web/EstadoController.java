@@ -55,7 +55,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author gibrandemetrioo
  */
 @Controller
-@RequestMapping(Constantes.PATH_ESTADO)
+@RequestMapping("/colportaje/estado")
 public class EstadoController {
     private static final Logger log = (Logger) LoggerFactory.getLogger(EstadoController.class);
     @Autowired
@@ -120,6 +120,7 @@ public class EstadoController {
             }
         }
         params = estadoDao.lista(params);
+        log.debug("Rows returned {}",((List)params.get(Constantes.CONTAINSKEY_ESTADOS)).size());
         modelo.addAttribute(Constantes.CONTAINSKEY_ESTADOS, params.get(Constantes.CONTAINSKEY_ESTADOS));
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);

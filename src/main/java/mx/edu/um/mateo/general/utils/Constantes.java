@@ -2658,26 +2658,26 @@ public class Constantes {
     /**
      * Valores para Estado Colportor
      */
-    public static final String PATH_ESTADO = "/estado";
-    public static final String PATH_ESTADO_LISTA = "estado/lista";
-    public static final String PATH_ESTADO_VER = "/estado/ver";
-    public static final String PATH_ESTADO_NUEVA = "/estado/nueva";
-    public static final String PATH_ESTADO_EDITA = "/estado/edita";
-    public static final String PATH_ESTADO_CREA = "/estado/crea";
-    public static final String PATH_ESTADO_ACTUALIZA = "/estado/actualiza";
-    public static final String PATH_ESTADO_ELIMINA = "/estado/elimina";
+    public static final String PATH_ESTADO = "/colportaje/estado";
+    public static final String PATH_ESTADO_LISTA = "/colportaje/estado/lista";
+    public static final String PATH_ESTADO_VER = "/colportaje/estado/ver";
+    public static final String PATH_ESTADO_NUEVA = "/colportaje/estado/nueva";
+    public static final String PATH_ESTADO_EDITA = "/colportaje/estado/edita";
+    public static final String PATH_ESTADO_CREA = "/colportaje/estado/crea";
+    public static final String PATH_ESTADO_ACTUALIZA = "/colportaje/estado/actualiza";
+    public static final String PATH_ESTADO_ELIMINA = "/colportaje/estado/elimina";
     public static final String ADDATTRIBUTE_ESTADO = "estado";
     /**
      * Valores para Pais Colportor
      */
-    public static final String PATH_PAIS = "/pais";
-    public static final String PATH_PAIS_LISTA = "pais/lista";
-    public static final String PATH_PAIS_VER = "/pais/ver";
-    public static final String PATH_PAIS_NUEVA = "/pais/nueva";
-    public static final String PATH_PAIS_EDITA = "/pais/edita";
-    public static final String PATH_PAIS_CREA = "/pais/crea";
-    public static final String PATH_PAIS_ACTUALIZA = "/pais/actualiza";
-    public static final String PATH_PAIS_ELIMINA = "/pais/elimina";
+    public static final String PATH_PAIS = "/colportaje/pais";
+    public static final String PATH_PAIS_LISTA = "/colportaje/pais/lista";
+    public static final String PATH_PAIS_VER = "/colportaje/pais/ver";
+    public static final String PATH_PAIS_NUEVA = "/colportaje/pais/nueva";
+    public static final String PATH_PAIS_EDITA = "/colportaje/pais/edita";
+    public static final String PATH_PAIS_CREA = "/colportaje/pais/crea";
+    public static final String PATH_PAIS_ACTUALIZA = "/colportaje/pais/actualiza";
+    public static final String PATH_PAIS_ELIMINA = "/colportaje/pais/elimina";
     public static final String ADDATTRIBUTE_PAIS = "pais";
     /**
      * Valores para Temporada Colportor Colportor

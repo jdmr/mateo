@@ -335,7 +335,8 @@ public class DocumentoController {
 
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Documento documentos, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
+    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Documento documentos, 
+        BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
         Map<String, Object> params = new HashMap<>();
         for (String folio : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", folio, request.getParameterMap().get(folio));
@@ -394,8 +395,8 @@ public class DocumentoController {
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "documento.creado.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{documentos.getFolio()});
-
-        return "redirect:" + Constantes.PATH_DOCUMENTO_VER + "/" + documentos.getId();
+        
+        return "redirect:" + Constantes.PATH_DOCUMENTO_VER+"/"+documentos.getId();
     }
 
     @RequestMapping("/edita/{id}")
@@ -453,8 +454,7 @@ public class DocumentoController {
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "documento.actualizado.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{documentos.getFolio()});
-
-        log.debug("Id del documento actualizado {}", documentos.getId());
+        
         return "redirect:" + Constantes.PATH_DOCUMENTO_VER + "/" + documentos.getId();
     }
 

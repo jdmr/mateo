@@ -8,6 +8,7 @@
         <li><a href="<c:url value='/activoFijo' />"><s:message code="activoFijo.label" /></a></li>
         <li><a href="<c:url value='/rh' />"><s:message code="rh.label" /></a></li>
         <li><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
+        <li><a href="<c:url value='/colportaje' />"><s:message code="colportaje.label" /></a></li>              
         <li><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>              
     </ul>
 </nav>
