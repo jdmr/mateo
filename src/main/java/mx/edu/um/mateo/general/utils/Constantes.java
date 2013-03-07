@@ -2570,14 +2570,14 @@ public class Constantes {
     /**
      * Valores para las Uniones Colportor
      */
-    public static final String PATH_UNION = "/admin/union";
-    public static final String PATH_UNION_LISTA = "admin/union/lista";
-    public static final String PATH_UNION_VER = "/admin/union/ver";
-    public static final String PATH_UNION_NUEVA = "admin/union/nueva";
-    public static final String PATH_UNION_EDITA = "admin/union/edita";
-    public static final String PATH_UNION_CREA = "/admin/union/crea";
-    public static final String PATH_UNION_ACTUALIZA = "/admin/union/actualiza";
-    public static final String PATH_UNION_ELIMINA = "/admin/union/elimina";
+    public static final String PATH_UNION = "/colportaje/union";
+    public static final String PATH_UNION_LISTA = "/colportaje/union/lista";
+    public static final String PATH_UNION_VER = "/colportaje/union/ver";
+    public static final String PATH_UNION_NUEVA = "colportaje/union/nueva";
+    public static final String PATH_UNION_EDITA = "colportaje/union/edita";
+    public static final String PATH_UNION_CREA = "/colportaje/union/crea";
+    public static final String PATH_UNION_ACTUALIZA = "/colportaje/union/actualiza";
+    public static final String PATH_UNION_ELIMINA = "/colportaje/union/elimina";
     /**
      * Valores para los Asociados Colportor
      */
@@ -2646,7 +2646,7 @@ public class Constantes {
     /**
      * Valores para Ciudad Colportor
      */
-    public static final String PATH_CIUDAD = "/ciudad";
+    public static final String PATH_CIUDAD = "/colportaje/ciudad";
     public static final String PATH_CIUDAD_LISTA = "/colportaje/ciudad/lista";
     public static final String PATH_CIUDAD_VER = "/colportaje/ciudad/ver";
     public static final String PATH_CIUDAD_NUEVA = "/colportaje/ciudad/nueva";
