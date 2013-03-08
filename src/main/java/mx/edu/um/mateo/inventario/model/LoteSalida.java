@@ -247,7 +247,7 @@ public class LoteSalida implements Serializable {
 	public String toString() {
 		return "LoteSalida{" + "cantidad=" + cantidad + ", precioUnitario="
 				+ precioUnitario + ", iva=" + iva + ", producto="
-				+ producto.getCodigo() + ", salida=" + salida.getFolio()
+				+ producto + ", salida=" + salida
 				+ ", fechaCreacion=" + fechaCreacion + '}';
 	}
 }
