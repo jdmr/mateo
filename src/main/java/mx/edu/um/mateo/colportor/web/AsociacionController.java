@@ -130,7 +130,7 @@ public class AsociacionController extends BaseController {
         log.debug("Nueva Asociacion");
         Asociacion asociacion = new Asociacion();
         modelo.addAttribute(Constantes.ADDATTRIBUTE_ASOCIACION, asociacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_UNIONES, unionDao.lista(null));
+        modelo.addAttribute(Constantes.CONTAINSKEY_UNIONES, unionDao.lista(null).get(Constantes.CONTAINSKEY_UNIONES));
         
         return Constantes.PATH_ASOCIACION_NUEVA;
     }
@@ -145,6 +145,7 @@ public class AsociacionController extends BaseController {
             for (ObjectError error : bindingResult.getAllErrors()) {
                 log.debug("Error: {}", error);
             }
+            modelo.addAttribute(Constantes.CONTAINSKEY_UNIONES, unionDao.lista(null).get(Constantes.CONTAINSKEY_UNIONES));
             return Constantes.PATH_ASOCIACION_NUEVA;
         }
         try {
@@ -157,6 +158,7 @@ public class AsociacionController extends BaseController {
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al Asociacion", e);
             errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
+            modelo.addAttribute(Constantes.CONTAINSKEY_UNIONES, unionDao.lista(null).get(Constantes.CONTAINSKEY_UNIONES));
             return Constantes.PATH_ASOCIACION_NUEVA;
         }
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "asociacion.creada.message");
@@ -169,7 +171,7 @@ public class AsociacionController extends BaseController {
         log.debug("Edita Asociacion {}", id);
         Asociacion asociacion = asociacionDao.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_ASOCIACION, asociacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_UNIONES, unionDao.lista(null));
+        modelo.addAttribute(Constantes.CONTAINSKEY_UNIONES, unionDao.lista(null).get(Constantes.CONTAINSKEY_UNIONES));
         return Constantes.PATH_ASOCIACION_EDITA;
     }
 
@@ -180,6 +182,7 @@ public class AsociacionController extends BaseController {
             for (ObjectError error : bindingResult.getAllErrors()) {
                 log.debug("Error: {}", error);
             }
+            modelo.addAttribute(Constantes.CONTAINSKEY_UNIONES, unionDao.lista(null).get(Constantes.CONTAINSKEY_UNIONES));
             return Constantes.PATH_ASOCIACION_EDITA;
         }
         try {
@@ -197,6 +200,7 @@ public class AsociacionController extends BaseController {
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la Asociacion", e);
             errors.rejectValue("nombre", "campo.duplicado.message", new String[]{"nombre"}, null);
+            modelo.addAttribute(Constantes.CONTAINSKEY_UNIONES, unionDao.lista(null).get(Constantes.CONTAINSKEY_UNIONES));
             return Constantes.PATH_ASOCIACION_EDITA;
         }
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "asociacion.actualizada.message");

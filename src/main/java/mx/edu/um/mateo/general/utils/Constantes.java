@@ -2617,14 +2617,14 @@ public class Constantes {
     /**
      * Valores para los Temporada Colportor
      */
-    public static final String PATH_TEMPORADA = "/temporada";
-    public static final String PATH_TEMPORADA_LISTA = "/temporada/lista";
-    public static final String PATH_TEMPORADA_VER = "/temporada/ver";
-    public static final String PATH_TEMPORADA_NUEVA = "/temporada/nueva";
-    public static final String PATH_TEMPORADA_EDITA = "/temporada/edita";
-    public static final String PATH_TEMPORADA_CREA = "/temporada/crea";
-    public static final String PATH_TEMPORADA_ACTUALIZA = "/temporada/actualiza";
-    public static final String PATH_TEMPORADA_ELIMINA = "/temporada/elimina";
+    public static final String PATH_TEMPORADA = "/colportaje/temporada";
+    public static final String PATH_TEMPORADA_LISTA = "/colportaje/temporada/lista";
+    public static final String PATH_TEMPORADA_VER = "/colportaje/temporada/ver";
+    public static final String PATH_TEMPORADA_NUEVA = "/colportaje/temporada/nueva";
+    public static final String PATH_TEMPORADA_EDITA = "/colportaje/temporada/edita";
+    public static final String PATH_TEMPORADA_CREA = "/colportaje/temporada/crea";
+    public static final String PATH_TEMPORADA_ACTUALIZA = "/colportaje/temporada/actualiza";
+    public static final String PATH_TEMPORADA_ELIMINA = "/colportaje/temporada/elimina";
     public static final String ADDATTRIBUTE_TEMPORADA = "temporada";
     /**
      * Valores para la exportacion Colportor
