@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.colportor.dao.AsociacionDao;
+import mx.edu.um.mateo.colportor.dao.UnionDao;
 import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.colportor.model.Union;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -52,12 +53,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author gibrandemetrioo
  */
 @Controller
-@RequestMapping(Constantes.PATH_ASOCIACION)
+@RequestMapping("/colportaje/asociacion")
 public class AsociacionController extends BaseController {
 
     @Autowired
     private AsociacionDao asociacionDao;
-
+    @Autowired
+    private UnionDao unionDao;
+    
     public AsociacionController() {
         log.info("Se ha creado una nueva instancia de AsociacionController");
     }
@@ -73,8 +76,8 @@ public class AsociacionController extends BaseController {
             Model modelo) {
         log.debug("Mostrando lista de Asociaciones");
         Map<String, Object> params = new HashMap<>();
-        Long unionId = (Long) request.getSession().getAttribute(Constantes.SESSION_UNION);
-        params.put(Constantes.ADDATTRIBUTE_UNION, unionId);
+//        Long unionId = (Long) request.getSession().getAttribute(Constantes.SESSION_UNION);
+//        params.put(Constantes.ADDATTRIBUTE_UNION, unionId);
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }
@@ -127,6 +130,8 @@ public class AsociacionController extends BaseController {
         log.debug("Nueva Asociacion");
         Asociacion asociacion = new Asociacion();
         modelo.addAttribute(Constantes.ADDATTRIBUTE_ASOCIACION, asociacion);
+        modelo.addAttribute(Constantes.CONTAINSKEY_UNIONES, unionDao.lista(null));
+        
         return Constantes.PATH_ASOCIACION_NUEVA;
     }
 
@@ -164,6 +169,7 @@ public class AsociacionController extends BaseController {
         log.debug("Edita Asociacion {}", id);
         Asociacion asociacion = asociacionDao.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_ASOCIACION, asociacion);
+        modelo.addAttribute(Constantes.CONTAINSKEY_UNIONES, unionDao.lista(null));
         return Constantes.PATH_ASOCIACION_EDITA;
     }
 

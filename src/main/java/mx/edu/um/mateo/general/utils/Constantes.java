@@ -2485,14 +2485,14 @@ public class Constantes {
     public static final String PATH_ESTUDIOSEMPLEADO_CREA = "/rh/estudiosEmpleado/crea";
     public static final String PATH_ESTUDIOSEMPLEADO_ACTUALIZA = "/rh/estudiosEmpleado/actualiza";
     public static final String PATH_ESTUDIOSEMPLEADO_ELIMINA = "/rh/estudiosEmpleado/elimina";
-    public static final String PATH_COLEGIO = "/rh/colegio";
-    public static final String PATH_COLEGIO_LISTA = "/rh/colegio/lista";
-    public static final String PATH_COLEGIO_VER = "/rh/colegio/ver";
-    public static final String PATH_COLEGIO_NUEVO = "/rh/colegio/nuevo";
-    public static final String PATH_COLEGIO_EDITA = "/rh/colegio/edita";
-    public static final String PATH_COLEGIO_CREA = "/rh/colegio/crea";
-    public static final String PATH_COLEGIO_ACTUALIZA = "/rh/colegio/actualiza";
-    public static final String PATH_COLEGIO_ELIMINA = "/rh/colegio/elimina";
+    public static final String PATH_COLEGIO = "/colportaje/colegio";
+    public static final String PATH_COLEGIO_LISTA = "/colportaje/colegio/lista";
+    public static final String PATH_COLEGIO_VER = "/colportaje/colegio/ver";
+    public static final String PATH_COLEGIO_NUEVO = "/colportaje/colegio/nuevo";
+    public static final String PATH_COLEGIO_EDITA = "/colportaje/colegio/edita";
+    public static final String PATH_COLEGIO_CREA = "/colportaje/colegio/crea";
+    public static final String PATH_COLEGIO_ACTUALIZA = "/colportaje/colegio/actualiza";
+    public static final String PATH_COLEGIO_ELIMINA = "/colportaje/colegio/elimina";
     public static final String PATH_SECCION = "/rh/seccion";
     public static final String PATH_SECCION_LISTA = "/rh/seccion/lista";
     public static final String PATH_SECCION_VER = "/rh/seccion/ver";
@@ -2552,14 +2552,14 @@ public class Constantes {
     /**
      * Valores para los Asociacion Colportor
      */
-    public static final String PATH_ASOCIACION = "/admin/asociacion";
-    public static final String PATH_ASOCIACION_LISTA = "/admin/asociacion/lista";
-    public static final String PATH_ASOCIACION_VER = "/admin/asociacion/ver";
-    public static final String PATH_ASOCIACION_NUEVA = "/admin/asociacion/nueva";
-    public static final String PATH_ASOCIACION_EDITA = "/admin/asociacion/edita";
-    public static final String PATH_ASOCIACION_CREA = "/admin/asociacion/crea";
-    public static final String PATH_ASOCIACION_ACTUALIZA = "/admin/asociacion/actualiza";
-    public static final String PATH_ASOCIACION_ELIMINA = "/admin/asociacion/elimina";
+    public static final String PATH_ASOCIACION = "/colportaje/asociacion";
+    public static final String PATH_ASOCIACION_LISTA = "/colportaje/asociacion/lista";
+    public static final String PATH_ASOCIACION_VER = "/colportaje/asociacion/ver";
+    public static final String PATH_ASOCIACION_NUEVA = "/colportaje/asociacion/nueva";
+    public static final String PATH_ASOCIACION_EDITA = "/colportaje/asociacion/edita";
+    public static final String PATH_ASOCIACION_CREA = "/colportaje/asociacion/crea";
+    public static final String PATH_ASOCIACION_ACTUALIZA = "/colportaje/asociacion/actualiza";
+    public static final String PATH_ASOCIACION_ELIMINA = "/colportaje/asociacion/elimina";
     /**
      * Variable en session donde se guarda la Temporada Colportor activa del
      * colportor en caso que el colportor no tenga una temporada activa el valor

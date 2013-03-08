@@ -9,6 +9,8 @@
         <li<c:if test="${param.menu eq 'estado'}"> class="active"</c:if>><a href="<s:url value='/colportaje/estado'/>" ><s:message code="estado.label" /></a></li>
         <li<c:if test="${param.menu eq 'ciudad'}"> class="active"</c:if>><a href="<s:url value='/colportaje/ciudad'/>" ><s:message code="ciudad.label" /></a></li>
         <li<c:if test="${param.menu eq 'union'}"> class="active"</c:if>><a href="<s:url value='/colportaje/union'/>" ><s:message code="union.label" /></a></li>
+        <li<c:if test="${param.menu eq 'asociacion'}"> class="active"</c:if>><a href="<s:url value='/colportaje/asociacion'/>" ><s:message code="asociacion.label" /></a></li>
+        <li<c:if test="${param.menu eq 'colegio'}"> class="active"</c:if>><a href="<s:url value='/colportaje/colegio'/>" ><s:message code="colegio.label" /></a></li>
     </ul>
 </nav>
     
