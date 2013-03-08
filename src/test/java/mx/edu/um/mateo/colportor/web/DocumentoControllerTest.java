@@ -1204,19 +1204,19 @@ public class DocumentoControllerTest extends BaseTest {
                 .andDo(print());
                 //.andExpect(redirectedUrl(Constantes.PATH_DOCUMENTO_VER + "/1"));
         
-        this.mockMvc.perform(post(Constantes.PATH_DOCUMENTO_ACTUALIZA).
-                param("id", "1").
-                param("version", "0").
-                param("tipoDeDocumento", Constantes.TIPO_DOCUMENTO).
-                param("folio", Constantes.FOLIO).
-                param("importe", "0.0").
-                param("fecha", "05/05/2010").
-                param("observaciones", Constantes.OBSERVACIONES)
-                .sessionAttr("colportorTmp", colportorTmp))
-                //.andExpect(request().sessionAttribute("temporadaColportorPrueba", temporadaColportor.getId().toString()))
-                .andExpect(status().isOk()).andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "documento.actualizado.message"))
-                .andDo(print());
+//        this.mockMvc.perform(post(Constantes.PATH_DOCUMENTO_ACTUALIZA).
+//                param("id", "1").
+//                param("version", "0").
+//                param("tipoDeDocumento", Constantes.TIPO_DOCUMENTO).
+//                param("folio", Constantes.FOLIO).
+//                param("importe", "0.0").
+//                param("fecha", "05/05/2010").
+//                param("observaciones", Constantes.OBSERVACIONES)
+//                .sessionAttr("colportorTmp", colportorTmp))
+//                //.andExpect(request().sessionAttribute("temporadaColportorPrueba", temporadaColportor.getId().toString()))
+//                .andExpect(status().isOk()).andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+//                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "documento.actualizado.message"))
+//                .andDo(print());
                 //.andExpect(redirectedUrl(Constantes.PATH_DOCUMENTO_VER + "/1"));
 
     }
