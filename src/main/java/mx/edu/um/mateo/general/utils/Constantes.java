@@ -2706,12 +2706,10 @@ public class Constantes {
     public static final String OBJETIVO = "Objetivo";
     public static final String ALCANZADO = "Alcanzado";
     public static final String FIDELIDAD = "Fidelidad";
-    
     /**
      * Valores para Tipos de beca
      *
      */
-    
     public static final String PATH_TIPOSBECAS = "/inscripciones/tiposBecas";
     public static final String PATH_TIPOSBECAS_LISTA = "/inscripciones/tiposBecas/lista";
     public static final String PATH_TIPOSBECAS_VER = "/inscripciones/tiposBecas/ver";
@@ -2738,11 +2736,11 @@ public class Constantes {
     public static final String ADDATTRIBUTE_AFECONVENIO = "afeConvenio";  
     
     
-    /**
+
+   /**
      * Valores para Paquete
      *
      */
-    
     public static final String PATH_PAQUETE = "/inscripciones/paquete";
     public static final String PATH_PAQUETE_LISTA = "/inscripciones/paquete/lista";
     public static final String PATH_PAQUETE_VER = "/inscripciones/paquete/ver";
@@ -2751,6 +2749,25 @@ public class Constantes {
     public static final String PATH_PAQUETE_GRABA = "/inscripciones/paquete/graba";
     public static final String PATH_PAQUETE_ACTUALIZA = "/inscripciones/paquete/actualiza";
     public static final String PATH_PAQUETE_ELIMINA = "/inscripciones/paquete/elimina";
+
     public static final String ADDATTRIBUTE_PAQUETE = "paquete";  
+    /**
+     * Valores para Prorroga
+     *
+     */
+    public static final String CONTAINSKEY_PRORROGAS = "prorrogas";
+    /**
+     * Valores para Tipos de beca
+     *
+     */
+    public static final String PATH_PRORROGA = "/inscripciones/prorroga";
+    public static final String PATH_PRORROGA_LISTA = "/inscripciones/prorroga/lista";
+    public static final String PATH_PRORROGA_VER = "/inscripciones/prorroga/ver";
+    public static final String PATH_PRORROGA_NUEVO = "/inscripciones/prorroga/nuevo";
+    public static final String PATH_PRORROGA_EDITA = "/inscripciones/prorroga/edita";
+    public static final String PATH_PRORROGA_GRABA = "/inscripciones/prorroga/graba";
+    public static final String PATH_PRORROGA_ACTUALIZA = "/inscripciones/prorroga/actualiza";
+    public static final String PATH_PRORROGA_ELIMINA = "/inscripciones/prorroga/elimina";
+    public static final String ADDATTRIBUTE_PRORROGA = "prorroga";
 
 }

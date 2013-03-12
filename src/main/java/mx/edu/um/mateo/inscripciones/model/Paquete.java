@@ -32,7 +32,7 @@ public class Paquete {
     @Column(nullable = false, length = 250)
     private String descripcion;
     @Column(nullable = false, length = 8)
-    private Double matricula;
+    private String matricula;
     @Column(nullable = false, length = 8)
     private Double ensenanza;
     @Column(nullable = false, length = 8)
@@ -49,7 +49,7 @@ public class Paquete {
         this.nombre = "";
         this.descripcion = "";
         this.acfe = "1";
-        this.matricula = new Double(0);
+        this.matricula = new String();
         this.ensenanza = new Double(0);
         this.internado = new Double(0);
 
@@ -132,14 +132,14 @@ public class Paquete {
     /**
      * @return Returns the matricula.
      */
-    public Double getMatricula() {
+    public String getMatricula() {
         return matricula;
     }
 
     /**
      * @param matricula The matricula to set.
      */
-    public void setMatricula(Double matricula) {
+    public void setMatricula(String matricula) {
         this.matricula = matricula;
     }
 
