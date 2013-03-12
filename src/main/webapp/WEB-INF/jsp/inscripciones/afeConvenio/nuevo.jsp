@@ -67,14 +67,18 @@
                             <form:input path="numHoras" maxlength="128" required="true" />
                             <form:errors path="numHoras" cssClass="alert alert-error" />
                         </div>
-                    <s:bind path="afeConvenio.tipoBeca">
+                    </s:bind> 
+                     <s:bind path="afeConvenio.tipoBeca">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="tipoBeca">
                                 <s:message code="tiposBecas.label" />
                                 <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="tipoBeca" maxlength="128" required="true" />
-                            <form:errors path="tipoBeca" cssClass="alert alert-error" />
+                                </label>
+                                <form:select id="tipoBeca" path="tipoBeca.id" required="true" cssClass="span3" >
+                                    <form:options items= "${tiposBecas}" itemValue="id" itemLabel="descripcion" />
+                                </form:select>
+                                <form:errors path="tipoBeca" cssClass="alert alert-error" />
+                                     
                         </div>
                     </s:bind>
                     <s:bind path="afeConvenio.importe">
@@ -91,9 +95,10 @@
 
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/inscripciones/afeConvenio'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <a class="btn btn-large" href="<s:url value='/inscripciones/afeConvenio/'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
+               
         </div>
     <content>
         <script>

@@ -6,8 +6,10 @@ package mx.edu.um.mateo.inscripciones.service.impl;
 
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inscripciones.dao.AFEConvenioDao;
 import mx.edu.um.mateo.inscripciones.dao.AlumnoDao;
+import mx.edu.um.mateo.inscripciones.dao.TiposBecasDao;
 import mx.edu.um.mateo.inscripciones.model.AFEConvenio;
 import mx.edu.um.mateo.inscripciones.service.AFEConvenioManager;
 import mx.edu.um.mateo.inscripciones.utils.MatriculaInvalidaException;
@@ -25,6 +27,8 @@ public class AFEConvenioManagerImpl extends BaseDao implements AFEConvenioManage
     
     @Autowired
     private AFEConvenioDao dao;
+    @Autowired
+    private TiposBecasDao tiposDao;
 
     @Autowired
     private AlumnoDao alDao;
@@ -39,9 +43,10 @@ public class AFEConvenioManagerImpl extends BaseDao implements AFEConvenioManage
     }
 
     @Override
-    public void graba(AFEConvenio afeConvenio)throws MatriculaInvalidaException{
+    public void graba(AFEConvenio afeConvenio, Usuario usuario)throws MatriculaInvalidaException{
        if(alDao.obtiene(afeConvenio.getMatricula())!= null){
-           dao.graba(afeConvenio);
+           
+           dao.graba(afeConvenio, usuario);
            
        }else{
            

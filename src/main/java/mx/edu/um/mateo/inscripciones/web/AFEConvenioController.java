@@ -18,12 +18,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inscripciones.model.AFEConvenio;
 import mx.edu.um.mateo.inscripciones.model.Alumno;
+import mx.edu.um.mateo.inscripciones.model.TiposBecas;
 import mx.edu.um.mateo.inscripciones.service.AFEConvenioManager;
+import mx.edu.um.mateo.inscripciones.service.TiposBecasManager;
 import mx.edu.um.mateo.inscripciones.utils.MatriculaInvalidaException;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
@@ -39,6 +40,7 @@ import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.context.spi.CurrentSessionContext;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +71,8 @@ public class AFEConvenioController extends BaseController{
     private static final Logger log = LoggerFactory.getLogger(mx.edu.um.mateo.inscripciones.web.TiposBecasController.class);
     @Autowired
     private AFEConvenioManager afeConvenioManager;
+    @Autowired
+    private TiposBecasManager tiposManager;
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
@@ -176,7 +180,11 @@ public class AFEConvenioController extends BaseController{
      @RequestMapping("/nuevo")
     public String nueva(Model modelo) {
         log.debug("Nuevo convenio");
+        Map<String, Object>params= new HashMap<>();
         AFEConvenio afeConvenio = new AFEConvenio();
+        params= tiposManager.getTiposBeca(params);
+        List<TiposBecas> listaTipos= (List)params.get(Constantes.CONTAINSKEY_TIPOSBECAS);
+        modelo.addAttribute(Constantes.CONTAINSKEY_TIPOSBECAS, listaTipos);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_AFECONVENIO, afeConvenio);
         return Constantes.PATH_AFECONVENIO_NUEVO;
     }
@@ -189,12 +197,19 @@ public class AFEConvenioController extends BaseController{
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
-            return Constantes.PATH_AFECONVENIO_NUEVO;
+            modelo.addAttribute(Constantes.ADDATTRIBUTE_AFECONVENIO, afeConvenio);
+            errors.rejectValue("matricula", "error.convenio.message",
+					new String[] { afeConvenio.getMatricula() }, null);
         }
         
         try {
-             
-             afeConvenioManager.graba(afeConvenio);
+           log.debug("obteniendo usuario");
+            Usuario usuario = ambiente.obtieneUsuario();
+           log.debug("Grabando tipoBeca");
+           TiposBecas tipoBeca=tiposManager.getTipoBeca(afeConvenio.getTipoBeca().getId().toString());
+           afeConvenio.setTipoBeca(tipoBeca);
+            log.debug("Entrandoo al  metodo Graba");
+             afeConvenioManager.graba(afeConvenio, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo grabar convenio", e);
             return Constantes.PATH_AFECONVENIO_NUEVO;
@@ -214,7 +229,11 @@ public class AFEConvenioController extends BaseController{
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Editar convenio {}", id);
+        Map<String, Object>params= new HashMap<>();
         AFEConvenio afeConvenio = afeConvenioManager.obtiene(id);
+        params= tiposManager.getTiposBeca(params);
+        List<TiposBecas> listaTipos= (List)params.get(Constantes.CONTAINSKEY_TIPOSBECAS);
+        modelo.addAttribute(Constantes.CONTAINSKEY_TIPOSBECAS, listaTipos);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_AFECONVENIO, afeConvenio);
         return Constantes.PATH_AFECONVENIO_EDITA;
     }
@@ -225,10 +244,10 @@ public class AFEConvenioController extends BaseController{
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute AFEConvenio afeConvenio, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina cuenta de convenios");
         try {
-           afeConvenioManager.elimina(id);
+          String convenio= afeConvenioManager.elimina(id);
             
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "afeConvenio.elimina.message");
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{afeConvenio.getMatricula()});
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{convenio.toString()});
         } catch (Exception e) {
             log.error("No se pudo eliminar el convenio " + id, e);
             bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_AFECONVENIO, new String[]{"afeConvenio.no.elimina.message"}, null, null));

@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inscripciones.dao.AFEConvenioDao;
 import mx.edu.um.mateo.inscripciones.dao.AlumnoDao;
@@ -68,14 +69,11 @@ public class AFEConvenioDaoHibernate extends BaseDao implements AFEConvenioDao{
         }
 
         if (params.containsKey("filtro")) {
-            criteria.createAlias("alumno", "al");
             criteria.createAlias("tipoBeca", "tb");
             String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("al.matricula", filtro,
-                    MatchMode.EXACT));
-            propiedades.add(Restrictions.ilike("tb.id", filtro,
-                    MatchMode.EXACT));
+            propiedades.add(Restrictions.ilike("matricula", filtro,
+                    MatchMode.START));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -126,7 +124,10 @@ public class AFEConvenioDaoHibernate extends BaseDao implements AFEConvenioDao{
 
     
     @Override
-    public void graba(final AFEConvenio afeConvenio) {
+    public void graba(final AFEConvenio afeConvenio, Usuario usuario) {
+        if (usuario != null) {
+            afeConvenio.setEmpresa(usuario.getEmpresa());
+        }
         Session session = currentSession();
         currentSession().saveOrUpdate(afeConvenio);
         currentSession().merge(afeConvenio);
@@ -143,7 +144,9 @@ public class AFEConvenioDaoHibernate extends BaseDao implements AFEConvenioDao{
     public String elimina(final Long id) {
         log.debug("Eliminando el convenio {}", id);
         AFEConvenio afeConvenio = this.obtiene(id);
+        log.debug("Checandoo Matricula");
         String matricula= afeConvenio.getAlumno().getMatricula();
+        log.debug("{}", matricula);
         currentSession().delete(afeConvenio);
 
         currentSession().flush();

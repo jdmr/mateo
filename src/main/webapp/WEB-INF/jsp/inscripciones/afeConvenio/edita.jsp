@@ -31,7 +31,7 @@
                 <form:hidden path="version" />
 
                 <fieldset>
-                    <s:bind path="afeConvenio.descripcion">
+                    <s:bind path="afeConvenio.matricula">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="matricula">
                                 <s:message code="matricula.label" />
@@ -61,7 +61,7 @@
                             <form:errors path="diezma" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="afeConvenio.numHoras">
+                     <s:bind path="afeConvenio.numHoras">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="numHoras">
                                 <s:message code="numHoras.label" />
@@ -69,6 +69,19 @@
                             </label>
                             <form:input path="numHoras" maxlength="128" required="true" />
                             <form:errors path="numHoras" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="afeConvenio.tipoBeca">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="tipoBeca">
+                                <s:message code="tiposBecas.label" />
+                                <span class="required-indicator">*</span>
+                                </label>
+                                <form:select id="tipoBeca" path="tipoBeca.id" required="true" cssClass="span3" >
+                                    <form:options items= "${tiposBecas}" itemValue="id" itemLabel="descripcion" />
+                                </form:select>
+                                <form:errors path="tipoBeca" cssClass="alert alert-error" />
+                                     
                         </div>
                     </s:bind>
                     <s:bind path="afeConvenio.importe">
@@ -81,21 +94,12 @@
                             <form:errors path="importe" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="afeConvenio.tipoBeca">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="tipoBeca">
-                                <s:message code="tiposBecas.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:checkbox path="tipoBeca" cssClass="span3" />
-                            <form:errors path="tipoBeca" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+                    
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="actualizarBtn" class="btn btn-primary btn-large" id="actualizar" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='actualizar.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/inscripciones/tiposBecas/ver/${tiposBecas.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <a class="btn btn-large" href="<s:url value='/inscripciones/afeConvenio/ver/${afeConvenio.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>

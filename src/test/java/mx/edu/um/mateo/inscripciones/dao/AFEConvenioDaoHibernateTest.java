@@ -63,7 +63,7 @@ public class AFEConvenioDaoHibernateTest {
         assertNotNull(alumno);
         AFEConvenio afeConvenio = null;
         for (int i=0 ; i<20; i++){
-            afeConvenio= new AFEConvenio(alumno,empresa,tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
+            afeConvenio= new AFEConvenio("A",alumno,empresa,tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
             currentSession().save(afeConvenio);
             assertNotNull(afeConvenio.getId());
         }
@@ -94,7 +94,7 @@ public class AFEConvenioDaoHibernateTest {
         assertNotNull(tipoBeca.getId());
         Alumno alumno = alDao.obtiene("1080506");
         assertNotNull(alumno);
-        AFEConvenio afeConvenio= new AFEConvenio(alumno,empresa,tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
+        AFEConvenio afeConvenio= new AFEConvenio("A",alumno,empresa,tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
         currentSession().save(afeConvenio);
         assertNotNull(afeConvenio.getId());
         assertEquals(alumno.getMatricula(), "1080506");
@@ -114,7 +114,7 @@ public class AFEConvenioDaoHibernateTest {
         assertNotNull(tipoBeca.getId());
         Alumno alumno = alDao.obtiene("1080506");
         assertNotNull(alumno);
-        AFEConvenio afeConvenio= new AFEConvenio(alumno,empresa,tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
+        AFEConvenio afeConvenio= new AFEConvenio("A",alumno,empresa,tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
         currentSession().save(afeConvenio);
         assertNotNull(afeConvenio.getId());
         
@@ -137,7 +137,7 @@ public class AFEConvenioDaoHibernateTest {
         assertNotNull(tipoBeca.getId());
         Alumno alumno = alDao.obtiene("1080506");
         assertNotNull(alumno);
-        AFEConvenio afeConvenio= new AFEConvenio(alumno,empresa,tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
+        AFEConvenio afeConvenio= new AFEConvenio("A",alumno,empresa,tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
         currentSession().save(afeConvenio);
         instance.elimina(afeConvenio.getId());        
         assertNotNull(afeConvenio.getId());

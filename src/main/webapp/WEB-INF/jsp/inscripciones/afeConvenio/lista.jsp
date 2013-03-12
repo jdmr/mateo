@@ -51,6 +51,9 @@
                             <jsp:param name="columna" value="matricula" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="tiposBecas" />
+                        </jsp:include>                        
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="status" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
@@ -62,20 +65,20 @@
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="importe" />
                         </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="tipoBeca" />
-                        </jsp:include>
+                        
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${afeConvenio}" var="afeConvenio" varStatus="status">
+                    <c:forEach items="${afeConvenios}" var="afeConvenio" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/inscripciones/afeConvenio/ver/${afeConvenio.id}' />">${afeConvenio.matricula}</a></td>                            
+                            
+                            <td><a href="<c:url value='/inscripciones/afeConvenio/ver/${afeConvenio.id}' />">${afeConvenio.matricula}</a></td> 
+                            <td>${afeConvenio.tipoBeca.descripcion}</td>
                             <td>${afeConvenio.status}</td>
                             <td ><input type="checkbox" value="" disabled="true" <c:if test="${afeConvenio.diezma}">checked="checked"</c:if> /></td>
                             <td>${afeConvenio.numHoras}</td>
                             <td>${afeConvenio.importe}</td>
-                            <td>${afeConvenio.tipoBeca}</td>
+                            
                             </tr>
                     </c:forEach>
                 </tbody>

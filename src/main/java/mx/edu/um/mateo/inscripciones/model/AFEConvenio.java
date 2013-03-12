@@ -28,11 +28,13 @@ public class AFEConvenio implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Version
     private Integer version;
     @Column
     String matricula;    
-    
+    @Column( length = 2)
+    private String status;
     private Alumno alumno;
     @ManyToOne(optional=false)
     private Empresa empresa;
@@ -48,7 +50,7 @@ public class AFEConvenio implements Serializable{
     public AFEConvenio(){
     }
     
-    public AFEConvenio(Alumno alumno, Empresa empresa, TiposBecas tipoBeca, BigDecimal importe, Integer numHoras, Boolean diezma, String matricula ){
+    public AFEConvenio(String status , Alumno alumno, Empresa empresa, TiposBecas tipoBeca, BigDecimal importe, Integer numHoras, Boolean diezma, String matricula ){
         this.alumno=alumno;
         this.empresa=empresa;
         this.tipoBeca=tipoBeca;
@@ -56,8 +58,17 @@ public class AFEConvenio implements Serializable{
         this.numHoras=numHoras;
         this.matricula=matricula;
         this.diezma=diezma;
+        this.status=status;
     
 }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String getMatricula() {
         return matricula;
@@ -135,8 +146,10 @@ public class AFEConvenio implements Serializable{
 
     @Override
     public String toString() {
-        return "AFEConvenio{" + "id=" + id + ", version=" + version + ", matricula=" +  matricula + ", empresa=" + empresa + ", tipoBeca=" + tipoBeca + ", importe=" + importe + ", numeroHoras=" + numHoras + ", diezma=" + diezma + '}';
+        return "AFEConvenio{" + "id=" + id + ", version=" + version + ", matricula=" + matricula + ", status=" + status + ", alumno=" + alumno + ", empresa=" + empresa + ", tipoBeca=" + tipoBeca+ ", importe=" + importe + ", numHoras=" + numHoras + ", diezma=" + diezma + '}';
     }
+
+   
     
     
 
@@ -145,6 +158,7 @@ public class AFEConvenio implements Serializable{
         int hash = 7;
         hash = 79 * hash + Objects.hashCode(this.id);
         hash = 79 * hash + Objects.hashCode(this.version);
+        hash = 79 * hash + Objects.hashCode(this.status);
         hash = 79 * hash + Objects.hashCode(this.matricula);
         hash = 79 * hash + Objects.hashCode(this.empresa);
         hash = 79 * hash + Objects.hashCode(this.tipoBeca);
@@ -175,6 +189,7 @@ public class AFEConvenio implements Serializable{
         if (!Objects.equals(this.tipoBeca, other.tipoBeca)) {
             return false;
         }
+        
         return true;
     }
 

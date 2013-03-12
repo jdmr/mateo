@@ -51,7 +51,7 @@
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="tiposBecas.label" /></div>
-                    <div class="span11">${afeConvenio.tipoBeca}</div>
+                    <div class="span11">${afeConvenio.tipoBeca.descripcion}</div>
                 </div>
 
                 

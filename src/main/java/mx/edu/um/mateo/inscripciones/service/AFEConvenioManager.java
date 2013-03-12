@@ -5,6 +5,7 @@
 package mx.edu.um.mateo.inscripciones.service;
 
 import java.util.Map;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inscripciones.model.AFEConvenio;
 import mx.edu.um.mateo.inscripciones.model.Alumno;
 import mx.edu.um.mateo.inscripciones.utils.MatriculaInvalidaException;
@@ -33,7 +34,7 @@ public interface AFEConvenioManager {
      * Graba de un Convenio(ya sea crear o actualizar)
      * @param AFEConvenio  el objeto que sera grabado
      */
-    public void graba(AFEConvenio afeConvenio)throws MatriculaInvalidaException;
+    public void graba(AFEConvenio afeConvenio, Usuario usuario)throws MatriculaInvalidaException;
 
     /**
      * Cambia el status del Convenio a I
