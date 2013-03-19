@@ -213,7 +213,7 @@ public class Carga {
 				conn = new Conexion().getConexionEnoc(new Boolean(false));
 			
 			String COMANDO = "SELECT CARGA_ID, NOMBRE_CARGA " +
-					"FROM CARGA ";
+					"FROM enoc.CARGA ";
 			pstmt = conn.prepareStatement(COMANDO);
 			rset = pstmt.executeQuery();
 			
@@ -244,7 +244,7 @@ public class Carga {
 				conn = new Conexion().getConexionEnoc(new Boolean(false));
 			
 			String COMANDO = "SELECT COUNT(*) NREG " +
-					"FROM CARGA " +
+					"FROM enoc.CARGA " +
                                         "WHERE SYSDATE BETWEEN F_INICIO AND F_FINAL " +
                                         "AND CARGA_ID = ? ";
 			pstmt = conn.prepareStatement(COMANDO);
@@ -281,7 +281,7 @@ public class Carga {
 				conn = new Conexion().getConexionEnoc(new Boolean(false));
 
 			String COMANDO = "SELECT COUNT(*) NREG " +
-					"FROM CARGA " +
+					"FROM enoc.CARGA " +
                                         "WHERE CARGA_ID = ? " +
                                         "AND ISVERANO = 'S' ";
 			pstmt = conn.prepareStatement(COMANDO);

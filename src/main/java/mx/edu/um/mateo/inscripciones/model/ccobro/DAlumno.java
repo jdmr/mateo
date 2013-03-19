@@ -74,7 +74,7 @@ public class DAlumno extends Descuento implements Constant{
 		COMANDO += "COALESCE(IMPORTE, 0.0) IMPORTE, ";
 		COMANDO += "COALESCE(CONTABILIZA, 'N') CONTABILIZA, ";
 		COMANDO += "TO_CHAR(FECHA, 'DD/MM/YYYY') FECHA, USUARIO, STATUS ";
-		COMANDO += "FROM FES_DESCUENTOALUMNO ";
+		COMANDO += "FROM noe.FES_DESCUENTOALUMNO ";
 		COMANDO += "WHERE STATUS = 'A' " ;
 		
 		pstmt = conn_noe.prepareStatement(COMANDO);

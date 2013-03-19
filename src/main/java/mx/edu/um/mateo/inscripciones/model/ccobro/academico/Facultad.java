@@ -115,7 +115,7 @@ public class Facultad {
 			Object obj = null;
 			
 			String COMANDO = "SELECT FACULTAD_ID, NOMBRE_FACULTAD " +
-					"FROM CAT_FACULTAD ";
+					"FROM enoc.CAT_FACULTAD ";
 			pstmt = conn.prepareStatement(COMANDO);
 			rset = pstmt.executeQuery();
 			

@@ -10,8 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sql.DataSource;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.inscripciones.model.Alumno;

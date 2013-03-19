@@ -61,7 +61,7 @@ public class DMateria extends Descuento {
 		
 		String COMANDO = "SELECT CURSO_PLAN_ID, COALESCE(IMPORTE,0.0) AS IMPORTE, ";
 		COMANDO += "TO_CHAR(FECHA,'DD/MM/YYYY') FECHA, USUARIO, STATUS ";
-		COMANDO += "FROM FES_DESCUENTOMATERIA ";
+		COMANDO += "FROM noe.FES_DESCUENTOMATERIA ";
 		COMANDO += "WHERE STATUS = 'A' ";
 		
 		pstmt = conn_noe.prepareStatement(COMANDO);

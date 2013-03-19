@@ -873,7 +873,7 @@ public class Alumno implements Constant {
             }
             
             String COMANDO = "SELECT C.CCOSTO_ID ";
-            COMANDO += "FROM ALUM_PLAN P, MAPA_PLAN MP, CAT_CARRERA C ";
+            COMANDO += "FROM enoc.ALUM_PLAN P, enoc.MAPA_PLAN MP, enoc.CAT_CARRERA C ";
             COMANDO += "WHERE MP.PLAN_ID = P.PLAN_ID ";
             COMANDO += "AND C.CARRERA_ID = MP.CARRERA_ID ";
             COMANDO += "AND P.ESTADO = '1' ";
@@ -936,7 +936,7 @@ public class Alumno implements Constant {
             SimpleDateFormat sdFormat = new SimpleDateFormat("dd/MM/yyyy");
             
             String COMANDO = "SELECT COUNT(*) NREG ";
-            COMANDO += "FROM CONT_RELACION ";
+            COMANDO += "FROM mateo.CONT_RELACION ";
             COMANDO += "WHERE ID_EJERCICIO = ? ";
             COMANDO += "AND ID_CCOSTO IN ('1.01','2.01') ";
             COMANDO += ("AND ID_CTAMAYOR IN ('" + ccfCtaEstudiantes + "','" +
@@ -998,10 +998,10 @@ public class Alumno implements Constant {
             
             /*Obtener CargaID*/
             String COMANDO = "SELECT DISTINCT SUBSTR(KCA.CURSO_CARGA_ID,0,6) CARGA_ID ";
-            COMANDO += "FROM CARGA_GRUPO_CURSO CGC, CARGA_GRUPO CG, MAPA_CURSO C, KRDX_CURSO_ACT KCA, ";
+            COMANDO += "FROM enoc.CARGA_GRUPO_CURSO CGC, enoc.CARGA_GRUPO CG, enoc.MAPA_CURSO C, enoc.KRDX_CURSO_ACT KCA, ";
             COMANDO += "( ";
             COMANDO += "SELECT CARGA_ID ";
-            COMANDO += "FROM CARGA_BLOQUE ";
+            COMANDO += "FROM enoc.CARGA_BLOQUE ";
             COMANDO += "WHERE TO_DATE(SYSDATE, 'dd-mm-yy') ";
             COMANDO += "BETWEEN F_INICIO AND F_CIERRE ";
             COMANDO += ") A ";
@@ -1030,11 +1030,11 @@ public class Alumno implements Constant {
                 //Buscar la carga_id en fes_ccobro
                 //Si no tiene carga de materias activa, puede ser que ya este inscrito
                 COMANDO = "SELECT CARGA_ID ";
-                COMANDO += "FROM FES_CCOBRO ";
+                COMANDO += "FROM mateo.FES_CCOBRO ";
                 COMANDO += "WHERE MATRICULA = ? ";
                 COMANDO += "AND FECHA IN ";
                 COMANDO += "(SELECT MAX(FECHA) ";
-                COMANDO += "FROM FES_CCOBRO ";
+                COMANDO += "FROM mateo.FES_CCOBRO ";
                 COMANDO += "WHERE MATRICULA = ?) ";
                 pstmt = conn.prepareStatement(COMANDO);
                 pstmt.setString(1, this.matricula);
@@ -1056,7 +1056,7 @@ public class Alumno implements Constant {
             //log.debug("getCargaIDBloque - carga {}",this.carga_id);
 
             COMANDO = "SELECT COALESCE(BLOQUE_ID,0) BLOQUE ";
-            COMANDO += "FROM CARGA_BLOQUE ";
+            COMANDO += "FROM enoc.CARGA_BLOQUE ";
             COMANDO += "WHERE TO_DATE(SYSDATE,'dd-mm-yy') BETWEEN F_INICIO AND F_CIERRE ";
             COMANDO += "AND CARGA_ID = ? ";
             pstmt = conn_enoc.prepareStatement(COMANDO);
@@ -1112,11 +1112,11 @@ public class Alumno implements Constant {
             }
             
             String COMANDO = "SELECT CARGA_ID, BLOQUE ";
-            COMANDO += "FROM FES_CCOBRO ";
+            COMANDO += "FROM mateo.FES_CCOBRO ";
             COMANDO += "WHERE MATRICULA = ? ";
             COMANDO += "AND FECHA IN ";
             COMANDO += "(SELECT MAX(FECHA) ";
-            COMANDO += "FROM FES_CCOBRO ";
+            COMANDO += "FROM mateo.FES_CCOBRO ";
             COMANDO += "WHERE MATRICULA = ? ";
             COMANDO += "AND FECHA BETWEEN TO_DATE(?, 'DD/MM/YY') AND TO_DATE(?, 'DD/MM/YY')  ";
             COMANDO += "AND INSCRITO = 'S' ) ";
@@ -1175,7 +1175,7 @@ public class Alumno implements Constant {
             //Obtener datos de la tabla Alumno_Academico
             String COMANDO = "SELECT MODALIDAD_ID, TIPO_ALUMNO, SEMESTRE, ";
             COMANDO += "CLAS_FIN, RESIDENCIA_ID, GRADO, HO_STATUS ";
-            COMANDO += "FROM ALUM_ACADEMICO ";
+            COMANDO += "FROM enoc.ALUM_ACADEMICO ";
             COMANDO += "WHERE CODIGO_PERSONAL = ? ";
             pstmt = conn_enoc.prepareStatement(COMANDO);
             pstmt.setString(1, this.matricula);
@@ -1242,7 +1242,7 @@ public class Alumno implements Constant {
 
             //Obtener descripcion de modalidad
             COMANDO = "SELECT NOMBRE_MODALIDAD ";
-            COMANDO += "FROM CAT_MODALIDAD ";
+            COMANDO += "FROM enoc.CAT_MODALIDAD ";
             COMANDO += "WHERE MODALIDAD_ID = ? ";
             pstmt = conn_enoc.prepareStatement(COMANDO);
             pstmt.setInt(1, this.modalidad_id.intValue());
@@ -1263,7 +1263,7 @@ public class Alumno implements Constant {
             
             //Obtener descripcion de tipo alumno
             COMANDO = "SELECT NOMBRE_TIPO ";
-            COMANDO += "FROM CAT_TIPOALUMNO ";
+            COMANDO += "FROM enoc.CAT_TIPOALUMNO ";
             COMANDO += "WHERE TIPO_ID = ? ";
             pstmt = conn_enoc.prepareStatement(COMANDO);
             pstmt.setInt(1, this.tAlumno_id.intValue());
@@ -1287,7 +1287,7 @@ public class Alumno implements Constant {
             //Obtener nacionalidad
             COMANDO = "SELECT CASE NACIONALIDAD WHEN 91 THEN 'MEX' ELSE 'EXT' END AS PAIS, ";
             COMANDO += "NOMBRE || ' ' || APELLIDO_PATERNO || ' ' || APELLIDO_MATERNO NOMBRE ";
-            COMANDO += "FROM ALUM_PERSONAL ";
+            COMANDO += "FROM enoc.ALUM_PERSONAL ";
             COMANDO += "WHERE CODIGO_PERSONAL = ? ";
             pstmt = conn_enoc.prepareStatement(COMANDO);
             pstmt.setString(1, this.matricula);
@@ -1323,8 +1323,8 @@ public class Alumno implements Constant {
             COMANDO = "SELECT F.FACULTAD_ID, F.NOMBRE_FACULTAD, ";
             COMANDO += "C.CARRERA_ID, C.NOMBRE_CARRERA, C.CCOSTO_ID, ";
             COMANDO += "P.PLAN_ID, MP.NOMBRE_PLAN, P.CICLO SEMESTRE, N.NIVEL_ID ";
-            COMANDO += "FROM ALUM_PLAN P, MAPA_PLAN MP, ";
-            COMANDO += "CAT_CARRERA C, CAT_FACULTAD F, CAT_NIVEL N ";
+            COMANDO += "FROM enoc.ALUM_PLAN P, enoc.MAPA_PLAN MP, ";
+            COMANDO += "enoc.CAT_CARRERA C, enoc.CAT_FACULTAD F, enoc.CAT_NIVEL N ";
             COMANDO += "WHERE F.FACULTAD_ID = C.FACULTAD_ID ";
             COMANDO += "AND C.CARRERA_ID = MP.CARRERA_ID ";
             COMANDO += "AND MP.PLAN_ID = P.PLAN_ID ";
@@ -1534,7 +1534,7 @@ public class Alumno implements Constant {
             Integer intIsMatricula = new Integer(0);
             
             //Verificar si la carga y bloque del alumno tienen prendida la bandera de matricula
-            String COMANDO = "SELECT COUNT(*) NREG " + "FROM CARGA_BLOQUE " +
+            String COMANDO = "SELECT COUNT(*) NREG " + "FROM enoc.CARGA_BLOQUE " +
                     "WHERE CARGA_ID = ? " + "AND BLOQUE_ID = ? " +
                     "AND ISMATRICULA = 'S' ";
             
@@ -1557,7 +1557,7 @@ public class Alumno implements Constant {
                 
                 //Se debe verificar si el alumno ya pago matricula en la carga respectiva
                 //buscamos si el alumno ya se inscribio algun subloque de la carga
-                COMANDO = "SELECT COUNT(*) NREG " + "FROM FES_CCOBRO " +
+                COMANDO = "SELECT COUNT(*) NREG " + "FROM mateo.FES_CCOBRO " +
                         "WHERE MATRICULA = ? " + "AND CARGA_ID = ? " +
                         "AND INSCRITO = 'S' ";
                 
@@ -1581,7 +1581,7 @@ public class Alumno implements Constant {
                 } else {
                     /*Verificar si en la carga actual, un bloque anterior exige pago de matricula*/
                     COMANDO = "SELECT COUNT(*) NREG ";
-                    COMANDO += "FROM CARGA_BLOQUE  ";
+                    COMANDO += "FROM enoc.CARGA_BLOQUE  ";
                     COMANDO += "WHERE BLOQUE_ID < ? ";
                     COMANDO += "AND CARGA_ID = ? ";
                     COMANDO += "AND ISMATRICULA = 'S' ";
@@ -1606,7 +1606,7 @@ public class Alumno implements Constant {
                         //Obtener la primer carga anterior a la actual con un bloque
                         //requiriendo pago de matricula
                         COMANDO = "SELECT C.CARGA_ID ";
-                        COMANDO += "FROM CARGA C, CARGA_BLOQUE B ";
+                        COMANDO += "FROM enoc.CARGA C, enoc.CARGA_BLOQUE B ";
                         COMANDO += "WHERE B.CARGA_ID = C.CARGA_ID ";
                         COMANDO += "AND SUBSTR(C.CARGA_ID,1,5) = SUBSTR(?, 1,5) ";
                         COMANDO += "AND C.CARGA_ID < ? ";
@@ -1630,7 +1630,7 @@ public class Alumno implements Constant {
                         
                         //Se debe verificar si el alumno ya pago matricula en la carga respectiva
                         //buscamos si el alumno ya se inscribio algun subloque de la carga
-                        COMANDO = "SELECT COUNT(*) NREG " + "FROM FES_CCOBRO " +
+                        COMANDO = "SELECT COUNT(*) NREG " + "FROM mateo.FES_CCOBRO " +
                                 "WHERE MATRICULA = ? " + "AND CARGA_ID = ? " +
                                 "AND INSCRITO = 'S' ";
                         
@@ -1654,7 +1654,7 @@ public class Alumno implements Constant {
                         else {
                             //Nos se utiliza el BETWEEN porque es INCLUSIVE y ocasiona errores
                             COMANDO = "SELECT COUNT(*) NReg " +
-                                    "FROM FES_CCOBRO " +
+                                    "FROM mateo.FES_CCOBRO " +
                                     "WHERE MATRICULA = ? " +
                                     "AND INSCRITO = 'S' " +
                                     "AND CARGA_ID > ? " +
@@ -1968,7 +1968,7 @@ public class Alumno implements Constant {
             /*Obtener saldo anterior de los movimientos de contabilidad*/
             /*Obtener los creditos del saldo anterior*/
             String COMANDO = "SELECT COALESCE(SUM(IMPORTE),0) SACREDITO ";
-            COMANDO += "FROM CONT_MOVIMIENTO ";
+            COMANDO += "FROM mateo.CONT_MOVIMIENTO ";
             COMANDO += "WHERE ID_EJERCICIO = ? ";
             COMANDO += "AND ID_AUXILIARM = ? ";
             COMANDO += "AND NATURALEZA = 'C' ";
@@ -1988,7 +1988,7 @@ public class Alumno implements Constant {
             
             //Obtener los cargos del saldo anterior
             COMANDO = "SELECT COALESCE(SUM(IMPORTE),0) SACARGO ";
-            COMANDO += "FROM CONT_MOVIMIENTO ";
+            COMANDO += "FROM mateo.CONT_MOVIMIENTO ";
             COMANDO += "WHERE ID_EJERCICIO = ? ";
             COMANDO += "AND NATURALEZA = 'D' ";
             COMANDO += "AND STATUS != 'I' ";
@@ -2362,7 +2362,7 @@ public class Alumno implements Constant {
                 if ((conn == null) || conn.isClosed()) {
                     conn = new Conexion().getConexionEnoc(new Boolean(false));
                 }
-                String COMANDO = "UPDATE ALUM_ACADEMICO ";
+                String COMANDO = "UPDATE mateo.ALUM_ACADEMICO ";
                 COMANDO += "SET HO_STATUS = 'A' ";
                 COMANDO += "WHERE CODIGO_PERSONAL = ? ";
                 
@@ -2404,7 +2404,7 @@ public class Alumno implements Constant {
         
         try {
             String COMANDO = "SELECT COUNT(*)  NREG " +
-                    "FROM ALUM_ESTADO " +
+                    "FROM enoc.ALUM_ESTADO " +
                     "WHERE CODIGO_PERSONAL = ? " +
                     "AND CARGA_ID = ? " +
                     "AND BLOQUE_ID = ? ";
@@ -2422,7 +2422,7 @@ public class Alumno implements Constant {
             
             if(nReg.compareTo(0) > 0){
                 
-                COMANDO = "UPDATE ALUM_ESTADO ";
+                COMANDO = "UPDATE enoc.ALUM_ESTADO ";
                 COMANDO += "SET ESTADO = 'A' ";
                 COMANDO += "WHERE CODIGO_PERSONAL = ? ";
                 COMANDO += "AND CARGA_ID = ? ";
@@ -2433,7 +2433,7 @@ public class Alumno implements Constant {
                 pstmt.setString(2, this.getCarga_id());
                 pstmt.setInt(3, this.getBloque().intValue());
             } else{
-                COMANDO = "INSERT INTO ALUM_ESTADO " +
+                COMANDO = "INSERT INTO enoc.ALUM_ESTADO " +
                         "(CODIGO_PERSONAL, CARGA_ID, BLOQUE_ID, ESTADO) " +
                         "VALUE " +
                         "(?, ?, ?, 'A') ";
@@ -2551,7 +2551,7 @@ public class Alumno implements Constant {
             
             String COMANDO =
                     "SELECT SEMANAS_INTERNADO " +
-                    "FROM FES_CCOBRO " +
+                    "FROM mateo.FES_CCOBRO " +
                     "WHERE MATRICULA = ? " + "AND CARGA_ID = ? " +
                     "AND BLOQUE = ? ";
             pstmt = conn.prepareStatement(COMANDO);
@@ -2606,7 +2606,7 @@ public class Alumno implements Constant {
                     "SELECT NOMBRE, MODALIDAD_ID, MODALIDAD, TALUMNO_ID, TALUMNO, " +
                     "SEMESTRE, TO_CHAR(FECHA,'DD/MM/YYYY') FECHA, FORMAPAGO, RELIGION, NACIONALIDAD, " +
                     "RESIDENCIA, FACULTAD_ID, FACULTAD, CARRERA_ID, CARRERA, PLAN_ID, NOMBRE_PLAN, " +
-                    "GRADO, SEMANAS_INTERNADO, INSCRITO, FOLIO, GRADUANDO " + "FROM FES_CCOBRO " +
+                    "GRADO, SEMANAS_INTERNADO, INSCRITO, FOLIO, GRADUANDO " + "FROM mateo.FES_CCOBRO " +
                     "WHERE MATRICULA = ? " + "AND CARGA_ID = ? " +
                     "AND BLOQUE = ? ";
             pstmt = conn.prepareStatement(COMANDO);
@@ -2727,7 +2727,7 @@ public class Alumno implements Constant {
             COMANDO = "SELECT MATRICULA, NOMBRE, MODALIDAD_ID, MODALIDAD, TALUMNO_ID, TALUMNO, " +
                     "SEMESTRE, TO_CHAR(FECHA,'DD/MM/YYYY') FECHA, FORMAPAGO, RELIGION, NACIONALIDAD, " +
                     "RESIDENCIA, FACULTAD_ID, FACULTAD, CARRERA_ID, CARRERA, PLAN_ID, NOMBRE_PLAN, " +
-                    "GRADO, SEMANAS_INTERNADO, INSCRITO, FOLIO, GRADUANDO " + "FROM FES_CCOBRO " +
+                    "GRADO, SEMANAS_INTERNADO, INSCRITO, FOLIO, GRADUANDO " + "FROM mateo.FES_CCOBRO " +
                     "WHERE INSCRITO = 'S' ";
             
             //Si cargaid y bloque son nulos, entonces debe existir un rango de fechas
@@ -2854,7 +2854,7 @@ public class Alumno implements Constant {
             }
             
             String COMANDO = "SELECT INSTITUCION_ID, COALESCE(I.NOMBRE_INSTITUCION,'') NOMBRE, A.TIPO_ALUMNO ";
-            COMANDO += "FROM ALUM_ACADEMICO A, CAT_INSTITUCION I ";
+            COMANDO += "FROM enoc.ALUM_ACADEMICO A, enoc.CAT_INSTITUCION I ";
             COMANDO += "WHERE A.OBRERO_INSTITUCION = I.INSTITUCION_ID ";
             COMANDO += "AND A.CODIGO_PERSONAL = ? ";
             COMANDO += "AND A.TIPO_ALUMNO IN (2,6) ";
@@ -2923,7 +2923,7 @@ public class Alumno implements Constant {
         PreparedStatement pstmt = null;
         
         try {
-            String COMANDO = "UPDATE FES_CCOBRO " + "SET INSCRITO = '?' " +
+            String COMANDO = "UPDATE mateo.FES_CCOBRO " + "SET INSCRITO = '?' " +
                     "WHERE MATRICULA = ? " + "AND CARGA_ID = ? " +
                     "AND BLOQUE = ? ";
             pstmt = conn.prepareStatement(COMANDO);
@@ -2933,7 +2933,7 @@ public class Alumno implements Constant {
             pstmt.execute();
             pstmt.close();
             
-            COMANDO = "UPDATE FES_CCOBRO " + "SET INSCRITO = 'N' " +
+            COMANDO = "UPDATE mateo.FES_CCOBRO " + "SET INSCRITO = 'N' " +
                     "WHERE MATRICULA = ? " + "AND CARGA_ID = ? " +
                     "AND BLOQUE = ? ";
             pstmt = conn.prepareStatement(COMANDO);
@@ -2943,7 +2943,7 @@ public class Alumno implements Constant {
             pstmt.execute();
             pstmt.close();
             
-            COMANDO = "UPDATE ALUM_ESTADO " + "SET ESTADO = 'M' " +
+            COMANDO = "UPDATE enoc.ALUM_ESTADO " + "SET ESTADO = 'M' " +
                     "WHERE CODIGO_PERSONAL = ? " + "AND CARGA_ID = ? " +
                     "AND BLOQUE_ID = ? ";
             pstmt = conn_enoc.prepareStatement(COMANDO);
@@ -2978,7 +2978,7 @@ public class Alumno implements Constant {
             COMANDO = "SELECT MATRICULA, CARGA_ID, BLOQUE, NOMBRE, MODALIDAD_ID, MODALIDAD, " +
                     "TALUMNO_ID, TALUMNO, SEMESTRE, FECHA, FORMAPAGO, RELIGION, NACIONALIDAD, " +
                     "RESIDENCIA, FACULTAD_ID, FACULTAD, CARRERA_ID, CARRERA, PLAN_ID, NOMBRE_PLAN," +
-                    "GRADO, INSCRITO, SEMANAS_INTERNADO, FOLIO, GRADUANDO " + "FROM FES_CCOBRO " +
+                    "GRADO, INSCRITO, SEMANAS_INTERNADO, FOLIO, GRADUANDO " + "FROM mateo.FES_CCOBRO " +
                     "WHERE CARGA_ID = ? " + "AND BLOQUE = ? ";
             pstmt = conn.prepareStatement(COMANDO);
             pstmt.setString(1, cargaId);
@@ -3058,7 +3058,7 @@ public class Alumno implements Constant {
                     "SELECT MATRICULA, CARGA_ID, BLOQUE, NOMBRE, MODALIDAD_ID, MODALIDAD, TALUMNO_ID, TALUMNO, " +
                     "SEMESTRE, TO_CHAR(FECHA,'DD/MM/YYYY') FECHA, FORMAPAGO, RELIGION, NACIONALIDAD, " +
                     "RESIDENCIA, FACULTAD_ID, FACULTAD, CARRERA_ID, CARRERA, PLAN_ID, NOMBRE_PLAN, " +
-                    "GRADO, SEMANAS_INTERNADO, INSCRITO, FOLIO, GRADUANDO " + "FROM FES_CCOBRO " +
+                    "GRADO, SEMANAS_INTERNADO, INSCRITO, FOLIO, GRADUANDO " + "FROM mateo.FES_CCOBRO " +
                     "WHERE FECHA BETWEEN TO_DATE(?,'DD/MM/YY') AND TO_DATE(?,'DD/MM/YY') " +
                     "AND INSCRITO = 'S' ";
             pstmt = conn.prepareStatement(COMANDO);
@@ -3146,7 +3146,7 @@ public class Alumno implements Constant {
             //no han estudiado, por lo que ni siquiera tengan datos academicos
             String COMANDO = "SELECT CASE NACIONALIDAD WHEN 91 THEN 'MEX' ELSE 'EXT' END AS PAIS, ";
             COMANDO += "NOMBRE || ' ' || APELLIDO_PATERNO || ' ' || APELLIDO_MATERNO NOMBRE ";
-            COMANDO += "FROM ALUM_PERSONAL ";
+            COMANDO += "FROM enoc.ALUM_PERSONAL ";
             COMANDO += "WHERE CODIGO_PERSONAL = ? ";
             pstmt = conn_enoc.prepareStatement(COMANDO);
             pstmt.setString(1, this.matricula);
@@ -3173,7 +3173,7 @@ public class Alumno implements Constant {
             //Obtener datos de la tabla Alumno_Academico
             COMANDO = "SELECT MODALIDAD_ID, TIPO_ALUMNO, SEMESTRE, ";
             COMANDO += "CLAS_FIN, RESIDENCIA_ID, GRADO ";
-            COMANDO += "FROM ALUM_ACADEMICO ";
+            COMANDO += "FROM enoc.ALUM_ACADEMICO ";
             COMANDO += "WHERE CODIGO_PERSONAL = ? ";
             pstmt = conn_enoc.prepareStatement(COMANDO);
             pstmt.setString(1, this.matricula);
@@ -3222,7 +3222,7 @@ public class Alumno implements Constant {
             
             //Obtener descripcion de modalidad
             COMANDO = "SELECT NOMBRE_MODALIDAD ";
-            COMANDO += "FROM CAT_MODALIDAD ";
+            COMANDO += "FROM enoc.CAT_MODALIDAD ";
             COMANDO += "WHERE MODALIDAD_ID = ? ";
             pstmt = conn_enoc.prepareStatement(COMANDO);
             pstmt.setInt(1, this.modalidad_id.intValue());
@@ -3241,7 +3241,7 @@ public class Alumno implements Constant {
             
             //Obtener descripcion de tipo alumno
             COMANDO = "SELECT NOMBRE_TIPO ";
-            COMANDO += "FROM CAT_TIPOALUMNO ";
+            COMANDO += "FROM enoc.CAT_TIPOALUMNO ";
             COMANDO += "WHERE TIPO_ID = ? ";
             pstmt = conn_enoc.prepareStatement(COMANDO);
             pstmt.setInt(1, this.tAlumno_id.intValue());
@@ -3264,8 +3264,8 @@ public class Alumno implements Constant {
             COMANDO = "SELECT F.FACULTAD_ID, F.NOMBRE_FACULTAD, ";
             COMANDO += "C.CARRERA_ID, C.NOMBRE_CARRERA, ";
             COMANDO += "P.PLAN_ID, MP.NOMBRE_PLAN ";
-            COMANDO += "FROM ALUM_PLAN P, MAPA_PLAN MP, ";
-            COMANDO += "CAT_CARRERA C, CAT_FACULTAD F ";
+            COMANDO += "FROM enoc.ALUM_PLAN P, enoc.MAPA_PLAN MP, ";
+            COMANDO += "enoc.CAT_CARRERA C, enoc.CAT_FACULTAD F ";
             COMANDO += "WHERE F.FACULTAD_ID = C.FACULTAD_ID ";
             COMANDO += "AND C.CARRERA_ID = MP.CARRERA_ID ";
             COMANDO += "AND MP.PLAN_ID = P.PLAN_ID ";
@@ -3357,7 +3357,7 @@ public class Alumno implements Constant {
             
             String COMANDO =
                     "SELECT APELLIDO_PATERNO || ' ' || APELLIDO_MATERNO || ' ' || NOMBRE NOMBRE " +
-                    "FROM ALUM_PERSONAL " + "WHERE CODIGO_PERSONAL = ? ";
+                    "FROM enoc.ALUM_PERSONAL " + "WHERE CODIGO_PERSONAL = ? ";
             pstmt = conn_enoc.prepareStatement(COMANDO);
             pstmt.setString(1, matricula);
             rset = pstmt.executeQuery();
@@ -3459,7 +3459,7 @@ public class Alumno implements Constant {
                 conn_enoc = new Conexion().getConexionEnoc(new Boolean(false));
             }
             
-            String COMANDO = "SELECT CODIGO_PERSONAL " + "FROM ALUM_PERSONAL " +
+            String COMANDO = "SELECT CODIGO_PERSONAL " + "FROM enoc.ALUM_PERSONAL " +
                     "WHERE CODIGO_PERSONAL BETWEEN ? AND ? ";
             pstmt = conn_enoc.prepareStatement(COMANDO);
             pstmt.setString(1, matriculaI);
@@ -3517,11 +3517,11 @@ public class Alumno implements Constant {
             //La busqueda la ligamos a los kardex, para asi leer solo alumnos que hayan estado estudiando
             //ultimamente, o que ya tengan carga academica
             String COMANDO = "SELECT P.CODIGO_PERSONAL, P.NOMBRE || ' ' || P.APELLIDO_PATERNO || ' ' || P.APELLIDO_MATERNO NOMBRE_LEGAL, A.MODALIDAD_ID, A.TIPO_ALUMNO, T.NOMBRE_TIPO, P.RELIGION_ID, P.NACIONALIDAD, A.RESIDENCIA_ID " +
-                    "FROM ALUM_PERSONAL P, ALUM_ACADEMICO A, CAT_TIPOALUMNO T " +
+                    "FROM enoc.ALUM_PERSONAL P, enoc.ALUM_ACADEMICO A, enoc.CAT_TIPOALUMNO T " +
                     "WHERE A.CODIGO_PERSONAL = P.CODIGO_PERSONAL " +
                     "AND T.TIPO_ID = A.TIPO_ALUMNO " +
                     "AND P.CODIGO_PERSONAL IN " +
-                    "(SELECT CODIGO_PERSONAL FROM KRDX_CURSO_ACT " +
+                    "(SELECT CODIGO_PERSONAL FROM enoc.KRDX_CURSO_ACT " +
                     "WHERE CURSO_CARGA_ID LIKE ? ) ";
             pstmt = conn_enoc.prepareStatement(COMANDO);
             pstmt.setString(1, carga.getCargaId()+"%");
@@ -3567,11 +3567,11 @@ public class Alumno implements Constant {
             }
             
             String COMANDO = "SELECT CARGA_ID, BLOQUE ";
-            COMANDO += "FROM FES_CCOBRO ";
+            COMANDO += "FROM mateo.FES_CCOBRO ";
             COMANDO += "WHERE MATRICULA = ? ";
             COMANDO += "AND FECHA IN ";
             COMANDO += "(SELECT MAX(FECHA) ";
-            COMANDO += "FROM FES_CCOBRO ";
+            COMANDO += "FROM mateo.FES_CCOBRO ";
             COMANDO += "WHERE MATRICULA = ?) ";
             pstmt = conn.prepareStatement(COMANDO);
             pstmt.setString(1, this.matricula);
@@ -3623,7 +3623,7 @@ public class Alumno implements Constant {
             
             //Obtener la cuenta de mayor del estudiante
             String COMANDO = "SELECT ID_CTAMAYOR ";
-            COMANDO += "FROM CONT_RELACION ";
+            COMANDO += "FROM mateo.CONT_RELACION ";
             COMANDO += "WHERE ID_EJERCICIO = ? ";
             COMANDO += "AND ID_AUXILIAR = ? ";
             COMANDO += "AND STATUS = 'A' ";
@@ -3686,7 +3686,7 @@ public class Alumno implements Constant {
             
             //Obtener las cuentas de los alumnos
             String COMANDO = "SELECT DISTINCT ID_CCOSTO, ID_CTAMAYOR ";
-            COMANDO += "FROM CONT_RELACION ";
+            COMANDO += "FROM mateo.CONT_RELACION ";
             COMANDO += "WHERE ID_EJERCICIO = ? ";
             COMANDO += "AND ID_CCOSTO IN ('1.01','2.01') ";
             COMANDO += "AND ID_CTAMAYOR IN ('1.1.04.01','1.1.04.29','1.1.04.30') ";
@@ -3850,7 +3850,7 @@ public class Alumno implements Constant {
                 conn = new Conexion().getConexionMateo(new Boolean(false));
             }
             
-            String COMANDO = "SELECT COUNT(*) NREG " + "FROM CONT_MOVIMIENTO " +
+            String COMANDO = "SELECT COUNT(*) NREG " + "FROM mateo.CONT_MOVIMIENTO " +
                     "WHERE ID_AUXILIARM = ? " + "AND REFERENCIA2 = ? ";
             pstmt = conn.prepareStatement(COMANDO);
             pstmt.setString(1, this.getMatricula());

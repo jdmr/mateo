@@ -162,7 +162,7 @@ public class TFinancieraEnc {
 				conn = new Conexion().getConexionNoe(new Boolean(false));
 			
 			String COMANDO = "SELECT TFINANCIERA_ID, MATRICULA, TLEGALES, INTERNADO, STATUS " +
-					"FROM FES_TFINANCIERA_ENC " +
+					"FROM noe.FES_TFINANCIERA_ENC " +
 					"WHERE CARGA_ID = ? ";
 			pstmt = conn.prepareStatement(COMANDO);
 			pstmt.setString(1, carga.getCargaId());
@@ -205,7 +205,7 @@ public class TFinancieraEnc {
 			if(dbEncabezado != null){
 				encabezado.setTFinancieraId(dbEncabezado.getTFinancieraId());
 				paso = "3";				
-				COMANDO = "UPDATE FES_TFINANCIERA_ENC " +
+				COMANDO = "UPDATE noe.FES_TFINANCIERA_ENC " +
 				"SET MATRICULA = ?, " +
 				"TLEGALES = ?, " +
 				"INTERNADO = ?," +
@@ -226,7 +226,7 @@ public class TFinancieraEnc {
 				//Obtener el folio de la tabla financiera
 				encabezado.setTFinancieraId(this.getTFinancieraId(conn));
 				
-				COMANDO = "INSERT INTO FES_TFINANCIERA_ENC " +
+				COMANDO = "INSERT INTO noe.FES_TFINANCIERA_ENC " +
 				"(TFINANCIERA_ID, CARGA_ID, MATRICULA, TLEGALES, INTERNADO, STATUS) " +
 				"VALUES " +
 				"(?,?,?,?,?,?) ";
@@ -270,7 +270,7 @@ public class TFinancieraEnc {
 		
 		try{
 			COMANDO = "SELECT COALESCE(MAX(TFINANCIERA_ID),0)+1 ID " +
-			"FROM FES_TFINANCIERA_ENC " ;				
+			"FROM noe.FES_TFINANCIERA_ENC " ;				
 			pstmt = conn.prepareStatement(COMANDO);							
 			rset = pstmt.executeQuery();
 			
@@ -304,7 +304,7 @@ public class TFinancieraEnc {
 		
 		try{
 			COMANDO = "SELECT COALESCE(MAX(TFINANCIERA_ID),0)+1 ID " +
-			"FROM FES_TFINANCIERA_ENC " +
+			"FROM noe.FES_TFINANCIERA_ENC " +
 			"WHERE CARGA_ID = ? " ;				
 			pstmt = conn.prepareStatement(COMANDO);
 			pstmt.setString(1, carga.getCargaId());
@@ -336,7 +336,7 @@ public class TFinancieraEnc {
 			}
 			
 			String COMANDO = "SELECT TFINANCIERA_ID, CARGA_ID, MATRICULA, TLEGALES, INTERNADO, STATUS " +
-					"FROM FES_TFINANCIERA_ENC ";
+					"FROM noe.FES_TFINANCIERA_ENC ";
 			pstmt = conn.prepareStatement(COMANDO);
 			rset = pstmt.executeQuery();
 			
