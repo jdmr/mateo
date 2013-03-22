@@ -59,14 +59,24 @@
                             <form:errors path="nombre" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="usuario.apellido">
+                    <s:bind path="usuario.apPaterno">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="apellido">
-                                <s:message code="apellido.label" />
+                            <label for="apPaterno">
+                                <s:message code="apPaterno.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="apellido" maxlength="128" required="true" />
-                            <form:errors path="apellido" cssClass="alert alert-error" />
+                            <form:input path="apPaterno" maxlength="128" required="true" />
+                            <form:errors path="apPaterno" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="usuario.apMaterno">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="apMaterno">
+                                <s:message code="apMaterno.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="apMaterno" maxlength="128" required="true" />
+                            <form:errors path="apMaterno" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                     <s:bind path="usuario.correo">

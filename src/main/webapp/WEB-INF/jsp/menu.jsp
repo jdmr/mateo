@@ -10,5 +10,7 @@
         <li><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
         <li><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>  
         <li><a href="<c:url value='/inscripciones' />"><s:message code="inscripciones.label" /></a></li>
+        <li><a href="<c:url value='/colportaje' />"><s:message code="colportaje.label" /></a></li>              
+        <li><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>              
     </ul>
 </nav>

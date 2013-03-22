@@ -6,11 +6,11 @@ package mx.edu.um.mateo.rh.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Digits;
@@ -31,29 +31,10 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 public class Empleado extends Usuario {
 
     private static final long serialVersionUID = 6001011125338853446L;
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-//    @Version
-//    private Integer version;
-//    @ManyToOne(optional = false)
-//    private Empresa empresa;
     @NotBlank
     @Size(min = 7, max = 7, message = "La clave del empleado debe contener una longitud de 7 caracteres")
     @Column(length = 7)
     private String clave;
-    @Enumerated(EnumType.STRING)
-    @Column
-    private NivelEstudios nivelEstudios;
-//    @NotBlank
-//    @Column(nullable = false, length = 100)
-//    private String nombre;
-//    @NotBlank
-//    @Column(nullable = false, length = 100)
-//    private String apPaterno;
-//    @NotBlank
-//    @Column(nullable = false, length = 100)
-//    private String apMaterno;
     @NotBlank
     @Column( length = 1)
     private String genero;
@@ -130,7 +111,9 @@ public class Empleado extends Usuario {
     private String iglesia;
     @Length(max = 100)
     @Column(length = 100)
-    private String responsabilidad;
+    private String responsabilidad;    
+    @ManyToOne
+    private TipoEmpleado tipoEmpleado;
 
     public Empleado() {
     }
@@ -142,15 +125,12 @@ public class Empleado extends Usuario {
             String modalidad, String ife, String rango,
             String padre, String madre, String estadoCivil, String conyuge,
             Boolean finadoPadre, Boolean finadoMadre, String iglesia,
-            String responsabilidad, String password) {
+            String responsabilidad, String password, TipoEmpleado tipoEmpleado) {
         super(nombre, apPaterno, apMaterno); 
         this.clave = clave;
         this.correo=correo;
         this.username=correo;
         this.password=password;
-//        this.nombre = nombre;
-//        this.apPaterno = apPaterno;
-//        this.apMaterno = apMaterno;
         this.genero = genero;
         this.fechaNacimiento = new Date();
         this.direccion = direccion;
@@ -177,25 +157,9 @@ public class Empleado extends Usuario {
         this.finadoMadre = finadoMadre;
         this.iglesia = iglesia;
         this.responsabilidad = responsabilidad;
-//        this.empresa = empresa;
-        this.nivelEstudios = NivelEstudios.DOCTORADO;
+        this.tipoEmpleado = tipoEmpleado;
+        
     }
-
-//    public String getApMaterno() {
-//        return apMaterno;
-//    }
-//
-//    public void setApMaterno(String apMaterno) {
-//        this.apMaterno = apMaterno;
-//    }
-//
-//    public String getApPaterno() {
-//        return apPaterno;
-//    }
-//
-//    public void setApPaterno(String apPaterno) {
-//        this.apPaterno = apPaterno;
-//    }
 
     public String getClave() {
         return clave;
@@ -405,22 +369,6 @@ public class Empleado extends Usuario {
         this.turno = turno;
     }
 
-//    public Long getId() {
-//        return id;
-//    }
-//
-//    public void setId(Long id) {
-//        this.id = id;
-//    }
-//
-//    public String getNombre() {
-//        return nombre;
-//    }
-//
-//    public void setNombre(String nombre) {
-//        this.nombre = nombre;
-//    }
-
     public String getStatus() {
         return status;
     }
@@ -429,31 +377,23 @@ public class Empleado extends Usuario {
         this.status = status;
     }
 
-//    public Integer getVersion() {
-//        return version;
-//    }
-//
-//    public void setVersion(Integer version) {
-//        this.version = version;
-//    }
-//
-//    /**
-//     * @return the empresa
-//     */
-//    public Empresa getEmpresa() {
-//        return empresa;
-//    }
-//
-//    /**
-//     * @param empresa the empresa to set
-//     */
-//    public void setEmpresa(Empresa empresa) {
-//        this.empresa = empresa;
-//    }
+    /**
+     * @return the tipoEmpleado
+     */
+    public TipoEmpleado getTipoEmpleado() {
+        return tipoEmpleado;
+    }
+
+    /**
+     * @param tipoEmpleado the tipoEmpleado to set
+     */
+    public void setTipoEmpleado(TipoEmpleado tipoEmpleado) {
+        this.tipoEmpleado = tipoEmpleado;
+    }
 
     @Override
     public String toString() {
-        return "Empleado{" + ", clave=" + clave + ", genero=" + genero + ", direccion=" 
+        return "Empleado{" + ", clave=" + clave + ", nombre = "+ this.getNombreCompleto() +", genero=" + genero + ", direccion=" 
                 + direccion + ", status=" + status + ", fechaNacimiento=" + fechaNacimiento + ", curp=" + curp 
                 + ", rfc=" + rfc + ", cuenta=" + cuenta + ", imms=" + imms + ", escalafon=" + escalafon + ", turno=" 
                 + turno + ", fechaAlta=" + fechaAlta + ", fechaBaja=" + fechaBaja + ", experienciaFueraUm=" 
@@ -461,6 +401,14 @@ public class Empleado extends Usuario {
                 + adventista + ", padre=" + padre + ", madre=" + madre + ", estadoCivil=" + estadoCivil + ", conyuge=" 
                 + conyuge + ", fechaMatrimonio=" + fechaMatrimonio + ", finadoPadre=" + finadoPadre + ", finadoMadre=" 
                 + finadoMadre + ", iglesia=" + iglesia + ", responsabilidad=" + responsabilidad + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 59 * hash + Objects.hashCode(this.clave);
+        hash = 59 * hash + Objects.hashCode(this.getNombreCompleto());
+        return hash;
     }
 
     @Override
@@ -472,34 +420,14 @@ public class Empleado extends Usuario {
             return false;
         }
         final Empleado other = (Empleado) obj;
-        
-        if ((this.clave == null) ? (other.clave != null) : !this.clave
-                .equals(other.clave)) {
+        if (!Objects.equals(this.clave, other.clave)) {
+            return false;
+        }
+        if (!Objects.equals(this.curp, other.getNombreCompleto())) {
             return false;
         }
         return true;
     }
+    
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-//        hash = 13 * hash + (this.id != null ? this.id.hashCode() : 0);
-//        hash = 13 * hash + (this.version != null ? this.version.hashCode() : 0);
-        hash = 13 * hash + (this.clave != null ? this.clave.hashCode() : 0);
-        return hash;
-    }
-
-     /**
-     * @return the nivelEstudios
-     */
-    public NivelEstudios getNivelEstudios() {
-        return nivelEstudios;
-    }
-
-    /**
-     * @param nivelEstudios the nivelEstudios to set
-     */
-    public void setNivelEstudios(NivelEstudios nivelEstudios) {
-        this.nivelEstudios = nivelEstudios;
-    }
 }

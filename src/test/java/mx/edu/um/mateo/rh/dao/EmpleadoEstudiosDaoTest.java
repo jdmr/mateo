@@ -34,11 +34,11 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author AMDA
  */
-
+public class EmpleadoEstudiosDaoTest {
+/*
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class EmpleadoEstudiosDaoTest {
     
     @Autowired
     private EmpleadoEstudiosDao instance;
@@ -220,5 +220,5 @@ public class EmpleadoEstudiosDaoTest {
         }
         
     }
-    
+    */
 }
