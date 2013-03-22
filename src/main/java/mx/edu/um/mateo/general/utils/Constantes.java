@@ -384,6 +384,8 @@ public class Constantes {
 	/**
 	 * The request scope attribute that holds the sobresueldo form.
 	 */
+
+	public static final String EMPLEADOPUESTO_KEY = "empleadoPuesto";
 	public static final String SOBRESUELDO_KEY = "sobresueldoForm";
 	/**
 	 * The request scope attribute that holds the sobresueldo list
@@ -1897,7 +1899,6 @@ public class Constantes {
     /**
      * The request scope attribute that holds the comunicacion form.
      */
-    public static final String EMPLEADOPUESTO_KEY = "empleadoPuestoForm";
     /**
      * The request scope attribute that holds the comunicacion list
      */
@@ -2538,7 +2539,32 @@ public class Constantes {
     public static final String PATH_PERDED_NUEVO = "/rh/perded/nuevo";
     public static final String PATH_PERDED_EDITA = "/rh/perded/edita";
     public static final String PATH_PERDED_GRABA = "/rh/perded/graba";
-
+    
+    public static final String PATH_EMPLEADOPUESTO = "/rh/empleadoPuesto";
+    public static final String PATH_EMPLEADOPUESTO_LISTA = "/rh/empleadoPuesto/lista";
+    public static final String PATH_EMPLEADOPUESTO_VER = "/rh/empleadoPuesto/ver";
+    public static final String PATH_EMPLEADOPUESTO_NUEVO = "/rh/empleadoPuesto/nuevo";
+    public static final String PATH_EMPLEADOPUESTO_EDITA = "/rh/empleadoPuesto/edita";
+    
+    public static final String CONTAINSKEY_PERIODOS = "periodos";
+    
+    public static final String PATH_PERIODOS = "/inscripciones/periodos";
+    public static final String PATH_PERIODOS_LISTA = "inscripciones/periodos/lista";
+    public static final String PATH_PERIODOS_VER = "inscripciones/periodos/ver";
+    public static final String PATH_PERIODOS_NUEVO = "/inscripciones/periodos/nuevo";
+    public static final String PATH_PERIODOS_EDITA = "/inscripciones/periodos/edita";
+    public static final String PATH_PERIODOS_GRABA = "/inscripciones/periodos/graba";
+    public static final String PATH_PERIODOS_CREA = "/inscripciones/periodos/crea";
+    
+    public static final String CONTAINSKEY_INSTITUCION = "instituciones";
+    
+    public static final String PATH_INSTITUCION = "/inscripciones/instituciones";
+    public static final String PATH_INSTITUCION_LISTA = "inscripciones/instituciones/lista";
+    public static final String PATH_INSTITUCION_VER = "inscripciones/instituciones/ver";
+    public static final String PATH_INSTITUCION_NUEVO = "/inscripciones/instituciones/nueva";
+    public static final String PATH_INSTITUCION_EDITA = "/inscripciones/instituciones/edita";
+    public static final String PATH_INSTITUCION_GRABA = "/inscripciones/instituciones/graba";
+    public static final String PATH_INSTITUCION_CREA = "/inscripciones/instituciones/crea";
     
     public static final String PATH_TIPOEMPLEADO = "/rh/tipoEmpleado";
     public static final String PATH_TIPOEMPLEADO_LISTA = "/rh/tipoEmpleado/lista";
