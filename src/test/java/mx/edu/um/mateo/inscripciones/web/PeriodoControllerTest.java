@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
+
 /**
  * @author semdariobarbaamaya
  */
@@ -44,8 +45,8 @@ import static org.junit.Assert.assertEquals;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class PeriodoControllerTest extends BaseTest{
-    
+public class PeriodoControllerTest extends BaseTest {
+
     private static final Logger log = LoggerFactory.getLogger(PeriodoControllerTest.class);
     @Autowired
     private WebApplicationContext wac;
@@ -54,12 +55,12 @@ public class PeriodoControllerTest extends BaseTest{
     private SessionFactory sessionFactory;
     @Autowired
     private PeriodoDao instance;
-    
+
     @Before
     public void setUp() {
         this.mockMvc = MockMvcBuilders.webApplicationContextSetup(wac).build();
     }
-    
+
     @Test
     public void debieraMostrarListaDePeriodo() throws Exception {
         log.debug("Debiera mostrar lista de periodo");
@@ -72,86 +73,27 @@ public class PeriodoControllerTest extends BaseTest{
                 .andExpect(model().attributeExists("paginas"))
                 .andExpect(model().attributeExists("pagina"));
     }
-    
-     @Test
+
+    @Test
     public void debieraMostrarPeriodo() throws Exception {
         log.debug("Debiera mostrar periodo");
-         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
         Periodo periodo = new Periodo("test", "A", "clave", new Date(), new Date());
-        periodo.setEmpresa(empresa);
+        periodo.setOrganizacion(organizacion);
         currentSession().save(periodo);
         Long id = periodo.getId();
-        
+
         this.mockMvc.perform(get("/inscripciones/periodos/ver/" + id))
                 .andExpect(status().isOk())
                 .andExpect(forwardedUrl("/WEB-INF/jsp/inscripciones/periodos/ver.jsp"))
                 .andExpect(model().attributeExists("periodo"));
-        
-    } 
- 
-     @Test
+
+    }
+
+    @Test
     public void debieraCrearPeriodo() throws Exception {
         log.debug("Debiera crear periodo");
-         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
-        assertNotNull(id);
-        
-        this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
-       
-        this.mockMvc.perform(post(Constantes.PATH_PERIODOS_GRABA)
-                .param("descripcion", "TEST-1")
-                .param("clave", "clave")
-                .param("status", "A")
-                .param("fechaInicial", "12/12/12")
-                .param("fechaFinal", "12/12/12")
-                )
-                .andExpect(status().isOk());
-               // .andExpect(flash().attributeExists("message"))
-               // .andExpect(flash().attribute("message", "periodo.creado.message"));
-    }
-     
-     @Test
-     public void debieraeliminarPeriodo() throws Exception {
-        log.debug("Debiera crear periodo");
-       Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Periodo periodo = new Periodo("test", "A", "clave", new Date(), new Date());
-        periodo.setEmpresa(empresa);
-        currentSession().save(periodo);
-        Long id = periodo.getId();
-        this.mockMvc.perform(post("/inscripciones/periodos/elimina")
-                .param("id", periodo.getId().toString())
-             
-                )
-                .andExpect(status().isOk())
-                .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "periodo.eliminado.message"));
-    }
-     
-    @Test
-    public void debieraActualizarPeriodo() throws Exception {
-        log.debug("Debiera actualizar periodo");
-       
-        
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
@@ -162,23 +104,74 @@ public class PeriodoControllerTest extends BaseTest{
         roles.add(rol);
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
         currentSession().save(usuario);
         Long id = usuario.getId();
         assertNotNull(id);
-        
+
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
-        
+
+        this.mockMvc.perform(post(Constantes.PATH_PERIODOS_GRABA)
+                .param("descripcion", "TEST-1")
+                .param("clave", "clave")
+                .param("status", "A")
+                .param("fechaInicial", "12/12/12")
+                .param("fechaFinal", "12/12/12"))
+                .andExpect(status().isOk())
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(flash().attribute("message", "periodo.creado.message"));
+    }
+
+    @Test
+    public void debieraeliminarPeriodo() throws Exception {
+        log.debug("Debiera eliminar periodo");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
         Periodo periodo = new Periodo("test", "A", "clave", new Date(), new Date());
-        periodo.setEmpresa(empresa);
+        periodo.setOrganizacion(organizacion);
+        currentSession().save(periodo);
+        Long id = periodo.getId();
+        this.mockMvc.perform(post("/inscripciones/periodos/elimina")
+                .param("id", periodo.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(flash().attribute("message", "periodo.eliminado.message"));
+    }
+
+    @Test
+    public void debieraActualizarPeriodo() throws Exception {
+        log.debug("Debiera actualizar periodo");
+
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
+        Long id = usuario.getId();
+        assertNotNull(id);
+
+        this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
+
+        Periodo periodo = new Periodo("test", "A", "clave", new Date(), new Date());
+        periodo.setOrganizacion(organizacion);
         instance.graba(periodo);
         assertNotNull(periodo);
         assertNotNull(periodo.getId());
         assertEquals("test", periodo.getDescripcion());
-        
+
         this.mockMvc.perform(post(Constantes.PATH_PERIODOS_GRABA)
                 .param("descripcion", "TEST-1")
                 .param("clave", "clave")
@@ -186,20 +179,16 @@ public class PeriodoControllerTest extends BaseTest{
                 .param("fechaInicial", "12/12/12")
                 .param("fechaFinal", "12/12/12")
                 .param("id", periodo.getId().toString())
-                .param("version", periodo.getVersion().toString())
-                )
+                .param("version", periodo.getVersion().toString()))
                 .andExpect(status().isOk())
                 .andExpect(redirectedUrl(Constantes.PATH_PERIODOS + "/"))
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message", "periodo.actualizado.message"));
-        
+
         assertEquals("TEST-1", instance.obtiene(periodo.getId()).getDescripcion());
     }
-     
-     
-     
-     private Session currentSession() {
+
+    private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
-    
 }

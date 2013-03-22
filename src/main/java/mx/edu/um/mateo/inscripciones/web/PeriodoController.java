@@ -6,12 +6,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
-import mx.edu.um.mateo.inscripciones.dao.PeriodoDao;
 import mx.edu.um.mateo.inscripciones.model.Periodo;
+import mx.edu.um.mateo.inscripciones.service.PeriodoManager;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class PeriodoController extends BaseController{
     
     @Autowired
-    private PeriodoDao periodoDao; 
+    private PeriodoManager periodoManager; 
     
     @SuppressWarnings("unchecked")
     @RequestMapping
@@ -64,7 +65,7 @@ public class PeriodoController extends BaseController{
 
 		if (StringUtils.isNotBlank(tipo)) {
 			params.put("reporte", true);
-			params = periodoDao.lista(params);
+			params = periodoManager.lista(params);
 			try {
 				generaReporte(tipo, (List<Periodo>) params.get(Constantes.CONTAINSKEY_PERIODOS),
 						response, "periodo", Constantes.EMP, empresaId);
@@ -76,7 +77,7 @@ public class PeriodoController extends BaseController{
 
 		if (StringUtils.isNotBlank(correo)) {
 			params.put("reporte", true);
-			params = periodoDao.lista(params);
+			params = periodoManager.lista(params);
 
 			params.remove("reporte");
 			try {
@@ -93,7 +94,7 @@ public class PeriodoController extends BaseController{
 				log.error("No se pudo enviar el reporte por correo", e);
 			}
 		}
-		params = periodoDao.lista(params);
+		params = periodoManager.lista(params);
                 log.debug("Periodos {}", ((List)params.get(Constantes.CONTAINSKEY_PERIODOS)).size());
 		modelo.addAttribute("periodo", params.get(Constantes.CONTAINSKEY_PERIODOS));
 
@@ -106,7 +107,7 @@ public class PeriodoController extends BaseController{
         @RequestMapping("/ver/{id}")
 	public String ver(@PathVariable Long id, Model modelo) {
 		log.debug("Mostrando periodo {}", id);
-		Periodo periodo = periodoDao.obtiene(id);
+		Periodo periodo = periodoManager.obtiene(id);
 
 		modelo.addAttribute("periodo", periodo);
 
@@ -139,8 +140,7 @@ public class PeriodoController extends BaseController{
 			log.debug("Hubo algun error en la forma, regresando");
 
 			Map<String, Object> params = new HashMap<>();
-			params.put("empresa", request.getSession()
-					.getAttribute("empresaId"));
+			params.put("empresa", ambiente.obtieneUsuario().getEmpresa());
 			params.put("reporte", true);
 			return Constantes.PATH_PERIODOS_NUEVO;
 		}
@@ -152,7 +152,7 @@ public class PeriodoController extends BaseController{
                         periodo.setEmpresa(usuario.getEmpresa());
                         periodoDao.graba(periodo);
                         */
-                            Periodo tmp = periodoDao.obtiene(periodo.getId());
+                            Periodo tmp = periodoManager.obtiene(periodo.getId());
                             tmp.setClave(periodo.getClave());
                             tmp.setDescripcion(periodo.getDescripcion());
                             tmp.setExcluye(periodo.getExcluye());
@@ -160,8 +160,8 @@ public class PeriodoController extends BaseController{
                             tmp.setStatus(periodo.getStatus());
                             tmp.setFechaFinal(periodo.getFechaFinal());
                             tmp.setFechaInicial(periodo.getFechaInicial());
-                            
-                            periodoDao.graba(tmp);
+                            log.debug("Hasta aqui ENTRA {}", tmp);
+                            periodoManager.graba(tmp);
                             
                             redirectAttributes.addFlashAttribute("message",
 				"periodo.actualizado.message");
@@ -170,8 +170,8 @@ public class PeriodoController extends BaseController{
                         }else{
                             
                             Usuario usuario = ambiente.obtieneUsuario();
-                            periodo.setEmpresa(usuario.getEmpresa());
-                            periodoDao.graba(periodo);
+                            periodo.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+                            periodoManager.graba(periodo);
                             /*
                             Periodo tmp = periodoDao.obtiene(periodo.getId());
                             tmp.setClave(periodo.getClave());
@@ -210,7 +210,7 @@ public class PeriodoController extends BaseController{
 	public String edita(HttpServletRequest request, @PathVariable Long id,
 			Model modelo) {
 		log.debug("Edita periodo {}", id);
-		Periodo periodo = periodoDao.obtiene(id);
+		Periodo periodo = periodoManager.obtiene(id);
 		modelo.addAttribute("periodo", periodo);
 
 		Map<String, Object> params = new HashMap<>();
@@ -226,7 +226,7 @@ public class PeriodoController extends BaseController{
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		log.debug("Elimina periodo");
 		try {
-			String descripcion = periodoDao.elimina(id);
+			String descripcion = periodoManager.elimina(id);
 
 			redirectAttributes.addFlashAttribute("message",
 					"periodo.eliminado.message");
@@ -240,6 +240,6 @@ public class PeriodoController extends BaseController{
 							null, null));
 			return Constantes.PATH_PERIODOS_VER;
 		}
-                return "redirect:" + Constantes.PATH_PERIODOS_LISTA;
+                return "redirect:" + Constantes.PATH_PERIODOS;
         }
 }

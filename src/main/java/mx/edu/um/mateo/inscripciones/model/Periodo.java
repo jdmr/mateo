@@ -12,7 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Version;
-import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Organizacion;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "afe_cat_periodo")
@@ -20,16 +21,16 @@ public class Periodo implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //@Column(nullable = false)
-    //private Carga carga;
     @Column(nullable = false, length = 10)
     private String clave;
     @Column(nullable = false, length = 100)
     private String descripcion;
     @Column(nullable = false)
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date fechaInicial;
     @Column(nullable = false)
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date fechaFinal; 
     @Column()
@@ -41,8 +42,7 @@ public class Periodo implements Serializable{
     @Version
     private Integer version;
     @ManyToOne(optional = false)
-    private Empresa empresa;
-  
+    private Organizacion organizacion;
 
     public Periodo() {
     }
@@ -63,14 +63,6 @@ public class Periodo implements Serializable{
         this.id = id;
     }
 
-//    public Carga getCarga() {
-//        return carga;
-//    }
-//
-//    public void setCarga(Carga carga) {
-//        this.carga = carga;
-//    }
-
     public String getClave() {
         return clave;
     }
@@ -85,6 +77,14 @@ public class Periodo implements Serializable{
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public Organizacion getOrganizacion() {
+        return organizacion;
+    }
+
+    public void setOrganizacion(Organizacion organizacion) {
+        this.organizacion = organizacion;
     }
 
     public Date getFechaInicial() {
@@ -127,14 +127,6 @@ public class Periodo implements Serializable{
         this.status = status;
     }
 
-    public Empresa getEmpresa() {
-        return empresa;
-    }
-
-    public void setEmpresa(Empresa empresa) {
-        this.empresa = empresa;
-    }
-
     public Integer getVersion() {
         return version;
     }
@@ -149,6 +141,7 @@ public class Periodo implements Serializable{
         hash = 53 * hash + Objects.hashCode(this.id);
         hash = 53 * hash + Objects.hashCode(this.clave);
         hash = 53 * hash + Objects.hashCode(this.version);
+        hash = 53 * hash + Objects.hashCode(this.organizacion);
         return hash;
     }
 
@@ -170,12 +163,15 @@ public class Periodo implements Serializable{
         if (!Objects.equals(this.version, other.version)) {
             return false;
         }
+        if (!Objects.equals(this.organizacion, other.organizacion)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "Periodo{" + "id=" + id + /*", carga=" + carga +*/ ", clave=" + clave + ", descripcion=" + descripcion + ", fechaInicial=" + fechaInicial + ", fechaFinal=" + fechaFinal + ", status=" + status + ", version=" + version + '}';
+        return "Periodo{" + "id=" + id +  ", clave=" + clave + ", descripcion=" + descripcion + ", fechaInicial=" + fechaInicial + ", fechaFinal=" + fechaFinal + ", status=" + status + ", version=" + version + '}';
     }  
     
 }

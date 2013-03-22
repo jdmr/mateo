@@ -47,9 +47,9 @@ public class PeriodoDaoHibernate extends BaseDao implements PeriodoDao{
         Criteria countCriteria = currentSession().createCriteria(Periodo.class);
         
 
-        if (params.containsKey("empresa")) {
-            criteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
-            countCriteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
+        if (params.containsKey("organizacion")) {
+            criteria.createCriteria("organizacion").add(Restrictions.idEq(params.get("organizacion")));
+            countCriteria.createCriteria("organizacion").add(Restrictions.idEq(params.get("organizacion")));
         }
 
         if (params.containsKey("filtro")) {
@@ -98,8 +98,9 @@ public class PeriodoDaoHibernate extends BaseDao implements PeriodoDao{
 
     @Override
     public void graba(Periodo periodo) {
+         log.debug("Hasta aqui ENTRA {}", periodo);
         Session session = currentSession();
-       
+        
         currentSession().saveOrUpdate(periodo);
         currentSession().merge(periodo);
         currentSession().flush();

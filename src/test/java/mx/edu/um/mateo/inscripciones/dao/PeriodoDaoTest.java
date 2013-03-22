@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inscripciones.model.Periodo;
@@ -44,13 +43,11 @@ public class PeriodoDaoTest {
     @Test
     public void debieraMostrarListaDePeriodo() {
         log.debug("Debiera mostrar lista de periodo");
-      Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
         for (int i = 0; i < 20; i++) {
             Periodo periodo = new Periodo("test" + i, "A" , "clave", new Date(), new Date());
-            periodo.setEmpresa(empresa);
+            periodo.setOrganizacion(organizacion);
             instance.graba(periodo);
         }
         Map<String, Object> params = new HashMap<>();
@@ -67,10 +64,8 @@ public class PeriodoDaoTest {
         log.debug("Debiera obtener Periodo");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
         Periodo periodo = new Periodo("test", "A", "clave", new Date(), new Date());
-        periodo.setEmpresa(empresa);
+        periodo.setOrganizacion(organizacion);
         currentSession().save(periodo);
         Long id = periodo.getId();
         Periodo result = instance.obtiene(id);
@@ -82,12 +77,9 @@ public class PeriodoDaoTest {
         log.debug("Debiera crear periodo");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
         Periodo periodo = new Periodo("test", "A", "clave", new Date(), new Date());
-        periodo.setEmpresa(empresa);
+        periodo.setOrganizacion(organizacion);
         instance.graba(periodo);
-        assertNotNull(periodo);
         assertNotNull(periodo.getId());
         assertEquals("test", periodo.getDescripcion());
     }
@@ -97,10 +89,8 @@ public class PeriodoDaoTest {
         log.debug("Debiera actualizar periodo");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
         Periodo periodo = new Periodo("test", "A", "clave", new Date(), new Date());
-        periodo.setEmpresa(empresa);
+        periodo.setOrganizacion(organizacion);
         instance.graba(periodo);
         assertNotNull(periodo.getId());
 

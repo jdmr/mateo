@@ -20,7 +20,6 @@
             <c:url var="actualizaUrl" value="/inscripciones/periodos/graba" />
             <form:form commandName="periodo" action="${actualizaUrl}" method="post">
                 <form:hidden path="id" />
-                <form:hidden path="status" />
                 <form:hidden path="version" />
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">

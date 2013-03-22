@@ -2525,4 +2525,14 @@ public class Constantes {
     public static final String PATH_PERIODOS_EDITA = "/inscripciones/periodos/edita";
     public static final String PATH_PERIODOS_GRABA = "/inscripciones/periodos/graba";
     public static final String PATH_PERIODOS_CREA = "/inscripciones/periodos/crea";
+    
+    public static final String CONTAINSKEY_INSTITUCION = "instituciones";
+    
+    public static final String PATH_INSTITUCION = "/inscripciones/instituciones";
+    public static final String PATH_INSTITUCION_LISTA = "inscripciones/instituciones/lista";
+    public static final String PATH_INSTITUCION_VER = "inscripciones/instituciones/ver";
+    public static final String PATH_INSTITUCION_NUEVO = "/inscripciones/instituciones/nueva";
+    public static final String PATH_INSTITUCION_EDITA = "/inscripciones/instituciones/edita";
+    public static final String PATH_INSTITUCION_GRABA = "/inscripciones/instituciones/graba";
+    public static final String PATH_INSTITUCION_CREA = "/inscripciones/instituciones/crea";
 }
