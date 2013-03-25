@@ -24,29 +24,36 @@ import org.hibernate.validator.constraints.NotBlank;
  * @author semdariobarbaamaya
  */
 @Entity
-@Table(name = "empleadoPuesto")
+@Table(name = "empleado_puesto")
 public class EmpleadoPuesto implements Serializable{
     //private CentroCosto centroCosto;
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Integer id;
+        private Long id;
         @Version
         private Integer version;
         @ManyToOne(optional=false)
 	private Puesto puesto;
-        @NotBlank
-        @Min(message="El valor minimo del turno es el 5%",value=5)
-        @Max(value=100,message="El valor maximo del turno es el 100%")
-        @Column(nullable = false, scale=6, precision=2)
+//        @NotBlank
+//        @Min(message="El valor minimo del turno es el 5%",value=5)
+//        @Max(value=100,message="El valor maximo del turno es el 100%")
+        @Column(nullable = false, scale=2, precision=6)
 	private BigDecimal turno;
         @Column(nullable = false, length = 2)
         private String status;
 
-    public Integer getId() {
+        
+    public EmpleadoPuesto(){
+            puesto = new Puesto();
+            turno = new BigDecimal("0");
+            status = new String();
+    }
+        
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

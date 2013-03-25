@@ -6,6 +6,7 @@ package mx.edu.um.mateo.rh.service;
 
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.rh.model.EmpleadoPuesto;
 
 /**
@@ -23,13 +24,13 @@ public interface EmpleadoPuestoManager {
      * @param id el id de empleadopuesto
      * @return regresa el empleadopuesto que obtuvo mediante el id
      */
-    public EmpleadoPuesto obtiene(final String id);
+    public EmpleadoPuesto obtiene(final Long id)throws ObjectRetrievalFailureException;
 
     /**
      * Graba la informacion del empleadopuesto
-     * @param empleadopuesto el objeto que sera grabado
+     * @param empleadoPuesto el objeto que sera grabado
      */
-    public void graba(EmpleadoPuesto empleadopuesto, Usuario usuario);
+    public void graba(EmpleadoPuesto empleadoPuesto, Usuario usuario);
 
     /**
      * Elimina empleadopuesto de la base de datos mediante su id

@@ -32,7 +32,7 @@ public class EmpleadoPuestoDaoHibernate extends BaseDao implements EmpleadoPuest
     
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
-        log.debug("Buscando lista de empleadopuesto con params {}", params);
+        log.debug("Buscando lista de empleadoPuesto con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
@@ -56,10 +56,10 @@ public class EmpleadoPuestoDaoHibernate extends BaseDao implements EmpleadoPuest
         Criteria countCriteria = currentSession().createCriteria(EmpleadoPuesto.class).add(Restrictions.eq("status",Constantes.STATUS_ACTIVO));
         
 
-        if (params.containsKey("empresa")) {
-            criteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
-            countCriteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
-        }
+//        if (params.containsKey("empresa")) {
+//            criteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
+//            countCriteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
+//        }
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
@@ -96,25 +96,25 @@ public class EmpleadoPuestoDaoHibernate extends BaseDao implements EmpleadoPuest
      */
     @Override
     public EmpleadoPuesto obtiene(final Long id) {
-        EmpleadoPuesto empleadopuesto = (EmpleadoPuesto) currentSession().get(EmpleadoPuesto.class, id);
-        if (empleadopuesto == null) {
-            log.warn("uh oh, empleadopuesto with id '" + id + "' not found...");
+        EmpleadoPuesto empleadoPuesto = (EmpleadoPuesto) currentSession().get(EmpleadoPuesto.class, id);
+        if (empleadoPuesto == null) {
+            log.warn("uh oh, empleadoPuesto with id '" + id + "' not found...");
             throw new ObjectRetrievalFailureException(EmpleadoPuesto.class, id);
         }
-        return empleadopuesto;
+        return empleadoPuesto;
     }
     
     /**
      *  @see mx.edu.um.mateo.rh.service.PerDedManager#graba(mx.edu.um.mateo.rh.model.PerDed, mx.edu.um.mateo.general.model.Usuario) 
      */
     @Override
-    public void graba(final EmpleadoPuesto empleadopuesto, Usuario usuario) {
+    public void graba(final EmpleadoPuesto empleadoPuesto, Usuario usuario) {
         Session session = currentSession();
 //        if (usuario != null) {
-//            empleadopuesto.setEmpresa(usuario.getEmpresa());
+//            empleadoPuesto.setEmpresa(usuario.getEmpresa());
 //        }
-        currentSession().saveOrUpdate(empleadopuesto);
-        currentSession().merge(empleadopuesto);
+        currentSession().saveOrUpdate(empleadoPuesto);
+        currentSession().merge(empleadoPuesto);
         currentSession().flush();
     }
      /**
@@ -123,9 +123,9 @@ public class EmpleadoPuestoDaoHibernate extends BaseDao implements EmpleadoPuest
     @Override
     public String elimina(final Long id) {
         log.debug("Eliminando la perded {}", id);
-        EmpleadoPuesto empleadopuesto = this.obtiene(id);
-        String nombre = empleadopuesto.getPuesto().getDescripcion();
-        currentSession().delete(empleadopuesto);
+        EmpleadoPuesto empleadoPuesto = this.obtiene(id);
+        String nombre = empleadoPuesto.getPuesto().getDescripcion();
+        currentSession().delete(empleadoPuesto);
 
         currentSession().flush();
 
