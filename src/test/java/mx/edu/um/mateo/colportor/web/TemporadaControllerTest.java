@@ -132,25 +132,25 @@ public class TemporadaControllerTest extends BaseTest {
                 .andExpect(view().name(Constantes.PATH_TEMPORADA_VER));
     }
 
-    @Test
-    public void debieraCrearTemporada() throws Exception {
-        log.debug("Debiera crear temporada");
-        Union union = new Union("test");
-        union = unionDao.crea(union);
-        
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        asociacionDao.crea(asociacion);
-        
-        SimpleDateFormat sdf = new SimpleDateFormat(Constantes.DATE_SHORT_HUMAN_PATTERN);
-        this.mockMvc.perform(post(Constantes.PATH_TEMPORADA_CREA)
-                .param("nombre", "test")
-                .param("fechaInicio", sdf.format(new Date()))
-                .param("fechaFinal", sdf.format(new Date()))
-                .sessionAttr(Constantes.SESSION_ASOCIACION, asociacion))
-                .andExpect(status().isOk())
-                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "temporada.creada.message"));
-    }
+//    @Test
+//    public void debieraCrearTemporada() throws Exception {
+//        log.debug("Debiera crear temporada");
+//        Union union = new Union("test");
+//        union = unionDao.crea(union);
+//        
+//        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
+//        asociacionDao.crea(asociacion);
+//        
+//        SimpleDateFormat sdf = new SimpleDateFormat(Constantes.DATE_SHORT_HUMAN_PATTERN);
+//        this.mockMvc.perform(post(Constantes.PATH_TEMPORADA_CREA)
+//                .param("nombre", "test")
+//                .param("fechaInicio", sdf.format(new Date()))
+//                .param("fechaFinal", sdf.format(new Date()))
+//                .sessionAttr(Constantes.SESSION_ASOCIACION, asociacion))
+//                .andExpect(status().isOk())
+//                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+//                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "temporada.creada.message"));
+//    }
 
     @Test
     public void debieraActualizarTemporada() throws Exception {
