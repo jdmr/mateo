@@ -1,7 +1,9 @@
 <%-- 
     Document   : index
-    Created on : 13-feb-2012, 10:44:12
-    Author     : AMDA
+
+    Created on : 18-feb-2013, 11:58:37
+    Author     : semdariobarbaamaya
+
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -27,4 +29,5 @@
         </c:if>
 
     </body>
+
 </html>

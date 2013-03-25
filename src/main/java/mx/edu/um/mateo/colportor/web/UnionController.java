@@ -51,7 +51,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author wilbert
  */
 @Controller
-@RequestMapping(Constantes.PATH_UNION)
+@RequestMapping("/colportaje/union")
 public class UnionController extends BaseController {
 
     @Autowired

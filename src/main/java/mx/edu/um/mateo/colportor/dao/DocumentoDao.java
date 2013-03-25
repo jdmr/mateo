@@ -8,6 +8,8 @@ import mx.edu.um.mateo.colportor.model.Documento;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Disjunction;
@@ -61,13 +63,15 @@ public class DocumentoDao {
         if (!params.containsKey(Constantes.CONTAINSKEY_OFFSET)) {
             params.put(Constantes.CONTAINSKEY_OFFSET, 0);
         }
-        Criteria criteria = currentSession().createCriteria(Documento.class);
-        log.debug("criteria"+criteria);
-        Criteria countCriteria = currentSession().createCriteria(Documento.class);
+        
+        Criteria criteria = currentSession().createCriteria(Documento.class)
+                .setFetchMode("temporadaColportor", FetchMode.SELECT);
+        Criteria countCriteria = currentSession().createCriteria(Documento.class)
+                .setFetchMode("temporadaColportor", FetchMode.SELECT);;
 
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
             String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);
-            filtro = "%" + filtro + "%";
+            filtro = "%" + filtro + "%";            
             Disjunction propiedades = Restrictions.disjunction();
             propiedades.add(Restrictions.ilike("tipoDeDocumento", filtro));
             propiedades.add(Restrictions.ilike("folio", filtro));

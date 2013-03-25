@@ -54,7 +54,10 @@
                             <jsp:param name="columna" value="nombre" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="apellido" />
+                            <jsp:param name="columna" value="apPaterno" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="apMaterno" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="correo" />
@@ -67,7 +70,8 @@
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/admin/usuario/ver/${usuario.id}' />">${usuario.username}</a></td>
                             <td>${usuario.nombre}</td>
-                            <td>${usuario.apellido}</td>
+                            <td>${usuario.apPaterno}</td>
+                            <td>${usuario.apMaterno}</td>
                             <td>${usuario.correo}</td>
                             <td>${usuario.empresa.nombre}</td>
                         </tr>

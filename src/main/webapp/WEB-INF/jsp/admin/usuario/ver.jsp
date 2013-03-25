@@ -51,10 +51,16 @@
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span8">
-                        <h4><s:message code="apellido.label" /></h4>
-                        <h3>${usuario.apellido}</h3>
+                        <h4><s:message code="apPaterno.label" /></h4>
+                        <h3>${usuario.apPaterno}</h3>
                     </div>
-                </div>
+                </div>                    
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span8">
+                        <h4><s:message code="apMaterno.label" /></h4>
+                        <h3>${usuario.apMaterno}</h3>
+                    </div>
+                </div>    
 
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span8">

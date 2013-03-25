@@ -27,19 +27,7 @@
                     </div>
                 </form:errors>
 
-                <fieldset>
-                    <s:bind path="empleado.nivelEstudios">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="nombre">
-                                <s:message code="nivelEstudios.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:select id="nivelEstudios" path="nivelEstudios" required="true" cssClass="span3" >
-                                <form:options items="${nivelEstudiosList}" />
-                            </form:select>
-                            <form:errors path="nivelEstudios" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+                <fieldset>                    
                     <s:bind path="empleado.nombre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombre">

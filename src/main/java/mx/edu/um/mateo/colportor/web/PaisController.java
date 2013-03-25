@@ -54,10 +54,10 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 /**
  *
- * @author gibrandemetrioo
+ * @author osoto
  */
 @Controller
-@RequestMapping(Constantes.PATH_PAIS)
+@RequestMapping("/colportaje/pais")
 public class PaisController {
     private static final Logger log = (Logger) LoggerFactory.getLogger(PaisController.class);
     @Autowired
@@ -136,8 +136,9 @@ public class PaisController {
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
-        return Constantes.PATH_PAIS_LISTA;
+        return "/colportaje/pais/lista";
         }
+    
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando Pais {}", id);
@@ -150,7 +151,7 @@ public class PaisController {
         log.debug("Nueva Pais");
         Pais paises = new Pais();
         modelo.addAttribute(Constantes.ADDATTRIBUTE_PAIS, paises);
-        return Constantes.PATH_PAIS_NUEVA;
+        return "/colportaje/pais/nueva";
     }
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
