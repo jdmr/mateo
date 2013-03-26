@@ -182,11 +182,12 @@ public class InstitucionControllerTest extends BaseTest{
         institucion.setStatus("A");
         instance.graba(institucion);
         assertNotNull(institucion.getId());
-
+        assertEquals("Nombre-test", institucion.getNombre());
+        
         this.mockMvc.perform(post(Constantes.PATH_INSTITUCION_GRABA)
                 .param("nombre", "TEST-1")
                 .param("status", "A")
-                .param("porcentaje", "test-%")
+                .param("porcentaje", "123")
                 .param("id", institucion.getId().toString())
                 .param("version", institucion.getVersion().toString()))
                 .andExpect(status().isOk())
