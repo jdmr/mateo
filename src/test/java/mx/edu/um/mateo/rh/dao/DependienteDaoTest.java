@@ -299,9 +299,9 @@ public class DependienteDaoTest {
         Dependiente dependiente = new Dependiente();
         dependiente.setTipoDependiente(TipoDependiente.HIJO);
         dependiente.setEmpleado(empleado);
-        dependiente.setStatus("A");
+        dependiente.setStatus("A"); 
         dependiente.setNombre("test");
-        dependienteDao.graba(dependiente);
+        dependienteDao.graba(dependiente); 
         assertNotNull(dependiente.getId());
         String tipo=dependienteDao.elimina(dependiente.getId());
         assertNotNull(tipo);

@@ -15,28 +15,28 @@ import mx.edu.um.mateo.rh.model.EmpleadoPuesto;
 public interface EmpleadoPuestoDao {
 
      /**
-     * Regresa una lista de empleadopuesto.
-     * @param empleadopuesto
+     * Regresa una lista de empleadoPuesto.
+     * @param empleadoPuesto
      * @return 
      */
     public Map<String, Object> lista (Map<String, Object> params);
 
     /**
-     * Obtiene una empleadopuesto
+     * Obtiene una empleadoPuesto
      * @param id
      * @return 
      */
     public EmpleadoPuesto obtiene(final Long id);
 
     /**
-     * Guarda la informacion de empleadopuesto
-     * @param empleadopuesto el objeto que sera guardado
+     * Guarda la informacion de empleadoPuesto
+     * @param empleadoPuesto el objeto que sera guardado
      */    
-    public void graba(EmpleadoPuesto empleadopuesto, Usuario usuario);
+    public void graba(EmpleadoPuesto empleadoPuesto, Usuario usuario);
 
     /**
      * Borra la categoria de la base de datos mediante el id
-     * @param id id de empleadopuesto
+     * @param id id de empleadoPuesto
      */
     public String elimina(final Long id);
 }

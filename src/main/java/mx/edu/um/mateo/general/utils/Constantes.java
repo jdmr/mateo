@@ -384,6 +384,8 @@ public class Constantes {
 	/**
 	 * The request scope attribute that holds the sobresueldo form.
 	 */
+
+	public static final String EMPLEADOPUESTO_KEY = "empleadoPuesto";
 	public static final String SOBRESUELDO_KEY = "sobresueldoForm";
 	/**
 	 * The request scope attribute that holds the sobresueldo list
@@ -1897,7 +1899,6 @@ public class Constantes {
     /**
      * The request scope attribute that holds the comunicacion form.
      */
-    public static final String EMPLEADOPUESTO_KEY = "empleadoPuestoForm";
     /**
      * The request scope attribute that holds the comunicacion list
      */
@@ -2453,6 +2454,8 @@ public class Constantes {
     public static final String CONTAINSKEY_UNIONES = "uniones";
     public static final String CONTAINSKEY_USUARIOS = "usuarios";
     public static final String CONTAINSKEY_COLEGIOS_COLPORTOR = "colegios";
+    public static final String CONTAINSKEY_TIPOSBECAS = "tiposBecas";
+    public static final String CONTAINSKEY_PAQUETES = "paquetes";
     /**
      * Valores para el los addAttribute para las clases
      */
@@ -2538,7 +2541,32 @@ public class Constantes {
     public static final String PATH_PERDED_NUEVO = "/rh/perded/nuevo";
     public static final String PATH_PERDED_EDITA = "/rh/perded/edita";
     public static final String PATH_PERDED_GRABA = "/rh/perded/graba";
-
+    
+    public static final String PATH_EMPLEADOPUESTO = "/rh/empleadoPuesto";
+    public static final String PATH_EMPLEADOPUESTO_LISTA = "/rh/empleadoPuesto/lista";
+    public static final String PATH_EMPLEADOPUESTO_VER = "/rh/empleadoPuesto/ver";
+    public static final String PATH_EMPLEADOPUESTO_NUEVO = "/rh/empleadoPuesto/nuevo";
+    public static final String PATH_EMPLEADOPUESTO_EDITA = "/rh/empleadoPuesto/edita";
+    
+    public static final String CONTAINSKEY_PERIODOS = "periodos";
+    
+    public static final String PATH_PERIODOS = "/inscripciones/periodos";
+    public static final String PATH_PERIODOS_LISTA = "inscripciones/periodos/lista";
+    public static final String PATH_PERIODOS_VER = "inscripciones/periodos/ver";
+    public static final String PATH_PERIODOS_NUEVO = "/inscripciones/periodos/nuevo";
+    public static final String PATH_PERIODOS_EDITA = "/inscripciones/periodos/edita";
+    public static final String PATH_PERIODOS_GRABA = "/inscripciones/periodos/graba";
+    public static final String PATH_PERIODOS_CREA = "/inscripciones/periodos/crea";
+    
+    public static final String CONTAINSKEY_INSTITUCION = "instituciones";
+    
+    public static final String PATH_INSTITUCION = "/inscripciones/instituciones";
+    public static final String PATH_INSTITUCION_LISTA = "inscripciones/instituciones/lista";
+    public static final String PATH_INSTITUCION_VER = "inscripciones/instituciones/ver";
+    public static final String PATH_INSTITUCION_NUEVO = "/inscripciones/instituciones/nueva";
+    public static final String PATH_INSTITUCION_EDITA = "/inscripciones/instituciones/edita";
+    public static final String PATH_INSTITUCION_GRABA = "/inscripciones/instituciones/graba";
+    public static final String PATH_INSTITUCION_CREA = "/inscripciones/instituciones/crea";
     
     public static final String PATH_TIPOEMPLEADO = "/rh/tipoEmpleado";
     public static final String PATH_TIPOEMPLEADO_LISTA = "/rh/tipoEmpleado/lista";
@@ -2727,4 +2755,48 @@ public class Constantes {
     public static final String OBJETIVO = "Objetivo";
     public static final String ALCANZADO = "Alcanzado";
     public static final String FIDELIDAD = "Fidelidad";
+    /**
+     * Valores para Tipos de beca
+     *
+     */
+    public static final String PATH_TIPOSBECAS = "/inscripciones/tiposBecas";
+    public static final String PATH_TIPOSBECAS_LISTA = "/inscripciones/tiposBecas/lista";
+    public static final String PATH_TIPOSBECAS_VER = "/inscripciones/tiposBecas/ver";
+    public static final String PATH_TIPOSBECAS_NUEVO = "/inscripciones/tiposBecas/nuevo";
+    public static final String PATH_TIPOSBECAS_EDITA = "/inscripciones/tiposBecas/edita";
+    public static final String PATH_TIPOSBECAS_GRABA = "/inscripciones/tiposBecas/graba";
+    public static final String PATH_TIPOSBECAS_ACTUALIZA = "/inscripciones/tiposBecas/actualiza";
+    public static final String PATH_TIPOSBECAS_ELIMINA = "/inscripciones/tiposBecas/elimina";
+    public static final String ADDATTRIBUTE_TIPOSBECAS = "tipoBeca";
+    /**
+     * Valores para Paquete
+     *
+     */
+    public static final String PATH_PAQUETE = "/inscripciones/paquete";
+    public static final String PATH_PAQUETE_LISTA = "/inscripciones/paquete/lista";
+    public static final String PATH_PAQUETE_VER = "/inscripciones/paquete/ver";
+    public static final String PATH_PAQUETE_NUEVO = "/inscripciones/paquete/nuevo";
+    public static final String PATH_PAQUETE_EDITA = "/inscripciones/paquete/edita";
+    public static final String PATH_PAQUETE_GRABA = "/inscripciones/paquete/graba";
+    public static final String PATH_PAQUETE_ACTUALIZA = "/inscripciones/paquete/actualiza";
+    public static final String PATH_PAQUETE_ELIMINA = "/inscripciones/paquete/elimina";
+    public static final String ADDATTRIBUTE_PAQUETE = "paquete";
+    /**
+     * Valores para Prorroga
+     *
+     */
+    public static final String CONTAINSKEY_PRORROGAS = "prorrogas";
+    /**
+     * Valores para Tipos de beca
+     *
+     */
+    public static final String PATH_PRORROGA = "/inscripciones/prorroga";
+    public static final String PATH_PRORROGA_LISTA = "/inscripciones/prorroga/lista";
+    public static final String PATH_PRORROGA_VER = "/inscripciones/prorroga/ver";
+    public static final String PATH_PRORROGA_NUEVO = "/inscripciones/prorroga/nuevo";
+    public static final String PATH_PRORROGA_EDITA = "/inscripciones/prorroga/edita";
+    public static final String PATH_PRORROGA_GRABA = "/inscripciones/prorroga/graba";
+    public static final String PATH_PRORROGA_ACTUALIZA = "/inscripciones/prorroga/actualiza";
+    public static final String PATH_PRORROGA_ELIMINA = "/inscripciones/prorroga/elimina";
+    public static final String ADDATTRIBUTE_PRORROGA = "prorroga";
 }
