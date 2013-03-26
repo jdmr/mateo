@@ -93,7 +93,7 @@ public class TemporadaController {
         //filtrar temporadas por asociacion
 
         Map<String, Object> params = new HashMap<>();
-        //params.put(Constantes.SESSION_ASOCIACION, ((Asociacion) request.getSession().getAttribute(Constantes.SESSION_ASOCIACION)));
+        params.put(Constantes.SESSION_ASOCIACION, ((Asociacion) request.getSession().getAttribute(Constantes.SESSION_ASOCIACION)));
 
 
         if (StringUtils.isNotBlank(filtro)) {
@@ -224,8 +224,8 @@ public class TemporadaController {
 
         try {
             log.debug("Temporada FEcha Inicio" + temporada.getFechaInicio());
-            //temporada.setAsociacion((Asociacion)request.getSession().getAttribute(Constantes.SESSION_ASOCIACION));
-            temporada.setAsociacion(asociacionDao.obtiene(temporada.getAsociacion().getId()));
+            temporada.setAsociacion((Asociacion)request.getSession().getAttribute(Constantes.SESSION_ASOCIACION));
+            
             log.debug("Temporada FEcha Inicio" + temporada.getFechaFinal());
             temporada = temporadaDao.crea(temporada);
         } catch (ConstraintViolationException e) {
