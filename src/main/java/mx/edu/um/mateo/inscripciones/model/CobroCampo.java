@@ -33,19 +33,23 @@ public class CobroCampo {
     private Long id;
     @Version
     private Integer version;
-    @Column
+    @Column(name = "matricula")
     @NotNull
     private String matricula;
+    @Column(name = "status")
+    private String status;
+    @Column(name = "institucion_id")
     @ManyToOne(optional = false)
     private Institucion institucion;
-    @Column(nullable = false, length = 8)
+    @Column(nullable = false, length = 8, name = "importe_matricula")
     private Double importeMatricula;
-    @Column(nullable = false, length = 8)
+    @Column(nullable = false, length = 8, name = "importe_enzenanza")
     private Double importeEnsenanza;
-    @Column(nullable = false, length = 8)
+    @Column(nullable = false, length = 8, name = "importe_internado")
     private Double importeInternado;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
+    @Column(name = "fecha")
     private Date fechaAlta;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
@@ -60,16 +64,15 @@ public class CobroCampo {
     public CobroCampo() {
     }
 
-    public CobroCampo(String matricula, Institucion institucion, Double importeMatricula, 
-                        Double importeEnsenanza, Double importeInternado) {
+    public CobroCampo(String matricula, Institucion institucion, Double importeMatricula,
+            Double importeEnsenanza, Double importeInternado) {
         this.matricula = matricula;
         this.institucion = institucion;
         this.importeMatricula = importeMatricula;
         this.importeEnsenanza = importeEnsenanza;
         this.importeInternado = importeInternado;
     }
-    
-    
+
     public Long getId() {
         return id;
     }
@@ -164,6 +167,14 @@ public class CobroCampo {
 
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
