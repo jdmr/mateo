@@ -833,33 +833,6 @@ public class Constantes {
 	 * Id del concepto de beca
 	 */
 	public static final Integer CONCEPTO_BECA_ID = new Integer(34);
-	/**
-    public static final String ABIERTA = "ABIERTA";
-    public static final String PENDIENTE = "PENDIENTE";
-    public static final String CERRADA = "CERRADA";
-    public static final String FACTURADA = "FACTURADA";
-    public static final String CANCELADA = "CANCELADA";
-    public static final String CREAR = "CREAR";
-    public static final String ACTUALIZAR = "ACTUALIZAR";
-    public static final String ELIMINAR = "ELIMINAR";
-    public static final String CANCELAR = "CANCELAR";
-    public static final String ADMIN = "ADMIN";
-    public static final String ORG = "ORG";
-    public static final String EMP = "EMP";
-    public static final String ALM = "ALM";
-    public static final String BAJA = "BAJA";
-    public static final String IMAGEN = "IMAGEN";
-    public static final String REUBICACION = "REUBICACION";
-    public static final String DEVOLUCION = "DEVOLUCION";
-    public static final String SYSTEM_CONSTANTS = "systemConstants";
-    // Errores
-    public static final String INVALIDSESSION = "Se detectaron datos invalidos.  Favor de salir del sistema y volver a ingresar su clave de usuario y password.";
-    // Formato de fecha
-    public static final String DATE_JAVA_FORMAT = "dd-MM-yyyy";
-    public static final String DATE_USER_FORMAT = "(dd-mm-yyyy)";
-<<<<<<< HEAD
-    public static final StriSng NOW = "now";
-    S
     /**
      *
      */
@@ -937,7 +910,7 @@ public class Constantes {
     /**
      * The request scope attribute that holds the tipoEmpleado form.
      */
-    public static final String TIPOEMPLEADO_KEY = "tipoEmpleadoForm";
+    public static final String TIPOEMPLEADO_KEY = "tipoEmpleado";
     /**
      * The request scope attribute that holds the tipoEmpleado list
      */
@@ -1945,11 +1918,11 @@ public class Constantes {
     public static final String CLIENTECOLPORTOR_LIST = "clienteColportorList";
     // ClienteColportor-END
     // SolicitudPermiso-START
-    public static final String SESSION_TEMPORADA_COLPORTOR = "temporadaColportor";
     /**
      * The request scope attribute that holds the solicitudPermiso form.
      */
     public static final String SOLICITUDPERMISO_KEY = "solicitudPermisoForm";
+    public static final String SESSION_TEMPORADA_COLPORTOR = "temporadaColportor";
     /**
      * The request scope attribute that holds the solicitudPermiso list
      */
@@ -2004,7 +1977,7 @@ public class Constantes {
     public static final String NIVELESTUDIOS_LIST = "nivelEstudiosList";
     // NivelEstudios-END
     // EmpleadoEstudios-START
-    public static final String EMPLEADOESTUDIOS_KEY = "empleadoEstudios";
+    public static final String EMPLEADOESTUDIOS_KEY = "empleadoEstudiosForm";
     public static final String EMPLEADOESTUDIOS_LIST = "empleadoEstudiosList";
     // EmpleadoEstudios-END
     // EmpleadoEventos-START
@@ -2301,10 +2274,118 @@ public class Constantes {
     public static final String NOMINA_PARAMGRAL_LIST = "nominaParamGralList";
     public static final String NOMINA_PARAMGRAL_PPTO_GASTOS = "nominaPptoGastos";
     public static final String NOMINA_PARAMGRAL_PPTO_AGUA = "nominaPptoAgua";
-    // Constantes de la session
+    // NominaParamGral - END
     /**
-     * Variable en session donde se guarda la Union Actual de Usuario
+     * Valores para el constructor de Locale
      */
+    /**
+     * Formato (yyyy-MM-dd) de la fecha en el cual el mes se representa
+     * numericamente.
+     */
+    /**
+     * Formato (dd/MM/yyyy) de la fecha en el cual el mes se representa
+     * numericamente
+     */
+    /**
+     * Formato (dd/MM/yyyy hh:mm) de la fecha en el cual el mes se representa
+     * numericamente incluyendo la hora:minutos:segundos am/pm
+     */
+    /**
+     * Se utiliza para informar al usuario el formato de fecha esperado
+     */
+    /**
+     * Formato (dd/MMM/yyyy) de la fecha en el cual el mes se representa en
+     * palabra
+     */
+    /**
+     * Formato (dd de MMMMM de yyyy) de la fecha en la cual el mes es completo
+     */
+    /**
+     * Valores para el los containsKey
+     */
+    public static final String CONTAINSKEY_MAX = "max";
+    public static final String CONTAINSKEY_PAGINA = "pagina";
+    public static final String CONTAINSKEY_PAGINAS = "paginas";
+    public static final String CONTAINSKEY_PAGINACION = "paginacion";
+    public static final String CONTAINSKEY_OFFSET = "offset";
+    public static final String CONTAINSKEY_FILTRO = "filtro";
+    public static final String CONTAINSKEY_ORDER = "order";
+    public static final String CONTAINSKEY_SORT = "sort";
+    public static final String CONTAINSKEY_DESC = "desc";
+    public static final String CONTAINSKEY_REPORTE = "reporte";
+    public static final String CONTAINSKEY_CANTIDAD = "cantidad";
+    public static final String CONTAINSKEY_MESSAGE = "message";
+    public static final String CONTAINSKEY_MESSAGE_ATTRS = "messageAttrs";
+    public static final String CONTAINSKEY_ORGANIZACION = "organizacion";
+    /**
+     * Valores para el los containsKey para las clases
+     */
+    public static final String CONTAINSKEY_MAYORES = "mayores";
+    public static final String CONTAINSKEY_EMPLEADOS = "empleados";
+    public static final String CONTAINSKEY_RESULTADOS = "resultados";
+    public static final String CONTAINSKEY_AUXILIARES = "auxiliares";
+    public static final String CONTAINSKEY_LIBROS = "libros";
+    /**
+     * Valores para el los addAttribute para las clases
+     */
+    // Valores para el los addAttribute para las clases
+    public static final String ADDATTRIBUTE_MAYOR = "mayor";
+    public static final String ADDATTRIBUTE_EMPLEADO = "empleado";
+    public static final String ADDATTRIBUTE_RESULTADO = "resultado";
+    public static final String ADDATTRIBUTE_AUXILIAR = "auxiliar";
+    public static final String ADDATTRIBUTE_LIBRO = "libro";
+    /**
+     * Valores para el los path's para las clases
+     */
+    public static final String PATH_CUENTA_MAYOR = "/contabilidad/mayor";
+    public static final String PATH_CUENTA_MAYOR_LISTA = "/contabilidad/mayor/lista";
+    public static final String PATH_CUENTA_MAYOR_VER = "/contabilidad/mayor/ver";
+    public static final String PATH_CUENTA_MAYOR_NUEVA = "/contabilidad/mayor/nueva";
+    public static final String PATH_CUENTA_MAYOR_EDITA = "/contabilidad/mayor/edita";
+    public static final String PATH_CUENTA_MAYOR_CREA = "/contabilidad/mayor/crea";
+    public static final String PATH_CUENTA_MAYOR_ACTUALIZA = "/contabilidad/mayor/actualiza";
+    public static final String PATH_CUENTA_MAYOR_ELIMINA = "/contabilidad/mayor/elimina";
+    public static final String PATH_EMPLEADO = "/rh/empleado";
+    public static final String PATH_EMPLEADO_LISTA = "/rh/empleado/lista";
+    public static final String PATH_EMPLEADO_VER = "/rh/empleado/ver";
+    public static final String PATH_EMPLEADO_NUEVO = "/rh/empleado/nuevo";
+    public static final String PATH_EMPLEADO_EDITA = "/rh/empleado/edita";
+    public static final String PATH_EMPLEADO_CREA = "/rh/empleado/crea";
+    public static final String PATH_EMPLEADO_ACTUALIZA = "/rh/empleado/actualiza";
+    public static final String PATH_EMPLEADO_ELIMINA = "/rh/empleado/elimina";
+    public static final String PATH_CUENTA_RESULTADO = "/contabilidad/resultado";
+    public static final String PATH_CUENTA_RESULTADO_LISTA = "/contabilidad/resultado/lista";
+    public static final String PATH_CUENTA_RESULTADO_VER = "/contabilidad/resultado/ver";
+    public static final String PATH_CUENTA_RESULTADO_NUEVA = "/contabilidad/resultado/nueva";
+    public static final String PATH_CUENTA_RESULTADO_EDITA = "/contabilidad/resultado/edita";
+    public static final String PATH_CUENTA_RESULTADO_CREA = "/contabilidad/resultado/crea";
+    public static final String PATH_CUENTA_RESULTADO_ACTUALIZA = "/contabilidad/resultado/actualiza";
+    public static final String PATH_CUENTA_RESULTADO_ELIMINA = "/contabilidad/resultado/elimina";
+    public static final String PATH_CUENTA_AUXILIAR = "/contabilidad/auxiliar";
+    public static final String PATH_CUENTA_AUXILIAR_LISTA = "/contabilidad/auxiliar/lista";
+    public static final String PATH_CUENTA_AUXILIAR_VER = "/contabilidad/auxiliar/ver";
+    public static final String PATH_CUENTA_AUXILIAR_NUEVA = "/contabilidad/auxiliar/nueva";
+    public static final String PATH_CUENTA_AUXILIAR_EDITA = "/contabilidad/auxiliar/edita";
+    public static final String PATH_CUENTA_AUXILIAR_CREA = "/contabilidad/auxiliar/crea";
+    public static final String PATH_CUENTA_AUXILIAR_ACTUALIZA = "/contabilidad/auxiliar/actualiza";
+    public static final String PATH_CUENTA_AUXILIAR_ELIMINA = "/contabilidad/auxiliar/elimina";
+    public static final String PATH_CUENTA_LIBRO = "/contabilidad/libro";
+    public static final String PATH_CUENTA_LIBRO_LISTA = "/contabilidad/libro/lista";
+    public static final String PATH_CUENTA_LIBRO_VER = "/contabilidad/libro/ver";
+    public static final String PATH_CUENTA_LIBRO_NUEVA = "/contabilidad/libro/nueva";
+    public static final String PATH_CUENTA_LIBRO_EDITA = "/contabilidad/libro/edita";
+    public static final String PATH_CUENTA_LIBRO_CREA = "/contabilidad/libro/crea";
+    public static final String PATH_CUENTA_LIBRO_ACTUALIZA = "/contabilidad/libro/actualiza";
+    public static final String PATH_CUENTA_LIBRO_ELIMINA = "/contabilidad/libro/elimina";
+    //Puesto-START
+    /**
+     * The request scope attribute that holds the puesto form.
+     */
+    public static final String PUESTO_FORM = "puestoForm";
+    /**
+     * The request scope attribute that holds the puesto list
+     */
+    //Puesto-END
     
 	// NominaParamGral - END
         /**
@@ -2336,29 +2417,6 @@ public class Constantes {
 	/**
 	 * Valores para el los containsKey
 	 */
-	public static final String CONTAINSKEY_MAX = "max";
-	public static final String CONTAINSKEY_PAGINA = "pagina";
-	public static final String CONTAINSKEY_PAGINAS = "paginas";
-	public static final String CONTAINSKEY_PAGINACION = "paginacion";
-	public static final String CONTAINSKEY_OFFSET = "offset";
-	public static final String CONTAINSKEY_FILTRO = "filtro";
-	public static final String CONTAINSKEY_ORDER = "order";
-	public static final String CONTAINSKEY_SORT = "sort";
-	public static final String CONTAINSKEY_DESC = "desc";
-	public static final String CONTAINSKEY_REPORTE = "reporte";
-	public static final String CONTAINSKEY_CANTIDAD = "cantidad";
-	public static final String CONTAINSKEY_MESSAGE = "message";
-	public static final String CONTAINSKEY_MESSAGE_ATTRS = "messageAttrs";
-	public static final String CONTAINSKEY_ORGANIZACION = "organizacion";
-	
-	/**
-	 * Valores para el los containsKey para las clases
-	 */
-	public static final String CONTAINSKEY_MAYORES = "mayores";
-	public static final String CONTAINSKEY_EMPLEADOS = "empleados";
-	public static final String CONTAINSKEY_RESULTADOS = "resultados";
-	public static final String CONTAINSKEY_AUXILIARES = "auxiliares";
-	public static final String CONTAINSKEY_LIBROS = "libros";
         public static final String CONTAINSKEY_DESCUENTO = "descuento";
 	/**
 	 * Valores para el los addAttribute para las clases
@@ -2366,70 +2424,6 @@ public class Constantes {
 
 	// Valores para el los addAttribute para las clases
 
-	public static final String ADDATTRIBUTE_MAYOR = "mayor";
-	public static final String ADDATTRIBUTE_EMPLEADO = "empleado";
-	public static final String ADDATTRIBUTE_RESULTADO = "resultado";
-	public static final String ADDATTRIBUTE_AUXILIAR = "auxiliar";
-	public static final String ADDATTRIBUTE_LIBRO = "libro";
-
-	/**
-	 * Valores para el los path's para las clases
-	 */
-	public static final String PATH_CUENTA_MAYOR = "/contabilidad/mayor";
-	public static final String PATH_CUENTA_MAYOR_LISTA = "/contabilidad/mayor/lista";
-	public static final String PATH_CUENTA_MAYOR_VER = "/contabilidad/mayor/ver";
-	public static final String PATH_CUENTA_MAYOR_NUEVA = "/contabilidad/mayor/nueva";
-	public static final String PATH_CUENTA_MAYOR_EDITA = "/contabilidad/mayor/edita";
-	public static final String PATH_CUENTA_MAYOR_CREA = "/contabilidad/mayor/crea";
-	public static final String PATH_CUENTA_MAYOR_ACTUALIZA = "/contabilidad/mayor/actualiza";
-	public static final String PATH_CUENTA_MAYOR_ELIMINA = "/contabilidad/mayor/elimina";
-	public static final String PATH_EMPLEADO = "/rh/empleado";
-	public static final String PATH_EMPLEADO_LISTA = "/rh/empleado/lista";
-	public static final String PATH_EMPLEADO_VER = "/rh/empleado/ver";
-	public static final String PATH_EMPLEADO_NUEVO = "/rh/empleado/nuevo";
-	public static final String PATH_EMPLEADO_EDITA = "/rh/empleado/edita";
-	public static final String PATH_EMPLEADO_CREA = "/rh/empleado/crea";
-	public static final String PATH_EMPLEADO_ACTUALIZA = "/rh/empleado/actualiza";
-	public static final String PATH_EMPLEADO_ELIMINA = "/rh/empleado/elimina";
-        
-	public static final String PATH_CUENTA_RESULTADO = "/contabilidad/resultado";
-	public static final String PATH_CUENTA_RESULTADO_LISTA = "/contabilidad/resultado/lista";
-	public static final String PATH_CUENTA_RESULTADO_VER = "/contabilidad/resultado/ver";
-	public static final String PATH_CUENTA_RESULTADO_NUEVA = "/contabilidad/resultado/nueva";
-	public static final String PATH_CUENTA_RESULTADO_EDITA = "/contabilidad/resultado/edita";
-	public static final String PATH_CUENTA_RESULTADO_CREA = "/contabilidad/resultado/crea";
-	public static final String PATH_CUENTA_RESULTADO_ACTUALIZA = "/contabilidad/resultado/actualiza";
-	public static final String PATH_CUENTA_RESULTADO_ELIMINA = "/contabilidad/resultado/elimina";
-	public static final String PATH_CUENTA_AUXILIAR = "/contabilidad/auxiliar";
-	public static final String PATH_CUENTA_AUXILIAR_LISTA = "/contabilidad/auxiliar/lista";
-	public static final String PATH_CUENTA_AUXILIAR_VER = "/contabilidad/auxiliar/ver";
-	public static final String PATH_CUENTA_AUXILIAR_NUEVA = "/contabilidad/auxiliar/nueva";
-	public static final String PATH_CUENTA_AUXILIAR_EDITA = "/contabilidad/auxiliar/edita";
-	public static final String PATH_CUENTA_AUXILIAR_CREA = "/contabilidad/auxiliar/crea";
-	public static final String PATH_CUENTA_AUXILIAR_ACTUALIZA = "/contabilidad/auxiliar/actualiza";
-	public static final String PATH_CUENTA_AUXILIAR_ELIMINA = "/contabilidad/auxiliar/elimina";
-	public static final String PATH_CUENTA_LIBRO = "/contabilidad/libro";
-	public static final String PATH_CUENTA_LIBRO_LISTA = "/contabilidad/libro/lista";
-	public static final String PATH_CUENTA_LIBRO_VER = "/contabilidad/libro/ver";
-	public static final String PATH_CUENTA_LIBRO_NUEVA = "/contabilidad/libro/nueva";
-	public static final String PATH_CUENTA_LIBRO_EDITA = "/contabilidad/libro/edita";
-	public static final String PATH_CUENTA_LIBRO_CREA = "/contabilidad/libro/crea";
-	public static final String PATH_CUENTA_LIBRO_ACTUALIZA = "/contabilidad/libro/actualiza";
-	public static final String PATH_CUENTA_LIBRO_ELIMINA = "/contabilidad/libro/elimina";
-        
-        //Puesto-START
-        /**
-         * The request scope attribute that holds the puesto form.
-         */
-        public static final String PUESTO_FORM = "puestoForm";
-
-        /**
-         * The request scope attribute that holds the puesto list
-         */
-        //Puesto-END
-
-   
-    
     // NominaParamGral - END
     /**
      * Valores para el constructor de Locale
@@ -2456,7 +2450,6 @@ public class Constantes {
     /**
      * Formato (dd de MMMMM de yyyy) de la fecha en la cual el mes es completo
      */
-    
     /**
      * Valores para el los containsKey para las clases
      */
@@ -2469,7 +2462,6 @@ public class Constantes {
     public static final String ADDATTRIBUTE_NOMBRE = "nombre";
     public static final String ADDATTRIBUTE_ASOCIACION = "asociacion";
     public static final String ADDATTRIBUTE_ASOCIADO = "asociado";
-    
     /**
      * The request scope attribute that holds the puesto list
      */
@@ -2525,7 +2517,6 @@ public class Constantes {
     public static final String PATH_DEPENDIENTE_CREA = "/rh/dependiente/crea";
     public static final String PATH_DEPENDIENTE_ACTUALIZA = "/rh/dependiente/actualiza";
     public static final String PATH_DEPENDIENTE_ELIMINA = "/rh/dependiente/elimina";
-    
     public static final String PATH_ESTUDIOSEMPLEADO = "/rh/estudiosEmpleado";
     public static final String PATH_ESTUDIOSEMPLEADO_LISTA = "/rh/estudiosEmpleado/lista";
     public static final String PATH_ESTUDIOSEMPLEADO_VER = "/rh/estudiosEmpleado/ver";
@@ -2587,15 +2578,12 @@ public class Constantes {
     public static final String PATH_PERDED_NUEVO = "/rh/perded/nuevo";
     public static final String PATH_PERDED_EDITA = "/rh/perded/edita";
     public static final String PATH_PERDED_GRABA = "/rh/perded/graba";
-    
     public static final String PATH_EMPLEADOPUESTO = "/rh/empleadoPuesto";
     public static final String PATH_EMPLEADOPUESTO_LISTA = "/rh/empleadoPuesto/lista";
     public static final String PATH_EMPLEADOPUESTO_VER = "/rh/empleadoPuesto/ver";
     public static final String PATH_EMPLEADOPUESTO_NUEVO = "/rh/empleadoPuesto/nuevo";
     public static final String PATH_EMPLEADOPUESTO_EDITA = "/rh/empleadoPuesto/edita";
-    
     public static final String CONTAINSKEY_PERIODOS = "periodos";
-    
     public static final String PATH_PERIODOS = "/inscripciones/periodos";
     public static final String PATH_PERIODOS_LISTA = "inscripciones/periodos/lista";
     public static final String PATH_PERIODOS_VER = "inscripciones/periodos/ver";
@@ -2603,9 +2591,7 @@ public class Constantes {
     public static final String PATH_PERIODOS_EDITA = "/inscripciones/periodos/edita";
     public static final String PATH_PERIODOS_GRABA = "/inscripciones/periodos/graba";
     public static final String PATH_PERIODOS_CREA = "/inscripciones/periodos/crea";
-    
     public static final String CONTAINSKEY_INSTITUCION = "instituciones";
-    
     public static final String PATH_INSTITUCION = "/inscripciones/instituciones";
     public static final String PATH_INSTITUCION_LISTA = "inscripciones/instituciones/lista";
     public static final String PATH_INSTITUCION_VER = "inscripciones/instituciones/ver";
@@ -2613,7 +2599,6 @@ public class Constantes {
     public static final String PATH_INSTITUCION_EDITA = "/inscripciones/instituciones/edita";
     public static final String PATH_INSTITUCION_GRABA = "/inscripciones/instituciones/graba";
     public static final String PATH_INSTITUCION_CREA = "/inscripciones/instituciones/crea";
-    
     public static final String PATH_TIPOEMPLEADO = "/rh/tipoEmpleado";
     public static final String PATH_TIPOEMPLEADO_LISTA = "/rh/tipoEmpleado/lista";
     public static final String PATH_TIPOEMPLEADO_VER = "/rh/tipoEmpleado/ver";
@@ -2622,7 +2607,6 @@ public class Constantes {
     public static final String PATH_TIPOEMPLEADO_CREA = "/rh/tipoEmpleado/crea";
     public static final String PATH_TIPOEMPLEADO_ACTUALIZA = "/rh/tipoEmpleado/actualiza";
     public static final String PATH_TIPOEMPLEADO_ELIMINA = "/rh/tipoEmpleado/elimina";
-
     /**
      * Valores para los Asociacion Colportor
      */
@@ -2897,4 +2881,5 @@ public class Constantes {
     public static final String PATH_DESCUENTO_ACTUALIZA = "/inscripciones/descuento/actualiza";
     public static final String PATH_DESCUENTO_ELIMINA = "/inscripciones/descuento/elimina";
     public static final String ADDATTRIBUTE_DESCUENTO = "descuento"; 
+    public static final String CONTAINSKEY_COBROSCAMPOS = "cobroscampos";
 }
