@@ -44,6 +44,7 @@ import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.utils.ReporteUtil;
+import mx.edu.um.mateo.general.utils.UtilControllerTests;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -81,6 +82,9 @@ public abstract class BaseController {
     protected ReporteUtil reporteUtil;
     @Autowired
     protected ReporteDao reporteDao;
+    
+    @Autowired
+    protected UtilControllerTests utils;
 
     protected void pagina(Map<String, Object> params, Model modelo,
             String lista, Long pagina) {

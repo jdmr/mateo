@@ -125,12 +125,13 @@ public class DocumentoController {
             params.put(Constantes.CONTAINSKEY_ORDER, order);
             params.put(Constantes.CONTAINSKEY_SORT, sort);
         }
+        
+        log.debug("esAsociado {}, esColportor {}, colportorTmp {}", new Object [] {ambiente.esAsociado(), ambiente.esColportor(), request.getSession().getAttribute("colportorTmp")});
         TemporadaColportor temporadaColportorTmp = null;
         if (ambiente.esAsociado() && request.getSession().getAttribute("colportorTmp") == null) {
-//            String clave1 = colportor1.getClave();
             log.debug("Entrando a Documentos como Asociado sin Colportor");
             log.debug("clave" + clave);
-//            log.debug("clave1" + clave1);
+
             if (clave != null && !clave.isEmpty()) {
                 log.debug("clave" + colportorDao.obtiene(clave));
                 Colportor colportor = colportorDao.obtiene(clave);
@@ -140,7 +141,6 @@ public class DocumentoController {
                 request.getSession().setAttribute("temporadaColportorTmp", temporadaColportor);
                 params.put("temporadaColportor", temporadaColportorTmp);
                 log.debug("temporadaColportor" + temporadaColportor);
-
             } else {
                 return Constantes.PATH_DOCUMENTO_LISTA;
             }
@@ -157,13 +157,14 @@ public class DocumentoController {
             log.debug("Entrando a Documentos como Colportor");
 
             Colportor colportor = colportorDao.obtiene(ambiente.obtieneUsuario().getId());
-            log.debug("temporadaId" + request.getParameter("temporadaId"));
+            log.debug("Usuario {}",ambiente.obtieneUsuario());
+            log.debug("Colportor {}",colportor);
+            
             if (request.getParameter("temporadaId") == null) {
-                log.debug("Entrando a Documentos como Colportor con Temporada Activa");
+                log.debug("Entrando a Documentos como Colportor {} con Temporada Activa", colportor);
 
                 temporadaColportorTmp = temporadaColportorDao.obtiene(colportor);
                 params.put("temporadaColportor", temporadaColportorTmp);
-//            log.debug("TemporadaColportor" + temporadaColportorTmp.getId().toString());
             } else {
                 log.debug("Entrando a Documentos como Colportor con Temporada Inactiva");
                 Temporada temporada = temporadaDao.obtiene(Long.parseLong(request.getParameter("temporadaId")));
@@ -194,7 +195,6 @@ public class DocumentoController {
             }
         }
 
-
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = DocumentoDao.lista(params);
@@ -209,9 +209,6 @@ public class DocumentoController {
             }
         }
 
-
-
-
         params = DocumentoDao.lista(params);
         params = temporadaDao.lista(params);
 //        Codigo para Valdiar Pruebas
@@ -220,12 +217,12 @@ public class DocumentoController {
         modelo.addAttribute(Constantes.CONTAINSKEY_TEMPORADAS, params.get(Constantes.CONTAINSKEY_TEMPORADAS));
 
         List<Documento> lista = (List) params.get(Constantes.CONTAINSKEY_DOCUMENTOS);
+        log.debug("Items en lista {}", lista.size());
         Iterator<Documento> iter = lista.iterator();
 
         List<Temporada> listaTemporada = (List) params.get(Constantes.CONTAINSKEY_TEMPORADAS);
 
         Map<String, Object> temporadas = temporadaDao.lista(null);
-        log.debug("Temporadas {}", temporadas.get(Constantes.CONTAINSKEY_TEMPORADAS));
         modelo.addAttribute(Constantes.CONTAINSKEY_TEMPORADAS, temporadas.get(Constantes.CONTAINSKEY_TEMPORADAS));
 
         Documento doc = null;
@@ -236,16 +233,14 @@ public class DocumentoController {
         BigDecimal objetivo = new BigDecimal(temporadaColportorTmp.getObjetivo());
         BigDecimal fidelidad = new BigDecimal("0");
         BigDecimal alcanzado = new BigDecimal("0");
-
-
-
+        
         while (iter.hasNext()) {
-            doc = iter.next();
+            doc = iter.next();            
             switch (doc.getTipoDeDocumento()) {
                 case Constantes.BOLETIN: {
-//                    log.debug("importe {}", doc.getImporte());
+                    log.debug("{} importe {}", doc.getId(), doc.getImporte());
                     totalBoletin = totalBoletin.add(doc.getImporte());
-//                    log.debug("totalBoletin{}" + totalBoletin, totalBoletin);
+                    log.debug("totalBoletin {}", totalBoletin);
                     break;
 
                 }
@@ -258,22 +253,22 @@ public class DocumentoController {
                 }
 
                 case Constantes.DEPOSITO_CAJA: {
-//                    log.debug("importe {}", doc.getImporte());
+                    log.debug("importe {}", doc.getImporte());
                     totalDepositos = totalDepositos.add(doc.getImporte());
-//                   log.debug("totalDepositos {}", totalDepositos);
+                   log.debug("totalDepositos {}", totalDepositos);
                     break;
                 }
 
                 case Constantes.DEPOSITO_BANCO: {
-//                    log.debug("importe {}", doc.getImporte());
+                    log.debug("importe {}", doc.getImporte());
                     totalDepositos = totalDepositos.add(doc.getImporte());
-//                   log.debug("totalDepositos {}", totalDepositos);
+                   log.debug("totalDepositos {}", totalDepositos);
                     break;
                 }
                 case Constantes.NOTAS_DE_COMPRA: {
-//                    log.debug("importe {}", doc.getImporte());
+                    log.debug("importe {}", doc.getImporte());
                     totalDepositos = totalDepositos.add(doc.getImporte());
-//                    log.debug("totalDepositos {}", totalDepositos);
+                    log.debug("totalDepositos {}", totalDepositos);
                     break;
 
                 }
@@ -286,19 +281,18 @@ public class DocumentoController {
         modelo.addAttribute(Constantes.TOTALDIEZMOS, totalDiezmos);
         modelo.addAttribute(Constantes.TOTALDEPOSITOS, totalDepositos);
         modelo.addAttribute(Constantes.OBJETIVO, objetivo);
-        log.debug("diezmos {}", totalDiezmos);
-//        log.debug("boletin", totalBoletin);
+        
         if (objetivo.compareTo(new BigDecimal("0")) > 0) {
+            log.debug("% alcanzado = [totalBoletin {} / objetivo {}] = {}", new Object []{totalBoletin, objetivo, totalBoletin.divide(objetivo, 6, RoundingMode.HALF_EVEN).multiply(new BigDecimal("100"))});
             alcanzado = totalBoletin.divide(objetivo, 6, RoundingMode.HALF_EVEN).multiply(new BigDecimal("100"));
         }
         if (totalBoletin.compareTo(new BigDecimal("0")) > 0) {
+            log.debug("fidelidad = [totalDiezmos {} / totalBoletin {}] = {}");
             fidelidad = totalDiezmos.divide(totalBoletin.movePointLeft(1), 6, RoundingMode.HALF_EVEN).multiply(new BigDecimal("100"));
         }
         modelo.addAttribute(Constantes.ALCANZADO, alcanzado.setScale(2, BigDecimal.ROUND_HALF_EVEN));
         modelo.addAttribute(Constantes.FIDELIDAD, fidelidad.setScale(2, BigDecimal.ROUND_HALF_EVEN));
-        log.debug("fidelidad" + fidelidad);
-
-
+        
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
         Long cantidadDePaginas = cantidad / max;
@@ -308,29 +302,18 @@ public class DocumentoController {
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
+        
         List<Documento> documentos = (List<Documento>) params.get(Constantes.CONTAINSKEY_DOCUMENTOS);
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (documentos.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
+        
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
-        // termina paginado
-        //        Codigo para Valdiar Pruebas
-        log.debug("SizeDocumento" + lista.size());
-        log.debug("SizeTemporada" + listaTemporada.size());
-        modelo.addAttribute("SizeDocumento", lista.size());
-        modelo.addAttribute("SizeTemporada", listaTemporada.size());
-
-        log.debug("clave", temporadaColportorDao.obtiene(temporadaColportorTmp.getId()));
-        log.debug("clave", temporadaColportorDao.obtiene(temporadaColportorTmp.getId()));
-        log.debug("clave", temporadaColportorDao.obtiene(temporadaColportorTmp.getId()).getColportor());
-        log.debug("clave", temporadaColportorDao.obtiene(temporadaColportorTmp.getId()).getColportor().getClave());
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);        
+        modelo.addAttribute(Constantes.CONTAINSKEY_DOCUMENTOS, params.get(Constantes.CONTAINSKEY_DOCUMENTOS));        
         modelo.addAttribute("claveTmp", temporadaColportorDao.obtiene(temporadaColportorTmp.getId()).getColportor().getClave());
-//        temporadaColportorDao.obtiene(temporadaColportorTmp.getId());
-//        request.setAttribute("claveTmp", temporadaColportorTmp.getColportor().getClave());
+        
         return Constantes.PATH_DOCUMENTO_LISTA;
-
-
     }
 
     @RequestMapping("/ver/{id}")
@@ -353,7 +336,8 @@ public class DocumentoController {
 
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Documento documentos, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
+    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Documento documentos, 
+        BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
         Map<String, Object> params = new HashMap<>();
         for (String folio : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", folio, request.getParameterMap().get(folio));
@@ -412,8 +396,8 @@ public class DocumentoController {
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "documento.creado.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{documentos.getFolio()});
-
-        return "redirect:" + Constantes.PATH_DOCUMENTO_VER + "/" + documentos.getId();
+        
+        return "redirect:" + Constantes.PATH_DOCUMENTO_VER+"/"+documentos.getId();
     }
 
     @RequestMapping("/edita/{id}")
@@ -471,7 +455,7 @@ public class DocumentoController {
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "documento.actualizado.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{documentos.getFolio()});
-
+        
         return "redirect:" + Constantes.PATH_DOCUMENTO_VER + "/" + documentos.getId();
     }
 

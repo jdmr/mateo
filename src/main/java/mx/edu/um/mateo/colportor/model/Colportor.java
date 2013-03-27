@@ -39,11 +39,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 @DiscriminatorValue("colportor")
 public class Colportor extends Usuario{
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-//    @Version
-//    private Integer version;
    @Column(  length = 64)
     private String clave;
     @Column( length = 2)
@@ -66,10 +61,6 @@ public class Colportor extends Usuario{
     @DateTimeFormat(pattern=Constantes.DATE_SHORT_HUMAN_PATTERN)
     @Column( name = "fecha_nac")
     private Date fechaDeNacimiento;
-//    private String username;
-//    private String nombre;
-//    private String apellidop;
-//    private String apellidom;
     
    public Colportor(String username, String password, String nombre, String apPaterno, String apMaterno,
            String clave, String status, String telefono, String calle, String colonia, String municipio,

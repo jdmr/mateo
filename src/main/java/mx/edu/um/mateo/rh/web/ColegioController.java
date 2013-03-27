@@ -23,24 +23,17 @@
  */
 package mx.edu.um.mateo.rh.web;
 
-import mx.edu.um.mateo.inventario.web.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.general.utils.ReporteException;
-import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.general.web.BaseController;
-import mx.edu.um.mateo.inventario.dao.AlmacenDao;
-import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.rh.model.Colegio;
 import mx.edu.um.mateo.rh.service.ColegioManager;
 import org.apache.commons.lang.StringUtils;
@@ -59,7 +52,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author AMDA
  */
 @Controller
-@RequestMapping("/rh/colegio")
+@RequestMapping("/colportaje/colegio")
 public class ColegioController extends BaseController {
 
     @Autowired

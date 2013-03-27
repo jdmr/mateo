@@ -54,7 +54,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author gibrandemetrioo
  */
 @Controller
-@RequestMapping(Constantes.PATH_CIUDAD)
+@RequestMapping("/colportaje/ciudad")
 public class CiudadController {
     private static final Logger log = (Logger) LoggerFactory.getLogger(CiudadController.class);
     @Autowired
@@ -217,7 +217,7 @@ public class CiudadController {
             bindingResult.addError(new ObjectError(Constantes.CONTAINSKEY_PAISES, new String[]{"ciudad.no.eliminada.message"}, null, null));
             return Constantes.PATH_CIUDAD_VER;
         }
-        return "redirect:" + Constantes.PATH_CIUDAD;
+        return "redirect:" + Constantes.PATH_CIUDAD_LISTA;
     }
     private void generaReporte(String tipo, List<Ciudad> ciudad, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);

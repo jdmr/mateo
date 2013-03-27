@@ -147,7 +147,7 @@ public class OrganizacionDaoHibernate extends BaseDao implements OrganizacionDao
         Byte x = new Byte("0");
         Ejercicio ejercicio = new Ejercicio(ejercicioPK, idEjercicio.toString(), "A", StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, x, x);
         session.save(ejercicio);
-
+        log.debug("Ejercicio creado {}",ejercicio);
         Empresa empresa = new Empresa("MTZ", "MATRIZ", "MATRIZ",
                 "000000000001", organizacion);
         if (usuario != null) {
