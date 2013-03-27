@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,7 +26,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  */
 @Entity
 @Table(name = "ALUMNO_INSTITUCION")
-public class CobroCampos {
+public class CobroCampo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +34,7 @@ public class CobroCampos {
     @Version
     private Integer version;
     @Column
+    @NotNull
     private String matricula;
     @ManyToOne(optional = false)
     private Institucion institucion;
@@ -48,17 +50,17 @@ public class CobroCampos {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     private Date fechaModificacion;
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Usuario usuarioAlta;
-    @ManyToOne(optional = false)
+    @ManyToOne
     private Usuario usuarioModificacion;
     @ManyToOne(optional = false)
     private Empresa empresa;
 
-    public CobroCampos() {
+    public CobroCampo() {
     }
 
-    public CobroCampos(String matricula, Institucion institucion, Double importeMatricula, 
+    public CobroCampo(String matricula, Institucion institucion, Double importeMatricula, 
                         Double importeEnsenanza, Double importeInternado) {
         this.matricula = matricula;
         this.institucion = institucion;
