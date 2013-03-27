@@ -26,6 +26,7 @@ package mx.edu.um.mateo.colportor.dao;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.colportor.model.TipoColportor;
+import mx.edu.um.mateo.colportor.utils.FaltaAsociacionException;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -47,7 +48,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-
 public class TipoColportorDao extends BaseDao {
 
     @Autowired
@@ -57,7 +57,7 @@ public class TipoColportorDao extends BaseDao {
         log.info("Nueva instancia de TipoColportorDao");
     }    
 
-    public Map<String, Object> lista(Map<String, Object> params) {
+    public Map<String, Object> lista(Map<String, Object> params){
         log.debug("Buscando lista de tipoColportores con params {}", params);
         if (params == null) {
             params = new HashMap<>();
