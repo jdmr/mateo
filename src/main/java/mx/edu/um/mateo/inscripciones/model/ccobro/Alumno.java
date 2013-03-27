@@ -3149,176 +3149,176 @@ public class Alumno implements Constant {
             COMANDO += "FROM enoc.ALUM_PERSONAL ";
             COMANDO += "WHERE CODIGO_PERSONAL = ? ";
             pstmt = conn_enoc.prepareStatement(COMANDO);
-            pstmt.setString(1, this.matricula);
+            pstmt.setString(1, matricula);
             rset = pstmt.executeQuery();
-            
+            log.debug("entrandoo a rset {}", matricula);
             if (rset.next()) {
                 this.nacionalidad = rset.getString("Pais");
-                
+                log.debug("{}",rset.getString("Pais"));
                 if (rset.wasNull()) {
                     this.nacionalidad = "-";
                 }
-                
+                log.debug("{}",nacionalidad);
                 this.nombre = rset.getString("Nombre");
-                
+                log.debug("{}",rset.getString("Nombre"));
                 if (rset.wasNull()) {
-                    throw new UMException("El alumno " + this.matricula +
+                    throw new UMException("El alumno " + matricula +
                             " no tiene capturado un valor de pais valido<br>Favor de contactar al Dpto. de Registo");
                 }
             }
             
             rset.close();
             pstmt.close();
-            
-            //Obtener datos de la tabla Alumno_Academico
-            COMANDO = "SELECT MODALIDAD_ID, TIPO_ALUMNO, SEMESTRE, ";
-            COMANDO += "CLAS_FIN, RESIDENCIA_ID, GRADO ";
-            COMANDO += "FROM enoc.ALUM_ACADEMICO ";
-            COMANDO += "WHERE CODIGO_PERSONAL = ? ";
-            pstmt = conn_enoc.prepareStatement(COMANDO);
-            pstmt.setString(1, this.matricula);
-            rset = pstmt.executeQuery();
-            
-            if (rset.next()) {
-                this.modalidad_id = new Integer(rset.getInt("Modalidad_ID"));
-                
-                if (rset.wasNull()) {
-                    this.modalidad_id = new Integer(0);
-                }
-                
-                this.tAlumno_id = new Integer(rset.getInt("Tipo_Alumno"));
-                
-                if (rset.wasNull()) {
-                    this.tAlumno_id = new Integer(0);
-                }
-                
-                this.religion = rset.getString("Clas_Fin");
-                
-                if (rset.wasNull()) {
-                    this.religion = "-";
-                }
-                
-                this.residencia = rset.getString("Residencia_ID");
-                
-                if (rset.wasNull()) {
-                    this.residencia = "-";
-                }
-                
-                this.semestre = new Integer(rset.getInt("Semestre"));
-                
-                if (rset.wasNull()) {
-                    this.semestre = new Integer(0);
-                }
-                
-                this.grado = new Integer(rset.getInt("Grado"));
-                
-                if (rset.wasNull()) {
-                    this.grado = new Integer(0);
-                }
-            }
-            
-            rset.close();
-            pstmt.close();
-            
-            //Obtener descripcion de modalidad
-            COMANDO = "SELECT NOMBRE_MODALIDAD ";
-            COMANDO += "FROM enoc.CAT_MODALIDAD ";
-            COMANDO += "WHERE MODALIDAD_ID = ? ";
-            pstmt = conn_enoc.prepareStatement(COMANDO);
-            pstmt.setInt(1, this.modalidad_id.intValue());
-            rset = pstmt.executeQuery();
-            
-            if (rset.next()) {
-                this.modalidad = rset.getString("Nombre_Modalidad");
-            }
-            
-            rset.close();
-            pstmt.close();
-            
-            if (this.modalidad == null) {
-                this.modalidad = "-";
-            }
-            
-            //Obtener descripcion de tipo alumno
-            COMANDO = "SELECT NOMBRE_TIPO ";
-            COMANDO += "FROM enoc.CAT_TIPOALUMNO ";
-            COMANDO += "WHERE TIPO_ID = ? ";
-            pstmt = conn_enoc.prepareStatement(COMANDO);
-            pstmt.setInt(1, this.tAlumno_id.intValue());
-            rset = pstmt.executeQuery();
-            
-            if (rset.next()) {
-                this.tAlumno = rset.getString("Nombre_Tipo");
-            }
-            
-            rset.close();
-            pstmt.close();
-            
-            if (this.tAlumno == null) {
-                if (rset.wasNull()) {
-                    this.tAlumno = "-";
-                }
-            }
-            
-            //Obtener Facultad y Carrera
-            COMANDO = "SELECT F.FACULTAD_ID, F.NOMBRE_FACULTAD, ";
-            COMANDO += "C.CARRERA_ID, C.NOMBRE_CARRERA, ";
-            COMANDO += "P.PLAN_ID, MP.NOMBRE_PLAN ";
-            COMANDO += "FROM enoc.ALUM_PLAN P, enoc.MAPA_PLAN MP, ";
-            COMANDO += "enoc.CAT_CARRERA C, enoc.CAT_FACULTAD F ";
-            COMANDO += "WHERE F.FACULTAD_ID = C.FACULTAD_ID ";
-            COMANDO += "AND C.CARRERA_ID = MP.CARRERA_ID ";
-            COMANDO += "AND MP.PLAN_ID = P.PLAN_ID ";
-            COMANDO += "AND P.ESTADO = '1' ";
-            COMANDO += "AND P.CODIGO_PERSONAL = ? ";
-            pstmt = conn_enoc.prepareStatement(COMANDO);
-            pstmt.setString(1, this.matricula);
-            rset = pstmt.executeQuery();
-            
-            if (rset.next()) {
-                this.facultad_id = rset.getString("Facultad_ID");
-                
-                if (rset.wasNull()) {
-                    this.facultad_id = "-";
-                }
-                
-                this.facultad = rset.getString("Nombre_Facultad");
-                
-                if (rset.wasNull()) {
-                    this.facultad = "-";
-                }
-                
-                this.carrera_id = rset.getString("Carrera_ID");
-                
-                if (rset.wasNull()) {
-                    this.carrera_id = "-";
-                }
-                
-                this.carrera = rset.getString("Nombre_Carrera");
-                
-                if (rset.wasNull()) {
-                    this.carrera = "-";
-                }
-                
-                this.plan_id = rset.getString("Plan_ID");
-                
-                if (rset.wasNull()) {
-                    this.plan_id = "-";
-                }
-                
-                this.nombre_plan = rset.getString("Nombre_Plan");
-                
-                if (rset.wasNull()) {
-                    this.nombre_plan = "-";
-                }
-            }
-            
-            rset.close();
-            pstmt.close();
-            
-            if (this.plan_id == null) {
-                this.plan_id = "-";
-            }
+//            
+//            //Obtener datos de la tabla Alumno_Academico
+//            COMANDO = "SELECT MODALIDAD_ID, TIPO_ALUMNO, SEMESTRE, ";
+//            COMANDO += "CLAS_FIN, RESIDENCIA_ID, GRADO ";
+//            COMANDO += "FROM enoc.ALUM_ACADEMICO ";
+//            COMANDO += "WHERE CODIGO_PERSONAL = ? ";
+//            pstmt = conn_enoc.prepareStatement(COMANDO);
+//            pstmt.setString(1, this.matricula);
+//            rset = pstmt.executeQuery();
+//            
+//            if (rset.next()) {
+//                this.modalidad_id = new Integer(rset.getInt("Modalidad_ID"));
+//                
+//                if (rset.wasNull()) {
+//                    this.modalidad_id = new Integer(0);
+//                }
+//                
+//                this.tAlumno_id = new Integer(rset.getInt("Tipo_Alumno"));
+//                
+//                if (rset.wasNull()) {
+//                    this.tAlumno_id = new Integer(0);
+//                }
+//                
+//                this.religion = rset.getString("Clas_Fin");
+//                
+//                if (rset.wasNull()) {
+//                    this.religion = "-";
+//                }
+//                
+//                this.residencia = rset.getString("Residencia_ID");
+//                
+//                if (rset.wasNull()) {
+//                    this.residencia = "-";
+//                }
+//                
+//                this.semestre = new Integer(rset.getInt("Semestre"));
+//                
+//                if (rset.wasNull()) {
+//                    this.semestre = new Integer(0);
+//                }
+//                
+//                this.grado = new Integer(rset.getInt("Grado"));
+//                
+//                if (rset.wasNull()) {
+//                    this.grado = new Integer(0);
+//                }
+//            }
+//            
+//            rset.close();
+//            pstmt.close();
+//            
+//            //Obtener descripcion de modalidad
+//            COMANDO = "SELECT NOMBRE_MODALIDAD ";
+//            COMANDO += "FROM enoc.CAT_MODALIDAD ";
+//            COMANDO += "WHERE MODALIDAD_ID = ? ";
+//            pstmt = conn_enoc.prepareStatement(COMANDO);
+//            pstmt.setInt(1, this.modalidad_id.intValue());
+//            rset = pstmt.executeQuery();
+//            
+//            if (rset.next()) {
+//                this.modalidad = rset.getString("Nombre_Modalidad");
+//            }
+//            
+//            rset.close();
+//            pstmt.close();
+//            
+//            if (this.modalidad == null) {
+//                this.modalidad = "-";
+//            }
+//            
+//            //Obtener descripcion de tipo alumno
+//            COMANDO = "SELECT NOMBRE_TIPO ";
+//            COMANDO += "FROM enoc.CAT_TIPOALUMNO ";
+//            COMANDO += "WHERE TIPO_ID = ? ";
+//            pstmt = conn_enoc.prepareStatement(COMANDO);
+//            pstmt.setInt(1, this.tAlumno_id.intValue());
+//            rset = pstmt.executeQuery();
+//            
+//            if (rset.next()) {
+//                this.tAlumno = rset.getString("Nombre_Tipo");
+//            }
+//            
+//            rset.close();
+//            pstmt.close();
+//            
+//            if (this.tAlumno == null) {
+//                if (rset.wasNull()) {
+//                    this.tAlumno = "-";
+//                }
+//            }
+//            
+//            //Obtener Facultad y Carrera
+//            COMANDO = "SELECT F.FACULTAD_ID, F.NOMBRE_FACULTAD, ";
+//            COMANDO += "C.CARRERA_ID, C.NOMBRE_CARRERA, ";
+//            COMANDO += "P.PLAN_ID, MP.NOMBRE_PLAN ";
+//            COMANDO += "FROM enoc.ALUM_PLAN P, enoc.MAPA_PLAN MP, ";
+//            COMANDO += "enoc.CAT_CARRERA C, enoc.CAT_FACULTAD F ";
+//            COMANDO += "WHERE F.FACULTAD_ID = C.FACULTAD_ID ";
+//            COMANDO += "AND C.CARRERA_ID = MP.CARRERA_ID ";
+//            COMANDO += "AND MP.PLAN_ID = P.PLAN_ID ";
+//            COMANDO += "AND P.ESTADO = '1' ";
+//            COMANDO += "AND P.CODIGO_PERSONAL = ? ";
+//            pstmt = conn_enoc.prepareStatement(COMANDO);
+//            pstmt.setString(1, this.matricula);
+//            rset = pstmt.executeQuery();
+//            
+//            if (rset.next()) {
+//                this.facultad_id = rset.getString("Facultad_ID");
+//                
+//                if (rset.wasNull()) {
+//                    this.facultad_id = "-";
+//                }
+//                
+//                this.facultad = rset.getString("Nombre_Facultad");
+//                
+//                if (rset.wasNull()) {
+//                    this.facultad = "-";
+//                }
+//                
+//                this.carrera_id = rset.getString("Carrera_ID");
+//                
+//                if (rset.wasNull()) {
+//                    this.carrera_id = "-";
+//                }
+//                
+//                this.carrera = rset.getString("Nombre_Carrera");
+//                
+//                if (rset.wasNull()) {
+//                    this.carrera = "-";
+//                }
+//                
+//                this.plan_id = rset.getString("Plan_ID");
+//                
+//                if (rset.wasNull()) {
+//                    this.plan_id = "-";
+//                }
+//                
+//                this.nombre_plan = rset.getString("Nombre_Plan");
+//                
+//                if (rset.wasNull()) {
+//                    this.nombre_plan = "-";
+//                }
+//            }
+//            
+//            rset.close();
+//            pstmt.close();
+//            
+//            if (this.plan_id == null) {
+//                this.plan_id = "-";
+//            }
         } catch (Exception e) {
             throw new UMException("Error al tratar de obtener los datos del alumno " +
                     matricula + "<br>" + e);
