@@ -185,7 +185,6 @@ public class PeriodoControllerTest extends BaseTest {
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message", "periodo.actualizado.message"));
 
-        assertEquals("TEST-1", instance.obtiene(periodo.getId()).getDescripcion());
     }
 
     private Session currentSession() {

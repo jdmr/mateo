@@ -3,7 +3,6 @@
 
     Created on : 18-feb-2013, 11:58:37
     Author     : semdariobarbaamaya
-
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -29,5 +28,4 @@
         </c:if>
 
     </body>
-
 </html>

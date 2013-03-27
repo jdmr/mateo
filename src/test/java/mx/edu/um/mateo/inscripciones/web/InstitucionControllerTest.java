@@ -133,7 +133,7 @@ public class InstitucionControllerTest extends BaseTest{
     }
     
      @Test
-    public void debieraeliminarInstitucion() throws Exception {
+    public void debieraEliminarInstitucion() throws Exception {
         log.debug("Debiera eliminar institucion");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
@@ -150,51 +150,52 @@ public class InstitucionControllerTest extends BaseTest{
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message", "institucion.eliminada.message"));
     }
-     
-//      @Test
-//    public void debieraActualizarInstitucion() throws Exception {
-//        log.debug("Debiera actualizar institucion");
-//
-//        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-//        currentSession().save(organizacion);
-//        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-//        currentSession().save(empresa);
-//        Rol rol = new Rol("ROLE_TEST");
-//        currentSession().save(rol);
-//        Set<Rol> roles = new HashSet<>();
-//        roles.add(rol);
-//        Almacen almacen = new Almacen("TST", "TEST", empresa);
-//        currentSession().save(almacen);
-//        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-//        usuario.setEmpresa(empresa);
-//        usuario.setAlmacen(almacen);
-//        usuario.setRoles(roles);
-//        currentSession().save(usuario);
-//        Long id = usuario.getId();
-//        assertNotNull(id);
-//
-//        this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
-//
-//        Institucion institucion = new Institucion();
-//        institucion.setOrganizacion(organizacion);
-//        institucion.setNombre("Nombre-test");
-//        institucion.setPorcentaje(new BigDecimal("123"));
-//        institucion.setStatus("A");
-//        instance.graba(institucion);
-//        assertNotNull(institucion.getId());
-//
-//        this.mockMvc.perform(post(Constantes.PATH_INSTITUCION_GRABA)
-//                .param("nombre", "TEST-1")
-//                .param("status", "A")
-//                .param("porcentaje", "test-%")
-//                .param("id", institucion.getId().toString())
-//                .param("version", institucion.getVersion().toString()))
-//                .andExpect(status().isOk())
-//                .andExpect(redirectedUrl(Constantes.PATH_INSTITUCION + "/"))
-//                .andExpect(flash().attributeExists("message"))
-//                .andExpect(flash().attribute("message", "institucion.actualizada.message"));
-//
-//    }
+
+      @Test
+    public void debieraActualizarInstitucion() throws Exception {
+        log.debug("Debiera actualizar institucion");
+
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
+        Long id = usuario.getId();
+        assertNotNull(id);
+
+        this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
+
+        Institucion institucion = new Institucion();
+        institucion.setOrganizacion(organizacion);
+        institucion.setNombre("Nombre-test");
+        institucion.setPorcentaje(new BigDecimal("123"));
+        institucion.setStatus("A");
+        instance.graba(institucion);
+        assertNotNull(institucion.getId());
+        assertEquals("Nombre-test", institucion.getNombre());
+        
+        this.mockMvc.perform(post(Constantes.PATH_INSTITUCION_GRABA)
+                .param("nombre", "TEST-1")
+                .param("status", "A")
+                .param("porcentaje", "123")
+                .param("id", institucion.getId().toString())
+                .param("version", institucion.getVersion().toString()))
+                .andExpect(status().isOk())
+                .andExpect(redirectedUrl(Constantes.PATH_INSTITUCION + "/"))
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(flash().attribute("message", "institucion.actualizada.message"));
+
+    }
 
     private Session currentSession() {
         return sessionFactory.getCurrentSession();

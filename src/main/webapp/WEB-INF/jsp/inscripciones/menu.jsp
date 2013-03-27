@@ -16,5 +16,8 @@
         <li<c:if test="${param.menu eq 'prorroga'}"> class="active"</c:if>><a href="<s:url value='/inscripciones/prorroga'/>" ><s:message code="prorroga.lista.label" /></a></li>
         <li<c:if test="${param.menu eq 'periodo'}"> class="active"</c:if>><a href="<c:url value='/inscripciones/periodos' />"><s:message code="periodo.label" /></a></li>
         <li<c:if test="${param.menu eq 'institucion'}"> class="active"</c:if>><a href="<c:url value='/inscripciones/instituciones' />"><s:message code="institucion.label" /></a></li>
+        <li<c:if test="${param.menu eq 'tiposBecas'}"> class="active"</c:if>><a href="<s:url value='/inscripciones/tiposBecas'/>" ><s:message code="tiposBecas.lista.label" /></a></li>
+        <li<c:if test="${param.menu eq 'paquete'}"> class="active"</c:if>><a href="<s:url value='/inscripciones/paquete'/>" ><s:message code="paquete.lista.label" /></a></li>
+        <li<c:if test="${param.menu eq 'prorroga'}"> class="active"</c:if>><a href="<s:url value='/inscripciones/prorroga'/>" ><s:message code="prorroga.lista.label" /></a></li>
     </ul>
 </nav>

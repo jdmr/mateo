@@ -203,7 +203,9 @@ public class DocumentoControllerTest extends BaseTest {
         
         this.mockMvc.perform(get(Constantes.PATH_DOCUMENTO_LISTA)
                 .sessionAttr("colportorTmp", colportorTmp)) 
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_DOCUMENTOS))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/"+Constantes.PATH_DOCUMENTO_LISTA+".jsp"));
     }
 
      

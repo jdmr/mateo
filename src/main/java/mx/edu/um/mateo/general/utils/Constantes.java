@@ -2799,4 +2799,18 @@ public class Constantes {
     public static final String PATH_PRORROGA_ACTUALIZA = "/inscripciones/prorroga/actualiza";
     public static final String PATH_PRORROGA_ELIMINA = "/inscripciones/prorroga/elimina";
     public static final String ADDATTRIBUTE_PRORROGA = "prorroga";
+    /**
+     * Valores para TipoColportor
+     *
+     */
+    public static final String PATH_TIPO_COLPORTOR = "/inscripciones/tipoColportor";
+    public static final String PATH_TIPO_COLPORTOR_LISTA = "/inscripciones/tipoColportor/lista";
+    public static final String PATH_TIPO_COLPORTOR_VER = "/inscripciones/tipoColportor/ver";
+    public static final String PATH_TIPO_COLPORTOR_NUEVO = "/inscripciones/tipoColportor/nuevo";
+    public static final String PATH_TIPO_COLPORTOR_EDITA = "/inscripciones/tipoColportor/edita";
+    public static final String PATH_TIPO_COLPORTOR_GRABA = "/inscripciones/tipoColportor/graba";
+    public static final String PATH_TIPO_COLPORTOR_ACTUALIZA = "/inscripciones/tipoColportor/actualiza";
+    public static final String PATH_TIPO_COLPORTOR_ELIMINA = "/inscripciones/tipoColportor/elimina";
+    public static final String ADDATTRIBUTE_TIPO_COLPORTOR = "tipoColportor";
+    public static final String CONTAINSKEY_TIPO_COLPORTOR = "tiposColportor";
 }
