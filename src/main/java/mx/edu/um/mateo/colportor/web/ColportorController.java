@@ -10,8 +10,10 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
@@ -81,7 +83,7 @@ public class ColportorController extends BaseController {
             Usuario usuario,
             Errors errors,
             Model modelo) {
-        log.debug("Mostrando lista de Asociado");
+        log.debug("Mostrando lista de Colportor");
         Map<String, Object> params = new HashMap<>();
         params.put(Constantes.ADDATTRIBUTE_ASOCIACION, ((Asociacion) request.getSession().getAttribute(Constantes.SESSION_ASOCIACION)));
 
@@ -192,19 +194,15 @@ public class ColportorController extends BaseController {
         log.debug("passwordColportor" + password);
 
         try {
-            String[] roles = request.getParameterValues("roles");
-            log.debug("Asignando ROLE_COL por defecto");
-            roles = new String[]{"ROLE_COL"};
-            modelo.addAttribute("roles", roles);
+            
             colportor.setAsociacion((Asociacion) request.getSession().getAttribute(Constantes.SESSION_ASOCIACION));
             colportor.setPassword(password);
             Usuario usuario = ambiente.obtieneUsuario();
-            colportor = colportorDao.crea(colportor, roles, usuario);
-
+            colportor = colportorDao.crea(colportor, usuario);
 
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "colportor.creado.message");
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{colportor.getNombre()});
-            modelo.addAttribute("colportor", colportor);
+            
             return "redirect:" + Constantes.PATH_COLPORTOR_VER + "/" + colportor.getId();
         } catch (Exception e) {
             log.error("No se pudo crear el colportor", e);

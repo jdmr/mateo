@@ -34,6 +34,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.server.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.server.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.server.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.server.result.MockMvcResultMatchers.forwardedUrl;
+import static org.springframework.test.web.server.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.server.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.server.result.MockMvcResultMatchers.status;
+import org.springframework.test.web.server.setup.MockMvcBuilders;
 
 /**
  *
@@ -59,6 +67,11 @@ public class ColportorControllerTest extends BaseTest {
 
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
+    }
+    
+    @Before
+    public void setUp() {
+        this.mockMvc = MockMvcBuilders.webApplicationContextSetup(wac).build();
     }
 
     @Test
@@ -90,15 +103,15 @@ public class ColportorControllerTest extends BaseTest {
             assertNotNull(colportor.getId());
         }
 
-//        this.mockMvc.perform(get(Constantes.PATH_COLPORTOR)
-//                .param("filtro", "test2")
-//                .sessionAttr(Constantes.SESSION_ASOCIACION, asociacion))
-//                .andExpect(status().isOk())
-//                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_COLPORTOR_LISTA + ".jsp"))
-//                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_COLPORTORES))
-//                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION))
-//                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINAS))
-//                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINA));
+        this.mockMvc.perform(get(Constantes.PATH_COLPORTOR)
+                .param("filtro", "test2")
+                .sessionAttr(Constantes.SESSION_ASOCIACION, asociacion))
+                .andExpect(status().isOk())
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_COLPORTOR_LISTA + ".jsp"))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_COLPORTORES))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINAS))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINA));
 
     }
 
@@ -128,10 +141,10 @@ public class ColportorControllerTest extends BaseTest {
 
             currentSession().save(colportor);
             assertNotNull(colportor.getId());
-//        this.mockMvc.perform(get(Constantes.PATH_COLPORTOR_VER + "/" + colportor.getId()))
-//                .andExpect(status().isOk())
-//                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_COLPORTOR_VER + ".jsp"))
-//                .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_COLPORTOR));
+        this.mockMvc.perform(get(Constantes.PATH_COLPORTOR_VER + "/" + colportor.getId()))
+                .andExpect(status().isOk())
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_COLPORTOR_VER + ".jsp"))
+                .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_COLPORTOR));
 
     }
     
@@ -143,12 +156,15 @@ public class ColportorControllerTest extends BaseTest {
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
+        
         Rol rol = new Rol("ROLE_COL");
-        currentSession().save(rol);
+        currentSession().save(rol);        
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
+        
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
+        
         Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
@@ -164,29 +180,26 @@ public class ColportorControllerTest extends BaseTest {
         
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         
-//        this.mockMvc.perform(post(Constantes.PATH_COLPORTOR_CREA)
-//                .sessionAttr(Constantes.SESSION_ASOCIACION, asociacion)
-//                .param("roles", "ROLE_COL")
-//                .param("roles", Constantes.ROLE_COL)
-//                .param("username", "test")
-//                .param("correo", "test@test.com")
-//                .param("password", "test")
-//                .param("nombre", "test")
-//                .param("apPaterno", "test")
-//                .param("apMaterno", "test")
-//                .param("clave", Constantes.CLAVE)
-//                .param("status", Constantes.STATUS_ACTIVO)
-//                .param("telefono", Constantes.TELEFONO)
-//                .param("calle", Constantes.CALLE)
-//                .param("colonia", Constantes.COLONIA)
-//                .param("municipio", Constantes.MUNICIPIO)
-//                .param("tipoDeColportor", Constantes.TIPO_COLPORTOR)
-//                .param("matricula", Constantes.MATRICULA)
-//                .param("fechaDeNacimiento", "05/05/2010"))
-//                .andExpect(status().isOk())
-//                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-//                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "colportor.creado.message"))
-//                .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_COLPORTOR));
+        this.mockMvc.perform(post(Constantes.PATH_COLPORTOR_CREA)
+                .sessionAttr(Constantes.SESSION_ASOCIACION, asociacion)
+                .param("username", "test")
+                .param("correo", "test@test.com")
+                .param("password", "test")
+                .param("nombre", "test")
+                .param("apPaterno", "test")
+                .param("apMaterno", "test")
+                .param("clave", Constantes.CLAVE)
+                .param("status", Constantes.STATUS_ACTIVO)
+                .param("telefono", Constantes.TELEFONO)
+                .param("calle", Constantes.CALLE)
+                .param("colonia", Constantes.COLONIA)
+                .param("municipio", Constantes.MUNICIPIO)
+                .param("tipoDeColportor", Constantes.TIPO_COLPORTOR)
+                .param("matricula", Constantes.MATRICULA)
+                .param("fechaDeNacimiento", "05/05/2010"))
+                .andExpect(status().isOk())
+                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "colportor.creado.message"));
     }
 
     @Test
@@ -216,31 +229,31 @@ public class ColportorControllerTest extends BaseTest {
             currentSession().save(colportor);
             assertNotNull(colportor.getId());
 
-//        this.mockMvc.perform(post(Constantes.PATH_COLPORTOR_ACTUALIZA)
-//                .sessionAttr(Constantes.SESSION_ASOCIACION, asociacion)
-//                .param("id", colportor.getId().toString())
-//                .param("version", colportor.getVersion().toString())
-//                .param("roles", "ROLE_COL")
-//                .param("roles", Constantes.ROLE_COL)
-//                .param("username", "test")
-//                .param("correo", "test@test.com")
-//                .param("password", "test")
-//                .param("nombre", "test")
-//                .param("apPaterno", "test")
-//                .param("apMaterno", "test")
-//                .param("clave", Constantes.CLAVE)
-//                .param("status", Constantes.STATUS_ACTIVO)
-//                .param("telefono", Constantes.TELEFONO)
-//                .param("calle", Constantes.CALLE)
-//                .param("colonia", Constantes.COLONIA)
-//                .param("municipio", Constantes.MUNICIPIO)
-//                .param("tipoDeColportor", Constantes.TIPO_COLPORTOR)
-//                .param("matricula", Constantes.MATRICULA)
-//                .param("fechaDeNacimiento", "05/05/2010"))                
-//                .andExpect(status().isOk())
-//                //.andExpect(redirectedUrl(Constantes.PATH_COLPORTOR_VER))
-//                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-//                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "colportor.actualizado.message"));
+        this.mockMvc.perform(post(Constantes.PATH_COLPORTOR_ACTUALIZA)
+                .sessionAttr(Constantes.SESSION_ASOCIACION, asociacion)
+                .param("id", colportor.getId().toString())
+                .param("version", colportor.getVersion().toString())
+                .param("roles", "ROLE_COL")
+                .param("roles", Constantes.ROLE_COL)
+                .param("username", "test")
+                .param("correo", "test@test.com")
+                .param("password", "test")
+                .param("nombre", "test")
+                .param("apPaterno", "test")
+                .param("apMaterno", "test")
+                .param("clave", Constantes.CLAVE)
+                .param("status", Constantes.STATUS_ACTIVO)
+                .param("telefono", Constantes.TELEFONO)
+                .param("calle", Constantes.CALLE)
+                .param("colonia", Constantes.COLONIA)
+                .param("municipio", Constantes.MUNICIPIO)
+                .param("tipoDeColportor", Constantes.TIPO_COLPORTOR)
+                .param("matricula", Constantes.MATRICULA)
+                .param("fechaDeNacimiento", "05/05/2010"))                
+                .andExpect(status().isOk())
+                //.andExpect(redirectedUrl(Constantes.PATH_COLPORTOR_VER))
+                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "colportor.actualizado.message"));
     }
 
     @Test
@@ -270,12 +283,12 @@ public class ColportorControllerTest extends BaseTest {
             currentSession().save(colportor);
             assertNotNull(colportor.getId());
 
-//        this.mockMvc.perform(post(Constantes.PATH_COLPORTOR_ELIMINA)
-//                .param("id", colportor.getId().toString()))
-//                .andExpect(status().isOk())
-//                .andExpect(redirectedUrl(Constantes.PATH_COLPORTOR))
-//                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-//                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "colportor.eliminado.message"));
+        this.mockMvc.perform(post(Constantes.PATH_COLPORTOR_ELIMINA)
+                .param("id", colportor.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(redirectedUrl(Constantes.PATH_COLPORTOR))
+                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "colportor.eliminado.message"));
 
     }
 }
