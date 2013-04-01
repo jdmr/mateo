@@ -2871,7 +2871,7 @@ public class Constantes {
     public static final String PATH_TIPO_COLPORTOR_VER = "/inscripciones/tipoColportor/ver";
     public static final String PATH_TIPO_COLPORTOR_NUEVO = "/inscripciones/tipoColportor/nuevo";
     public static final String PATH_TIPO_COLPORTOR_EDITA = "/inscripciones/tipoColportor/edita";
-    public static final String PATH_TIPO_COLPORTOR_GRABA = "/inscripciones/tipoColportor/graba";
+    public static final String PATH_TIPO_COLPORTOR_CREA = "/inscripciones/tipoColportor/crea";
     public static final String PATH_TIPO_COLPORTOR_ACTUALIZA = "/inscripciones/tipoColportor/actualiza";
     public static final String PATH_TIPO_COLPORTOR_ELIMINA = "/inscripciones/tipoColportor/elimina";
     public static final String ADDATTRIBUTE_TIPO_COLPORTOR = "tipoColportor";

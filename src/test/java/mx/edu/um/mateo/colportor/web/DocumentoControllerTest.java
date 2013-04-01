@@ -53,7 +53,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 /**
  *
- * @author wilbert
+ * @author 
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)

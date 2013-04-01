@@ -97,6 +97,34 @@ public class TipoColportor implements Serializable{
     public String toString() {
         return "TipoColportor{" + "id=" + id + ", version=" + version + ", tipoColportor=" + tipoColportor + ", status=" + status + '}';
     }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    /**
+     * @param version the version to set
+     */
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    /**
+     * @param tipoColportor the tipoColportor to set
+     */
+    public void setTipoColportor(String tipoColportor) {
+        this.tipoColportor = tipoColportor;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(String status) {
+        this.status = status;
+    }
     
     
 }

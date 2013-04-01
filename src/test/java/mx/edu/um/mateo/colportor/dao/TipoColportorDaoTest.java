@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.colportor.model.TipoColportor;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
+import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -28,8 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class TipoColportorDaoTest {
-    private static final Logger log = LoggerFactory.getLogger(TipoColportorDaoTest.class);
+public class TipoColportorDaoTest extends BaseTest{
     @Autowired
     private TipoColportorDao instance;
     @Autowired
@@ -70,6 +70,7 @@ public class TipoColportorDaoTest {
         }
         Map<String, Object> params = null;
         Map result = instance.lista(params);
+        
         assertNotNull(result.get(Constantes.CONTAINSKEY_TIPO_COLPORTOR));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
         assertEquals(10, ((List<TipoColportor>) result.get(Constantes.CONTAINSKEY_TIPO_COLPORTOR)).size());
@@ -106,19 +107,18 @@ public class TipoColportorDaoTest {
     /**
      * Test of actualiza method, of class TipoColportorDao.
      */
-//    @Test
-//    public void deberiaActualizarTipoColportor() {
-//        log.debug("Deberia actualizar TipoColportor");
-//        TipoColportor tipoColportor = new TipoColportor("test","A");        
-//        currentSession().save(tipoColportor);
-//        
-//        String nombre = "test1";
-//        tipoColportor.set(nombre);
-//        TipoColportor tipoColportor2 = instance.actualiza(tipoColportor);
-//        assertNotNull(tipoColportor2);
-//        assertEquals(nombre, tipoColportor.getNombre());
-//        assertEquals(tipoColportor, tipoColportor2);
-//    }
+    @Test
+    public void deberiaActualizarTipoColportor() {
+        log.debug("Deberia actualizar TipoColportor");
+        TipoColportor tipoColportor = new TipoColportor("test","A");        
+        currentSession().save(tipoColportor);
+        
+        String nombre = "test1";
+        tipoColportor.setTipoColportor(nombre);
+        TipoColportor tipoColportor2 = instance.actualiza(tipoColportor);
+        assertNotNull(tipoColportor2);
+        assertEquals(nombre, tipoColportor2.getTipoColportor());
+    }
     /**
      * Test of elimina method, of class TipoColportorDao.
      */
