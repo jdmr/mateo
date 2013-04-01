@@ -131,7 +131,7 @@ public class Beca {
 			COMANDO += "COALESCE(p_matricula,0)/100 as BMatricula, ";
 	        COMANDO += "COALESCE(p_ensenanza,0)/100 as BEnsenanza, ";
 	        COMANDO += "COALESCE(p_internado,0)/100 as BInternado ";
-	        COMANDO += "FROM bec_alumnos b ";
+	        COMANDO += "FROM noe.bec_alumnos b ";
 	        COMANDO += "WHERE STATUS = 'A' ";
 
 	        pstmt = conn_noe.prepareStatement(COMANDO);
@@ -237,7 +237,7 @@ public class Beca {
 			COMANDO += "COALESCE(p_matricula,0)/100 as BMatricula, ";
 	        COMANDO += "COALESCE(p_ensenanza,0)/100 as BEnsenanza, ";
 	        COMANDO += "COALESCE(p_internado,0)/100 as BInternado ";
-	        COMANDO += "FROM bec_alumnos b ";
+	        COMANDO += "FROM noe.bec_alumnos b ";
 	        COMANDO += "WHERE STATUS = 'I' ";
 	        COMANDO += "AND FECHA BETWEEN TO_DATE(?,'DD/MM/YY') AND TO_DATE(?,'DD/MM/YY') ";
 
@@ -270,7 +270,7 @@ public class Beca {
 		PreparedStatement pstmt = null;
 
 		try{
-			String COMANDO="UPDATE BEC_ALUMNOS " +
+			String COMANDO="UPDATE noe.BEC_ALUMNOS " +
 					"SET STATUS = 'A' " +
 					"WHERE MATRICULA = ? " +
 					"AND STATUS = 'I' " +

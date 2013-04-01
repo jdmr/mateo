@@ -119,7 +119,7 @@ public class Auxiliar {
 			conn = new Conexion().getConexionMateo(new Boolean(false));
 			
 			String COMANDO = "SELECT ID_AUXILIAR, NOMBRE, DETALLE " +
-					"FROM CONT_AUXILIAR " +
+					"FROM mateo.CONT_AUXILIAR " +
 					"WHERE ID_EJERCICIO = ? ";
 			
 			pstmt = this.conn.prepareStatement(COMANDO);
@@ -157,7 +157,7 @@ public class Auxiliar {
 			if(conn == null || conn.isClosed())
 			conn = new Conexion().getConexionMateo(new Boolean(false));
 			
-			String COMANDO = "INSERT INTO CONT_AUXILIAR " +
+			String COMANDO = "INSERT INTO mateo.CONT_AUXILIAR " +
 					"(ID_EJERCICIO, ID_AUXILIAR, NOMBRE, DETALLE) " +
 					"VALUES " +
 					"(?,?,?,?) ";

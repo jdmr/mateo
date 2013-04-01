@@ -105,7 +105,7 @@ public class Empleado {
 
 			String COMANDO = "SELECT MATRICULA, CODIGO_PERSONAL, CREDITOS_AUTORIZADOS, ";
 			COMANDO += "TO_CHAR(FECHA,'DD/MM/YYYY') FECHA, STATUS ";
-			COMANDO += "FROM PER_EMPESTUDIOS ";
+			COMANDO += "FROM noe.PER_EMPESTUDIOS ";
 			COMANDO += "WHERE STATUS = 'A' ";
 			
 			pstmt = conn_noe.prepareStatement(COMANDO);
@@ -192,7 +192,7 @@ public class Empleado {
 		PreparedStatement pstmt = null;		
 		
 		try{		
-			String COMANDO="UPDATE PER_EMPESTUDIOS " +
+			String COMANDO="UPDATE noe.PER_EMPESTUDIOS " +
 					"SET STATUS = 'I' " +
 					"WHERE MATRICULA = ? " +
 					"AND STATUS = 'T' ";
@@ -222,7 +222,7 @@ public class Empleado {
 
 			String COMANDO = "SELECT MATRICULA, CODIGO_PERSONAL, CREDITOS_AUTORIZADOS, ";
 			COMANDO += "TO_CHAR(FECHA,'DD/MM/YYYY') FECHA, STATUS ";
-			COMANDO += "FROM PER_EMPESTUDIOS ";
+			COMANDO += "FROM noe.PER_EMPESTUDIOS ";
 			COMANDO += "WHERE STATUS = 'I' ";
 			COMANDO += "AND FECHA BETWEEN TO_DATE(?,'DD/MM/YY') AND TO_DATE(?,'DD/MM/YY') ";
 			
@@ -255,7 +255,7 @@ public class Empleado {
 		PreparedStatement pstmt = null;		
 		
 		try{		
-			String COMANDO="UPDATE PER_EMPESTUDIOS " +
+			String COMANDO="UPDATE noe.PER_EMPESTUDIOS " +
 					"SET STATUS = 'A' " +
 					"WHERE MATRICULA = ? " +
 					"AND STATUS = 'I' " +			

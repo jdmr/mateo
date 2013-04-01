@@ -78,7 +78,7 @@ public class Aviso {
         //y obtiene la entidad del CCosto
         Integer intNContable = null;
         String COMANDO = "SELECT NIVEL_CONTABLE ";
-        COMANDO += "FROM CONT_EJERCICIO ";
+        COMANDO += "FROM mateo.CONT_EJERCICIO ";
         COMANDO += "WHERE ID_EJERCICIO = ? ";
         PreparedStatement pstmt = conn.prepareStatement(COMANDO);
         pstmt.setString(1, strIDEjercicio);
@@ -117,7 +117,7 @@ public class Aviso {
             String strIDEjercicio, String strIDCCosto) throws SQLException, Exception {
         String strNombre = null;
         String COMANDO = "SELECT NOMBRE ";
-        COMANDO += "FROM CONT_CCOSTO ";
+        COMANDO += "FROM mateo.CONT_CCOSTO ";
         COMANDO += "WHERE ID_EJERCICIO = ? ";
         COMANDO += "AND ID_CCOSTO = ? ";
         PreparedStatement pstmt = conn.prepareStatement(COMANDO);
@@ -143,7 +143,7 @@ public class Aviso {
             String strIDEjercicio, String strIDCtaMayor) throws SQLException, Exception {
         String strNombre = null;
         String COMANDO = "SELECT NOMBRE ";
-        COMANDO += "FROM CONT_CTAMAYOR ";
+        COMANDO += "FROM mateo.CONT_CTAMAYOR ";
         COMANDO += "WHERE ID_EJERCICIO = ? ";
         COMANDO += "AND ID_CTAMAYOR = ? ";
         PreparedStatement pstmt = conn.prepareStatement(COMANDO);
@@ -169,7 +169,7 @@ public class Aviso {
             String strIDEjercicio, String strIDAuxiliar) throws SQLException, Exception {
         String strNombre = null;
         String COMANDO = "SELECT NOMBRE ";
-        COMANDO += "FROM CONT_AUXILIAR ";
+        COMANDO += "FROM mateo.CONT_AUXILIAR ";
         COMANDO += "WHERE ID_EJERCICIO = ? ";
         COMANDO += "AND ID_AUXILIAR = ? ";
         PreparedStatement pstmt = conn.prepareStatement(COMANDO);
@@ -201,7 +201,7 @@ public class Aviso {
         }
 
         String COMANDO = "SELECT NOMBRE ";
-        COMANDO += "FROM CONT_RELACION ";
+        COMANDO += "FROM mateo.CONT_RELACION ";
         COMANDO += "WHERE ID_EJERCICIO = ? ";
         COMANDO += "AND ID_CTAMAYOR = ? ";
         COMANDO += "AND ID_CCOSTO = ? ";
@@ -232,7 +232,7 @@ public class Aviso {
         String strNombre = null;
 
         String COMANDO = "SELECT NOMBRE ";
-        COMANDO += "FROM CONT_EJERCICIO ";
+        COMANDO += "FROM mateo.CONT_EJERCICIO ";
         COMANDO += "WHERE STATUS = 'A' ";
         COMANDO += "AND ID_EJERCICIO = ? ";
         PreparedStatement pstmt = conn.prepareStatement(COMANDO);
@@ -266,7 +266,7 @@ public class Aviso {
             
             //System.out.println("Aviso id "+intFolio);
 
-            String COMANDO = "INSERT INTO CONT_AVISO ";
+            String COMANDO = "INSERT INTO mateo.CONT_AVISO ";
             COMANDO += "VALUES ";
             COMANDO += "(?, to_date(?, 'dd/mm/yy'), ?, ?, 'A', ?, ?)";
 
@@ -334,7 +334,7 @@ public class Aviso {
 
             intFolio = mavi_getNuevoId("Id_Aviso", "mateo.Cont_Aviso");
 
-            String COMANDO = "INSERT INTO CONT_AVISO ";
+            String COMANDO = "INSERT INTO mateo.CONT_AVISO ";
             COMANDO += "VALUES ";
             COMANDO += "(?, to_date(?, 'dd/mm/yy'), ?, ?, 'A')";
 
@@ -366,7 +366,7 @@ public class Aviso {
 
             Integer intFolio_Det = mavi_getNuevoId("Id_Aviso_Det", "mateo.Cont_Aviso_Det", "Id_Aviso", intFolio);
 
-            String COMANDO = "INSERT INTO CONT_AVISO_DET ";
+            String COMANDO = "INSERT INTO mateo.CONT_AVISO_DET ";
             COMANDO += "VALUES ";
             COMANDO += "(?,?,?,?,?,?,?,?)";
 
@@ -441,7 +441,7 @@ public class Aviso {
             /*Obtener ejercicio actual*/
             String strIDEjercicio = "";
             String COMANDO = "SELECT MAX(ID_EJERCICIO) ID_EJERCICIO ";
-            COMANDO += "FROM CONT_EJERCICIO ";
+            COMANDO += "FROM mateo.CONT_EJERCICIO ";
             COMANDO += "WHERE STATUS = 'A' ";
             pstmt = conn.prepareStatement(COMANDO);
             rset = pstmt.executeQuery();
@@ -460,7 +460,7 @@ public class Aviso {
             Integer intNReg = new Integer(0);
 
             COMANDO = "SELECT COUNT(*) NREG ";
-            COMANDO += "FROM ALUM_PERSONAL ";
+            COMANDO += "FROM enoc.ALUM_PERSONAL ";
             COMANDO += "WHERE CODIGO_PERSONAL = ? ";
             pstmt = conn_enoc.prepareStatement(COMANDO);
             pstmt.setString(1, strMatricula);
@@ -480,7 +480,7 @@ public class Aviso {
             String strNombre = null;
 
             COMANDO = "SELECT NOMBRE_LEGAL NOMBRE ";
-            COMANDO += "FROM ALUM_PERSONAL ";
+            COMANDO += "FROM enoc.ALUM_PERSONAL ";
             COMANDO += "WHERE CODIGO_PERSONAL = ? ";
             pstmt = conn_enoc.prepareStatement(COMANDO);
             pstmt.setString(1, strMatricula);
@@ -493,7 +493,7 @@ public class Aviso {
             rset.close();
 
             COMANDO = "SELECT COUNT(*) NREG ";
-            COMANDO += "FROM CONT_AUXILIAR ";
+            COMANDO += "FROM mateo.CONT_AUXILIAR ";
             COMANDO += "WHERE ID_EJERCICIO = ? ";
             COMANDO += "AND ID_AUXILIAR = ? ";
             pstmt = conn.prepareStatement(COMANDO);
@@ -511,7 +511,7 @@ public class Aviso {
             /*indica que es un alumno nuevo*/
             if (intNReg.compareTo(new Integer(0)) == 0) {
                 /*Insertar auxiliar*/
-                COMANDO = "INSERT INTO CONT_AUXILIAR ";
+                COMANDO = "INSERT INTO mateo.CONT_AUXILIAR ";
                 COMANDO += "(ID_EJERCICIO, ID_AUXILIAR, NOMBRE, DETALLE) ";
                 COMANDO += "VALUES ";
                 COMANDO += "(?, ?, ?, 'S')";
@@ -523,7 +523,7 @@ public class Aviso {
                 pstmt.close();
 
                 COMANDO = "SELECT C.CCOSTO_ID ";
-                COMANDO += "FROM ALUM_PLAN AP, MAPA_PLAN P, CAT_CARRERA C ";
+                COMANDO += "FROM enoc.ALUM_PLAN AP, enoc.MAPA_PLAN P, enoc.CAT_CARRERA C ";
                 COMANDO += "WHERE P.PLAN_ID = AP.PLAN_ID ";
                 COMANDO += "AND C.CARRERA_ID = P.CARRERA_ID ";
                 COMANDO += "AND AP.ESTADO = '1' ";
@@ -542,7 +542,7 @@ public class Aviso {
                     //Si el alumno no tiene plan de estudios activo
                     //agarrar el primer plan disponible
                     COMANDO = "SELECT C.CCOSTO_ID ";
-                    COMANDO += "FROM ALUM_PLAN AP, MAPA_PLAN P, CAT_CARRERA C ";
+                    COMANDO += "FROM enoc.ALUM_PLAN AP, enoc.MAPA_PLAN P, enoc.CAT_CARRERA C ";
                     COMANDO += "WHERE P.PLAN_ID = AP.PLAN_ID ";
                     COMANDO += "AND C.CARRERA_ID = P.CARRERA_ID ";
                     COMANDO += "AND AP.CODIGO_PERSONAL = ? ";
@@ -567,7 +567,7 @@ public class Aviso {
                 //aun cuando est? desactivada
 
                 COMANDO = "SELECT COUNT(*) NREG ";
-                COMANDO += "FROM CONT_RELACION ";
+                COMANDO += "FROM mateo.CONT_RELACION ";
                 COMANDO += "WHERE ID_EJERCICIO = ? ";
                 COMANDO += "AND ID_CTAMAYOR = '1.1.04.01' ";
                 COMANDO += "AND ID_CCOSTO = ? ";
@@ -586,7 +586,7 @@ public class Aviso {
                 
                 
                 if (intNReg.compareTo(new Integer(0)) == 0) {
-                    COMANDO = "INSERT INTO CONT_RELACION ";
+                    COMANDO = "INSERT INTO mateo.CONT_RELACION ";
                     COMANDO += "(ID_EJERCICIO, ID_CTAMAYOR, ID_CCOSTO, ID_AUXILIAR, NOMBRE, STATUS, NATURALEZA, TIPO_CUENTA, ID_EJERCICIO2, ID_EJERCICIO3) ";
                     COMANDO += "VALUES ";
                     COMANDO += "(?, '1.1.04.01', ?, ?, ?, 'A', 'D',?,?,?) ";
@@ -610,7 +610,7 @@ public class Aviso {
 
                 /*Obtener contabilidad del nuevo plan de estudios*/
                 COMANDO = "SELECT C.CCOSTO_ID ";
-                COMANDO += "FROM ALUM_PLAN AP, MAPA_PLAN P, CAT_CARRERA C ";
+                COMANDO += "FROM enoc.ALUM_PLAN AP, enoc.MAPA_PLAN P, enoc.CAT_CARRERA C ";
                 COMANDO += "WHERE P.PLAN_ID = AP.PLAN_ID ";
                 COMANDO += "AND C.CARRERA_ID = P.CARRERA_ID ";
                 COMANDO += "AND AP.PLAN_ID = ? ";
@@ -798,7 +798,7 @@ public class Aviso {
 
             /*Obtener id*/
             String COMANDO = "SELECT COALESCE(MAX(" + strCampo + "),0) + 1 FOLIO ";
-            COMANDO += "FROM " + strTabla + " ";
+            COMANDO += "FROM mateo." + strTabla + " ";
 
             pstmt = conn.prepareStatement(COMANDO);
             rset = pstmt.executeQuery();
@@ -831,7 +831,7 @@ public class Aviso {
 
             /*Obtener id*/
             String COMANDO = "SELECT COALESCE(MAX(" + strCampo + "),0) + 1 FOLIO ";
-            COMANDO += "FROM " + strTabla + " ";
+            COMANDO += "FROM mateo." + strTabla + " ";
             //System.out.println(COMANDO);
             pstmt = conn.prepareStatement(COMANDO);
             rset = pstmt.executeQuery();
@@ -866,7 +866,7 @@ public class Aviso {
 
             /*Obtener id*/
             String COMANDO = "SELECT COALESCE(MAX(" + strCampo + "),0) + 1 FOLIO ";
-            COMANDO += "FROM " + strTabla + " ";
+            COMANDO += "FROM mateo." + strTabla + " ";
             COMANDO += "WHERE " + strCampoBase + "  = ? ";
 
             pstmt = conn.prepareStatement(COMANDO);
@@ -900,7 +900,7 @@ public class Aviso {
 
             /*Obtener id*/
             String COMANDO = "SELECT COALESCE(MAX(" + strCampo + "),0) + 1 FOLIO ";
-            COMANDO += "FROM " + strTabla + " ";
+            COMANDO += "FROM mateo." + strTabla + " ";
             COMANDO += "WHERE " + strCampoBase + "  = ? ";
 
             pstmt = conn.prepareStatement(COMANDO);
@@ -970,7 +970,7 @@ public class Aviso {
         //Obtener Ejercicio            
         String strIDEjercicio = "";
         String FE_COMANDO = "SELECT MAX(ID_EJERCICIO) ID_EJERCICIO ";
-        FE_COMANDO += "FROM CONT_EJERCICIO ";
+        FE_COMANDO += "FROM mateo.CONT_EJERCICIO ";
         FE_COMANDO += "WHERE STATUS = 'A' ";
         PreparedStatement pstmt = conn.prepareStatement(FE_COMANDO);
         ResultSet fe_rset = pstmt.executeQuery();
@@ -988,7 +988,7 @@ public class Aviso {
         }
 
         FE_COMANDO = "SELECT COUNT(*) NREG ";
-        FE_COMANDO += "FROM ALUMNO_PERSONAL ";
+        FE_COMANDO += "FROM enoc.ALUMNO_PERSONAL ";
         FE_COMANDO += "WHERE CODIGO_PERSONAL = ? ";
         pstmt = conn_enoc.prepareStatement(FE_COMANDO);
         pstmt.setString(1, strMatricula);
@@ -1008,7 +1008,7 @@ public class Aviso {
         String strNombre = null;
 
         FE_COMANDO = "SELECT NOMBRE_LEGAL NOMBRE ";
-        FE_COMANDO += "FROM ALUMNO_PERSONAL ";
+        FE_COMANDO += "FROM enoc.ALUMNO_PERSONAL ";
         FE_COMANDO += "WHERE CODIGO_PERSONAL = ? ";
         pstmt = conn_enoc.prepareStatement(FE_COMANDO);
         pstmt.setString(1, strMatricula);
@@ -1025,7 +1025,7 @@ public class Aviso {
         intNReg = 0;
 
         FE_COMANDO = "SELECT COUNT(*) NREG ";
-        FE_COMANDO += "FROM CONT_AUXILIAR ";
+        FE_COMANDO += "FROM mateo.CONT_AUXILIAR ";
         FE_COMANDO += "WHERE ID_EJERCICIO = ? ";
         FE_COMANDO += "AND ID_AUXILIAR = ? ";
         pstmt = conn.prepareStatement(FE_COMANDO);
@@ -1043,7 +1043,7 @@ public class Aviso {
         /*indica que es un alumno nuevo*/
         if (intNReg == 0) {
             //Insertar auxiliar
-            FE_COMANDO = "INSERT INTO CONT_AUXILIAR ";
+            FE_COMANDO = "INSERT INTO mateo.CONT_AUXILIAR ";
             FE_COMANDO += "(ID_EJERCICIO, ID_AUXILIAR, NOMBRE, DETALLE) ";
             FE_COMANDO += "VALUES ";
             FE_COMANDO += "(?, ?, ?, 'S')";
@@ -1060,7 +1060,7 @@ public class Aviso {
             String strCCostoID = null;
 
             FE_COMANDO = "SELECT C.CCOSTO_ID ";
-            FE_COMANDO += "FROM ALUM_PLAN AP, MAPA_PLAN P, CAT_CARRERA C ";
+            FE_COMANDO += "FROM enoc.ALUM_PLAN AP, enoc.MAPA_PLAN P, enoc.CAT_CARRERA C ";
             FE_COMANDO += "WHERE P.PLAN_ID = AP.PLAN_ID ";
             FE_COMANDO += "AND C.CARRERA_ID = P.CARRERA_ID ";
             FE_COMANDO += "AND AP.ESTADO = '1' ";
@@ -1079,7 +1079,7 @@ public class Aviso {
                 //Si el alumno no tiene plan de estudios activo
                 //agarrar el primer plan disponible
                 FE_COMANDO = "SELECT C.CCOSTO_ID ";
-                FE_COMANDO += "FROM ALUM_PLAN AP, MAPA_PLAN P, CAT_CARRERA C ";
+                FE_COMANDO += "FROM enoc.ALUM_PLAN AP, enoc.MAPA_PLAN P, enoc.CAT_CARRERA C ";
                 FE_COMANDO += "WHERE P.PLAN_ID = AP.PLAN_ID ";
                 FE_COMANDO += "AND S.CARRERA_ID = P.CARRERA_ID ";
                 FE_COMANDO += "AND AP.CODIGO_PERSONAL = ? ";
@@ -1107,7 +1107,7 @@ public class Aviso {
             intNReg = 0;
 
             FE_COMANDO = "SELECT COUNT(*) NREG ";
-            FE_COMANDO += "FROM CONT_RELACION ";
+            FE_COMANDO += "FROM mateo.CONT_RELACION ";
             FE_COMANDO += "WHERE ID_EJERCICIO = ? ";
             FE_COMANDO += "AND ID_CTAMAYOR = '1.1.04.01' ";
             FE_COMANDO += "AND ID_CCOSTO = ? ";
@@ -1125,7 +1125,7 @@ public class Aviso {
             fe_rset.close();
 
             if (intNReg == 0) {
-                FE_COMANDO = "INSERT INTO CONT_RELACION ";
+                FE_COMANDO = "INSERT INTO mateo.CONT_RELACION ";
                 FE_COMANDO += "(ID_EJERCICIO, ID_CTAMAYOR, ID_CCOSTO, ID_AUXILIAR, NOMBRE, STATUS, NATURALEZA,TIPO_CUENTA,ID_EJERCICIO2,ID_EJERCICIO3) ";
                 FE_COMANDO += "VALUES ";
                 FE_COMANDO += "(?, '1.1.04.01', ?, ?, ?, 'A', 'D',?,?,?) ";

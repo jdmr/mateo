@@ -205,7 +205,7 @@ public class Convenio implements Comparable <String>{
         PreparedStatement pstmt = null;
 
         try {
-            String COMANDO = "UPDATE AFE_CONVENIO " +
+            String COMANDO = "UPDATE noe.AFE_CONVENIO " +
                     "SET STATUS = ? " +
                     "WHERE MATRICULA = ? " +
                     "AND CARGA_ID = ? " +
@@ -240,7 +240,7 @@ public class Convenio implements Comparable <String>{
         PreparedStatement pstmt = null;
 
         try {
-            String COMANDO = "UPDATE AFE_CONVENIO " +
+            String COMANDO = "UPDATE noe.AFE_CONVENIO " +
                     "SET STATUS = ? " +
                     "WHERE MATRICULA = ? " +
                     "AND CARGA_ID = ? " +
@@ -288,7 +288,7 @@ public class Convenio implements Comparable <String>{
 
             //A la beca se le quita el 10%
             String COMANDO = "SELECT ID, MATRICULA, PUESTO, PRECIO_HORA, BECA, MAXIMO_HORAS, TO_CHAR(FECHA,'DD/MM/YY') FECHA, USER_ID, TIPO_CONVENIO_ID, EJERCICIO_ID, CCOSTO_ID, CARGA_ID, BLOQUE_ID, TOTAL_ENSENANZA " +
-                    "FROM AFE_CONVENIO " +
+                    "FROM noe.AFE_CONVENIO " +
                     "WHERE STATUS = ? ";
 
             if (obj == null) {
@@ -365,7 +365,7 @@ public class Convenio implements Comparable <String>{
 
             //A la beca se le quita el 10%
             String COMANDO = "SELECT ID, MATRICULA, PUESTO, PRECIO_HORA, BECA, MAXIMO_HORAS, TO_CHAR(FECHA,'DD/MM/YY') FECHA, USER_ID, TIPO_CONVENIO_ID, EJERCICIO_ID, CCOSTO_ID, CARGA_ID, BLOQUE_ID, TOTAL_ENSENANZA " +
-                    "FROM AFE_CONVENIO " +
+                    "FROM noe.AFE_CONVENIO " +
                     "WHERE STATUS = ? ";
 
             //No se necesitan variables en el query

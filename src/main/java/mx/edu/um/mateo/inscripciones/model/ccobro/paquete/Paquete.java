@@ -150,7 +150,7 @@ public class Paquete {
 			conn_noe = conx.getConexionNoe(new Boolean(false));
 			
 			String COMANDO = "SELECT COALESCE(MAX(ID),0)+1 ID " +
-					"FROM FES_PAQUETE " ;
+					"FROM noe.FES_PAQUETE " ;
 			pstmt = conn_noe.prepareStatement(COMANDO);
 			rset = pstmt.executeQuery();
 			if(rset.next()){
@@ -159,7 +159,7 @@ public class Paquete {
 			pstmt.close();
 			rset.close();
 			
-			COMANDO = "INSERT INTO FES_PAQUETE " +
+			COMANDO = "INSERT INTO noe.FES_PAQUETE " +
 					"(ID, NOMBRE, DESCRIPCION, MATRICULA, ENSENANZA, INTERNADO, ACFE)" +
 					"VALUES " +
 					"(?,?,?,?,?,?,?)";
@@ -190,7 +190,7 @@ public class Paquete {
 			conx = new Conexion();
 			conn_noe = conx.getConexionNoe(new Boolean(false));
 			
-			String COMANDO = "UPDATE FES_PAQUETE " +
+			String COMANDO = "UPDATE noe.FES_PAQUETE " +
 					"SET NOMBRE = ?, DESCRIPCION = ?, " +
 					"MATRICULA = ?, ENSENANZA = ?, INTERNADO = ?, ACFE = ? " +
 					"WHERE ID = ? ";
@@ -224,7 +224,7 @@ public class Paquete {
 			conn_noe = conx.getConexionNoe(new Boolean(false));
 			
 			String COMANDO = "SELECT ID, NOMBRE, DESCRIPCION, MATRICULA, ENSENANZA, INTERNADO, ACFE " +
-					"FROM FES_PAQUETE " +
+					"FROM noe.FES_PAQUETE " +
 					"WHERE ID = ?" ;
 			pstmt = conn_noe.prepareStatement(COMANDO);
 			pstmt.setInt(1, id.intValue());
@@ -264,7 +264,7 @@ public class Paquete {
 			conn_noe = conx.getConexionNoe(new Boolean(false));
 			
 			String COMANDO = "SELECT ID, NOMBRE, DESCRIPCION, MATRICULA, ENSENANZA, INTERNADO, ACFE " +
-			"FROM FES_PAQUETE " ;
+			"FROM noe.FES_PAQUETE " ;
 			
 			pstmt = conn_noe.prepareStatement(COMANDO);	
 			rset = pstmt.executeQuery();

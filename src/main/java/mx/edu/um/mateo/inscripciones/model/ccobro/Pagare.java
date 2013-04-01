@@ -263,7 +263,7 @@ public class Pagare {
 				conn = new Conexion().getConexionMateo(new Boolean(false));
 			
 			String COMANDO = "SELECT FOLIO, FVENCIMIENTO FECHA, IMPORTE, STATUS, CLAVE " +
-				"FROM FES_CC_PAGARE_DET " +
+				"FROM mateo.FES_CC_PAGARE_DET " +
 				"WHERE MATRICULA = ? " +
 				"AND CARGA_ID = ? " +
 				"AND BLOQUE = ? " +
@@ -393,7 +393,7 @@ public class Pagare {
 			/*Se modifica la fecha de vencimiento del pagare al primero de mes*/
 			if((fechaI!=null && fechaI.trim().length()>0)&&((fechaF!=null && fechaF.trim().length()>0))){
 				String COMANDO = "SELECT MATRICULA, SUM(IMPORTE) IMPORTE " +
-				"FROM FES_CC_PAGARE_DET " +
+				"FROM mateo.FES_CC_PAGARE_DET " +
 				"WHERE CARGA_ID IN ("+cargas+") AND STATUS IN ('A', 'P') " +
 				"AND to_date('01/'||to_char(fvencimiento,'mm')||'/'||to_char(fvencimiento,'yyyy'),'dd/mm/yy') > TO_DATE(?,'DD/MM/YYYY') " +
 				"GROUP BY MATRICULA";
@@ -404,7 +404,7 @@ public class Pagare {
 			}
 			else if(fechaF!=null && fechaF.trim().length()>0){
 				String COMANDO = "SELECT MATRICULA, SUM(IMPORTE) IMPORTE " +
-				"FROM FES_CC_PAGARE_DET " +
+				"FROM mateo.FES_CC_PAGARE_DET " +
 				"WHERE CARGA_ID IN ("+cargas+") " +				
 				"AND STATUS IN ('A') " +
 				"AND to_date('01/'||to_char(fvencimiento,'mm')||'/'||to_char(fvencimiento,'yyyy'),'dd/mm/yy') > TO_DATE(?,'DD/MM/YYYY') " +
@@ -416,7 +416,7 @@ public class Pagare {
 				
 			}else{
 				String COMANDO = "SELECT MATRICULA, SUM(IMPORTE) IMPORTE " +
-				"FROM FES_CC_PAGARE_DET " +
+				"FROM mateo.FES_CC_PAGARE_DET " +
 				"WHERE CARGA_ID = ? " +
 				"AND BLOQUE = ? " +
 				"AND STATUS = 'A' " +

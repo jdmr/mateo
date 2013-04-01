@@ -115,7 +115,7 @@ public class Clasificacion {
 				conn = new Conexion().getConexionNoe(new Boolean(false));
 			
 			String COMANDO = "SELECT ACFE, CCREDITO, CMATERIA " +
-					"FROM FES_TFINANCIERA_CLAS " +
+					"FROM noe.FES_TFINANCIERA_CLAS " +
 					"WHERE TFINANCIERA_ID = ? ";
 			pstmt = conn.prepareStatement(COMANDO);
 			pstmt.setInt(1, encabezado.getTFinancieraId().intValue());
@@ -167,7 +167,7 @@ public class Clasificacion {
 				paso = "4";
 				if(mClasificaciones.containsKey(key)){
 					paso = "5";
-					COMANDO = "UPDATE FES_TFINANCIERA_CLAS " +
+					COMANDO = "UPDATE noe.FES_TFINANCIERA_CLAS " +
 							"SET CCREDITO = ?, CMATERIA = ? " +
 							"WHERE TFINANCIERA_ID = ? " +
 							"AND ACFE = ? ";
@@ -179,7 +179,7 @@ public class Clasificacion {
 				}
 				else{
 					paso = "6";
-					COMANDO = "INSERT INTO FES_TFINANCIERA_CLAS " +
+					COMANDO = "INSERT INTO noe.FES_TFINANCIERA_CLAS " +
 							"(TFINANCIERA_ID, ACFE, CCREDITO, CMATERIA) " +
 							"VALUES " +
 							"(?,?,?,?) ";
