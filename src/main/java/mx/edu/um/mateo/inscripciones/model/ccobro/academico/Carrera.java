@@ -198,7 +198,7 @@ public class Carrera {
 				conn = new Conexion().getConexionEnoc(new Boolean(false));
 			
 			String COMANDO = "SELECT CARRERA_ID, NOMBRE_CARRERA " +
-					"FROM CAT_CARRERA " +
+					"FROM enoc.CAT_CARRERA " +
 					"WHERE FACULTAD_ID = ? ";
 			pstmt = conn.prepareStatement(COMANDO);
 			pstmt.setString(1, facultad.getFacultadId());

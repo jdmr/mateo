@@ -77,7 +77,7 @@
         <property name="initialSize" value="5" />
         <property name="maxActive" value="10" />
     </bean>
-
+     
     <!-- No puede ir ningun bean debajo de esta configuracion de beans -->        
     <beans profile="produccion">
         <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">

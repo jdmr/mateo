@@ -182,7 +182,7 @@ public class TFinancieraDet {
 				conn = new Conexion().getConexionNoe(new Boolean(false));
 			
 			String COMANDO = "SELECT CARRERA_ID, MODALIDAD_ID, PMATRICULA, PTLEGALES, PINTERNADO, PCCREDITO, PCMATERIA " +
-					"FROM FES_TFINANCIERA_DET " +
+					"FROM noe.FES_TFINANCIERA_DET " +
 					"WHERE TFINANCIERA_ID = ? ";
 			pstmt = conn.prepareStatement(COMANDO);
 			pstmt.setInt(1, encabezado.getTFinancieraId().intValue());
@@ -229,7 +229,7 @@ public class TFinancieraDet {
 					
 					//Al realizar el query se debe evaluar que porcentaje trae un valor mayor o igual que cero
 					
-					COMANDO = "UPDATE FES_TFINANCIERA_DET " +
+					COMANDO = "UPDATE noe.FES_TFINANCIERA_DET " +
 					"SET ";
 					
 					Clasificacion clasificacion = (Clasificacion)encabezado.getClasificacion().get(new Integer(1));
@@ -306,7 +306,7 @@ public class TFinancieraDet {
 				else{
 					paso = "6";
 					sw = new Boolean(false);
-					COMANDO = "INSERT INTO FES_TFINANCIERA_DET " +
+					COMANDO = "INSERT INTO noe.FES_TFINANCIERA_DET " +
 					"(TFINANCIERA_ID, CARRERA_ID, MODALIDAD_ID, PMATRICULA, PTLEGALES, PINTERNADO, PCCREDITO, PCMATERIA) " +
 					"VALUES " +
 					"(?,?,?,?,?,?,?,?) ";

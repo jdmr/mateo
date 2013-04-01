@@ -66,7 +66,7 @@ public class Carga {
                 conn_enoc = new Conexion().getConexionEnoc(new Boolean(false));
 
                 String COMANDO = "SELECT CARGA_ID, NOMBRE_CARGA NOMBRE, TO_CHAR(F_INICIO,'DD/MM/YYYY') F_INICIO, TO_CHAR(F_FINAL,'DD/MM/YYYY') F_FINAL  " + 
-				" FROM CARGA " +
+				" FROM enoc.CARGA " +
 				"WHERE  TO_DATE(?,'DD/MM/YY') BETWEEN F_INICIO AND F_FINAL ";
                 pstmt = conn_enoc.prepareStatement(COMANDO);
                 pstmt.setString(1, hoy);
@@ -120,7 +120,7 @@ public class Carga {
             conn_enoc = new Conexion().getConexionEnoc(new Boolean(false));
             
             String COMANDO = "SELECT TIPOCARGA " + 
-			" FROM CARGA " +
+			" FROM enoc.CARGA " +
 			"WHERE  CARGA_ID = ? ";
             pstmt = conn_enoc.prepareStatement(COMANDO);
             pstmt.setString(1, cargaId);

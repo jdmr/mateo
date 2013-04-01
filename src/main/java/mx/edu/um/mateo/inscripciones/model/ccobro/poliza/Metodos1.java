@@ -170,7 +170,7 @@ public class Metodos1 extends Conexion{
 				  throw new Error("Usuario sin derechos de modificar p?liza");
 			  }
 
-			  COMANDO = "UPDATE CONT_POLIZA ";
+			  COMANDO = "UPDATE mateo.CONT_POLIZA ";
 			  COMANDO += " SET FECHA = TO_DATE(?, 'DD/MM/YY'), ";
 			  COMANDO += " DESCRIPCION = ? ";
 			  COMANDO += " WHERE ID_EJERCICIO = ? ";
@@ -190,7 +190,7 @@ public class Metodos1 extends Conexion{
 			  //Si Modifica Movimientos es true
 			  if (blnModificaMovimientos)
 			  {
-				  COMANDO = "UPDATE CONT_MOVIMIENTO ";
+				  COMANDO = "UPDATE mateo.CONT_MOVIMIENTO ";
 				  COMANDO += "SET FECHA = TO_DATE(?, 'DD/MM/YY') ";
 				  COMANDO += "WHERE ID_EJERCICIO = ? ";
 				  COMANDO += "AND ID_LIBRO = ? ";
@@ -214,7 +214,7 @@ public class Metodos1 extends Conexion{
 				  throw new Error("Usuario sin derechos de modificar p?liza");
 			  }
 			  //Verificar que el usuario no sea capturista de p?lizas
-			  COMANDO = "UPDATE CONT_POLIZA ";
+			  COMANDO = "UPDATE mateo.CONT_POLIZA ";
 			  COMANDO += " SET FECHA = TO_DATE(?, 'DD/MM/YY'), ";
 			  COMANDO += " DESCRIPCION = ? ";
 			  COMANDO += " WHERE ID_EJERCICIO = ? ";
@@ -234,7 +234,7 @@ public class Metodos1 extends Conexion{
 			  //Si Modifica Movimientos es true
 			  if (blnModificaMovimientos)
 			  {
-				  COMANDO = "UPDATE CONT_MOVIMIENTO ";
+				  COMANDO = "UPDATE mateo.CONT_MOVIMIENTO ";
 				  COMANDO += "SET FECHA = TO_DATE(?, 'DD/MM/YY') ";
 				  COMANDO += "WHERE ID_EJERCICIO = ? ";
 				  COMANDO += "AND ID_LIBRO = ? ";
@@ -314,7 +314,7 @@ public class Metodos1 extends Conexion{
 			  }
 
 			  //Modificar status de la p?liza
-			  COMANDO = "UPDATE CONT_POLIZA ";
+			  COMANDO = "UPDATE mateo.CONT_POLIZA ";
 			  COMANDO += "SET STATUS = 'A' ";
 			  COMANDO += "WHERE ID_EJERCICIO = ? ";
 			  COMANDO += "AND ID_LIBRO = ? ";
@@ -339,7 +339,7 @@ public class Metodos1 extends Conexion{
 			  }
 
 			  //Modificar status de la p?liza
-			  COMANDO = "UPDATE CONT_POLIZA ";
+			  COMANDO = "UPDATE mateo.CONT_POLIZA ";
 			  COMANDO += "SET STATUS = 'R' ";
 			  COMANDO += "WHERE ID_EJERCICIO = ? ";
 			  COMANDO += "AND ID_LIBRO = ? ";
@@ -497,7 +497,7 @@ public class Metodos1 extends Conexion{
 			  {
 				  //Verificar si es el creador de la p?liza que pretende borrar
 				  COMANDO = "SELECT COUNT(*) NReg ";
-				  COMANDO += "FROM  CONT_POLIZA ";
+				  COMANDO += "FROM  mateo.CONT_POLIZA ";
 				  COMANDO += "WHERE ID_EJERCICIO = ? ";
 				  COMANDO += "AND ID_LIBRO = ? ";
 				  COMANDO += "AND ID_CCOSTO = ? ";
@@ -528,7 +528,7 @@ public class Metodos1 extends Conexion{
 			  if (polizaConMovimientos(strIDEjercicio, strIDLibro, strIDCCosto, strFolio))
 			  {
 				  COMANDO = "DELETE ";
-				  COMANDO += "FROM  CONT_MOVIMIENTO ";
+				  COMANDO += "FROM  mateo.CONT_MOVIMIENTO ";
 				  COMANDO += "WHERE ID_EJERCICIO = ? ";
 				  COMANDO += "AND ID_LIBRO = ? ";
 				  COMANDO += "AND ID_CCOSTO = ? ";
@@ -543,7 +543,7 @@ public class Metodos1 extends Conexion{
 			  }
 			  //Borrar encabezado de la p?liza
 			  COMANDO = "DELETE ";
-			  COMANDO += "FROM  CONT_POLIZA ";
+			  COMANDO += "FROM  mateo.CONT_POLIZA ";
 			  COMANDO += "WHERE ID_EJERCICIO = ? ";
 			  COMANDO += "AND ID_LIBRO = ? ";
 			  COMANDO += "AND ID_CCOSTO = ? ";
@@ -569,7 +569,7 @@ public class Metodos1 extends Conexion{
 			  if (polizaConMovimientos(strIDEjercicio, strIDLibro, strIDCCosto, strFolio))
 			  {
 								  String strDescripcion = "MOVIMIENTO CANCELADO POR "+strUsuario+" EN ";
-				  COMANDO = "UPDATE CONT_MOVIMIENTO ";
+				  COMANDO = "UPDATE mateo.CONT_MOVIMIENTO ";
 				  COMANDO += "SET STATUS = 'I', ";
 				  COMANDO += "IMPORTE = 0, ";
 				  COMANDO += "DESCRIPCION = ? || TO_CHAR(SYSDATE, 'DD/MM/YY') ";
@@ -589,7 +589,7 @@ public class Metodos1 extends Conexion{
 
 			  //Cancelar encabezado de la p?liza
 						  String strDescripcion = "POLIZA CANCELADA POR "+strUsuario+" EN ";
-			  COMANDO = "UPDATE CONT_POLIZA ";
+			  COMANDO = "UPDATE mateo.CONT_POLIZA ";
 			  COMANDO += "SET STATUS = 'I', ";
 			  COMANDO += "DESCRIPCION = ? || TO_CHAR(SYSDATE, 'DD/MM/YY') ";
 			  COMANDO += "WHERE ID_EJERCICIO = ? ";
@@ -617,7 +617,7 @@ public class Metodos1 extends Conexion{
 			  //Si la p?liza tiene movimientos se modifican
 			  if (polizaConMovimientos(strIDEjercicio, strIDLibro, strIDCCosto, strFolio))
 			  {
-				  COMANDO = "UPDATE CONT_MOVIMIENTO ";
+				  COMANDO = "UPDATE mateo.CONT_MOVIMIENTO ";
 				  COMANDO += "SET STATUS = 'I', ";
 				  COMANDO += "IMPORTE = 0, ";
 				  COMANDO += "DESCRIPCION = ";
@@ -635,7 +635,7 @@ public class Metodos1 extends Conexion{
 				  pstmt.close();
 			  }
 			  //Cancelar encabezado de la p?liza
-			  COMANDO = "UPDATE CONT_POLIZA ";
+			  COMANDO = "UPDATE mateo.CONT_POLIZA ";
 			  COMANDO += "SET STATUS = 'I', ";
 			  COMANDO += "DESCRIPCION = ";
 			  COMANDO += "'POLIZA CANCELADA POR ' || strUsuario || 'EN' || TO_CHAR(SYSDATE, 'DD/MM/YY') ";
@@ -1476,7 +1476,7 @@ public class Metodos1 extends Conexion{
 				  {
 					  //Verificar si es el creador de la p?liza que pretende borrar
 					  COMANDO = "SELECT COUNT(*) NReg ";
-					  COMANDO += "FROM  CONT_POLIZA ";
+					  COMANDO += "FROM  mateo.CONT_POLIZA ";
 					  COMANDO += "WHERE ID_EJERCICIO = ? ";
 					  COMANDO += "AND ID_LIBRO = ? ";
 					  COMANDO += "AND ID_CCOSTO = ? ";
@@ -2104,7 +2104,7 @@ public class Metodos1 extends Conexion{
 		  String strLibro = null;
 
 		  COMANDO = "SELECT NOMBRE ";
-		  COMANDO += "FROM CONT_LIBRO ";
+		  COMANDO += "FROM mateo.CONT_LIBRO ";
 		  COMANDO += "WHERE ID_LIBRO = ? ";
 		  pstmt = conn.prepareStatement(COMANDO);
 		  pstmt.setString(1, strIDLibro);
@@ -2515,7 +2515,7 @@ public class Metodos1 extends Conexion{
 
 		  //Obtener el siguiente n?mero de p?liza v?lido para el usuario
 		  COMANDO = "SELECT SUBSTR(COALESCE(MAX(C_RECIBO),'00000')+1000001,2,6) C_RECIBO ";
-		  COMANDO += "FROM CONT_FOLIO ";
+		  COMANDO += "FROM mateo.CONT_FOLIO ";
 		  COMANDO += "WHERE UPPER(LOGIN) = ? ";
 		  COMANDO += "AND ID_EJERCICIO = ? ";
 		  COMANDO += "AND ID_LIBRO = ? ";
@@ -2566,7 +2566,7 @@ public class Metodos1 extends Conexion{
 
 		  //Obtener el siguiente n?mero de p?liza v?lido para el usuario
 		  COMANDO = "SELECT COALESCE(C_RECIBO,'000000') C_RECIBO ";
-		  COMANDO += "FROM CONT_FOLIO ";
+		  COMANDO += "FROM mateo.CONT_FOLIO ";
 		  COMANDO += "WHERE UPPER(LOGIN) = ? ";
 		  COMANDO += "AND ID_EJERCICIO = ? ";
 		  COMANDO += "AND ID_LIBRO = ? ";
@@ -2607,7 +2607,7 @@ public class Metodos1 extends Conexion{
 		  String strIDCCosto = (String)session.getAttribute("id_ccosto");
 
 		  //modificar el recibo actual
-		  COMANDO = "UPDATE CONT_FOLIO ";
+		  COMANDO = "UPDATE mateo.CONT_FOLIO ";
 		  COMANDO += "SET C_RECIBO = ? ";
 		  COMANDO += "WHERE UPPER(LOGIN) = ? ";
 		  COMANDO += "AND ID_EJERCICIO = ? ";
@@ -2639,7 +2639,7 @@ public class Metodos1 extends Conexion{
 		  String strIDLibro = (String)session.getAttribute("id_libro");
 
 		  //modificar el recibo actual
-		  COMANDO = "UPDATE CONT_FOLIO ";
+		  COMANDO = "UPDATE mateo.CONT_FOLIO ";
 		  COMANDO += "SET C_RECIBO = ? ";
 		  COMANDO += "WHERE UPPER(LOGIN) = ? ";
 		  COMANDO += "AND ID_EJERCICIO = ? ";
@@ -2702,7 +2702,7 @@ public class Metodos1 extends Conexion{
 		  String strIDLibro = (String)session.getAttribute("id_libro");
 
 		  //modificar el recibo actual
-		  COMANDO = "UPDATE CONT_FOLIO ";
+		  COMANDO = "UPDATE mateo.CONT_FOLIO ";
 		  COMANDO += "SET C_POLIZA = ? ";
 		  COMANDO += "WHERE UPPER(LOGIN) = ? ";
 		  COMANDO += "AND ID_EJERCICIO = ? ";
@@ -2742,7 +2742,7 @@ public class Metodos1 extends Conexion{
 
 		  //Obtener el siguiente n?mero de p?liza v?lido para el usuario
 		  COMANDO = "SELECT SUBSTR(COALESCE(MAX(C_POLIZA),'00000')+100000,2,5) C_POLIZA ";
-		  COMANDO += "FROM CONT_FOLIO ";
+		  COMANDO += "FROM mateo.CONT_FOLIO ";
 		  COMANDO += "WHERE UPPER(LOGIN) = ? ";
 		  COMANDO += "AND ID_EJERCICIO = ? ";
 		  COMANDO += "AND ID_LIBRO = ? ";
@@ -2826,7 +2826,7 @@ public class Metodos1 extends Conexion{
 		  Integer intTAuxiliar = null;
 
 		  String COMANDO = "SELECT NIVEL_TAUXILIAR ";
-		  COMANDO += "FROM CONT_EJERCICIO ";
+		  COMANDO += "FROM mateo.CONT_EJERCICIO ";
 		  COMANDO += "WHERE ID_EJERCICIO = ? ";
 		  PreparedStatement pstmt = conn.prepareStatement(COMANDO);
 		  pstmt.setString(1, strIDEjercicio);
@@ -2873,7 +2873,7 @@ public class Metodos1 extends Conexion{
 	  {
 		  String strIDCCosto = null;
 		  String COMANDO = "SELECT ID_CCOSTO ";
-		  COMANDO += "FROM CONT_FOLIO ";
+		  COMANDO += "FROM mateo.CONT_FOLIO ";
 		  COMANDO += "WHERE LOGIN = ? ";
 		  COMANDO += "AND ID_EJERCICIO = ? ";
 		  COMANDO += "AND ID_LIBRO = ? ";
@@ -2932,7 +2932,7 @@ public class Metodos1 extends Conexion{
 	  {
 		  String strNombre = null;
 		  String COMANDO = "SELECT NOMBRE ";
-		  COMANDO += "FROM CONT_CCOSTO ";
+		  COMANDO += "FROM mateo.CONT_CCOSTO ";
 		  COMANDO += "WHERE ID_EJERCICIO = ? ";
 		  COMANDO += "AND ID_CCOSTO = ? ";
 		  PreparedStatement pstmt = conn.prepareStatement(COMANDO);
@@ -2961,7 +2961,7 @@ public class Metodos1 extends Conexion{
 	  {
 		  String strNombre = null;
 		  String COMANDO = "SELECT NOMBRE ";
-		  COMANDO += "FROM CONT_CTAMAYOR ";
+		  COMANDO += "FROM mateo.CONT_CTAMAYOR ";
 		  COMANDO += "WHERE ID_EJERCICIO = ? ";
 		  COMANDO += "AND ID_CTAMAYOR = ? ";
 		  PreparedStatement pstmt = conn.prepareStatement(COMANDO);
@@ -2990,7 +2990,7 @@ public class Metodos1 extends Conexion{
 	  {
 		  String strNombre = null;
 		  String COMANDO = "SELECT NOMBRE ";
-		  COMANDO += "FROM CONT_AUXILIAR ";
+		  COMANDO += "FROM mateo.CONT_AUXILIAR ";
 		  COMANDO += "WHERE ID_EJERCICIO = ? ";
 		  COMANDO += "AND ID_AUXILIAR = ? ";
 		  PreparedStatement pstmt = conn.prepareStatement(COMANDO);
@@ -3024,7 +3024,7 @@ public class Metodos1 extends Conexion{
 			  strIDAuxiliar = "0000000";
 
 		  String COMANDO = "SELECT NOMBRE ";
-		  COMANDO += "FROM CONT_RELACION ";
+		  COMANDO += "FROM mateo.CONT_RELACION ";
 		  COMANDO += "WHERE ID_EJERCICIO = ? ";
 		  COMANDO += "AND ID_CTAMAYOR = ? ";
 		  COMANDO += "AND ID_CCOSTO = ? ";
@@ -3503,7 +3503,7 @@ public class Metodos1 extends Conexion{
 		  String strNombre = null;
 
 		  String COMANDO = "SELECT NOMBRE ";
-		  COMANDO += "FROM CONT_EJERCICIO ";
+		  COMANDO += "FROM mateo.CONT_EJERCICIO ";
 		  COMANDO += "WHERE STATUS = 'A' ";
 		  COMANDO += "AND ID_EJERCICIO = ? ";
 		  PreparedStatement pstmt = conn.prepareStatement(COMANDO);
@@ -3530,7 +3530,7 @@ public class Metodos1 extends Conexion{
 	  ) throws SQLException, Exception
 	  {
                   String COMANDO = "SELECT ID_EJERCICIO, ID_CCOSTO, ID_LIBRO ";
-		  COMANDO += "FROM CONT_FOLIO ";
+		  COMANDO += "FROM mateo.CONT_FOLIO ";
 		  COMANDO += "WHERE LOGIN = ? ";
 				  COMANDO += "AND ID_EJERCICIO = ? ";
 				  COMANDO += "AND ID_CCOSTO = ? ";
@@ -3549,7 +3549,7 @@ public class Metodos1 extends Conexion{
 	  ) throws SQLException, Exception
 	  {
 		  String COMANDO = "SELECT DISTINCT ID_CCOSTO ";
-		  COMANDO += "FROM CONT_FOLIO ";
+		  COMANDO += "FROM mateo.CONT_FOLIO ";
 		  COMANDO += "WHERE LOGIN = ? ";
           COMANDO += "AND ID_EJERCICIO = ? ";
 		  PreparedStatement pstmt = conn.prepareStatement(COMANDO);
@@ -3566,7 +3566,7 @@ public class Metodos1 extends Conexion{
 	  ) throws SQLException, Exception
 	  {
 		  String COMANDO = "SELECT DISTINCT ID_CCOSTO ";
-		  COMANDO += "FROM CONT_FOLIO ";
+		  COMANDO += "FROM mateo.CONT_FOLIO ";
 		  COMANDO += "WHERE LOGIN = ? ";
 				  COMANDO += "AND ID_EJERCICIO = ? ";
 		  PreparedStatement pstmt = conn.prepareStatement(COMANDO);
@@ -3583,7 +3583,7 @@ public class Metodos1 extends Conexion{
 	  ) throws SQLException, Exception
 	  {
 		  String COMANDO = "SELECT DISTINCT ID_CCOSTO ";
-		  COMANDO += "FROM CONT_FOLIO ";
+		  COMANDO += "FROM mateo.CONT_FOLIO ";
 		  COMANDO += "WHERE ID_EJERCICIO = ? ";
 		  PreparedStatement pstmt = conn.prepareStatement(COMANDO);
 		  pstmt.setString(1, ejercicio);
@@ -3598,7 +3598,7 @@ public class Metodos1 extends Conexion{
 	  ) throws SQLException, Exception
 	  {
 		  String COMANDO = "SELECT DISTINCT ID_EJERCICIO ";
-		  COMANDO += "FROM CONT_FOLIO ";
+		  COMANDO += "FROM mateo.CONT_FOLIO ";
 		  COMANDO += "WHERE LOGIN = ? ";
 		  PreparedStatement pstmt = conn.prepareStatement(COMANDO);
 		  pstmt.setString(1, (String)session.getAttribute("login"));
@@ -3652,7 +3652,7 @@ public class Metodos1 extends Conexion{
 				  COMANDO = "SELECT MASC_RESULTADO MASC ";
 			  }
 
-			  COMANDO += "FROM CONT_EJERCICIO ";
+			  COMANDO += "FROM mateo.CONT_EJERCICIO ";
 			  COMANDO += "WHERE ID_EJERCICIO = ? ";
 			  pstmt = conn.prepareStatement(COMANDO);
 			  pstmt.setString(1, strIDEjercicio);
@@ -3667,7 +3667,7 @@ public class Metodos1 extends Conexion{
 
 			  //Obtener mascara del centro de costo
 			  COMANDO = "SELECT MASC_CCOSTO MASC, NIVEL_CONTABLE ";
-			  COMANDO += "FROM CONT_EJERCICIO ";
+			  COMANDO += "FROM mateo.CONT_EJERCICIO ";
 			  COMANDO += "WHERE ID_EJERCICIO = ? ";
 			  pstmt = conn.prepareStatement(COMANDO);
 			  pstmt.setString(1, strIDEjercicio);

@@ -30,7 +30,7 @@ public class Metodos {
 
 	public ResultSet getCuentasConPresupuesto(String strIDEjercicio, String strCCosto)throws Exception{
 		String strComando = "SELECT ID_EJERCICIO,ID_CTAMAYOR,ID_CCOSTO ";
-			strComando += "FROM CCP_PRESUPUESTO ";
+			strComando += "FROM mateo.CCP_PRESUPUESTO ";
 			strComando += "WHERE ID_EJERCICIO = '"+strIDEjercicio+"' ";
 			strComando += "AND ID_CCOSTO = '"+strCCosto+"' ";
 			strComando += "GROUP BY ID_EJERCICIO,ID_CTAMAYOR,ID_CCOSTO ";
@@ -42,7 +42,7 @@ public class Metodos {
 	public double getPresupuestoMesActual(String strIDEjercicio, String strIDCtaMayor,
 	 					String strIDCcosto, int intMes) throws Exception{
 		double dblCantidad = 0;
-		String strComando = "SELECT COALESCE(SUM(IMPORTE),0) AS IMPORTE FROM CCP_PRESUPUESTO ";
+		String strComando = "SELECT COALESCE(SUM(IMPORTE),0) AS IMPORTE FROM mateo.CCP_PRESUPUESTO ";
 			strComando += "WHERE ID_EJERCICIO = '"+strIDEjercicio+"' ";
 			strComando += "AND ID_CCOSTO = '"+strIDCcosto+"' ";
 			strComando += "AND ID_CTAMAYOR = '"+strIDCtaMayor+"' ";
@@ -61,7 +61,7 @@ public class Metodos {
 	public double getPresupuestoMesActual(String strIDEjercicio, String strIDCtaMayor,
 	 					String strIDCcosto, String strIDAuxiliar, int intMes) throws Exception{
 		double dblCantidad = 0;
-		String strComando = "SELECT COALESCE(SUM(IMPORTE),0) AS IMPORTE FROM CCP_PRESUPUESTO ";
+		String strComando = "SELECT COALESCE(SUM(IMPORTE),0) AS IMPORTE FROM mateo.CCP_PRESUPUESTO ";
 			strComando += "WHERE ID_EJERCICIO = '"+strIDEjercicio+"' ";
 			strComando += "AND ID_CCOSTO = '"+strIDCcosto+"' ";
 			strComando += "AND ID_CTAMAYOR = '"+strIDCtaMayor+"' ";
@@ -103,12 +103,12 @@ public class Metodos {
 	        String strIDCcosto, String strIDAuxiliar, String strFechaInicial, String strFechaFinal)throws Exception{
 		double dblCantidadComprometida = 0, dblCantidadDesComprometida = 0;
 		String strComando = "SELECT COALESCE(SUM(PRECIO_U * CANTIDAD),0) AS IMPORTE ";
-        strComando += "FROM CCP_AUTORIZACION_DET ";
+        strComando += "FROM mateo.CCP_AUTORIZACION_DET ";
 		strComando += "WHERE ID_EJERCICIO = '"+strIDEjercicio+"' ";
 		strComando += "AND ID_AUTORIZACION IN  ";
         strComando += "( ";
         strComando += "SELECT ID_AUTORIZACION ";
-        strComando += "FROM CCP_AUTORIZACION ";
+        strComando += "FROM mateo.CCP_AUTORIZACION ";
         strComando += "WHERE ID_EJERCICIO = '"+strIDEjercicio+"' ";
         strComando += "AND ID_CCOSTO = '"+strIDCcosto+"' ";
         strComando += "AND STATUS = 'R' ";
@@ -162,12 +162,12 @@ public class Metodos {
         {
 		double dblCantidadComprometida = 0, dblCantidadDesComprometida = 0;
 		String strComando = "SELECT COALESCE(SUM(PRECIO_U * CANTIDAD),0) AS IMPORTE ";
-        strComando += "FROM CCP_AUTORIZACION_DET ";
+        strComando += "FROM mateo.CCP_AUTORIZACION_DET ";
 		strComando += "WHERE ID_EJERCICIO = '"+strIDEjercicio+"' ";
         strComando += "AND ID_AUTORIZACION IN  ";
         strComando += "( ";
         strComando += "SELECT ID_AUTORIZACION ";
-        strComando += "FROM CCP_AUTORIZACION ";
+        strComando += "FROM mateo.CCP_AUTORIZACION ";
         strComando += "WHERE ID_EJERCICIO = '"+strIDEjercicio+"' ";
         strComando += "AND ID_CCOSTO = '"+strIDCcosto+"' ";
         strComando += "AND STATUS = 'R' ";
@@ -270,7 +270,7 @@ public class Metodos {
                             strIDAuxiliar = splits[1];
                         }
 
-			String strComando = "INSERT INTO CCP_AUTORIZACION_DET(ID_EJERCICIO, ";
+			String strComando = "INSERT INTO mateo.CCP_AUTORIZACION_DET(ID_EJERCICIO, ";
 			strComando += "ID_AUTORIZACION, ID_AUTORIZACION_DET, ID_CTAMAYOR, ID_CCOSTO, ID_AUXILIAR, ";
 			strComando += "CANTIDAD, DESCRIPCION, PRECIO_U, STATUS) ";
 			strComando += "VALUES('"+strIDEjercicio+"', '"+strIDAutorizacion+"', "+strIDAutorizacionDet+",";
@@ -284,7 +284,7 @@ public class Metodos {
 	public void grabaEncabezadoAutorizacion(String strIDEjercicio, String strIDAutorizacion, String strIDCCosto,
 					String strFecha, String strMoneda, String strNoDoc, String strClaveEmpleado,
 					String strProveedor, String strServicio, String strUsuarioLogin, String strStatus)throws Exception{
-		String strComando = "INSERT INTO CCP_AUTORIZACION(ID_EJERCICIO, ";
+		String strComando = "INSERT INTO mateo.CCP_AUTORIZACION(ID_EJERCICIO, ";
 			strComando += "ID_AUTORIZACION, ID_CCOSTO, FECHA, TIPO, NO_DOC, CLAVEEMPLEADO, PROVEEDOR, SERVICIO, USUARIO, STATUS, IMPRESO) ";
 			strComando += "VALUES('"+strIDEjercicio+"', '"+strIDAutorizacion+"', '"+strIDCCosto+"',";
 			strComando += "TO_DATE('"+strFecha+"', 'dd/mm/yy'),'"+strMoneda+"','"+strNoDoc+"','"+strClaveEmpleado+"','"+strProveedor+"',";
@@ -298,7 +298,7 @@ public class Metodos {
 	public void modificaEncAutorizacion(HttpSession session, String strIDAutorizacion,
 						String strNoDoc, String strClaveEmpleado, String strFecha, String strMoneda,
                                                 String strProveedor, String strServicio)throws Exception{
-		String strComando = "UPDATE CCP_AUTORIZACION ";
+		String strComando = "UPDATE mateo.CCP_AUTORIZACION ";
 			strComando += "SET NO_DOC = '"+strNoDoc+"', ";
                         strComando += "FECHA = to_date('"+strFecha+"','dd/mm/yy'), ";
 			strComando += "CLAVEEMPLEADO = '"+strClaveEmpleado+"', ";
@@ -316,7 +316,7 @@ public class Metodos {
 
                          String strAuxiliar = "";
 
-                        String strComando = "UPDATE CCP_AUTORIZACION_DET ";
+                        String strComando = "UPDATE mateo.CCP_AUTORIZACION_DET ";
 			strComando += "SET DESCRIPCION = '"+strDescripcion+"', CANTIDAD = "+String.valueOf(dblCantidad)+", PRECIO_U = "+String.valueOf(dblPrecioU)+", ";
 
 
@@ -399,7 +399,7 @@ public class Metodos {
 	public String getAutorizacionID(String strIDEjercicio)throws Exception{
 		String strAutorizacionId = "";
 		String strComando = "SELECT COALESCE(MAX(ID_AUTORIZACION)+1,'9900001') ID_AUTORIZACION ";
-		strComando += "FROM CCP_AUTORIZACION ";
+		strComando += "FROM mateo.CCP_AUTORIZACION ";
 		strComando += "WHERE ID_EJERCICIO = '"+strIDEjercicio+"' ";
 		strComando += "AND LENGTH(ID_AUTORIZACION) = 7 ";
 		Statement stmt = conn.createStatement();
@@ -416,7 +416,7 @@ public class Metodos {
 	public String getAutorizacionIdDet(String strIDEjercicio, String strIDAutorizacion)throws Exception{
 		String strAutorizacionIdDet = "";
 		String strComando = "SELECT COALESCE(MAX(ID_AUTORIZACION_DET),0) + 1 ID_AUTORIZACION_DET ";
-		strComando += "FROM CCP_AUTORIZACION_DET ";
+		strComando += "FROM mateo.CCP_AUTORIZACION_DET ";
 		strComando += "WHERE ID_EJERCICIO = '"+strIDEjercicio+"' ";
 		strComando += "AND ID_AUTORIZACION = '"+strIDAutorizacion+"' ";
 		Statement stmt = conn.createStatement();
@@ -431,7 +431,7 @@ public class Metodos {
 
 	//se utiliza para cada departamento
 	public PreparedStatement getAutorizacionesEnc(HttpSession session, String strStatus)throws Exception{
-		String strComando = "SELECT  * FROM CCP_AUTORIZACION ";
+		String strComando = "SELECT  * FROM mateo.CCP_AUTORIZACION ";
 			strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 			strComando += "AND ID_CCOSTO = '"+(String)session.getAttribute("id_ccosto_ccp")+"' ";
 			strComando += "AND STATUS = '"+strStatus+"' ";
@@ -443,7 +443,7 @@ public class Metodos {
 
 	//se utiliza para obtener autorizaciones independientemente del departamento
 	public PreparedStatement getAutorizacionesEncT(HttpSession session, String strStatus)throws Exception{
-		String strComando = "SELECT  * FROM CCP_AUTORIZACION ";
+		String strComando = "SELECT  * FROM mateo.CCP_AUTORIZACION ";
 			strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
                         strComando += "AND ID_CCOSTO = '"+(String)session.getAttribute("id_ccosto_ccp")+"' ";
 			strComando += "AND STATUS = '"+strStatus+"' ";
@@ -467,7 +467,7 @@ public class Metodos {
 	//se utiliza para obtener autorizaciones independientemente del departamento
     //y validando que el usuario que autoriz? sea distinto al actual
 	public PreparedStatement getAutorizacionesEncTGralUser(HttpSession session, String strStatus)throws Exception{
-		String strComando = "SELECT  * FROM CCP_AUTORIZACION ";
+		String strComando = "SELECT  * FROM mateo.CCP_AUTORIZACION ";
 			strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 			strComando += "AND STATUS = '"+strStatus+"' ";
             strComando += "AND USUARIO_AUT_RECH != '"+(String)session.getAttribute("login")+"' ";
@@ -479,7 +479,7 @@ public class Metodos {
 
 	//se utiliza para una sola autorizacion
 	public PreparedStatement getAutorizacionEnc(HttpSession session, String strAutorizacion)throws Exception{
-		String strComando = "SELECT  * FROM CCP_AUTORIZACION ";
+		String strComando = "SELECT  * FROM mateo.CCP_AUTORIZACION ";
 			strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 			strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"' ";
 			PreparedStatement pstmt = conn.prepareStatement(strComando);
@@ -489,7 +489,7 @@ public class Metodos {
 
 	public PreparedStatement getAutorizacionesDet(HttpSession session, String strAutorizacion,
 						String strStatus)throws Exception{
-		String strComando = "SELECT  * FROM CCP_AUTORIZACION_DET ";
+		String strComando = "SELECT  * FROM mateo.CCP_AUTORIZACION_DET ";
 			strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 			strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"' ";
 			strComando += "AND STATUS = '"+strStatus+"'";
@@ -500,7 +500,7 @@ public class Metodos {
 	}
 
 	public PreparedStatement getAutorizacionesDet(HttpSession session, String strAutorizacion)throws Exception{
-		String strComando = "SELECT  * FROM CCP_AUTORIZACION_DET ";
+		String strComando = "SELECT  * FROM mateo.CCP_AUTORIZACION_DET ";
 			strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 			strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"'";
 			PreparedStatement pstmt = conn.prepareStatement(strComando);
@@ -548,7 +548,7 @@ public class Metodos {
 	public double getImporteTotalAutorizacion(HttpSession session, String strAutorizacion)throws Exception{
 		double dblImporte = 0;
 		String strComando = "SELECT  COALESCE(SUM(CANTIDAD*PRECIO_U),0) ";
-                        strComando += "FROM CCP_AUTORIZACION_DET ";
+                        strComando += "FROM mateo.CCP_AUTORIZACION_DET ";
 			strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 			strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"'";
 			Statement stmt = conn.createStatement();
@@ -564,7 +564,7 @@ public class Metodos {
 	public double getImporteTotalAutorizacionPesos(HttpSession session, String strAutorizacion)throws Exception{
 		double dblImporte = 0;
 		String strComando = "SELECT  COALESCE(SUM(CANTIDAD*PRECIO_U),0) ";
-                        strComando += "FROM CCP_AUTORIZACION_DET ";
+                        strComando += "FROM mateo.CCP_AUTORIZACION_DET ";
 			strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 			strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"'";
 			Statement stmt = conn.createStatement();
@@ -579,7 +579,7 @@ public class Metodos {
 
 	public PreparedStatement getAutorizacionDet(HttpSession session, String strAutorizacion,
 						String strAutorizacionDet)throws Exception{
-		String strComando = "SELECT  * FROM CCP_AUTORIZACION_DET ";
+		String strComando = "SELECT  * FROM mateo.CCP_AUTORIZACION_DET ";
 			strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 			strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"' ";
 			strComando += "AND ID_AUTORIZACION_DET = '"+strAutorizacionDet+"' ";
@@ -592,7 +592,7 @@ public class Metodos {
 	//se utiliza para cada departamento
 	public boolean getAutorizacionesEncBool(HttpSession session, String strStatus)throws Exception{
 		int intNumReg = 0;
-		String strComando = "SELECT  COUNT(*) FROM CCP_AUTORIZACION ";
+		String strComando = "SELECT  COUNT(*) FROM mateo.CCP_AUTORIZACION ";
 			strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 			strComando += "AND ID_CCOSTO = '"+(String)session.getAttribute("id_ccosto_ccp")+"' ";
 			strComando += "AND STATUS = '"+strStatus+"'";
@@ -610,7 +610,7 @@ public class Metodos {
 	public boolean getAutorizacionesDetBool(HttpSession session, String strAutorizacion,
 						String strStatus)throws Exception{
 		int intNumReg = 0;
-		String strComando = "SELECT  COUNT(*) FROM CCP_AUTORIZACION_DET ";
+		String strComando = "SELECT  COUNT(*) FROM mateo.CCP_AUTORIZACION_DET ";
 			strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 			strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"' ";
 			strComando += "AND STATUS = '"+strStatus+"'";
@@ -625,7 +625,7 @@ public class Metodos {
 
 
 	public void borraEncabezadoAutorizacion(HttpSession session, String strAutorizacion)throws Exception{
-		String strComando = "DELETE FROM CCP_AUTORIZACION ";
+		String strComando = "DELETE FROM mateo.CCP_AUTORIZACION ";
 			strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 			strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"'"; //en la db es numerico
 			Statement stmt = conn.createStatement();
@@ -636,7 +636,7 @@ public class Metodos {
 
 	public void borraDetalleAutorizacion(HttpSession session, String strAutorizacion,
 						String strAutorizacionDet)throws Exception{
-		String strComando = "DELETE FROM CCP_AUTORIZACION_DET ";
+		String strComando = "DELETE FROM mateo.CCP_AUTORIZACION_DET ";
 			strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 			strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"' ";
 			strComando += "AND ID_AUTORIZACION_DET = "+strAutorizacionDet; //en la db es numerico
@@ -663,8 +663,8 @@ public class Metodos {
 
                         String strUsuario = (String)session.getAttribute("login");
 
-                        String strTabla1 = "UPDATE CCP_AUTORIZACION ";
-			String strTabla2 = "UPDATE CCP_AUTORIZACION_DET ";
+                        String strTabla1 = "UPDATE mateo.CCP_AUTORIZACION ";
+			String strTabla2 = "UPDATE mateo.CCP_AUTORIZACION_DET ";
 			String strComando = "SET STATUS = '"+strStatusAct+"' ";
 				strComando += "WHERE ID_EJERCICIO = '"+strEjercicio+"' ";
 				strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"'";
@@ -689,7 +689,7 @@ public class Metodos {
                                 //Obtener tipo de cambio
                                 Double dblTCambio = new Double(0);
                                 String COMANDO = "SELECT TIPO_CAMBIO_DLL ";
-                                COMANDO += "FROM CONT_TIPOCAMBIO ";
+                                COMANDO += "FROM mateo.CONT_TIPOCAMBIO ";
                                 PreparedStatement pstmt = conn.prepareStatement(COMANDO);
                                 ResultSet rset = pstmt.executeQuery();
 
@@ -733,7 +733,7 @@ public class Metodos {
                 double dblLimite = 1500;
 
                 String COMANDO = "SELECT COALESCE(LIMITE_AUTORIZACION, 1500) LIMITE ";
-                COMANDO += "FROM CCP_PARAMGRAL ";
+                COMANDO += "FROM mateo.CCP_PARAMGRAL ";
                 PreparedStatement pstmt = conn.prepareStatement(COMANDO);
                 ResultSet rset = pstmt.executeQuery();
 
@@ -768,7 +768,7 @@ public class Metodos {
 
 		intDescomprometidoID = getDescomprometidoIDNum();
 
-		strComando = "INSERT INTO CCP_DESCOMPROMETIDO(ID_EJERCICIO, ID_AUTORIZACION, ID_AUTORIZACION_DET, ID_DESCOMPROMETIDO, FECHA, ";
+		strComando = "INSERT INTO mateo.CCP_DESCOMPROMETIDO(ID_EJERCICIO, ID_AUTORIZACION, ID_AUTORIZACION_DET, ID_DESCOMPROMETIDO, FECHA, ";
 				strComando += "ID_CTAMAYOR_M, ID_CCOSTO_M, ID_AUXILIAR_M, IMPORTE, DESCRIPCION, USUARIO, STATUS) ";
 				strComando += "VALUES('"+(String)session.getAttribute("id_ejercicio")+"', '"+strAutorizacion+"', '"+strAutorizacionDet+"', "+intDescomprometidoID+", ";
 				strComando += "?, '"+strCtaMayor+"', '"+strCCosto+"', '"+strAuxiliar+"', "+dblImporte+", '"+strDescripcion+"', ";
@@ -831,7 +831,7 @@ public class Metodos {
 		double dblImporte = 0;
 		double dblImporteD = 0;
 		String strComando = "SELECT COALESCE(CANTIDAD * PRECIO_U,0) IMPORTE ";
-                                strComando += "FROM  CCP_AUTORIZACION_DET ";
+                                strComando += "FROM  mateo.CCP_AUTORIZACION_DET ";
 				strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 				strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"' ";
 				strComando += "AND ID_AUTORIZACION_DET = '"+strAutorizacionDet+"'";
@@ -863,7 +863,7 @@ public class Metodos {
 	public String getDescomprometidoID()throws Exception{
 		String strDescomprometidoID = "";
 		String strComando = "SELECT COALESCE(MAX(ID_DESCOMPROMETIDO),0) + 1  ID_DESCOMPROMETIDO ";
-		strComando += "FROM CCP_DESCOMPROMETIDO ";
+		strComando += "FROM mateo.CCP_DESCOMPROMETIDO ";
 		Statement stmt = conn.createStatement();
 		ResultSet rst = stmt.executeQuery(strComando);
 		if(rst.next())
@@ -877,7 +877,7 @@ public class Metodos {
 	public int getDescomprometidoIDNum()throws Exception{
 		int intDescomprometidoID = 0;
 		String strComando = "SELECT COALESCE(MAX(ID_DESCOMPROMETIDO),0) + 1  ID_DESCOMPROMETIDO ";
-		strComando += "FROM CCP_DESCOMPROMETIDO ";
+		strComando += "FROM mateo.CCP_DESCOMPROMETIDO ";
 		Statement stmt = conn.createStatement();
 		ResultSet rst = stmt.executeQuery(strComando);
 		if(rst.next())
@@ -890,7 +890,7 @@ public class Metodos {
 
 	public void borrarDescomprometido(HttpSession session, String strAutorizacion, String strAutorizacionDet,
 										String strCtaMayor, String strCCosto, String strAuxiliar)throws Exception{
-		String strComando = "DELETE FROM CCP_DESCOMPROMETIDO ";
+		String strComando = "DELETE FROM mateo.CCP_DESCOMPROMETIDO ";
 				strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 				strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"' ";
 				strComando += "AND ID_AUTORIZACION_DET = '"+strAutorizacionDet+"' ";
@@ -903,7 +903,7 @@ public class Metodos {
 	}
 
 	public void cambiaStatusDescomprometerDet(HttpSession session, String strAutorizacion, String strAutorizacionDet, String strStatus)throws Exception{
-                String strComando = "UPDATE CCP_AUTORIZACION_DET  SET STATUS = '"+strStatus+"' ";
+                String strComando = "UPDATE mateo.CCP_AUTORIZACION_DET  SET STATUS = '"+strStatus+"' ";
 				strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 				strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"' ";
 				strComando += "AND ID_AUTORIZACION_DET = '"+strAutorizacionDet+"'";
@@ -914,7 +914,7 @@ public class Metodos {
 
 	public void cambiaStatusDescomprometerDet(HttpSession session, String strAutorizacion, String strStatus)throws Exception{
 
-                String strComando = "UPDATE CCP_AUTORIZACION_DET  SET STATUS = '"+strStatus+"' ";
+                String strComando = "UPDATE mateo.CCP_AUTORIZACION_DET  SET STATUS = '"+strStatus+"' ";
 				strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 				strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"' ";
 				Statement stmt = conn.createStatement();
@@ -923,7 +923,7 @@ public class Metodos {
 	}
 
 	public void cambiaStatusDescomprometerDetDP(HttpSession session, String strAutorizacion, String strStatus)throws Exception{
-                String strComando = "UPDATE CCP_AUTORIZACION_DET  SET STATUS = '"+strStatus+"' ";
+                String strComando = "UPDATE mateo.CCP_AUTORIZACION_DET  SET STATUS = '"+strStatus+"' ";
 				strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 				strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"' ";
                                 strComando += "AND STATUS = 'DP' ";
@@ -933,7 +933,7 @@ public class Metodos {
 	}
 
 	public void cambiaStatusDescomprometerEnc(HttpSession session, String strAutorizacion, String strStatus)throws SQLException, Exception{
-		String strComando = "UPDATE CCP_AUTORIZACION SET STATUS = '"+strStatus+"' ";
+		String strComando = "UPDATE mateo.CCP_AUTORIZACION SET STATUS = '"+strStatus+"' ";
 				strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 				strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"'";
 				Statement stmt = conn.createStatement();
@@ -944,7 +944,7 @@ public class Metodos {
 
 	public boolean getDetallesComprometidos(HttpSession session, String strAutorizacion)throws Exception{
 		int intRows = 0;
-		String strComando = "SELECT COUNT(*) FROM  CCP_AUTORIZACION_DET ";
+		String strComando = "SELECT COUNT(*) FROM  mateo.CCP_AUTORIZACION_DET ";
 				strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 				strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"' ";
 				strComando += "AND STATUS = 'R'";
@@ -967,7 +967,7 @@ public class Metodos {
 		String strComando = "";
 		intDescomprometidoID = getDescomprometidoIDNum();
 
-		strComando = "INSERT INTO CCP_DESCOMPROMETIDO(ID_EJERCICIO, ID_AUTORIZACION, ID_LIBRO, ID_CCOSTO, ";
+		strComando = "INSERT INTO mateo.CCP_DESCOMPROMETIDO(ID_EJERCICIO, ID_AUTORIZACION, ID_LIBRO, ID_CCOSTO, ";
 		strComando += "FOLIO, NUMMOVTO, ID_DESCOMPROMETIDO, FECHA, ID_CTAMAYOR_M, ID_CCOSTO_M, ID_AUXILIAR_M, ";
 		strComando += "IMPORTE, DESCRIPCION, USUARIO, STATUS) ";
 		strComando += "VALUES(?, ?, ?, ?, ?, ?, ?, to_date(?, 'dd-MM-yy'), ?, ?, ?, ?, ?, ?, 'A')";
@@ -1113,7 +1113,7 @@ public class Metodos {
 	public double getCantidadPorDescomprometer(HttpSession session, String strAutorizacion, String strCtaMayor, String strCCosto, String strAuxiliar)throws Exception{
 		double dblImporte = 0;
 		double dblImporteD = 0;
-		String strComando = "SELECT COALESCE(SUM(IMPORTE),0) IMPORTE FROM  CCP_AUTORIZACION_DET ";
+		String strComando = "SELECT COALESCE(SUM(IMPORTE),0) IMPORTE FROM  mateo.CCP_AUTORIZACION_DET ";
 				strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 				strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"' ";
 				if(!strCCosto.equals("") && !strCtaMayor.equals("") && strAuxiliar.equals("")){
@@ -1154,7 +1154,7 @@ public class Metodos {
 		//validamos que empieze con "99"
 		if(strSubstring.equals("99")){
 			if(intMedidaString == 6){
-				String strComando = "SELECT * FROM CCP_AUTORIZACION ";
+				String strComando = "SELECT * FROM mateo.CCP_AUTORIZACION ";
 						strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 						strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"'";
 				Statement stmt = conn.createStatement();
@@ -1177,7 +1177,7 @@ public class Metodos {
 	public boolean existeCuenta(HttpSession session, String strAutorizacion, String strCCosto,
 									String strCtaMayor, String strAuxiliar)throws Exception{
 		boolean boolExisteCuenta = false;
-		String strComando = "SELECT * FROM CCP_AUTORIZACION_DET ";
+		String strComando = "SELECT * FROM mateo.CCP_AUTORIZACION_DET ";
 				strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 				strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"' ";
 				strComando += "AND ID_CCOSTO = '"+strCCosto+"' ";
@@ -1197,11 +1197,11 @@ public class Metodos {
 //POR BLOQUES
 	public ResultSet getCuentasConPresupuestoOperativo(String strIDEjercicio, String strCCosto)throws Exception{
 			String sSql = "SELECT NOMBRE, ID_CTAMAYOR, AUXILIAR ";
-			sSql += "FROM CONT_CTAMAYOR ";
+			sSql += "FROM mateo.CONT_CTAMAYOR ";
 			sSql += "WHERE ID_EJERCICIO = ? ";
 			sSql += "AND ID_CTAMAYOR IN ";
 			sSql += "(SELECT ID_CTAMAYOR ";
-			sSql += "FROM CONT_RELACION ";
+			sSql += "FROM mateo.CONT_RELACION ";
 			sSql += "WHERE ID_EJERCICIO = ? ";
 			sSql += "AND ID_CCOSTO = ?) ";
 			sSql += "AND (ID_CTAMAYOR like '2.4%' ";
@@ -1219,7 +1219,7 @@ public class Metodos {
 	public double getPresupuestoRangoMeses(String strIDEjercicio, String strIDCtaMayor,
 	 					String strIDCcosto, int intMesIni, int intMesFin) throws Exception{
 		double dblCantidad = 0;
-		String strComando = "SELECT COALESCE(SUM(IMPORTE),0) AS IMPORTE FROM CCP_PRESUPUESTO ";
+		String strComando = "SELECT COALESCE(SUM(IMPORTE),0) AS IMPORTE FROM mateo.CCP_PRESUPUESTO ";
 			strComando += "WHERE ID_EJERCICIO = '"+strIDEjercicio+"' ";
 			strComando += "AND ID_CTAMAYOR = '"+strIDCtaMayor+"' ";
 			strComando += "AND ID_CCOSTO = '"+strIDCcosto+"' ";
@@ -1247,7 +1247,7 @@ public class Metodos {
 
 	public PreparedStatement getEntidadesConPresupuesto(HttpSession session)throws Exception{
 		String strComando = "SELECT DISTINCT(C.ID_CCOSTO),C.NOMBRE ";
-				strComando += "FROM CONT_CCOSTO C, CCP_PRESUPUESTO P ";
+				strComando += "FROM mateo.CONT_CCOSTO C, mateo.CCP_PRESUPUESTO P ";
 				strComando += "WHERE P.ID_CCOSTO = C.ID_CCOSTO ";
 				strComando += "AND P.ID_EJERCICIO = C.ID_EJERCICIO ";
 				strComando += "AND C.ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
@@ -1261,7 +1261,7 @@ public class Metodos {
 												String strPatronInicial, String strPatronFinal)throws Exception{//acumulado por tipos
 		double dblCantidad = 0;
 		String strComando = "SELECT P.ID_EJERCICIO, COALESCE(SUM(P.IMPORTE),0) ";
-				strComando += "FROM 	CCP_PRESUPUESTO P, CONT_CTAMAYOR M ";
+				strComando += "FROM 	mateo.CCP_PRESUPUESTO P, mateo.CONT_CTAMAYOR M ";
 				strComando += "WHERE 	P.ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 				strComando += "AND	M.TIPO_CUENTA = 'R' ";
 				strComando += "AND	M.DETALLE = 'S' ";
@@ -1283,7 +1283,7 @@ public class Metodos {
                 String strPatronInicial, String strPatronFinal, String strMesI, String strMesF)throws Exception{//acumulado por tipos
 		double dblCantidad = 0;
 		String strComando = "SELECT P.ID_EJERCICIO, COALESCE(SUM(P.IMPORTE),0) ";
-				strComando += "FROM 	CCP_PRESUPUESTO P, CONT_CTAMAYOR M ";
+				strComando += "FROM 	mateo.CCP_PRESUPUESTO P, mateo.CONT_CTAMAYOR M ";
 				strComando += "WHERE 	P.ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 				strComando += "AND	M.TIPO_CUENTA = 'R' ";
 				strComando += "AND	M.DETALLE = 'S' ";
@@ -1347,13 +1347,13 @@ public class Metodos {
 	public double getComprometido(String strIDEjercicio, String strIDCtaMayor, String strIDCcosto, String strFechaFinal)throws Exception{
 			double dblCantidadComprometida = 0, dblCantidadDesComprometida = 0;
 			String strComando = "SELECT COALESCE(SUM(PRECIO_U * CANTIDAD),0) AS IMPORTE ";
-            strComando += "FROM CCP_AUTORIZACION_DET ";
+            strComando += "FROM mateo.CCP_AUTORIZACION_DET ";
             strComando += "WHERE ID_EJERCICIO = '"+strIDEjercicio+"' ";
             strComando += "AND ID_CTAMAYOR = '"+strIDCtaMayor+"' ";
 			strComando += "AND ID_AUTORIZACION IN ";
             strComando += "( ";
             strComando += "SELECT ID_AUTORIZACION ";
-            strComando += "FROM CCP_AUTORIZACION ";
+            strComando += "FROM mateo.CCP_AUTORIZACION ";
 			strComando += "WHERE ID_EJERCICIO = '"+strIDEjercicio+"' ";
 			strComando += "AND ID_CCOSTO = '"+strIDCcosto+"' ";
             strComando += "AND STATUS = 'R' ";
@@ -1399,7 +1399,7 @@ public class Metodos {
 	}
 
 	public PreparedStatement getCComprometido(String strIDEjer, String strCCosto, String strFechai, String strFechaf)throws Exception{
-		String strComando = "SELECT ID_AUTORIZACION, FECHA, NO_DOC, CLAVEEMPLEADO, PROVEEDOR, SERVICIO, USUARIO FROM CCP_AUTORIZACION ";
+		String strComando = "SELECT ID_AUTORIZACION, FECHA, NO_DOC, CLAVEEMPLEADO, PROVEEDOR, SERVICIO, USUARIO FROM mateo.CCP_AUTORIZACION ";
 			strComando += "WHERE ID_EJERCICIO = '"+strIDEjer+"' ";
 			strComando += "AND ID_CCOSTO = '"+strCCosto+"' ";
                         strComando += "AND FECHA BETWEEN TO_DATE('"+strFechai+"','dd/MM/yyyy') AND TO_DATE('"+strFechaf+"','dd/MM/yyyy') ";
@@ -1411,7 +1411,7 @@ public class Metodos {
 
 	public PreparedStatement getCComprometidoDet(String strIDEjer, String strCCosto, String auxiliarId, String strAutorizacion)throws Exception
 	{
-	 String strComando = "SELECT * FROM CCP_AUTORIZACION_DET ";
+	 String strComando = "SELECT * FROM mateo.CCP_AUTORIZACION_DET ";
 		 	strComando += "WHERE ID_EJERCICIO = '"+strIDEjer+"' ";
 			strComando += "AND ID_CCOSTO = '"+strCCosto+"' ";
                         strComando += "AND ID_AUXILIAR = '"+auxiliarId+"' ";
@@ -1423,7 +1423,7 @@ public class Metodos {
 	}
 
 	public PreparedStatement getAutorizacionesDetP(String strAutorizacion, String strStatus, String strIDEjer, String strCCosto)throws Exception{
-		String strComando = "SELECT  * FROM CCP_AUTORIZACION_DET ";
+		String strComando = "SELECT  * FROM mateo.CCP_AUTORIZACION_DET ";
 			strComando += "WHERE ID_EJERCICIO = '"+strIDEjer+"' ";
 			strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"' ";
 			strComando += "AND ID_CCOSTO = '"+strCCosto+"' ";
@@ -1434,7 +1434,7 @@ public class Metodos {
 	}
 
 	public PreparedStatement getCComprometido(String strStatus, String strIDEjer, String strCCosto)throws Exception{
-		String strComando = "SELECT * FROM CCP_AUTORIZACION ";
+		String strComando = "SELECT * FROM mateo.CCP_AUTORIZACION ";
 			strComando += "WHERE ID_EJERCICIO = '"+strIDEjer+"' ";
 			strComando += "AND ID_CCOSTO = '"+strCCosto+"' ";
 			strComando += "AND STATUS = '"+strStatus+"'";
@@ -1507,7 +1507,7 @@ public class Metodos {
                         String strAutorizacion = ((String)enAutorizacion.nextElement()).trim();
 
                         String COMANDO = "SELECT COUNT(*) AUTORIZACION ";
-                        COMANDO += "FROM CCP_AUTORIZACION ";
+                        COMANDO += "FROM mateo.CCP_AUTORIZACION ";
                         COMANDO += "WHERE ID_EJERCICIO = ? ";
                         COMANDO += "AND ID_AUTORIZACION = ? ";
                         PreparedStatement pstmt = conn.prepareStatement(COMANDO);
@@ -1575,7 +1575,7 @@ public class Metodos {
         {
 		double dblImporte = 0;
 		String strComando = "SELECT  COALESCE(SUM(CANTIDAD*PRECIO_U),0) ";
-                strComando += "FROM CCP_AUTORIZACION_DET ";
+                strComando += "FROM mateo.CCP_AUTORIZACION_DET ";
 		strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 		strComando += "AND ID_AUTORIZACION = '"+strAutorizacion+"'";
                 strComando += "AND SUBSTR(STATUS,1,1) = 'D' ";
@@ -1672,7 +1672,7 @@ public class Metodos {
 
                 //Obtener folio de autorizacion
                 String COMANDO = "SELECT ID_AUTORIZACION ";
-                COMANDO += "FROM CCP_DESCOMPROMETIDO ";
+                COMANDO += "FROM mateo.CCP_DESCOMPROMETIDO ";
                 COMANDO += "WHERE ID_EJERCICIO = ? ";
                 COMANDO += "AND ID_LIBRO = ? ";
                 COMANDO += "AND ID_CCOSTO = ? ";
@@ -1694,7 +1694,7 @@ public class Metodos {
                         strAutorizacion = rset.getString("ID_Autorizacion");
 
                         //Borrar movimiento de descomprometido
-                        COMANDO = "UPDATE CCP_DESCOMPROMETIDO ";
+                        COMANDO = "UPDATE mateo.CCP_DESCOMPROMETIDO ";
                         COMANDO += "SET DESCRIPCION = 'CANCELADO POR ' || ?  || 'EN ' || TO_CHAR(SYSDATE,'DD/MM/YY'), ";
                         COMANDO += "IMPORTE = 0, STATUS = 'I' ";
                         COMANDO += "WHERE ID_EJERCICIO = ? ";
@@ -1730,7 +1730,7 @@ public class Metodos {
                 Double dblLimiteSobregiro = new Double(0);
 
                 String COMANDO = "SELECT LIMITE_SOBREGIRO ";
-                COMANDO += "FROM CCP_PARAMGRAL ";
+                COMANDO += "FROM mateo.CCP_PARAMGRAL ";
                 PreparedStatement pstmt = conn.prepareStatement(COMANDO);
                 ResultSet rset = pstmt.executeQuery();
 
@@ -1750,7 +1750,7 @@ public class Metodos {
                 HttpSession session
         ) throws SQLException, Exception
         {
-                String strComando = "SELECT ID_EJERCICIO, ID_CCOSTO FROM CCP_EMPLEADO_CCOSTO ";
+                String strComando = "SELECT ID_EJERCICIO, ID_CCOSTO FROM mateo.CCP_EMPLEADO_CCOSTO ";
                 strComando += "WHERE CLAVEEMPLEADO IN ";
                 strComando += "(SELECT CODIGO_PERSONAL FROM NOE.DATOS_PERSONALES ";
                 strComando += " WHERE LOGIN = '"+((String)session.getAttribute("login")).toUpperCase()+"')";
@@ -1762,7 +1762,7 @@ public class Metodos {
 	public PreparedStatement getCComprometidoDet(String strIDEjer, String strCCosto, String strIDAutorizacion, String strFechai, String strFechaf)throws Exception
 	{
                 String strComando = "SELECT D.ID_AUTORIZACION, D.ID_CTAMAYOR, D.ID_CCOSTO, D.CANTIDAD, D.DESCRIPCION, D.PRECIO_U, D.STATUS, A.FECHA, A.NO_DOC, A.PROVEEDOR ";
-	        strComando += "FROM CCP_AUTORIZACION_DET D, ccp_autorizacion A ";
+	        strComando += "FROM mateo.CCP_AUTORIZACION_DET D, mateo.ccp_autorizacion A ";
 	        strComando += "WHERE A.ID_EJERCICIO = D.ID_EJERCICIO ";
 		strComando += "AND A.ID_AUTORIZACION = D.ID_AUTORIZACION ";
 		strComando += "AND D.ID_EJERCICIO = '"+strIDEjer+"' ";
@@ -1800,14 +1800,14 @@ public class Metodos {
         )throws SQLException, Exception
         {
                 String strComando = "SELECT * ";
-                strComando += "FROM CCP_AUTORIZACION ";
+                strComando += "FROM mateo.CCP_AUTORIZACION ";
 		strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
                 strComando += "AND ID_CCOSTO = '"+(String)session.getAttribute("id_ccosto_ccp")+"' ";
                 strComando += "AND STATUS = 'R' ";
                 strComando += "AND ID_AUTORIZACION IN ";
                 strComando += "( ";
                 strComando += "SELECT ID_AUTORIZACION ";
-                strComando += "FROM CCP_DESCOMPROMETIDO ";
+                strComando += "FROM mateo.CCP_DESCOMPROMETIDO ";
                 strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
                 strComando += "AND FECHA BETWEEN to_date('"+strFechaInicial+"', 'dd/mm/yy') ";
                 strComando += "AND to_date('"+strFechaFinal+"', 'dd/mm/yy') ";
@@ -1815,7 +1815,7 @@ public class Metodos {
                 strComando += "AND ID_AUTORIZACION IN ";
                 strComando += "( ";
                 strComando += "SELECT ID_AUTORIZACION ";
-                strComando += "FROM CCP_AUTORIZACION ";
+                strComando += "FROM mateo.CCP_AUTORIZACION ";
 	        strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 	        strComando += "AND ID_CCOSTO = '"+(String)session.getAttribute("id_ccosto_ccp")+"' ";
                 strComando += "AND STATUS = 'R' ";
@@ -1841,7 +1841,7 @@ public class Metodos {
                 if (strStatus.equals("R") || strStatus.equals("NU"))
                 {
                         String strComando = "SELECT * ";
-                        strComando += "FROM CCP_AUTORIZACION ";
+                        strComando += "FROM mateo.CCP_AUTORIZACION ";
                         strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
                         strComando += "AND ID_CCOSTO = '"+(String)session.getAttribute("id_ccosto_ccp")+"' ";
                         strComando += "AND STATUS = 'R' ";
@@ -1855,7 +1855,7 @@ public class Metodos {
                         strComando += "AND ID_AUTORIZACION NOT IN ";
                         strComando += "( ";
                         strComando += "SELECT ID_AUTORIZACION ";
-                        strComando += "FROM CCP_DESCOMPROMETIDO ";
+                        strComando += "FROM mateo.CCP_DESCOMPROMETIDO ";
                         strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
                         strComando += "AND FECHA BETWEEN to_date('"+strFechaInicial+"', 'dd/mm/yy') ";
                         strComando += "AND to_date('"+strFechaFinal+"', 'dd/mm/yy') ";
@@ -1863,7 +1863,7 @@ public class Metodos {
                         strComando += "AND ID_AUTORIZACION IN ";
                         strComando += "( ";
                         strComando += "SELECT ID_AUTORIZACION ";
-                        strComando += "FROM CCP_AUTORIZACION ";
+                        strComando += "FROM mateo.CCP_AUTORIZACION ";
                         strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
                         strComando += "AND ID_CCOSTO = '"+(String)session.getAttribute("id_ccosto_ccp")+"' ";
                         strComando += "AND STATUS = 'R' ";
@@ -1893,7 +1893,7 @@ public class Metodos {
                 double dblComprometido = 0;
                 Map<String, Double>  mReturn = new TreeMap <String, Double> ();
 
-                String strComando = "SELECT ID_AUTORIZACION, COALESCE(SUM(IMPORTE),0) AS IMPORTE FROM CCP_DESCOMPROMETIDO ";
+                String strComando = "SELECT ID_AUTORIZACION, COALESCE(SUM(IMPORTE),0) AS IMPORTE FROM mateo.CCP_DESCOMPROMETIDO ";
                 strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
                 strComando += "AND STATUS = 'A' ";
                 strComando += "AND FOLIO IS NOT NULL ";
@@ -1916,7 +1916,7 @@ public class Metodos {
                 double dblComprometido = 0;
                 Map<String, Double>  mReturn = new TreeMap <String, Double> ();
 
-                String strComando = "SELECT ID_AUTORIZACION, COALESCE(SUM(IMPORTE),0) AS IMPORTE FROM CCP_DESCOMPROMETIDO ";
+                String strComando = "SELECT ID_AUTORIZACION, COALESCE(SUM(IMPORTE),0) AS IMPORTE FROM mateo.CCP_DESCOMPROMETIDO ";
                 strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
                 strComando += "AND STATUS = 'A' ";
                 strComando += "AND FOLIO IS NULL ";
@@ -1938,7 +1938,7 @@ public class Metodos {
         {
                 double dblComprometido = 0;
 
-                String strComando = "SELECT COALESCE(SUM(IMPORTE),0) AS IMPORTE FROM CCP_DESCOMPROMETIDO ";
+                String strComando = "SELECT COALESCE(SUM(IMPORTE),0) AS IMPORTE FROM mateo.CCP_DESCOMPROMETIDO ";
                 strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
                 strComando += "AND STATUS = 'A' ";
                 strComando += "AND ID_AUTORIZACION = '"+strAutorizacionID+"' ";
@@ -1958,7 +1958,7 @@ public class Metodos {
         {
                 double dblComprometido = 0;
 
-                String strComando = "SELECT COALESCE(SUM(IMPORTE),0) AS IMPORTE FROM CCP_DESCOMPROMETIDO ";
+                String strComando = "SELECT COALESCE(SUM(IMPORTE),0) AS IMPORTE FROM mateo.CCP_DESCOMPROMETIDO ";
                 strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
                 strComando += "AND FECHA BETWEEN to_date('"+strFechaInicial+"', 'dd/mm/yy') ";
                 strComando += "AND to_date('"+strFechaFinal+"', 'dd/mm/yy') ";
@@ -1980,7 +1980,7 @@ public class Metodos {
         {
                 double dblComprometido = 0;
 
-                String strComando = "SELECT COALESCE(SUM(IMPORTE),0) AS IMPORTE FROM CCP_DESCOMPROMETIDO ";
+                String strComando = "SELECT COALESCE(SUM(IMPORTE),0) AS IMPORTE FROM mateo.CCP_DESCOMPROMETIDO ";
                 strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
                 strComando += "AND FECHA BETWEEN to_date('"+strFechaInicial+"', 'dd/mm/yy') ";
                 strComando += "AND to_date('"+strFechaFinal+"', 'dd/mm/yy') ";
@@ -2013,7 +2013,7 @@ public class Metodos {
 
                 java.util.Calendar gcHoy = new java.util.GregorianCalendar();
                 gcHoy.setTime(new java.util.Date());
-		String strComando = "SELECT COALESCE(SUM(IMPORTE),0) AS IMPORTE FROM CCP_PRESUPUESTO ";
+		String strComando = "SELECT COALESCE(SUM(IMPORTE),0) AS IMPORTE FROM mateo.CCP_PRESUPUESTO ";
 		strComando += "WHERE ID_EJERCICIO = '"+(String)session.getAttribute("id_ejercicio")+"' ";
 		strComando += "AND ID_CCOSTO = '"+strIDCcosto+"' ";
 		strComando += "AND MES <= "+String.valueOf(gcHoy.get(java.util.Calendar.MONTH)+1);
@@ -2043,12 +2043,12 @@ public class Metodos {
                 double dblComprometido = 0;
 
                 String COMANDO = "SELECT COALESCE(SUM(PRECIO_U * CANTIDAD),0) IMPORTE ";
-                COMANDO += "FROM CCP_AUTORIZACION_DET ";
+                COMANDO += "FROM mateo.CCP_AUTORIZACION_DET ";
                 COMANDO += "WHERE ID_EJERCICIO = ? ";
                 COMANDO += "AND ID_CCOSTO = ? ";
                 COMANDO += "AND ID_EJERCICIO || ID_AUTORIZACION IN ";
                 COMANDO += "(SELECT ID_EJERCICIO || ID_AUTORIZACION ";
-                COMANDO += "FROM CCP_AUTORIZACION ";
+                COMANDO += "FROM mateo.CCP_AUTORIZACION ";
                 COMANDO += "WHERE ID_EJERCICIO = ? ";
                 COMANDO += "AND ID_CCOSTO = ? ";
                 COMANDO += "AND STATUS = 'R' ";
@@ -2082,7 +2082,7 @@ public class Metodos {
 
 /**************************Query Optimizado*****************************************/
                 String COMANDO = "SELECT COALESCE(SUM(IMPORTE),0) IMPORTE ";
-                COMANDO += "FROM CCP_DESCOMPROMETIDO D, CCP_AUTORIZACION A ";
+                COMANDO += "FROM mateo.CCP_DESCOMPROMETIDO D, mateo.CCP_AUTORIZACION A ";
                 COMANDO += "WHERE A.ID_EJERCICIO = ? ";
                 COMANDO += "AND A.ID_CCOSTO = ? ";
                 //COMANDO += "AND A.STATUS = 'R' ";
@@ -2114,7 +2114,7 @@ public class Metodos {
                 double dblGastos = 0;
 
                 String COMANDO = "SELECT COALESCE(SUM(IMPORTE * CASE NATURALEZA WHEN 'C' THEN -1 ELSE 1 END),0) IMPORTE ";
-                COMANDO += "FROM CONT_MOVIMIENTO ";
+                COMANDO += "FROM mateo.CONT_MOVIMIENTO ";
                 COMANDO += "WHERE ID_EJERCICIO = ? ";
                 COMANDO += "AND ID_CCOSTOM = ? ";
                 COMANDO += "AND (ID_CTAMAYORM LIKE '2.4.%' ";
@@ -2126,7 +2126,7 @@ public class Metodos {
                         "AND ID_EJERCICIO || ID_CTAMAYORM IN " +
                         "( " +
                         "SELECT ID_EJERCICIO || ID_CTAMAYOR " +
-                        "FROM CCP_PRESUPUESTO " +
+                        "FROM mateo.CCP_PRESUPUESTO " +
                         "WHERE ID_EJERCICIO = ? " +
                         "AND ID_CCOSTO = ? " +
                         "AND (ID_CTAMAYOR LIKE '2.4.%'  " +
@@ -2172,7 +2172,7 @@ public class Metodos {
                 String strAutorizacionID, HttpSession session
         ) throws Exception
         {
-                String COMANDO = "UPDATE CCP_AUTORIZACION ";
+                String COMANDO = "UPDATE mateo.CCP_AUTORIZACION ";
                 COMANDO += "SET IMPRESO = 'S', ";
                 COMANDO += "USUARIO_IMPRESO = ?, ";
                 COMANDO += "FECHA_IMPRESO = SYSDATE ";
@@ -2262,7 +2262,7 @@ public class Metodos {
 		String strIDEjercicio = (String)session.getAttribute("id_ejercicio");
 
 		String COMANDO = "SELECT ID_CCOSTO ";
-		COMANDO += "FROM CONT_CCOSTO ";
+		COMANDO += "FROM mateo.CONT_CCOSTO ";
 		COMANDO += "WHERE ID_EJERCICIO = ? ";
 		COMANDO += "AND ID_CCOSTO BETWEEN ? AND ? ";
 		COMANDO += "AND DETALLE = 'S' ";
@@ -2291,7 +2291,7 @@ public class Metodos {
 		Vector vctFondos = new Vector();
 
 		String COMANDO = "SELECT A.ID_AUXILIAR, A.NOMBRE ";
-		COMANDO += "FROM CONT_AUXILIAR A, CONT_RELACION R ";
+		COMANDO += "FROM mateo.CONT_AUXILIAR A, CONT_RELACION R ";
 		COMANDO += "WHERE A.ID_EJERCICIO = R.ID_EJERCICIO ";
 		COMANDO += "AND A.ID_AUXILIAR = R.ID_AUXILIAR ";
 		COMANDO += "AND R.ID_EJERCICIO = ? ";
@@ -2321,14 +2321,14 @@ public class Metodos {
 		String strIDCCosto = (String)session.getAttribute("id_ccosto_ccp");
 
 		String COMANDO = "SELECT Z.ID_AUTORIZACION, TO_CHAR(Z.FECHA,'DD/MM/YYYY') FECHA, COALESCE(A.IMPORTE,0) AUTORIZADO, COALESCE(D.IMPORTE,0) DESCOMPROMETIDO ";
-		COMANDO += "FROM CCP_AUTORIZACION Z, ";
+		COMANDO += "FROM mateo.CCP_AUTORIZACION Z, ";
 		COMANDO += "(SELECT ID_EJERCICIO, ID_AUTORIZACION, COALESCE(SUM(precio_u*cantidad),0) IMPORTE ";
-		COMANDO += "FROM CCP_AUTORIZACION_DET ";
+		COMANDO += "FROM mateo.CCP_AUTORIZACION_DET ";
 		COMANDO += "WHERE ID_EJERCICIO = ? ";
 		COMANDO += "AND STATUS != 'X' ";
 		COMANDO += "GROUP BY ID_EJERCICIO, ID_AUTORIZACION) A, ";
 		COMANDO += "(SELECT ID_EJERCICIO, ID_AUTORIZACION, coalesce(SUM(IMPORTE),0) IMPORTE ";
-		COMANDO += "FROM CCP_DESCOMPROMETIDO ";
+		COMANDO += "FROM mateo.CCP_DESCOMPROMETIDO ";
 		COMANDO += "WHERE ID_EJERCICIO = ? ";
 		COMANDO += "GROUP BY ID_EJERCICIO, ID_AUTORIZACION) D ";
 		COMANDO += "WHERE A.ID_EJERCICIO = D.ID_EJERCICIO(+) ";

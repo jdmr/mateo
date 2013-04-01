@@ -88,7 +88,7 @@ public class TParametros {
 				conn_noe = new Conexion().getConexionNoe(new Boolean(false));
 		
 		String COMANDO = "SELECT CLAVE, CONCEPTO, VALOR ";		
-		COMANDO += "FROM FES_PARAMGRALDET ";
+		COMANDO += "FROM noe.FES_PARAMGRALDET ";
 		COMANDO += "WHERE CARGA_ID = ? ";		
 		
 		pstmt = conn_noe.prepareStatement(COMANDO);
