@@ -37,27 +37,26 @@ public class Asociado extends Usuario {
     private String colonia;
     @Column(length = 200)
     private String municipio;
-//    private String nombre;
-//    private String apellidop;
-//    private String apellidom;
-//    private String username;
 
     public Asociado() {
     }
-//
-//    public Asociado(String clave, String telefono, String status, String calle, String colonia, String municipio) {
-//        this.clave = clave;
-//        this.telefono = telefono;
-//        this.status = status;
-//        this.calle = calle;
-//        this.colonia = colonia;
-//        this.municipio = municipio;
-//    }
 
     public Asociado(String username, String password,   String nombre, String apellidoP,
             String apellidoM, String status, String clave, String telefono, String calle, 
             String colonia, String municipio){
-     super(username, password, nombre, apellidoP, apellidoM); 
+     super(username, password, nombre, apellidoP, apellidoM);
+    this.clave=clave;
+    this.telefono=telefono;
+    this.status=status;
+    this.calle = calle;
+    this.colonia = colonia;
+    this.municipio = municipio;
+    }
+    
+    public Asociado(String username, String password, String correo, String nombre, String apellidoP,
+            String apellidoM, String status, String clave, String telefono, String calle, 
+            String colonia, String municipio){
+     super(username, password, nombre, apellidoP, apellidoM, correo);
     this.clave=clave;
     this.telefono=telefono;
     this.status=status;
