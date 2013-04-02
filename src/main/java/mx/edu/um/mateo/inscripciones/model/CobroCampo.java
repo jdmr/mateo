@@ -38,7 +38,6 @@ public class CobroCampo {
     private String matricula;
     @Column(name = "status")
     private String status;
-    @Column(name = "institucion_id")
     @ManyToOne(optional = false)
     private Institucion institucion;
     @Column(nullable = false, length = 8, name = "importe_matricula")
