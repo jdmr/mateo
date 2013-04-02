@@ -2882,4 +2882,17 @@ public class Constantes {
     public static final String PATH_DESCUENTO_ELIMINA = "/inscripciones/descuento/elimina";
     public static final String ADDATTRIBUTE_DESCUENTO = "descuento"; 
     public static final String CONTAINSKEY_COBROSCAMPOS = "cobroscampos";
+    /**
+     * Valores para Cobros a campos
+     *
+     */
+    public static final String PATH_COBROCAMPO = "/inscripciones/cobrocampo";
+    public static final String PATH_COBROCAMPO_LISTA = "/inscripciones/cobrocampo/lista";
+    public static final String PATH_COBROCAMPO_VER = "/inscripciones/cobrocampo/ver";
+    public static final String PATH_COBROCAMPO_NUEVO = "/inscripciones/cobrocampo/nuevo";
+    public static final String PATH_COBROCAMPO_EDITA = "/inscripciones/cobrocampo/edita";
+    public static final String PATH_COBROCAMPO_GRABA = "/inscripciones/cobrocampo/graba";
+    public static final String PATH_COBROCAMPO_ACTUALIZA = "/inscripciones/cobrocampo/actualiza";
+    public static final String PATH_COBROCAMPO_ELIMINA = "/inscripciones/cobrocampo/elimina";
+    public static final String ADDATTRIBUTE_COBROCAMPO = "cobrocampo";
 }
