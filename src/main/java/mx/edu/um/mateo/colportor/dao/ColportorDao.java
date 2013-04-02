@@ -168,8 +168,8 @@ public class ColportorDao {
         }
         currentSession().save(colportor);
         
+        colportor.addRol(rolDao.obtiene("ROLE_CLP"));
         log.debug("Rol del colportor {}",colportor.getRoles());
-        colportor.addRol(rolDao.obtiene("ROLE_COL"));
         currentSession().save(colportor);
         currentSession().flush();
         log.debug("Rol del colportor {}",colportor.getRoles());

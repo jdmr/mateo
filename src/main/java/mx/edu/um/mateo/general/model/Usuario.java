@@ -52,6 +52,8 @@ import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -64,7 +66,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @DiscriminatorValue("user")
 @Entity
 @Table(name = "usuarios")
-public class Usuario implements Serializable, UserDetails {
+public class Usuario  implements Serializable, UserDetails {
+    protected final transient Logger log = LoggerFactory.getLogger(getClass());
 
     /**
      *
@@ -129,15 +132,19 @@ public class Usuario implements Serializable, UserDetails {
     }
 
     public Usuario() {
+        this.setRoles(new HashSet());
     }
       public Usuario( String nombre, String apPaterno, String apMaterno) {
+          this();
         this.nombre = nombre;
         this.apPaterno = apPaterno;
         this.apMaterno = apMaterno;
+        
     }
 
     public Usuario(String username, String password, String nombre,
             String apPaterno, String apMaterno) {
+        this();
         this.username = username;
         this.password = password;
         this.nombre = nombre;
@@ -148,11 +155,13 @@ public class Usuario implements Serializable, UserDetails {
 
     public Usuario(String username, String password, String nombre,
             String apPaterno,String apMaterno, String correo) {
+        this();
         this.username = username;
         this.password = password;
         this.nombre = nombre;
         this.apPaterno = apPaterno;
         this.apMaterno = apMaterno;
+        
         this.correo = correo;
     }
 

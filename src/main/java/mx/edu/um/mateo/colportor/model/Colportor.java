@@ -24,6 +24,7 @@
 package mx.edu.um.mateo.colportor.model;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -63,6 +64,7 @@ public class Colportor extends Usuario{
     private Date fechaDeNacimiento;
     
     public Colportor() {
+        
     }
     
     public Colportor(String username, String password, String nombre, String apPaterno, String apMaterno,
@@ -78,6 +80,8 @@ public class Colportor extends Usuario{
        this.tipoDeColportor=tipoColportor;
        this.matricula=matricula;
        this.fechaDeNacimiento=fechaNac;
+       
+       
     }
     
     public Colportor(String username, String password, String correo, String nombre, String apPaterno, String apMaterno,
@@ -93,6 +97,8 @@ public class Colportor extends Usuario{
        this.tipoDeColportor=tipoColportor;
        this.matricula=matricula;
        this.fechaDeNacimiento=fechaNac;
+       
+       
     }
     
     public String getCalle() {

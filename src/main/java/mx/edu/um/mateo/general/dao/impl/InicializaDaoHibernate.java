@@ -174,9 +174,9 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
         currentSession().save(estatus);
         estatus = new Estatus(Constantes.CANCELADA, 500);
         currentSession().save(estatus);
-        
+                
         //Datos de colportores        
-        usuario = new Asociado(username, password, "test", username + "@asoc.edu.mx", "apPaterno", "apMaterno", "A",  "12345", "8262630900", "Direccion", "Colonia", "Municipio");
+        usuario = new Asociado(username + "@asoc.um.edu.mx", password, username + "@asoc.edu.mx", "test", "apPaterno", "apMaterno", "A",  "12345", "8262630900", "Direccion", "Colonia", "Municipio");
         
         usuario.setAlmacen(almacen);
         usuario.setEmpresa(almacen.getEmpresa());
@@ -185,9 +185,10 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
             usuario.setEjercicio(ejercicio);
             break;
         }
+        
         asociadoDao.crea((Asociado)usuario, null);
                 
-        usuario = new Colportor(username, password, "test", username + "@clp.edu.mx", "apPaterno", "apMaterno", "12345", "A",  "8262630900", "Direccion", "Colonia", "Municipio", "tipoClp", "0890626", new Date());
+        usuario = new Colportor(username + "@clp.um.edu.mx", password, username + "@clp.edu.mx", "test", "apPaterno", "apMaterno", "12345", "A",  "8262630900", "Direccion", "Colonia", "Municipio", "tipoClp", "0890626", new Date());
         
         usuario.setAlmacen(almacen);
         usuario.setEmpresa(almacen.getEmpresa());
@@ -196,6 +197,7 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
             usuario.setEjercicio(ejercicio);
             break;
         }
+        
         colportorDao.crea((Colportor)usuario, usuario);
     }
 }

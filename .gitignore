@@ -5,6 +5,7 @@ target
 *.java~
 *.*~
 /src/main/resources/rebel.xml
+/src/main/resources/logback.xml
 /nb-configuration.xml
 /nbactions.xml
 .settings
