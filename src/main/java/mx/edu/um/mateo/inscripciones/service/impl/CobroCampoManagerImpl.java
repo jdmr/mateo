@@ -7,7 +7,6 @@ package mx.edu.um.mateo.inscripciones.service.impl;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inscripciones.dao.CobroCampoDao;
-import mx.edu.um.mateo.inscripciones.dao.ProrrogaDao;
 import mx.edu.um.mateo.inscripciones.model.CobroCampo;
 import mx.edu.um.mateo.inscripciones.model.Prorroga;
 import mx.edu.um.mateo.inscripciones.service.CobroCampoManager;
