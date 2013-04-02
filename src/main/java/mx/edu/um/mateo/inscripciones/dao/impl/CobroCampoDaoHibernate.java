@@ -87,7 +87,7 @@ public class CobroCampoDaoHibernate extends BaseDao implements CobroCampoDao {
                 criteria.addOrder(Order.asc(campo));
             }
         } else {
-            criteria.addOrder(Order.asc("descripcion"));
+            criteria.addOrder(Order.asc("matricula"));
         }
 
         if (!params.containsKey("reporte")) {
@@ -106,7 +106,7 @@ public class CobroCampoDaoHibernate extends BaseDao implements CobroCampoDao {
      * @see mx.edu.um.mateo.rh.dao.CobroCampoDao#obtiene(java.lang.Long)
      */
     @Override
-    public CobroCampo obtiene(Integer id) {
+    public CobroCampo obtiene(Long id) {
         log.debug("Obtiene cobro a campo con id = {}", id);
         CobroCampo cobroCampo = (CobroCampo) currentSession().get(CobroCampo.class, id);
         if (cobroCampo == null) {
@@ -138,13 +138,14 @@ public class CobroCampoDaoHibernate extends BaseDao implements CobroCampoDao {
      * @see mx.edu.um.mateo.rh.dao.CobroCampoDao#elimina(java.lang.Long)
      */
     @Override
-    public String elimina(Integer id) {
+    public String elimina(Long id) {
         log.debug("Eliminando prorroga con id {}", id);
         CobroCampo cobroCampo = obtiene(id);
         cobroCampo.setStatus("I");
-        currentSession().delete(cobroCampo);
+        currentSession().saveOrUpdate(cobroCampo);
+        currentSession().merge(cobroCampo);
         currentSession().flush();
-        String descripcion = cobroCampo.getMatricula();
-        return descripcion;
+        String matricula = cobroCampo.getMatricula();
+        return matricula;
     }
 }

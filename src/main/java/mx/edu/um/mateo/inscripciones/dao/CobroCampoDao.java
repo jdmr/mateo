@@ -28,7 +28,7 @@ public interface CobroCampoDao {
      * @param id
      * @return
      */
-    public CobroCampo obtiene(final Integer id);
+    public CobroCampo obtiene(final Long id);
 
     /**
      * graba informacion sobre un CobroCampo
@@ -42,5 +42,5 @@ public interface CobroCampoDao {
      *
      * @param id el id de CobroCampo
      */
-    public String elimina(final Integer id);
+    public String elimina(final Long id);
 }
