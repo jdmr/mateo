@@ -258,7 +258,7 @@ public class AutorizaComida {
                     int intNReg = 0;
                     //System.out.println("GrabaTabla " + comedor.getMatricula() + ", " + comedor.getCarga_id() + ", " + comedor.getBloque());
                     String COMANDO = "SELECT COUNT(*) NREG ";
-                    COMANDO += "FROM COM_AUTORIZACION ";
+                    COMANDO += "FROM noe.COM_AUTORIZACION ";
                     COMANDO += "WHERE MATRICULA = ? ";
                     COMANDO += "AND CARGA_ID = ? ";
                     COMANDO += "AND BLOQUE = ?";
@@ -275,7 +275,7 @@ public class AutorizaComida {
                     rset.close();
 
                     if (intNReg == 0) {
-                        COMANDO = "INSERT INTO COM_AUTORIZACION ";
+                        COMANDO = "INSERT INTO noe.COM_AUTORIZACION ";
                         COMANDO += "(MATRICULA, CARGA_ID, BLOQUE, NUM_COMIDAS, TIPO_COMIDA, FECHA_INICIAL, FECHA_FINAL, USUARIO, CLIENTE, PAQUETE, INSCRITO) ";
                         COMANDO += "VALUES ";
                         COMANDO += "(?, ?, ?, 3, '111', SYSDATE, SYSDATE, ?, 'ALUMNO', 'M', 'N') ";
@@ -391,7 +391,7 @@ public class AutorizaComida {
 
             String COMANDO = "SELECT MATRICULA, CARGA_ID, BLOQUE, "
                     + "NUM_COMIDAS, CLIENTE, TIPO_COMIDA, PAQUETE, FECHA_INICIAL, FECHA_FINAL "
-                    + "FROM COM_AUTORIZACION "
+                    + "FROM noe.COM_AUTORIZACION "
                     + "WHERE CARGA_ID = ? "
                     + "AND INSCRITO IS NULL ";
             pstmt = conn_noe.prepareStatement(COMANDO);

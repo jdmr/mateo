@@ -8,6 +8,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Autor: Luis P?rez
@@ -17,9 +19,10 @@ import javax.sql.DataSource;
  */
 
 
-public class Conexion
-{
-	private DataSource ds = null;
+public class Conexion{
+    
+    private static final Logger log = LoggerFactory.getLogger(mx.edu.um.mateo.inscripciones.model.ccobro.common.Conexion.class);
+    private DataSource ds = null;
 	public Connection conn;
 	private Boolean transaccion;
 	
@@ -31,7 +34,7 @@ public class Conexion
 		
 		this.transaccion=transaccion;
 		try {
-			
+			log.debug("Entrandoo a Conexion arriba");
 			Context initContext = new InitialContext();
 			DataSource ds = (DataSource) initContext.lookup("java:comp/env/jdbc/conn_mateo");
 			conn = ds.getConnection();
@@ -42,7 +45,11 @@ public class Conexion
             /**
              * TODO Quitar esta linea
              */
-            conn = DriverManager.getConnection("jdbc:oracle:thin:@172.16.254.14:1521:oreb", "mateo", "jgrjwjiewm");
+                    log.debug("{}", e);
+                    log.debug("Entrandoo a Conexion abajo");
+                    log.debug("{}", conn);
+            conn = DriverManager.getConnection("jdbc:oracle:thin:@172.16.254.20:1521:ora1", "mateo", "jgrjwjiewm");
+            log.debug("{}", conn);
 		}catch(Exception e2)
 		{
 			//System.out.println("Error al intentar conectarse a la BD "+e2);
@@ -56,7 +63,7 @@ public class Conexion
 		
 		this.transaccion=transaccion;
 		try {
-
+                        log.debug("Entrandoo a Conexion arriba");
 			Context initContext = new InitialContext();
 			//System.out.println("Tratando de conectarse.");
 			Context envContext  = (Context)initContext.lookup("java:/comp/env");
@@ -68,6 +75,11 @@ public class Conexion
 			conn.setAutoCommit(!transaccion.booleanValue());
 			//System.out.println("Asignando autocommit...");
 		} catch (NamingException e) {
+                    log.debug("{}", e);
+                    log.debug("Entrandoo a Conexion abajo");
+                    log.debug("{}", conn);
+            conn = DriverManager.getConnection("jdbc:oracle:thin:@172.16.254.20:1521:ora1", "mateo", "jgrjwjiewm");
+            log.debug("{}", conn);
 			//System.out.println("No se encontro el Datasource "+e);
 		}catch(Exception e2)
 		{
@@ -79,7 +91,7 @@ public class Conexion
 	
 	public Connection getConexionNoe(Boolean transaccion) throws Exception
 	{
-		
+		log.debug("Entrandoo a Conexion arriba");
 		this.transaccion=transaccion;
 		try {
 			
@@ -93,6 +105,11 @@ public class Conexion
 			
 			conn.setAutoCommit(!transaccion.booleanValue());
 		} catch (NamingException e) {
+                   log.debug("{}", e);
+                    log.debug("Entrandoo a Conexion abajo");
+                    log.debug("{}", conn);
+            conn = DriverManager.getConnection("jdbc:oracle:thin:@172.16.254.20:1521:ora1", "mateo", "jgrjwjiewm");
+            log.debug("{}", conn);
 			//System.out.println("No se encontro el Datasource "+e);
 		}catch(Exception e2)
 		{
@@ -104,7 +121,7 @@ public class Conexion
 	
 	public Connection getConexionEnoc(Boolean transaccion) throws Exception
 	{
-		
+		log.debug("Entrandoo a Conexion arriba");
 		this.transaccion=transaccion;
 		try {
 			
@@ -118,6 +135,11 @@ public class Conexion
 			
 			conn.setAutoCommit(!transaccion.booleanValue());
 		} catch (NamingException e) {
+                    log.debug("{}", e);
+                    log.debug("Entrandoo a Conexion abajo");
+                    log.debug("{}", conn);
+            conn = DriverManager.getConnection("jdbc:oracle:thin:@172.16.254.20:1521:ora1", "mateo", "jgrjwjiewm");
+            log.debug("{}", conn);
 			//System.out.println("No se encontro el Datasource "+e);
 		}catch(Exception e2)
 		{
@@ -129,7 +151,7 @@ public class Conexion
 	
 	public Connection getConexionPedro(Boolean transaccion) throws Exception
 	{
-		
+		log.debug("Entrandoo a Conexion arriba");
 		this.transaccion=transaccion;
 		try {
 			
@@ -143,6 +165,12 @@ public class Conexion
 			
 			conn.setAutoCommit(!transaccion.booleanValue());
 		} catch (NamingException e) {
+                    log.debug("{}", e);
+                    log.debug("Entrandoo a Conexion abajo");
+                    log.debug("{}", conn);
+            conn = DriverManager.getConnection("jdbc:oracle:thin:@172.16.254.20:1521:ora1", "mateo", "jgrjwjiewm");
+            log.debug("{}", conn);
+            
 			//System.out.println("No se encontro el Datasource "+e);
 		}catch(Exception e2)
 		{

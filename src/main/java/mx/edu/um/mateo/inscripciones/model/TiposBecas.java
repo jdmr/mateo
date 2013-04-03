@@ -45,8 +45,26 @@ public class TiposBecas {
     private Boolean perteneceAlumno; //true si la beca es del alumno, y no de la plaza de un departamento
     @Column
     private Boolean soloPostgrado; //true si la beca es solo para alumnos de postgrado
-    @ManyToOne(optional = false)
+     @ManyToOne(optional = false)
     private Empresa empresa;
+
+    public TiposBecas() {
+    }
+
+    
+    public TiposBecas(String descripcion, Boolean diezma ,BigDecimal porcentaje, BigDecimal tope, Boolean perteneceAlumno, Boolean soloPostgrado, Integer numHoras, Empresa empresa ){
+        this.descripcion=descripcion;
+        this.diezma=diezma;
+        this.porcentaje=porcentaje;
+        this.tope=tope;
+        this.numHoras=numHoras;
+        this.empresa = empresa;
+        this.perteneceAlumno=perteneceAlumno;
+        this.soloPostgrado=soloPostgrado;
+}       
+
+   
+
 //    private CentroCosto centroCosto;
 //    private CtaMayor ctaMayor;
 

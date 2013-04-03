@@ -1,2 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context antiJARLocking="true" path="/mateo"/>
+<Context antiJARLocking="true" path="/mateo">
+<Resource name="jdbc/financiero" auth="Container" type="javax.sql.DataSource" 
+        maxActive="150" maxIdle="30" maxWait="10000" driverClassName="oracle.jdbc.driver.OracleDriver"
+        username="noe" password="arcopacto" url="jdbc:oracle:thin:@172.16.254.20:1521:ora1" defaultAutoCommit="true" 
+        removeAbandoned="true" removeAbandonedTimeout="60" logAbandoned="true"/>
+        
+    <Resource name="jdbc/conn_enoc" auth="Container" type="javax.sql.DataSource" 
+        maxActive="100" maxIdle="30" maxWait="10000" driverClassName="oracle.jdbc.driver.OracleDriver"
+        username="enoc" password="caminacondios" url="jdbc:oracle:thin:@172.16.254.20:1521:ora1" 
+        defaultAutoCommit="true" removeAbandoned="true" removeAbandonedTimeout="60" logAbandoned="true"/>
+        
+    <Resource name="jdbc/conn_mateo" auth="Container" type="javax.sql.DataSource" 
+        maxActive="100" maxIdle="30" maxWait="10000" driverClassName="oracle.jdbc.driver.OracleDriver"
+        username="mateo" password="jgrjwjiewm" url="jdbc:oracle:thin:@172.16.254.20:1521:ora1" 
+        defaultAutoCommit="true" removeAbandoned="true" removeAbandonedTimeout="60" logAbandoned="true"/>
+        
+    <Resource name="jdbc/conn_noe" auth="Container" type="javax.sql.DataSource" 
+        maxActive="100" maxIdle="30" maxWait="10000" driverClassName="oracle.jdbc.driver.OracleDriver"
+        username="noe" password="arcopacto" url="jdbc:oracle:thin:@172.16.254.20:1521:ora1"
+        defaultAutoCommit="true" removeAbandoned="true" removeAbandonedTimeout="60" logAbandoned="true"/>
+        
+    <Resource name="jdbc/conn_aron" auth="Container" type="javax.sql.DataSource" 
+        maxActive="50" maxIdle="30" maxWait="10000" driverClassName="oracle.jdbc.driver.OracleDriver"
+        username="aron" password="iqgnyousvg" url="jdbc:oracle:thin:@172.16.254.20:1521:ora1" 
+        defaultAutoCommit="true" removeAbandoned="true" removeAbandonedTimeout="60" logAbandoned="true"/>
+        
+    <Resource name="jdbc/conn_pedro" auth="Container" type="javax.sql.DataSource" 
+        maxActive="50" maxIdle="30" maxWait="10000" driverClassName="oracle.jdbc.driver.OracleDriver"
+        username="pedro" password="gduwztowop" url="jdbc:oracle:thin:@172.16.254.20:1521:ora1" 
+        defaultAutoCommit="true" removeAbandoned="true" removeAbandonedTimeout="60" logAbandoned="true"/>
+        
+    <Resource name="jdbc/conn_moises" auth="Container" type="javax.sql.DataSource" 
+        maxActive="50" maxIdle="30" maxWait="10000" driverClassName="oracle.jdbc.driver.OracleDriver"
+        username="moises" password="fakhnrftnw" url="jdbc:oracle:thin:@172.16.254.20:1521:ora1" 
+        defaultAutoCommit="true" removeAbandoned="true" removeAbandonedTimeout="60" logAbandoned="true"/>
+</Context>

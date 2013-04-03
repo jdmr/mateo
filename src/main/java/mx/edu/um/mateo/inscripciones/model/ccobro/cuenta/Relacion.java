@@ -168,7 +168,7 @@ public class Relacion {
 			
 			String COMANDO = "SELECT ID_CTAMAYOR, ID_CCOSTO, ID_AUXILIAR, NOMBRE, " +
 					"NATURALEZA, STATUS " +
-					"FROM CONT_RELACION " +
+					"FROM mateo.CONT_RELACION " +
 					"WHERE ID_EJERCICIO = ? ";					
 			
 			pstmt = this.conn.prepareStatement(COMANDO);
@@ -207,7 +207,7 @@ public class Relacion {
 			if(conn == null || conn.isClosed())
 			conn = new Conexion().getConexionMateo(new Boolean(false));
 			
-			String COMANDO = "INSERT INTO CONT_RELACION " +
+			String COMANDO = "INSERT INTO mateo.CONT_RELACION " +
 					"(ID_EJERCICIO, ID_CTAMAYOR, ID_CCOSTO, ID_AUXILIAR, NOMBRE, NATURALEZA, STATUS, " +
 					"TIPO_CUENTA, ID_EJERCICIO2, ID_EJERCICIO3 ) " +
 					"VALUES " +

@@ -87,7 +87,7 @@ public class CtaMayor {
 			
 			String COMANDO = "SELECT ID_EJERCICIO, ID_CTAMAYOR, TIPO_CUENTA, NOMBRE, " +
 				"NOMBREFISCAL, DETALLE, AVISO, AUXILIAR, IVA, PCTIVA, DETALLER " +
-				"FROM CONT_CTAMAYOR " +
+				"FROM mateo.CONT_CTAMAYOR " +
 				"WHERE DETALLE = 'S' " +
 				"AND ID_EJERCICIO = ? " +
 				"AND ID_CTAMAYOR = ? ";
@@ -285,7 +285,7 @@ public class CtaMayor {
 			
 			String COMANDO = "SELECT ID_CTAMAYOR, TIPO_CUENTA, NOMBRE, NOMBREFISCAL, " +
 					"DETALLE, AVISO, AUXILIAR, IVA, COALESCE(PCTIVA,0) PCTIVA, DETALLER " +
-					"FROM CONT_CTAMAYOR " +
+					"FROM mateo.CONT_CTAMAYOR " +
 					"WHERE ID_EJERCICIO = ? ";
 								
 			pstmt = this.conn.prepareStatement(COMANDO);
@@ -329,7 +329,7 @@ public class CtaMayor {
 			if(conn == null || conn.isClosed())
 			conn = new Conexion().getConexionMateo(new Boolean(false));
 			
-			String COMANDO = "INSERT INTO CONT_CTAMAYOR " +
+			String COMANDO = "INSERT INTO mateo.CONT_CTAMAYOR " +
 					"(ID_EJERCICIO, ID_CTAMAYOR, TIPO_CUENTA, NOMBRE, NOMBREFISCAL, " +
 					"DETALLE, AVISO, AUXILIAR, IVA, PCTIVA, DETALLER) " +
 					"VALUES " +
@@ -384,7 +384,7 @@ public class CtaMayor {
 				  conn = new Conexion().getConexionMateo(new Boolean(false));
 			  
 			  String COMANDO = "SELECT TIPO_CUENTA ";
-			  COMANDO += "FROM CONT_CTAMAYOR ";
+			  COMANDO += "FROM mateo.CONT_CTAMAYOR ";
 			  COMANDO += "WHERE ID_EJERCICIO = ? ";
 			  COMANDO += "AND ID_CTAMAYOR = ? ";
 			  COMANDO += "AND DETALLE = 'S' ";

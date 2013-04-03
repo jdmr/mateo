@@ -81,7 +81,7 @@ public class Modalidad {
 				conn = new Conexion().getConexionEnoc(new Boolean(false));
 			
 			String COMANDO = "SELECT MODALIDAD_ID, NOMBRE_MODALIDAD " +
-					"FROM CAT_MODALIDAD ";
+					"FROM enoc.CAT_MODALIDAD ";
 			pstmt = conn.prepareStatement(COMANDO);
 			rset = pstmt.executeQuery();
 			

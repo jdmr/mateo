@@ -157,7 +157,7 @@ public class ColportorControllerTest extends BaseTest {
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         
-        Rol rol = new Rol("ROLE_COL");
+        Rol rol = new Rol("ROLE_CLP");
         currentSession().save(rol);        
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);

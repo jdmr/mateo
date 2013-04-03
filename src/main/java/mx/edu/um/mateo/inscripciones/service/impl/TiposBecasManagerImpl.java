@@ -4,7 +4,6 @@
  */
 package mx.edu.um.mateo.inscripciones.service.impl;
 
-import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inscripciones.dao.TiposBecasDao;
@@ -22,12 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TiposBecasManagerImpl implements TiposBecasManager{
     @Autowired
-     private TiposBecasDao dao;
-
-   
-   
-
-    
+     private TiposBecasDao dao;    
     
       @Override
     public Map<String, Object> getTiposBeca(Map<String, Object> params) {
