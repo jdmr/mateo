@@ -54,7 +54,7 @@
                     <s:bind path="paquete.matricula">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="matricula">
-                                <s:message code="matricula.label" />
+                                <s:message code="importe.matricula.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="matricula" maxlength="7" required="true" />
@@ -64,7 +64,7 @@
                     <s:bind path="paquete.ensenanza">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="ensenanza">
-                                <s:message code="ensenanza.label" />
+                                <s:message code="importe.ensenanza.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="ensenanza" maxlength="8" required="true" />
@@ -74,7 +74,7 @@
                     <s:bind path="paquete.internado">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="internado">
-                                <s:message code="internado.label" />
+                                <s:message code="importe.internado.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="internado" maxlength="8" required="true" />

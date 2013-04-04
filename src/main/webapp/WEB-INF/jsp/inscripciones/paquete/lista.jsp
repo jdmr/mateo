@@ -54,13 +54,13 @@
                             <jsp:param name="columna" value="descripcion" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="matricula" />
+                            <jsp:param name="columna" value="importe.matricula" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="ensenanza" />
+                            <jsp:param name="columna" value="importe.ensenanza" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="internado" />
+                            <jsp:param name="columna" value="importe.internado" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="acfe" />

@@ -169,17 +169,17 @@ public class CobroCampoController extends BaseController {
     @RequestMapping("/nuevo")
     public String nueva(HttpServletRequest request, Model modelo) {
         Map<String, Object> params = new HashMap<>();
-        log.debug("Nueva Prorroga");
+        log.debug("Nueva Cobro a Campo");
         params = institucionDao.lista(params);
         List<Institucion> instituciones = (List) params.get(Constantes.CONTAINSKEY_INSTITUCION);
         modelo.addAttribute(Constantes.CONTAINSKEY_INSTITUCION, instituciones);
-        Prorroga prorroga = new Prorroga();
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_PRORROGA, prorroga);
+        CobroCampo cobroCampo = new CobroCampo();
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_COBROCAMPO, cobroCampo);
         params.put("empresa", request.getSession()
                 .getAttribute("empresaId"));
         params.put("reporte", true);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_PRORROGA, prorroga);
-        return Constantes.PATH_PRORROGA_NUEVO;
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_COBROCAMPO, cobroCampo);
+        return Constantes.PATH_COBROCAMPO_NUEVO;
 
 
 
@@ -203,9 +203,9 @@ public class CobroCampoController extends BaseController {
             Usuario usuario = ambiente.obtieneUsuario();
             if (cobroCampo.getId() == null) {
                 cobroCampo.setUsuarioAlta(usuario);
-                
+
             }
-            if(cobroCampo.getId()!=null){
+            if (cobroCampo.getId() != null) {
                 cobroCampo.setUsuarioModificacion(usuario);
             }
             Institucion institucion = institucionDao.obtiene(cobroCampo.getInstitucion().getId());
@@ -225,6 +225,10 @@ public class CobroCampoController extends BaseController {
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Editar cuenta de tipos de becas {}", id);
+        Map<String, Object> params = new HashMap<>();
+        params = institucionDao.lista(params);
+        List<Institucion> instituciones = (List) params.get(Constantes.CONTAINSKEY_INSTITUCION);
+        modelo.addAttribute(Constantes.CONTAINSKEY_INSTITUCION, instituciones);
         CobroCampo cobroCampo = manager.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_COBROCAMPO, cobroCampo);
         return Constantes.PATH_COBROCAMPO_EDITA;
