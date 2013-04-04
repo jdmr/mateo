@@ -8,6 +8,7 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,13 +63,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping(Constantes.PATH_COBROCAMPO)
-public class CobroCampoController extends BaseController{
-@Autowired
-private CobroCampoManager manager;
-@Autowired
-private InstitucionDao institucionDao;
+public class CobroCampoController extends BaseController {
 
-    @RequestMapping({"", "/lista"}) 
+    @Autowired
+    private CobroCampoManager manager;
+    @Autowired
+    private InstitucionDao institucionDao;
+
+    @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
             @RequestParam(required = false) Long pagina,
@@ -166,9 +168,9 @@ private InstitucionDao institucionDao;
 
     @RequestMapping("/nuevo")
     public String nueva(HttpServletRequest request, Model modelo) {
-         Map<String, Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         log.debug("Nueva Prorroga");
-         params = institucionDao.lista(params);
+        params = institucionDao.lista(params);
         List<Institucion> instituciones = (List) params.get(Constantes.CONTAINSKEY_INSTITUCION);
         modelo.addAttribute(Constantes.CONTAINSKEY_INSTITUCION, instituciones);
         Prorroga prorroga = new Prorroga();
@@ -178,9 +180,9 @@ private InstitucionDao institucionDao;
         params.put("reporte", true);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_PRORROGA, prorroga);
         return Constantes.PATH_PRORROGA_NUEVO;
-      
 
-		
+
+
     }
 
     @Transactional
@@ -199,9 +201,16 @@ private InstitucionDao institucionDao;
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
-             Institucion institucion = institucionDao.obtiene(cobroCampo.getInstitucion().getId());
+            if (cobroCampo.getId() == null) {
+                cobroCampo.setUsuarioAlta(usuario);
+                
+            }
+            if(cobroCampo.getId()!=null){
+                cobroCampo.setUsuarioModificacion(usuario);
+            }
+            Institucion institucion = institucionDao.obtiene(cobroCampo.getInstitucion().getId());
             cobroCampo.setInstitucion(institucion);
-            manager.graba(cobroCampo,usuario);
+            manager.graba(cobroCampo, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el cobro a campo", e);
             return Constantes.PATH_COBROCAMPO_NUEVO;
@@ -341,5 +350,4 @@ private InstitucionDao institucionDao;
 
         return archivo;
     }
-    
 }
