@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.inscripciones.service.impl;
 
+import java.util.Date;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inscripciones.dao.CobroCampoDao;
@@ -36,6 +37,12 @@ public class CobroCampoManagerImpl  implements CobroCampoManager{
 
     @Override
     public void graba(CobroCampo cobroCampo, Usuario usuario) {
+        if(cobroCampo.getId()==null){
+            cobroCampo.setFechaAlta(new Date());
+        }
+        if(cobroCampo.getId()!=null){
+            cobroCampo.setFechaModificacion(new Date());
+        }
         dao.graba(cobroCampo, usuario);
     }
 
