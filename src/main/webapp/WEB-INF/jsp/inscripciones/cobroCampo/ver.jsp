@@ -38,20 +38,20 @@
                     <div class="span11">${cobroCampo.status}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="matricula.label" /></div>
+                    <div class="span1"><s:message code="importe.matricula.label" /></div>
                     <div class="span11">${cobroCampo.importeMatricula}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="ensenanza.label" /></div>
+                    <div class="span1"><s:message code="importe.ensenanza.label" /></div>
                     <div class="span11">${cobroCampo.importeEnsenanza}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="internado.label" /></div>
+                    <div class="span1"><s:message code="importe.internado.label" /></div>
                     <div class="span11">${cobroCampo.importeInternado}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="institucion.label" /></div>
-                    <div class="span11">${cobroCampo.institucion}</div>
+                    <div class="span11">${cobroCampo.institucion.nombre}</div>
                 </div>
 
 

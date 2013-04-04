@@ -13,7 +13,7 @@
         </jsp:include>
 
         <div id="nuevo-colegio" class="content scaffold-list" role="main">
-            <h1><s:message code="prorroga.nuevo.label" /></h1>
+            <h1><s:message code="cobroCampo.nuevo.label" /></h1>
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/inscripciones/cobroCampo'/>"><i class="icon-list icon-white"></i> <s:message code='cobroCampo.lista.label' /></a>
             </p>
@@ -48,34 +48,34 @@
                             <form:errors path="status" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="cobroCampo.matricula">
+                    <s:bind path="cobroCampo.importeMatricula">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="matricula">
-                                <s:message code="matricula.label" />
+                                <s:message code="importe.matricula.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="matricula" maxlength="8" required="true" />
-                            <form:errors path="matricula" cssClass="alert alert-error" />
+                            <form:input path="importeMatricula" maxlength="8" required="true" />
+                            <form:errors path="importeMatricula" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="cobroCampo.ensenanza">
+                    <s:bind path="cobroCampo.importeEnsenanza">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="ensenanza">
-                                <s:message code="ensenanza.label" />
+                                <s:message code="importe.ensenanza.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="ensenanza" maxlength="8" required="true" />
-                            <form:errors path="ensenanza" cssClass="alert alert-error" />
+                            <form:input path="importeEnsenanza" maxlength="8" required="true" />
+                            <form:errors path="importeEnsenanza" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="cobroCampo.internado">
+                    <s:bind path="cobroCampo.importeInternado">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="internado">
-                                <s:message code="internado.label" />
+                                <s:message code="importe.internado.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="internado" maxlength="8" required="true" />
-                            <form:errors path="internado" cssClass="alert alert-error" />
+                            <form:input path="importeInternado" maxlength="8" required="true" />
+                            <form:errors path="importeInternado" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                     <s:bind path="cobroCampo.institucion">
