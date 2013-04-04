@@ -2782,18 +2782,18 @@ public class Constantes {
      * Valores para Cobros a campos
      *
      */
-    public static final String CONTAINSKEY_COBROSCAMPOS = "cobroscampos";
+    public static final String CONTAINSKEY_COBROSCAMPOS = "cobrosCampos";
     /**
      * Valores para Cobros a campos
      *
      */
-    public static final String PATH_COBROCAMPO = "/inscripciones/cobrocampo";
-    public static final String PATH_COBROCAMPO_LISTA = "/inscripciones/cobrocampo/lista";
-    public static final String PATH_COBROCAMPO_VER = "/inscripciones/cobrocampo/ver";
-    public static final String PATH_COBROCAMPO_NUEVO = "/inscripciones/cobrocampo/nuevo";
-    public static final String PATH_COBROCAMPO_EDITA = "/inscripciones/cobrocampo/edita";
-    public static final String PATH_COBROCAMPO_GRABA = "/inscripciones/cobrocampo/graba";
-    public static final String PATH_COBROCAMPO_ACTUALIZA = "/inscripciones/cobrocampo/actualiza";
-    public static final String PATH_COBROCAMPO_ELIMINA = "/inscripciones/cobrocampo/elimina";
-    public static final String ADDATTRIBUTE_COBROCAMPO = "cobrocampo";
+    public static final String PATH_COBROCAMPO = "/inscripciones/cobroCampo";
+    public static final String PATH_COBROCAMPO_LISTA = "/inscripciones/cobroCampo/lista";
+    public static final String PATH_COBROCAMPO_VER = "/inscripciones/cobroCampo/ver";
+    public static final String PATH_COBROCAMPO_NUEVO = "/inscripciones/cobroCampo/nuevo";
+    public static final String PATH_COBROCAMPO_EDITA = "/inscripciones/cobroCampo/edita";
+    public static final String PATH_COBROCAMPO_GRABA = "/inscripciones/cobroCampo/graba";
+    public static final String PATH_COBROCAMPO_ACTUALIZA = "/inscripciones/cobroCampo/actualiza";
+    public static final String PATH_COBROCAMPO_ELIMINA = "/inscripciones/cobroCampo/elimina";
+    public static final String ADDATTRIBUTE_COBROCAMPO = "cobroCampo";
 }
