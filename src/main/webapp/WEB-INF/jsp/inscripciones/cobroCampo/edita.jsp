@@ -29,6 +29,8 @@
                 </form:errors>
                 <form:hidden path="id" />
                 <form:hidden path="version" />
+                <form:hidden path="usuarioAlta.id" />
+                <form:hidden path="fechaAlta" />
                 <fieldset>
                     <s:bind path="cobroCampo.matricula">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">

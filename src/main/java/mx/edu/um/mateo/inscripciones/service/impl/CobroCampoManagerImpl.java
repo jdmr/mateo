@@ -7,6 +7,7 @@ package mx.edu.um.mateo.inscripciones.service.impl;
 import java.util.Date;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.service.BaseManager;
 import mx.edu.um.mateo.inscripciones.dao.CobroCampoDao;
 import mx.edu.um.mateo.inscripciones.model.CobroCampo;
 import mx.edu.um.mateo.inscripciones.service.CobroCampoManager;
@@ -20,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 @Service
-public class CobroCampoManagerImpl  implements CobroCampoManager{
+public class CobroCampoManagerImpl extends BaseManager implements CobroCampoManager{
     
     @Autowired
     private CobroCampoDao dao;
@@ -37,18 +38,14 @@ public class CobroCampoManagerImpl  implements CobroCampoManager{
 
     @Override
     public void graba(CobroCampo cobroCampo, Usuario usuario) {
-        if(cobroCampo.getId()==null){
-            cobroCampo.setFechaAlta(new Date());
-        }
-        if(cobroCampo.getId()!=null){
-            cobroCampo.setFechaModificacion(new Date());
-        }
+      log.debug("cobroCapo {}", cobroCampo);
         dao.graba(cobroCampo, usuario);
     }
 
     @Override
     public String elimina(final Long id) {
         CobroCampo cobroCampo = dao.obtiene(id);
+        
         dao.elimina(new Long(id));
         return cobroCampo.getMatricula();
     }

@@ -203,13 +203,15 @@ public class CobroCampoController extends BaseController {
             Usuario usuario = ambiente.obtieneUsuario();
             if (cobroCampo.getId() == null) {
                 cobroCampo.setUsuarioAlta(usuario);
-
-            }
-            if (cobroCampo.getId() != null) {
+                cobroCampo.setFechaAlta(new Date());
+            } else {
                 cobroCampo.setUsuarioModificacion(usuario);
+                cobroCampo.setFechaModificacion(new Date());
             }
+//if (cobroCampo.getId() != null)
             Institucion institucion = institucionDao.obtiene(cobroCampo.getInstitucion().getId());
             cobroCampo.setInstitucion(institucion);
+            log.debug("cobro campo {}", cobroCampo);
             manager.graba(cobroCampo, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el cobro a campo", e);
