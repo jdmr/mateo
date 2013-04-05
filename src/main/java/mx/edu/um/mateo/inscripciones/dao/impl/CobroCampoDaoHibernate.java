@@ -56,9 +56,9 @@ public class CobroCampoDaoHibernate extends BaseDao implements CobroCampoDao {
             params.put("offset", 0);
         }
         Criteria criteria = currentSession().createCriteria(CobroCampo.class)
-                .setFetchMode("usuario", FetchMode.SELECT);
+                .setFetchMode("institucion", FetchMode.SELECT);
         Criteria countCriteria = currentSession().createCriteria(CobroCampo.class)
-                .setFetchMode("usuario", FetchMode.SELECT);
+                .setFetchMode("institucion", FetchMode.SELECT);
 
         if (params.containsKey("empresa")) {
             criteria.createCriteria("empresa").add(
@@ -127,6 +127,7 @@ public class CobroCampoDaoHibernate extends BaseDao implements CobroCampoDao {
         if (usuario != null) {
             cobroCampo.setEmpresa(usuario.getEmpresa());
         }
+        log.debug("cobroCampo {}", cobroCampo);
         currentSession().saveOrUpdate(cobroCampo);
         currentSession().merge(cobroCampo);
         currentSession().flush();
