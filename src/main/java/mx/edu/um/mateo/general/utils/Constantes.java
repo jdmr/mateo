@@ -2456,6 +2456,7 @@ public class Constantes {
     public static final String CONTAINSKEY_COLEGIOS_COLPORTOR = "colegios";
     public static final String CONTAINSKEY_TIPOSBECAS = "tiposBecas";
     public static final String CONTAINSKEY_PAQUETES = "paquetes";
+    public static final String CONTAINSKEY_ALUMNOPAQUETES = "alumnoPaquetes";
     /**
      * Valores para el los addAttribute para las clases
      */
@@ -2799,4 +2800,13 @@ public class Constantes {
     public static final String PATH_PRORROGA_ACTUALIZA = "/inscripciones/prorroga/actualiza";
     public static final String PATH_PRORROGA_ELIMINA = "/inscripciones/prorroga/elimina";
     public static final String ADDATTRIBUTE_PRORROGA = "prorroga";
+    
+    public static final String PATH_ALUMNOPAQUETE = "/inscripciones/alumnoPaquete";
+    public static final String PATH_ALUMNOPAQUETE_LISTA = "inscripciones/alumnoPaquete/lista";
+    public static final String PATH_ALUMNOPAQUETE_VER = "inscripciones/alumnoPaquete/ver";
+    public static final String PATH_ALUMNOPAQUETE_NUEVO = "/inscripciones/alumnoPaquete/nuevo";
+    public static final String PATH_ALUMNOPAQUETE_EDITA = "/inscripciones/alumnoPaquete/edita";
+    public static final String PATH_ALUMNOPAQUETE_GRABA = "/inscripciones/alumnoPaquete/graba";
+    public static final String PATH_ALUMNOPAQUETE_ELIMINA = "/inscripciones/alumnoPaquete/elimina";
+    public static final String ADDATTRIBUTE_ALUMNOPAQUETE = "alumnoPaquete";
 }

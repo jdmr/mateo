@@ -24,7 +24,7 @@ public class Paquete {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     @Version
     private Integer version;
     @Column(nullable = false, length = 50)
@@ -55,7 +55,19 @@ public class Paquete {
 
     }
 
-    public Paquete(Integer id) {
+    public Paquete(String nombre, String descripcion, String matricula, Double ensenanza, Double internado, String acfe, Empresa empresa) {
+        this.empresa = empresa;
+        this.nombre = nombre;
+        this.matricula= matricula;
+        this.descripcion = descripcion;
+        this.ensenanza = ensenanza;
+        this.internado = internado;
+        this.acfe = acfe;
+    }
+    
+    
+
+    public Paquete(Long id) {
         this.id = id;
     }
 
@@ -76,14 +88,14 @@ public class Paquete {
     /**
      * @return Returns the id.
      */
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
     /**
      * @param id The id to set.
      */
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

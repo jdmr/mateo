@@ -22,8 +22,8 @@
     <logger name="mx.edu.um.mateo" level="debug"/>
     <logger name="org.springframework.orm.hibernate4" level="ERROR"/>
     <logger name="org.hibernate.engine.transaction" level="ERROR"/>
-    <logger name="org.hibernate.SQL" level="ERROR"/>
-    <logger name="org.hibernate.type" level="ERROR"/>
+    <logger name="org.hibernate.SQL" level="TRACE"/>
+    <logger name="org.hibernate.type" level="TRACE"/>
 
      <logger name="org.springframework" level="ERROR"/>
      <logger name="org.springframework.security" level="ERROR"/>

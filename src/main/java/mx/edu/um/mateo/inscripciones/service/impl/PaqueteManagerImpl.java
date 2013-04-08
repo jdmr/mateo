@@ -31,7 +31,7 @@ public class PaqueteManagerImpl implements PaqueteManager {
 
     @Override
     public Paquete getPaquete(final String id) {
-        return dao.getPaquete(new Integer(id));
+        return dao.getPaquete(new Long(id));
     }
 
     @Override
@@ -41,6 +41,6 @@ public class PaqueteManagerImpl implements PaqueteManager {
 
     @Override
     public void removePaquete(final String id) {
-        dao.removePaquete(new Integer(id));
+        dao.removePaquete(new Long(id));
     }
 }
