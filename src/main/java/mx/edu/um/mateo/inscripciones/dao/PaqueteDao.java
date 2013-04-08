@@ -25,7 +25,7 @@ public interface PaqueteDao {
      * @return paquete populated paquete object
      */
     public Paquete obtiene(final Integer id);
-
+    
     /**
      * Saves a paquete's information
      * @param paquete the object to be saved
