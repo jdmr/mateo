@@ -25,22 +25,22 @@ public class PaqueteManagerImpl implements PaqueteManager {
     private PaqueteDao dao;
 
     @Override
-    public Map<String, Object> getPaquetes(Map<String, Object> params) {
-        return dao.getPaquetes(params);
+    public Map<String, Object> lista(Map<String, Object> params) {
+        return dao.lista(params);
     }
 
     @Override
-    public Paquete getPaquete(final String id) {
-        return dao.getPaquete(new Integer(id));
+    public Paquete obtiene(final String id) {
+        return dao.obtiene(new Integer(id));
     }
 
     @Override
-    public void graba(Paquete paquete, Usuario usuario) {
-        dao.graba(paquete, usuario);
+    public void crea(Paquete paquete, Usuario usuario) {
+        dao.crea(paquete, usuario);
     }
 
     @Override
-    public void removePaquete(final String id) {
-        dao.removePaquete(new Integer(id));
+    public void elimina(final String id) {
+        dao.elimina(new Integer(id));
     }
 }

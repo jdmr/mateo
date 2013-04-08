@@ -15,7 +15,7 @@ import mx.edu.um.mateo.inscripciones.model.TiposBecas;
  */
 public interface PaqueteManager {
 
-    public Map<String, Object> getPaquetes(Map<String, Object> params);
+    public Map<String, Object> lista(Map<String, Object> params);
 
     /**
      * Gets paquete's information based on id.
@@ -23,19 +23,19 @@ public interface PaqueteManager {
      * @param id the tipoBeca's id
      * @return paquete populated paquete object
      */
-    public Paquete getPaquete(final String id);
+    public Paquete obtiene(final String id);
 
     /**
      * Saves a paquete's information
      *
      * @param paquete the object to be saved
      */
-    public void graba(Paquete paquete, Usuario usuario);
+    public void crea(Paquete paquete, Usuario usuario);
 
     /**
      * Removes a paquete from the database by id
      *
      * @param id the paquete's id
      */
-    public void removePaquete(final String id);
+    public void elimina(final String id);
 }

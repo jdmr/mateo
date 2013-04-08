@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.inscripciones.dao;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,26 +74,28 @@ public class PaqueteDaoTest {
     }
 
     /**
-     * Test of getPaquetes method, of class PaqueteDao.
+     * Test of lista method, of class PaqueteDao.
      */
     @Test
     public void testGetPaquetes() {
-   
-
-         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         assertNotNull(organizacion.getId());
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         assertNotNull(empresa.getId());
+        
         Rol rol = new Rol("ROLE_TEST");
         currentSession().save(rol);
         assertNotNull(rol.getId());
+        
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
+        
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         assertNotNull(almacen.getId());
+        
         Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
@@ -99,23 +103,24 @@ public class PaqueteDaoTest {
         currentSession().save(usuario);
         Long id = usuario.getId();
         assertNotNull(id);
+        
         Paquete paquete=null;
         for (int i = 0; i < 20; i++) {
             paquete = new Paquete();
             paquete.setAcfe("s");
             paquete.setDescripcion("test");
-            paquete.setEnsenanza(new Double("1.2"));
-            paquete.setInternado(new Double("2.2"));
-            paquete.setMatricula("1110475");
+            paquete.setEnsenanza(new BigDecimal("1.2"));
+            paquete.setInternado(new BigDecimal("2.2"));
+            paquete.setMatricula(new BigDecimal("3.3"));
             paquete.setNombre("Test");
-            instance.graba(paquete, usuario);
+            instance.crea(paquete, usuario);
             assertNotNull(paquete.getId());
         }
 
         Map<String, Object> params;
         params = new TreeMap<>();
         params.put("empresa", empresa.getId());
-        Map<String, Object> result = instance.getPaquetes(params);
+        Map<String, Object> result = instance.lista(params);
         assertNotNull(result.get(Constantes.CONTAINSKEY_PAQUETES));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
         assertEquals(10, ((List<TiposBecas>) result.get(Constantes.CONTAINSKEY_PAQUETES)).size());
@@ -123,26 +128,31 @@ public class PaqueteDaoTest {
     }
 
     /**
-     * Test of getPaquete method, of class PaqueteDao.
+     * Test of obtiene method, of class PaqueteDao.
      */
     @Test
     public void testGetPaquete() {
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
+        assertNotNull(organizacion.getId());
+        
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
+        assertNotNull(empresa.getId());
+        
         String nombre = "nombre";
         Paquete paquete = new Paquete();
         paquete.setAcfe("s");
         paquete.setDescripcion("test");
-        paquete.setEnsenanza(new Double("1.2"));
-        paquete.setInternado(new Double("2.2"));
-        paquete.setMatricula("1110475");
+        paquete.setEnsenanza(new BigDecimal("1.2"));
+        paquete.setInternado(new BigDecimal("2.2"));
+        paquete.setMatricula(new BigDecimal("3.3"));
         paquete.setNombre(nombre);
         paquete.setEmpresa(empresa);
         currentSession().save(paquete);
         assertNotNull(paquete.getId());
-        Paquete paquete1 = instance.getPaquete(paquete.getId());
+        
+        Paquete paquete1 = instance.obtiene(paquete.getId());
         assertEquals(paquete.getNombre(), paquete1.getNombre());
 
     }
@@ -155,17 +165,22 @@ public class PaqueteDaoTest {
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         assertNotNull(organizacion.getId());
+        
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         assertNotNull(empresa.getId());
+        
         Rol rol = new Rol("ROLE_TEST");
         currentSession().save(rol);
         assertNotNull(rol.getId());
+        
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
+        
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         assertNotNull(almacen.getId());
+        
         Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
@@ -173,40 +188,56 @@ public class PaqueteDaoTest {
         currentSession().save(usuario);
         Long id = usuario.getId();
         assertNotNull(id);
+        
         String nombre = "nombre";
         Paquete paquete = new Paquete();
         paquete.setAcfe("s");
         paquete.setDescripcion("test");
-        paquete.setEnsenanza(new Double("1.2"));
-        paquete.setInternado(new Double("2.2"));
-        paquete.setMatricula("1110475");
+        paquete.setEnsenanza(new BigDecimal("1.2"));
+        paquete.setInternado(new BigDecimal("2.2"));
+        paquete.setMatricula(new BigDecimal("3.3"));
         paquete.setNombre(nombre);
         paquete.setEmpresa(empresa);
-        instance.graba(paquete, usuario);
+        instance.crea(paquete, usuario);
         assertNotNull(paquete.getId());
+        
+        Paquete paquete1 = instance.obtiene(paquete.getId());
+        assertEquals(paquete.getNombre(), paquete1.getNombre());
     }
 
     /**
-     * Test of removePaquete method, of class PaqueteDao.
+     * Test of elimina method, of class PaqueteDao.
      */
     @Test
     public void testRemovePaquete() {
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
+        assertNotNull(organizacion.getId());
+        
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
+        assertNotNull(empresa.getId());
+        
         String nombre = "nombre";
         Paquete paquete = new Paquete();
         paquete.setAcfe("s");
         paquete.setDescripcion("test");
-        paquete.setEnsenanza(new Double("1.2"));
-        paquete.setInternado(new Double("2.2"));
-        paquete.setMatricula("1110475");
+        paquete.setEnsenanza(new BigDecimal("1.2"));
+        paquete.setInternado(new BigDecimal("2.2"));
+        paquete.setMatricula(new BigDecimal("3.3"));
         paquete.setNombre(nombre);
         paquete.setEmpresa(empresa);
         currentSession().save(paquete);
         assertNotNull(paquete.getId());
-        String descripcion = instance.removePaquete(paquete.getId());
+        
+        String descripcion = instance.elimina(paquete.getId());
         assertEquals(paquete.getDescripcion(), descripcion);
+        
+        try{
+            Paquete paquete1 = instance.obtiene(paquete.getId());        
+            fail("Se encontro paquete "+paquete1);
+        }catch(ObjectRetrievalFailureException e){
+            log.debug("Se elimino con exito el paquete {}", descripcion);
+        }
     }
 }

@@ -108,7 +108,7 @@ public class PaqueteController {
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = paqueteManager.getPaquetes(params);
+            params = paqueteManager.lista(params);
             try {
                 generaReporte(tipo, (List<Paquete>) params.get(Constantes.CONTAINSKEY_PAQUETES), response);
                 return null;
@@ -121,7 +121,7 @@ public class PaqueteController {
 
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = paqueteManager.getPaquetes(params);
+            params = paqueteManager.lista(params);
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
@@ -132,7 +132,7 @@ public class PaqueteController {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-        params = paqueteManager.getPaquetes(params);
+        params = paqueteManager.lista(params);
         log.debug("params{}", params.get(Constantes.CONTAINSKEY_PAQUETES));
         modelo.addAttribute(Constantes.CONTAINSKEY_PAQUETES, params.get(Constantes.CONTAINSKEY_PAQUETES));
 
@@ -165,7 +165,7 @@ public class PaqueteController {
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable String id, Model modelo) {
         log.debug("Mostrando Tipos de Becas {}", id);
-        Paquete paquete = paqueteManager.getPaquete(id);
+        Paquete paquete = paqueteManager.obtiene(id);
 
         modelo.addAttribute(Constantes.ADDATTRIBUTE_PAQUETE, paquete);
 
@@ -204,7 +204,7 @@ public class PaqueteController {
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
-            paqueteManager.graba(paquete,usuario);
+            paqueteManager.crea(paquete,usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el tipo de Beca", e);
             return Constantes.PATH_PAQUETE_NUEVO;
@@ -219,7 +219,7 @@ public class PaqueteController {
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable String id, Model modelo) {
         log.debug("Editar cuenta de tipos de becas {}", id);
-        Paquete paquete = paqueteManager.getPaquete(id);
+        Paquete paquete = paqueteManager.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_PAQUETE, paquete);
         return Constantes.PATH_PAQUETE_EDITA;
     }
@@ -229,7 +229,7 @@ public class PaqueteController {
     public String elimina(HttpServletRequest request, @RequestParam String id, Model modelo, @ModelAttribute Paquete paquete, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina cuenta de tipos de becas");
         try {
-            paqueteManager.removePaquete(id);
+            paqueteManager.elimina(id);
 
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "paquete.elimina.message");
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{paquete.getDescripcion()});

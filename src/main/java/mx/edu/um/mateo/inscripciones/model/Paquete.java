@@ -4,6 +4,8 @@
  */
 package mx.edu.um.mateo.inscripciones.model;
 
+import java.math.BigDecimal;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,11 +34,11 @@ public class Paquete {
     @Column(nullable = false, length = 250)
     private String descripcion;
     @Column(nullable = false, length = 8)
-    private String matricula;
+    private BigDecimal matricula;
     @Column(nullable = false, length = 8)
-    private Double ensenanza;
+    private BigDecimal ensenanza;
     @Column(nullable = false, length = 8)
-    private Double internado;
+    private BigDecimal internado;
     @Column(nullable = false, length = 1)
     private String acfe;
     @ManyToOne(optional = false)
@@ -49,9 +51,9 @@ public class Paquete {
         this.nombre = "";
         this.descripcion = "";
         this.acfe = "1";
-        this.matricula = new String();
-        this.ensenanza = new Double(0);
-        this.internado = new Double(0);
+        this.matricula = BigDecimal.ZERO;
+        this.ensenanza = BigDecimal.ZERO;
+        this.internado = BigDecimal.ZERO;
 
     }
 
@@ -104,42 +106,42 @@ public class Paquete {
     /**
      * @return Returns the ensenanza.
      */
-    public Double getEnsenanza() {
+    public BigDecimal getEnsenanza() {
         return ensenanza;
     }
 
     /**
      * @param ensenanza The ensenanza to set.
      */
-    public void setEnsenanza(Double ensenanza) {
+    public void setEnsenanza(BigDecimal ensenanza) {
         this.ensenanza = ensenanza;
     }
 
     /**
      * @return Returns the internado.
      */
-    public Double getInternado() {
+    public BigDecimal getInternado() {
         return internado;
     }
 
     /**
      * @param internado The internado to set.
      */
-    public void setInternado(Double internado) {
+    public void setInternado(BigDecimal internado) {
         this.internado = internado;
     }
 
     /**
      * @return Returns the matricula.
      */
-    public String getMatricula() {
+    public BigDecimal getMatricula() {
         return matricula;
     }
 
     /**
      * @param matricula The matricula to set.
      */
-    public void setMatricula(String matricula) {
+    public void setMatricula(BigDecimal matricula) {
         this.matricula = matricula;
     }
 
@@ -172,5 +174,42 @@ public class Paquete {
     public void setVersion(Integer version) {
         this.version = version;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this.id);
+        hash = 17 * hash + Objects.hashCode(this.version);
+        hash = 17 * hash + Objects.hashCode(this.nombre);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Paquete other = (Paquete) obj;
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.version, other.version)) {
+            return false;
+        }
+        if (!Objects.equals(this.nombre, other.nombre)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Paquete{" + "id=" + id + ", version=" + version + ", nombre=" + nombre + ", descripcion=" + descripcion + ", matricula=" + matricula + ", ensenanza=" + ensenanza + ", internado=" + internado + ", acfe=" + acfe + ", empresa=" + empresa.getId() + '}';
+    }
+    
+    
     
 }

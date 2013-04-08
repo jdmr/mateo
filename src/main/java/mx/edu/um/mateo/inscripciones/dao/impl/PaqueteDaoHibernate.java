@@ -33,7 +33,7 @@ public class PaqueteDaoHibernate extends BaseDao implements PaqueteDao{
      */
 
  @Override
-    public Map<String, Object> getPaquetes(Map<String, Object> params) {
+    public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de Tipos de Becas con params {}", params);
         if (params == null) {
             params = new HashMap<>();
@@ -102,11 +102,11 @@ public class PaqueteDaoHibernate extends BaseDao implements PaqueteDao{
      * @see mx.edu.um.afe.dao.TipoAFEBecaDao#getTipoBeca(Integer id)
      */
     @Override
-    public Paquete getPaquete(final Integer id) {
+    public Paquete obtiene(final Integer id) {
         Paquete paquete =  (Paquete) currentSession().get(Paquete.class, id);
         if (paquete == null) {
-            //log.warn("uh oh, tipoBeca with id '" + id + "' not found...");
-            throw new ObjectRetrievalFailureException(TiposBecas.class, id);
+            log.warn("uh oh, tipoBeca with id '" + id + "' not found...");
+            throw new ObjectRetrievalFailureException(Paquete.class, id);
         }
 
         return paquete;
@@ -115,7 +115,7 @@ public class PaqueteDaoHibernate extends BaseDao implements PaqueteDao{
     /**
      * @see mx.edu.um.afe.dao.TipoAFEBecaDao#saveTipoBeca(TipoAFEBeca tipoBeca)
      */    
-   public void graba(final Paquete paquete, Usuario usuario) {
+   public void crea(final Paquete paquete, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
             paquete.setEmpresa(usuario.getEmpresa());
@@ -129,8 +129,8 @@ public class PaqueteDaoHibernate extends BaseDao implements PaqueteDao{
      * @see mx.edu.um.afe.dao.TipoAFEBecaDao#removeTipoBeca(Integer id)
      */
     @Override
-    public String removePaquete(final Integer id) {
-       Paquete paquete = this.getPaquete(id);
+    public String elimina(final Integer id) {
+       Paquete paquete = this.obtiene(id);
        String descripcion = paquete.getDescripcion(); 
        currentSession().delete(paquete);
         currentSession().flush();
