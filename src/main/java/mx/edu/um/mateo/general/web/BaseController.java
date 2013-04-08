@@ -64,6 +64,8 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 /**
  *
@@ -460,5 +462,13 @@ public abstract class BaseController {
             }
         }
         return params;
+    }
+    
+    public void despliegaBindingResultErrors(BindingResult bindingResult){
+        List <ObjectError> errores = bindingResult.getAllErrors();
+            for(ObjectError err : errores){
+                log.error("{}",err);
+                
+            }
     }
 }

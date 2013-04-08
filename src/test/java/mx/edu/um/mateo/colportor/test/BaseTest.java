@@ -24,22 +24,35 @@
 package mx.edu.um.mateo.colportor.test;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 /**
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public class BaseTest {
+    protected final transient Logger log = LoggerFactory.getLogger(getClass());
     
     public Authentication authenticate(UserDetails principal, String credentials, List<GrantedAuthority> authorities) {
         Authentication authentication = new TestingAuthenticationToken(principal, credentials, authorities);
         authentication.setAuthenticated(true);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
+    }
+    
+    public void despliegaBindingResultErrors(BindingResult bindingResult){
+        List <ObjectError> errores = bindingResult.getAllErrors();
+            for(ObjectError err : errores){
+                log.error("{}",err);
+                
+            }
     }
 }

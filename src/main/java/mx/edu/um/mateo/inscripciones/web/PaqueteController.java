@@ -20,6 +20,7 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inscripciones.model.Paquete;
 import mx.edu.um.mateo.inscripciones.model.TiposBecas;
 import mx.edu.um.mateo.inscripciones.service.PaqueteManager;
@@ -65,7 +66,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping(Constantes.PATH_PAQUETE)
-public class PaqueteController {
+public class PaqueteController extends BaseController {
      private static final Logger log = LoggerFactory.getLogger(PaqueteController.class);
     @Autowired
     private PaqueteManager paqueteManager;
@@ -199,6 +200,9 @@ public class PaqueteController {
             Map<String, Object> params = new HashMap<>();
             params.put("empresa", request.getSession()
                     .getAttribute("empresaId"));
+            
+            this.despliegaBindingResultErrors(bindingResult);
+            
             return Constantes.PATH_PAQUETE_NUEVO;
         }
 
