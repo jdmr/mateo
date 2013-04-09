@@ -57,14 +57,15 @@ public class Paquete {
 
     }
 
-    public Paquete(String nombre, String descripcion, String matricula, Double ensenanza, Double internado, String acfe, Empresa empresa) {
+    public Paquete(String nombre, String descripcion, BigDecimal matricula, BigDecimal ensenanza, BigDecimal internado, String acfe, Empresa empresa) {
         this.empresa = empresa;
         this.nombre = nombre;
-        this.matricula= matricula;
         this.descripcion = descripcion;
-        this.ensenanza = ensenanza;
-        this.internado = internado;
+        this.matricula = BigDecimal.ZERO;
+        this.ensenanza = BigDecimal.ZERO;
+        this.internado = BigDecimal.ZERO;
         this.acfe = acfe;
+        
     }
     
     

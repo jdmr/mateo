@@ -23,10 +23,13 @@
     <logger name="mx.edu.um.mateo.colportor" level="debug"/>
     <logger name="org.springframework.orm.hibernate4" level="ERROR"/>
     <logger name="org.hibernate.engine.transaction" level="ERROR"/>
+<<<<<<< HEAD
     <logger name="org.springframework" level="trace"/>
     <logger name="org.springframework.security" level="trace"/>
     <logger name="org.hibernate" level="trace"/>
     
+=======
+>>>>>>> b20b2e03d2080fc6bc589dd66140f8133a75a89e
     <logger name="org.hibernate.SQL" level="TRACE"/>
     <logger name="org.hibernate.type" level="TRACE"/>
 

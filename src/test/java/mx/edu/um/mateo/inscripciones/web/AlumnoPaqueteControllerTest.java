@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.inscripciones.web;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -100,7 +101,7 @@ public class AlumnoPaqueteControllerTest extends BaseTest{
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
         currentSession().save(usuario);
-        Paquete paquete = new Paquete("Test","Test1","1110475", new Double(12), new Double(12),"1", usuario.getEmpresa());
+        Paquete paquete = new Paquete("Test","Test1",new BigDecimal("1110475"), new BigDecimal(12), new BigDecimal(12),"1", usuario.getEmpresa());
         currentSession().save(paquete);
         AlumnoPaquete alumnoPaquete = new AlumnoPaquete();
         alumnoPaquete.setPaquete(paquete);
@@ -150,7 +151,7 @@ public class AlumnoPaqueteControllerTest extends BaseTest{
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
         currentSession().save(usuario);
-        Paquete paquete = new Paquete("Test","Test1","1110475", new Double(12), new Double(12),"1", usuario.getEmpresa());
+        Paquete paquete = new Paquete("Test","Test1",new BigDecimal("1110475"), new BigDecimal(12), new BigDecimal(12),"1", usuario.getEmpresa());
         currentSession().save(paquete);
         AlumnoPaquete alumnoPaquete = new AlumnoPaquete();
         alumnoPaquete.setPaquete(paquete);
@@ -186,7 +187,7 @@ public class AlumnoPaqueteControllerTest extends BaseTest{
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
         currentSession().save(usuario);
-        Paquete paquete = new Paquete("Test","Test1","1110475", new Double(12), new Double(12),"1", usuario.getEmpresa());
+        Paquete paquete = new Paquete("Test","Test1",new BigDecimal("1110475"), new BigDecimal(12), new BigDecimal(12),"1", usuario.getEmpresa());
         currentSession().save(paquete);
         AlumnoPaquete alumnoPaquete = new AlumnoPaquete();
         alumnoPaquete.setPaquete(paquete);
@@ -225,7 +226,7 @@ public class AlumnoPaqueteControllerTest extends BaseTest{
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
         currentSession().save(usuario);
-        Paquete paquete = new Paquete("Test","Test1","1110475", new Double(12), new Double(12),"1", usuario.getEmpresa());
+        Paquete paquete = new Paquete("Test","Test1",new BigDecimal("1110475"), new BigDecimal(12), new BigDecimal(12),"1", usuario.getEmpresa());
         currentSession().save(paquete);
         AlumnoPaquete alumnoPaquete = new AlumnoPaquete();
         alumnoPaquete.setPaquete(paquete);
@@ -269,7 +270,7 @@ public class AlumnoPaqueteControllerTest extends BaseTest{
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
         currentSession().save(usuario);
-        Paquete paquete = new Paquete("Test","Test1","1110475", new Double(12), new Double(12),"1", usuario.getEmpresa());
+        Paquete paquete = new Paquete("Test","Test1",new BigDecimal("1110475"), new BigDecimal(12), new BigDecimal(12),"1", usuario.getEmpresa());
         currentSession().save(paquete);
         AlumnoPaquete alumnoPaquete = new AlumnoPaquete();
         alumnoPaquete.setPaquete(paquete);

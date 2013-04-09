@@ -178,7 +178,7 @@ public class AlumnoPaqueteController {
                 .getAttribute("empresaId"));
         params.put("reporte", true);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_ALUMNOPAQUETE, alumnoPaquete);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAQUETES, paqueteManager.getPaquetes(params).get(Constantes.CONTAINSKEY_PAQUETES));
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAQUETES, paqueteManager.lista(params).get(Constantes.CONTAINSKEY_PAQUETES));
         return Constantes.PATH_ALUMNOPAQUETE_NUEVO;
     }
 
@@ -202,14 +202,14 @@ public class AlumnoPaqueteController {
             
             if(alumnoPaquete.getId() != null){
                 tmp = alumnoPaqueteManager.obtiene(alumnoPaquete.getId());
-                tmp.setPaquete(paqueteManager.getPaquete(alumnoPaquete.getPaquete().getId().toString()));
+                tmp.setPaquete(paqueteManager.obtiene(alumnoPaquete.getPaquete().getId().toString()));
                 tmp.setMatricula(alumnoPaquete.getMatricula());
                 tmp.setStatus(alumnoPaquete.getStatus());
                 alumnoPaqueteManager.graba(tmp, usuario);
                 redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "alumnoPaquete.actualizado.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{alumnoPaquete.getMatricula()});
             }else{
-                  alumnoPaquete.setPaquete(paqueteManager.getPaquete(alumnoPaquete.getPaquete().getId().toString()));
+                  alumnoPaquete.setPaquete(paqueteManager.obtiene(alumnoPaquete.getPaquete().getId().toString()));
                   alumnoPaqueteManager.graba(alumnoPaquete, usuario);
                   redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "alumnoPaquete.creado.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{alumnoPaquete.getMatricula()});
@@ -234,7 +234,7 @@ public class AlumnoPaqueteController {
         params.put("reporte", true);
         AlumnoPaquete alumnoPaquete = alumnoPaqueteManager.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_ALUMNOPAQUETE, alumnoPaquete);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAQUETES, paqueteManager.getPaquetes(params).get(Constantes.CONTAINSKEY_PAQUETES));
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAQUETES, paqueteManager.lista(params).get(Constantes.CONTAINSKEY_PAQUETES));
         return Constantes.PATH_ALUMNOPAQUETE_EDITA;
     }
 
