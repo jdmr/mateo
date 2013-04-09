@@ -7,7 +7,7 @@ package mx.edu.um.mateo.inscripciones.web;
 import java.math.BigDecimal;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
-import mx.edu.um.mateo.general.test.BaseTest;
+import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inscripciones.dao.TiposBecasDao;
@@ -45,7 +45,7 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class TiposBecasControllerTest extends BaseTest {
+public class TiposBecasControllerTest extends BaseControllerTest {
 
     @Autowired
     private TiposBecasDao tipoBecasDao;

@@ -23,29 +23,27 @@
  */
 package mx.edu.um.mateo.general.test;
 
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.TestingAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.junit.Before;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.server.MockMvc;
+import static org.springframework.test.web.server.result.MockMvcResultMatchers.status;
+import org.springframework.test.web.server.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 /**
  *
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
-public abstract class BaseTest {
-    protected final transient Logger log = LoggerFactory.getLogger(getClass());
-        
-    public Authentication authenticate(UserDetails principal, String credentials, List<GrantedAuthority> authorities) {
-        log.debug("Entrando al metodo 'authenticate' ***");
-        Authentication authentication = new TestingAuthenticationToken(principal, credentials, authorities);
-        authentication.setAuthenticated(true);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        log.debug("Regresando autenticacion {} ***", authentication);
-        return authentication;
-    }
+public abstract class BaseControllerTest extends BaseTest {
+        @Autowired
+        private WebApplicationContext wac;
     
+        protected MockMvc mockMvc;
+    
+    @Before
+    public void setUp() {
+        this.mockMvc = MockMvcBuilders.webApplicationContextSetup(wac)
+                .alwaysExpect(status().isOk())
+                .build();
+    }
 }

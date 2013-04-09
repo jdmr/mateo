@@ -13,7 +13,7 @@ import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.test.BaseTest;
+import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inscripciones.dao.ProrrogaDao;
@@ -56,7 +56,7 @@ import static org.springframework.test.web.server.request.MockMvcRequestBuilders
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class ProrrogaControllerTest extends BaseTest {
+public class ProrrogaControllerTest extends BaseControllerTest {
 
     @Autowired
     private ProrrogaDao prorrogaDao;

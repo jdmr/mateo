@@ -31,6 +31,12 @@ public interface PaqueteDao {
      * @param paquete the object to be saved
      */    
     public void crea(Paquete paquete, Usuario usuario);
+    /**
+     * Actualiza un paquete
+     * @param paquete
+     * @param usuario 
+     */
+    public void actualiza(Paquete paquete, Usuario usuario);
 
     /**
      * Removes a paquete from the database by id

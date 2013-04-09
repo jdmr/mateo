@@ -34,7 +34,7 @@ import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.test.BaseTest;
+import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.junit.*;
@@ -64,7 +64,7 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class OrganizacionControllerTest extends BaseTest {
+public class OrganizacionControllerTest extends BaseControllerTest {
 
     private static final Logger log = LoggerFactory.getLogger(OrganizacionControllerTest.class);
     @Autowired

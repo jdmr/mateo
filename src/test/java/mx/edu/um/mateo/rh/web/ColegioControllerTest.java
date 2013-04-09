@@ -4,7 +4,7 @@
  */
 package mx.edu.um.mateo.rh.web;
 
-import mx.edu.um.mateo.general.test.BaseTest;
+import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.rh.dao.ColegioDao;
@@ -37,7 +37,7 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class ColegioControllerTest extends BaseTest {
+public class ColegioControllerTest extends BaseControllerTest {
 
     @Autowired
     private ColegioDao colegioDao;

@@ -23,9 +23,9 @@
     <logger name="mx.edu.um.mateo.colportor" level="debug"/>
     <logger name="org.springframework.orm.hibernate4" level="ERROR"/>
     <logger name="org.hibernate.engine.transaction" level="ERROR"/>
-    <logger name="org.springframework" level="trace"/>
-    <logger name="org.springframework.security" level="trace"/>
-    <logger name="org.hibernate" level="trace"/>
+    <logger name="org.springframework" level="error"/>
+    <logger name="org.springframework.security" level="error"/>
+    <logger name="org.hibernate" level="error"/>
     
     <root level="INFO">
         <appender-ref ref="stdout"/>
