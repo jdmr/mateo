@@ -44,9 +44,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PaqueteDaoTest {
 
+    private static final Logger log = LoggerFactory.getLogger(PaqueteDaoTest.class);
     @Autowired
     private PaqueteDao instance;
-    private static final Logger log = LoggerFactory.getLogger(PaqueteDaoTest.class);
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -57,27 +57,11 @@ public class PaqueteDaoTest {
     public PaqueteDaoTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     /**
-     * Test of lista method, of class PaqueteDao.
+     * Prueba la lista de paquetes
      */
     @Test
-    public void testGetPaquetes() {
+    public void testLista() {
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         assertNotNull(organizacion.getId());
@@ -128,10 +112,10 @@ public class PaqueteDaoTest {
     }
 
     /**
-     * Test of obtiene method, of class PaqueteDao.
+     * Prueba el obtener un paquete
      */
     @Test
-    public void testGetPaquete() {
+    public void testObtiene() {
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         assertNotNull(organizacion.getId());
@@ -158,10 +142,10 @@ public class PaqueteDaoTest {
     }
 
     /**
-     * Test of savePaquete method, of class PaqueteDao.
+     * Prueba el proceso de creacion del paquete
      */
     @Test
-    public void testSavePaquete() {
+    public void testCrea() {
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         assertNotNull(organizacion.getId());
@@ -204,12 +188,66 @@ public class PaqueteDaoTest {
         Paquete paquete1 = instance.obtiene(paquete.getId());
         assertEquals(paquete.getNombre(), paquete1.getNombre());
     }
-
+    
     /**
-     * Test of elimina method, of class PaqueteDao.
+     * Prueba el proceso de actualizacion
      */
     @Test
-    public void testRemovePaquete() {
+    public void testActualiza() {
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        assertNotNull(organizacion.getId());
+        
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        assertNotNull(empresa.getId());
+        
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        assertNotNull(rol.getId());
+        
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        assertNotNull(almacen.getId());
+        
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
+        Long id = usuario.getId();
+        assertNotNull(id);
+        
+        String nombre = "nombre";
+        Paquete paquete = new Paquete();
+        paquete.setAcfe("s");
+        paquete.setDescripcion("test");
+        paquete.setEnsenanza(new BigDecimal("1.2"));
+        paquete.setInternado(new BigDecimal("2.2"));
+        paquete.setMatricula(new BigDecimal("3.3"));
+        paquete.setNombre(nombre);
+        paquete.setEmpresa(empresa);
+        instance.crea(paquete, usuario);
+        assertNotNull(paquete.getId());
+        
+        Paquete paquete1 = instance.obtiene(paquete.getId());
+        assertEquals(paquete.getNombre(), paquete1.getNombre());
+        
+        paquete1.setDescripcion("test2");
+        instance.actualiza(paquete1, usuario);
+        
+        currentSession().refresh(paquete);
+        assertEquals("test2", paquete.getDescripcion());
+    }
+
+    /**
+     * Prueba el eliminar el paquete
+     */
+    @Test
+    public void testRemove() {
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         assertNotNull(organizacion.getId());

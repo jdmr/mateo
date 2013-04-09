@@ -28,7 +28,7 @@ import mx.edu.um.mateo.colportor.model.Union;
 import mx.edu.um.mateo.contabilidad.dao.EjercicioDao;
 import mx.edu.um.mateo.general.dao.*;
 import mx.edu.um.mateo.general.model.*;
-import mx.edu.um.mateo.general.test.BaseTest;
+import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inventario.model.Almacen;
@@ -63,7 +63,7 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class DocumentoControllerTest extends BaseTest {
+public class DocumentoControllerTest extends BaseControllerTest {
 
     private static final Logger log = LoggerFactory.getLogger(DocumentoControllerTest.class);
     @Autowired

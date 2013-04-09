@@ -17,7 +17,7 @@ import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.colportor.model.Union;
 import mx.edu.um.mateo.general.model.*;
-import mx.edu.um.mateo.general.test.BaseTest;
+import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Session;
@@ -54,7 +54,7 @@ import org.springframework.test.web.server.setup.MockMvcBuilders;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class ColportorControllerTest extends BaseTest {
+public class ColportorControllerTest extends BaseControllerTest {
 
     private static final Logger log = LoggerFactory.getLogger(ColportorControllerTest.class);
     @Autowired

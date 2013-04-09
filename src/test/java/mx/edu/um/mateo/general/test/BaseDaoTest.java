@@ -23,29 +23,11 @@
  */
 package mx.edu.um.mateo.general.test;
 
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.TestingAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-
 /**
- *
+ * Se creo esta clase para poner codigo especifico para DaoTests.
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
-public abstract class BaseTest {
-    protected final transient Logger log = LoggerFactory.getLogger(getClass());
+public abstract class BaseDaoTest extends BaseTest{
         
-    public Authentication authenticate(UserDetails principal, String credentials, List<GrantedAuthority> authorities) {
-        log.debug("Entrando al metodo 'authenticate' ***");
-        Authentication authentication = new TestingAuthenticationToken(principal, credentials, authorities);
-        authentication.setAuthenticated(true);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        log.debug("Regresando autenticacion {} ***", authentication);
-        return authentication;
-    }
     
 }

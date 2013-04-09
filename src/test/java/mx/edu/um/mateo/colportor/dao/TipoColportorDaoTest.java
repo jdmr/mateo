@@ -8,15 +8,13 @@ import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.colportor.model.TipoColportor;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
-import mx.edu.um.mateo.general.test.BaseTest;
+import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.*;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -29,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class TipoColportorDaoTest extends BaseTest{
+public class TipoColportorDaoTest extends BaseDaoTest{
     @Autowired
     private TipoColportorDao instance;
     @Autowired
@@ -39,23 +37,7 @@ public class TipoColportorDaoTest extends BaseTest{
     }
     
     public TipoColportorDaoTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
+    }    
 
     /**
      * Test of lista method, of class TipoColportorDao.
