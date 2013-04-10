@@ -20,20 +20,14 @@ import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.inventario.model.Almacen;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import static org.junit.Assert.assertNotNull;
 import org.junit.*;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.web.server.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.flash;
@@ -41,7 +35,6 @@ import static org.springframework.test.web.server.result.MockMvcResultMatchers.f
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.status;
-import org.springframework.test.web.server.setup.MockMvcBuilders;
 
 /**
  *
@@ -55,25 +48,10 @@ import org.springframework.test.web.server.setup.MockMvcBuilders;
 })
 @Transactional
 public class ColportorControllerTest extends BaseControllerTest {
-
-    private static final Logger log = LoggerFactory.getLogger(ColportorControllerTest.class);
-    @Autowired
-    private WebApplicationContext wac;
-    private MockMvc mockMvc;
+    
     @Autowired
     private ColportorDao colportorDao;
-    @Autowired
-    private SessionFactory sessionFactory;
-
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
     
-    @Before
-    public void setUp() {
-        this.mockMvc = MockMvcBuilders.webApplicationContextSetup(wac).build();
-    }
-
     @Test
     public void debieraMostrarListaDeColportor() throws Exception {
         log.debug("Debiera mostrar lista de colportores");
