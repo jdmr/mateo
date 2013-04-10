@@ -2496,14 +2496,9 @@ public class Constantes {
     public static final String CONTAINSKEY_UNIONES = "uniones";
     public static final String CONTAINSKEY_USUARIOS = "usuarios";
     public static final String CONTAINSKEY_COLEGIOS_COLPORTOR = "colegios";
-<<<<<<< HEAD
     public static final String CONTAINSKEY_TIPOSBECAS= "tiposBecas";
     public static final String CONTAINSKEY_AFECONVENIO= "afeConvenios";
     public static final String CONTAINSKEY_PAQUETES= "paquetes";
-=======
-    public static final String CONTAINSKEY_TIPOSBECAS = "tiposBecas";
-    public static final String CONTAINSKEY_PAQUETES = "paquetes";
->>>>>>> b20b2e03d2080fc6bc589dd66140f8133a75a89e
     public static final String CONTAINSKEY_ALUMNOPAQUETES = "alumnoPaquetes";
     /**
      * Valores para el los addAttribute para las clases
@@ -2867,7 +2862,6 @@ public class Constantes {
     public static final String PATH_PRORROGA_ACTUALIZA = "/inscripciones/prorroga/actualiza";
     public static final String PATH_PRORROGA_ELIMINA = "/inscripciones/prorroga/elimina";
     public static final String ADDATTRIBUTE_PRORROGA = "prorroga";
-<<<<<<< HEAD
     /**
      * Valores para TipoColportor
      *
@@ -2883,9 +2877,6 @@ public class Constantes {
     public static final String ADDATTRIBUTE_TIPO_COLPORTOR = "tipoColportor";
     public static final String CONTAINSKEY_TIPO_COLPORTOR = "tiposColportor";
 
-=======
-    
->>>>>>> b20b2e03d2080fc6bc589dd66140f8133a75a89e
     public static final String PATH_ALUMNOPAQUETE = "/inscripciones/alumnoPaquete";
     public static final String PATH_ALUMNOPAQUETE_LISTA = "inscripciones/alumnoPaquete/lista";
     public static final String PATH_ALUMNOPAQUETE_VER = "inscripciones/alumnoPaquete/ver";

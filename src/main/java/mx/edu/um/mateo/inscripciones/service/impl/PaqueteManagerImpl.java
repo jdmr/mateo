@@ -30,13 +30,8 @@ public class PaqueteManagerImpl implements PaqueteManager {
     }
 
     @Override
-<<<<<<< HEAD
     public Paquete obtiene(final String id) {
         return dao.obtiene(new Long(id));
-=======
-    public Paquete getPaquete(final String id) {
-        return dao.getPaquete(new Long(id));
->>>>>>> b20b2e03d2080fc6bc589dd66140f8133a75a89e
     }
 
     @Override
@@ -45,12 +40,7 @@ public class PaqueteManagerImpl implements PaqueteManager {
     }
 
     @Override
-<<<<<<< HEAD
     public void elimina(final String id) {
         dao.elimina(new Long(id));
-=======
-    public void removePaquete(final String id) {
-        dao.removePaquete(new Long(id));
->>>>>>> b20b2e03d2080fc6bc589dd66140f8133a75a89e
     }
 }
