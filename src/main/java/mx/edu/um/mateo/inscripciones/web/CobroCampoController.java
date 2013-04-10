@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.colportor.model.Documento;
+import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.web.BaseController;
@@ -27,6 +28,7 @@ import mx.edu.um.mateo.inscripciones.model.CobroCampo;
 import mx.edu.um.mateo.inscripciones.model.Institucion;
 import mx.edu.um.mateo.inscripciones.model.Prorroga;
 import mx.edu.um.mateo.inscripciones.service.CobroCampoManager;
+import mx.edu.um.mateo.inscripciones.service.InstitucionManager;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -69,6 +71,8 @@ public class CobroCampoController extends BaseController {
     private CobroCampoManager manager;
     @Autowired
     private InstitucionDao institucionDao;
+    @Autowired
+    private UsuarioDao usuarioDao;
 
     @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -142,7 +146,7 @@ public class CobroCampoController extends BaseController {
         List<CobroCampo> cobroCampos = (List<CobroCampo>) params.get(Constantes.CONTAINSKEY_COBROSCAMPOS);
         Long primero = ((pagina - 1) * max) + 1;
         log.debug("primero {}", primero);
-        log.debug("prorrogas size {}", cobroCampos.size());
+        log.debug("cobroCampos size {}", cobroCampos.size());
         Long ultimo = primero + (cobroCampos.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
@@ -204,15 +208,29 @@ public class CobroCampoController extends BaseController {
             if (cobroCampo.getId() == null) {
                 cobroCampo.setUsuarioAlta(usuario);
                 cobroCampo.setFechaAlta(new Date());
+                Institucion institucion = institucionDao.obtiene(cobroCampo.getInstitucion().getId());
+                cobroCampo.setInstitucion(institucion);
+                log.debug("cobro campo {}", cobroCampo);
+                manager.graba(cobroCampo, usuario);
             } else {
-                cobroCampo.setUsuarioModificacion(usuario);
-                cobroCampo.setFechaModificacion(new Date());
+                CobroCampo cobroCampoTmp = manager.obtiene(cobroCampo.getId());
+                cobroCampoTmp.setFechaAlta(cobroCampo.getFechaAlta());
+                Usuario usuarioAlta = usuarioDao.obtiene(cobroCampo.getUsuarioAlta().getId());
+                cobroCampoTmp.setUsuarioAlta(usuarioAlta);
+                cobroCampoTmp.setUsuarioModificacion(usuario);
+                cobroCampoTmp.setImporteEnsenanza(cobroCampo.getImporteEnsenanza());
+                cobroCampoTmp.setImporteInternado(cobroCampo.getImporteInternado());
+                cobroCampoTmp.setImporteMatricula(cobroCampo.getImporteMatricula());
+                cobroCampoTmp.setStatus(cobroCampo.getStatus());
+                cobroCampoTmp.setFechaModificacion(new Date());
+                cobroCampoTmp.setMatricula(cobroCampo.getMatricula());
+                Institucion institucion = institucionDao.obtiene(cobroCampo.getInstitucion().getId());
+                cobroCampoTmp.setInstitucion(institucion);
+                log.debug("cobro campo {}", cobroCampo);
+                manager.graba(cobroCampoTmp, usuario);
             }
 //if (cobroCampo.getId() != null)
-            Institucion institucion = institucionDao.obtiene(cobroCampo.getInstitucion().getId());
-            cobroCampo.setInstitucion(institucion);
-            log.debug("cobro campo {}", cobroCampo);
-            manager.graba(cobroCampo, usuario);
+
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el cobro a campo", e);
             return Constantes.PATH_COBROCAMPO_NUEVO;
