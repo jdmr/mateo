@@ -174,7 +174,7 @@ public class PaqueteController extends BaseController {
     public String nueva(HttpServletRequest request, Model modelo) {
         log.debug("Nuevo tipo de Beca");
         Paquete paquete = new Paquete();
-        modelo.addAttribute("tipoBeca", paquete);
+        modelo.addAttribute("paquete", paquete);
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", request.getSession()
                 .getAttribute("empresaId"));

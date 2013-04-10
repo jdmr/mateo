@@ -82,7 +82,7 @@ public class DescuentoDaoHibernate extends BaseDao implements DescuentoDao{
             criteria.setFirstResult((Integer) params.get(Constantes.CONTAINSKEY_OFFSET));
             criteria.setMaxResults((Integer) params.get(Constantes.CONTAINSKEY_MAX));
         }
-        params.put(Constantes.CONTAINSKEY_DESCUENTO, criteria.list());
+        params.put(Constantes.CONTAINSKEY_DESCUENTOS, criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));
