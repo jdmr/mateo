@@ -4,7 +4,10 @@
  */
 package mx.edu.um.mateo.inscripciones.web;
 
+<<<<<<< HEAD
 import java.math.BigDecimal;
+=======
+>>>>>>> b20b2e03d2080fc6bc589dd66140f8133a75a89e
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -101,7 +104,11 @@ public class AlumnoPaqueteControllerTest extends BaseTest{
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
         currentSession().save(usuario);
+<<<<<<< HEAD
         Paquete paquete = new Paquete("Test","Test1",new BigDecimal("1110475"), new BigDecimal(12), new BigDecimal(12),"1", usuario.getEmpresa());
+=======
+        Paquete paquete = new Paquete("Test","Test1","1110475", new Double(12), new Double(12),"1", usuario.getEmpresa());
+>>>>>>> b20b2e03d2080fc6bc589dd66140f8133a75a89e
         currentSession().save(paquete);
         AlumnoPaquete alumnoPaquete = new AlumnoPaquete();
         alumnoPaquete.setPaquete(paquete);
@@ -151,7 +158,11 @@ public class AlumnoPaqueteControllerTest extends BaseTest{
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
         currentSession().save(usuario);
+<<<<<<< HEAD
         Paquete paquete = new Paquete("Test","Test1",new BigDecimal("1110475"), new BigDecimal(12), new BigDecimal(12),"1", usuario.getEmpresa());
+=======
+        Paquete paquete = new Paquete("Test","Test1","1110475", new Double(12), new Double(12),"1", usuario.getEmpresa());
+>>>>>>> b20b2e03d2080fc6bc589dd66140f8133a75a89e
         currentSession().save(paquete);
         AlumnoPaquete alumnoPaquete = new AlumnoPaquete();
         alumnoPaquete.setPaquete(paquete);
@@ -187,7 +198,11 @@ public class AlumnoPaqueteControllerTest extends BaseTest{
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
         currentSession().save(usuario);
+<<<<<<< HEAD
         Paquete paquete = new Paquete("Test","Test1",new BigDecimal("1110475"), new BigDecimal(12), new BigDecimal(12),"1", usuario.getEmpresa());
+=======
+        Paquete paquete = new Paquete("Test","Test1","1110475", new Double(12), new Double(12),"1", usuario.getEmpresa());
+>>>>>>> b20b2e03d2080fc6bc589dd66140f8133a75a89e
         currentSession().save(paquete);
         AlumnoPaquete alumnoPaquete = new AlumnoPaquete();
         alumnoPaquete.setPaquete(paquete);
@@ -226,7 +241,11 @@ public class AlumnoPaqueteControllerTest extends BaseTest{
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
         currentSession().save(usuario);
+<<<<<<< HEAD
         Paquete paquete = new Paquete("Test","Test1",new BigDecimal("1110475"), new BigDecimal(12), new BigDecimal(12),"1", usuario.getEmpresa());
+=======
+        Paquete paquete = new Paquete("Test","Test1","1110475", new Double(12), new Double(12),"1", usuario.getEmpresa());
+>>>>>>> b20b2e03d2080fc6bc589dd66140f8133a75a89e
         currentSession().save(paquete);
         AlumnoPaquete alumnoPaquete = new AlumnoPaquete();
         alumnoPaquete.setPaquete(paquete);
@@ -270,7 +289,11 @@ public class AlumnoPaqueteControllerTest extends BaseTest{
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
         currentSession().save(usuario);
+<<<<<<< HEAD
         Paquete paquete = new Paquete("Test","Test1",new BigDecimal("1110475"), new BigDecimal(12), new BigDecimal(12),"1", usuario.getEmpresa());
+=======
+        Paquete paquete = new Paquete("Test","Test1","1110475", new Double(12), new Double(12),"1", usuario.getEmpresa());
+>>>>>>> b20b2e03d2080fc6bc589dd66140f8133a75a89e
         currentSession().save(paquete);
         AlumnoPaquete alumnoPaquete = new AlumnoPaquete();
         alumnoPaquete.setPaquete(paquete);

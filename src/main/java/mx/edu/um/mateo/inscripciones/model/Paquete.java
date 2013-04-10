@@ -57,6 +57,7 @@ public class Paquete {
 
     }
 
+<<<<<<< HEAD
     public Paquete(String nombre, String descripcion, BigDecimal matricula, BigDecimal ensenanza, BigDecimal internado, String acfe, Empresa empresa) {
         this.empresa = empresa;
         this.nombre = nombre;
@@ -66,6 +67,16 @@ public class Paquete {
         this.internado = BigDecimal.ZERO;
         this.acfe = acfe;
         
+=======
+    public Paquete(String nombre, String descripcion, String matricula, Double ensenanza, Double internado, String acfe, Empresa empresa) {
+        this.empresa = empresa;
+        this.nombre = nombre;
+        this.matricula= matricula;
+        this.descripcion = descripcion;
+        this.ensenanza = ensenanza;
+        this.internado = internado;
+        this.acfe = acfe;
+>>>>>>> b20b2e03d2080fc6bc589dd66140f8133a75a89e
     }
     
     

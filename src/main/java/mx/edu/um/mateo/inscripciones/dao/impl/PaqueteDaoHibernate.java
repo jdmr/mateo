@@ -102,7 +102,11 @@ public class PaqueteDaoHibernate extends BaseDao implements PaqueteDao{
      * @see mx.edu.um.afe.dao.TipoAFEBecaDao#getTipoBeca(Integer id)
      */
     @Override
+<<<<<<< HEAD
     public Paquete obtiene(final Long id) {
+=======
+    public Paquete getPaquete(final Long id) {
+>>>>>>> b20b2e03d2080fc6bc589dd66140f8133a75a89e
         Paquete paquete =  (Paquete) currentSession().get(Paquete.class, id);
         if (paquete == null) {
             log.warn("uh oh, tipoBeca with id '" + id + "' not found...");
@@ -129,8 +133,13 @@ public class PaqueteDaoHibernate extends BaseDao implements PaqueteDao{
      * @see mx.edu.um.afe.dao.TipoAFEBecaDao#removeTipoBeca(Integer id)
      */
     @Override
+<<<<<<< HEAD
     public String elimina(final Long id) {
        Paquete paquete = this.obtiene(id);
+=======
+    public String removePaquete(final Long id) {
+       Paquete paquete = this.getPaquete(id);
+>>>>>>> b20b2e03d2080fc6bc589dd66140f8133a75a89e
        String descripcion = paquete.getDescripcion(); 
        currentSession().delete(paquete);
         currentSession().flush();
