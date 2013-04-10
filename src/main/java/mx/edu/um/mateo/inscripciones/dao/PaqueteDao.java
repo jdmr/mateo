@@ -24,8 +24,8 @@ public interface PaqueteDao {
      * @param id the paquete's id
      * @return paquete populated paquete object
      */
-    public Paquete obtiene(final Integer id);
-
+    public Paquete obtiene(final Long id);
+    
     /**
      * Saves a paquete's information
      * @param paquete the object to be saved
@@ -42,6 +42,6 @@ public interface PaqueteDao {
      * Removes a paquete from the database by id
      * @param id the paquete's id
      */
-    public String elimina(final Integer id);
+    public String elimina(final Long id);
     
 }

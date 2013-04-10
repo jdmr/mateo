@@ -17,12 +17,14 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.web.BaseController;
-import mx.edu.um.mateo.inscripciones.dao.PaqueteDao;
-import mx.edu.um.mateo.inscripciones.model.Paquete;
+import mx.edu.um.mateo.inscripciones.dao.DescuentoDao;
+import mx.edu.um.mateo.inscripciones.model.Descuento;
+import mx.edu.um.mateo.inscripciones.service.DescuentoManager;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -59,14 +61,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
- * @author develop
+ * @author zorch
  */
 @Controller
-@RequestMapping(Constantes.PATH_PAQUETE)
-public class PaqueteController extends BaseController {
-     private static final Logger log = LoggerFactory.getLogger(PaqueteController.class);
+@RequestMapping(Constantes.PATH_DESCUENTO)
+public class DescuentoController extends BaseController{
+    
+     private static final Logger log = LoggerFactory.getLogger(DescuentoController.class);
     @Autowired
-    private PaqueteDao paqueteDao;
+    private DescuentoDao descuentoManager;
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
@@ -74,7 +77,8 @@ public class PaqueteController extends BaseController {
     @Autowired
     private Ambiente ambiente;
     
-   @RequestMapping({"", "/lista"})
+    
+    @RequestMapping ({"","/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
             @RequestParam(required = false) Long pagina,
@@ -85,7 +89,7 @@ public class PaqueteController extends BaseController {
             Usuario usuario,
             Errors errors,
             Model modelo) {
-        log.debug("Mostrando lista de tipos de Becas");
+        log.debug("Mostrando lista de Descuentos");
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
@@ -103,12 +107,12 @@ public class PaqueteController extends BaseController {
             params.put(Constantes.CONTAINSKEY_ORDER, order);
             params.put(Constantes.CONTAINSKEY_SORT, sort);
         }
-
+        
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = paqueteDao.lista(params);
+            params = descuentoManager.lista(params);
             try {
-                generaReporte(tipo, (List<Paquete>) params.get(Constantes.CONTAINSKEY_PAQUETES), response);
+                generaReporte(tipo, (List<Descuento>) params.get(Constantes.CONTAINSKEY_DESCUENTO), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -116,23 +120,23 @@ public class PaqueteController extends BaseController {
                 //errors.reject("error.generar.reporte");
             }
         }
-
+        
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = paqueteDao.lista(params);
-
+            params = descuentoManager.lista(params);
+            
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<Paquete>) params.get(Constantes.CONTAINSKEY_PAQUETES), request);
+                enviaCorreo(correo, (List<Descuento>) params.get(Constantes.CONTAINSKEY_DESCUENTO), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
-                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("paquete.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("descuento.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-        params = paqueteDao.lista(params);
-        log.debug("params{}", params.get(Constantes.CONTAINSKEY_PAQUETES));
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAQUETES, params.get(Constantes.CONTAINSKEY_PAQUETES));
+        params = descuentoManager.lista(params);
+        log.debug("params{}",params.get(Constantes.CONTAINSKEY_DESCUENTO));
+        modelo.addAttribute(Constantes.CONTAINSKEY_DESCUENTOS, params.get(Constantes.CONTAINSKEY_DESCUENTO));
 
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
@@ -143,155 +147,122 @@ public class PaqueteController extends BaseController {
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<Paquete> paquetes = (List<Paquete>) params.get(Constantes.CONTAINSKEY_PAQUETES);
+        List<Descuento> descuentos = (List<Descuento>) params.get(Constantes.CONTAINSKEY_DESCUENTO);
         Long primero = ((pagina - 1) * max) + 1;
-        log.debug("primero {}", primero);
-        log.debug("paquetes {}", paquetes.size());
-        Long ultimo = primero + (paquetes.size() - 1);
+        log.debug("primero {}",primero);
+        log.debug("Descuentossize {}",descuentos.size());
+        Long ultimo = primero + (descuentos.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
         log.debug("Paginacion{}", paginacion);
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
-        log.debug("paginas{}", paginas);
+        log.debug("paginas{}",paginas);
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
-        log.debug("Pagina{}", pagina);
+        log.debug("Pagina{}",pagina);
         // termina paginado
 
-        return Constantes.PATH_PAQUETE_LISTA;
+        return Constantes.PATH_DESCUENTO_LISTA ;
     }
-
-    @RequestMapping("/ver/{id}")
+       @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
-        log.debug("Mostrando Tipos de Becas {}", id);
-        Paquete paquete = paqueteDao.obtiene(id);
-
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_PAQUETE, paquete);
-
-        return Constantes.PATH_PAQUETE_VER;
+        log.debug("Mostrando convenio {}", id);
+        Descuento descuento = descuentoManager.obtiene(id);
+        
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_DESCUENTO, descuento);
+        
+        return Constantes.PATH_DESCUENTO_VER;
     }
-
-    @RequestMapping("/nuevo")
-    public String nueva(HttpServletRequest request, Model modelo) {
-        log.debug("Nuevo tipo de Beca");
-        Paquete paquete = new Paquete();
-        modelo.addAttribute("tipoBeca", paquete);
-        Map<String, Object> params = new HashMap<>();
-        params.put("empresa", request.getSession()
-                .getAttribute("empresaId"));
-        params.put("reporte", true);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_PAQUETE, paquete);
-        return Constantes.PATH_PAQUETE_NUEVO;
-      
-
-		
+    
+     @RequestMapping("/nuevo")
+    public String nueva(Model modelo) {
+        log.debug("Nuevo convenio");
+        Descuento descuento = new Descuento();
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_DESCUENTO, descuento);
+        return Constantes.PATH_DESCUENTO_NUEVO;
     }
-
+    
     @Transactional
     @RequestMapping(value = "/graba", method = RequestMethod.POST)
-    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid Paquete paquete, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid Descuento descuento, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
-            Map<String, Object> params = new HashMap<>();
-            params.put("empresa", request.getSession()
-                    .getAttribute("empresaId"));
-            
-            this.despliegaBindingResultErrors(bindingResult);
-            
-            return Constantes.PATH_PAQUETE_NUEVO;
+            utils.despliegaBindingResultErrors(bindingResult);
+            modelo.addAttribute(Constantes.ADDATTRIBUTE_DESCUENTO, descuento);
+            errors.rejectValue("descuento", "error.convenio.message",
+					new String[] { descuento.getDescripcion() }, null);
+            return Constantes.PATH_DESCUENTO_NUEVO;
         }
-
+        
         try {
+           log.debug("obteniendo usuario");
             Usuario usuario = ambiente.obtieneUsuario();
-            paqueteDao.crea(paquete,usuario);
+           log.debug("Grabando descuento");
+             Organizacion organizacion= usuario.getEmpresa().getOrganizacion();
+             if(descuento.getId()==null){
+                 descuento.setStatus(Constantes.STATUS_ACTIVO);
+             }
+             descuentoManager.graba(descuento, organizacion);
         } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear el tipo de Beca", e);
-            return Constantes.PATH_PAQUETE_NUEVO;
+            log.error("No se pudo grabar convenio", e);
+            return Constantes.PATH_DESCUENTO_NUEVO;
+        
         }
-
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "paquete.graba.message");
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{paquete.getDescripcion()});
-
-        return "redirect:" + Constantes.PATH_PAQUETE_LISTA;
+        
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "descuento.graba.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{descuento.getDescripcion()});
+        
+        return "redirect:" + Constantes.PATH_DESCUENTO_LISTA + "/" ;
     }
-    @Transactional
-    @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, HttpServletResponse response, @Valid Paquete paquete, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
-        for (String nombre : request.getParameterMap().keySet()) {
-            log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
-        }
-        if (bindingResult.hasErrors()) {
-            log.debug("Hubo algun error en la forma, regresando");
-            Map<String, Object> params = new HashMap<>();
-            params.put("empresa", request.getSession()
-                    .getAttribute("empresaId"));
-            
-            this.despliegaBindingResultErrors(bindingResult);
-            
-            return Constantes.PATH_PAQUETE_NUEVO;
-        }
-
-        try {
-            Usuario usuario = ambiente.obtieneUsuario();
-            log.debug("Paquete {}",paquete);
-            paqueteDao.actualiza(paquete,usuario);
-        } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear el tipo de Beca", e);
-            return Constantes.PATH_PAQUETE_NUEVO;
-        }
-
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "paquete.graba.message");
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{paquete.getDescripcion()});
-
-        return "redirect:" + Constantes.PATH_PAQUETE_LISTA;
-    }
-
+    
+    
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
-        log.debug("Editar cuenta de tipos de becas {}", id);
-        Paquete paquete = paqueteDao.obtiene(id);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_PAQUETE, paquete);
-        return Constantes.PATH_PAQUETE_EDITA;
+        log.debug("Editar descuento {}", id);
+        Descuento descuento = descuentoManager.obtiene(id);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_DESCUENTO, descuento);
+        return Constantes.PATH_DESCUENTO_EDITA;
     }
-
+    
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Paquete paquete, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        log.debug("Elimina cuenta de tipos de becas");
+    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Descuento descuento, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        log.debug("Elimina cuenta de descuentos");
         try {
-            paqueteDao.elimina(id);
+            descuentoManager.elimina(id);
 
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "paquete.elimina.message");
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{paquete.getDescripcion()});
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "descuento.elimina.message");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{descuento.getDescripcion()});
         } catch (Exception e) {
-            log.error("No se pudo eliminar el tipo de paquete " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_PAQUETE, new String[]{"paquete.no.elimina.message"}, null, null));
-            return Constantes.PATH_PAQUETE_VER;
+            log.error("No se pudo eliminar el tipo de Descuento " + id, e);
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_DESCUENTO, new String[]{"descuento.no.elimina.message"}, null, null));
+            return Constantes.PATH_DESCUENTO_VER;
         }
 
-        return "redirect:" + Constantes.PATH_PAQUETE_LISTA;
+        return "redirect:" + Constantes.PATH_DESCUENTO_LISTA;
     }
-
-    private void generaReporte(String tipo, List<Paquete> paquetes, HttpServletResponse response) throws JRException, IOException {
+    
+    
+     private void generaReporte(String tipo, List<Descuento> descuentos, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
         switch (tipo) {
             case "PDF":
-                archivo = generaPdf(paquetes);
+                archivo = generaPdf(descuentos);
                 response.setContentType("application/pdf");
-                response.addHeader("Content-Disposition", "attachment; filename=Paquetes.pdf");
+                response.addHeader("Content-Disposition", "attachment; filename=Descuentos.pdf");
                 break;
             case "CSV":
-                archivo = generaCsv(paquetes);
+                archivo = generaCsv(descuentos);
                 response.setContentType("text/csv");
-                response.addHeader("Content-Disposition", "attachment; filename=Paquetes.csv");
+                response.addHeader("Content-Disposition", "attachment; filename=Descuentos.csv");
                 break;
             case "XLS":
-                archivo = generaXls(paquetes);
+                archivo = generaXls(descuentos);
                 response.setContentType("application/vnd.ms-excel");
-                response.addHeader("Content-Disposition", "attachment; filename=Paquetes.xls");
+                response.addHeader("Content-Disposition", "attachment; filename=Descuentos.xls");
         }
         if (archivo != null) {
             response.setContentLength(archivo.length);
@@ -303,51 +274,51 @@ public class PaqueteController extends BaseController {
 
     }
 
-    private void enviaCorreo(String tipo, List<Paquete> paquetes, HttpServletRequest request) throws JRException, MessagingException {
+    private void enviaCorreo(String tipo, List<Descuento> descuento, HttpServletRequest request) throws JRException, MessagingException {
         log.debug("Enviando correo {}", tipo);
         byte[] archivo = null;
         String tipoContenido = null;
         switch (tipo) {
             case "PDF":
-                archivo = generaPdf(paquetes);
+                archivo = generaPdf(descuento);
                 tipoContenido = "application/pdf";
                 break;
             case "CSV":
-                archivo = generaCsv(paquetes);
+                archivo = generaCsv(descuento);
                 tipoContenido = "text/csv";
                 break;
             case "XLS":
-                archivo = generaXls(paquetes);
+                archivo = generaXls(descuento);
                 tipoContenido = "application/vnd.ms-excel";
         }
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(ambiente.obtieneUsuario().getUsername());
-        String titulo = messageSource.getMessage("paquete.lista.label", null, request.getLocale());
+        String titulo = messageSource.getMessage("descuento.lista.label", null, request.getLocale());
         helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
         helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
         helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
         mailSender.send(message);
     }
 
-    private byte[] generaPdf(List paquetes) throws JRException {
+    private byte[] generaPdf(List descuento) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/tiposBecas.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(paquetes));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(descuento));
         byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
 
         return archivo;
     }
 
-    private byte[] generaCsv(List paquetes) throws JRException {
+    private byte[] generaCsv(List descuento) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRCsvExporter exporter = new JRCsvExporter();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/tiposBecas.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(paquetes));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(descuento));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
         exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
         exporter.exportReport();
@@ -356,13 +327,13 @@ public class PaqueteController extends BaseController {
         return archivo;
     }
 
-    private byte[] generaXls(List paquetes) throws JRException {
+    private byte[] generaXls(List descuento) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRXlsExporter exporter = new JRXlsExporter();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/tiposBecas.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(paquetes));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(descuento));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
         exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
         exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);
