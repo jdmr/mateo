@@ -26,9 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class AlumnoDaoHibernateTest {
+public class AlumnoDaoTest {
     
-    private static final Logger log = LoggerFactory.getLogger(AlumnoDaoHibernateTest.class);
+    private static final Logger log = LoggerFactory.getLogger(AlumnoDaoTest.class);
     @Autowired
     private AlumnoDao instance;
     	

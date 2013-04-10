@@ -26,6 +26,7 @@
     <logger name="org.springframework" level="trace"/>
     <logger name="org.springframework.security" level="trace"/>
     <logger name="org.hibernate" level="trace"/>
+    <logger name="org.hibernate.sql" level="trace"/>
     
     <logger name="org.hibernate.SQL" level="TRACE"/>
     <logger name="org.hibernate.type" level="TRACE"/>

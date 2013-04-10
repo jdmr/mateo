@@ -2350,6 +2350,7 @@ public class Constantes {
 	public static final String CONTAINSKEY_MESSAGE = "message";
 	public static final String CONTAINSKEY_MESSAGE_ATTRS = "messageAttrs";
 	public static final String CONTAINSKEY_ORGANIZACION = "organizacion";
+	
 	/**
 	 * Valores para el los containsKey para las clases
 	 */
@@ -2358,7 +2359,7 @@ public class Constantes {
 	public static final String CONTAINSKEY_RESULTADOS = "resultados";
 	public static final String CONTAINSKEY_AUXILIARES = "auxiliares";
 	public static final String CONTAINSKEY_LIBROS = "libros";
-
+        public static final String CONTAINSKEY_DESCUENTO = "descuento";
 	/**
 	 * Valores para el los addAttribute para las clases
 	 */
@@ -2500,6 +2501,7 @@ public class Constantes {
     public static final String CONTAINSKEY_AFECONVENIO= "afeConvenios";
     public static final String CONTAINSKEY_PAQUETES= "paquetes";
     public static final String CONTAINSKEY_ALUMNOPAQUETES = "alumnoPaquetes";
+    public static final String CONTAINSKEY_DESCUENTOS= "descuentos";
     /**
      * Valores para el los addAttribute para las clases
      */
@@ -2885,4 +2887,14 @@ public class Constantes {
     public static final String PATH_ALUMNOPAQUETE_GRABA = "/inscripciones/alumnoPaquete/graba";
     public static final String PATH_ALUMNOPAQUETE_ELIMINA = "/inscripciones/alumnoPaquete/elimina";
     public static final String ADDATTRIBUTE_ALUMNOPAQUETE = "alumnoPaquete";
+    
+    public static final String PATH_DESCUENTO = "/inscripciones/descuento";
+    public static final String PATH_DESCUENTO_LISTA = "/inscripciones/descuento/lista";
+    public static final String PATH_DESCUENTO_VER = "/inscripciones/descuento/ver";
+    public static final String PATH_DESCUENTO_NUEVO = "/inscripciones/descuento/nuevo";
+    public static final String PATH_DESCUENTO_EDITA = "/inscripciones/descuento/edita";
+    public static final String PATH_DESCUENTO_GRABA = "/inscripciones/descuento/graba";
+    public static final String PATH_DESCUENTO_ACTUALIZA = "/inscripciones/descuento/actualiza";
+    public static final String PATH_DESCUENTO_ELIMINA = "/inscripciones/descuento/elimina";
+    public static final String ADDATTRIBUTE_DESCUENTO = "descuento"; 
 }
