@@ -31,20 +31,15 @@
                 <form:hidden path="version" />
                 <form:hidden path="usuarioAlta.id" />
                 <form:hidden path="fechaAlta" />
+                <form:hidden path="matricula" />
                 <fieldset>
-                    <s:bind path="cobroCampo.matricula">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="matricula">
-                                <s:message code="matricula.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="matricula" maxlength="8" required="true" />
-                            <form:errors path="matricula" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+                    <div class="row-fluid" style="padding-bottom: 10px;">
+                        <div class="span1"><s:message code="matricula.label" /></div>
+                        <div class="span11">${cobroCampo.matricula}</div>
+                    </div>
                     <s:bind path="cobroCampo.status">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="status">
+                                <label for="status">
                                 <s:message code="status.label" />
                                 <span class="required-indicator">*</span>
                             </label>

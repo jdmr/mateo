@@ -7,6 +7,7 @@ package mx.edu.um.mateo.inscripciones.dao.impl;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
+import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inscripciones.dao.CobroCampoDao;
@@ -56,10 +57,12 @@ public class CobroCampoDaoHibernate extends BaseDao implements CobroCampoDao {
             params.put("offset", 0);
         }
         Criteria criteria = currentSession().createCriteria(CobroCampo.class)
-                .setFetchMode("institucion", FetchMode.SELECT);
+                .setFetchMode("usuarioAlta", FetchMode.SELECT);
         Criteria countCriteria = currentSession().createCriteria(CobroCampo.class)
-                .setFetchMode("institucion", FetchMode.SELECT);
-
+                .setFetchMode("usuarioAlta", FetchMode.SELECT);
+//        Criteria criteria = currentSession().createCriteria(CobroCampo.class);
+//        Criteria countCriteria = currentSession().createCriteria(
+//                CobroCampo.class);
         if (params.containsKey("empresa")) {
             criteria.createCriteria("empresa").add(
                     Restrictions.idEq(params.get("empresa")));
@@ -74,7 +77,7 @@ public class CobroCampoDaoHibernate extends BaseDao implements CobroCampoDao {
                     MatchMode.ANYWHERE));
             propiedades.add(Restrictions.ilike("matricula", filtro,
                     MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.eq("fecha", filtro));
+            propiedades.add(Restrictions.eq("importeMatricula", filtro));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
