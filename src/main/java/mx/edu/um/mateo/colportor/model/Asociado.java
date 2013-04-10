@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.colportor.model;
 
+import java.util.HashSet;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -19,11 +20,7 @@ import mx.edu.um.mateo.general.model.Usuario;
 @DiscriminatorValue("asociado")
 public class Asociado extends Usuario {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-//    @Version
-//    private Integer version;
+
     @Column(length = 65)
     private String clave;
     @Size(min = 10, max = 12)
@@ -37,33 +34,38 @@ public class Asociado extends Usuario {
     private String colonia;
     @Column(length = 200)
     private String municipio;
-//    private String nombre;
-//    private String apellidop;
-//    private String apellidom;
-//    private String username;
 
     public Asociado() {
+        
     }
-//
-//    public Asociado(String clave, String telefono, String status, String calle, String colonia, String municipio) {
-//        this.clave = clave;
-//        this.telefono = telefono;
-//        this.status = status;
-//        this.calle = calle;
-//        this.colonia = colonia;
-//        this.municipio = municipio;
-//    }
 
     public Asociado(String username, String password,   String nombre, String apellidoP,
             String apellidoM, String status, String clave, String telefono, String calle, 
             String colonia, String municipio){
-     super(username, password, nombre, apellidoP, apellidoM); 
+     super(username, password, nombre, apellidoP, apellidoM);
+     
     this.clave=clave;
     this.telefono=telefono;
     this.status=status;
     this.calle = calle;
     this.colonia = colonia;
     this.municipio = municipio;
+    
+    
+    }
+    
+    public Asociado(String username, String password, String correo, String nombre, String apellidoP,
+            String apellidoM, String status, String clave, String telefono, String calle, 
+            String colonia, String municipio){
+     super(username, password, nombre, apellidoP, apellidoM, correo);
+    this.clave=clave;
+    this.telefono=telefono;
+    this.status=status;
+    this.calle = calle;
+    this.colonia = colonia;
+    this.municipio = municipio;
+    
+    
     }
     
     public String getCalle() {

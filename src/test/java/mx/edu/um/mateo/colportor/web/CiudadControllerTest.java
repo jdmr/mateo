@@ -12,7 +12,7 @@ import mx.edu.um.mateo.colportor.model.Estado;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.dao.*;
 import mx.edu.um.mateo.general.model.*;
-import mx.edu.um.mateo.general.test.BaseTest;
+import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -43,7 +43,7 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class CiudadControllerTest extends BaseTest {
+public class CiudadControllerTest extends BaseControllerTest {
     private static final Logger log = LoggerFactory.getLogger(CiudadControllerTest.class);
     @Autowired
     private WebApplicationContext wac;

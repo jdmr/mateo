@@ -108,7 +108,7 @@ public class PaqueteAlumno {
             conn_noe = conx.getConexionNoe(new Boolean(false));
             
             String COMANDO = "SELECT COALESCE(MAX(ID),0)+1 ID " +
-                    "FROM FES_PAQUETEALUMNO " ;
+                    "FROM noe.FES_PAQUETEALUMNO " ;
             pstmt = conn_noe.prepareStatement(COMANDO);
             rset = pstmt.executeQuery();
             if(rset.next()){
@@ -117,7 +117,7 @@ public class PaqueteAlumno {
             pstmt.close();
             rset.close();
             
-            COMANDO = "INSERT INTO FES_PAQUETEALUMNO " +
+            COMANDO = "INSERT INTO noe.FES_PAQUETEALUMNO " +
                     "(ID, MATRICULA, PAQUETE_ID, STATUS)" +
                     "VALUES " +
                     "(?,?,?,?)";
@@ -145,7 +145,7 @@ public class PaqueteAlumno {
             conx = new Conexion();
             conn_noe = conx.getConexionNoe(new Boolean(false));
             
-            String COMANDO = "UPDATE FES_PAQUETEALUMNO " +
+            String COMANDO = "UPDATE noe.FES_PAQUETEALUMNO " +
                     "SET MATRICULA = ?, PAQUETE_ID = ?, " +
                     "STATUS = ? " +
                     "WHERE ID = ? ";
@@ -176,7 +176,7 @@ public class PaqueteAlumno {
             conn_noe = conx.getConexionNoe(new Boolean(false));
             
             String COMANDO = "SELECT ID, MATRICULA, PAQUETE_ID, STATUS " +
-                    "FROM FES_PAQUETEALUMNO " +
+                    "FROM noe.FES_PAQUETEALUMNO " +
                     "WHERE ID = ?" ;
             pstmt = conn_noe.prepareStatement(COMANDO);
             pstmt.setInt(1, id.intValue());
@@ -213,7 +213,7 @@ public class PaqueteAlumno {
             conn_noe = conx.getConexionNoe(new Boolean(false));
             
             String COMANDO = "SELECT ID, MATRICULA, PAQUETE_ID, STATUS " +
-                    "FROM FES_PAQUETEALUMNO " +
+                    "FROM noe.FES_PAQUETEALUMNO " +
                     "WHERE STATUS = 'A' " ;
             
             pstmt = conn_noe.prepareStatement(COMANDO);
@@ -269,7 +269,7 @@ public class PaqueteAlumno {
         try{
             conx = new Conexion();
             conn_noe = conx.getConexionNoe(new Boolean(false));
-            String COMANDO = "DELETE FROM FES_PAQUETEALUMNO WHERE ID = ? ";
+            String COMANDO = "DELETE FROM noe.FES_PAQUETEALUMNO WHERE ID = ? ";
             pstmt = conn_noe.prepareStatement(COMANDO);
             pstmt.setInt(1, id.intValue());
             pstmt.execute();

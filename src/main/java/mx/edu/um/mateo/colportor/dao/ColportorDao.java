@@ -155,20 +155,29 @@ public class ColportorDao {
         return colportor;
     }
     
-    public Colportor crea(Colportor colportor, String[] nombreDeRoles, Usuario usuario) {
+    public Colportor crea(Colportor colportor, Usuario usuario) {
         log.debug("Creando colportor : {}", colportor);
         colportor.setPassword(passwordEncoder.encodePassword(colportor.getPassword(), colportor.getUsername()));
+        
         log.debug("password"+colportor.getPassword());
-        colportor.addRol(rolDao.obtiene("ROLE_COL"));
         colportor.setStatus(Constantes.STATUS_ACTIVO);
+        
         if (usuario != null) {
             colportor.setEmpresa(usuario.getEmpresa());
+            colportor.setAlmacen(usuario.getAlmacen());
         }
         currentSession().save(colportor);
+        
+        colportor.addRol(rolDao.obtiene("ROLE_CLP"));
+        log.debug("Rol del colportor {}",colportor.getRoles());
+        currentSession().save(colportor);
         currentSession().flush();
+        log.debug("Rol del colportor {}",colportor.getRoles());
+        
         return colportor;
     }
-        public Colportor actualiza(Colportor colportor, String[] nombreDeRoles) {
+    
+    public Colportor actualiza(Colportor colportor, String[] nombreDeRoles) {
         Colportor nuevoColportor= (Colportor) currentSession().get(Usuario.class, colportor.getId());
         nuevoColportor.setVersion(colportor.getVersion());
         nuevoColportor.setUsername(colportor.getUsername());

@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import mx.edu.um.mateo.general.model.*;
-import mx.edu.um.mateo.general.test.BaseTest;
+import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inventario.model.Almacen;
@@ -66,7 +66,7 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class EntradaControllerTest extends BaseTest {
+public class EntradaControllerTest extends BaseControllerTest {
     private static final Logger log = LoggerFactory.getLogger(EntradaControllerTest.class);
     @Autowired
     private WebApplicationContext wac;

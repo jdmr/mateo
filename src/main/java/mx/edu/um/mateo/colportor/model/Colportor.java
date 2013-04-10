@@ -24,6 +24,7 @@
 package mx.edu.um.mateo.colportor.model;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -39,11 +40,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 @DiscriminatorValue("colportor")
 public class Colportor extends Usuario{
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-//    @Version
-//    private Integer version;
    @Column(  length = 64)
     private String clave;
     @Column( length = 2)
@@ -66,12 +62,12 @@ public class Colportor extends Usuario{
     @DateTimeFormat(pattern=Constantes.DATE_SHORT_HUMAN_PATTERN)
     @Column( name = "fecha_nac")
     private Date fechaDeNacimiento;
-//    private String username;
-//    private String nombre;
-//    private String apellidop;
-//    private String apellidom;
     
-   public Colportor(String username, String password, String nombre, String apPaterno, String apMaterno,
+    public Colportor() {
+        
+    }
+    
+    public Colportor(String username, String password, String nombre, String apPaterno, String apMaterno,
            String clave, String status, String telefono, String calle, String colonia, String municipio,
            String tipoColportor, String matricula, Date fechaNac) {
        super(username, password, nombre, apPaterno, apMaterno); 
@@ -84,43 +80,27 @@ public class Colportor extends Usuario{
        this.tipoDeColportor=tipoColportor;
        this.matricula=matricula;
        this.fechaDeNacimiento=fechaNac;
+       
+       
     }
-    public Colportor() {
+    
+    public Colportor(String username, String password, String correo, String nombre, String apPaterno, String apMaterno,
+           String clave, String status, String telefono, String calle, String colonia, String municipio,
+           String tipoColportor, String matricula, Date fechaNac) {
+       super(username, password, nombre, apPaterno, apMaterno, correo); 
+       this.clave=clave;
+       this.status=status;
+       this.telefono=telefono;
+       this.calle=calle;
+       this.colonia=colonia;
+       this.municipio=municipio;
+       this.tipoDeColportor=tipoColportor;
+       this.matricula=matricula;
+       this.fechaDeNacimiento=fechaNac;
+       
+       
     }
-//
-//    public Colportor(String clave, String status, String telefono, String tipoDeColportor, String matricula) {
-//        this.clave = clave;
-//        this.status = status;
-//        this.telefono = telefono;
-//        this.tipoDeColportor = tipoDeColportor;
-//        this.matricula = matricula;
-//    }
-//
-//    public Colportor(String clave, String status, String telefono, String calle, String colonia, String municipio, String tipoDeColportor, String matricula, Date fechaDeNacimiento) {
-//        this.clave = clave;
-//        this.status = status;
-//        this.telefono = telefono;
-//        this.calle = calle;
-//        this.colonia = colonia;
-//        this.municipio = municipio;
-//        this.tipoDeColportor = tipoDeColportor;
-//        this.matricula = matricula;
-//        this.fechaDeNacimiento = fechaDeNacimiento;
-//    }
-//    public Colportor(String username, String nombre,String apellidop,String apellidom,String status,String clave,String telefono,String matricula,String calle,String colonia,String municipio){
-//    this.username=username;
-//    this.nombre=nombre;
-//    this.apellidop=apellidop;
-//    this.apellidom=apellidom;
-//    this.status=status;
-//    this.clave=clave;
-//    this.telefono=telefono;
-//    this.matricula=matricula;
-//    this.calle=calle;
-//    this.colonia=colonia;
-//    this.municipio=municipio;
-//    }
-//    
+    
     public String getCalle() {
         return calle;
     }

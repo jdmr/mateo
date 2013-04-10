@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.inscripciones.model.TiposBecas;
 import org.hibernate.Criteria;
+import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
@@ -29,11 +29,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PaqueteDaoHibernate extends BaseDao implements PaqueteDao{
       /**
-     * @see mx.edu.um.afe.dao.TipoAFEBecaDao#getTiposBeca(mx.edu.um.afe.model.TipoAFEBeca)
+     * @see mx.edu.um.mateo.inscripciones.dao.PaqueteDao#lista(java.util.Map) 
      */
 
  @Override
-    public Map<String, Object> getPaquetes(Map<String, Object> params) {
+    public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de Tipos de Becas con params {}", params);
         if (params == null) {
             params = new HashMap<>();
@@ -99,38 +99,64 @@ public class PaqueteDaoHibernate extends BaseDao implements PaqueteDao{
     }
 
     /**
-     * @see mx.edu.um.afe.dao.TipoAFEBecaDao#getTipoBeca(Integer id)
+     * @see mx.edu.um.mateo.inscripciones.dao.PaqueteDao#obtiene(java.lang.Integer) 
      */
     @Override
-    public Paquete getPaquete(final Integer id) {
+    public Paquete obtiene(final Long id) {
         Paquete paquete =  (Paquete) currentSession().get(Paquete.class, id);
         if (paquete == null) {
-            //log.warn("uh oh, tipoBeca with id '" + id + "' not found...");
-            throw new ObjectRetrievalFailureException(TiposBecas.class, id);
+            log.warn("uh oh, tipoBeca with id '" + id + "' not found...");
+            throw new ObjectRetrievalFailureException(Paquete.class, id);
         }
 
         return paquete;
     }
 
     /**
-     * @see mx.edu.um.afe.dao.TipoAFEBecaDao#saveTipoBeca(TipoAFEBeca tipoBeca)
+     * @see mx.edu.um.mateo.inscripciones.dao.PaqueteDao#crea(mx.edu.um.mateo.inscripciones.model.Paquete, mx.edu.um.mateo.general.model.Usuario) 
      */    
-   public void graba(final Paquete paquete, Usuario usuario) {
+    @Override
+   public void crea(final Paquete paquete, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
             paquete.setEmpresa(usuario.getEmpresa());
         }
-        currentSession().saveOrUpdate(paquete);
+        currentSession().save(paquete);        
         currentSession().merge(paquete);
         currentSession().flush();
 
     }
+   
+   /**
+     * @see mx.edu.um.mateo.inscripciones.dao.PaqueteDao#actualiza(mx.edu.um.mateo.inscripciones.model.Paquete, mx.edu.um.mateo.general.model.Usuario) 
+     */    
+   @Override
+   public void actualiza(final Paquete paquete, Usuario usuario) {
+        Session session = currentSession();
+        if (usuario != null) {
+            paquete.setEmpresa(usuario.getEmpresa());
+        }
+        try {
+            currentSession().update(paquete);
+       } catch (NonUniqueObjectException e) {
+           try {
+                currentSession().merge(paquete);                
+            } catch (Exception ex) {
+                log.error("No se pudo actualizar el paquete", ex);
+                throw new RuntimeException("No se pudo actualizar el paquete",
+                        ex);
+            }
+       }finally{
+            currentSession().flush();
+       }
+
+    }
     /**
-     * @see mx.edu.um.afe.dao.TipoAFEBecaDao#removeTipoBeca(Integer id)
+     * @see mx.edu.um.mateo.inscripciones.dao.PaqueteDao#elimina(java.lang.Integer) 
      */
     @Override
-    public String removePaquete(final Integer id) {
-       Paquete paquete = this.getPaquete(id);
+    public String elimina(final Long id) {
+       Paquete paquete = this.obtiene(id);
        String descripcion = paquete.getDescripcion(); 
        currentSession().delete(paquete);
         currentSession().flush();

@@ -490,7 +490,7 @@ public class metodos3 extends Conexion{
 			Double dblTipoCambio = null;
 
 			String COMANDO = "SELECT COALESCE(TIPO_CAMBIO_DLL,0) TIPO_CAMBIO ";
-			COMANDO += "FROM CONT_TIPOCAMBIO ";
+			COMANDO += "FROM mateo.CONT_TIPOCAMBIO ";
 			PreparedStatement pstmt = conn.prepareStatement(COMANDO);
 			ResultSet rset = pstmt.executeQuery();
 
@@ -543,7 +543,7 @@ public class metodos3 extends Conexion{
 
 					//Obtener la mascara del centro de costo del ejercicio actual
 					String COMANDO = "SELECT MASC_CCOSTO ";
-					COMANDO += "FROM CONT_EJERCICIO ";
+					COMANDO += "FROM mateo.CONT_EJERCICIO ";
 					COMANDO += "WHERE ID_EJERCICIO = ? ";
 					PreparedStatement pstmt = conn.prepareStatement(COMANDO);
 					pstmt.setString(1, (String)session.getAttribute("id_ejercicio"));

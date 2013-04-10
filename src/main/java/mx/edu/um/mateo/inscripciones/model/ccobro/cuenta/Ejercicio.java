@@ -203,7 +203,7 @@ public class Ejercicio {
 			
 			String COMANDO = "SELECT ID_EJERCICIO, NOMBRE, MASC_BALANCE, MASC_RESULTADO, " +
 					"MASC_AUXILIAR, MASC_CCOSTO, NIVEL_CONTABLE, NIVEL_TAUXILIAR, STATUS " +
-					"FROM CONT_EJERCICIO " ;
+					"FROM mateo.CONT_EJERCICIO " ;
 			
 			pstmt = conn.prepareStatement(COMANDO);
 			rset = pstmt.executeQuery();
@@ -240,7 +240,7 @@ public class Ejercicio {
 			if(conn == null || conn.isClosed())
 			conn = new Conexion().getConexionMateo(new Boolean(false));
 			
-			String COMANDO = "INSERT INTO CONT_EJERCICIO " +
+			String COMANDO = "INSERT INTO mateo.CONT_EJERCICIO " +
 					"(ID_EJERCICIO, NOMBRE, MASC_BALANCE, MASC_RESULTADO, " +
 					"MASC_AUXILIAR, MASC_CCOSTO, NIVEL_CONTABLE, NIVEL_TAUXILIAR, STATUS)" +
 					"VALUES " +

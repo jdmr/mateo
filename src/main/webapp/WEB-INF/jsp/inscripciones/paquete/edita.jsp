@@ -57,7 +57,7 @@
                                 <s:message code="importe.matricula.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="matricula" maxlength="8" required="true" />
+                            <form:input path="matricula" maxlength="7" required="true" />
                             <form:errors path="matricula" cssClass="alert alert-error" />
                         </div>
                     </s:bind>

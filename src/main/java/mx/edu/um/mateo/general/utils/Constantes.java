@@ -257,6 +257,604 @@ public class Constantes {
      * Constante del cache de hibernate
      *
      */
+    public static Integer HIBERNATE_JDBC_BATCH_SIZE = 50;
+    // Constantes varias del sistema
+    /**
+     * The name of the ResourceBundle used in this application
+     */
+    public static final String BUNDLE_KEY = "ApplicationResources";
+    /**
+     * The encryption algorithm key to be used for passwords
+     */
+    public static final String ENC_ALGORITHM = "algorithm";
+    /**
+     * A flag to indicate if passwords should be encrypted
+     */
+    public static final String ENCRYPT_PASSWORD = "encryptPassword";
+    /**
+     * File separator from System properties
+     */
+    public static final String FILE_SEP = System.getProperty("file.separator");
+    /**
+     * User home from System properties
+     */
+    public static final String USER_HOME = System.getProperty("user.home")
+            + FILE_SEP;
+    /**
+     * The name of the configuration hashmap stored in application scope.
+     */
+    public static final String CONFIG = "appConfig";
+    /**
+     * Session scope attribute that holds the locale set by the user. By setting
+     * this key to the same one that Struts uses, we get synchronization in
+     * Struts w/o having to do extra work or have two session-level variables.
+     */
+    public static final String PREFERRED_LOCALE_KEY = "org.apache.struts.action.LOCALE";
+    /**
+     * The request scope attribute under which an editable user form is stored
+     */
+    public static final String USER_KEY = "userForm";
+    /**
+     * The request scope attribute that holds the user list
+     */
+    public static final String USER_LIST = "userList";
+    /**
+     * The request scope attribute for indicating a newly-registered user
+     */
+    public static final String REGISTERED = "registered";
+    /**
+     * The name of the Administrator role, as specified in web.xml
+     */
+    public static final String ADMIN_ROLE = "admin";
+    /**
+     * The name of the User role, as specified in web.xml
+     */
+    public static final String USER_ROLE = "user";
+    /**
+     * The name of the user's role list, a request-scoped attribute when
+     * adding/editing a user.
+     */
+    public static final String USER_ROLES = "userRoles";
+    /**
+     * The name of the available roles list, a request-scoped attribute when
+     * adding/editing a user.
+     */
+    public static final String AVAILABLE_ROLES = "availableRoles";
+    /**
+     * The name of the CSS Theme setting.
+     */
+    public static final String CSS_THEME = "csstheme";
+    // Comunicacion-START
+    /**
+     * The request scope attribute that holds the comunicacion form.
+     */
+    public static final String COMUNICACION_KEY = "comunicacionForm";
+    /**
+     * The request scope attribute that holds the comunicacion list
+     */
+    public static final String COMUNICACION_LIST = "comunicacionList";
+    // Comunicacion-END
+    // EmpleadoPuesto-START
+    /**
+     * The request scope attribute that holds the comunicacion form.
+     */
+    public static final String EMPLEADOPUESTO_KEY = "empleadoPuestoForm";
+    /**
+     * The request scope attribute that holds the comunicacion list
+     */
+    public static final String EMPLEADOPUESTO_LIST = "empleadoPuestoList";
+    /**
+     * The request scope attribute that holds the empleadoPuesto value that has
+     * been edited
+     */
+    public static final String EMPLEADOPUESTO_EDIT = "empleaoPuestoEdit";
+    // EmpleadoPuesto-END
+    // EmpleadoVacaciones-START
+    public static final String EMPLEADOVACACIONES_KEY = "empleadoVacacionesForm";
+    public static final String EMPLEADOVACACIONES_LIST = "empleadoVacacionesList";
+    public static final String EMPLEADOVACACIONES_STATUS_ALTA_BY_USER = "U";
+    public static final String EMPLEADOVACACIONES_STATUS_ALTA_BY_PROCESS = "P";
+    // EmpleadoVacaciones-END
+    // Grupo-START
+    /**
+     * The request scope attribute that holds the grupo form.
+     */
+    public static final String GRUPO_KEY = "grupoForm";
+    /**
+     * The request scope attribute that holds the grupo list
+     */
+    public static final String GRUPO_LIST = "grupoList";
+    public static final String GRUPO_COMODIN = "X";
+    // Grupo-END
+    // Seccion-START
+    /**
+     * The request scope attribute that holds the seccionCategoria form.
+     */
+    public static final String SECCION_KEY = "seccionForm";
+    /**
+     * The request scope attribute that holds the seccionCategoria list
+     */
+    public static final String SECCION_LIST = "seccionList";
+    // Seccion-END
+    // TipoDependiente-START
+    /**
+     * The request scope attribute that holds the tipoDependiente form.
+     */
+    public static final String TIPODEPENDIENTE_KEY = "tipoDependiente";
+    /**
+     * The request scope attribute that holds the tipoDependiente list
+     */
+    public static final String TIPODEPENDIENTE_LIST = "tipoDependienteList";
+    /**
+     * The request scope attribute that holds the alumnoInscripciones list
+     */
+    public static final String ALUMNO_LIST = "alumnList";
+    // TipoDependiente-END
+    // Dependiente-START
+    /**
+     * The request scope attribute that holds the dependiente form.
+     */
+    public static final String EMPLEADODEPENDIENTE_KEY = "empleadoDependienteForm";
+    /**
+     * The request scope attribute that holds the dependiente list
+     */
+    public static final String EMPLEADODEPENDIENTE_LIST = "empleadoDependienteList";
+    // Dependiente-END
+    // EmpleadoComunicacion-START
+    public static final String EMPLEADOCOMUNICACION_KEY = "empleadoComunicacionForm";
+    public static final String EMPLEADOCOMUNICACION_LIST = "empleadoComunicacionList";
+    // EmpleadoComunicacion-END
+    // Detalle-START
+    /**
+     * The request scope attribute that holds the detalle form.
+     */
+    public static final String DETALLE_KEY = "detalleForm";
+    /**
+     * The request scope attribute that holds the detalle list
+     */
+    public static final String DETALLE_LIST = "detalleList";
+    // Detalle-END
+    // Docencia-START
+    /**
+     * The request scope attribute that holds the docencia form.
+     */
+    public static final String DOCENCIA_KEY = "docenciaForm";
+    /**
+     * The request scope attribute that holds the docencia list
+     */
+    public static final String DOCENCIA_LIST = "docenciaList";
+    // Docencia-END
+    // Universidad-START
+    /**
+     * The request scope attribute that holds the universidad form.
+     */
+    public static final String UNIVERSIDAD_KEY = "universidadForm";
+    /**
+     * The request scope attribute that holds the universidad list
+     */
+    public static final String UNIVERSIDAD_LIST = "universidadList";
+    // Universidad-END
+    // Ejercicio-START
+    /**
+     * The request scope attribute that holds the ejercicio form.
+     */
+    public static final String EJERCICIO_KEY = "ejercicioForm";
+    /**
+     * The request scope attribute that holds the ejercicio list
+     */
+    public static final String EJERCICIO_LIST = "ejercicioList";
+    /**
+     * Status del ejercicio activo
+     */
+    public static final String EJERCICIO_ACTIVO = "A";
+    /**
+     * Status del ejercicio cerrado
+     */
+    public static final String EJERCICIO_CERRADO = "I";
+    // Ejercicio-END
+    // Libro-START
+    /**
+     * The request scope attribute that holds the libro form.
+     */
+    public static final String LIBRO_KEY = "libroForm";
+    /**
+     * The request scope attribute that holds the libro list
+     */
+    public static final String LIBRO_LIST = "libroList";
+    public static final String LIBRO_CAJA = "20";
+    // Libro-END
+    // CentroCosto-START
+    /**
+     * The request scope attribute that holds the cCosto form.
+     */
+    public static final String CCOSTO_KEY = "centroCostoForm";
+    /**
+     * The request scope attribute that holds the cCosto list
+     */
+    public static final String CCOSTO_LIST = "cCostoList";
+    public static final String CCOSTO_DETALLE = "S";
+    public static final String CCOSTO = "ccosto";
+    public static final String CCOSTO_DIEZMO_OTROSGASTOS_OTROSPRODUCTOS_ACA = "1.01.4.07.02";
+    public static final String CCOSTO_DIEZMO_OTROSGASTOS_OTROSPRODUCTOS_COV = "2.01.1.01.02";
+    public static final String CCOSTO_RECHUMANOS = "1.01.4.01.05";
+    // CentroCosto-END
+    // CtaMayor-START
+    /**
+     * The request scope attribute that holds the ctaMayor form.
+     */
+    public static final String CTAMAYOR_KEY = "ctaMayorForm";
+    /**
+     * The request scope attribute that holds the ctaMayor list
+     */
+    public static final String CTAMAYOR_LIST = "ctaMayorList";
+    /**
+     * Tipo de cuenta Balance
+     */
+    public static final String CTAMAYOR_BALANCE = "B";
+    /**
+     * Tipo de cuenta Resultados
+     */
+    public static final String CTAMAYOR_RESULTADOS = "R";
+    public static final String CTAMAYOR_NOMINA = "2.1.01.08";
+    public static final String CTAMAYOR_NOMINA_JUBILADOS = "2.1.01.25";
+    public static final String CTAMAYOR_PRESUPUESTO_BECAS = "1.3.12";
+    public static final String CTAMAYOR_ESTUDIANTES_ACTIVOS = "1.1.04.01";
+    public static final String CTAMAYOR_ESTUDIANTES_PASIVOS = "1.1.04.29";
+    public static final String CTAMAYOR_ESTUDIANTES_INCOBRABLES = "1.1.04.30";
+    public static final String CTAMAYOR_TALLERES_ESTUDIANTILES = "1.3.15";
+    public static final String CTAMAYOR_DIEZMO_ASOCNORESTE = "2.1.01.10";
+    public static final String CTAMAYOR_DIEZMO_OTROSGASTOS = "1.1.14";
+    public static final String CTAMAYOR_BECA_INSTITUCIONAL = "1.3.13";
+    public static final String CTAMAYOR_BECA_PROMOCIONAL = "1.3.16";
+    public static final String CTAMAYOR_ACADEMICO_COVOPROM = "1.1.05.07";
+    public static final String CTAMAYOR_COVOPROM_ACADEMICO = "2.1.01.09";
+    public static final String CTAMAYOR_DESPENSA = "2.1.02";
+    public static final String CTAMAYOR_PROVEEDORES = "2.1.01.04";
+    public static final String CTAMAYOR_ACREEDORES_DIVERSOS = "2.1.01.05";
+    public static final String CTAMAYOR_BANORTE_1511 = "1.1.02.01";
+    public static final String CTAMAYOR_BANCO_JUBILADOS = "1.1.02.15";
+    public static final String CTAMAYOR_CC_ENERGIA_ELECTRICA = "2.2.03";
+    public static final String CTAMAYOR_CC_TELEFONIA = "2.5.02";
+    public static final String CTAMAYOR_CC_IVA_DEDUCIBLE = "2.5.36";
+    public static final String CTAMAYOR_CC_IVA_DEDUCIBLE_EE = "2.2.08";
+    public static final String CTAMAYOR_CAJA_GENERAL = "1.1.01.01";
+    /**
+     * El primer numero de la cuenta de mayor indica la naturaleza de la misma
+     */
+    public static final String CTAMAYOR_DEUDORA = "1";
+    /**
+     * Indica que la cuenta de mayor tiene auxiliares
+     */
+    public static final String CTAMAYOR_AUXILIAR_SI = "S";
+    // CtaMayor-END
+    // Auxiliar-START
+    /**
+     * The request scope attribute that holds the auxiliar form.
+     */
+    public static final String AUXILIAR_KEY = "auxiliarForm";
+    /**
+     * The request scope attribute that holds the auxiliar list
+     */
+    public static final String AUXILIAR_LIST = "auxiliarList";
+    /**
+     * Clave de auxiliar default Se utiliza cuando el usuario no proporciona una
+     * clave de auxiliar
+     */
+    public static final String AUXILIAR_DEFAULT = "0000000";
+    public static final String AUXILIAR_ACCORD = "8112107";
+    public static final String AUXILIAR_COMPANIA_LUZ = "8000003";
+    public static final String AUXILIAR_TELMEX = "8080001";
+    /**
+     * Valor del atributo detalle
+     */
+    public static final String AUXILIAR_DETALLE = "S";
+    // Auxiliar-END
+    // Cuenta-START
+    /**
+     * The request scope attribute that holds the cuenta form.
+     */
+    public static final String CUENTA_KEY = "cuentaForm";
+    /**
+     * The request scope attribute that holds the cuenta list
+     */
+    public static final String CUENTA_LIST = "cuentaList";
+    /**
+     * Cuenta activa
+     */
+    public static final String CUENTA_ACTIVA = "A";
+    /**
+     * Cuenta inactiva No se pueden crear, modificar o borrar movimientos en
+     * esta cuenta Solo se puede consultar
+     */
+    public static final String CUENTA_INACTIVA = "I";
+    // Cuenta-END
+    // Poliza-START
+    /**
+     * The request scope attribute that holds the poliza form.
+     */
+    public static final String POLIZA_KEY = "polizaForm";
+    /**
+     * The request scope attribute that holds the poliza list
+     */
+    public static final String POLIZA_LIST = "polizaList";
+    /**
+     * Poliza activa
+     */
+    public static final String POLIZA_ACTIVA = "A";
+    /**
+     * Poliza cerrada. Si esta cerrada debe estar cuadrada.
+     */
+    public static final String POLIZA_CERRADA = "D";
+    /**
+     * Se inserta cada movimiento que se recibe tal cual
+     */
+    public static final String POLIZA_COMPORTAMIENTO_NORMAL = "Normal";
+    /**
+     * Acumula los importes de los movimientos con cuenta y naturaleza iguales
+     */
+    public static final String POLIZA_COMPORTAMIENTO_BY_CUENTA = "Cuenta";
+    /**
+     * Acumula los importes de los movimientos con cuenta, naturaleza y
+     * descripcion iguales
+     */
+    public static final String POLIZA_COMPORTAMIENTO_BY_DESCRIPCION = "Descripcion";
+    /**
+     * Acumula los importes de los movimientos con cuenta, naturaleza y
+     * descripcion, tomando en cuenta la referencia
+     */
+    public static final String POLIZA_COMPORTAMIENTO_BY_CAJA = "Caja";
+    // Poliza-END
+    // Movimiento-START
+    /**
+     * The request scope attribute that holds the movimiento form.
+     */
+    public static final String MOVIMIENTO_KEY = "movimientoForm";
+    /**
+     * The request scope attribute that holds the movimiento list
+     */
+    public static final String MOVIMIENTO_LIST = "movimientoList";
+    /**
+     * Descripcion de movimiento de saldo anterior
+     */
+    public static final String SALDOANTERIOR = "Saldo Anterior";
+    /**
+     * Movimiento activo
+     */
+    public static final String MOVIMIENTO_ACTIVO = "A";
+    /**
+     * Movimiento que cancela caja, y queda en espera que auditoria lo cancele
+     * definitivamente
+     */
+    public static final String MOVIMIENTO_CANCELADO_POR_CAJA = "T";
+    /**
+     * Movimiento cancelado definitivamente
+     */
+    public static final String MOVIMIENTO_CANCELADO = "I";
+    // Movimiento-END
+    // Reportes Financieros - Start
+    public static final String FONDOS_KEY = "fondosForm";
+    /**
+     * Lista que contiene el estado de cuenta de fondos
+     */
+    public static final String FONDOSEDOCTA_LIST = "fondosEdoCtaList";
+    /**
+     * Map que contiene las listas de saldo incial, entradas y salidas de fondos
+     */
+    public static final String FONDOSEDOCTA_MAP = "fondosEdoCtaMap";
+    /**
+     * Lista que contiene el estado de cuenta de saldos de operaciones
+     */
+    public static final String FONDOSEDOCTA_LIST_SALDOSOPERACIONES = "fondosEdoCtaSaldosOperaciones";
+    /**
+     * Lista de saldo inicial
+     */
+    public static final String FONDOSEDOCTA_LIST_SALDOINICIAL = "fondosEdoCtaListSaldoInicial";
+    /**
+     * Lista de entradas
+     */
+    public static final String FONDOSEDOCTA_LIST_ENTRADAS25 = "fondosEdoCtaListEntradas25";
+    /**
+     * Lista de entradas
+     */
+    public static final String FONDOSEDOCTA_LIST_ENTRADAS26 = "fondosEdoCtaListEntradas26";
+    /**
+     * Lista de entradas
+     */
+    public static final String FONDOSEDOCTA_LIST_ENTRADAS27 = "fondosEdoCtaListEntradas27";
+    /**
+     * Lista de salidas
+     */
+    public static final String FONDOSEDOCTA_LIST_SALIDAS05 = "fondosEdoCtaListSalidas05";
+    /**
+     * Lista de salidas
+     */
+    public static final String FONDOSEDOCTA_LIST_SALIDAS06 = "fondosEdoCtaListSalidas06";
+    /**
+     * Lista de salidas
+     */
+    public static final String FONDOSEDOCTA_LIST_SALIDAS07 = "fondosEdoCtaListSalidas07";
+    /**
+     * Lista de salidas
+     */
+    public static final String FONDOSEDOCTA_LIST_SALIDAS08 = "fondosEdoCtaListSalidas08";
+    /**
+     * Lista de salidas
+     */
+    public static final String FONDOSEDOCTA_LIST_SALIDAS25 = "fondosEdoCtaListSalidas25";
+    /**
+     * Lista de salidas
+     */
+    public static final String FONDOSEDOCTA_LIST_SALIDAS26 = "fondosEdoCtaListSalidas26";
+    /**
+     * Cuenta de fondos que contiene los saldos iniciales
+     */
+    public static final String FONDOS_SALDOINICIAL = "3.1.02.01";
+    public static final String FONDOS_SALDOINICIAL_TIPO = "B";
+    public static final String FONDOS_SALDOINICIAL_NOMBRE = "SALDO INICIAL";
+    /**
+     * Cuenta de fondos que contiene las entradas
+     */
+    public static final String FONDOS_ENTRADAS25 = "1.1.25";
+    public static final String FONDOS_ENTRADAS25_TIPO = "R";
+    public static final String FONDOS_ENTRADAS25_NOMBRE = "ENTRADAS";
+    /**
+     * Cuenta de fondos que contiene las entradas
+     */
+    public static final String FONDOS_ENTRADAS26 = "1.1.26";
+    public static final String FONDOS_ENTRADAS26_TIPO = "R";
+    public static final String FONDOS_ENTRADAS26_NOMBRE = "ENTRADAS";
+    /**
+     * Cuenta de fondos que contiene las entradas
+     */
+    public static final String FONDOS_ENTRADAS27 = "1.1.27";
+    public static final String FONDOS_ENTRADAS27_TIPO = "R";
+    public static final String FONDOS_ENTRADAS27_NOMBRE = "ENTRADAS";
+    /**
+     * Cuenta de fondos que contiene las salidas
+     */
+    public static final String FONDOS_SALIDAS05 = "3.1.05";
+    public static final String FONDOS_SALIDAS05_TIPO = "R";
+    public static final String FONDOS_SALIDAS05_NOMBRE = "SALIDAS";
+    /**
+     * Cuenta de fondos que contiene las salidas
+     */
+    public static final String FONDOS_SALIDAS06 = "3.1.06";
+    public static final String FONDOS_SALIDAS06_TIPO = "R";
+    public static final String FONDOS_SALIDAS06_NOMBRE = "SALIDAS";
+    /**
+     * Cuenta de fondos que contiene las salidas
+     */
+    public static final String FONDOS_SALIDAS07 = "3.1.07";
+    public static final String FONDOS_SALIDAS07_TIPO = "R";
+    public static final String FONDOS_SALIDAS07_NOMBRE = "SALIDAS";
+    /**
+     * Cuenta de fondos que contiene las salidas
+     */
+    public static final String FONDOS_SALIDAS08 = "3.1.08";
+    public static final String FONDOS_SALIDAS08_TIPO = "R";
+    public static final String FONDOS_SALIDAS08_NOMBRE = "SALIDAS";
+    /**
+     * Cuenta de fondos que contiene las salidas
+     */
+    public static final String FONDOS_SALIDAS25 = "3.1.25";
+    public static final String FONDOS_SALIDAS25_TIPO = "R";
+    public static final String FONDOS_SALIDAS25_NOMBRE = "SALIDAS";
+    /**
+     * Cuenta de fondos que contiene las salidas
+     */
+    public static final String FONDOS_SALIDAS26 = "3.1.26";
+    public static final String FONDOS_SALIDAS26_TIPO = "R";
+    public static final String FONDOS_SALIDAS26_NOMBRE = "SALIDAS";
+    public static final String FONDO_ESTADO_CUENTA = "FN";
+    public static final String FONDO_ESTADO_CUENTA_DETALLADO = "FD";
+    public static final String FONDO_ESTADO_CUENTA_SALDOS_OPERACIONES = "SO";
+    /**
+     * Reporte de Antiguedad de Saldos
+     */
+    public static final String ANTIGUEDAD_SALDOS = "aSaldos";
+    public static final String EDO_CUENTA_ANTIGUEDAD_SALDOS = "antiguedadSaldosReport";
+    /**
+     * Reporte de Flujo de Efectivo
+     */
+    public static final String FLUJO_EFECTIVO = "fEfectivo";
+    public static final String RPT_FLUJO_EFECTIVO_ENTRADA = "flujoEfectivoEntradaReport";
+    public static final String RPT_FLUJO_EFECTIVO_SALIDA = "flujoEfectivoSalidaReport";
+    /**
+     * Reporte de Formas de Entrada a Caja
+     */
+    public static final String FORMAS_ENTRADA_CAJA = "fEntradas";
+    public static final String RPT_FORMAS_ENTRADA_CAJA = "formasEntradasCajaList";
+    // Reportes Financieros - END
+    // Concepto-START
+    /**
+     * The request scope attribute that holds the concepto form.
+     */
+    public static final String CONCEPTO_FORM = "conceptoForm";
+    /**
+     * Id del concepto de vacaciones
+     */
+    public static final Integer CONCEPTO_VACACIONES_ID = new Integer(18);
+    /**
+     * Id del concepto de aguinaldo
+     */
+    public static final Integer CONCEPTO_AGUINALDO_ID = new Integer(21);
+    /**
+     * Id del concepto de diezmo
+     */
+    public static final Integer CONCEPTO_DIEZMO_ID = new Integer(23);
+    /**
+     * Id del concepto de ispt
+     */
+    public static final Integer CONCEPTO_ISPT_ID = new Integer(24);
+    /**
+     * Id del concepto de salario
+     */
+    public static final Integer CONCEPTO_SALARIO_ID = new Integer(14);
+    /**
+     * Id del concepto de diferencia del importe en dolares de los cheques
+     */
+    public static final Integer CONCEPTO_DIF_DIVISAS_ID = new Integer(25);
+    /**
+     * Id del concepto de los cheques
+     */
+    public static final Integer CONCEPTO_CHEQUE_ID = new Integer(26);
+    /**
+     * Id del concepto de caja
+     */
+    public static final Integer CONCEPTO_CAJA_ID = new Integer(27);
+    /**
+     * Id del concepto de iva de ingresos en caja
+     */
+    public static final Integer CONCEPTO_IVA_INGRESOS_ID = new Integer(28);
+    /**
+     * Id del concepto de creditos excentos
+     */
+    public static final Integer CONCEPTO_CREDITOS_EXCENTOS_ID = new Integer(29);
+    /**
+     * Id del concepto de creditos excentos
+     */
+    public static final Integer CONCEPTO_MATRICULA_ID = new Integer(30);
+    /**
+     * Id del concepto de creditos excentos
+     */
+    public static final Integer CONCEPTO_ENSENANZA_ID = new Integer(31);
+    /**
+     * Id del concepto de creditos excentos
+     */
+    public static final Integer CONCEPTO_INTERNADO_ID = new Integer(32);
+    /**
+     * Id del concepto de descuento pago contado
+     */
+    public static final Integer CONCEPTO_DCTO_PAGO_CONTADO_ID = new Integer(33);
+    /**
+     * Id del concepto de beca
+     */
+    public static final Integer CONCEPTO_BECA_ID = new Integer(34);
+    /**
+     * >>>>>>> ae5dad9bcae3f95a42b1da712e10f6cd73ebd3d5 public static final
+     * String ABIERTA = "ABIERTA"; public static final String PENDIENTE =
+     * "PENDIENTE"; public static final String CERRADA = "CERRADA"; public
+     * static final String FACTURADA = "FACTURADA"; public static final String
+     * CANCELADA = "CANCELADA"; public static final String CREAR = "CREAR";
+     * public static final String ACTUALIZAR = "ACTUALIZAR"; public static final
+     * String ELIMINAR = "ELIMINAR"; public static final String CANCELAR =
+     * "CANCELAR"; public static final String ADMIN = "ADMIN"; public static
+     * final String ORG = "ORG"; public static final String EMP = "EMP"; public
+     * static final String ALM = "ALM"; public static final String BAJA =
+     * "BAJA"; public static final String IMAGEN = "IMAGEN"; public static final
+     * String REUBICACION = "REUBICACION"; public static final String DEVOLUCION
+     * = "DEVOLUCION"; public static final String SYSTEM_CONSTANTS =
+     * "systemConstants"; // Errores public static final String INVALIDSESSION =
+     * "Se detectaron datos invalidos. Favor de salir del sistema y volver a
+     * ingresar su clave de usuario y password."; // Formato de fecha public
+     * static final String DATE_JAVA_FORMAT = "dd-MM-yyyy"; public static final
+     * String DATE_USER_FORMAT = "(dd-mm-yyyy)";
+     *
+     *
+     * /**
+     * Constante del cache de hibernate
+     *
+     */
     public static final Integer CONCEPTO_BECA_EDUCACIONAL_ID = new Integer(10);
     /**
      * Id del concepto de matricula extemporanea
@@ -384,7 +982,6 @@ public class Constantes {
     /**
      * The request scope attribute that holds the sobresueldo form.
      */
-    public static final String EMPLEADOPUESTO_KEY = "empleadoPuesto";
     public static final String SOBRESUELDO_KEY = "sobresueldoForm";
     /**
      * The request scope attribute that holds the sobresueldo list
@@ -1808,574 +2405,6 @@ public class Constantes {
      * The request scope attribute that holds the puesto list
      */
     //Puesto-END
-    public static Integer HIBERNATE_JDBC_BATCH_SIZE = 50;
-    // Constantes varias del sistema
-    /**
-     * The name of the ResourceBundle used in this application
-     */
-    public static final String BUNDLE_KEY = "ApplicationResources";
-    /**
-     * The encryption algorithm key to be used for passwords
-     */
-    public static final String ENC_ALGORITHM = "algorithm";
-    /**
-     * A flag to indicate if passwords should be encrypted
-     */
-    public static final String ENCRYPT_PASSWORD = "encryptPassword";
-    /**
-     * File separator from System properties
-     */
-    public static final String FILE_SEP = System.getProperty("file.separator");
-    /**
-     * User home from System properties
-     */
-    public static final String USER_HOME = System.getProperty("user.home")
-            + FILE_SEP;
-    /**
-     * The name of the configuration hashmap stored in application scope.
-     */
-    public static final String CONFIG = "appConfig";
-    /**
-     * Session scope attribute that holds the locale set by the user. By setting
-     * this key to the same one that Struts uses, we get synchronization in
-     * Struts w/o having to do extra work or have two session-level variables.
-     */
-    public static final String PREFERRED_LOCALE_KEY = "org.apache.struts.action.LOCALE";
-    /**
-     * The request scope attribute under which an editable user form is stored
-     */
-    public static final String USER_KEY = "userForm";
-    /**
-     * The request scope attribute that holds the user list
-     */
-    public static final String USER_LIST = "userList";
-    /**
-     * The request scope attribute for indicating a newly-registered user
-     */
-    public static final String REGISTERED = "registered";
-    /**
-     * The name of the Administrator role, as specified in web.xml
-     */
-    public static final String ADMIN_ROLE = "admin";
-    /**
-     * The name of the User role, as specified in web.xml
-     */
-    public static final String USER_ROLE = "user";
-    /**
-     * The name of the user's role list, a request-scoped attribute when
-     * adding/editing a user.
-     */
-    public static final String USER_ROLES = "userRoles";
-    /**
-     * The name of the available roles list, a request-scoped attribute when
-     * adding/editing a user.
-     */
-    public static final String AVAILABLE_ROLES = "availableRoles";
-    /**
-     * The name of the CSS Theme setting.
-     */
-    public static final String CSS_THEME = "csstheme";
-    // Comunicacion-START
-    /**
-     * The request scope attribute that holds the comunicacion form.
-     */
-    public static final String COMUNICACION_KEY = "comunicacionForm";
-    /**
-     * The request scope attribute that holds the comunicacion list
-     */
-    public static final String COMUNICACION_LIST = "comunicacionList";
-    // Comunicacion-END
-    // EmpleadoPuesto-START
-    /**
-     * The request scope attribute that holds the comunicacion form.
-     */
-    /**
-     * The request scope attribute that holds the comunicacion list
-     */
-    public static final String EMPLEADOPUESTO_LIST = "empleadoPuestoList";
-    /**
-     * The request scope attribute that holds the empleadoPuesto value that has
-     * been edited
-     */
-    public static final String EMPLEADOPUESTO_EDIT = "empleaoPuestoEdit";
-    // EmpleadoPuesto-END
-    // EmpleadoVacaciones-START
-    public static final String EMPLEADOVACACIONES_KEY = "empleadoVacacionesForm";
-    public static final String EMPLEADOVACACIONES_LIST = "empleadoVacacionesList";
-    public static final String EMPLEADOVACACIONES_STATUS_ALTA_BY_USER = "U";
-    public static final String EMPLEADOVACACIONES_STATUS_ALTA_BY_PROCESS = "P";
-    // EmpleadoVacaciones-END
-    // Grupo-START
-    /**
-     * The request scope attribute that holds the grupo form.
-     */
-    public static final String GRUPO_KEY = "grupoForm";
-    /**
-     * The request scope attribute that holds the grupo list
-     */
-    public static final String GRUPO_LIST = "grupoList";
-    public static final String GRUPO_COMODIN = "X";
-    // Grupo-END
-    // Seccion-START
-    /**
-     * The request scope attribute that holds the seccionCategoria form.
-     */
-    public static final String SECCION_KEY = "seccionForm";
-    /**
-     * The request scope attribute that holds the seccionCategoria list
-     */
-    public static final String SECCION_LIST = "seccionList";
-    // Seccion-END
-    // TipoDependiente-START
-    /**
-     * The request scope attribute that holds the tipoDependiente form.
-     */
-    public static final String TIPODEPENDIENTE_KEY = "tipoDependiente";
-    /**
-     * The request scope attribute that holds the tipoDependiente list
-     */
-    public static final String TIPODEPENDIENTE_LIST = "tipoDependienteList";
-    // TipoDependiente-END
-    // Dependiente-START
-    /**
-     * The request scope attribute that holds the dependiente form.
-     */
-    public static final String EMPLEADODEPENDIENTE_KEY = "empleadoDependienteForm";
-    /**
-     * The request scope attribute that holds the dependiente list
-     */
-    public static final String EMPLEADODEPENDIENTE_LIST = "empleadoDependienteList";
-    // Dependiente-END
-    // EmpleadoComunicacion-START
-    public static final String EMPLEADOCOMUNICACION_KEY = "empleadoComunicacionForm";
-    public static final String EMPLEADOCOMUNICACION_LIST = "empleadoComunicacionList";
-    // EmpleadoComunicacion-END
-    // Detalle-START
-    /**
-     * The request scope attribute that holds the detalle form.
-     */
-    public static final String DETALLE_KEY = "detalleForm";
-    /**
-     * The request scope attribute that holds the detalle list
-     */
-    public static final String DETALLE_LIST = "detalleList";
-    // Detalle-END
-    // Docencia-START
-    /**
-     * The request scope attribute that holds the docencia form.
-     */
-    public static final String DOCENCIA_KEY = "docenciaForm";
-    /**
-     * The request scope attribute that holds the docencia list
-     */
-    public static final String DOCENCIA_LIST = "docenciaList";
-    // Docencia-END
-    // Universidad-START
-    /**
-     * The request scope attribute that holds the universidad form.
-     */
-    public static final String UNIVERSIDAD_KEY = "universidadForm";
-    /**
-     * The request scope attribute that holds the universidad list
-     */
-    public static final String UNIVERSIDAD_LIST = "universidadList";
-    // Universidad-END
-    // Ejercicio-START
-    /**
-     * The request scope attribute that holds the ejercicio form.
-     */
-    public static final String EJERCICIO_KEY = "ejercicioForm";
-    /**
-     * The request scope attribute that holds the ejercicio list
-     */
-    public static final String EJERCICIO_LIST = "ejercicioList";
-    /**
-     * Status del ejercicio activo
-     */
-    public static final String EJERCICIO_ACTIVO = "A";
-    /**
-     * Status del ejercicio cerrado
-     */
-    public static final String EJERCICIO_CERRADO = "I";
-    // Ejercicio-END
-    // Libro-START
-    /**
-     * The request scope attribute that holds the libro form.
-     */
-    public static final String LIBRO_KEY = "libroForm";
-    /**
-     * The request scope attribute that holds the libro list
-     */
-    public static final String LIBRO_LIST = "libroList";
-    public static final String LIBRO_CAJA = "20";
-    // Libro-END
-    // CentroCosto-START
-    /**
-     * The request scope attribute that holds the cCosto form.
-     */
-    public static final String CCOSTO_KEY = "centroCostoForm";
-    /**
-     * The request scope attribute that holds the cCosto list
-     */
-    public static final String CCOSTO_LIST = "cCostoList";
-    public static final String CCOSTO_DETALLE = "S";
-    public static final String CCOSTO = "ccosto";
-    public static final String CCOSTO_DIEZMO_OTROSGASTOS_OTROSPRODUCTOS_ACA = "1.01.4.07.02";
-    public static final String CCOSTO_DIEZMO_OTROSGASTOS_OTROSPRODUCTOS_COV = "2.01.1.01.02";
-    public static final String CCOSTO_RECHUMANOS = "1.01.4.01.05";
-    // CentroCosto-END
-    // CtaMayor-START
-    /**
-     * The request scope attribute that holds the ctaMayor form.
-     */
-    public static final String CTAMAYOR_KEY = "ctaMayorForm";
-    /**
-     * The request scope attribute that holds the ctaMayor list
-     */
-    public static final String CTAMAYOR_LIST = "ctaMayorList";
-    /**
-     * Tipo de cuenta Balance
-     */
-    public static final String CTAMAYOR_BALANCE = "B";
-    /**
-     * Tipo de cuenta Resultados
-     */
-    public static final String CTAMAYOR_RESULTADOS = "R";
-    public static final String CTAMAYOR_NOMINA = "2.1.01.08";
-    public static final String CTAMAYOR_NOMINA_JUBILADOS = "2.1.01.25";
-    public static final String CTAMAYOR_PRESUPUESTO_BECAS = "1.3.12";
-    public static final String CTAMAYOR_ESTUDIANTES_ACTIVOS = "1.1.04.01";
-    public static final String CTAMAYOR_ESTUDIANTES_PASIVOS = "1.1.04.29";
-    public static final String CTAMAYOR_ESTUDIANTES_INCOBRABLES = "1.1.04.30";
-    public static final String CTAMAYOR_TALLERES_ESTUDIANTILES = "1.3.15";
-    public static final String CTAMAYOR_DIEZMO_ASOCNORESTE = "2.1.01.10";
-    public static final String CTAMAYOR_DIEZMO_OTROSGASTOS = "1.1.14";
-    public static final String CTAMAYOR_BECA_INSTITUCIONAL = "1.3.13";
-    public static final String CTAMAYOR_BECA_PROMOCIONAL = "1.3.16";
-    public static final String CTAMAYOR_ACADEMICO_COVOPROM = "1.1.05.07";
-    public static final String CTAMAYOR_COVOPROM_ACADEMICO = "2.1.01.09";
-    public static final String CTAMAYOR_DESPENSA = "2.1.02";
-    public static final String CTAMAYOR_PROVEEDORES = "2.1.01.04";
-    public static final String CTAMAYOR_ACREEDORES_DIVERSOS = "2.1.01.05";
-    public static final String CTAMAYOR_BANORTE_1511 = "1.1.02.01";
-    public static final String CTAMAYOR_BANCO_JUBILADOS = "1.1.02.15";
-    public static final String CTAMAYOR_CC_ENERGIA_ELECTRICA = "2.2.03";
-    public static final String CTAMAYOR_CC_TELEFONIA = "2.5.02";
-    public static final String CTAMAYOR_CC_IVA_DEDUCIBLE = "2.5.36";
-    public static final String CTAMAYOR_CC_IVA_DEDUCIBLE_EE = "2.2.08";
-    public static final String CTAMAYOR_CAJA_GENERAL = "1.1.01.01";
-    /**
-     * El primer numero de la cuenta de mayor indica la naturaleza de la misma
-     */
-    public static final String CTAMAYOR_DEUDORA = "1";
-    /**
-     * Indica que la cuenta de mayor tiene auxiliares
-     */
-    public static final String CTAMAYOR_AUXILIAR_SI = "S";
-    // CtaMayor-END
-    // Auxiliar-START
-    /**
-     * The request scope attribute that holds the auxiliar form.
-     */
-    public static final String AUXILIAR_KEY = "auxiliarForm";
-    /**
-     * The request scope attribute that holds the auxiliar list
-     */
-    public static final String AUXILIAR_LIST = "auxiliarList";
-    /**
-     * Clave de auxiliar default Se utiliza cuando el usuario no proporciona una
-     * clave de auxiliar
-     */
-    public static final String AUXILIAR_DEFAULT = "0000000";
-    public static final String AUXILIAR_ACCORD = "8112107";
-    public static final String AUXILIAR_COMPANIA_LUZ = "8000003";
-    public static final String AUXILIAR_TELMEX = "8080001";
-    /**
-     * Valor del atributo detalle
-     */
-    public static final String AUXILIAR_DETALLE = "S";
-    // Auxiliar-END
-    // Cuenta-START
-    /**
-     * The request scope attribute that holds the cuenta form.
-     */
-    public static final String CUENTA_KEY = "cuentaForm";
-    /**
-     * The request scope attribute that holds the cuenta list
-     */
-    public static final String CUENTA_LIST = "cuentaList";
-    /**
-     * Cuenta activa
-     */
-    public static final String CUENTA_ACTIVA = "A";
-    /**
-     * Cuenta inactiva No se pueden crear, modificar o borrar movimientos en
-     * esta cuenta Solo se puede consultar
-     */
-    public static final String CUENTA_INACTIVA = "I";
-    // Cuenta-END
-    // Poliza-START
-    /**
-     * The request scope attribute that holds the poliza form.
-     */
-    public static final String POLIZA_KEY = "polizaForm";
-    /**
-     * The request scope attribute that holds the poliza list
-     */
-    public static final String POLIZA_LIST = "polizaList";
-    /**
-     * Poliza activa
-     */
-    public static final String POLIZA_ACTIVA = "A";
-    /**
-     * Poliza cerrada. Si esta cerrada debe estar cuadrada.
-     */
-    public static final String POLIZA_CERRADA = "D";
-    /**
-     * Se inserta cada movimiento que se recibe tal cual
-     */
-    public static final String POLIZA_COMPORTAMIENTO_NORMAL = "Normal";
-    /**
-     * Acumula los importes de los movimientos con cuenta y naturaleza iguales
-     */
-    public static final String POLIZA_COMPORTAMIENTO_BY_CUENTA = "Cuenta";
-    /**
-     * Acumula los importes de los movimientos con cuenta, naturaleza y
-     * descripcion iguales
-     */
-    public static final String POLIZA_COMPORTAMIENTO_BY_DESCRIPCION = "Descripcion";
-    /**
-     * Acumula los importes de los movimientos con cuenta, naturaleza y
-     * descripcion, tomando en cuenta la referencia
-     */
-    public static final String POLIZA_COMPORTAMIENTO_BY_CAJA = "Caja";
-    // Poliza-END
-    // Movimiento-START
-    /**
-     * The request scope attribute that holds the movimiento form.
-     */
-    public static final String MOVIMIENTO_KEY = "movimientoForm";
-    /**
-     * The request scope attribute that holds the movimiento list
-     */
-    public static final String MOVIMIENTO_LIST = "movimientoList";
-    /**
-     * Descripcion de movimiento de saldo anterior
-     */
-    public static final String SALDOANTERIOR = "Saldo Anterior";
-    /**
-     * Movimiento activo
-     */
-    public static final String MOVIMIENTO_ACTIVO = "A";
-    /**
-     * Movimiento que cancela caja, y queda en espera que auditoria lo cancele
-     * definitivamente
-     */
-    public static final String MOVIMIENTO_CANCELADO_POR_CAJA = "T";
-    /**
-     * Movimiento cancelado definitivamente
-     */
-    public static final String MOVIMIENTO_CANCELADO = "I";
-    // Movimiento-END
-    // Reportes Financieros - Start
-    public static final String FONDOS_KEY = "fondosForm";
-    /**
-     * Lista que contiene el estado de cuenta de fondos
-     */
-    public static final String FONDOSEDOCTA_LIST = "fondosEdoCtaList";
-    /**
-     * Map que contiene las listas de saldo incial, entradas y salidas de fondos
-     */
-    public static final String FONDOSEDOCTA_MAP = "fondosEdoCtaMap";
-    /**
-     * Lista que contiene el estado de cuenta de saldos de operaciones
-     */
-    public static final String FONDOSEDOCTA_LIST_SALDOSOPERACIONES = "fondosEdoCtaSaldosOperaciones";
-    /**
-     * Lista de saldo inicial
-     */
-    public static final String FONDOSEDOCTA_LIST_SALDOINICIAL = "fondosEdoCtaListSaldoInicial";
-    /**
-     * Lista de entradas
-     */
-    public static final String FONDOSEDOCTA_LIST_ENTRADAS25 = "fondosEdoCtaListEntradas25";
-    /**
-     * Lista de entradas
-     */
-    public static final String FONDOSEDOCTA_LIST_ENTRADAS26 = "fondosEdoCtaListEntradas26";
-    /**
-     * Lista de entradas
-     */
-    public static final String FONDOSEDOCTA_LIST_ENTRADAS27 = "fondosEdoCtaListEntradas27";
-    /**
-     * Lista de salidas
-     */
-    public static final String FONDOSEDOCTA_LIST_SALIDAS05 = "fondosEdoCtaListSalidas05";
-    /**
-     * Lista de salidas
-     */
-    public static final String FONDOSEDOCTA_LIST_SALIDAS06 = "fondosEdoCtaListSalidas06";
-    /**
-     * Lista de salidas
-     */
-    public static final String FONDOSEDOCTA_LIST_SALIDAS07 = "fondosEdoCtaListSalidas07";
-    /**
-     * Lista de salidas
-     */
-    public static final String FONDOSEDOCTA_LIST_SALIDAS08 = "fondosEdoCtaListSalidas08";
-    /**
-     * Lista de salidas
-     */
-    public static final String FONDOSEDOCTA_LIST_SALIDAS25 = "fondosEdoCtaListSalidas25";
-    /**
-     * Lista de salidas
-     */
-    public static final String FONDOSEDOCTA_LIST_SALIDAS26 = "fondosEdoCtaListSalidas26";
-    /**
-     * Cuenta de fondos que contiene los saldos iniciales
-     */
-    public static final String FONDOS_SALDOINICIAL = "3.1.02.01";
-    public static final String FONDOS_SALDOINICIAL_TIPO = "B";
-    public static final String FONDOS_SALDOINICIAL_NOMBRE = "SALDO INICIAL";
-    /**
-     * Cuenta de fondos que contiene las entradas
-     */
-    public static final String FONDOS_ENTRADAS25 = "1.1.25";
-    public static final String FONDOS_ENTRADAS25_TIPO = "R";
-    public static final String FONDOS_ENTRADAS25_NOMBRE = "ENTRADAS";
-    /**
-     * Cuenta de fondos que contiene las entradas
-     */
-    public static final String FONDOS_ENTRADAS26 = "1.1.26";
-    public static final String FONDOS_ENTRADAS26_TIPO = "R";
-    public static final String FONDOS_ENTRADAS26_NOMBRE = "ENTRADAS";
-    /**
-     * Cuenta de fondos que contiene las entradas
-     */
-    public static final String FONDOS_ENTRADAS27 = "1.1.27";
-    public static final String FONDOS_ENTRADAS27_TIPO = "R";
-    public static final String FONDOS_ENTRADAS27_NOMBRE = "ENTRADAS";
-    /**
-     * Cuenta de fondos que contiene las salidas
-     */
-    public static final String FONDOS_SALIDAS05 = "3.1.05";
-    public static final String FONDOS_SALIDAS05_TIPO = "R";
-    public static final String FONDOS_SALIDAS05_NOMBRE = "SALIDAS";
-    /**
-     * Cuenta de fondos que contiene las salidas
-     */
-    public static final String FONDOS_SALIDAS06 = "3.1.06";
-    public static final String FONDOS_SALIDAS06_TIPO = "R";
-    public static final String FONDOS_SALIDAS06_NOMBRE = "SALIDAS";
-    /**
-     * Cuenta de fondos que contiene las salidas
-     */
-    public static final String FONDOS_SALIDAS07 = "3.1.07";
-    public static final String FONDOS_SALIDAS07_TIPO = "R";
-    public static final String FONDOS_SALIDAS07_NOMBRE = "SALIDAS";
-    /**
-     * Cuenta de fondos que contiene las salidas
-     */
-    public static final String FONDOS_SALIDAS08 = "3.1.08";
-    public static final String FONDOS_SALIDAS08_TIPO = "R";
-    public static final String FONDOS_SALIDAS08_NOMBRE = "SALIDAS";
-    /**
-     * Cuenta de fondos que contiene las salidas
-     */
-    public static final String FONDOS_SALIDAS25 = "3.1.25";
-    public static final String FONDOS_SALIDAS25_TIPO = "R";
-    public static final String FONDOS_SALIDAS25_NOMBRE = "SALIDAS";
-    /**
-     * Cuenta de fondos que contiene las salidas
-     */
-    public static final String FONDOS_SALIDAS26 = "3.1.26";
-    public static final String FONDOS_SALIDAS26_TIPO = "R";
-    public static final String FONDOS_SALIDAS26_NOMBRE = "SALIDAS";
-    public static final String FONDO_ESTADO_CUENTA = "FN";
-    public static final String FONDO_ESTADO_CUENTA_DETALLADO = "FD";
-    public static final String FONDO_ESTADO_CUENTA_SALDOS_OPERACIONES = "SO";
-    /**
-     * Reporte de Antiguedad de Saldos
-     */
-    public static final String ANTIGUEDAD_SALDOS = "aSaldos";
-    public static final String EDO_CUENTA_ANTIGUEDAD_SALDOS = "antiguedadSaldosReport";
-    /**
-     * Reporte de Flujo de Efectivo
-     */
-    public static final String FLUJO_EFECTIVO = "fEfectivo";
-    public static final String RPT_FLUJO_EFECTIVO_ENTRADA = "flujoEfectivoEntradaReport";
-    public static final String RPT_FLUJO_EFECTIVO_SALIDA = "flujoEfectivoSalidaReport";
-    /**
-     * Reporte de Formas de Entrada a Caja
-     */
-    public static final String FORMAS_ENTRADA_CAJA = "fEntradas";
-    public static final String RPT_FORMAS_ENTRADA_CAJA = "formasEntradasCajaList";
-    // Reportes Financieros - END
-    // Concepto-START
-    /**
-     * The request scope attribute that holds the concepto form.
-     */
-    public static final String CONCEPTO_FORM = "conceptoForm";
-    /**
-     * Id del concepto de vacaciones
-     */
-    public static final Integer CONCEPTO_VACACIONES_ID = new Integer(18);
-    /**
-     * Id del concepto de aguinaldo
-     */
-    public static final Integer CONCEPTO_AGUINALDO_ID = new Integer(21);
-    /**
-     * Id del concepto de diezmo
-     */
-    public static final Integer CONCEPTO_DIEZMO_ID = new Integer(23);
-    /**
-     * Id del concepto de ispt
-     */
-    public static final Integer CONCEPTO_ISPT_ID = new Integer(24);
-    /**
-     * Id del concepto de salario
-     */
-    public static final Integer CONCEPTO_SALARIO_ID = new Integer(14);
-    /**
-     * Id del concepto de diferencia del importe en dolares de los cheques
-     */
-    public static final Integer CONCEPTO_DIF_DIVISAS_ID = new Integer(25);
-    /**
-     * Id del concepto de los cheques
-     */
-    public static final Integer CONCEPTO_CHEQUE_ID = new Integer(26);
-    /**
-     * Id del concepto de caja
-     */
-    public static final Integer CONCEPTO_CAJA_ID = new Integer(27);
-    /**
-     * Id del concepto de iva de ingresos en caja
-     */
-    public static final Integer CONCEPTO_IVA_INGRESOS_ID = new Integer(28);
-    /**
-     * Id del concepto de creditos excentos
-     */
-    public static final Integer CONCEPTO_CREDITOS_EXCENTOS_ID = new Integer(29);
-    /**
-     * Id del concepto de creditos excentos
-     */
-    public static final Integer CONCEPTO_MATRICULA_ID = new Integer(30);
-    /**
-     * Id del concepto de creditos excentos
-     */
-    public static final Integer CONCEPTO_ENSENANZA_ID = new Integer(31);
-    /**
-     * Id del concepto de creditos excentos
-     */
-    public static final Integer CONCEPTO_INTERNADO_ID = new Integer(32);
-    /**
-     * Id del concepto de descuento pago contado
-     */
-    public static final Integer CONCEPTO_DCTO_PAGO_CONTADO_ID = new Integer(33);
-    /**
-     * Id del concepto de beca
-     */
-    public static final Integer CONCEPTO_BECA_ID = new Integer(34);
     // NominaParamGral - END
     /**
      * Valores para el constructor de Locale
@@ -2442,7 +2471,10 @@ public class Constantes {
     public static final String CONTAINSKEY_USUARIOS = "usuarios";
     public static final String CONTAINSKEY_COLEGIOS_COLPORTOR = "colegios";
     public static final String CONTAINSKEY_TIPOSBECAS = "tiposBecas";
+    public static final String CONTAINSKEY_AFECONVENIO = "afeConvenios";
     public static final String CONTAINSKEY_PAQUETES = "paquetes";
+    public static final String CONTAINSKEY_ALUMNOPAQUETES = "alumnoPaquetes";
+    public static final String CONTAINSKEY_DESCUENTOS = "descuentos";
     /**
      * Valores para el los addAttribute para las clases
      */
@@ -2748,6 +2780,19 @@ public class Constantes {
     public static final String PATH_TIPOSBECAS_ELIMINA = "/inscripciones/tiposBecas/elimina";
     public static final String ADDATTRIBUTE_TIPOSBECAS = "tipoBeca";
     /**
+     * Valores para Convenios
+     *
+     */
+    public static final String PATH_AFECONVENIO = "/inscripciones/afeConvenio";
+    public static final String PATH_AFECONVENIO_LISTA = "/inscripciones/afeConvenio/lista";
+    public static final String PATH_AFECONVENIO_VER = "/inscripciones/afeConvenio/ver";
+    public static final String PATH_AFECONVENIO_NUEVO = "/inscripciones/afeConvenio/nuevo";
+    public static final String PATH_AFECONVENIO_EDITA = "/inscripciones/afeConvenio/edita";
+    public static final String PATH_AFECONVENIO_GRABA = "/inscripciones/afeConvenio/graba";
+    public static final String PATH_AFECONVENIO_ACTUALIZA = "/inscripciones/afeConvenio/actualiza";
+    public static final String PATH_AFECONVENIO_ELIMINA = "/inscripciones/afeConvenio/elimina";
+    public static final String ADDATTRIBUTE_AFECONVENIO = "afeConvenio";
+    /**
      * Valores para Paquete
      *
      */
@@ -2796,4 +2841,35 @@ public class Constantes {
     public static final String PATH_COBROCAMPO_ACTUALIZA = "/inscripciones/cobroCampo/actualiza";
     public static final String PATH_COBROCAMPO_ELIMINA = "/inscripciones/cobroCampo/elimina";
     public static final String ADDATTRIBUTE_COBROCAMPO = "cobroCampo";
+
+    /* Valores para TipoColportor
+     *
+     */
+    public static final String PATH_TIPO_COLPORTOR = "/inscripciones/tipoColportor";
+    public static final String PATH_TIPO_COLPORTOR_LISTA = "/inscripciones/tipoColportor/lista";
+    public static final String PATH_TIPO_COLPORTOR_VER = "/inscripciones/tipoColportor/ver";
+    public static final String PATH_TIPO_COLPORTOR_NUEVO = "/inscripciones/tipoColportor/nuevo";
+    public static final String PATH_TIPO_COLPORTOR_EDITA = "/inscripciones/tipoColportor/edita";
+    public static final String PATH_TIPO_COLPORTOR_CREA = "/inscripciones/tipoColportor/crea";
+    public static final String PATH_TIPO_COLPORTOR_ACTUALIZA = "/inscripciones/tipoColportor/actualiza";
+    public static final String PATH_TIPO_COLPORTOR_ELIMINA = "/inscripciones/tipoColportor/elimina";
+    public static final String ADDATTRIBUTE_TIPO_COLPORTOR = "tipoColportor";
+    public static final String CONTAINSKEY_TIPO_COLPORTOR = "tiposColportor";
+    public static final String PATH_ALUMNOPAQUETE = "/inscripciones/alumnoPaquete";
+    public static final String PATH_ALUMNOPAQUETE_LISTA = "inscripciones/alumnoPaquete/lista";
+    public static final String PATH_ALUMNOPAQUETE_VER = "inscripciones/alumnoPaquete/ver";
+    public static final String PATH_ALUMNOPAQUETE_NUEVO = "/inscripciones/alumnoPaquete/nuevo";
+    public static final String PATH_ALUMNOPAQUETE_EDITA = "/inscripciones/alumnoPaquete/edita";
+    public static final String PATH_ALUMNOPAQUETE_GRABA = "/inscripciones/alumnoPaquete/graba";
+    public static final String PATH_ALUMNOPAQUETE_ELIMINA = "/inscripciones/alumnoPaquete/elimina";
+    public static final String ADDATTRIBUTE_ALUMNOPAQUETE = "alumnoPaquete";
+    public static final String PATH_DESCUENTO = "/inscripciones/descuento";
+    public static final String PATH_DESCUENTO_LISTA = "/inscripciones/descuento/lista";
+    public static final String PATH_DESCUENTO_VER = "/inscripciones/descuento/ver";
+    public static final String PATH_DESCUENTO_NUEVO = "/inscripciones/descuento/nuevo";
+    public static final String PATH_DESCUENTO_EDITA = "/inscripciones/descuento/edita";
+    public static final String PATH_DESCUENTO_GRABA = "/inscripciones/descuento/graba";
+    public static final String PATH_DESCUENTO_ACTUALIZA = "/inscripciones/descuento/actualiza";
+    public static final String PATH_DESCUENTO_ELIMINA = "/inscripciones/descuento/elimina";
+    public static final String ADDATTRIBUTE_DESCUENTO = "descuento";
 }

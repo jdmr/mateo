@@ -142,10 +142,8 @@ public class AsociadoDaoTest {
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
-        Rol rol = new Rol(Constantes.ROLE_ASO);
+        Rol rol = new Rol("ROLE_ASOC"); //Rol Colportor
         currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
         Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
         currentSession().save(asociacion);
 
@@ -155,7 +153,7 @@ public class AsociadoDaoTest {
         asociado.setEmpresa(empresa);
         asociado.setAlmacen(almacen);
         asociado.setAsociacion(asociacion);
-        currentSession().save(asociado);
+        instance.crea(asociado, null);
         assertNotNull(asociado.getId());
 
         Asociado asociado2 = instance.obtiene(asociado.getId());

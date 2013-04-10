@@ -28,7 +28,7 @@ import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.test.BaseTest;
+import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Session;
@@ -51,7 +51,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class OrganizacionDaoTest extends BaseTest {
+public class OrganizacionDaoTest extends BaseDaoTest {
 
     private static final Logger log = LoggerFactory.getLogger(OrganizacionDaoTest.class);
     @Autowired

@@ -1530,7 +1530,7 @@ public class CCobro implements Constant {
             String COMANDO = " SELECT TO_NUMBER(P2.VALOR, '99999') AS MEB, ";
             COMANDO += " TO_NUMBER(P1.VALOR, '99999') AS MED, ";
             COMANDO += " TO_DATE(SYSDATE, 'DD/MM/YY') - TO_DATE(P3.VALOR, 'DD/MM/YY') AS NDIAS ";
-            COMANDO += " FROM FES_PARAMGRALDET P1, FES_PARAMGRALDET P2, FES_PARAMGRALDET P3  ";
+            COMANDO += " FROM noe.FES_PARAMGRALDET P1, noe.FES_PARAMGRALDET P2, noe.FES_PARAMGRALDET P3  ";
             COMANDO += " WHERE P1.CLAVE = 'SMED' ";
             COMANDO += " AND P1.CONCEPTO = 'Z' ";
             COMANDO = COMANDO + " AND P1.CARGA_ID = ? ";
@@ -1567,7 +1567,7 @@ public class CCobro implements Constant {
                     while (intConta <= intNDias) {
                         //Si el dia actual comienza con S, indica que es Sunday o Saturday, dias inhabiles
                         COMANDO = " SELECT CASE SUBSTR(TO_CHAR(SYSDATE-?, 'DY'),0,1) WHEN 'S' THEN 0 ELSE 1 END AS DIA ";
-                        COMANDO += " FROM FES_PARAMGRALDET ";
+                        COMANDO += " FROM noe.FES_PARAMGRALDET ";
                         COMANDO += " WHERE CLAVE = 'FME' ";
                         COMANDO += " AND CONCEPTO = 'Z' ";
                         COMANDO = COMANDO + " AND CARGA_ID = ? ";
@@ -1954,7 +1954,7 @@ public class CCobro implements Constant {
             }
 
             String COMANDO = "SELECT MATRICULA ";
-            COMANDO += "FROM FES_CCOBRO ";
+            COMANDO += "FROM mateo.FES_CCOBRO ";
             COMANDO += "WHERE CARGA_ID = ? ";
 
             pstmt = conn.prepareStatement(COMANDO);
@@ -2001,7 +2001,7 @@ public class CCobro implements Constant {
             }
 
             String COMANDO = "SELECT MATRICULA ";
-            COMANDO += "FROM FES_CCOBRO ";
+            COMANDO += "FROM mateo.FES_CCOBRO ";
             COMANDO += "WHERE CARGA_ID = ? ";
             COMANDO += "AND INSCRITO = 'S' ";
             pstmt = conn.prepareStatement(COMANDO);
@@ -2049,7 +2049,7 @@ public class CCobro implements Constant {
             }
 
             String COMANDO = "SELECT MATRICULA, CARGA_ID, BLOQUE, NOMBRE, TO_CHAR(FECHA,'DD/MM/YYYY') FECHA, FACULTAD, CARRERA, NOMBRE_PLAN ";
-            COMANDO += "FROM FES_CCOBRO ";
+            COMANDO += "FROM mateo.FES_CCOBRO ";
             COMANDO += "WHERE MATRICULA = ? ";
             COMANDO += "AND INSCRITO = 'S' ";
             pstmt = conn.prepareStatement(COMANDO);

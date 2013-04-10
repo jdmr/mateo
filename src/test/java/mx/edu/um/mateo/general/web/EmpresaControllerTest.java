@@ -30,7 +30,7 @@ import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.contabilidad.model.EjercicioPK;
 import mx.edu.um.mateo.general.dao.EmpresaDao;
 import mx.edu.um.mateo.general.model.*;
-import mx.edu.um.mateo.general.test.BaseTest;
+import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.apache.commons.lang.StringUtils;
@@ -65,7 +65,7 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class EmpresaControllerTest extends BaseTest {
+public class EmpresaControllerTest extends BaseControllerTest {
 
     private static final Logger log = LoggerFactory.getLogger(EmpresaControllerTest.class);
     @Autowired

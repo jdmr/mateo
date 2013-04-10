@@ -79,7 +79,7 @@ public class metodos2 extends Conexion{
 				strIDAuxiliar = "0000000";
 
 			String COMANDO = "SELECT NATURALEZA ";
-			COMANDO += "FROM CONT_RELACION ";
+			COMANDO += "FROM mateo.CONT_RELACION ";
 			COMANDO += "WHERE ID_EJERCICIO = ? ";
 			COMANDO += "AND ID_CTAMAYOR = ? ";
 			COMANDO += "AND ID_CCOSTO = ? ";
@@ -118,7 +118,7 @@ public class metodos2 extends Conexion{
 
 			//Obtener el tipo de la cuenta de mayor (B,R)
 			String COMANDO = "SELECT TIPO_CUENTA ";
-			COMANDO += "FROM CONT_CTAMAYOR ";
+			COMANDO += "FROM mateo.CONT_CTAMAYOR ";
 			COMANDO += "WHERE DETALLE = 'S' ";
 			COMANDO += "AND ID_EJERCICIO = ? ";
 			COMANDO += "AND ID_CTAMAYOR = ? ";
@@ -183,7 +183,7 @@ public class metodos2 extends Conexion{
 
 			//Obtener nombre del centro de costo
 			String COMANDO = "SELECT NOMBRE ";
-			COMANDO += "FROM CONT_CCOSTO ";
+			COMANDO += "FROM mateo.CONT_CCOSTO ";
 			COMANDO += "WHERE ID_EJERCICIO = ? ";
 			COMANDO += "AND ID_CCOSTO = ? ";
 			PreparedStatement pstmt = conn.prepareStatement(COMANDO);
@@ -201,7 +201,7 @@ public class metodos2 extends Conexion{
 
 			//Obtener nombre de la cuenta de mayor
 			COMANDO = "SELECT NOMBRE ";
-			COMANDO += "FROM CONT_CTAMAYOR ";
+			COMANDO += "FROM mateo.CONT_CTAMAYOR ";
 			COMANDO += "WHERE DETALLE = 'S' ";
 			COMANDO += "AND ID_EJERCICIO = ? ";
 			COMANDO += "AND ID_CTAMAYOR = ? ";
@@ -221,7 +221,7 @@ public class metodos2 extends Conexion{
 				strNombre = strNombre.substring(0, 59);
 
 			//Relacionar cuenta con el centro de costo
-			COMANDO = "INSERT INTO CONT_RELACION ";
+			COMANDO = "INSERT INTO mateo.CONT_RELACION ";
 			COMANDO += "(ID_EJERCICIO, ID_CTAMAYOR, ID_CCOSTO, ID_AUXILIAR, NOMBRE, NATURALEZA, STATUS, TIPO_CUENTA, ID_EJERCICIO2, ID_EJERCICIO3) ";
 			COMANDO += "VALUES ";
 			COMANDO += "(?, ?, ?, '0000000', ?, ?, 'A',?,?,?) ";
@@ -253,7 +253,7 @@ public class metodos2 extends Conexion{
 			//Cancelar la relaci?n de la cuenta, si existen movimientos con dicha cuenta
 			//o eliminar f?sicamente la cuenta, si no existen movimientos con la cuenta
 			String COMANDO = "SELECT COUNT(*) NREG ";
-			COMANDO += "FROM CONT_MOVIMIENTO ";
+			COMANDO += "FROM mateo.CONT_MOVIMIENTO ";
 			COMANDO += "WHERE ID_EJERCICIO = ? ";
 			COMANDO += "AND ID_CTAMAYORM = ? ";
 			COMANDO += "AND ID_CCOSTOM = ? ";
@@ -271,7 +271,7 @@ public class metodos2 extends Conexion{
 			rset.close();
 
 			COMANDO = "SELECT ROWID ";
-			COMANDO += "FROM CONT_RELACION ";
+			COMANDO += "FROM mateo.CONT_RELACION ";
 			COMANDO += "WHERE ID_EJERCICIO = ? ";
 			COMANDO += "AND ID_CTAMAYOR = ? ";
 			COMANDO += "AND ID_CCOSTO = ? ";
@@ -285,7 +285,7 @@ public class metodos2 extends Conexion{
 			{
 				if (intNReg.compareTo(new Integer(0)) > 0)
 				{
-					COMANDO = "UPDATE CONT_RELACION ";
+					COMANDO = "UPDATE mateo.CONT_RELACION ";
 					COMANDO += "SET STATUS = 'I' ";
 					COMANDO += "WHERE ROWID = ? ";
 					pstmt2 = conn.prepareStatement(COMANDO);
@@ -296,7 +296,7 @@ public class metodos2 extends Conexion{
 				else
 				{
 					COMANDO = "DELETE ";
-					COMANDO += "FROM CONT_RELACION ";
+					COMANDO += "FROM mateo.CONT_RELACION ";
 					COMANDO += "WHERE ROWID = ? ";
 					pstmt2 = conn.prepareStatement(COMANDO);
 					pstmt2.setString(1, rset.getString("RowID"));
@@ -331,7 +331,7 @@ public class metodos2 extends Conexion{
 
 					//Verificar si existe la cuenta con status desactivado
 			String COMANDO = "SELECT COUNT(*) NREG ";
-			COMANDO += "FROM CONT_RELACION ";
+			COMANDO += "FROM mateo.CONT_RELACION ";
 			COMANDO += "WHERE ID_EJERCICIO = ? ";
 			COMANDO += "AND ID_CTAMAYOR = ? ";
 			COMANDO += "AND ID_CCOSTO = ? ";
@@ -353,7 +353,7 @@ public class metodos2 extends Conexion{
 					if (intNReg.compareTo(new Integer(0)) > 0)
 					{
 							//La cuenta ya existe, solo prendemos el status
-							COMANDO = "UPDATE CONT_RELACION ";
+							COMANDO = "UPDATE mateo.CONT_RELACION ";
 							COMANDO += "SET STATUS = 'A' ";
 							COMANDO += "WHERE ID_EJERCICIO = ? ";
 							COMANDO += "AND ID_CTAMAYOR = ? ";
@@ -372,7 +372,7 @@ public class metodos2 extends Conexion{
 							//Verificar si existe la relacion del centro de costo, la cuenta de mayor
 							//y el auxiliar '0000000', si no entonces crearla
 							COMANDO = "SELECT COUNT(*) NREG ";
-							COMANDO += "FROM CONT_RELACION ";
+							COMANDO += "FROM mateo.CONT_RELACION ";
 							COMANDO += "WHERE ID_EJERCICIO = ? ";
 							COMANDO += "AND ID_CTAMAYOR = ? ";
 							COMANDO += "AND ID_CCOSTO = ? ";
@@ -396,7 +396,7 @@ public class metodos2 extends Conexion{
 							{
 									//Obtener nombre y tipo de cuenta
 									COMANDO = "SELECT NOMBRE, TIPO_CUENTA ";
-									COMANDO += "FROM CONT_CTAMAYOR ";
+									COMANDO += "FROM mateo.CONT_CTAMAYOR ";
 									COMANDO += "WHERE DETALLE = 'S' ";
 									COMANDO += "AND ID_EJERCICIO = ? ";
 									COMANDO += "AND ID_CTAMAYOR = ? ";
@@ -424,7 +424,7 @@ public class metodos2 extends Conexion{
 							//Relacionar centro de costo, cuenta de mayor y el auxiliar
 							//Obtener nombre del auxiliar
 							COMANDO = "SELECT NOMBRE ";
-							COMANDO += "FROM CONT_AUXILIAR ";
+							COMANDO += "FROM mateo.CONT_AUXILIAR ";
 							COMANDO += "WHERE ID_EJERCICIO = ? ";
 							COMANDO += "AND ID_AUXILIAR = ? ";
 							pstmt = conn.prepareStatement(COMANDO);
@@ -441,7 +441,7 @@ public class metodos2 extends Conexion{
 
 							//Obtener nombre de la relacion, para validar longitud
 							COMANDO = "SELECT NOMBRE ";
-							COMANDO += "FROM CONT_RELACION ";
+							COMANDO += "FROM mateo.CONT_RELACION ";
 							COMANDO += "WHERE ID_EJERCICIO = ? ";
 							COMANDO += "AND ID_CTAMAYOR = ? ";
 							COMANDO += "AND ID_CCOSTO = ? ";
@@ -463,7 +463,7 @@ public class metodos2 extends Conexion{
 							if (strNombreTemp.length() > 60)
 									strNombreTemp = strNombreTemp.substring(0,59);
 
-							COMANDO = "UPDATE CONT_RELACION ";
+							COMANDO = "UPDATE mateo.CONT_RELACION ";
 							COMANDO += "SET ID_AUXILIAR = ?, ";
 							COMANDO += "NOMBRE = ? ";
 							COMANDO += "WHERE ID_EJERCICIO = ? ";
@@ -493,7 +493,7 @@ public class metodos2 extends Conexion{
 			String strIDEjercicio = (String)session.getAttribute("id_ejercicio");
 
 			//Asignar auxiliar 0000000 para indicar que hace falta auxiliar
-			String COMANDO = "UPDATE CONT_RELACION ";
+			String COMANDO = "UPDATE mateo.CONT_RELACION ";
 			COMANDO += "SET STATUS = 'I' ";
 			COMANDO += "WHERE ID_EJERCICIO = ? ";
 			COMANDO += "AND ID_CTAMAYOR = ? ";
@@ -520,7 +520,7 @@ public class metodos2 extends Conexion{
 			String strLlevaAuxiliar = null;
 
 			String COMANDO = "SELECT AUXILIAR ";
-			COMANDO += "FROM CONT_CTAMAYOR ";
+			COMANDO += "FROM mateo.CONT_CTAMAYOR ";
 			COMANDO += "WHERE ID_EJERCICIO = ? ";
 			COMANDO += "AND ID_CTAMAYOR = ? ";
 			PreparedStatement pstmt = conn.prepareStatement(COMANDO);
@@ -551,7 +551,7 @@ public class metodos2 extends Conexion{
 		) throws SQLException, Exception
 		{
 			String COMANDO = "SELECT A.ID_AUXILIAR, A.NOMBRE ";
-			COMANDO += "FROM CONT_AUXILIAR A, CONT_RELACION R ";
+			COMANDO += "FROM mateo.CONT_AUXILIAR A, mateo.CONT_RELACION R ";
 			COMANDO += "WHERE A.ID_AUXILIAR = R.ID_AUXILIAR ";
 			COMANDO += "AND R.ID_EJERCICIO = ? ";
 			COMANDO += "AND R.ID_CTAMAYOR = ? ";

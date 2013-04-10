@@ -28,7 +28,7 @@ import mx.edu.um.mateo.colportor.model.Union;
 import mx.edu.um.mateo.contabilidad.dao.EjercicioDao;
 import mx.edu.um.mateo.general.dao.*;
 import mx.edu.um.mateo.general.model.*;
-import mx.edu.um.mateo.general.test.BaseTest;
+import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inventario.model.Almacen;
@@ -53,7 +53,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 /**
  *
- * @author wilbert
+ * @author 
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -63,7 +63,7 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class DocumentoControllerTest extends BaseTest {
+public class DocumentoControllerTest extends BaseControllerTest {
 
     private static final Logger log = LoggerFactory.getLogger(DocumentoControllerTest.class);
     @Autowired
@@ -203,7 +203,9 @@ public class DocumentoControllerTest extends BaseTest {
         
         this.mockMvc.perform(get(Constantes.PATH_DOCUMENTO_LISTA)
                 .sessionAttr("colportorTmp", colportorTmp)) 
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_DOCUMENTOS))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/"+Constantes.PATH_DOCUMENTO_LISTA+".jsp"));
     }
 
      

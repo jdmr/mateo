@@ -443,7 +443,7 @@ public class Materia implements Constant {
              * */
             Map mComponentes = new TreeMap();
             COMANDO = "SELECT MC.CURSO_ID " +
-                    "FROM KRDX_CURSO_ACT KCA, MAPA_CURSO MC " +
+                    "FROM enoc.KRDX_CURSO_ACT KCA, enoc.MAPA_CURSO MC " +
                     "WHERE KCA.CODIGO_PERSONAL = ? " +
                     "AND (KCA.TIPOCAL_ID != 'M' AND KCA.TIPOCAL_ID != '3') " +
                     "AND MC.TIPOCURSO_ID = 3 " +
@@ -466,7 +466,7 @@ public class Materia implements Constant {
              * */
             Map mRemediales = new TreeMap();
             COMANDO = "SELECT MC.CURSO_ID " +
-                    "FROM KRDX_CURSO_ACT KCA, MAPA_CURSO MC " +
+                    "FROM enoc.KRDX_CURSO_ACT KCA, enoc.MAPA_CURSO MC " +
                     "WHERE KCA.CODIGO_PERSONAL = ? " +
                     "AND (KCA.TIPOCAL_ID != 'M' AND KCA.TIPOCAL_ID != '3') " +
                     "AND MC.TIPOCURSO_ID = 4 " +
@@ -491,8 +491,8 @@ public class Materia implements Constant {
             COMANDO += "MC.CICLO, MC.CREDITOS, COALESCE(CG.GRUPO, 'U') AS GRUPO, CG.CURSO_CARGA_ID, ";
             COMANDO += "P.PLAN_ID, COALESCE(CG.BLOQUE_ID, 0) BLOQUE, CG.CARGA_ID, CG.MODALIDAD_ID, ";
             COMANDO += "CG.F_INICIO, CG.F_FINAL ";
-            COMANDO += "FROM CARGA_GRUPO_CURSO CGC, CARGA_GRUPO CG, MAPA_CURSO MC, KRDX_CURSO_ACT KCA, ";
-            COMANDO += "MAPA_PLAN P, CAT_CARRERA C, CAT_FACULTAD F ";
+            COMANDO += "FROM enoc.CARGA_GRUPO_CURSO CGC, enoc.CARGA_GRUPO CG, enoc.MAPA_CURSO MC, enoc.KRDX_CURSO_ACT KCA, ";
+            COMANDO += "enoc.MAPA_PLAN P, enoc.CAT_CARRERA C, enoc.CAT_FACULTAD F ";
             COMANDO += "WHERE CGC.CURSO_CARGA_ID = CG.CURSO_CARGA_ID ";
             COMANDO += "AND KCA.CURSO_CARGA_ID = CGC.CURSO_CARGA_ID ";
             COMANDO += "AND MC.CURSO_ID = CGC.CURSO_ID ";
@@ -885,7 +885,7 @@ public class Materia implements Constant {
             /*Obtener fecha del sistema, y fecha limite de inscripcion de bloque*/
             String COMANDO = "SELECT TO_DATE(F_CIERRE, 'dd-mm-yy') FALTABAJA, ";
             COMANDO += "TO_DATE(SYSDATE, 'dd-mm-yy') FECHA ";
-            COMANDO += "FROM CARGA_BLOQUE ";
+            COMANDO += "FROM enoc.CARGA_BLOQUE ";
             COMANDO += "WHERE CARGA_ID = ? ";
             COMANDO += "AND BLOQUE_ID = ? ";
             pstmt = conn_enoc.prepareStatement(COMANDO);
@@ -1067,7 +1067,7 @@ public class Materia implements Constant {
             String COMANDO =
                     "SELECT CURSO_CARGA_ID, CURSO_ID, FACULTAD_ID, CARRERA_ID, NOMBRE_CURSO, CREDITOS, " +
                     "CICLO, GRUPO, CURSO_PLAN_ID, COSTO_CREDITO, COSTO_CURSO, CARGAID_CURSO, BLOQUE_CURSO, " +
-                    "COALESCE(MODALIDAD_ID,0) MODALIDAD_ID " + "FROM FES_CC_MATERIA " +
+                    "COALESCE(MODALIDAD_ID,0) MODALIDAD_ID " + "FROM mateo.FES_CC_MATERIA " +
                     "WHERE MATRICULA = ? " + "AND CARGA_ID = ? " +
                     "AND BLOQUE = ? ";
             
@@ -1141,8 +1141,8 @@ public class Materia implements Constant {
             COMANDO += "MC.CICLO, MC.CREDITOS, COALESCE(CG.GRUPO, 'U') AS GRUPO, CG.CURSO_CARGA_ID, ";
             COMANDO += "P.PLAN_ID, COALESCE(CG.BLOQUE_ID, 0) BLOQUE, CG.CARGA_ID, CG.MODALIDAD_ID, ";
             COMANDO += "CG.F_INICIO, CG.F_FINAL ";
-            COMANDO += "FROM CARGA_GRUPO_CURSO CGC, CARGA_GRUPO CG, MAPA_CURSO MC, KRDX_CURSO_ACT KCA, ";
-            COMANDO += "MAPA_PLAN P, CAT_CARRERA C, CAT_FACULTAD F ";
+            COMANDO += "FROM enoc.CARGA_GRUPO_CURSO CGC, enoc.CARGA_GRUPO CG, enoc.MAPA_CURSO MC, enoc.KRDX_CURSO_ACT KCA, ";
+            COMANDO += "enoc.MAPA_PLAN P, enoc.CAT_CARRERA C, enoc.CAT_FACULTAD F ";
             COMANDO += "WHERE CGC.CURSO_CARGA_ID = CG.CURSO_CARGA_ID ";
             COMANDO += "AND KCA.CURSO_CARGA_ID = CGC.CURSO_CARGA_ID ";
             COMANDO += "AND MC.CURSO_ID = CGC.CURSO_ID ";
@@ -1222,7 +1222,7 @@ public class Materia implements Constant {
             
             while (iMaterias.hasNext()) {
                 Materia materia = (Materia) mMaterias.get(iMaterias.next());
-                COMANDO = "UPDATE KRDX_CURSO_ACT " + "SET TIPOCAL_ID = 'M' " +
+                COMANDO = "UPDATE enoc.KRDX_CURSO_ACT " + "SET TIPOCAL_ID = 'M' " +
                         "WHERE CODIGO_PERSONAL = ? " + "AND CURSO_CARGA_ID = ? ";
                 pstmt = conn_enoc.prepareStatement(COMANDO);
                 pstmt.setString(1, matricula);
@@ -1251,7 +1251,7 @@ public class Materia implements Constant {
                 conn_enoc = new Conexion().getConexionEnoc(new Boolean(false));
             
             String COMANDO = "SELECT DISTINCT CODIGO_PERSONAL ";
-            COMANDO += "FROM KRDX_CURSO_ACT ";
+            COMANDO += "FROM enoc.KRDX_CURSO_ACT ";
             COMANDO += "WHERE CURSO_CARGA_ID LIKE ? ";
             pstmt = conn_enoc.prepareStatement(COMANDO);
             pstmt.setString(1, carga.getCargaId()+"%");

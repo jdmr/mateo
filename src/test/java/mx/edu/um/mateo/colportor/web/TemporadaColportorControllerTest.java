@@ -23,7 +23,7 @@ import mx.edu.um.mateo.colportor.model.TemporadaColportor;
 import mx.edu.um.mateo.colportor.model.Union;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.*;
-import mx.edu.um.mateo.general.test.BaseTest;
+import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.rh.model.Colegio;
@@ -59,7 +59,7 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class TemporadaColportorControllerTest extends BaseTest {
+public class TemporadaColportorControllerTest extends BaseControllerTest {
 
     private static final Logger log = LoggerFactory.getLogger(TemporadaColportorControllerTest.class);
     @Autowired

@@ -7,7 +7,7 @@ package mx.edu.um.mateo.colportor.web;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.colportor.dao.ColegioColportorDao;
 import mx.edu.um.mateo.colportor.model.ColegioColportor;
-import mx.edu.um.mateo.general.test.BaseTest;
+import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import static org.junit.Assert.assertNotNull;
 import org.junit.*;
@@ -36,7 +36,7 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class ColegioColportorControllerTest extends BaseTest {
+public class ColegioColportorControllerTest extends BaseControllerTest {
 
     private static final Logger log = LoggerFactory.getLogger(ColegioColportorControllerTest.class);
     @Autowired

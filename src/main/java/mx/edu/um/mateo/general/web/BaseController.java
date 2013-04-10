@@ -44,6 +44,7 @@ import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.utils.ReporteUtil;
+import mx.edu.um.mateo.general.utils.UtilControllerTests;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -63,6 +64,8 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 /**
  *
@@ -81,6 +84,9 @@ public abstract class BaseController {
     protected ReporteUtil reporteUtil;
     @Autowired
     protected ReporteDao reporteDao;
+    
+    @Autowired
+    protected UtilControllerTests utils;
 
     protected void pagina(Map<String, Object> params, Model modelo,
             String lista, Long pagina) {
@@ -456,5 +462,13 @@ public abstract class BaseController {
             }
         }
         return params;
+    }
+    
+    public void despliegaBindingResultErrors(BindingResult bindingResult){
+        List <ObjectError> errores = bindingResult.getAllErrors();
+            for(ObjectError err : errores){
+                log.error("{}",err);
+                
+            }
     }
 }

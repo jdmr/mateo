@@ -247,6 +247,8 @@ public class ColportorDaoTest {
         currentSession().save(empresa);
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
+        Rol rol = new Rol("ROLE_CLP"); //Rol Colportor
+        currentSession().save(rol);
         Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
         currentSession().save(asociacion);
         Colportor colportor = new Colportor("test@test.com", "test", "test", "test", "test", "test", Constantes.STATUS_ACTIVO,
@@ -254,7 +256,7 @@ public class ColportorDaoTest {
         colportor.setEmpresa(empresa);
         colportor.setAlmacen(almacen);
         colportor.setAsociacion(asociacion);
-        currentSession().save(colportor);
+        colportorDao.crea(colportor, null);
         Colportor colportor2 = colportorDao.obtiene(colportor.getId());
         assertNotNull(colportor2);
         assertNotNull(colportor2.getId());

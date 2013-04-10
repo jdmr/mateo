@@ -67,7 +67,7 @@ public class DocumentoDao {
         Criteria criteria = currentSession().createCriteria(Documento.class)
                 .setFetchMode("temporadaColportor", FetchMode.SELECT);
         Criteria countCriteria = currentSession().createCriteria(Documento.class)
-                .setFetchMode("temporadaColportor", FetchMode.SELECT);;
+                .setFetchMode("temporadaColportor", FetchMode.SELECT);
 
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
             String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);

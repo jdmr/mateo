@@ -49,7 +49,7 @@ public class InstitucionController extends BaseController{
 		log.debug("Mostrando lista de instituciones");
 		Map<String, Object> params = new HashMap<>();
 		Long empresaId = (Long) request.getSession().getAttribute("empresaId");
-		params.put("organizacion", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
+		params.put("empresa", empresaId);
 		if (StringUtils.isNotBlank(filtro)) {
 			params.put("filtro", filtro);
 		}
@@ -137,8 +137,9 @@ public class InstitucionController extends BaseController{
 			log.debug("Hubo algun error en la forma, regresando");
 
 			Map<String, Object> params = new HashMap<>();
-			params.put("organizacion", request.getSession()
-					.getAttribute("organizacionId"));
+			//params.put("organizacion", request.getSession()
+					//.getAttribute("organizacionId"));
+                        params.put("empresa", ambiente.obtieneUsuario().getEmpresa());
 			params.put("reporte", true);
 			return Constantes.PATH_INSTITUCION_NUEVO;
 		}
@@ -195,7 +196,7 @@ public class InstitucionController extends BaseController{
 			return Constantes.PATH_INSTITUCION_NUEVO;
 		}
 
-		
+		log.error("Hasta Aqui llega {}", institucion);
 
 		return "redirect:"+ Constantes.PATH_INSTITUCION + "/";
 	}

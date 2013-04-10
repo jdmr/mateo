@@ -121,7 +121,7 @@ public class CCosto {
 			conn = new Conexion().getConexionMateo(new Boolean(false));
 			
 			String COMANDO = "SELECT ID_CCOSTO, NOMBRE, DETALLE " +
-					"FROM CONT_CCOSTO " +
+					"FROM mateo.CONT_CCOSTO " +
 					"WHERE ID_EJERCICIO = ? " +
 					"AND ID_CCOSTO = ? ";
 			
@@ -162,7 +162,7 @@ public class CCosto {
 			conn = new Conexion().getConexionMateo(new Boolean(false));
 			
 			String COMANDO = "SELECT ID_CCOSTO, NOMBRE, DETALLE " +
-					"FROM CONT_CCOSTO " +
+					"FROM mateo.CONT_CCOSTO " +
 					"WHERE ID_EJERCICIO = ? ";
 			
 			pstmt = this.conn.prepareStatement(COMANDO);
@@ -200,7 +200,7 @@ public class CCosto {
 			if(conn == null || conn.isClosed())
 			conn = new Conexion().getConexionMateo(new Boolean(false));
 			
-			String COMANDO = "INSERT INTO CONT_CCOSTO " +
+			String COMANDO = "INSERT INTO mateo.CONT_CCOSTO " +
 					"(ID_EJERCICIO, ID_CCOSTO, NOMBRE, DETALLE) " +
 					"VALUES " +
 					"(?,?,?,?) ";

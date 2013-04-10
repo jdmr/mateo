@@ -20,11 +20,9 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.general.web.BaseController;
+import mx.edu.um.mateo.inscripciones.dao.PaqueteDao;
 import mx.edu.um.mateo.inscripciones.model.Paquete;
-import mx.edu.um.mateo.inscripciones.model.TiposBecas;
-import mx.edu.um.mateo.inscripciones.service.PaqueteManager;
-import mx.edu.um.mateo.inscripciones.service.TiposBecasManager;
-import mx.edu.um.mateo.rh.model.Nacionalidad;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -65,10 +63,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping(Constantes.PATH_PAQUETE)
-public class PaqueteController {
+public class PaqueteController extends BaseController {
      private static final Logger log = LoggerFactory.getLogger(PaqueteController.class);
     @Autowired
-    private PaqueteManager paqueteManager;
+    private PaqueteDao paqueteDao;
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
@@ -108,7 +106,7 @@ public class PaqueteController {
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = paqueteManager.getPaquetes(params);
+            params = paqueteDao.lista(params);
             try {
                 generaReporte(tipo, (List<Paquete>) params.get(Constantes.CONTAINSKEY_PAQUETES), response);
                 return null;
@@ -121,7 +119,7 @@ public class PaqueteController {
 
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = paqueteManager.getPaquetes(params);
+            params = paqueteDao.lista(params);
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
@@ -132,7 +130,7 @@ public class PaqueteController {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-        params = paqueteManager.getPaquetes(params);
+        params = paqueteDao.lista(params);
         log.debug("params{}", params.get(Constantes.CONTAINSKEY_PAQUETES));
         modelo.addAttribute(Constantes.CONTAINSKEY_PAQUETES, params.get(Constantes.CONTAINSKEY_PAQUETES));
 
@@ -163,9 +161,9 @@ public class PaqueteController {
     }
 
     @RequestMapping("/ver/{id}")
-    public String ver(@PathVariable String id, Model modelo) {
+    public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando Tipos de Becas {}", id);
-        Paquete paquete = paqueteManager.getPaquete(id);
+        Paquete paquete = paqueteDao.obtiene(id);
 
         modelo.addAttribute(Constantes.ADDATTRIBUTE_PAQUETE, paquete);
 
@@ -199,12 +197,15 @@ public class PaqueteController {
             Map<String, Object> params = new HashMap<>();
             params.put("empresa", request.getSession()
                     .getAttribute("empresaId"));
+            
+            this.despliegaBindingResultErrors(bindingResult);
+            
             return Constantes.PATH_PAQUETE_NUEVO;
         }
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
-            paqueteManager.graba(paquete,usuario);
+            paqueteDao.crea(paquete,usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el tipo de Beca", e);
             return Constantes.PATH_PAQUETE_NUEVO;
@@ -213,23 +214,54 @@ public class PaqueteController {
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "paquete.graba.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{paquete.getDescripcion()});
 
-        return "redirect:" + Constantes.PATH_PAQUETE_LISTA+ "/";
+        return "redirect:" + Constantes.PATH_PAQUETE_LISTA;
+    }
+    @Transactional
+    @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
+    public String actualiza(HttpServletRequest request, HttpServletResponse response, @Valid Paquete paquete, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
+        }
+        if (bindingResult.hasErrors()) {
+            log.debug("Hubo algun error en la forma, regresando");
+            Map<String, Object> params = new HashMap<>();
+            params.put("empresa", request.getSession()
+                    .getAttribute("empresaId"));
+            
+            this.despliegaBindingResultErrors(bindingResult);
+            
+            return Constantes.PATH_PAQUETE_NUEVO;
+        }
+
+        try {
+            Usuario usuario = ambiente.obtieneUsuario();
+            log.debug("Paquete {}",paquete);
+            paqueteDao.actualiza(paquete,usuario);
+        } catch (ConstraintViolationException e) {
+            log.error("No se pudo crear el tipo de Beca", e);
+            return Constantes.PATH_PAQUETE_NUEVO;
+        }
+
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "paquete.graba.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{paquete.getDescripcion()});
+
+        return "redirect:" + Constantes.PATH_PAQUETE_LISTA;
     }
 
     @RequestMapping("/edita/{id}")
-    public String edita(@PathVariable String id, Model modelo) {
+    public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Editar cuenta de tipos de becas {}", id);
-        Paquete paquete = paqueteManager.getPaquete(id);
+        Paquete paquete = paqueteDao.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_PAQUETE, paquete);
         return Constantes.PATH_PAQUETE_EDITA;
     }
 
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpServletRequest request, @RequestParam String id, Model modelo, @ModelAttribute Paquete paquete, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Paquete paquete, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina cuenta de tipos de becas");
         try {
-            paqueteManager.removePaquete(id);
+            paqueteDao.elimina(id);
 
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "paquete.elimina.message");
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{paquete.getDescripcion()});
