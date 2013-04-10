@@ -28,6 +28,15 @@
     <logger name="org.hibernate" level="trace"/>
     <logger name="org.hibernate.sql" level="trace"/>
     
+    <logger name="org.hibernate.SQL" level="TRACE"/>
+    <logger name="org.hibernate.type" level="TRACE"/>
+
+     <logger name="org.springframework" level="ERROR"/>
+     <logger name="org.springframework.security" level="ERROR"/>
+     
+    <logger name="org.springframework.orm.hibernate4" level="DEBUG"/>
+    <logger name="org.hibernate.type" level="TRACE"/>
+    <logger name="org.springframework" level="DEBUG"/>
     <root level="INFO">
         <appender-ref ref="stdout"/>
         <appender-ref ref="R"/>
