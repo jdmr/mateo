@@ -34,10 +34,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class AFEConvenioDaoHibernateTest {
+public class AFEConvenioDaoTest {
      @Autowired
     private AFEConvenioDao instance;
-    private static final Logger log = LoggerFactory.getLogger(AFEConvenioDaoHibernateTest.class);
+    private static final Logger log = LoggerFactory.getLogger(AFEConvenioDaoTest.class);
     @Autowired
     private SessionFactory sessionFactory;
 
