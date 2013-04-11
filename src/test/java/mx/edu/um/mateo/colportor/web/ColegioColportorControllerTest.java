@@ -12,18 +12,13 @@ import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import static org.junit.Assert.assertNotNull;
 import org.junit.*;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.web.server.MockMvc;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
-import org.springframework.test.web.server.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 
 /**
  *
@@ -38,29 +33,8 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 public class ColegioColportorControllerTest extends BaseControllerTest {
 
-    private static final Logger log = LoggerFactory.getLogger(ColegioColportorControllerTest.class);
-    @Autowired
-    private WebApplicationContext wac;
-    private MockMvc mockMvc;
     @Autowired
     private ColegioColportorDao colegioDao;
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-        this.mockMvc = MockMvcBuilders.webApplicationContextSetup(wac).build();
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     @Test
     //PRUEBA PASO 100%

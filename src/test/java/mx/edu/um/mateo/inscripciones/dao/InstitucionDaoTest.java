@@ -4,7 +4,10 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Organizacion;
+import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inscripciones.model.Institucion;
 import org.hibernate.Session;
@@ -26,41 +29,33 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class InstitucionDaoTest {
+public class InstitucionDaoTest extends BaseDaoTest {
 
-    private static final Logger log = LoggerFactory.getLogger(InstitucionDaoTest.class);
     @Autowired
     private InstitucionDao instance;
-    @Autowired
-    private SessionFactory sessionFactory;
-
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
 
     @SuppressWarnings("unchecked")
     @Test
     public void debieraMostrarListaDeInstitucion() {
         log.debug("Debiera mostrar lista de institucion");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
+        Usuario usuario = obtieneUsuario();
         Institucion institucion = null;
         for (int i = 0; i < 20; i++) {
             institucion = new Institucion();
             institucion.setNombre("Nombre-test");
             institucion.setPorcentaje(new BigDecimal("123"));
             institucion.setStatus("A");
-            institucion.setOrganizacion(organizacion);
+            institucion.setOrganizacion(usuario.getEmpresa().getOrganizacion());
             instance.graba(institucion);
             assertNotNull(institucion.getId());
         }
         Map<String, Object> params = new HashMap<>();
-
+        params.put("empresa", usuario.getEmpresa().getId());
         Map<String, Object> result = instance.lista(params);
         assertNotNull(result.get(Constantes.CONTAINSKEY_INSTITUCION));
-        assertNotNull(result.get("cantidad"));
+        assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
         assertEquals(10, ((List<Institucion>) result.get(Constantes.CONTAINSKEY_INSTITUCION)).size());
-        assertEquals(20, ((Long) result.get("cantidad")).intValue());
+        assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
 
     @Test

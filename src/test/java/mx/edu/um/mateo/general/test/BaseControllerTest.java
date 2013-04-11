@@ -41,7 +41,7 @@ public abstract class BaseControllerTest extends BaseTest {
         protected MockMvc mockMvc;
     
     @Before
-    public void setUp() {
+    public void setUp() {        
         this.mockMvc = MockMvcBuilders.webApplicationContextSetup(wac)
                 .alwaysExpect(status().isOk())
                 .build();

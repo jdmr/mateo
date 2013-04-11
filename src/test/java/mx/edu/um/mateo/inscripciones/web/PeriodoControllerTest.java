@@ -14,13 +14,8 @@ import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inscripciones.dao.PeriodoDao;
 import mx.edu.um.mateo.inscripciones.model.Periodo;
 import mx.edu.um.mateo.inventario.model.Almacen;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.context.ContextConfiguration;
@@ -28,10 +23,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
-import org.springframework.test.web.server.MockMvc;
-import org.springframework.test.web.server.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
@@ -46,21 +38,10 @@ import static org.junit.Assert.assertEquals;
 })
 @Transactional
 public class PeriodoControllerTest extends BaseControllerTest {
-
-    private static final Logger log = LoggerFactory.getLogger(PeriodoControllerTest.class);
-    @Autowired
-    private WebApplicationContext wac;
-    private MockMvc mockMvc;
-    @Autowired
-    private SessionFactory sessionFactory;
+   
     @Autowired
     private PeriodoDao instance;
-
-    @Before
-    public void setUp() {
-        this.mockMvc = MockMvcBuilders.webApplicationContextSetup(wac).build();
-    }
-
+    
     @Test
     public void debieraMostrarListaDePeriodo() throws Exception {
         log.debug("Debiera mostrar lista de periodo");
@@ -187,7 +168,4 @@ public class PeriodoControllerTest extends BaseControllerTest {
 
     }
 
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
 }

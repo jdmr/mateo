@@ -63,18 +63,6 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 public class ProveedorControllerTest extends BaseControllerTest {
 
-    private static final Logger log = LoggerFactory.getLogger(ProveedorControllerTest.class);
-    @Autowired
-    private WebApplicationContext wac;
-    private MockMvc mockMvc;
-    @Autowired
-    private SessionFactory sessionFactory;
-    
-    @Before
-    public void setUp() {
-        this.mockMvc = MockMvcBuilders.webApplicationContextSetup(wac).build();
-    }
-    
     @Test
     public void debieraMostrarListaDeProveedores() throws Exception {
         log.debug("Debiera mostrar lista de proveedores");
@@ -138,7 +126,4 @@ public class ProveedorControllerTest extends BaseControllerTest {
         
     }
     
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
 }

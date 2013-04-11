@@ -46,39 +46,13 @@ import org.springframework.web.context.WebApplicationContext;
 @Transactional
 public class TemporadaControllerTest extends BaseControllerTest {
 
-    private static final Logger log = LoggerFactory.getLogger(TemporadaControllerTest.class);
-    @Autowired
-    private WebApplicationContext wac;
-    private MockMvc mockMvc;
     @Autowired
     private TemporadaDao temporadaDao;
     @Autowired
     private UnionDao unionDao;
     @Autowired
     private AsociacionDao asociacionDao;
-    @Autowired
-    private SessionFactory sessionFactory;
-
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-        this.mockMvc = MockMvcBuilders.webApplicationContextSetup(wac).build();
-    }
-
-    @After
-    public void tearDown() {
-    }
-
+    
     /**
      * 
      * @throws Exception 

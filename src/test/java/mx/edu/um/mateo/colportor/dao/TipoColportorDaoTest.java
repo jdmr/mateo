@@ -10,8 +10,6 @@ import mx.edu.um.mateo.colportor.model.TipoColportor;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
 import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.Constantes;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.junit.*;
 import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
@@ -30,11 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class TipoColportorDaoTest extends BaseDaoTest{
     @Autowired
     private TipoColportorDao instance;
-    @Autowired
-    private SessionFactory sessionFactory;
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
     
     public TipoColportorDaoTest() {
     }    

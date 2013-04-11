@@ -31,13 +31,9 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.UltimoException;
 import mx.edu.um.mateo.inventario.model.Almacen;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.context.ContextConfiguration;
@@ -53,16 +49,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class OrganizacionDaoTest extends BaseDaoTest {
 
-    private static final Logger log = LoggerFactory.getLogger(OrganizacionDaoTest.class);
     @Autowired
     private OrganizacionDao instance;
-    @Autowired
-    private SessionFactory sessionFactory;
-
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
-
+    
     @Test
     public void debieraMostrarListaDeOrganizaciones() {
         log.debug("Debiera mostrar lista de organizaciones");
