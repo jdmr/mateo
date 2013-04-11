@@ -10,6 +10,7 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inscripciones.model.Institucion;
+import mx.edu.um.mateo.inscripciones.model.Paquete;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import static org.junit.Assert.assertEquals;
@@ -19,9 +20,11 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
+import static org.junit.Assert.*;
 
 /**
  * @author semdariobarbaamaya
@@ -61,13 +64,12 @@ public class InstitucionDaoTest extends BaseDaoTest {
     @Test
     public void debieraObtenerInstitucion() {
         log.debug("Debiera obtener Institucion");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
+        Usuario usuario = obtieneUsuario();
         Institucion institucion = new Institucion();
         institucion.setNombre("Institucion-test");
         institucion.setPorcentaje(new BigDecimal("123"));
         institucion.setStatus("A");
-        institucion.setOrganizacion(organizacion);
+        institucion.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         instance.graba(institucion);
         assertNotNull(institucion.getId());
         Long id = institucion.getId();
@@ -79,58 +81,68 @@ public class InstitucionDaoTest extends BaseDaoTest {
     @Test
     public void debieraCrearInstitucion() {
         log.debug("Debiera crear institucion");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
+        Usuario usuario = obtieneUsuario();
         Institucion institucion = new Institucion();
         institucion.setNombre("Institucion-test");
         institucion.setPorcentaje(new BigDecimal("123"));
         institucion.setStatus("A");
-        institucion.setOrganizacion(organizacion);
+        institucion.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         instance.graba(institucion);
         assertNotNull(institucion.getId());
         Long id = institucion.getId();
+
         Institucion result = instance.obtiene(id);
-        assertEquals("Institucion-test", result.getNombre());
+        assertNotNull(result.getId());
+        assertEquals(institucion.getNombre(), result.getNombre());
     }
 
     @Test
     public void debieraActualizarInstitucion() {
         log.debug("Debiera actualizar institucion");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
+        Usuario usuario = obtieneUsuario();
         Institucion institucion = new Institucion();
         institucion.setNombre("Institucion-test");
         institucion.setPorcentaje(new BigDecimal("123"));
         institucion.setStatus("A");
-        institucion.setOrganizacion(organizacion);
+        institucion.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         instance.graba(institucion);
         assertNotNull(institucion.getId());
+        Long id = institucion.getId();
 
-        institucion.setNombre("PRUEBA");
-        instance.graba(institucion);
-        assertNotNull(institucion.getId());
-        Institucion prueba = instance.obtiene(institucion.getId());
-        assertNotNull(prueba.getId());
-        assertEquals("PRUEBA", prueba.getNombre());
+        Institucion result = instance.obtiene(id);
+        assertNotNull(result.getId());
+        assertEquals(institucion.getNombre(), result.getNombre());
+
+        result.setNombre("PruebaNombre");
+        instance.actualiza(result);
+
+        currentSession().refresh(institucion);
+        assertEquals(result.getNombre(), institucion.getNombre());
     }
 
     @Test
     public void debieraEliminarInstitucion() {
         log.debug("Debiera actualizar institucion");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
+        Usuario usuario = obtieneUsuario();
         Institucion institucion = new Institucion();
         institucion.setNombre("Institucion-test");
         institucion.setPorcentaje(new BigDecimal("123"));
         institucion.setStatus("A");
-        institucion.setOrganizacion(organizacion);
+        institucion.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         instance.graba(institucion);
         assertNotNull(institucion.getId());
+        Long id = institucion.getId();
 
         institucion.setNombre("PRUEBA");
         instance.graba(institucion);
         assertNotNull(institucion.getId());
         String nombre = instance.elimina(institucion.getId());
         assertEquals("PRUEBA", nombre);
+        try {
+            Institucion institucion1 = instance.obtiene(institucion.getId());
+            fail("Se encontro paquete " + institucion1);
+        } catch (ObjectRetrievalFailureException e) {
+            log.debug("Se elimino con exito el paquete {}", nombre);
+        }
     }
 }

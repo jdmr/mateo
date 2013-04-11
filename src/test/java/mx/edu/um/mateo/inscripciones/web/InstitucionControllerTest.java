@@ -151,28 +151,12 @@ public class InstitucionControllerTest extends BaseControllerTest {
     public void debieraActualizarInstitucion() throws Exception {
         log.debug("Debiera actualizar institucion");
 
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
-        assertNotNull(id);
+       Usuario usuario=obtieneUsuario();
 
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
 
         Institucion institucion = new Institucion();
-        institucion.setOrganizacion(organizacion);
+        institucion.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         institucion.setNombre("Nombre-test");
         institucion.setPorcentaje(new BigDecimal("123"));
         institucion.setStatus("A");
