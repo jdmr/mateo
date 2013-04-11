@@ -43,24 +43,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class InstitucionControllerTest extends BaseControllerTest {
 
-    
     @Autowired
     private InstitucionDao instance;
-
-
 
     @Test
     public void debieraMostrarListaDeInstitucion() throws Exception {
         log.debug("Debiera mostrar lista de institucion");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
+        Usuario usuario = obtieneUsuario();
         Institucion institucion = null;
         for (int i = 0; i < 20; i++) {
             institucion = new Institucion();
             institucion.setNombre("Nombre-test");
             institucion.setPorcentaje(new BigDecimal("123"));
             institucion.setStatus("A");
-            institucion.setOrganizacion(organizacion);
+            institucion.setOrganizacion(usuario.getEmpresa().getOrganizacion());
             instance.graba(institucion);
             assertNotNull(institucion.getId());
         }
@@ -73,7 +69,6 @@ public class InstitucionControllerTest extends BaseControllerTest {
                 .andExpect(model().attributeExists("paginas"))
                 .andExpect(model().attributeExists("pagina"));
     }
-
 
     @Test
     public void debieraMostrarInstitucion() throws Exception {
@@ -151,7 +146,7 @@ public class InstitucionControllerTest extends BaseControllerTest {
     public void debieraActualizarInstitucion() throws Exception {
         log.debug("Debiera actualizar institucion");
 
-       Usuario usuario=obtieneUsuario();
+        Usuario usuario = obtieneUsuario();
 
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
 
@@ -176,5 +171,4 @@ public class InstitucionControllerTest extends BaseControllerTest {
                 .andExpect(flash().attribute("message", "institucion.actualizada.message"));
 
     }
-
 }
