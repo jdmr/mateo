@@ -13,7 +13,7 @@ import mx.edu.um.mateo.colportor.dao.UnionDao;
 import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.colportor.model.Temporada;
 import mx.edu.um.mateo.colportor.model.Union;
-import mx.edu.um.mateo.general.test.BaseTest;
+import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -44,41 +44,15 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class TemporadaControllerTest extends BaseTest {
+public class TemporadaControllerTest extends BaseControllerTest {
 
-    private static final Logger log = LoggerFactory.getLogger(TemporadaControllerTest.class);
-    @Autowired
-    private WebApplicationContext wac;
-    private MockMvc mockMvc;
     @Autowired
     private TemporadaDao temporadaDao;
     @Autowired
     private UnionDao unionDao;
     @Autowired
     private AsociacionDao asociacionDao;
-    @Autowired
-    private SessionFactory sessionFactory;
-
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-        this.mockMvc = MockMvcBuilders.webApplicationContextSetup(wac).build();
-    }
-
-    @After
-    public void tearDown() {
-    }
-
+    
     /**
      * 
      * @throws Exception 

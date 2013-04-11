@@ -12,11 +12,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import mx.edu.um.mateo.colportor.dao.AsociadoDao;
 import mx.edu.um.mateo.colportor.dao.DocumentoDao;
 import mx.edu.um.mateo.colportor.dao.TemporadaColportorDao;
-import mx.edu.um.mateo.colportor.dao.TemporadaDao;
-import mx.edu.um.mateo.colportor.dao.UnionDao;
 import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.colportor.model.Asociado;
 import mx.edu.um.mateo.colportor.model.ColegioColportor;
@@ -25,31 +22,22 @@ import mx.edu.um.mateo.colportor.model.Documento;
 import mx.edu.um.mateo.colportor.model.Temporada;
 import mx.edu.um.mateo.colportor.model.TemporadaColportor;
 import mx.edu.um.mateo.colportor.model.Union;
-import mx.edu.um.mateo.contabilidad.dao.EjercicioDao;
-import mx.edu.um.mateo.general.dao.*;
 import mx.edu.um.mateo.general.model.*;
-import mx.edu.um.mateo.general.test.BaseTest;
+import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inventario.model.Almacen;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import static org.junit.Assert.assertNotNull;
 import org.junit.*;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.web.server.MockMvc;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.server.result.MockMvcResultHandlers.*;
-import org.springframework.test.web.server.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 
 /**
  *
@@ -63,55 +51,13 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class DocumentoControllerTest extends BaseTest {
+public class DocumentoControllerTest extends BaseControllerTest {
 
-    private static final Logger log = LoggerFactory.getLogger(DocumentoControllerTest.class);
-    @Autowired
-    private WebApplicationContext wac;
-    private MockMvc mockMvc;
     @Autowired
     private DocumentoDao documentoDao;
     @Autowired
-    private RolDao rolDao;
-    @Autowired
-    private UnionDao unionDao;
-    @Autowired
-    private UsuarioDao usuarioDao;
-    @Autowired
     private TemporadaColportorDao temporadaColportorDao;
-    @Autowired
-    private AsociadoDao asociadoDao;
-    @Autowired
-    private TemporadaDao temporadaDao;
-    @Autowired
-    private SessionFactory sessionFactory;
-    @Autowired
-    private EjercicioDao ejercicioDao;
-    @Autowired
-    private OrganizacionDao organizacionDao;
-
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-        this.mockMvc = MockMvcBuilders.webApplicationContextSetup(wac).build();
-    }
-
-    @After
-    public void tearDown() {
-    }
-
-     
+         
     @Test
     public void debieraMostrarListaDeDocumentoDeColportor() throws Exception {
         log.debug("Debiera monstrar lista de documentos");

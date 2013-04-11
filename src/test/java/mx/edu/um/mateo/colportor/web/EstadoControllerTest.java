@@ -3,34 +3,22 @@
  * and open the template in the editor.
  */
 package mx.edu.um.mateo.colportor.web;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import mx.edu.um.mateo.colportor.dao.EstadoDao;
 import mx.edu.um.mateo.colportor.model.Estado;
 import mx.edu.um.mateo.colportor.model.Pais;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.general.dao.*;
-import mx.edu.um.mateo.general.model.*;
-import mx.edu.um.mateo.general.test.BaseTest;
+import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import static org.junit.Assert.assertNotNull;
 import org.junit.*;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.web.server.MockMvc;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.*;
-import org.springframework.test.web.server.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 /**
  *
  * @author gibrandemetrioo
@@ -43,35 +31,11 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class EstadoControllerTest extends BaseTest {
-    private static final Logger log = LoggerFactory.getLogger(EstadoControllerTest.class);
-    @Autowired
-    private WebApplicationContext wac;
-    private MockMvc mockMvc;
+public class EstadoControllerTest extends BaseControllerTest {
+    
     @Autowired
     private EstadoDao estadoDao;
-    @Autowired
-    private SessionFactory sessionFactory;
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-        this.mockMvc = MockMvcBuilders.webApplicationContextSetup(wac).build();
-    }
-
-    @After
-    public void tearDown() {
-    }
-
+    
     @Test
     public void debieraMostrarListaDeEstado() throws Exception {
         log.debug("Debiera monstrar lista estado");

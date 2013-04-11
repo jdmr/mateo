@@ -112,7 +112,7 @@ public class DescuentoController extends BaseController{
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = descuentoManager.lista(params);
             try {
-                generaReporte(tipo, (List<Descuento>) params.get(Constantes.CONTAINSKEY_DESCUENTO), response);
+                generaReporte(tipo, (List<Descuento>) params.get(Constantes.CONTAINSKEY_DESCUENTOS), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -127,7 +127,7 @@ public class DescuentoController extends BaseController{
             
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<Descuento>) params.get(Constantes.CONTAINSKEY_DESCUENTO), request);
+                enviaCorreo(correo, (List<Descuento>) params.get(Constantes.CONTAINSKEY_DESCUENTOS), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("descuento.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
@@ -135,8 +135,8 @@ public class DescuentoController extends BaseController{
             }
         }
         params = descuentoManager.lista(params);
-        log.debug("params{}",params.get(Constantes.CONTAINSKEY_DESCUENTO));
-        modelo.addAttribute(Constantes.CONTAINSKEY_DESCUENTOS, params.get(Constantes.CONTAINSKEY_DESCUENTO));
+        log.debug("params{}",params.get(Constantes.CONTAINSKEY_DESCUENTOS));
+        modelo.addAttribute(Constantes.CONTAINSKEY_DESCUENTOS, params.get(Constantes.CONTAINSKEY_DESCUENTOS));
 
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
@@ -147,7 +147,7 @@ public class DescuentoController extends BaseController{
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<Descuento> descuentos = (List<Descuento>) params.get(Constantes.CONTAINSKEY_DESCUENTO);
+        List<Descuento> descuentos = (List<Descuento>) params.get(Constantes.CONTAINSKEY_DESCUENTOS);
         Long primero = ((pagina - 1) * max) + 1;
         log.debug("primero {}",primero);
         log.debug("Descuentossize {}",descuentos.size());

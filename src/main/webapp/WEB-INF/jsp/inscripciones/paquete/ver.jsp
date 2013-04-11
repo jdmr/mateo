@@ -38,19 +38,19 @@
                     <div class="span11">${paquete.descripcion}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="matricula.label" /></div>
+                    <div class="span1"><s:message code="importe.matricula.label" /></div>
                     <div class="span11">${paquete.matricula}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="ensenanza.label" /></div>
+                    <div class="span1"><s:message code="importe.ensenanza.label" /></div>
                     <div class="span11">${paquete.ensenanza}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="internado.label" /></div>
+                    <div class="span1"><s:message code="importe.internado.label" /></div>
                     <div class="span11">${paquete.internado}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="internado.label" /></div>
+                    <div class="span1"><s:message code="acfe.label" /></div>
                     <div class="span11">${paquete.acfe}</div>
                 </div>
                  

@@ -170,7 +170,7 @@ public class DependienteDaoTest {
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
+        usuario.setEmpresa(empresa);    
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
         currentSession().save(usuario);

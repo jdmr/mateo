@@ -23,9 +23,20 @@
  */
 package mx.edu.um.mateo.general.test;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Organizacion;
+import mx.edu.um.mateo.general.model.Rol;
+import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.inventario.model.Almacen;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import static org.junit.Assert.assertNotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -37,9 +48,16 @@ import org.springframework.security.core.userdetails.UserDetails;
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public abstract class BaseTest {
-        protected final transient Logger log = LoggerFactory.getLogger(getClass());
-
-    public Authentication authenticate(UserDetails principal, String credentials, List<GrantedAuthority> authorities) {
+    protected final transient Logger log = LoggerFactory.getLogger(getClass());
+    
+    @Autowired
+    private SessionFactory sessionFactory;
+    
+    protected Session currentSession() {
+        return sessionFactory.getCurrentSession();
+    }
+            
+    protected Authentication authenticate(UserDetails principal, String credentials, List<GrantedAuthority> authorities) {
         log.debug("Entrando al metodo 'authenticate' ***");
         Authentication authentication = new TestingAuthenticationToken(principal, credentials, authorities);
         authentication.setAuthenticated(true);
@@ -47,4 +65,39 @@ public abstract class BaseTest {
         log.debug("Regresando autenticacion {} ***", authentication);
         return authentication;
     }
+    
+    protected Usuario obtieneUsuario(){
+        log.debug("Entrando a 'obtieneUsuario'");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        assertNotNull(organizacion.getId());
+        
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        assertNotNull(empresa.getId());
+        
+        Rol rol = new Rol("ROLE_TEST");
+        currentSession().save(rol);
+        assertNotNull(rol.getId());
+        
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        assertNotNull(almacen);
+        
+        Usuario user = new Usuario("test", "TEST-01", "nombre", "appaterno", "apmaterno", "tset@um.edu.mx");
+        user.setEmpresa(empresa);
+        user.setAlmacen(almacen);
+        user.setRoles(roles);
+        currentSession().save(user);        
+        Long id = user.getId();
+        assertNotNull(id);
+        
+        log.debug("Usuario creado {}",user);
+        
+        return user;
+    }
+    
 }
