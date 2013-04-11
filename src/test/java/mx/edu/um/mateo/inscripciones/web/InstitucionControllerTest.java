@@ -42,7 +42,6 @@ import org.springframework.web.context.WebApplicationContext;
 /**
  * @author semdariobarbaamaya
  */
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = GenericWebXmlContextLoader.class, locations = {
     "classpath:mateo.xml",
@@ -50,8 +49,8 @@ import org.springframework.web.context.WebApplicationContext;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class InstitucionControllerTest extends BaseControllerTest{
-    
+public class InstitucionControllerTest extends BaseControllerTest {
+
     private static final Logger log = LoggerFactory.getLogger(InstitucionControllerTest.class);
     @Autowired
     private WebApplicationContext wac;
@@ -60,25 +59,37 @@ public class InstitucionControllerTest extends BaseControllerTest{
     private SessionFactory sessionFactory;
     @Autowired
     private InstitucionDao instance;
-    
+
     @Before
     public void setUp() {
         this.mockMvc = MockMvcBuilders.webApplicationContextSetup(wac).build();
     }
-    
-//    @Test
-//    public void debieraMostrarListaDeInstitucion() throws Exception {
-//        log.debug("Debiera mostrar lista de institucion");
-//        this.mockMvc.perform(
-//                get(Constantes.PATH_INSTITUCION))
-//                .andExpect(status().isOk())
-//                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_INSTITUCION_LISTA + ".jsp"))
-//                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_INSTITUCION))
-//                .andExpect(model().attributeExists("paginacion"))
-//                .andExpect(model().attributeExists("paginas"))
-//                .andExpect(model().attributeExists("pagina"));
-//    }
-    
+
+    @Test
+    public void debieraMostrarListaDeInstitucion() throws Exception {
+        log.debug("Debiera mostrar lista de institucion");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        Institucion institucion = null;
+        for (int i = 0; i < 20; i++) {
+            institucion = new Institucion();
+            institucion.setNombre("Nombre-test");
+            institucion.setPorcentaje(new BigDecimal("123"));
+            institucion.setStatus("A");
+            institucion.setOrganizacion(organizacion);
+            instance.graba(institucion);
+            assertNotNull(institucion.getId());
+        }
+        this.mockMvc.perform(
+                get(Constantes.PATH_INSTITUCION))
+                .andExpect(status().isOk())
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_INSTITUCION_LISTA + ".jsp"))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_INSTITUCION))
+                .andExpect(model().attributeExists("paginacion"))
+                .andExpect(model().attributeExists("paginas"))
+                .andExpect(model().attributeExists("pagina"));
+    }
+
     @Test
     public void debieraMostrarInstitucion() throws Exception {
         log.debug("Debiera mostrar institucion");
@@ -98,7 +109,7 @@ public class InstitucionControllerTest extends BaseControllerTest{
                 .andExpect(model().attributeExists("institucion"));
 
     }
-    
+
     @Test
     public void debieraCrearInstitucion() throws Exception {
         log.debug("Debiera crear institucion");
@@ -118,7 +129,7 @@ public class InstitucionControllerTest extends BaseControllerTest{
         usuario.setRoles(roles);
         currentSession().save(usuario);
         Long id = usuario.getId();
-        
+
         assertNotNull(id);
 
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
@@ -131,8 +142,8 @@ public class InstitucionControllerTest extends BaseControllerTest{
         // .andExpect(flash().attributeExists("message"))
         // .andExpect(flash().attribute("message", "institucion.creada.message"));
     }
-    
-     @Test
+
+    @Test
     public void debieraEliminarInstitucion() throws Exception {
         log.debug("Debiera eliminar institucion");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
@@ -151,7 +162,7 @@ public class InstitucionControllerTest extends BaseControllerTest{
                 .andExpect(flash().attribute("message", "institucion.eliminada.message"));
     }
 
-      @Test
+    @Test
     public void debieraActualizarInstitucion() throws Exception {
         log.debug("Debiera actualizar institucion");
 
@@ -183,7 +194,7 @@ public class InstitucionControllerTest extends BaseControllerTest{
         instance.graba(institucion);
         assertNotNull(institucion.getId());
         assertEquals("Nombre-test", institucion.getNombre());
-        
+
         this.mockMvc.perform(post(Constantes.PATH_INSTITUCION_GRABA)
                 .param("nombre", "TEST-1")
                 .param("status", "A")
@@ -200,5 +211,4 @@ public class InstitucionControllerTest extends BaseControllerTest{
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
-    
 }

@@ -23,45 +23,46 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * @author semdariobarbaamaya
  */
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
 public class InstitucionDaoTest {
-    
+
     private static final Logger log = LoggerFactory.getLogger(InstitucionDaoTest.class);
-     @Autowired
-     private InstitucionDao instance;
-     @Autowired
-     private SessionFactory sessionFactory;
-     
-     private Session currentSession() {
+    @Autowired
+    private InstitucionDao instance;
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
-    
-    @SuppressWarnings("unchecked") 
+
+    @SuppressWarnings("unchecked")
     @Test
     public void debieraMostrarListaDeInstitucion() {
         log.debug("Debiera mostrar lista de institucion");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
+        Institucion institucion = null;
         for (int i = 0; i < 20; i++) {
-            Institucion institucion = new Institucion();
+            institucion = new Institucion();
             institucion.setNombre("Nombre-test");
             institucion.setPorcentaje(new BigDecimal("123"));
             institucion.setStatus("A");
             institucion.setOrganizacion(organizacion);
             instance.graba(institucion);
+            assertNotNull(institucion.getId());
         }
         Map<String, Object> params = new HashMap<>();
-     
+
         Map<String, Object> result = instance.lista(params);
         assertNotNull(result.get(Constantes.CONTAINSKEY_INSTITUCION));
         assertNotNull(result.get("cantidad"));
-        assertEquals(10, ((List<Institucion>) result.get(Constantes.CONTAINSKEY_INSTITUCION )).size());
+        assertEquals(10, ((List<Institucion>) result.get(Constantes.CONTAINSKEY_INSTITUCION)).size());
         assertEquals(20, ((Long) result.get("cantidad")).intValue());
     }
-    
+
     @Test
     public void debieraObtenerInstitucion() {
         log.debug("Debiera obtener Institucion");
@@ -72,13 +73,15 @@ public class InstitucionDaoTest {
         institucion.setPorcentaje(new BigDecimal("123"));
         institucion.setStatus("A");
         institucion.setOrganizacion(organizacion);
-        currentSession().save(institucion);
+        instance.graba(institucion);
+        assertNotNull(institucion.getId());
         Long id = institucion.getId();
         Institucion result = instance.obtiene(id);
+        assertNotNull(result.getId());
         assertEquals("Institucion-test", result.getNombre());
     }
-    
-     @Test
+
+    @Test
     public void debieraCrearInstitucion() {
         log.debug("Debiera crear institucion");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
@@ -94,9 +97,9 @@ public class InstitucionDaoTest {
         Institucion result = instance.obtiene(id);
         assertEquals("Institucion-test", result.getNombre());
     }
-     
-      @Test
-      public void debieraActualizarInstitucion() {
+
+    @Test
+    public void debieraActualizarInstitucion() {
         log.debug("Debiera actualizar institucion");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
@@ -110,11 +113,29 @@ public class InstitucionDaoTest {
 
         institucion.setNombre("PRUEBA");
         instance.graba(institucion);
-
+        assertNotNull(institucion.getId());
         Institucion prueba = instance.obtiene(institucion.getId());
-        assertNotNull(prueba);
+        assertNotNull(prueba.getId());
         assertEquals("PRUEBA", prueba.getNombre());
-    }   
-     
-     
+    }
+
+    @Test
+    public void debieraEliminarInstitucion() {
+        log.debug("Debiera actualizar institucion");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        Institucion institucion = new Institucion();
+        institucion.setNombre("Institucion-test");
+        institucion.setPorcentaje(new BigDecimal("123"));
+        institucion.setStatus("A");
+        institucion.setOrganizacion(organizacion);
+        instance.graba(institucion);
+        assertNotNull(institucion.getId());
+
+        institucion.setNombre("PRUEBA");
+        instance.graba(institucion);
+        assertNotNull(institucion.getId());
+        String nombre = instance.elimina(institucion.getId());
+        assertEquals("PRUEBA", nombre);
+    }
 }
