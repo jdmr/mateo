@@ -11,6 +11,7 @@ import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.BaseTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -52,42 +53,17 @@ import static org.springframework.test.web.server.result.MockMvcResultMatchers.*
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class CategoriaControllerTest extends BaseTest{
+public class CategoriaControllerTest extends BaseControllerTest{
     
     @Autowired
     private CategoriaDao categoriaDao;
     
-    private static final Logger log = LoggerFactory.getLogger(CategoriaControllerTest.class);
-    @Autowired
-    private WebApplicationContext wac;
-    private MockMvc mockMvc;
-    @Autowired
-    private SessionFactory sessionFactory;
 
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
+    
     public CategoriaControllerTest() {
     }
     
     
-     @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-        this.mockMvc = MockMvcBuilders.webApplicationContextSetup(wac).build();
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     
     @Test
     public void testListaCategorias() throws Exception {
@@ -125,6 +101,32 @@ public class CategoriaControllerTest extends BaseTest{
                 andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINAS)).
                 andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINA));
     }
+    
+    @Test
+    public void testNuevoCategoria() throws Exception {
+        log.debug("Test 'nuevo' categoria");
+                
+        this.mockMvc.perform(get(Constantes.PATH_CATEGORIA_NUEVO))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_CATEGORIA_NUEVO + ".jsp"))
+                .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_CATEGORIA));
+    }
+    
+    @Test
+    public void testEdita() throws Exception {
+        log.debug("Test 'edita'");
+        Usuario usuario = obtieneUsuario();
+        Categoria categoria = new Categoria();
+        categoria.setNombre("Test");
+        categoria.setStatus("A");
+        categoriaDao.graba(categoria, usuario);
+        assertNotNull(categoria.getId());
+                
+        this.mockMvc.perform(get(Constantes.PATH_CATEGORIA_EDITA+"/"+categoria.getId()))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_CATEGORIA_EDITA + ".jsp"))
+                .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_CATEGORIA))
+                .andExpect(model().attribute(Constantes.ADDATTRIBUTE_CATEGORIA, categoria));
+    }
+    
     
     @Test
     public void testGrabaCategoria() throws Exception {
@@ -192,7 +194,7 @@ public class CategoriaControllerTest extends BaseTest{
         
         this.mockMvc.perform(get("/rh/categoria/ver/" + categoria.getId()))
                 .andExpect(status().isOk())
-                .andExpect(forwardedUrl("/WEB-INF/jsp/"+Constantes.PATH_CATEGORIA_VER+".jsp"))
+                .andExpect(forwardedUrl("/WEB-INF/jsp"+Constantes.PATH_CATEGORIA_VER+".jsp"))
                 .andExpect(model().attributeExists("categoria"));
         
     }
