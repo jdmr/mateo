@@ -5,9 +5,16 @@
 package mx.edu.um.mateo.rh.dao;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
+import mx.edu.um.mateo.general.model.Rol;
+import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.rh.model.Categoria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -43,10 +50,23 @@ public class CategoriaDaoTest {
     @Test
      public void testObtenerListaDeCategorias() {     
         log.debug("Muestra lista de categorias");
-        Organizacion organizacion = new Organizacion("tst-01", "test-02", "test-03");
+        Rol rol = new Rol(Constantes.ROLE_COL);
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Organizacion organizacion = new Organizacion("codigo", "nombre", "Organizacion");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa( "test01","test-01", "test-01", "000000000001", organizacion);
+        Empresa empresa = new Empresa("codigo", "empresa", "Empresa", "123456789123", organizacion);
         currentSession().save(empresa);
+        Almacen almacen = new Almacen("test", "alamcen", empresa);
+        currentSession().save(almacen);
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
+        Long id = usuario.getId();
+        assertNotNull(id);
         for(int i=0; i<5; i++){
             
             
@@ -56,14 +76,13 @@ public class CategoriaDaoTest {
             categoria.setNombre("Categoria"+i);
             categoria.setStatus("A");
             categoria.setEmpresa(empresa);
-            instance.graba(categoria, null);
+            instance.graba(categoria, usuario);
            assertNotNull(categoria.getId());
         }
          Map<String, Object> params= new HashMap<>();
          params.put("empresa",empresa.getId());
          Map<String, Object> result=instance.lista(params);
-        
-        //assertNotNull((List)params.get(Constantes.CATEGORIA_LIST));
+         assertEquals(5,result.size());
         
         
     }
@@ -71,15 +90,28 @@ public class CategoriaDaoTest {
      
     @Test
     public void testObtiene() {
-        Organizacion organizacion = new Organizacion("tst-01", "test-02", "test-03");
+        Rol rol = new Rol(Constantes.ROLE_COL);
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Organizacion organizacion = new Organizacion("codigo", "nombre", "Organizacion");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst01", "test-02", "test-03", "000000000001", organizacion);
+        Empresa empresa = new Empresa("codigo", "empresa", "Empresa", "123456789123", organizacion);
         currentSession().save(empresa);
+        Almacen almacen = new Almacen("test", "alamcen", empresa);
+        currentSession().save(almacen);
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
+        Long id = usuario.getId();
+        assertNotNull(id);
         Categoria categoria= new Categoria();
         categoria.setNombre("Test1");
         categoria.setStatus("AC");
         categoria.setEmpresa(empresa);
-        currentSession().save(categoria);
+        instance.graba(categoria, usuario);
         
         Categoria categoria1= instance.obtiene(categoria.getId());
         assertEquals(categoria.getId(),categoria1.getId());
@@ -88,15 +120,28 @@ public class CategoriaDaoTest {
     }
     @Test
     public void testGraba() throws Exception {
-        Organizacion organizacion = new Organizacion("tst-01", "test-02", "test-03");
+        Rol rol = new Rol(Constantes.ROLE_COL);
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Organizacion organizacion = new Organizacion("codigo", "nombre", "Organizacion");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst01", "test-02", "test-03", "000000000001", organizacion);
+        Empresa empresa = new Empresa("codigo", "empresa", "Empresa", "123456789123", organizacion);
         currentSession().save(empresa);
+        Almacen almacen = new Almacen("test", "alamcen", empresa);
+        currentSession().save(almacen);
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
+        Long id = usuario.getId();
+        assertNotNull(id);
         Categoria categoria= new Categoria();
         categoria.setNombre("Test1");
         categoria.setStatus("AC");
         categoria.setEmpresa(empresa);
-        currentSession().save(categoria);
+        instance.graba(categoria, usuario);
         
         assertNotNull(categoria.getId());
         assertEquals(categoria.getNombre(),"Test1");
@@ -107,16 +152,29 @@ public class CategoriaDaoTest {
     }
     @Test
     public void testElimina() throws Exception {
-        Organizacion organizacion = new Organizacion("tst-01", "test-02", "test-03");
+       Rol rol = new Rol(Constantes.ROLE_COL);
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        Organizacion organizacion = new Organizacion("codigo", "nombre", "Organizacion");
         currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-02", "test-03", "000000000001", organizacion);
-        currentSession().save(empresa); 
+        Empresa empresa = new Empresa("codigo", "empresa", "Empresa", "123456789123", organizacion);
+        currentSession().save(empresa);
+        Almacen almacen = new Almacen("test", "alamcen", empresa);
+        currentSession().save(almacen);
+        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
+        usuario.setEmpresa(empresa);
+        usuario.setAlmacen(almacen);
+        usuario.setRoles(roles);
+        currentSession().save(usuario);
+        Long id = usuario.getId();
+        assertNotNull(id); 
         Categoria categoria= new Categoria();
         categoria.setNombre("Test1");
         categoria.setStatus("AC");
         categoria.setEmpresa(empresa);
-        currentSession().save(categoria);
-        currentSession().delete(categoria);
+        instance.graba(categoria, usuario);
+        instance.elimina(categoria.getId());
         
         assertNotNull(categoria.getId());
         assertEquals(categoria.getNombre(),"Test1");

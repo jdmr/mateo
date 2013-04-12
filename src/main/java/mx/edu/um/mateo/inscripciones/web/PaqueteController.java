@@ -85,7 +85,7 @@ public class PaqueteController extends BaseController {
             Usuario usuario,
             Errors errors,
             Model modelo) {
-        log.debug("Mostrando lista de tipos de Becas");
+        log.debug("Mostrando lista de paquetes");
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
@@ -162,7 +162,7 @@ public class PaqueteController extends BaseController {
 
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
-        log.debug("Mostrando Tipos de Becas {}", id);
+        log.debug("Mostrando paquete {}", id);
         Paquete paquete = paqueteDao.obtiene(id);
 
         modelo.addAttribute(Constantes.ADDATTRIBUTE_PAQUETE, paquete);
@@ -172,7 +172,7 @@ public class PaqueteController extends BaseController {
 
     @RequestMapping("/nuevo")
     public String nueva(HttpServletRequest request, Model modelo) {
-        log.debug("Nuevo tipo de Beca");
+        log.debug("Nuevo paquete");
         Paquete paquete = new Paquete();
         modelo.addAttribute("paquete", paquete);
         Map<String, Object> params = new HashMap<>();
