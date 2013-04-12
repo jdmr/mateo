@@ -128,51 +128,16 @@ public class ProrrogaControllerTest extends BaseControllerTest {
 
         this.mockMvc.perform(post(Constantes.PATH_PRORROGA_GRABA)
                 .param("matricula", "1110475")
-                .param("fecha", "test")
-                .param("fechaCompromiso", "2013-04-12")
-                .param("descripcion", "2013-04-12")
+                .param("fecha", "12/04/2013")
+                .param("fechaCompromiso", "12/04/2013")
+                .param("descripcion", "test")
                 .param("saldo", "80")
                 .param("userName", usuario.getUsername())
                 .param("status", "A")
-                .param("observaciones", "Test-Observaciones")
-                .param("usuario", usuario.toString()))
+                .param("observaciones", "Test-Observaciones"))
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message", "prorroga.graba.message"))
-                .andExpect(redirectedUrl(Constantes.PATH_PRORROGA_LISTA));
-    }
-
-    /**
-     * Prueba el proceso de Actualizacion de un paquete
-     */
-    @Test
-    public void testActualiza() throws Exception {
-        log.debug("Test 'actualiza' un prorroga");
-        Usuario usuario = obtieneUsuario();
-        Prorroga prorroga = new Prorroga("1110475", new Date(), new Date(), "test", new Double("1203.5"), "a");
-        prorroga.setObservaciones("prueba");
-        prorrogaDao.graba(prorroga, usuario);
-        assertNotNull(prorroga.getId());
-        this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
-
-        this.mockMvc.perform(post(Constantes.PATH_PRORROGA_ACTUALIZA)
-                .param("version", prorroga.getVersion().toString())
-                .param("id", prorroga.getId().toString())
-                .param("matricula", "1110475")
-                .param("fecha", "2013-04-12")
-                .param("fechaCompromiso", "2013-04-12")
-                .param("descripcion", "text")
-                .param("saldo", "80")
-                .param("userName", usuario.getUsername())
-                .param("status", "A")
-                .param("observaciones", "Test-Observaciones")
-                .param("usuario", usuario.toString()))
-                .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "paquete.graba.message"))
-                .andExpect(redirectedUrl(Constantes.PATH_PAQUETE_LISTA));
-
-        currentSession().refresh(prorroga);
-        log.debug("{}", prorroga);
-        assertEquals("text", prorroga.getDescripcion());
+                .andExpect(redirectedUrl(Constantes.PATH_PRORROGA_LISTA + "/"));
     }
 
     /**
