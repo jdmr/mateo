@@ -16,10 +16,9 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.inscripciones.dao.PaqueteDao;
 import mx.edu.um.mateo.inscripciones.model.AlumnoPaquete;
-import mx.edu.um.mateo.inscripciones.model.Institucion;
 import mx.edu.um.mateo.inscripciones.service.AlumnoPaqueteManager;
-import mx.edu.um.mateo.inscripciones.service.PaqueteManager;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -71,7 +70,7 @@ public class AlumnoPaqueteController {
     @Autowired
     private Ambiente ambiente;
     @Autowired
-    private PaqueteManager paqueteManager;
+    private PaqueteDao paqueteDao;
 
     @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -178,7 +177,7 @@ public class AlumnoPaqueteController {
                 .getAttribute("empresaId"));
         params.put("reporte", true);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_ALUMNOPAQUETE, alumnoPaquete);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAQUETES, paqueteManager.lista(params).get(Constantes.CONTAINSKEY_PAQUETES));
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAQUETES, paqueteDao.lista(params).get(Constantes.CONTAINSKEY_PAQUETES));
         return Constantes.PATH_ALUMNOPAQUETE_NUEVO;
     }
 
@@ -202,14 +201,14 @@ public class AlumnoPaqueteController {
             
             if(alumnoPaquete.getId() != null){
                 tmp = alumnoPaqueteManager.obtiene(alumnoPaquete.getId());
-                tmp.setPaquete(paqueteManager.obtiene(alumnoPaquete.getPaquete().getId().toString()));
+                tmp.setPaquete(paqueteDao.obtiene(alumnoPaquete.getPaquete().getId()));
                 tmp.setMatricula(alumnoPaquete.getMatricula());
                 tmp.setStatus(alumnoPaquete.getStatus());
                 alumnoPaqueteManager.graba(tmp, usuario);
                 redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "alumnoPaquete.actualizado.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{alumnoPaquete.getMatricula()});
             }else{
-                  alumnoPaquete.setPaquete(paqueteManager.obtiene(alumnoPaquete.getPaquete().getId().toString()));
+                  alumnoPaquete.setPaquete(paqueteDao.obtiene(alumnoPaquete.getPaquete().getId()));
                   alumnoPaqueteManager.graba(alumnoPaquete, usuario);
                   redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "alumnoPaquete.creado.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{alumnoPaquete.getMatricula()});
@@ -234,7 +233,7 @@ public class AlumnoPaqueteController {
         params.put("reporte", true);
         AlumnoPaquete alumnoPaquete = alumnoPaqueteManager.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_ALUMNOPAQUETE, alumnoPaquete);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAQUETES, paqueteManager.lista(params).get(Constantes.CONTAINSKEY_PAQUETES));
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAQUETES, paqueteDao.lista(params).get(Constantes.CONTAINSKEY_PAQUETES));
         return Constantes.PATH_ALUMNOPAQUETE_EDITA;
     }
 
