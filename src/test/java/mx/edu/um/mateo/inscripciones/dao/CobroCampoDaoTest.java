@@ -15,9 +15,11 @@ import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inscripciones.model.CobroCampo;
 import mx.edu.um.mateo.inscripciones.model.Institucion;
+import mx.edu.um.mateo.inscripciones.model.Paquete;
 import mx.edu.um.mateo.inscripciones.model.Prorroga;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import org.hibernate.Session;
@@ -32,6 +34,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,74 +46,29 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class CobroCampoDaoTest {
+public class CobroCampoDaoTest extends BaseDaoTest {
 
     @Autowired
     private CobroCampoDao instance;
-    private static final Logger log = LoggerFactory.getLogger(CobroCampoDaoTest.class);
-    @Autowired
-    private SessionFactory sessionFactory;
-
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
-
-    public CobroCampoDaoTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of lista method, of class CobroCampoDao.
      */
     @Test
     public void testLista() {
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        assertNotNull(almacen.getId());
+        Usuario usuario = obtieneUsuario();
         Institucion institucion = new Institucion();
         institucion.setNombre("Nombre-test");
         institucion.setPorcentaje(new BigDecimal("123"));
         institucion.setStatus("A");
-        institucion.setOrganizacion(organizacion);
+        institucion.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         currentSession().save(institucion);
+        assertNotNull(institucion.getId());
 
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
-        assertNotNull(id);
         CobroCampo cobroCampo = null;
         for (int i = 0; i < 20; i++) {
             cobroCampo = new CobroCampo("1110475", institucion, new Double("8.00"), new Double("8.00"), new Double("8.00"));
-            cobroCampo.setEmpresa(empresa);
+            cobroCampo.setEmpresa(usuario.getEmpresa());
             cobroCampo.setFechaAlta(new Date());
             cobroCampo.setFechaModificacion(new Date());
             cobroCampo.setStatus("A");
@@ -121,11 +79,11 @@ public class CobroCampoDaoTest {
         }
         Map<String, Object> params;
         params = new TreeMap<>();
-        params.put("empresa", empresa.getId());
+        params.put("empresa", usuario.getEmpresa().getId());
         Map<String, Object> result = instance.lista(params);
         assertNotNull(result.get(Constantes.CONTAINSKEY_COBROSCAMPOS));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
-        assertEquals(10, ((List<Prorroga>) result.get(Constantes.CONTAINSKEY_COBROSCAMPOS)).size());
+        assertEquals(10, ((List<CobroCampo>) result.get(Constantes.CONTAINSKEY_COBROSCAMPOS)).size());
         assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
 
@@ -134,33 +92,17 @@ public class CobroCampoDaoTest {
      */
     @Test
     public void testObtiene() {
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        assertNotNull(almacen.getId());
+        Usuario usuario = obtieneUsuario();
         Institucion institucion = new Institucion();
         institucion.setNombre("Nombre-test");
         institucion.setPorcentaje(new BigDecimal("123"));
         institucion.setStatus("A");
-        institucion.setOrganizacion(organizacion);
+        institucion.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         currentSession().save(institucion);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
-        assertNotNull(id);
+        assertNotNull(institucion.getId());
+
         CobroCampo cobroCampo = new CobroCampo("1110475", institucion, new Double("8.00"), new Double("8.00"), new Double("8.00"));
-        cobroCampo.setEmpresa(empresa);
+        cobroCampo.setEmpresa(usuario.getEmpresa());
         cobroCampo.setFechaAlta(new Date());
         cobroCampo.setFechaModificacion(new Date());
         cobroCampo.setStatus("A");
@@ -168,6 +110,7 @@ public class CobroCampoDaoTest {
         cobroCampo.setUsuarioModificacion(usuario);
         instance.graba(cobroCampo, usuario);
         assertNotNull(cobroCampo.getId());
+
         CobroCampo cobroCampo1 = instance.obtiene(cobroCampo.getId());
         assertEquals(cobroCampo.getMatricula(), cobroCampo1.getMatricula());
 
@@ -178,33 +121,17 @@ public class CobroCampoDaoTest {
      */
     @Test
     public void testGraba() {
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        assertNotNull(almacen.getId());
+        Usuario usuario = obtieneUsuario();
         Institucion institucion = new Institucion();
         institucion.setNombre("Nombre-test");
         institucion.setPorcentaje(new BigDecimal("123"));
         institucion.setStatus("A");
-        institucion.setOrganizacion(organizacion);
+        institucion.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         currentSession().save(institucion);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
-        assertNotNull(id);
+        assertNotNull(institucion.getId());
+
         CobroCampo cobroCampo = new CobroCampo("1110475", institucion, new Double("8.00"), new Double("8.00"), new Double("8.00"));
-        cobroCampo.setEmpresa(empresa);
+        cobroCampo.setEmpresa(usuario.getEmpresa());
         cobroCampo.setFechaAlta(new Date());
         cobroCampo.setFechaModificacion(new Date());
         cobroCampo.setStatus("A");
@@ -212,6 +139,43 @@ public class CobroCampoDaoTest {
         cobroCampo.setUsuarioModificacion(usuario);
         instance.graba(cobroCampo, usuario);
         assertNotNull(cobroCampo.getId());
+
+        CobroCampo cobroCampo1 = instance.obtiene(cobroCampo.getId());
+        assertEquals(cobroCampo.getMatricula(), cobroCampo1.getMatricula());
+    }
+
+    /**
+     * Prueba el proceso de actualizacion
+     */
+    @Test
+    public void testActualiza() {
+        Usuario usuario = obtieneUsuario();
+        Institucion institucion = new Institucion();
+        institucion.setNombre("Nombre-test");
+        institucion.setPorcentaje(new BigDecimal("123"));
+        institucion.setStatus("A");
+        institucion.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+        currentSession().save(institucion);
+        assertNotNull(institucion.getId());
+
+        CobroCampo cobroCampo = new CobroCampo("1110475", institucion, new Double("8.00"), new Double("8.00"), new Double("8.00"));
+        cobroCampo.setEmpresa(usuario.getEmpresa());
+        cobroCampo.setFechaAlta(new Date());
+        cobroCampo.setFechaModificacion(new Date());
+        cobroCampo.setStatus("A");
+        cobroCampo.setUsuarioAlta(usuario);
+        cobroCampo.setUsuarioModificacion(usuario);
+        instance.graba(cobroCampo, usuario);
+        assertNotNull(cobroCampo.getId());
+
+        CobroCampo cobroCampo1 = instance.obtiene(cobroCampo.getId());
+        assertEquals(cobroCampo.getMatricula(), cobroCampo1.getMatricula());
+
+        cobroCampo1.setMatricula("1110476");
+        instance.graba(cobroCampo1, usuario);
+
+        currentSession().refresh(cobroCampo);
+        assertEquals("1110476", cobroCampo.getMatricula());
     }
 
     /**
@@ -219,33 +183,17 @@ public class CobroCampoDaoTest {
      */
     @Test
     public void testElimina() {
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        assertNotNull(almacen.getId());
+        Usuario usuario = obtieneUsuario();
         Institucion institucion = new Institucion();
         institucion.setNombre("Nombre-test");
         institucion.setPorcentaje(new BigDecimal("123"));
         institucion.setStatus("A");
-        institucion.setOrganizacion(organizacion);
+        institucion.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         currentSession().save(institucion);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
-        assertNotNull(id);
+        assertNotNull(institucion.getId());
+
         CobroCampo cobroCampo = new CobroCampo("1110475", institucion, new Double("8.00"), new Double("8.00"), new Double("8.00"));
-        cobroCampo.setEmpresa(empresa);
+        cobroCampo.setEmpresa(usuario.getEmpresa());
         cobroCampo.setFechaAlta(new Date());
         cobroCampo.setFechaModificacion(new Date());
         cobroCampo.setStatus("A");
@@ -255,5 +203,13 @@ public class CobroCampoDaoTest {
         assertNotNull(cobroCampo.getId());
         String matricula = instance.elimina(cobroCampo.getId());
         assertEquals(matricula, cobroCampo.getMatricula());
+        CobroCampo cobroCampo1 = instance.obtiene(cobroCampo.getId());
+        if ("A".equals(cobroCampo.getStatus())) {
+            fail("Se encontro cobroCampo " + cobroCampo1);
+        } else {
+            log.debug("Se elimino con exito el Cobro Campo {}", matricula);
+        }
+
+
     }
 }
