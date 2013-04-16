@@ -2807,7 +2807,7 @@ public class Constantes {
     public static final String PATH_AFECONVENIO = "/inscripciones/afeConvenio";
     public static final String PATH_AFECONVENIO_LISTA = "/inscripciones/afeConvenio/lista";
     public static final String PATH_AFECONVENIO_VER = "/inscripciones/afeConvenio/ver";
-    public static final String PATH_AFECONVENIO_NUEVO = "/inscripciones/afeConvenio/nuevo";
+    public static final String PATH_AFECONVENIO_NUEVO = "inscripciones/afeConvenio/nuevo";
     public static final String PATH_AFECONVENIO_EDITA = "/inscripciones/afeConvenio/edita";
     public static final String PATH_AFECONVENIO_GRABA = "/inscripciones/afeConvenio/graba";
     public static final String PATH_AFECONVENIO_ACTUALIZA = "/inscripciones/afeConvenio/actualiza";
