@@ -192,6 +192,7 @@ public class CobroCampoController extends BaseController {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
+        utils.despliegaBindingResultErrors(bindingResult);
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
             Map<String, Object> params = new HashMap<>();
