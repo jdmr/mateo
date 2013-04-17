@@ -118,7 +118,9 @@ public class AFEConvenioDaoHibernate extends BaseDao implements AFEConvenioDao{
        log.debug("Obtiene convenio con id = {}", id);
                 
         AFEConvenio afeConvenio = (AFEConvenio) currentSession().get(AFEConvenio.class, id);
+        if(afeConvenio != null){
         afeConvenio.setAlumno(alDao.obtiene(afeConvenio.getMatricula()));
+        }
         return afeConvenio;
     }
 
