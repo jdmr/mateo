@@ -4,6 +4,8 @@
  */
 package mx.edu.um.mateo.inscripciones.web;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,12 +17,14 @@ import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inscripciones.dao.ProrrogaDao;
+import mx.edu.um.mateo.inscripciones.model.Paquete;
 import mx.edu.um.mateo.inscripciones.model.Prorroga;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
@@ -43,34 +47,13 @@ public class ProrrogaControllerTest extends BaseControllerTest {
 
     @Autowired
     private ProrrogaDao prorrogaDao;
-    
+
     /**
      * Test of lista method, of class ProrrogaController.
      */
     @Test
     public void testLista() throws Exception {
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        assertNotNull(almacen.getId());
-
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
-        assertNotNull(id);
+        Usuario usuario = obtieneUsuario();
         Prorroga prorroga = null;
         for (int i = 0; i < 20; i++) {
             prorroga = new Prorroga("1110475", new Date(), new Date(), "test", new Double("1203.5"), "a");
@@ -88,31 +71,42 @@ public class ProrrogaControllerTest extends BaseControllerTest {
     }
 
     /**
+     * Prueba que se muestre el jsp Nuevo
+     */
+    @Test
+    public void testNuevo() throws Exception {
+        log.debug("Test 'nuevo'");
+
+        this.mockMvc.perform(get(Constantes.PATH_PRORROGA_NUEVO))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_PRORROGA_NUEVO + ".jsp"))
+                .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_PRORROGA));
+    }
+
+    /**
+     * Test of edita method, of class ProrrogaController.
+     */
+    @Test
+    public void testEdita() throws Exception {
+
+        Usuario usuario = obtieneUsuario();
+        Prorroga prorroga = new Prorroga("1110475", new Date(), new Date(), "test", new Double("1203.5"), "a");
+        prorroga.setObservaciones("prueba");
+        prorrogaDao.graba(prorroga, usuario);
+        assertNotNull(prorroga.getId());
+
+        this.mockMvc.perform(get(Constantes.PATH_PRORROGA_EDITA + "/" + prorroga.getId()))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_PRORROGA_EDITA + ".jsp"))
+                .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_PRORROGA))
+                .andExpect(model().attribute(Constantes.ADDATTRIBUTE_PRORROGA, prorroga));
+    }
+
+    /**
      * Test of ver method, of class ProrrogaController.
      */
     @Test
     public void testVer() throws Exception {
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        assertNotNull(almacen.getId());
 
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
+        Usuario usuario = obtieneUsuario();
         Prorroga prorroga = new Prorroga("1110475", new Date(), new Date(), "test", new Double("1203.5"), "a");
         prorroga.setObservaciones("prueba");
         prorrogaDao.graba(prorroga, usuario);
@@ -123,42 +117,45 @@ public class ProrrogaControllerTest extends BaseControllerTest {
                 .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_PRORROGA));
     }
 
+    /**
+     * Prueba que el proceso de Grabar un paquete
+     */
+    @Test
+    public void testGraba() throws Exception {
+        log.debug("Debiera crear paquete");
+        Usuario usuario = obtieneUsuario();
+        this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
 
+        this.mockMvc.perform(post(Constantes.PATH_PRORROGA_GRABA)
+                .param("matricula", "1110475")
+                .param("fecha", "12/04/2013")
+                .param("fechaCompromiso", "12/04/2013")
+                .param("descripcion", "test")
+                .param("saldo", "80")
+                .param("userName", usuario.getUsername())
+                .param("status", "A")
+                .param("observaciones", "Test-Observaciones"))
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(flash().attribute("message", "prorroga.graba.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_PRORROGA_LISTA + "/"));
+    }
 
     /**
      * Test of elimina method, of class ProrrogaController.
      */
     @Test
-    public void testElimina() throws Exception{
-          Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        assertNotNull(almacen.getId());
-
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
+    public void testElimina() throws Exception {
+        Usuario usuario = obtieneUsuario();
         Prorroga prorroga = new Prorroga("1110475", new Date(), new Date(), "test", new Double("1203.5"), "a");
         prorroga.setObservaciones("prueba");
         prorrogaDao.graba(prorroga, usuario);
         assertNotNull(prorroga.getId());
-          this.mockMvc.perform(post(Constantes.PATH_PRORROGA_ELIMINA)
+
+        this.mockMvc.perform(post(Constantes.PATH_PRORROGA_ELIMINA)
                 .param("id", prorroga.getId().toString()))
                 .andExpect(status().isOk())
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "prorroga.elimina.message"));
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "prorroga.elimina.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_PRORROGA_LISTA));
     }
 }

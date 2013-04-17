@@ -5,32 +5,18 @@
 package mx.edu.um.mateo.inscripciones.dao;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
-import mx.edu.um.mateo.colportor.model.Asociacion;
-import mx.edu.um.mateo.general.model.Empresa;
-import mx.edu.um.mateo.general.model.Organizacion;
-import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inscripciones.model.Prorroga;
-import mx.edu.um.mateo.inscripciones.model.TiposBecas;
-import mx.edu.um.mateo.inventario.model.Almacen;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,64 +28,17 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class ProrrogaDaoTest {
+public class ProrrogaDaoTest extends BaseDaoTest {
 
     @Autowired
     private ProrrogaDao instance;
-    private static final Logger log = LoggerFactory.getLogger(ProrrogaDaoTest.class);
-    @Autowired
-    private SessionFactory sessionFactory;
-
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
-
-    public ProrrogaDaoTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of lista method, of class ProrrogaDao.
      */
     @Test
     public void testLista() {
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        assertNotNull(almacen.getId());
-
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
-        assertNotNull(id);
+        Usuario usuario = obtieneUsuario();
         Prorroga prorroga = null;
         for (int i = 0; i < 20; i++) {
             prorroga = new Prorroga("1110475", new Date(), new Date(), "test", new Double("2369.8"), "a");
@@ -109,7 +48,7 @@ public class ProrrogaDaoTest {
         }
         Map<String, Object> params;
         params = new TreeMap<>();
-        params.put("empresa", empresa.getId());
+        params.put("empresa", usuario.getEmpresa().getId());
         Map<String, Object> result = instance.lista(params);
         assertNotNull(result.get(Constantes.CONTAINSKEY_PRORROGAS));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
@@ -122,28 +61,7 @@ public class ProrrogaDaoTest {
      */
     @Test
     public void testObtiene() {
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        assertNotNull(almacen.getId());
-
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
-        assertNotNull(id);
+        Usuario usuario = obtieneUsuario();
 
         Prorroga prorroga = new Prorroga("1110475", new Date(), new Date(), "test", new Double("2369.8"), "a");
         prorroga.setObservaciones("test");
@@ -154,7 +72,8 @@ public class ProrrogaDaoTest {
         instance.graba(prorroga, usuario);
         assertNotNull(prorroga.getId());
         Prorroga prorroga1 = instance.obtiene(prorroga.getId());
-        assertEquals(prorroga1.getMatricula(), prorroga.getMatricula());
+        assertNotNull(prorroga1.getId());
+        assertEquals(prorroga.getMatricula(), prorroga1.getMatricula());
 
     }
 
@@ -163,32 +82,33 @@ public class ProrrogaDaoTest {
      */
     @Test
     public void testGraba() {
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        assertNotNull(almacen.getId());
-
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
-        assertNotNull(id);
+        Usuario usuario = obtieneUsuario();
         Prorroga prorroga = new Prorroga("1110475", new Date(), new Date(), "test", new Double("2369.8"), "a");
         prorroga.setObservaciones("test");
         instance.graba(prorroga, usuario);
         assertNotNull(prorroga.getId());
+        Prorroga prorroga1 = instance.obtiene(prorroga.getId());
+        assertNotNull(prorroga1.getId());
+        assertEquals(prorroga.getMatricula(), prorroga1.getMatricula());
+    }
+
+    /**
+     * Test of graba method, of class ProrrogaDao.
+     */
+    @Test
+    public void testActualiza() {
+        Usuario usuario = obtieneUsuario();
+        Prorroga prorroga = new Prorroga("1110475", new Date(), new Date(), "test", new Double("2369.8"), "a");
+        prorroga.setObservaciones("test");
+        instance.graba(prorroga, usuario);
+        assertNotNull(prorroga.getId());
+        Prorroga prorroga1 = instance.obtiene(prorroga.getId());
+        assertNotNull(prorroga1.getId());
+        assertEquals(prorroga.getMatricula(), prorroga1.getMatricula());
+        prorroga1.setMatricula("1110476");
+        instance.graba(prorroga, usuario);
+        currentSession().refresh(prorroga);
+        assertEquals("1110476", prorroga.getMatricula());
     }
 
     /**
@@ -196,28 +116,7 @@ public class ProrrogaDaoTest {
      */
     @Test
     public void testElimina() {
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        assertNotNull(almacen.getId());
-
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
-        assertNotNull(id);
+        Usuario usuario = obtieneUsuario();
 
         Prorroga prorroga = new Prorroga("1110475", new Date(), new Date(), "test", new Double("2369.8"), "a");
         prorroga.setObservaciones("test");
@@ -226,6 +125,11 @@ public class ProrrogaDaoTest {
 
         String descripcion = instance.elimina(prorroga.getId());
         assertEquals(prorroga.getDescripcion(), descripcion);
-
+        try {
+            Prorroga prorroga1 = instance.obtiene(prorroga.getId());
+            fail("Se encontro paquete " + prorroga1);
+        } catch (ObjectRetrievalFailureException e) {
+            log.debug("Se elimino con exito el paquete {}", descripcion);
+        }
     }
 }

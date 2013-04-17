@@ -2508,6 +2508,7 @@ public class Constantes {
     public static final String PATH_INSTITUCION_EDITA = "/inscripciones/instituciones/edita";
     public static final String PATH_INSTITUCION_GRABA = "/inscripciones/instituciones/graba";
     public static final String PATH_INSTITUCION_CREA = "/inscripciones/instituciones/crea";
+    public static final String PATH_INSTITUCION_ELIMINA = "/inscripciones/instituciones/elimina";
     public static final String PATH_TIPOEMPLEADO = "/rh/tipoEmpleado";
     public static final String PATH_TIPOEMPLEADO_LISTA = "/rh/tipoEmpleado/lista";
     public static final String PATH_TIPOEMPLEADO_VER = "/rh/tipoEmpleado/ver";
@@ -2516,6 +2517,7 @@ public class Constantes {
     public static final String PATH_TIPOEMPLEADO_CREA = "/rh/tipoEmpleado/crea";
     public static final String PATH_TIPOEMPLEADO_ACTUALIZA = "/rh/tipoEmpleado/actualiza";
     public static final String PATH_TIPOEMPLEADO_ELIMINA = "/rh/tipoEmpleado/elimina";
+    public static final String ADDATTRIBUTE_INSTITUCION = "institucion";
     /**
      * Valores para los Asociacion Colportor
      */
