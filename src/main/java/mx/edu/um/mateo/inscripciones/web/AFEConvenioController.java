@@ -197,7 +197,7 @@ public class AFEConvenioController extends BaseController{
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
-            utils.despliegaBindingResultErrors(bindingResult);
+            despliegaBindingResultErrors(bindingResult);
             modelo.addAttribute(Constantes.ADDATTRIBUTE_AFECONVENIO, afeConvenio);
             errors.rejectValue("matricula", "error.convenio.message",
 					new String[] { afeConvenio.getMatricula() }, null);
@@ -225,7 +225,7 @@ public class AFEConvenioController extends BaseController{
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "afeConvenio.graba.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{afeConvenio.getMatricula()});
         
-        return "redirect:" + Constantes.PATH_AFECONVENIO_LISTA + "/" ;
+        return "redirect:" + Constantes.PATH_AFECONVENIO_LISTA  ;
     }
     
     @RequestMapping("/edita/{id}")
