@@ -196,7 +196,9 @@ public class TiposBecasController extends BaseController {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
         if (bindingResult.hasErrors()) {
+            
             log.debug("Hubo algun error en la forma, regresando");
+            despliegaBindingResultErrors(bindingResult);
             Map<String, Object> params = new HashMap<>();
             params.put("empresa", request.getSession()
                     .getAttribute("empresaId"));
