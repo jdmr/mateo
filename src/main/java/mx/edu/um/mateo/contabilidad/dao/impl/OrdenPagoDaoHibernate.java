@@ -13,6 +13,7 @@ import mx.edu.um.mateo.contabilidad.model.OrdenPago;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.inscripciones.model.ccobro.utils.Constants;
 import org.apache.commons.beanutils.BeanUtils;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueObjectException;
@@ -56,8 +57,11 @@ public class OrdenPagoDaoHibernate extends BaseDao implements OrdenPagoDao {
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(OrdenPago.class);
-        Criteria countCriteria = currentSession().createCriteria(OrdenPago.class);
+        
+        Criteria criteria = currentSession().createCriteria(OrdenPago.class)
+                .add(Restrictions.eq("statusInterno", Constants.STATUS_ACTIVO));
+        Criteria countCriteria = currentSession().createCriteria(OrdenPago.class)
+                .add(Restrictions.eq("statusInterno", Constants.STATUS_ACTIVO));
 
         if (params.containsKey("empresa")) {
             criteria.createCriteria("empresa").add(
@@ -104,7 +108,11 @@ public class OrdenPagoDaoHibernate extends BaseDao implements OrdenPagoDao {
      */
     @Override
     public OrdenPago obtiene(final Long id) {
-        OrdenPago ordenPago = (OrdenPago) currentSession().get(OrdenPago.class, id);
+        Criteria criteria = currentSession().createCriteria(OrdenPago.class)
+                .add(Restrictions.idEq(id))
+                .add(Restrictions.eq("statusInterno", Constants.STATUS_ACTIVO));
+        OrdenPago ordenPago = (OrdenPago)criteria.uniqueResult();
+        //OrdenPago ordenPago = (OrdenPago) currentSession().get(OrdenPago.class, id);
         if (ordenPago == null) {
             log.warn("uh oh, orden de pago with id '" + id + "' not found...");
             //throw new ObjectRetrievalFailureException(OrdenPago.class, id);
@@ -143,9 +151,10 @@ public class OrdenPagoDaoHibernate extends BaseDao implements OrdenPagoDao {
         }
         OrdenPago op1 = null, op2 = null;
         try {
-            op1 = obtiene(ordenPago.getId());
-            op2 = (OrdenPago)BeanUtils.cloneBean(op1);
             
+            op1 = obtiene(ordenPago.getId());
+            
+            op2 = (OrdenPago)BeanUtils.cloneBean(op1);
             op2.setCheque(ordenPago.getCheque());
             op2.setDescripcion(ordenPago.getDescripcion());
             op2.setFechaPago(ordenPago.getFechaPago());
@@ -189,8 +198,20 @@ public class OrdenPagoDaoHibernate extends BaseDao implements OrdenPagoDao {
     public String elimina(final Long id) {
         OrdenPago ordenPago = this.obtiene(id);
         String descripcion = ordenPago.getDescripcion();
-        currentSession().delete(ordenPago);
-        currentSession().flush();
+        ordenPago.setStatusInterno(Constantes.STATUS_INACTIVO);
+        try{
+            currentSession().update(ordenPago);
+        } catch (NonUniqueObjectException e) {
+            try {
+                currentSession().merge(ordenPago);
+            } catch (Exception ex) {
+                log.error("No se pudo actualizar el ordenPago", ex);
+                throw new RuntimeException("No se pudo actualizar el ordenPago",
+                        ex);
+            }
+        } finally {
+            currentSession().flush();
+        }
         return descripcion;
 
     }

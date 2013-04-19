@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.contabilidad.dao;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -12,13 +13,13 @@ import mx.edu.um.mateo.contabilidad.model.OrdenPago;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.Constantes;
+import org.apache.commons.beanutils.BeanUtils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -112,24 +113,33 @@ public class OrdenPagoDaoTest extends BaseDaoTest {
     @Test
     public void testActualiza() {
         inserta();
+        log.debug("OrdenPago {}", ordenPago);
         
         Map<String, Object> params = new TreeMap<>();
         params.put("empresa", usuario.getEmpresa().getId());
         Map<String, Object> result = instance.lista(params);
-        Integer nRows =  result.size();
+        List <OrdenPago> lista = (List)result.get(Constantes.CONTAINSKEY_ORDENES_PAGO);
+        Integer nRows =  lista.size();
         
-        OrdenPago ordenPago1 = instance.obtiene(ordenPago.getId());
+        OrdenPago ordenPago1 = new OrdenPago();
+        try {
+            BeanUtils.copyProperties(ordenPago1, ordenPago);
+        } catch (IllegalAccessException | InvocationTargetException ex) {
+            log.error("Error al intentar copiar las propiedades de orden pago");
+        }
         assertNotNull(ordenPago1);
         
         ordenPago1.setDescripcion("test2");
         instance.actualiza(ordenPago1, usuario);
         
         currentSession().refresh(ordenPago);
-        assertEquals("test2", ordenPago.getDescripcion());
+        assertEquals("Test", ordenPago.getDescripcion());
+        assertEquals("test2", ordenPago1.getDescripcion());
         
         //Debe haber dos registros en la lista
         result = instance.lista(params);
-        assertEquals(nRows+1, result.size());
+        lista = (List)result.get(Constantes.CONTAINSKEY_ORDENES_PAGO);
+        assertEquals(nRows+1, lista.size());
     }
 
     /**
@@ -138,6 +148,12 @@ public class OrdenPagoDaoTest extends BaseDaoTest {
     @Test
     public void testElimina() {
         inserta();
+        
+        Map<String, Object> params = new TreeMap<>();
+        params.put("empresa", usuario.getEmpresa().getId());
+        Map<String, Object> result = instance.lista(params);
+        List <OrdenPago> lista = (List)result.get(Constantes.CONTAINSKEY_ORDENES_PAGO);
+        Integer nRows =  lista.size();
         
         String descripcion = instance.elimina(ordenPago.getId());
         assertEquals(ordenPago.getDescripcion(), descripcion);
@@ -149,6 +165,10 @@ public class OrdenPagoDaoTest extends BaseDaoTest {
         else{
             log.debug("Se elimino con exito el ordenPago {}", descripcion);
         }
+        
+        result = instance.lista(params);
+        lista = (List)result.get(Constantes.CONTAINSKEY_ORDENES_PAGO);
+        assertEquals(nRows, new Integer(lista.size()));
         
     }
 }
