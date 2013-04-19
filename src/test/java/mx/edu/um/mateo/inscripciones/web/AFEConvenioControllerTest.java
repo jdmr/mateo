@@ -57,39 +57,24 @@ public class AFEConvenioControllerTest extends BaseControllerTest{
     
     
     @Test
-    public void testObtenerListaConvenios() throws Exception {
-    log.debug("test obtener una lista de Convenios");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, empresa);
+    public void testLista() throws Exception {
+        log.debug("test obtener una lista de Convenios");
+        
+        Usuario usuario = obtieneUsuario();
+       
+        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, usuario.getEmpresa());
         currentSession().save(tipoBeca);
         assertNotNull(tipoBeca.getId());
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
         Alumno alumno = alDao.obtiene("1080506");
         assertNotNull(alumno);
         AFEConvenio afeConvenio = null;
         for (int i=0 ; i<20; i++){
-            afeConvenio= new AFEConvenio("A",alumno,empresa,tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
+            afeConvenio= new AFEConvenio("A",alumno,usuario.getEmpresa(),tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
             currentSession().save(afeConvenio);
             assertNotNull(afeConvenio.getId());
         }
         
          this.mockMvc.perform(get(Constantes.PATH_AFECONVENIO)).
-                andExpect(status().isOk()).
                 andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_AFECONVENIO_LISTA + ".jsp")).
                 andExpect(model().attributeExists(Constantes.CONTAINSKEY_AFECONVENIO)).
                 andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION)).
@@ -98,35 +83,30 @@ public class AFEConvenioControllerTest extends BaseControllerTest{
     }
     
     @Test
-    public void testCrearConvenio() throws Exception {
+    public void testNuevo() throws Exception {
+        log.debug("Test 'nuevo'");
+                
+        this.mockMvc.perform(get("/" + Constantes.PATH_AFECONVENIO_NUEVO))
+                
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_AFECONVENIO_NUEVO + ".jsp"))
+                .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_AFECONVENIO))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_TIPOSBECAS));
+    }
+    
+    @Test
+    public void testCrear() throws Exception {
         log.debug("Test Crea un Convenio");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, empresa);
+        Usuario usuario = obtieneUsuario();
+        
+        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, usuario.getEmpresa());
         currentSession().save(tipoBeca);
         assertNotNull(tipoBeca.getId());
         Alumno alumno = alDao.obtiene("1080506");
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
         assertNotNull(alumno);
-        AFEConvenio afeConvenio= new AFEConvenio("A",alumno,empresa,tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
-        currentSession().save(afeConvenio);
+        AFEConvenio afeConvenio= new AFEConvenio("A",alumno,usuario.getEmpresa(),tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
+        instance.graba(afeConvenio, usuario);
         assertNotNull(afeConvenio.getId());
         assertEquals(alumno.getMatricula(), "1080506");
-        instance.graba(afeConvenio, usuario);
         
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         
@@ -136,95 +116,52 @@ public class AFEConvenioControllerTest extends BaseControllerTest{
                 .param("importe", "300")
                 .param("numHoras", "320")
                 .param("diezma", "0")
-                .param("afeConvenio.id", afeConvenio.getId().toString())
-                
-                )
-                
-                .andExpect(status().isOk())
-                .andExpect(redirectedUrl(Constantes.PATH_AFECONVENIO_LISTA+"/"))
+                .param("afeConvenio.id", afeConvenio.getId().toString()))
+                .andExpect(redirectedUrl(Constantes.PATH_AFECONVENIO_LISTA))
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message", "afeConvenio.graba.message"));
-        
     }
     
     @Test
-    public void testActualizarConvenio() throws Exception {
-        log.debug("Test Crea un Convenio");
-         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, empresa);
+    public void testActualizar() throws Exception {
+        log.debug("Test Actualiza un Convenio");
+        Usuario usuario = obtieneUsuario();
+        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, usuario.getEmpresa());
         currentSession().save(tipoBeca);
         assertNotNull(tipoBeca.getId());
         Alumno alumno = alDao.obtiene("1080506");
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
         assertNotNull(alumno);
-        AFEConvenio afeConvenio= new AFEConvenio("A",alumno,empresa,tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
-        currentSession().save(afeConvenio);
+        AFEConvenio afeConvenio= new AFEConvenio("A",alumno,usuario.getEmpresa(),tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
+       instance.graba(afeConvenio, usuario);
         assertNotNull(afeConvenio.getId());
         assertEquals(alumno.getMatricula(), "1080506");
-        instance.graba(afeConvenio, usuario);
         
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         
         this.mockMvc.perform(post(Constantes.PATH_AFECONVENIO_GRABA)
                 .param("matricula", "1080506")
-                .param("tipoBeca", tipoBeca.getId().toString())
+                .param("tipoBeca.id", tipoBeca.getId().toString())
                 .param("importe", "300")
                 .param("numHoras", "320")
                 .param("diezma", "0")
-                .param("afeConvenio.id", afeConvenio.getId().toString())
-                
-                )
-                
-                .andExpect(status().isOk())
-                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_AFECONVENIO_NUEVO + ".jsp"));
-                // .andExpect(flash().attributeExists("message"))
-              //  .andExpect(flash().attribute("message", "afeConvenio.creado.label"));
-              
-        
-    
+                .param("afeConvenio.id", afeConvenio.getId().toString()))
+                .andExpect(redirectedUrl(Constantes.PATH_AFECONVENIO_LISTA))
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(flash().attribute("message", "afeConvenio.graba.message"));
     }
     
     @Test
-    public void testMuestraConvenio() throws Exception {
+    public void testVer() throws Exception {
         log.debug("Test mostrar un Convenio");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, empresa);
+        Usuario usuario = obtieneUsuario();
+        
+        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, usuario.getEmpresa());
         currentSession().save(tipoBeca);
         assertNotNull(tipoBeca.getId());
         Alumno alumno = alDao.obtiene("1080506");
         assertNotNull(alumno);
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
         currentSession().save(usuario);
-        AFEConvenio afeConvenio= new AFEConvenio("A",alumno,empresa,tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
+        AFEConvenio afeConvenio= new AFEConvenio("A",alumno,usuario.getEmpresa(),tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
         currentSession().save(afeConvenio);
         assertNotNull(afeConvenio.getId());
         assertEquals(alumno.getMatricula(), "1080506");
@@ -235,39 +172,26 @@ public class AFEConvenioControllerTest extends BaseControllerTest{
     }
     
     @Test
-    public void testEliminaConvenio() throws Exception {
+    public void testElimina() throws Exception {
         log.debug("Test eliminar un Convenio");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, empresa);
+        Usuario usuario = obtieneUsuario();  
+        
+        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, usuario.getEmpresa());
         currentSession().save(tipoBeca);
         assertNotNull(tipoBeca.getId());
         Alumno alumno = alDao.obtiene("1080506");
         assertNotNull(alumno);
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
         currentSession().save(usuario);
-        AFEConvenio afeConvenio= new AFEConvenio("A",alumno,empresa,tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
-        currentSession().save(afeConvenio);
+        AFEConvenio afeConvenio= new AFEConvenio("A",alumno,usuario.getEmpresa(),tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
+        instance.graba(afeConvenio, usuario);
         assertNotNull(afeConvenio.getId());
         assertEquals(alumno.getMatricula(), "1080506");
+        
         this.mockMvc.perform(post(Constantes.PATH_AFECONVENIO_ELIMINA)
                 .param("id", afeConvenio.getId().toString()))
-                .andExpect(status().isOk())
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "afeConvenio.elimina.message"));
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "afeConvenio.elimina.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_AFECONVENIO_LISTA));
     
     }
 }

@@ -13,6 +13,7 @@ import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inscripciones.dao.InstitucionDao;
 import mx.edu.um.mateo.inscripciones.model.Institucion;
+import mx.edu.um.mateo.inscripciones.model.Paquete;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -34,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * @author semdariobarbaamaya
  */
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = GenericWebXmlContextLoader.class, locations = {
     "classpath:mateo.xml",
@@ -42,131 +42,122 @@ import org.springframework.transaction.annotation.Transactional;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class InstitucionControllerTest extends BaseControllerTest{
-    
+public class InstitucionControllerTest extends BaseControllerTest {
+
     @Autowired
     private InstitucionDao instance;
-    
-    
-//    @Test
-//    public void debieraMostrarListaDeInstitucion() throws Exception {
-//        log.debug("Debiera mostrar lista de institucion");
-//        this.mockMvc.perform(
-//                get(Constantes.PATH_INSTITUCION))
-//                .andExpect(status().isOk())
-//                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_INSTITUCION_LISTA + ".jsp"))
-//                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_INSTITUCION))
-//                .andExpect(model().attributeExists("paginacion"))
-//                .andExpect(model().attributeExists("paginas"))
-//                .andExpect(model().attributeExists("pagina"));
-//    }
-    
+
     @Test
-    public void debieraMostrarInstitucion() throws Exception {
-        log.debug("Debiera mostrar institucion");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
+    public void debieraMostrarListaDeInstitucion() throws Exception {
+        log.debug("Debiera mostrar lista de institucion");
+        Usuario usuario = obtieneUsuario();
+        Institucion institucion = null;
+        for (int i = 0; i < 20; i++) {
+            institucion = new Institucion();
+            institucion.setNombre("Nombre-test");
+            institucion.setPorcentaje(new BigDecimal("123"));
+            institucion.setStatus("A");
+            institucion.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+            instance.graba(institucion);
+            assertNotNull(institucion.getId());
+        }
+        this.mockMvc.perform(
+                get(Constantes.PATH_INSTITUCION))
+                .andExpect(status().isOk())
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_INSTITUCION_LISTA + ".jsp"))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_INSTITUCION))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINAS))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINA));
+    }
+
+    /**
+     * Prueba que se muestre el jsp Nuevo
+     */
+    @Test
+    public void testNuevo() throws Exception {
+        log.debug("Test 'nuevo'");
+
+        this.mockMvc.perform(get(Constantes.PATH_INSTITUCION_NUEVO))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_INSTITUCION_NUEVO + ".jsp"))
+                .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_INSTITUCION));
+    }
+
+    /**
+     * Prueba que se muestre el jsp Edita
+     */
+    @Test
+    public void testEdita() throws Exception {
+        log.debug("Test 'edita'");
+        Usuario usuario = obtieneUsuario();
         Institucion institucion = new Institucion();
-        institucion.setOrganizacion(organizacion);
         institucion.setNombre("Nombre-test");
         institucion.setPorcentaje(new BigDecimal("123"));
         institucion.setStatus("A");
-        currentSession().save(institucion);
-        Long id = institucion.getId();
+        institucion.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+        instance.graba(institucion);
+        assertNotNull(institucion.getId());
 
-        this.mockMvc.perform(get("/inscripciones/instituciones/ver/" + id))
+        this.mockMvc.perform(get(Constantes.PATH_INSTITUCION_EDITA + "/" + institucion.getId()))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_INSTITUCION_EDITA + ".jsp"))
+                .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_INSTITUCION))
+                .andExpect(model().attribute(Constantes.ADDATTRIBUTE_INSTITUCION, institucion));
+    }
+
+    @Test
+    public void debieraMostrarInstitucion() throws Exception {
+        log.debug("Debiera mostrar institucion");
+        Usuario usuario = obtieneUsuario();
+        Institucion institucion = new Institucion();
+        institucion.setNombre("Nombre-test");
+        institucion.setPorcentaje(new BigDecimal("123"));
+        institucion.setStatus("A");
+        institucion.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+        instance.graba(institucion);
+        assertNotNull(institucion.getId());
+
+        this.mockMvc.perform(get("/"+Constantes.PATH_INSTITUCION_VER + "/" + institucion.getId()))
                 .andExpect(status().isOk())
-                .andExpect(forwardedUrl("/WEB-INF/jsp/inscripciones/instituciones/ver.jsp"))
-                .andExpect(model().attributeExists("institucion"));
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" +Constantes.PATH_INSTITUCION_VER+".jsp"))
+                .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_INSTITUCION));
 
     }
-    
+
     @Test
     public void debieraCrearInstitucion() throws Exception {
         log.debug("Debiera crear institucion");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
-        
-        assertNotNull(id);
-
+        Usuario usuario = obtieneUsuario();
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
 
         this.mockMvc.perform(post(Constantes.PATH_INSTITUCION_GRABA)
                 .param("nombre", "TEST-1")
-                .param("porcentaje", "test-%")
+                .param("porcentaje", "10")
                 .param("status", "A"))
-                .andExpect(status().isOk());
-        // .andExpect(flash().attributeExists("message"))
-        // .andExpect(flash().attribute("message", "institucion.creada.message"));
-    }
-    
-     @Test
-    public void debieraEliminarInstitucion() throws Exception {
-        log.debug("Debiera eliminar institucion");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Institucion institucion = new Institucion();
-        institucion.setOrganizacion(organizacion);
-        institucion.setNombre("Nombre-test");
-        institucion.setPorcentaje(new BigDecimal("123"));
-        institucion.setStatus("A");
-        currentSession().save(institucion);
-        Long id = institucion.getId();
-        this.mockMvc.perform(post("/inscripciones/instituciones/elimina")
-                .param("id", institucion.getId().toString()))
                 .andExpect(status().isOk())
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "institucion.eliminada.message"));
+                .andExpect(flash().attribute("message", "institucion.creada.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_INSTITUCION + "/"));
     }
 
-      @Test
+    @Test
     public void debieraActualizarInstitucion() throws Exception {
         log.debug("Debiera actualizar institucion");
 
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
-        assertNotNull(id);
-
-        this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
+        Usuario usuario = obtieneUsuario();
 
         Institucion institucion = new Institucion();
-        institucion.setOrganizacion(organizacion);
+        institucion.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         institucion.setNombre("Nombre-test");
         institucion.setPorcentaje(new BigDecimal("123"));
         institucion.setStatus("A");
         instance.graba(institucion);
         assertNotNull(institucion.getId());
         assertEquals("Nombre-test", institucion.getNombre());
-        
+
+        this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         this.mockMvc.perform(post(Constantes.PATH_INSTITUCION_GRABA)
+                .param("version", institucion.getVersion().toString())
+                .param("id", institucion.getId().toString())
                 .param("nombre", "TEST-1")
                 .param("status", "A")
                 .param("porcentaje", "123")
@@ -178,5 +169,24 @@ public class InstitucionControllerTest extends BaseControllerTest{
                 .andExpect(flash().attribute("message", "institucion.actualizada.message"));
 
     }
-    
+
+    @Test
+    public void debieraEliminarInstitucion() throws Exception {
+        log.debug("Debiera eliminar institucion");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        Institucion institucion = new Institucion();
+        institucion.setOrganizacion(organizacion);
+        institucion.setNombre("Nombre-test");
+        institucion.setPorcentaje(new BigDecimal("123"));
+        institucion.setStatus("A");
+        currentSession().save(institucion);
+        Long id = institucion.getId();
+        this.mockMvc.perform(post(Constantes.PATH_INSTITUCION_ELIMINA)
+                .param("id", institucion.getId().toString()))
+                .andExpect(status().isOk())
+                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "institucion.eliminada.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_INSTITUCION));
+    }
 }

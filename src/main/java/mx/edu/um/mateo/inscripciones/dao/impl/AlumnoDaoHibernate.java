@@ -157,6 +157,7 @@ public class AlumnoDaoHibernate extends BaseDao implements AlumnoDao{
         Alumno alumno= new Alumno();
         try {
             conn = dataSource2.getConnection();
+            log.debug("Creando query");
             stmt = conn.prepareStatement("select ap.NOMBRE,ap.CODIGO_PERSONAL, ap.APELLIDO_PATERNO, ap.APELLIDO_MATERNO, aa.TIPO_ALUMNO, aa.MODALIDAD_ID, m.nombre_modalidad ,m.MODALIDAD_ID, m.ENLINEA \n" +
 "from enoc.alum_personal ap, enoc.alum_academico aa, enoc.cat_modalidad m where ap.CODIGO_PERSONAL=aa.CODIGO_PERSONAL and aa.MODALIDAD_ID=m.MODALIDAD_ID \n" +
 "and (ap.CODIGO_PERSONAL =  ? )");

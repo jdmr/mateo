@@ -6,27 +6,18 @@ package mx.edu.um.mateo.inscripciones.dao;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import mx.edu.um.mateo.general.model.Empresa;
-import mx.edu.um.mateo.general.model.Organizacion;
-import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inscripciones.model.AFEConvenio;
 import mx.edu.um.mateo.inscripciones.model.Alumno;
 import mx.edu.um.mateo.inscripciones.model.TiposBecas;
-import mx.edu.um.mateo.inventario.model.Almacen;
-import org.hibernate.Session;
 import static org.junit.Assert.*;
-import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -39,41 +30,28 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class AFEConvenioDaoTest {
-     @Autowired
-    private AFEConvenioDao instance;
-    private static final Logger log = LoggerFactory.getLogger(AFEConvenioDaoTest.class);
+public class AFEConvenioDaoTest extends BaseDaoTest{
     @Autowired
-    private SessionFactory sessionFactory;
-
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
+    private AFEConvenioDao instance;
     @Autowired
     private AlumnoDao alDao;
     
     @Test
-    public void testObtenerListaAFEConvenios() {
-     log.debug("Deberia obtener una lista de Convenios");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, empresa);
+    public void testLista() {
+        Usuario usuario = obtieneUsuario();
+        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, usuario.getEmpresa());
         currentSession().save(tipoBeca);
         assertNotNull(tipoBeca.getId());
         Alumno alumno = alDao.obtiene("1080506");
         assertNotNull(alumno);
         AFEConvenio afeConvenio = null;
         for (int i=0 ; i<20; i++){
-            afeConvenio= new AFEConvenio("A",alumno,empresa,tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
-            currentSession().save(afeConvenio);
+            afeConvenio= new AFEConvenio("A",alumno,usuario.getEmpresa(),tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
+            instance.graba(afeConvenio, usuario);
             assertNotNull(afeConvenio.getId());
         }
         Map<String, Object> params = new HashMap<>();
-        params.put("empresa",empresa.getId());
+        params.put("empresa",usuario.getEmpresa().getId());
         Map <String, Object>  result = instance.lista(params);
         assertNotNull(result.get(Constantes.CONTAINSKEY_AFECONVENIO));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
@@ -86,52 +64,53 @@ public class AFEConvenioDaoTest {
     }
     
     @Test
-    public void testGrabaAFEConvenios() {
-     log.debug("Deberia grabar un Convenio");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, empresa);
+    public void testGraba() {
+        Usuario usuario = obtieneUsuario();   
+        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, usuario.getEmpresa());
         currentSession().save(tipoBeca);
         assertNotNull(tipoBeca.getId());
         Alumno alumno = alDao.obtiene("1080506");
         assertNotNull(alumno);
-        AFEConvenio afeConvenio= new AFEConvenio("A",alumno,empresa,tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
-        currentSession().save(afeConvenio);
+        AFEConvenio afeConvenio= new AFEConvenio("A",alumno,usuario.getEmpresa(),tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
+        instance.graba(afeConvenio, usuario);
         assertNotNull(afeConvenio.getId());
-        assertEquals(alumno.getMatricula(), "1080506");
+        
+        AFEConvenio afeConvenio1 = instance.obtiene(afeConvenio.getId());
+        assertEquals("1080506", afeConvenio1.getAlumno().getMatricula());
     }
     
-    @Test
-    public void testObtieneAFEConvenios() {
-     log.debug("Deberia obtener un Convenio");
-        Rol rol = new Rol(Constantes.ROLE_COL);
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Organizacion organizacion = new Organizacion("codigo", "nombre", "Organizacion");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("codigo", "empresa", "Empresa", "123456789123", organizacion);
-        currentSession().save(empresa);
-        Almacen almacen = new Almacen("test", "alamcen", empresa);
-        currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
-        assertNotNull(id);
-        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10,empresa);
+     @Test
+    public void testActualiza() {
+        Usuario usuario = obtieneUsuario();
+        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, usuario.getEmpresa());
         currentSession().save(tipoBeca);
         assertNotNull(tipoBeca.getId());
         Alumno alumno = alDao.obtiene("1080506");
         assertNotNull(alumno);
-        AFEConvenio afeConvenio= new AFEConvenio("A",alumno,empresa,tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
+        AFEConvenio afeConvenio= new AFEConvenio("A",alumno,usuario.getEmpresa(),tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
         instance.graba(afeConvenio, usuario);
+        assertNotNull(afeConvenio.getId());
+        
+        AFEConvenio afeConvenio1 = instance.obtiene(afeConvenio.getId());
+        assertEquals("1080506", afeConvenio1.getAlumno().getMatricula());
+        
+        afeConvenio1.setImporte(new BigDecimal("3.30"));
+        instance.graba(afeConvenio1, usuario);
+        
+        currentSession().refresh(afeConvenio);
+        assertEquals("3.30", afeConvenio.getImporte().toString());
+    }
+    
+   
+    public void testObtiene() {
+        Usuario usuario = obtieneUsuario();
+        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10,usuario.getEmpresa());
+        currentSession().save(tipoBeca);
+        assertNotNull(tipoBeca.getId());
+        Alumno alumno = alDao.obtiene("1080506");
+        assertNotNull(alumno);
+        AFEConvenio afeConvenio= new AFEConvenio("A",alumno,usuario.getEmpresa(),tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
+        currentSession().save(afeConvenio);
         assertNotNull(afeConvenio.getId());
         
         AFEConvenio afeConvenio1= instance.obtiene(afeConvenio.getId());
@@ -140,25 +119,26 @@ public class AFEConvenioDaoTest {
     }
     
     @Test
-    public void testEliminaAFEConvenios() {
-     log.debug("Deberia Eliminar un Convenio");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, empresa);
+    public void testElimina() {
+        Usuario usuario = obtieneUsuario();
+        TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, usuario.getEmpresa());
         currentSession().save(tipoBeca);
         assertNotNull(tipoBeca.getId());
         Alumno alumno = alDao.obtiene("1080506");
         assertNotNull(alumno);
-        AFEConvenio afeConvenio= new AFEConvenio("A",alumno,empresa,tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
-        currentSession().save(afeConvenio);
-        instance.elimina(afeConvenio.getId());        
-        assertNotNull(afeConvenio.getId());
-        assertEquals(afeConvenio.getMatricula(), "1080506");
+        AFEConvenio afeConvenio= new AFEConvenio("A",alumno,usuario.getEmpresa(),tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
+        instance.graba(afeConvenio, usuario);
         
+        String matricula = instance.obtiene(afeConvenio.getId()).getMatricula();
+        String matricula1 = instance.elimina(afeConvenio.getId());        
+        assertEquals(matricula, matricula1);
+        
+        
+            AFEConvenio afeConvenio1 = instance.obtiene(afeConvenio.getId());
+            
+            if(afeConvenio1 != null){
+            fail("se encontro afeConvenio" + afeConvenio1);
+            }
         
     }
 }
