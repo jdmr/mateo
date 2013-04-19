@@ -198,6 +198,10 @@ public class CategoriaController extends BaseController{
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
+            Map<String, Object> params = new HashMap<>();
+			params.put("empresa", request.getSession()
+					.getAttribute("empresaId"));
+			params.put("reporte", true);
             return Constantes.PATH_CATEGORIA_NUEVO;
         }
         
@@ -207,6 +211,11 @@ public class CategoriaController extends BaseController{
         } catch (ConstraintViolationException e) {
             log.error("No se pudo grabar categoria", e);
             return Constantes.PATH_CATEGORIA_NUEVO;
+        }catch (Exception ex){
+            log.error("Nuevo Falla");
+            log.debug("Nuevo Falla");
+            return Constantes.PATH_CATEGORIA_NUEVO;
+            
         }
         
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "categoria.graba.message");

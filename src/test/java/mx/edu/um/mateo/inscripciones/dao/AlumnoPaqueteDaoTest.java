@@ -14,6 +14,7 @@ import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inscripciones.model.AlumnoPaquete;
 import mx.edu.um.mateo.inscripciones.model.Paquete;
@@ -45,64 +46,19 @@ import org.springframework.orm.ObjectRetrievalFailureException;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class AlumnoPaqueteDaoTest {
+public class AlumnoPaqueteDaoTest  extends BaseDaoTest{
     
     @Autowired
     private AlumnoPaqueteDao instance;
-    private static final Logger log = LoggerFactory.getLogger(AlumnoPaqueteDaoTest.class);
-    @Autowired
-    private SessionFactory sessionFactory;
 
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
-
-    public AlumnoPaqueteDaoTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of getPaquetes method, of class PaqueteDao.
      */
     @Test
-    public void debieraMostrarListaDeAlumnoPaquete() {
+    public void testListaDeAlumnoPaquete() {
 
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        assertNotNull(almacen.getId());
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
-        assertNotNull(id);
+        Usuario usuario= obtieneUsuario();
         Paquete paquete = new Paquete("Test","Test1",new BigDecimal("1110475"), new BigDecimal(12), new BigDecimal(12),"1", usuario.getEmpresa());
         currentSession().save(paquete);
         AlumnoPaquete alumnoPaquete = null;
@@ -117,7 +73,7 @@ public class AlumnoPaqueteDaoTest {
 
         Map<String, Object> params;
         params = new TreeMap<>();
-        params.put("empresa", empresa.getId());
+        params.put("empresa", usuario.getEmpresa().getId());
         Map<String, Object> result = instance.lista(params);
         assertNotNull(result.get(Constantes.CONTAINSKEY_ALUMNOPAQUETES));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
@@ -129,26 +85,8 @@ public class AlumnoPaqueteDaoTest {
      * Test of getPaquete method, of class PaqueteDao.
      */
     @Test
-    public void debieraObtenerAlumnoPaquete() {
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        assertNotNull(almacen.getId());
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
+    public void testObtenerAlumnoPaquete() {
+        Usuario usuario= obtieneUsuario();
         Paquete paquete = new Paquete("Test","Test1",new BigDecimal("1110475"), new BigDecimal(12), new BigDecimal(12),"1", usuario.getEmpresa());
         currentSession().save(paquete);
         AlumnoPaquete alumnoPaquete = new AlumnoPaquete();
@@ -166,35 +104,15 @@ public class AlumnoPaqueteDaoTest {
      * Test of savePaquete method, of class PaqueteDao.
      */
     @Test
-    public void debieraCrearAlumnoPaquete() {
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        assertNotNull(almacen.getId());
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
+    public void testGrabaAlumnoPaquete() {
+        Usuario usuario = obtieneUsuario();
+        AlumnoPaquete alumnoPaquete = new AlumnoPaquete();
         Paquete paquete = new Paquete("Test","Test1",new BigDecimal("1110475"), new BigDecimal(12), new BigDecimal(12),"1", usuario.getEmpresa());
         currentSession().save(paquete);
-        Long id = usuario.getId();
-        assertNotNull(id);
-        AlumnoPaquete alumnoPaquete = new AlumnoPaquete();
         alumnoPaquete.setPaquete(paquete);
         alumnoPaquete.setMatricula("1110475");
         alumnoPaquete.setStatus("A");
-        alumnoPaquete.getPaquete().setEmpresa(empresa);
+        alumnoPaquete.getPaquete().setEmpresa(usuario.getEmpresa());
         instance.graba(alumnoPaquete, usuario);
         assertNotNull(alumnoPaquete.getId());
     }
@@ -204,34 +122,14 @@ public class AlumnoPaqueteDaoTest {
      */
     @Test
     public void debieraEliminarAlumnoPaquete() {
-       Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        assertNotNull(almacen.getId());
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
+        Usuario usuario = obtieneUsuario();  
         Paquete paquete = new Paquete("Test","Test1",new BigDecimal("1110475"), new BigDecimal(12), new BigDecimal(12),"1", usuario.getEmpresa());
         currentSession().save(paquete);
-        Long id = usuario.getId();
-        assertNotNull(id);
         AlumnoPaquete alumnoPaquete = new AlumnoPaquete();
         alumnoPaquete.setPaquete(paquete);
         alumnoPaquete.setMatricula("1110475");
         alumnoPaquete.setStatus("A");
-        alumnoPaquete.getPaquete().setEmpresa(empresa);
+        alumnoPaquete.getPaquete().setEmpresa(usuario.getEmpresa());
         instance.graba(alumnoPaquete, usuario);
         assertNotNull(alumnoPaquete.getId());
         
