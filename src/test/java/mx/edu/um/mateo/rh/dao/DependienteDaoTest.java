@@ -150,7 +150,7 @@ public class DependienteDaoTest {
         dependiente.setEmpleado(empleado);
         dependiente.setNombre("test");
         dependiente.setStatus("A");
-        currentSession().save(dependiente);
+        dependienteDao.graba(dependiente);
         assertNotNull(dependiente.getId());
         Dependiente prueba = dependienteDao.obtiene(dependiente.getId());
         assertEquals(prueba.getNombre(), dependiente.getNombre());
@@ -199,7 +199,7 @@ public class DependienteDaoTest {
         dependiente.setEmpleado(empleado);
         dependiente.setNombre("test");
         dependiente.setStatus("A");
-        currentSession().save(dependiente);
+        dependienteDao.graba(dependiente);
         assertNotNull(dependiente.getId());
 
     }

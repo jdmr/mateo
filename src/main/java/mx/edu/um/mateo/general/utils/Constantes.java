@@ -2452,10 +2452,10 @@ public class Constantes {
     public static final String PATH_SECCION_ELIMINA = "/rh/colegio/elimina";
     public static final String PATH_CATEGORIA = "/rh/categoria";
     public static final String PATH_CATEGORIA_LISTA = "/rh/categoria/lista";
-    public static final String PATH_CATEGORIA_VER = "/rh/categoria/ver";
+    public static final String PATH_CATEGORIA_VER = "rh/categoria/ver";
     public static final String PATH_CATEGORIA_NUEVO = "/rh/categoria/nuevo";
     public static final String PATH_CATEGORIA_EDITA = "/rh/categoria/edita";
-    public static final String PATH_CATEGORIA_CREA = "/rh/categoria/crea";
+    public static final String PATH_CATEGORIA_GRABA = "/rh/categoria/graba";
     public static final String PATH_CATEGORIA_ACTUALIZA = "/rh/categoria/actualiza";
     public static final String PATH_CATEGORIA_ELIMINA = "/rh/categoria/elimina";
     public static final String CATEGORIA_FORM = "categoriaForm";

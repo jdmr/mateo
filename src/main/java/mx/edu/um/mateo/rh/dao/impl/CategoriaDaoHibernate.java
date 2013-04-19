@@ -31,6 +31,7 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.rh.dao.CategoriaDao;
 import mx.edu.um.mateo.rh.model.Categoria;
 import org.hibernate.Criteria;
+import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
@@ -133,10 +134,16 @@ public class CategoriaDaoHibernate extends BaseDao implements CategoriaDao {
         if (usuario != null) {
             categoria.setEmpresa(usuario.getEmpresa());
         }
+        try{
         currentSession().saveOrUpdate(categoria);
-        currentSession().merge(categoria);
-        currentSession().flush();
-
+                   
+        }catch(NonUniqueObjectException e){
+            currentSession().merge(categoria);
+        
+        }finally{
+            currentSession().flush(); 
+        }    
+        
 //        if(categoria.getId() != null){
 //        	Categoria nuevaCategoria = obtiene(categoria.getId());
 //        	if(categoria.hashCode() == nuevaCategoria.hashCode()){
