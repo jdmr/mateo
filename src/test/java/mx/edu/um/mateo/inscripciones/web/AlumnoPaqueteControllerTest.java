@@ -195,6 +195,6 @@ public class AlumnoPaqueteControllerTest extends BaseControllerTest{
                 .param("id", alumnoPaquete.getId().toString()))
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
                 .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "alumnoPaquete.eliminado.message"))
-                .andExpect(redirectedUrl(Constantes.PATH_ALUMNOPAQUETE_LISTA));;
+                .andExpect(redirectedUrl("/"+Constantes.PATH_ALUMNOPAQUETE_LISTA));
    }
 }

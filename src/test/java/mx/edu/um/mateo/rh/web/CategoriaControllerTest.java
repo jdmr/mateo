@@ -182,7 +182,7 @@ public class CategoriaControllerTest extends BaseControllerTest{
         
         this.mockMvc.perform(get("/rh/categoria/ver/" + categoria.getId()))
                 .andExpect(status().isOk())
-                .andExpect(forwardedUrl("/WEB-INF/jsp"+Constantes.PATH_CATEGORIA_VER+".jsp"))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/"+Constantes.PATH_CATEGORIA_VER+".jsp"))
                 .andExpect(model().attributeExists("categoria"));
         
     }
