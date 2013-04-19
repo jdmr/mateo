@@ -187,8 +187,8 @@ public class DependienteController extends BaseController{
     public String nueva(Model modelo) {
         log.debug("Nuevo dependiente");
         Dependiente dependiente = new Dependiente();
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_AFECONVENIO, dependiente);
-        return Constantes.PATH_AFECONVENIO_NUEVO;
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_DEPENDIENTE, dependiente);
+        return Constantes.PATH_DEPENDIENTE_NUEVO;
     }
 
     

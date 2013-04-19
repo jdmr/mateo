@@ -2452,10 +2452,10 @@ public class Constantes {
     public static final String PATH_SECCION_ELIMINA = "/rh/colegio/elimina";
     public static final String PATH_CATEGORIA = "/rh/categoria";
     public static final String PATH_CATEGORIA_LISTA = "/rh/categoria/lista";
-    public static final String PATH_CATEGORIA_VER = "/rh/categoria/ver";
+    public static final String PATH_CATEGORIA_VER = "rh/categoria/ver";
     public static final String PATH_CATEGORIA_NUEVO = "/rh/categoria/nuevo";
     public static final String PATH_CATEGORIA_EDITA = "/rh/categoria/edita";
-    public static final String PATH_CATEGORIA_CREA = "/rh/categoria/crea";
+    public static final String PATH_CATEGORIA_GRABA = "/rh/categoria/graba";
     public static final String PATH_CATEGORIA_ACTUALIZA = "/rh/categoria/actualiza";
     public static final String PATH_CATEGORIA_ELIMINA = "/rh/categoria/elimina";
     public static final String CATEGORIA_FORM = "categoriaForm";
@@ -2508,6 +2508,7 @@ public class Constantes {
     public static final String PATH_INSTITUCION_EDITA = "/inscripciones/instituciones/edita";
     public static final String PATH_INSTITUCION_GRABA = "/inscripciones/instituciones/graba";
     public static final String PATH_INSTITUCION_CREA = "/inscripciones/instituciones/crea";
+    public static final String PATH_INSTITUCION_ELIMINA = "/inscripciones/instituciones/elimina";
     public static final String PATH_TIPOEMPLEADO = "/rh/tipoEmpleado";
     public static final String PATH_TIPOEMPLEADO_LISTA = "/rh/tipoEmpleado/lista";
     public static final String PATH_TIPOEMPLEADO_VER = "/rh/tipoEmpleado/ver";
@@ -2516,6 +2517,7 @@ public class Constantes {
     public static final String PATH_TIPOEMPLEADO_CREA = "/rh/tipoEmpleado/crea";
     public static final String PATH_TIPOEMPLEADO_ACTUALIZA = "/rh/tipoEmpleado/actualiza";
     public static final String PATH_TIPOEMPLEADO_ELIMINA = "/rh/tipoEmpleado/elimina";
+    public static final String ADDATTRIBUTE_INSTITUCION = "institucion";
     /**
      * Valores para los Asociacion Colportor
      */
