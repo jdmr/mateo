@@ -203,7 +203,7 @@ public class PeriodoController extends BaseController{
 
 		
 
-		return "redirect:"+ Constantes.PATH_PERIODOS + "/";
+		return "redirect:"+ Constantes.PATH_PERIODOS;
 	}
         
         @RequestMapping("/edita/{id}")
