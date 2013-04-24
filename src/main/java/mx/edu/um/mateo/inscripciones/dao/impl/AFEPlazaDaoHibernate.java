@@ -55,8 +55,8 @@ public class AFEPlazaDaoHibernate extends BaseDao implements AFEPlazaDao {
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(Paquete.class);
-        Criteria countCriteria = currentSession().createCriteria(Paquete.class);
+        Criteria criteria = currentSession().createCriteria(AFEPlaza.class);
+        Criteria countCriteria = currentSession().createCriteria(AFEPlaza.class);
 
         if (params.containsKey("empresa")) {
             criteria.createCriteria("empresa").add(
