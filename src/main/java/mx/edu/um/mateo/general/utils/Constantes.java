@@ -2803,4 +2803,8 @@ public class Constantes {
     public static final String PATH_DESCUENTO_ELIMINA = "/inscripciones/descuento/elimina";
 
     public static final String ADDATTRIBUTE_DESCUENTO = "descuento"; 
+    /* Valores para TipoColportor
+     *
+     */
+    public static final String CONTAINSKEY_AFEPLAZAS = "afePlazas";
 }
