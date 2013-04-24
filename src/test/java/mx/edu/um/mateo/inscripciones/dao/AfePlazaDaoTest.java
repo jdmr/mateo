@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
 public class AfePlazaDaoTest extends BaseDaoTest {
 
     @Autowired
-    private AfePlazaDao instance;
+    private AFEPlazaDao instance;
 
     /**
      * Prueba la lista de paquetes

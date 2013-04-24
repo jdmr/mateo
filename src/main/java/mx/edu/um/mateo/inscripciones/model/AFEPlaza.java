@@ -41,6 +41,7 @@ public class AFEPlaza {
     private String dias;
     private String requisitos;
     private String email;
+    private String status;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     @Column(name = "fecha")
@@ -169,17 +170,6 @@ public class AFEPlaza {
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
     }
-     
-    
-    @Override
-    public String toString() {
-        return "AfePlaza{" + "id=" + id + ", version=" + version + ", tipoPlaza=" + tipoPlaza
-                + ", clave=" + clave + ", primerIngreso=" + primerIngreso + ", turno=" + turno
-                + ", dias=" + dias + ", requisitos=" + requisitos + ", email=" + email
-                + ", fechaAlta=" + fechaAlta + ", fechaModificacion=" + fechaModificacion
-                + ", usuarioAlta=" + usuarioAlta + ", usuarioModificacion=" + usuarioModificacion
-                + ", empresa=" + empresa + '}';
-    }
 
     public String getObservaciones() {
         return observaciones;
@@ -195,5 +185,22 @@ public class AFEPlaza {
 
     public void setIndustrial(Boolean industrial) {
         this.industrial = industrial;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "AFEPlaza{" + "id=" + id + ", version=" + version + ", tipoPlaza=" + tipoPlaza + ", clave=" + clave
+                + ", observaciones=" + observaciones + ", primerIngreso=" + primerIngreso + ", industrial=" + industrial
+                + ", turno=" + turno + ", dias=" + dias + ", requisitos=" + requisitos + ", email=" + email
+                + ", status=" + status + ", fechaAlta=" + fechaAlta + ", fechaModificacion=" + fechaModificacion
+                + ", usuarioAlta=" + usuarioAlta + ", usuarioModificacion=" + usuarioModificacion + ", empresa=" + empresa + '}';
     }
 }
