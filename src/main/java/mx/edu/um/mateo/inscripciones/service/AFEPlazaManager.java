@@ -43,4 +43,6 @@ public interface AFEPlazaManager {
      * @param id el id de AFE Plaza
      */
     public String elimina(final Long id);
+
+    public void actualiza(final AFEPlaza afePlaza, Usuario usuario);
 }

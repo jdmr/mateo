@@ -199,7 +199,7 @@ public class AFEPlazaControllerTest extends BaseControllerTest {
         this.mockMvc.perform(post(Constantes.PATH_AFEPLAZA_ACTUALIZA)
                 .param("version", afePlaza.getVersion().toString())
                 .param("id", afePlaza.getId().toString())
-                .param("clave", "1110475")
+                .param("clave", "1110476")
                 .param("email", "samuel.9401@gmail.com")
                 .param("primerIngreso", "true")
                 .param("industrial", "true")
@@ -213,7 +213,7 @@ public class AFEPlazaControllerTest extends BaseControllerTest {
 
         currentSession().refresh(afePlaza);
         log.debug("{}", afePlaza);
-        assertEquals("prueba2", afePlaza.getObservaciones());
+        assertEquals("1110476", afePlaza.getClave());
     }
 
     /**

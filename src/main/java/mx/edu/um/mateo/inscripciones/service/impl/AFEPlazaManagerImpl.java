@@ -48,4 +48,9 @@ public class AFEPlazaManagerImpl implements AFEPlazaManager {
         dao.elimina(id);
         return afePlaza.getTipoPlaza();
     }
+
+    @Override
+    public void actualiza(final AFEPlaza afePlaza, Usuario usuario) {
+        dao.actualiza(afePlaza, usuario);
+    }
 }

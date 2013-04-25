@@ -15,7 +15,6 @@ import java.util.Map;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
-import javax.resource.spi.AuthenticationMechanism;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -24,9 +23,6 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inscripciones.model.AFEPlaza;
-import mx.edu.um.mateo.inscripciones.model.CobroCampo;
-import mx.edu.um.mateo.inscripciones.model.Institucion;
-import mx.edu.um.mateo.inscripciones.model.Paquete;
 import mx.edu.um.mateo.inscripciones.service.AFEPlazaManager;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
@@ -195,33 +191,8 @@ public class AFEPlazaController extends BaseController {
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
-            if (afePlaza.getId() == null) {
-                afePlaza.setUsuarioAlta(usuario);
-                afePlaza.setFechaAlta(new Date());
-
-                log.debug("cobro campo {}", afePlaza);
-                manager.crea(afePlaza, usuario);
-            } else {
-                AFEPlaza afePlazaTmp = manager.obtiene(afePlaza.getId());
-                afePlazaTmp.setFechaAlta(afePlaza.getFechaAlta());
-                Usuario usuarioAlta = usuarioDao.obtiene(afePlaza.getUsuarioAlta().getId());
-                afePlazaTmp.setUsuarioAlta(usuarioAlta);
-                afePlazaTmp.setUsuarioModificacion(usuario);
-                afePlazaTmp.setStatus(afePlaza.getStatus());
-                afePlazaTmp.setFechaModificacion(new Date());
-                afePlazaTmp.setClave(afePlaza.getClave());
-                afePlazaTmp.setDias(afePlaza.getDias());
-                afePlazaTmp.setEmail(afePlaza.getEmail());
-                afePlazaTmp.setPrimerIngreso(afePlaza.getPrimerIngreso());
-                afePlazaTmp.setRequisitos(afePlaza.getRequisitos());
-                afePlazaTmp.setTipoPlaza(afePlaza.getTipoPlaza());
-                afePlazaTmp.setTurno(afePlaza.getTurno());
-                afePlazaTmp.setIndustrial(afePlaza.getIndustrial());
-                afePlazaTmp.setObservaciones(afePlaza.getObservaciones());
-                log.debug("cobro campo {}", afePlaza);
-                manager.crea(afePlazaTmp, usuario);
-            }
-//if (cobroCampo.getId() != null)
+            log.debug("plaza {}", afePlaza);
+            manager.crea(afePlaza, usuario);
 
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el cobro a campo", e);
@@ -254,7 +225,7 @@ public class AFEPlazaController extends BaseController {
         try {
             Usuario usuario = ambiente.obtieneUsuario();
             log.debug("Plaza {}", afePlaza);
-            manager.crea(afePlaza, usuario);
+            manager.actualiza(afePlaza, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la Plaza", e);
             return Constantes.PATH_AFEPLAZA_NUEVO;
@@ -341,7 +312,7 @@ public class AFEPlazaController extends BaseController {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(ambiente.obtieneUsuario().getUsername());
-        String titulo = messageSource.getMessage("paquete.lista.label", null, request.getLocale());
+        String titulo = messageSource.getMessage("afePlaza.lista.label", null, request.getLocale());
         helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
         helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
         helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
