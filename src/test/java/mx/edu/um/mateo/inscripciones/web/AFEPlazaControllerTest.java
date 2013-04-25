@@ -165,8 +165,8 @@ public class AFEPlazaControllerTest extends BaseControllerTest {
                 .param("tipoPlaza", "ayudanteGeneral")
                 .param("turno", "matutino"))
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "paquete.graba.message"))
-                .andExpect(redirectedUrl(Constantes.PATH_AFEPLAZA_LISTA));
+                .andExpect(flash().attribute("message", "afePlaza.graba.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_AFEPLAZA_LISTA + "/"));
     }
 
     /**
@@ -208,8 +208,8 @@ public class AFEPlazaControllerTest extends BaseControllerTest {
                 .param("tipoPlaza", "ayudanteGeneral")
                 .param("turno", "matutino"))
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "paquete.graba.message"))
-                .andExpect(redirectedUrl(Constantes.PATH_PAQUETE_LISTA));
+                .andExpect(flash().attribute("message", "afePlaza.graba.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_AFEPLAZA_LISTA));
 
         currentSession().refresh(afePlaza);
         log.debug("{}", afePlaza);
@@ -246,7 +246,7 @@ public class AFEPlazaControllerTest extends BaseControllerTest {
         this.mockMvc.perform(post(Constantes.PATH_AFEPLAZA_ELIMINA)
                 .param("id", afePlaza.getId().toString()))
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "paquete.elimina.message"))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "afePlaza.elimina.message"))
                 .andExpect(redirectedUrl(Constantes.PATH_AFEPLAZA_LISTA));
     }
 }
