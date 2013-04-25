@@ -119,8 +119,8 @@ public class PeriodoDaoHibernate extends BaseDao implements PeriodoDao{
     public String elimina(Long id) {
         Periodo periodo = obtiene(id);
         String descripcion = periodo.getDescripcion();
-        currentSession().delete(periodo);
-        currentSession().flush();
+        periodo.setStatus("I");
+        actualiza(periodo);
         return descripcion;
     }
     

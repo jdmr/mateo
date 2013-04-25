@@ -2415,6 +2415,7 @@ public class Constantes {
     public static final String ADDATTRIBUTE_CATEGORIA = "categoria";
     public static final String ADDATTRIBUTE_NACIONALIDAD = "nacionalidad";
     public static final String ADDATTRIBUTE_PERDED = "perded";
+    
     /*
      * Valores para el los path's para las clases
      */
@@ -2495,11 +2496,14 @@ public class Constantes {
     public static final String CONTAINSKEY_PERIODOS = "periodos";
     public static final String PATH_PERIODOS = "/inscripciones/periodos";
     public static final String PATH_PERIODOS_LISTA = "inscripciones/periodos/lista";
-    public static final String PATH_PERIODOS_VER = "inscripciones/periodos/ver";
+    public static final String PATH_PERIODOS_VER = "/inscripciones/periodos/ver";
     public static final String PATH_PERIODOS_NUEVO = "/inscripciones/periodos/nuevo";
     public static final String PATH_PERIODOS_EDITA = "/inscripciones/periodos/edita";
+    public static final String PATH_PERIODOS_ELIMINA = "/inscripciones/periodos/elimina";
     public static final String PATH_PERIODOS_GRABA = "/inscripciones/periodos/graba";
     public static final String PATH_PERIODOS_CREA = "/inscripciones/periodos/crea";
+    public static final String ADDATTRIBUTE_PERIODOS = "periodo";
+     
     public static final String CONTAINSKEY_INSTITUCION = "instituciones";
     public static final String PATH_INSTITUCION = "/inscripciones/instituciones";
     public static final String PATH_INSTITUCION_LISTA = "inscripciones/instituciones/lista";
