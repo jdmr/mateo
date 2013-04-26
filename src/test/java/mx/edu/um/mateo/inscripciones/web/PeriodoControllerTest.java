@@ -2,21 +2,13 @@ package mx.edu.um.mateo.inscripciones.web;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import mx.edu.um.mateo.general.model.Empresa;
-import mx.edu.um.mateo.general.model.Organizacion;
-import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.inscripciones.dao.PeriodoDao;
 import mx.edu.um.mateo.inscripciones.model.Periodo;
-import mx.edu.um.mateo.inventario.model.Almacen;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -38,13 +30,25 @@ import static org.junit.Assert.assertEquals;
 })
 @Transactional
 public class PeriodoControllerTest extends BaseControllerTest {
-   
-    @Autowired
-    private PeriodoDao instance;
-    
+
     @Test
-    public void debieraMostrarListaDePeriodo() throws Exception {
-        log.debug("Debiera mostrar lista de periodo");
+    public void testLista() throws Exception {
+        log.debug("Debiera mostrar lista de periodos");
+        Usuario usuario = obtieneUsuario();
+        
+        Periodo periodo = null;
+        for(int i=0; i<20; i++){
+            periodo = new Periodo();
+            periodo.setDescripcion("TEST-1");
+            periodo.setStatus("A");
+            periodo.setClave("clave");
+            periodo.setFechaInicial(new Date());
+            periodo.setFechaFinal(new Date());
+            periodo.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+            currentSession().save(periodo);
+            assertNotNull(periodo.getId());
+        }
+        
         this.mockMvc.perform(
                 get(Constantes.PATH_PERIODOS))
                 .andExpect(status().isOk())
@@ -56,43 +60,29 @@ public class PeriodoControllerTest extends BaseControllerTest {
     }
 
     @Test
-    public void debieraMostrarPeriodo() throws Exception {
-        log.debug("Debiera mostrar periodo");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Periodo periodo = new Periodo("test", "A", "clave", new Date(), new Date());
-        periodo.setOrganizacion(organizacion);
+    public void testVer() throws Exception {
+        log.debug("Debiera mostrar periodos");
+        Usuario usuario = obtieneUsuario();
+        Periodo periodo = new Periodo();
+        periodo.setDescripcion("TEST-1");
+        periodo.setStatus("A");
+        periodo.setClave("clave");
+        periodo.setFechaInicial(new Date());
+        periodo.setFechaFinal(new Date());
+        periodo.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         currentSession().save(periodo);
-        Long id = periodo.getId();
+        assertNotNull(periodo.getId());
 
-        this.mockMvc.perform(get("/inscripciones/periodos/ver/" + id))
-                .andExpect(status().isOk())
-                .andExpect(forwardedUrl("/WEB-INF/jsp/inscripciones/periodos/ver.jsp"))
-                .andExpect(model().attributeExists("periodo"));
+        this.mockMvc.perform(get(Constantes.PATH_PERIODOS_VER + "/" + periodo.getId()))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_PERIODOS_VER + ".jsp"))
+                .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_PERIODOS));
 
     }
 
     @Test
-    public void debieraCrearPeriodo() throws Exception {
+    public void testGraba() throws Exception {
         log.debug("Debiera crear periodo");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
-        assertNotNull(id);
-
+        Usuario usuario = obtieneUsuario();
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
 
         this.mockMvc.perform(post(Constantes.PATH_PERIODOS_GRABA)
@@ -101,57 +91,50 @@ public class PeriodoControllerTest extends BaseControllerTest {
                 .param("status", "A")
                 .param("fechaInicial", "12/12/12")
                 .param("fechaFinal", "12/12/12"))
-                .andExpect(status().isOk())
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "periodo.creado.message"));
+                .andExpect(flash().attribute("message", "periodo.creado.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_PERIODOS));
     }
 
     @Test
-    public void debieraeliminarPeriodo() throws Exception {
+    public void testEliminar() throws Exception {
         log.debug("Debiera eliminar periodo");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Periodo periodo = new Periodo("test", "A", "clave", new Date(), new Date());
-        periodo.setOrganizacion(organizacion);
+        Usuario usuario = obtieneUsuario();
+        Periodo periodo = new Periodo();
+        periodo.setDescripcion("TEST-1");
+        periodo.setStatus("A");
+        periodo.setClave("clave");
+        periodo.setFechaInicial(new Date());
+        periodo.setFechaFinal(new Date());
+        periodo.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         currentSession().save(periodo);
-        Long id = periodo.getId();
-        this.mockMvc.perform(post("/inscripciones/periodos/elimina")
+        assertNotNull(periodo);
+        
+        this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
+        
+        this.mockMvc.perform(post(Constantes.PATH_PERIODOS_ELIMINA)
                 .param("id", periodo.getId().toString()))
-                .andExpect(status().isOk())
-                .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "periodo.eliminado.message"));
+                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "periodo.eliminado.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_PERIODOS));
     }
 
     @Test
-    public void debieraActualizarPeriodo() throws Exception {
+    public void testActualizar() throws Exception {
         log.debug("Debiera actualizar periodo");
-
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
-        Long id = usuario.getId();
-        assertNotNull(id);
+        Usuario usuario = obtieneUsuario();
+        
+        Periodo periodo = new Periodo();
+        periodo.setDescripcion("TEST-1");
+        periodo.setStatus("A");
+        periodo.setClave("clave");
+        periodo.setFechaInicial(new Date());
+        periodo.setFechaFinal(new Date());
+        periodo.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+        currentSession().save(periodo);
+        assertNotNull(periodo);
 
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
-
-        Periodo periodo = new Periodo("test", "A", "clave", new Date(), new Date());
-        periodo.setOrganizacion(organizacion);
-        instance.graba(periodo);
-        assertNotNull(periodo);
-        assertNotNull(periodo.getId());
-        assertEquals("test", periodo.getDescripcion());
 
         this.mockMvc.perform(post(Constantes.PATH_PERIODOS_GRABA)
                 .param("descripcion", "TEST-1")
@@ -161,11 +144,13 @@ public class PeriodoControllerTest extends BaseControllerTest {
                 .param("fechaFinal", "12/12/12")
                 .param("id", periodo.getId().toString())
                 .param("version", periodo.getVersion().toString()))
-                .andExpect(status().isOk())
-                .andExpect(redirectedUrl(Constantes.PATH_PERIODOS + "/"))
+                .andExpect(redirectedUrl(Constantes.PATH_PERIODOS))
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message", "periodo.actualizado.message"));
-
+        
+        currentSession().refresh(periodo);
+        log.debug("{}",periodo);
+        assertEquals("TEST-1", periodo.getDescripcion());
     }
 
 }

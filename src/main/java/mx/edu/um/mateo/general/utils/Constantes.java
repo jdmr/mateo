@@ -2416,6 +2416,7 @@ public class Constantes {
     public static final String ADDATTRIBUTE_CATEGORIA = "categoria";
     public static final String ADDATTRIBUTE_NACIONALIDAD = "nacionalidad";
     public static final String ADDATTRIBUTE_PERDED = "perded";
+    
     /*
      * Valores para el los path's para las clases
      */
@@ -2496,11 +2497,14 @@ public class Constantes {
     public static final String CONTAINSKEY_PERIODOS = "periodos";
     public static final String PATH_PERIODOS = "/inscripciones/periodos";
     public static final String PATH_PERIODOS_LISTA = "inscripciones/periodos/lista";
-    public static final String PATH_PERIODOS_VER = "inscripciones/periodos/ver";
+    public static final String PATH_PERIODOS_VER = "/inscripciones/periodos/ver";
     public static final String PATH_PERIODOS_NUEVO = "/inscripciones/periodos/nuevo";
     public static final String PATH_PERIODOS_EDITA = "/inscripciones/periodos/edita";
+    public static final String PATH_PERIODOS_ELIMINA = "/inscripciones/periodos/elimina";
     public static final String PATH_PERIODOS_GRABA = "/inscripciones/periodos/graba";
     public static final String PATH_PERIODOS_CREA = "/inscripciones/periodos/crea";
+    public static final String ADDATTRIBUTE_PERIODOS = "periodo";
+     
     public static final String CONTAINSKEY_INSTITUCION = "instituciones";
     public static final String PATH_INSTITUCION = "/inscripciones/instituciones";
     public static final String PATH_INSTITUCION_LISTA = "inscripciones/instituciones/lista";
@@ -2805,6 +2809,7 @@ public class Constantes {
 
     public static final String ADDATTRIBUTE_DESCUENTO = "descuento"; 
     
+
     
     /**
      * Valores para Tipo Descuento
@@ -2819,4 +2824,17 @@ public class Constantes {
     public static final String PATH_TIPODESCUENTO_ACTUALIZA = "/inscripciones/tipoDescuento/actualiza";
     public static final String PATH_TIPODESCUENTO_ELIMINA = "/inscripciones/tipoDescuento/elimina";
     public static final String ADDATTRIBUTE_TIPODESCUENTO = "tipoDescuento";
+
+    /*
+     * Ordenes de pago
+     */
+    public static final String CONTAINSKEY_ORDENES_PAGO = "ordenesPago";
+    public static final String PATH_ORDENES_PAGO = "/contabilidad/ordenPago";
+    public static final String PATH_ORDENES_PAGO_LISTA = "/contabilidad/ordenPago/lista";
+    public static final String PATH_ORDENES_PAGO_VER = "/contabilidad/ordenPago/ver";
+    public static final String PATH_ORDENES_PAGO_NUEVO = "/contabilidad/ordenPago/nuevo";
+    public static final String PATH_ORDENES_PAGO_EDITA = "/contabilidad/ordenPago/edita";
+    public static final String PATH_ORDENES_PAGO_GRABA = "/contabilidad/ordenPago/graba";
+    public static final String PATH_ORDENES_PAGO_ACTUALIZA = "/contabilidad/ordenPago/actualiza";
+    public static final String PATH_ORDENES_PAGO_ELIMINA = "/contabilidad/ordenPago/elimina";
 }

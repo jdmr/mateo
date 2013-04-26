@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Organizacion;
+import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inscripciones.model.Periodo;
 import org.hibernate.Session;
@@ -27,78 +29,87 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class PeriodoDaoTest {
+public class PeriodoDaoTest extends BaseDaoTest {
     
      private static final Logger log = LoggerFactory.getLogger(PeriodoDaoTest.class);
      @Autowired
      private PeriodoDao instance;
-     @Autowired
-     private SessionFactory sessionFactory;
-     
-     private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
      
     @SuppressWarnings("unchecked") 
     @Test
-    public void debieraMostrarListaDePeriodo() {
-        log.debug("Debiera mostrar lista de periodo");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
+    public void testLista() {
+        Usuario usuario = obtieneUsuario();
+        Periodo periodo = null;
         for (int i = 0; i < 20; i++) {
-            Periodo periodo = new Periodo("test" + i, "A" , "clave", new Date(), new Date());
-            periodo.setOrganizacion(organizacion);
+            periodo = new Periodo("test" + i, "A" , "clave", new Date(), new Date());
+            periodo.setOrganizacion(usuario.getEmpresa().getOrganizacion());
             instance.graba(periodo);
         }
+        
         Map<String, Object> params = new HashMap<>();
-     
+        params.put("empresa", usuario.getEmpresa().getId());
         Map<String, Object> result = instance.lista(params);
         assertNotNull(result.get(Constantes.CONTAINSKEY_PERIODOS));
-        assertNotNull(result.get("cantidad"));
+        assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
         assertEquals(10, ((List<Periodo>) result.get(Constantes.CONTAINSKEY_PERIODOS)).size());
-        assertEquals(20, ((Long) result.get("cantidad")).intValue());
+        assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
     
     @Test
-    public void debieraObtenerPeriodo() {
-        log.debug("Debiera obtener Periodo");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
+    public void testObtiene() {
+        Usuario usuario = obtieneUsuario();
+        
         Periodo periodo = new Periodo("test", "A", "clave", new Date(), new Date());
-        periodo.setOrganizacion(organizacion);
+        periodo.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+        
         currentSession().save(periodo);
-        Long id = periodo.getId();
-        Periodo result = instance.obtiene(id);
-        assertEquals("test", result.getDescripcion());
+        assertNotNull(periodo.getId());
+        
+        Periodo periodo1 = instance.obtiene(periodo.getId());
+        assertEquals(periodo.getDescripcion(), periodo1.getDescripcion());
     }
     
      @Test
-    public void debieraCrearPeriodo() {
-        log.debug("Debiera crear periodo");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
+    public void testCrear() {
+        Usuario usuario = obtieneUsuario();  
+        
         Periodo periodo = new Periodo("test", "A", "clave", new Date(), new Date());
-        periodo.setOrganizacion(organizacion);
+        periodo.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         instance.graba(periodo);
         assertNotNull(periodo.getId());
-        assertEquals("test", periodo.getDescripcion());
+        
+        Periodo periodo1 = instance.obtiene(periodo.getId());
+        assertEquals(periodo.getDescripcion(), periodo1.getDescripcion());
     }
      
       @Test
-    public void debieraActualizarPeriodo() {
-        log.debug("Debiera actualizar periodo");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
+    public void testActualiza() {
+        Usuario usuario = obtieneUsuario();
         Periodo periodo = new Periodo("test", "A", "clave", new Date(), new Date());
-        periodo.setOrganizacion(organizacion);
+        periodo.setOrganizacion(usuario.getEmpresa().getOrganizacion());
         instance.graba(periodo);
         assertNotNull(periodo.getId());
 
-        periodo.setDescripcion("PRUEBA");
-        instance.graba(periodo);
-
         Periodo prueba = instance.obtiene(periodo.getId());
-        assertNotNull(prueba);
-        assertEquals("PRUEBA", prueba.getDescripcion());
-    }   
+        assertNotNull(periodo.getDescripcion(), prueba.getDescripcion());
+        
+        prueba.setDescripcion("PRUEBA");
+        instance.actualiza(prueba);
+        
+        currentSession().refresh(periodo);
+        assertEquals("PRUEBA", periodo.getDescripcion());
+    }
+      
+      @Test
+       public void testElimina() {
+          Usuario usuario = obtieneUsuario();
+          Periodo periodo = new Periodo("test", "A", "clave", new Date(), new Date());
+          periodo.setOrganizacion(usuario.getEmpresa().getOrganizacion());
+          currentSession().save(periodo);
+          instance.elimina(periodo.getId());
+          
+          Periodo periodo1 = instance.obtiene(periodo.getId());
+          
+          assertEquals("I", periodo1.getStatus());
+      }
 }
