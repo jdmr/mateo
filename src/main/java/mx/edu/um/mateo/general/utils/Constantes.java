@@ -2403,6 +2403,7 @@ public class Constantes {
     public static final String CONTAINSKEY_PAQUETES = "paquetes";
     public static final String CONTAINSKEY_ALUMNOPAQUETES = "alumnoPaquetes";
     public static final String CONTAINSKEY_DESCUENTOS = "descuentos";
+    public static final String CONTAINSKEY_TIPODESCUENTOS = "tipoDescuentos";
     /**
      * Valores para el los addAttribute para las clases
      */
@@ -2803,4 +2804,19 @@ public class Constantes {
     public static final String PATH_DESCUENTO_ELIMINA = "/inscripciones/descuento/elimina";
 
     public static final String ADDATTRIBUTE_DESCUENTO = "descuento"; 
+    
+    
+    /**
+     * Valores para Tipo Descuento
+     *
+     */
+    public static final String PATH_TIPODESCUENTO = "/inscripciones/tipoDescuento";
+    public static final String PATH_TIPODESCUENTO_LISTA = "/inscripciones/tipoDescuento/lista";
+    public static final String PATH_TIPODESCUENTO_VER = "/inscripciones/tipoDescuento/ver";
+    public static final String PATH_TIPODESCUENTO_NUEVO = "/inscripciones/tipoDescuento/nuevo";
+    public static final String PATH_TIPODESCUENTO_EDITA = "/inscripciones/tipoDescuento/edita";
+    public static final String PATH_TIPODESCUENTO_GRABA = "/inscripciones/tipoDescuento/graba";
+    public static final String PATH_TIPODESCUENTO_ACTUALIZA = "/inscripciones/tipoDescuento/actualiza";
+    public static final String PATH_TIPODESCUENTO_ELIMINA = "/inscripciones/tipoDescuento/elimina";
+    public static final String ADDATTRIBUTE_TIPODESCUENTO = "tipoDescuento";
 }
