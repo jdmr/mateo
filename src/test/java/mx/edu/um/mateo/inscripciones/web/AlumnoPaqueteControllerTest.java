@@ -18,6 +18,7 @@ import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inscripciones.model.AlumnoPaquete;
 import mx.edu.um.mateo.inscripciones.model.Paquete;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +30,7 @@ import static org.springframework.test.web.server.request.MockMvcRequestBuilders
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.flash;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.server.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.status;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,8 +48,22 @@ import org.springframework.transaction.annotation.Transactional;
 public class AlumnoPaqueteControllerTest extends BaseControllerTest{
     
     @Test
-    public void debieraMostrarListaDeAlumnoPaquete() throws Exception {
-        log.debug("Debiera mostrar lista de AlumnoPaquete");
+    public void testListaDeAlumnoPaquete() throws Exception {
+        log.debug("test mostrar lista de AlumnoPaquete");
+        Usuario usuario = obtieneUsuario();
+        Paquete paquete = null;
+        for (int i = 0; i < 20; i++) {
+            paquete = new Paquete();
+            paquete.setAcfe("a");
+            paquete.setDescripcion("test");
+            paquete.setEmpresa(usuario.getEmpresa());
+            paquete.setEnsenanza(new BigDecimal("80"));
+            paquete.setInternado(new BigDecimal("80"));
+            paquete.setMatricula(new BigDecimal("80"));
+            paquete.setNombre("test");
+            currentSession().save(paquete);
+            assertNotNull(paquete.getId());
+        }
         this.mockMvc.perform(
                 get(Constantes.PATH_ALUMNOPAQUETE))
                 .andExpect(status().isOk())
@@ -59,27 +75,8 @@ public class AlumnoPaqueteControllerTest extends BaseControllerTest{
     }
     
     @Test
-    public void debieraMostrarJspEditaDeAlumnoPaquete() throws Exception {
-        log.debug("Debiera mostrar JspEdita de AlumnoPaquete");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        assertNotNull(almacen.getId());
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
+    public void testEditaAlumnoPaquete() throws Exception {
+        Usuario usuario = obtieneUsuario();
         Paquete paquete = new Paquete("Test","Test1",new BigDecimal("1110475"), new BigDecimal(12), new BigDecimal(12),"1", usuario.getEmpresa());
         currentSession().save(paquete);
         AlumnoPaquete alumnoPaquete = new AlumnoPaquete();
@@ -98,8 +95,8 @@ public class AlumnoPaqueteControllerTest extends BaseControllerTest{
     }
     
     @Test
-    public void debieraMostrarJspNuevoDeAlumnoPaquete() throws Exception {
-        log.debug("Debiera mostrar JspNuevo de AlumnoPaquete");
+    public void testNuevoDeAlumnoPaquete() throws Exception {
+        log.debug("test Nuevo de AlumnoPaquete");
         this.mockMvc.perform(
                 get(Constantes.PATH_ALUMNOPAQUETE_NUEVO))
                 .andExpect(status().isOk())
@@ -109,27 +106,9 @@ public class AlumnoPaqueteControllerTest extends BaseControllerTest{
     }
     
      @Test
-    public void debieraMostrarAlumnoPaquete() throws Exception {
-        log.debug("Debiera mostrar alumnoPaquete");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        assertNotNull(almacen.getId());
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno", "apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
+    public void testVerAlumnoPaquete() throws Exception {
+        log.debug("test ver alumnoPaquete");
+        Usuario usuario = obtieneUsuario();
         Paquete paquete = new Paquete("Test","Test1",new BigDecimal("1110475"), new BigDecimal(12), new BigDecimal(12),"1", usuario.getEmpresa());
         currentSession().save(paquete);
         AlumnoPaquete alumnoPaquete = new AlumnoPaquete();
@@ -148,24 +127,8 @@ public class AlumnoPaqueteControllerTest extends BaseControllerTest{
     }
     
     @Test
-    public void debieraCrearAlumnoPaquete() throws Exception {
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
+    public void testCreaAlumnoPaquete() throws Exception {
+        Usuario usuario = obtieneUsuario();
         Paquete paquete = new Paquete("Test","Test1",new BigDecimal("1110475"), new BigDecimal(12), new BigDecimal(12),"1", usuario.getEmpresa());
         currentSession().save(paquete);
         AlumnoPaquete alumnoPaquete = new AlumnoPaquete();
@@ -187,24 +150,8 @@ public class AlumnoPaqueteControllerTest extends BaseControllerTest{
     }
     
      @Test
-     public void debieraModificarAlumnoPaquete() throws Exception {
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
+     public void testActualizaAlumnoPaquete() throws Exception {
+        Usuario usuario = obtieneUsuario();
         Paquete paquete = new Paquete("Test","Test1",new BigDecimal("1110475"), new BigDecimal(12), new BigDecimal(12),"1", usuario.getEmpresa());
         currentSession().save(paquete);
         AlumnoPaquete alumnoPaquete = new AlumnoPaquete();
@@ -225,30 +172,16 @@ public class AlumnoPaqueteControllerTest extends BaseControllerTest{
                 .andExpect(status().isOk())
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message", "alumnoPaquete.actualizado.message"));
+        
+        currentSession().refresh(alumnoPaquete);
+        log.debug("{}",alumnoPaquete);
+        assertEquals("1090687", alumnoPaquete.getMatricula());
     }
     
      @Test
-    public void debieraEliminarAlumnoPaquete() throws Exception {
-        log.debug("Debiera eliminar alumnoPaquete");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        Rol rol = new Rol("ROLE_TEST");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        assertNotNull(almacen.getId());
-        Usuario usuario = new Usuario("bugs@um.edu.mx", "apPaterno","apMaterno", "TEST-01", "TEST-01");
-        usuario.setEmpresa(empresa);
-        usuario.setAlmacen(almacen);
-        usuario.setRoles(roles);
-        currentSession().save(usuario);
+    public void testEliminarAlumnoPaquete() throws Exception {
+        log.debug("test eliminar alumnoPaquete");
+       Usuario usuario = obtieneUsuario();
         Paquete paquete = new Paquete("Test","Test1",new BigDecimal("1110475"), new BigDecimal(12), new BigDecimal(12),"1", usuario.getEmpresa());
         currentSession().save(paquete);
         AlumnoPaquete alumnoPaquete = new AlumnoPaquete();
@@ -260,8 +193,8 @@ public class AlumnoPaqueteControllerTest extends BaseControllerTest{
 
         this.mockMvc.perform(post(Constantes.PATH_ALUMNOPAQUETE_ELIMINA)
                 .param("id", alumnoPaquete.getId().toString()))
-                .andExpect(status().isOk())
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "alumnoPaquete.eliminado.message"));
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "alumnoPaquete.eliminado.message"))
+                .andExpect(redirectedUrl("/"+Constantes.PATH_ALUMNOPAQUETE_LISTA));
    }
 }

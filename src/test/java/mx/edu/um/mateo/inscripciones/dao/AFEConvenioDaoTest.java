@@ -19,7 +19,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,7 +101,7 @@ public class AFEConvenioDaoTest extends BaseDaoTest{
         assertEquals("3.30", afeConvenio.getImporte().toString());
     }
     
-    @Test
+   
     public void testObtiene() {
         Usuario usuario = obtieneUsuario();
         TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10,usuario.getEmpresa());
