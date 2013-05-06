@@ -33,7 +33,7 @@
 
                     <s:bind path="afePlaza.tipoPlaza">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="tipoPlaza">
+                                <label for="tipoPlaza">
                                 <s:message code="tipoPlaza.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -43,8 +43,8 @@
                     </s:bind>
                     <s:bind path="afePlaza.clave">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="clave">
-                                <s:message code="clave.label" />
+                                <label for="clave">
+                                <s:message code="afePlaza.clave.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="clave" maxlength="50" required="true" />
@@ -53,7 +53,7 @@
                     </s:bind>
                     <s:bind path="afePlaza.observaciones">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="observaciones">
+                                <label for="observaciones">
                                 <s:message code="observaciones.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -63,7 +63,7 @@
                     </s:bind>
                     <s:bind path="afePlaza.primerIngreso">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="primerIngreso">
+                                <label for="primerIngreso">
                                 <s:message code="primerIngreso.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -73,7 +73,7 @@
                     </s:bind>
                     <s:bind path="afePlaza.industrial">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="industrial">
+                                <label for="industrial">
                                 <s:message code="industrial.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -83,7 +83,7 @@
                     </s:bind>
                     <s:bind path="afePlaza.turno">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="turno">
+                                <label for="turno">
                                 <s:message code="turno.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -93,7 +93,7 @@
                     </s:bind>
                     <s:bind path="afePlaza.dias">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="dias">
+                                <label for="dias">
                                 <s:message code="dias.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -103,7 +103,7 @@
                     </s:bind>
                     <s:bind path="afePlaza.requisitos">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="requisitos">
+                                <label for="requisitos">
                                 <s:message code="requisitos.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -113,7 +113,7 @@
                     </s:bind>
                     <s:bind path="afePlaza.email">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="email">
+                                <label for="email">
                                 <s:message code="email.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -123,7 +123,7 @@
                     </s:bind>
                     <s:bind path="afePlaza.status">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="status">
+                                <label for="status">
                                 <s:message code="status.label" />
                                 <span class="required-indicator">*</span>
                             </label>

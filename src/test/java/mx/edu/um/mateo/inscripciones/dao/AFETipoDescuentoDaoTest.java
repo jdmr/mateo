@@ -5,12 +5,14 @@
 package mx.edu.um.mateo.inscripciones.dao;
 
 import java.util.HashMap;
-import static org.junit.Assert.*;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseDaoTest;
-import mx.edu.um.mateo.inscripciones.model.Descuento;
+import mx.edu.um.mateo.inscripciones.model.AFETipoDescuento;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,28 +27,22 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class DescuentoDaoTest extends BaseDaoTest{
+public class AFETipoDescuentoDaoTest extends BaseDaoTest{
     @Autowired
-    private DescuentoDao instance;
-    
+    private AFETipoDescuentoDao instance;
     
     @Test
      public void testObtenerListaDeDescuentos() {     
-        log.debug("Muestra lista de descuentos");
+        log.debug("Muestra lista de tipos de descuentos");
             Usuario usuario= obtieneUsuario();
-            Descuento descuento=null;
+            AFETipoDescuento afeTipoDescuento=null;
             Organizacion organizacion=usuario.getEmpresa().getOrganizacion();
                 for(int i=0; i<5; i++){         
             
             
-                descuento= new Descuento();
-                descuento.setDescripcion("Descuento"+i);
-                descuento.setStatus("A");
-                descuento.setContabiliza("S");
-                
-                
-                instance.graba(descuento, organizacion);
-                assertNotNull(descuento.getId());
+                afeTipoDescuento= new AFETipoDescuento("Descuento","A", organizacion);
+                instance.graba(afeTipoDescuento, organizacion);
+                assertNotNull(afeTipoDescuento.getId());
         }
          Map<String, Object> params= new HashMap<>();
          params.put("organizacion",organizacion.getId());
@@ -57,15 +53,12 @@ public class DescuentoDaoTest extends BaseDaoTest{
     @Test
     public void testObtiene() {
         Usuario usuario= obtieneUsuario();
-        Descuento descuento=new Descuento();
         Organizacion organizacion=usuario.getEmpresa().getOrganizacion();
-        descuento.setDescripcion("Descuento1");
-        descuento.setStatus("A");
-        descuento.setContabiliza("S");
-        instance.graba(descuento, organizacion);
+        AFETipoDescuento afeTipoDescuento= new AFETipoDescuento("tipoDescuento","A", organizacion);
+        instance.graba(afeTipoDescuento, organizacion);
         
-        Descuento descuento1= instance.obtiene(descuento.getId());
-        assertEquals(descuento.getId(),descuento1.getId());
+        AFETipoDescuento afeTipoDescuento1= instance.obtiene(afeTipoDescuento.getId());
+        assertEquals(afeTipoDescuento.getId(),afeTipoDescuento1.getId());
         
        
     }
@@ -73,31 +66,31 @@ public class DescuentoDaoTest extends BaseDaoTest{
     @Test
     public void testGraba() throws Exception {
          Usuario usuario= obtieneUsuario();
-        Descuento descuento=new Descuento();
+        AFETipoDescuento afeTipoDescuento;
         Organizacion organizacion=usuario.getEmpresa().getOrganizacion();
-        descuento.setDescripcion("Descuento");
-        descuento.setStatus("A");
-        descuento.setContabiliza("S");
-        instance.graba(descuento, organizacion);
+        afeTipoDescuento= new AFETipoDescuento("tipoDescuento","A", organizacion);
+        instance.graba(afeTipoDescuento, organizacion);
         
-        assertNotNull(descuento.getId());
-        assertEquals(descuento.getDescripcion(),"Descuento");
-        assertEquals(descuento.getStatus(), "A");
-        assertEquals(descuento.getContabiliza(), "S");
+        assertNotNull(afeTipoDescuento.getId());
+        assertEquals(afeTipoDescuento.getDescripcion(),"tipoDescuento");
+        assertEquals(afeTipoDescuento.getStatus(), "A");
     }
+    
+    
     @Test
     public void testElimina() throws Exception {
          Usuario usuario= obtieneUsuario();
         Organizacion organizacion=usuario.getEmpresa().getOrganizacion();
 
-        Descuento descuento= new Descuento("Descuento","A", "S", organizacion);
-        instance.graba(descuento, organizacion);
-        instance.elimina(descuento.getId());
+        AFETipoDescuento afeTipoDescuento= new AFETipoDescuento("tipoDescuento","A", organizacion);
+        instance.graba(afeTipoDescuento, organizacion);
+        instance.elimina(afeTipoDescuento.getId());
+        assertEquals(afeTipoDescuento.getStatus(), "I");
         
-       Descuento descuento1= instance.obtiene(descuento.getId());
-       if (descuento1!=null){ 
-           fail("no se borro el descuento");
+       AFETipoDescuento afeTipoDescuento1= instance.obtiene(afeTipoDescuento.getId());
+       if (afeTipoDescuento1.getStatus()!="I"){ 
+           fail("no se borro el tipo de descuento");
        }
         
     }
-}
+}   

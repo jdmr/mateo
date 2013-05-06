@@ -34,7 +34,7 @@
                     <div class="span11">${afePlaza.tipoPlaza}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="clave.label" /></div>
+                    <div class="span1"><s:message code="afePlaza.clave.label" /></div>
                     <div class="span11">${afePlaza.clave}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">

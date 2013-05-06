@@ -13,6 +13,7 @@ import mx.edu.um.mateo.inscripciones.model.TiposBecas;
 import mx.edu.um.mateo.rh.model.Colegio;
 import mx.edu.um.mateo.rh.model.PerDed;
 import org.hibernate.Criteria;
+import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
@@ -125,9 +126,19 @@ public class TiposBecasDaoHibernate extends BaseDao implements TiposBecasDao{
         if (usuario != null) {
             tiposBecas.setEmpresa(usuario.getEmpresa());
         }
-        currentSession().saveOrUpdate(tiposBecas);
-        currentSession().merge(tiposBecas);
-        currentSession().flush();
+       try {
+            currentSession().saveOrUpdate(tiposBecas);
+       } catch (NonUniqueObjectException e) {
+           try {
+                currentSession().merge(tiposBecas);                
+            } catch (Exception ex) {
+                log.error("No se pudo actualizar el paquete", ex);
+                throw new RuntimeException("No se pudo actualizar el paquete",
+                        ex);
+            }
+       }finally{
+            currentSession().flush();
+       }
 
     }
     /**

@@ -51,7 +51,7 @@
                             <jsp:param name="columna" value="tipoPlaza" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="clave" />
+                            <jsp:param name="columna" value="afePlaza.clave" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="observaciones" />
