@@ -2816,6 +2816,8 @@ public class Constantes {
     public static final String PATH_AFECONVENIO_GRABA = "/inscripciones/afeConvenio/graba";
     public static final String PATH_AFECONVENIO_ACTUALIZA = "/inscripciones/afeConvenio/actualiza";
     public static final String PATH_AFECONVENIO_ELIMINA = "/inscripciones/afeConvenio/elimina";
+    public static final String PATH_AFECONVENIO_CONVENIO = "/inscripciones/afeConvenio/asignarConvenio";
+    public static final String PATH_AFECONVENIO_ALUMNO = "/inscripciones/afeConvenio/obtenerAlumno";
     public static final String ADDATTRIBUTE_AFECONVENIO = "afeConvenio";  
     
     
@@ -2899,4 +2901,6 @@ public class Constantes {
     public static final String PATH_COBROCAMPO_ACTUALIZA = "/inscripciones/cobroCampo/actualiza";
     public static final String PATH_COBROCAMPO_ELIMINA = "/inscripciones/cobroCampo/elimina";
     public static final String ADDATTRIBUTE_COBROCAMPO = "cobroCampo";
+    
+     public static final String ADDATTRIBUTE_ALUMNO = "alumno";
 }

@@ -10,8 +10,6 @@ import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inscripciones.dao.TiposBecasDao;
 import mx.edu.um.mateo.inscripciones.model.TiposBecas;
-import mx.edu.um.mateo.rh.model.Colegio;
-import mx.edu.um.mateo.rh.model.PerDed;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
@@ -142,6 +140,21 @@ public class TiposBecasDaoHibernate extends BaseDao implements TiposBecasDao{
         return descripcion;
         
     }
+    
+     /**
+     * @see mx.edu.um.mateo.inscripciones.dao.TiposBecasDao#obtiene(java.lang.String) 
+     */
+    @Override
+    public TiposBecas obtiene(final String descripcion) {
+        Criteria sql = currentSession().createCriteria(TiposBecas.class);
+        sql.add(Restrictions.eq("descripcion", descripcion));
+        TiposBecas tipoBeca = (TiposBecas)sql.uniqueResult();
+        if (tipoBeca == null) {
+            log.warn("uh oh, tipoBeca with descripcion '" + descripcion + "' not found...");
+//            throw new ObjectRetrievalFailureException(TiposBecas.class, descripcion);
+        }
 
+        return tipoBeca;
+    }
 
 }
