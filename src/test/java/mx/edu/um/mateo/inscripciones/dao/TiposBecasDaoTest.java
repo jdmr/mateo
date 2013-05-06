@@ -179,5 +179,4 @@ public class TiposBecasDaoTest extends BaseDaoTest{
         TiposBecas prueba = instance.obtiene(tiposBecas.getDescripcion());
         assertEquals(prueba.getDescripcion(), tiposBecas.getDescripcion());
     }
-    
 }
