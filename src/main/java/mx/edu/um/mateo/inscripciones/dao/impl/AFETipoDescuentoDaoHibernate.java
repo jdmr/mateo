@@ -12,9 +12,10 @@ import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
-import mx.edu.um.mateo.inscripciones.dao.DescuentoDao;
-import mx.edu.um.mateo.inscripciones.model.Descuento;
+import mx.edu.um.mateo.inscripciones.dao.AFETipoDescuentoDao;
+import mx.edu.um.mateo.inscripciones.model.AFETipoDescuento;
 import org.hibernate.Criteria;
+import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
@@ -30,9 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class DescuentoDaoHibernate extends BaseDao implements DescuentoDao{
-    
-    
+public class AFETipoDescuentoDaoHibernate extends BaseDao implements AFETipoDescuentoDao{
+     
    @Override
    public Map<String, Object> lista(Map<String, Object> params) {
 
@@ -56,8 +56,8 @@ public class DescuentoDaoHibernate extends BaseDao implements DescuentoDao{
         if (!params.containsKey(Constantes.CONTAINSKEY_OFFSET)) {
             params.put(Constantes.CONTAINSKEY_OFFSET, 0);
         }
-        Criteria criteria = currentSession().createCriteria(Descuento.class);
-        Criteria countCriteria = currentSession().createCriteria(Descuento.class);
+        Criteria criteria = currentSession().createCriteria(AFETipoDescuento.class);
+        Criteria countCriteria = currentSession().createCriteria(AFETipoDescuento.class);
 
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
             String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);
@@ -82,7 +82,7 @@ public class DescuentoDaoHibernate extends BaseDao implements DescuentoDao{
             criteria.setFirstResult((Integer) params.get(Constantes.CONTAINSKEY_OFFSET));
             criteria.setMaxResults((Integer) params.get(Constantes.CONTAINSKEY_MAX));
         }
-        params.put(Constantes.CONTAINSKEY_DESCUENTOS, criteria.list());
+        params.put(Constantes.CONTAINSKEY_TIPODESCUENTOS, criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));
@@ -92,41 +92,44 @@ public class DescuentoDaoHibernate extends BaseDao implements DescuentoDao{
     }
 
     @Override
-    public Descuento obtiene(final Long id) {
-        Descuento descuento = (Descuento) currentSession().get(Descuento.class, id);
-        if (descuento == null) {
-            log.warn("uh oh, descuento with id '" + id + "' not found...");
+    public AFETipoDescuento obtiene(final Long id) {
+        AFETipoDescuento afeTipoDescuento = (AFETipoDescuento) currentSession().get(AFETipoDescuento.class, id);
+        if (afeTipoDescuento == null) {
+            log.warn("uh oh, el descuento con id '" + id + "' no fue encontrado...");
             try {
-                throw new ObjectRetrievalFailureException(Descuento.class, id);
+                throw new ObjectRetrievalFailureException(AFETipoDescuento.class, id);
             } catch (ObjectRetrievalFailureException ex) {
-                Logger.getLogger(DescuentoDaoHibernate.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AFETipoDescuentoDaoHibernate.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
-        return descuento;
+        return afeTipoDescuento;
     }
     
-
     @Override
-    public void graba(Descuento descuento, Organizacion organizacion) {
+    public void graba(AFETipoDescuento afeTipoDescuento, Organizacion organizacion) {
         if (organizacion != null) {
-            descuento.setOrganizacion(organizacion);
+            afeTipoDescuento.setOrganizacion(organizacion);
         }
-        Session session = currentSession();
-        currentSession().saveOrUpdate(descuento);
-        currentSession().merge(descuento);
-        currentSession().flush();
+        try{
+        currentSession().saveOrUpdate(afeTipoDescuento);
+                   
+        }catch(NonUniqueObjectException e){
+            currentSession().merge(afeTipoDescuento);
+        
+        }finally{
+            currentSession().flush(); 
+        }    
     }
 
     @Override
     public String elimina(final Long id) {
-       log.debug("Eliminando el descuento {}", id);
-        Descuento descuento = this.obtiene(id);
-        String nombre = descuento.getDescripcion();
-        currentSession().delete(descuento);
+       log.debug("Eliminando el tipo de descuento {}", id);
+        AFETipoDescuento afeTipoDescuento = this.obtiene(id);
+        String nombre = afeTipoDescuento.getDescripcion();
+        afeTipoDescuento.setStatus("I");
         currentSession().flush();
 
         return nombre;
     }
-
 }
