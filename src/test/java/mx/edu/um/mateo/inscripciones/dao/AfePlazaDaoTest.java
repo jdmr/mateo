@@ -41,7 +41,7 @@ public class AfePlazaDaoTest extends BaseDaoTest {
     public void testLista() {
         Usuario usuario = obtieneUsuario();
         AFEPlaza afePlaza = null;
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 5; i++) {
             afePlaza = new AFEPlaza();
             afePlaza.setClave("1110475");
             afePlaza.setDias("23");
@@ -67,8 +67,8 @@ public class AfePlazaDaoTest extends BaseDaoTest {
         Map<String, Object> result = instance.lista(params);
         assertNotNull(result.get(Constantes.CONTAINSKEY_AFEPLAZAS));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
-        assertEquals(10, ((List<TiposBecas>) result.get(Constantes.CONTAINSKEY_AFEPLAZAS)).size());
-        assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
+        assertEquals(5, ((List<AFEPlaza>) result.get(Constantes.CONTAINSKEY_AFEPLAZAS)).size());
+        assertEquals(5, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
 
     /**
@@ -121,8 +121,17 @@ public class AfePlazaDaoTest extends BaseDaoTest {
         afePlaza.setTurno("Matutino");
         afePlaza.setUsuarioAlta(usuario);
         afePlaza.setUsuarioModificacion(usuario);
+        Map<String, Object> params;
+        params = new TreeMap<>();
+        params.put("empresa", usuario.getEmpresa().getId());
+        Map<String, Object> result = instance.lista(params);
+        Integer items = ((List<AFEPlaza>) result.get(Constantes.CONTAINSKEY_AFEPLAZAS)).size();
         instance.crea(afePlaza, usuario);
         assertNotNull(afePlaza.getId());
+
+        result = instance.lista(params);
+        List<AFEPlaza> lista = ((List<AFEPlaza>) result.get(Constantes.CONTAINSKEY_AFEPLAZAS));
+        assertEquals(items + 1, lista.size());
 
         AFEPlaza afePlaza1 = instance.obtiene(afePlaza.getId());
         assertEquals(afePlaza.getClave(), afePlaza1.getClave());
@@ -147,8 +156,19 @@ public class AfePlazaDaoTest extends BaseDaoTest {
         afePlaza.setTurno("Matutino");
         afePlaza.setUsuarioAlta(usuario);
         afePlaza.setUsuarioModificacion(usuario);
+
+        Map<String, Object> params;
+        params = new TreeMap<>();
+        params.put("empresa", usuario.getEmpresa().getId());
+        Map<String, Object> result = instance.lista(params);
+        Integer items = ((List<AFEPlaza>) result.get(Constantes.CONTAINSKEY_AFEPLAZAS)).size();
+
         instance.crea(afePlaza, usuario);
         assertNotNull(afePlaza.getId());
+
+        result = instance.lista(params);
+        List<AFEPlaza> lista = ((List<AFEPlaza>) result.get(Constantes.CONTAINSKEY_AFEPLAZAS));
+        assertEquals(items + 1, lista.size());
 
         AFEPlaza afePlaza1 = instance.obtiene(afePlaza.getId());
         assertEquals(afePlaza.getClave(), afePlaza1.getClave());
@@ -156,6 +176,10 @@ public class AfePlazaDaoTest extends BaseDaoTest {
         afePlaza1.setObservaciones("test2");
         instance.actualiza(afePlaza1, usuario);
 
+        result = instance.lista(params);
+        List<AFEPlaza> lista2 = ((List<AFEPlaza>) result.get(Constantes.CONTAINSKEY_AFEPLAZAS));
+        assertEquals(lista.size() , lista2.size());
+        log.debug("lista]{}", lista2);
         currentSession().refresh(afePlaza);
         assertEquals("test2", afePlaza.getObservaciones());
     }

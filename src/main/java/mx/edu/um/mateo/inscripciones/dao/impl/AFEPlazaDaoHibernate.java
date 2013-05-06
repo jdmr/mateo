@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.inscripciones.dao.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
@@ -13,7 +14,9 @@ import mx.edu.um.mateo.inscripciones.dao.AFEPlazaDao;
 import mx.edu.um.mateo.inscripciones.model.AFEPlaza;
 import mx.edu.um.mateo.inscripciones.model.CobroCampo;
 import mx.edu.um.mateo.inscripciones.model.Paquete;
+import mx.edu.um.mateo.inscripciones.model.Prorroga;
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
@@ -57,6 +60,10 @@ public class AFEPlazaDaoHibernate extends BaseDao implements AFEPlazaDao {
         }
         Criteria criteria = currentSession().createCriteria(AFEPlaza.class);
         Criteria countCriteria = currentSession().createCriteria(AFEPlaza.class);
+//        Criteria criteria = currentSession().createCriteria(AFEPlaza.class)
+//                .setFetchMode("usuario", FetchMode.SELECT);
+//        Criteria countCriteria = currentSession().createCriteria(AFEPlaza.class)
+//                .setFetchMode("usuario", FetchMode.SELECT);
 
         if (params.containsKey("empresa")) {
             criteria.createCriteria("empresa").add(
@@ -116,6 +123,8 @@ public class AFEPlazaDaoHibernate extends BaseDao implements AFEPlazaDao {
         if (usuario != null) {
             afePlaza.setEmpresa(usuario.getEmpresa());
         }
+        afePlaza.setFechaAlta(new Date());
+        afePlaza.setUsuarioAlta(usuario);
         currentSession().save(afePlaza);
         currentSession().merge(afePlaza);
         currentSession().flush();
@@ -128,8 +137,14 @@ public class AFEPlazaDaoHibernate extends BaseDao implements AFEPlazaDao {
         if (usuario != null) {
             afePlaza.setEmpresa(usuario.getEmpresa());
         }
+        afePlaza.setFechaModificacion(new Date());
+        afePlaza.setUsuarioModificacion(usuario);
         try {
-            currentSession().update(afePlaza);
+            afePlaza.setFechaModificacion(new Date());
+            afePlaza.setUsuarioModificacion(usuario);
+            currentSession().saveOrUpdate(afePlaza);
+            currentSession().merge(afePlaza);
+            log.debug("Actualizacion Correcta!! :D");
         } catch (NonUniqueObjectException e) {
             try {
                 currentSession().merge(afePlaza);

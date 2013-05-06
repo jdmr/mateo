@@ -191,8 +191,8 @@ public class AFEPlazaController extends BaseController {
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
-            log.debug("plaza {}", afePlaza);
             manager.crea(afePlaza, usuario);
+            log.debug("plaza {}", afePlaza);
 
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el cobro a campo", e);
