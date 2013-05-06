@@ -154,4 +154,30 @@ public class TiposBecasDaoTest extends BaseDaoTest{
         String descripcion = instance.removeTipoBeca(tiposBecas.getId());
         assertEquals(descripcion, tiposBecas.getDescripcion());
     }
+    
+     /**
+     * Test of obtiene method, of class TiposBecasDao.
+     */
+    @Test
+    public void testObtienePorDescripcion() {
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        TiposBecas tiposBecas = new TiposBecas();
+        tiposBecas.setDescripcion("test");
+        tiposBecas.setDiezma(true);
+        tiposBecas.setNumHoras(320);
+        tiposBecas.setPerteneceAlumno(false);
+        tiposBecas.setPorcentaje(new BigDecimal(320));
+        tiposBecas.setSoloPostgrado(false);
+        tiposBecas.setStatus("a");
+        tiposBecas.setTope(new BigDecimal(350));
+        tiposBecas.setEmpresa(empresa);
+        currentSession().save(tiposBecas);
+        assertNotNull(tiposBecas.getId());
+        TiposBecas prueba = instance.obtiene(tiposBecas.getDescripcion());
+        assertEquals(prueba.getDescripcion(), tiposBecas.getDescripcion());
+    }
+    
 }

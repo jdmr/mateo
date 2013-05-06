@@ -70,16 +70,24 @@ public class AFEConvenioDaoTest extends BaseDaoTest{
         currentSession().save(tipoBeca);
         assertNotNull(tipoBeca.getId());
         Alumno alumno = alDao.obtiene("1080506");
+        Alumno alumno2 = alDao.obtiene("1060755");
         assertNotNull(alumno);
+        assertNotNull(alumno2);
         AFEConvenio afeConvenio= new AFEConvenio("A",alumno,usuario.getEmpresa(),tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1080506");
+        AFEConvenio afeConvenio2= new AFEConvenio("A",alumno,usuario.getEmpresa(),tipoBeca, new BigDecimal(10),10, Boolean.TRUE,"1060755");
+        instance.graba(afeConvenio2, usuario);
         instance.graba(afeConvenio, usuario);
         assertNotNull(afeConvenio.getId());
+        assertNotNull(afeConvenio2.getId());
         
         AFEConvenio afeConvenio1 = instance.obtiene(afeConvenio.getId());
         assertEquals("1080506", afeConvenio1.getAlumno().getMatricula());
+        
+         AFEConvenio afeConvenio3 = instance.obtiene(afeConvenio2.getId());
+        assertEquals("1060755", afeConvenio3.getAlumno().getMatricula());
     }
     
-     @Test
+    @Test
     public void testActualiza() {
         Usuario usuario = obtieneUsuario();
         TiposBecas tipoBeca= new TiposBecas("Descripcion", Boolean.TRUE,new BigDecimal(10),new BigDecimal(12),Boolean.FALSE,Boolean.TRUE, 10, usuario.getEmpresa());
@@ -97,8 +105,7 @@ public class AFEConvenioDaoTest extends BaseDaoTest{
         afeConvenio1.setImporte(new BigDecimal("3.30"));
         instance.graba(afeConvenio1, usuario);
         
-        currentSession().refresh(afeConvenio);
-        assertEquals("3.30", afeConvenio.getImporte().toString());
+        assertEquals("3.30",  instance.obtiene(afeConvenio.getId()).getImporte().toString());
     }
     
    
@@ -139,6 +146,5 @@ public class AFEConvenioDaoTest extends BaseDaoTest{
             if(afeConvenio1 != null){
             fail("se encontro afeConvenio" + afeConvenio1);
             }
-        
     }
 }

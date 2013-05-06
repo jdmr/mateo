@@ -41,5 +41,5 @@ public interface AFEConvenioManager {
      */
     public String elimina(final Long id);
     
-
+    public AFEConvenio asignarConvenio(AFEConvenio afeConvenio)throws MatriculaInvalidaException;
 }
