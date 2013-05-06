@@ -385,6 +385,7 @@ public class Constantes {
 	 * The request scope attribute that holds the tipoDependiente list
 	 */
 	public static final String TIPODEPENDIENTE_LIST = "tipoDependienteList";
+	public static final String DESCUENTO_LIST = "descuentos";
 	/**
 	 * The request scope attribute that holds the alumnoInscripciones list
 	 */
@@ -2404,6 +2405,7 @@ public class Constantes {
     public static final String CONTAINSKEY_ALUMNOPAQUETES = "alumnoPaquetes";
     public static final String CONTAINSKEY_DESCUENTOS = "descuentos";
     public static final String CONTAINSKEY_TIPODESCUENTOS = "tipoDescuentos";
+    public static final String CONTAINSKEY_ALUMNODESCUENTOS = "alumnoDescuentos";
     /**
      * Valores para el los addAttribute para las clases
      */
@@ -2837,4 +2839,19 @@ public class Constantes {
     public static final String PATH_ORDENES_PAGO_GRABA = "/contabilidad/ordenPago/graba";
     public static final String PATH_ORDENES_PAGO_ACTUALIZA = "/contabilidad/ordenPago/actualiza";
     public static final String PATH_ORDENES_PAGO_ELIMINA = "/contabilidad/ordenPago/elimina";
+    
+    
+      /**
+     * Valores para Alumno Descuento
+     *
+     */
+    public static final String PATH_ALUMNODESCUENTO = "/inscripciones/alumnoDescuento";
+    public static final String PATH_ALUMNODESCUENTO_LISTA = "/inscripciones/alumnoDescuento/lista";
+    public static final String PATH_ALUMNODESCUENTO_VER = "/inscripciones/alumnoDescuento/ver";
+    public static final String PATH_ALUMNODESCUENTO_NUEVO = "/inscripciones/alumnoDescuento/nuevo";
+    public static final String PATH_ALUMNODESCUENTO_EDITA = "/inscripciones/alumnoDescuento/edita";
+    public static final String PATH_ALUMNODESCUENTO_GRABA = "/inscripciones/alumnoDescuento/graba";
+    public static final String PATH_ALUMNODESCUENTO_ACTUALIZA = "/inscripciones/alumnoDescuento/actualiza";
+    public static final String PATH_ALUMNODESCUENTO_ELIMINA = "/inscripciones/alumnoDescuento/elimina";
+    public static final String ADDATTRIBUTE_ALUMNODESCUENTO = "alumnoDescuento";
 }
