@@ -385,6 +385,8 @@ public class Constantes {
      * The request scope attribute that holds the tipoDependiente list
      */
     public static final String TIPODEPENDIENTE_LIST = "tipoDependienteList";
+    
+     public static final String DESCUENTO_LIST = "descuentos";
     /**
      * The request scope attribute that holds the alumnoInscripciones list
      */
@@ -2722,6 +2724,9 @@ public class Constantes {
     public static final String PATH_AFECONVENIO_ACTUALIZA = "/inscripciones/afeConvenio/actualiza";
     public static final String PATH_AFECONVENIO_ELIMINA = "/inscripciones/afeConvenio/elimina";
     public static final String ADDATTRIBUTE_AFECONVENIO = "afeConvenio";
+    public static final String PATH_AFECONVENIO_CONVENIO = "/inscripciones/afeConvenio/asignarConvenio";
+    public static final String PATH_AFECONVENIO_ALUMNO = "/inscripciones/afeConvenio/obtenerAlumno";
+    
    /**
      * Valores para Paquete
      *
@@ -2854,6 +2859,6 @@ public class Constantes {
     public static final String PATH_ALUMNODESCUENTO_ACTUALIZA = "/inscripciones/alumnoDescuento/actualiza";
     public static final String PATH_ALUMNODESCUENTO_ELIMINA = "/inscripciones/alumnoDescuento/elimina";
     public static final String ADDATTRIBUTE_ALUMNODESCUENTO = "alumnoDescuento";
-    
+
      public static final String ADDATTRIBUTE_ALUMNO = "alumno";
 }
