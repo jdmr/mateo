@@ -51,6 +51,19 @@ public class OrdenPago {
         statusInterno = Constantes.STATUS_ACTIVO;
     }
 
+    public OrdenPago(String descripcion, Boolean cheque, Date fechaPago, Empresa empresa, String status, Usuario userCaptura, Date fechaCaptura, String statusInterno) {
+        this.descripcion = descripcion;
+        this.cheque = cheque;
+        this.fechaPago = fechaPago;
+        this.empresa = empresa;
+        this.status = status;
+        this.userCaptura = userCaptura;
+        this.fechaCaptura = fechaCaptura;
+        this.statusInterno = statusInterno;
+    }
+    
+    
+
     /**
      * @return the id
      */

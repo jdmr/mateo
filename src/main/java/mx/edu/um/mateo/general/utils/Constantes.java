@@ -2856,4 +2856,17 @@ public class Constantes {
     public static final String PATH_ALUMNODESCUENTO_ACTUALIZA = "/inscripciones/alumnoDescuento/actualiza";
     public static final String PATH_ALUMNODESCUENTO_ELIMINA = "/inscripciones/alumnoDescuento/elimina";
     public static final String ADDATTRIBUTE_ALUMNODESCUENTO = "alumnoDescuento";
+    /**
+     * Valores para Ordenes de Pago
+     */
+    public static final String ORDENPAGO_PATH = "/contabilidad/ordenPago";
+    public static final String ORDENPAGO_PATH_LISTA = "contabilidad/ordenPago/lista";
+    public static final String ORDENPAGO_PATH_VER = "/contabilidad/ordenPago/ver";
+    public static final String ORDENPAGO_PATH_NUEVO = "/contabilidad/ordenPago/nuevo";
+    public static final String ORDENPAGO_PATH_EDITA = "/contabilidad/ordenPago/edita";
+    public static final String ORDENPAGO_PATH_GRABA = "/contabilidad/ordenPago/graba";
+    public static final String ORDENPAGO_PATH_ACTUALIZA = "/contabilidad/ordenPago/actualiza";
+    public static final String ORDENPAGO_PATH_ELIMINA = "/contabilidad/ordenPago/elimina";
+    public static final String ORDENPAGO = "ordenPago";
+    public static final String ORDENPAGO_LIST = "ordenPagoList";
 }

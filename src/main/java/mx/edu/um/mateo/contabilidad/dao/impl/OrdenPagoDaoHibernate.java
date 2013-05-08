@@ -94,7 +94,7 @@ public class OrdenPagoDaoHibernate extends BaseDao implements OrdenPagoDao {
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put(Constantes.CONTAINSKEY_ORDENES_PAGO, criteria.list());
+        params.put(Constantes.ORDENPAGO_LIST, criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
