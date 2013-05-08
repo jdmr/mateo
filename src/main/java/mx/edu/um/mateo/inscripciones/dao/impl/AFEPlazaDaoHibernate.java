@@ -4,16 +4,21 @@
  */
 package mx.edu.um.mateo.inscripciones.dao.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
-import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.inscripciones.dao.CobroCampoDao;
+import mx.edu.um.mateo.inscripciones.dao.AFEPlazaDao;
+import mx.edu.um.mateo.inscripciones.model.AFEPlaza;
 import mx.edu.um.mateo.inscripciones.model.CobroCampo;
+import mx.edu.um.mateo.inscripciones.model.Paquete;
+import mx.edu.um.mateo.inscripciones.model.Prorroga;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.NonUniqueObjectException;
+import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -29,14 +34,11 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class CobroCampoDaoHibernate extends BaseDao implements CobroCampoDao {
+public class AFEPlazaDaoHibernate extends BaseDao implements AFEPlazaDao {
 
-    /**
-     * @see mx.edu.um.mateo.rh.dao.CobroCampoDao#lista(java.util.Map)
-     */
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
-        log.debug("Buscando lista de cobros a campos con params {}", params);
+        log.debug("Buscando lista de AFE plazas con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
@@ -56,13 +58,13 @@ public class CobroCampoDaoHibernate extends BaseDao implements CobroCampoDao {
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-//        Criteria criteria = currentSession().createCriteria(CobroCampo.class)
-//                .setFetchMode("usuarioAlta", FetchMode.SELECT);
-//        Criteria countCriteria = currentSession().createCriteria(CobroCampo.class)
-//                .setFetchMode("usuarioAlta", FetchMode.SELECT);
-        Criteria criteria = currentSession().createCriteria(CobroCampo.class);
-        Criteria countCriteria = currentSession().createCriteria(
-                CobroCampo.class);
+        Criteria criteria = currentSession().createCriteria(AFEPlaza.class);
+        Criteria countCriteria = currentSession().createCriteria(AFEPlaza.class);
+//        Criteria criteria = currentSession().createCriteria(AFEPlaza.class)
+//                .setFetchMode("usuario", FetchMode.SELECT);
+//        Criteria countCriteria = currentSession().createCriteria(AFEPlaza.class)
+//                .setFetchMode("usuario", FetchMode.SELECT);
+
         if (params.containsKey("empresa")) {
             criteria.createCriteria("empresa").add(
                     Restrictions.idEq(params.get("empresa")));
@@ -73,11 +75,10 @@ public class CobroCampoDaoHibernate extends BaseDao implements CobroCampoDao {
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("institucion", filtro,
+            propiedades.add(Restrictions.ilike("observaciones", filtro,
                     MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("matricula", filtro,
+            propiedades.add(Restrictions.ilike("tipoPlaza", filtro,
                     MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.eq("importeMatricula", filtro));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -90,14 +91,14 @@ public class CobroCampoDaoHibernate extends BaseDao implements CobroCampoDao {
                 criteria.addOrder(Order.asc(campo));
             }
         } else {
-            criteria.addOrder(Order.asc("matricula"));
+            criteria.addOrder(Order.asc("tipoPlaza"));
         }
 
         if (!params.containsKey("reporte")) {
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put(Constantes.CONTAINSKEY_COBROSCAMPOS, criteria.list());
+        params.put(Constantes.CONTAINSKEY_AFEPLAZAS, criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
@@ -105,51 +106,67 @@ public class CobroCampoDaoHibernate extends BaseDao implements CobroCampoDao {
         return params;
     }
 
-    /**
-     * @see mx.edu.um.mateo.rh.dao.CobroCampoDao#obtiene(java.lang.Long)
-     */
     @Override
-    public CobroCampo obtiene(Long id) {
-        log.debug("Obtiene cobro a campo con id = {}", id);
-        CobroCampo cobroCampo = (CobroCampo) currentSession().get(CobroCampo.class, id);
-        if (cobroCampo == null) {
-            log.warn("uh oh, la cobro a campo con el id" + id + "no se encontro...");
-            throw new ObjectRetrievalFailureException(CobroCampo.class, id);
-
+    public AFEPlaza obtiene(final Long id) {
+        AFEPlaza afePlaza = (AFEPlaza) currentSession().get(AFEPlaza.class, id);
+        if (afePlaza == null) {
+            log.warn("uh oh, AFE Plaza with id '" + id + "' not found...");
+            throw new ObjectRetrievalFailureException(AFEPlaza.class, id);
         }
-        return cobroCampo;
+
+        return afePlaza;
     }
 
-    /**
-     * @see
-     * mx.edu.um.mateo.rh.dao.CobroCampoDao#graba(mx.edu.um.mateo.rh.model.Prorroga,
-     * mx.edu.um.mateo.general.model.Usuario)
-     */
     @Override
-    public void graba(final CobroCampo cobroCampo, Usuario usuario) {
+    public void crea(final AFEPlaza afePlaza, Usuario usuario) {
+        Session session = currentSession();
         if (usuario != null) {
-            cobroCampo.setEmpresa(usuario.getEmpresa());
+            afePlaza.setEmpresa(usuario.getEmpresa());
         }
-        log.debug("cobroCampo {}", cobroCampo);
-        currentSession().saveOrUpdate(cobroCampo);
-        currentSession().merge(cobroCampo);
+        afePlaza.setFechaAlta(new Date());
+        afePlaza.setUsuarioAlta(usuario);
+        currentSession().save(afePlaza);
+        currentSession().merge(afePlaza);
         currentSession().flush();
 
-
     }
 
-    /**
-     * @see mx.edu.um.mateo.rh.dao.CobroCampoDao#elimina(java.lang.Long)
-     */
+    @Override
+    public void actualiza(final AFEPlaza afePlaza, Usuario usuario) {
+        Session session = currentSession();
+        if (usuario != null) {
+            afePlaza.setEmpresa(usuario.getEmpresa());
+        }
+        afePlaza.setFechaModificacion(new Date());
+        afePlaza.setUsuarioModificacion(usuario);
+        try {
+            afePlaza.setFechaModificacion(new Date());
+            afePlaza.setUsuarioModificacion(usuario);
+            currentSession().saveOrUpdate(afePlaza);
+            currentSession().merge(afePlaza);
+            log.debug("Actualizacion Correcta!! :D");
+        } catch (NonUniqueObjectException e) {
+            try {
+                currentSession().merge(afePlaza);
+            } catch (Exception ex) {
+                log.error("No se pudo actualizar la Plaza", ex);
+                throw new RuntimeException("No se pudo actualizar la Plaza",
+                        ex);
+            }
+        } finally {
+            currentSession().flush();
+        }
+    }
+
     @Override
     public String elimina(Long id) {
         log.debug("Eliminando prorroga con id {}", id);
-        CobroCampo cobroCampo = obtiene(id);
-        cobroCampo.setStatus("I");
-        currentSession().saveOrUpdate(cobroCampo);
-        currentSession().merge(cobroCampo);
+        AFEPlaza afePlaza = obtiene(id);
+        afePlaza.setStatus("I");
+        currentSession().saveOrUpdate(afePlaza);
+        currentSession().merge(afePlaza);
         currentSession().flush();
-        String matricula = cobroCampo.getMatricula();
-        return matricula;
+        String tipoPlaza = afePlaza.getTipoPlaza();
+        return tipoPlaza;
     }
 }

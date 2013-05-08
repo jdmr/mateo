@@ -16,7 +16,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
-import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,27 +25,24 @@ import org.springframework.format.annotation.DateTimeFormat;
  * @author develop
  */
 @Entity
-@Table(name = "ALUMNO_INSTITUCION")
-public class CobroCampo {
+@Table(name = "AFE_PLAZA")
+public class AFEPlaza {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Version
     private Integer version;
-    @Column(name = "matricula")
-    @NotNull
-    private String matricula;
-    @Column(name = "status")
+    private String tipoPlaza;
+    private String clave;
+    private String observaciones;
+    private Boolean primerIngreso;
+    private Boolean industrial;
+    private String turno;
+    private String dias;
+    private String requisitos;
+    private String email;
     private String status;
-    @ManyToOne(optional = false)
-    private Institucion institucion;
-    @Column(nullable = false, length = 8, name = "importe_matricula")
-    private Double importeMatricula;
-    @Column(nullable = false, length = 8, name = "importe_enzenanza")
-    private Double importeEnsenanza;
-    @Column(nullable = false, length = 8, name = "importe_internado")
-    private Double importeInternado;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     @Column(name = "fecha")
@@ -61,16 +57,7 @@ public class CobroCampo {
     @ManyToOne(optional = false)
     private Empresa empresa;
 
-    public CobroCampo() {
-    }
-
-    public CobroCampo(String matricula, Institucion institucion, Double importeMatricula,
-            Double importeEnsenanza, Double importeInternado) {
-        this.matricula = matricula;
-        this.institucion = institucion;
-        this.importeMatricula = importeMatricula;
-        this.importeEnsenanza = importeEnsenanza;
-        this.importeInternado = importeInternado;
+    public AFEPlaza() {
     }
 
     public Long getId() {
@@ -89,44 +76,60 @@ public class CobroCampo {
         this.version = version;
     }
 
-    public String getMatricula() {
-        return matricula;
+    public String getTipoPlaza() {
+        return tipoPlaza;
     }
 
-    public void setMatricula(String matricula) {
-        this.matricula = matricula;
+    public void setTipoPlaza(String tipoPlaza) {
+        this.tipoPlaza = tipoPlaza;
     }
 
-    public Institucion getInstitucion() {
-        return institucion;
+    public String getClave() {
+        return clave;
     }
 
-    public void setInstitucion(Institucion institucion) {
-        this.institucion = institucion;
+    public void setClave(String clave) {
+        this.clave = clave;
     }
 
-    public Double getImporteMatricula() {
-        return importeMatricula;
+    public Boolean getPrimerIngreso() {
+        return primerIngreso;
     }
 
-    public void setImporteMatricula(Double importeMatricula) {
-        this.importeMatricula = importeMatricula;
+    public void setPrimerIngreso(Boolean primerIngreso) {
+        this.primerIngreso = primerIngreso;
     }
 
-    public Double getImporteEnsenanza() {
-        return importeEnsenanza;
+    public String getTurno() {
+        return turno;
     }
 
-    public void setImporteEnsenanza(Double importeEnsenanza) {
-        this.importeEnsenanza = importeEnsenanza;
+    public void setTurno(String turno) {
+        this.turno = turno;
     }
 
-    public Double getImporteInternado() {
-        return importeInternado;
+    public String getDias() {
+        return dias;
     }
 
-    public void setImporteInternado(Double importeInternado) {
-        this.importeInternado = importeInternado;
+    public void setDias(String dias) {
+        this.dias = dias;
+    }
+
+    public String getRequisitos() {
+        return requisitos;
+    }
+
+    public void setRequisitos(String requisitos) {
+        this.requisitos = requisitos;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Date getFechaAlta() {
@@ -169,6 +172,22 @@ public class CobroCampo {
         this.empresa = empresa;
     }
 
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
+    }
+
+    public Boolean getIndustrial() {
+        return industrial;
+    }
+
+    public void setIndustrial(Boolean industrial) {
+        this.industrial = industrial;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -179,9 +198,10 @@ public class CobroCampo {
 
     @Override
     public String toString() {
-        return "CobroCampos{" + "id=" + id + ", version=" + version + ", matricula=" + matricula + ", institucion=" + institucion
-                + ", importeMatricula=" + importeMatricula + ", importeEnsenanza=" + importeEnsenanza
-                + ", importeInternado=" + importeInternado + ", fechaAlta=" + fechaAlta + ", fechaModificacion=" + fechaModificacion
+        return "AFEPlaza{" + "id=" + id + ", version=" + version + ", tipoPlaza=" + tipoPlaza + ", clave=" + clave
+                + ", observaciones=" + observaciones + ", primerIngreso=" + primerIngreso + ", industrial=" + industrial
+                + ", turno=" + turno + ", dias=" + dias + ", requisitos=" + requisitos + ", email=" + email
+                + ", status=" + status + ", fechaAlta=" + fechaAlta + ", fechaModificacion=" + fechaModificacion
                 + ", usuarioAlta=" + usuarioAlta + ", usuarioModificacion=" + usuarioModificacion + ", empresa=" + empresa + '}';
     }
 }

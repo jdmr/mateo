@@ -25,7 +25,7 @@
     <logger name="org.hibernate.engine.transaction" level="ERROR"/>
     
     <logger name="org.hibernate.SQL" level="TRACE"/>
-    <logger name="org.hibernate.type" level="ERROR"/>
+    <logger name="org.hibernate.type" level="TRACE"/>
     
     <logger name="org.springframework" level="error"/>
     <logger name="org.springframework.security" level="error"/>
