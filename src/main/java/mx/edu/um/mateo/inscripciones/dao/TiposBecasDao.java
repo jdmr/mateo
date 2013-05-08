@@ -18,7 +18,7 @@ public interface TiposBecasDao {
     /**
      * Retrieves all of the TipoBeca
      */
-    public Map<String, Object> getTiposBeca(Map<String, Object> params);
+    public Map<String, Object> lista(Map<String, Object> params);
 
     /**
      * Gets tipoBeca's information based on primary key. An
@@ -28,7 +28,7 @@ public interface TiposBecasDao {
      * @param id the tipoBeca's id
      * @return tipoBeca populated tipoBeca object
      */
-    public TiposBecas getTipoBeca(final Integer id);
+    public TiposBecas obtiene(final Integer id);
 
     /**
      * Saves a tipoBeca's information
@@ -40,5 +40,5 @@ public interface TiposBecasDao {
      * Removes a tipoBeca from the database by id
      * @param id the tipoBeca's id
      */
-    public String removeTipoBeca(final Integer id);
+    public String elimina(final Integer id);
 }

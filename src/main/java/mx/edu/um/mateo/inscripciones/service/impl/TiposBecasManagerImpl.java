@@ -24,14 +24,14 @@ public class TiposBecasManagerImpl implements TiposBecasManager{
      private TiposBecasDao dao;    
     
       @Override
-    public Map<String, Object> getTiposBeca(Map<String, Object> params) {
-        return dao.getTiposBeca(params);
+    public Map<String, Object> lista(Map<String, Object> params) {
+        return dao.lista(params);
     }
 
   
     @Override
-    public TiposBecas getTipoBeca(final String id) {
-        return dao.getTipoBeca(new Integer(id));
+    public TiposBecas obtiene(final String id) {
+        return dao.obtiene(new Integer(id));
     }
 
   
@@ -42,8 +42,8 @@ public class TiposBecasManagerImpl implements TiposBecasManager{
 
    
     @Override
-    public void removeTipoBeca(final String id) {
-        dao.removeTipoBeca(new Integer(id));
+    public void elimina(final String id) {
+        dao.elimina(new Integer(id));
     }
     
 }

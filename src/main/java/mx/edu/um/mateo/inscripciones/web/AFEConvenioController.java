@@ -182,7 +182,7 @@ public class AFEConvenioController extends BaseController{
         log.debug("Nuevo convenio");
         Map<String, Object>params= new HashMap<>();
         AFEConvenio afeConvenio = new AFEConvenio();
-        params= tiposManager.getTiposBeca(params);
+        params= tiposManager.lista(params);
         List<TiposBecas> listaTipos= (List)params.get(Constantes.CONTAINSKEY_TIPOSBECAS);
         modelo.addAttribute(Constantes.CONTAINSKEY_TIPOSBECAS, listaTipos);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_AFECONVENIO, afeConvenio);
@@ -208,7 +208,7 @@ public class AFEConvenioController extends BaseController{
            log.debug("obteniendo usuario");
             Usuario usuario = ambiente.obtieneUsuario();
            log.debug("Grabando tipoBeca");
-           TiposBecas tipoBeca=tiposManager.getTipoBeca(afeConvenio.getTipoBeca().getId().toString());
+           TiposBecas tipoBeca=tiposManager.obtiene(afeConvenio.getTipoBeca().getId().toString());
            afeConvenio.setTipoBeca(tipoBeca);
             log.debug("Entrandoo al  metodo Graba");
              afeConvenioManager.graba(afeConvenio, usuario);
@@ -233,7 +233,7 @@ public class AFEConvenioController extends BaseController{
         log.debug("Editar convenio {}", id);
         Map<String, Object>params= new HashMap<>();
         AFEConvenio afeConvenio = afeConvenioManager.obtiene(id);
-        params= tiposManager.getTiposBeca(params);
+        params= tiposManager.lista(params);
         List<TiposBecas> listaTipos= (List)params.get(Constantes.CONTAINSKEY_TIPOSBECAS);
         modelo.addAttribute(Constantes.CONTAINSKEY_TIPOSBECAS, listaTipos);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_AFECONVENIO, afeConvenio);

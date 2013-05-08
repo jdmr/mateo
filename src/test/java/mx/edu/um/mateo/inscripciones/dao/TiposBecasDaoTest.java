@@ -8,20 +8,13 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Empresa;
-import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inscripciones.model.TiposBecas;
-import mx.edu.um.mateo.rh.dao.ColegioDaoTest;
-import mx.edu.um.mateo.rh.model.Nacionalidad;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -45,20 +38,12 @@ public class TiposBecasDaoTest extends BaseDaoTest{
     public void testObtenerListaDeTiposBecas() {
         Usuario usuario = obtieneUsuario();
         for (int i = 0; i < 20; i++) {
-            TiposBecas tiposBecas = new TiposBecas();
-            tiposBecas.setDescripcion("test");
-            tiposBecas.setDiezma(true);
-            tiposBecas.setNumHoras(320);
-            tiposBecas.setPerteneceAlumno(false);
-            tiposBecas.setPorcentaje(new BigDecimal(320));
-            tiposBecas.setSoloPostgrado(false);
-            tiposBecas.setStatus("a");
-            tiposBecas.setTope(new BigDecimal(350));
-            tiposBecas.setEmpresa(usuario.getEmpresa());
+            Empresa empresa= usuario.getEmpresa();
+            TiposBecas tiposBecas = new TiposBecas("test", Boolean.TRUE, new BigDecimal(12.3),new BigDecimal(12.3), Boolean.TRUE, Boolean.FALSE, 230 , empresa);
             instance.graba(tiposBecas, usuario);
         }
         Map<String, Object> params = null;
-        Map<String, Object> result = instance.getTiposBeca(params);
+        Map<String, Object> result = instance.lista(params);
         assertNotNull(result.get("tiposBecas"));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
         assertEquals(10, ((List<TiposBecas>) result.get("tiposBecas")).size());
@@ -73,19 +58,11 @@ public class TiposBecasDaoTest extends BaseDaoTest{
     @Test
     public void testObtiene() {
         Usuario usuario = obtieneUsuario();
-        TiposBecas tiposBecas = new TiposBecas();
-        tiposBecas.setDescripcion("test");
-        tiposBecas.setDiezma(true);
-        tiposBecas.setNumHoras(320);
-        tiposBecas.setPerteneceAlumno(false);
-        tiposBecas.setPorcentaje(new BigDecimal(320));
-        tiposBecas.setSoloPostgrado(false);
-        tiposBecas.setStatus("a");
-        tiposBecas.setTope(new BigDecimal(350));
-        tiposBecas.setEmpresa(usuario.getEmpresa());
+        Empresa empresa= usuario.getEmpresa();
+        TiposBecas tiposBecas = new TiposBecas("test", Boolean.TRUE, new BigDecimal(12.3),new BigDecimal(12.3), Boolean.TRUE, Boolean.FALSE, 230 , empresa);
         instance.graba(tiposBecas, usuario);
         assertNotNull(tiposBecas.getId());
-        TiposBecas tiposBeca2 = instance.getTipoBeca(tiposBecas.getId());
+        TiposBecas tiposBeca2 = instance.obtiene(tiposBecas.getId());
         assertEquals(tiposBeca2.getDescripcion(), tiposBecas.getDescripcion());
     }
 
@@ -95,16 +72,8 @@ public class TiposBecasDaoTest extends BaseDaoTest{
     @Test
     public void testCrea() {
         Usuario usuario=obtieneUsuario();
-        TiposBecas tiposBecas = new TiposBecas();
-        tiposBecas.setDescripcion("test");
-        tiposBecas.setDiezma(true);
-        tiposBecas.setNumHoras(320);
-        tiposBecas.setPerteneceAlumno(false);
-        tiposBecas.setPorcentaje(new BigDecimal(320));
-        tiposBecas.setSoloPostgrado(false);
-        tiposBecas.setStatus("a");
-        tiposBecas.setTope(new BigDecimal(350));
-        tiposBecas.setEmpresa(usuario.getEmpresa());
+        Empresa empresa= usuario.getEmpresa();
+        TiposBecas tiposBecas = new TiposBecas("test", Boolean.TRUE, new BigDecimal(12.3),new BigDecimal(12.3), Boolean.TRUE, Boolean.FALSE, 230 , empresa);
         instance.graba(tiposBecas, usuario);
         assertNotNull(tiposBecas.getId());
     }
@@ -115,16 +84,8 @@ public class TiposBecasDaoTest extends BaseDaoTest{
     @Test
     public void testActualiza() {
         Usuario usuario=obtieneUsuario();
-        TiposBecas tiposBecas = new TiposBecas();
-        tiposBecas.setDescripcion("test");
-        tiposBecas.setDiezma(true);
-        tiposBecas.setNumHoras(320);
-        tiposBecas.setPerteneceAlumno(false);
-        tiposBecas.setPorcentaje(new BigDecimal(320));
-        tiposBecas.setSoloPostgrado(false);
-        tiposBecas.setStatus("a");
-        tiposBecas.setTope(new BigDecimal(350));
-        tiposBecas.setEmpresa(usuario.getEmpresa());
+        Empresa empresa= usuario.getEmpresa();
+        TiposBecas tiposBecas = new TiposBecas("test", Boolean.TRUE, new BigDecimal(12.3),new BigDecimal(12.3), Boolean.TRUE, Boolean.FALSE, 230 , empresa);
         currentSession().save(tiposBecas);
         assertNotNull(tiposBecas.getId());
         String descripcion = "prueba";
@@ -139,19 +100,11 @@ public class TiposBecasDaoTest extends BaseDaoTest{
     @Test
     public void testElimina() throws Exception {
         Usuario usuario=obtieneUsuario();
-        TiposBecas tiposBecas = new TiposBecas();
-        tiposBecas.setDescripcion("test");
-        tiposBecas.setDiezma(true);
-        tiposBecas.setNumHoras(320);
-        tiposBecas.setPerteneceAlumno(false);
-        tiposBecas.setPorcentaje(new BigDecimal(320));
-        tiposBecas.setSoloPostgrado(false);
-        tiposBecas.setStatus("a");
-        tiposBecas.setTope(new BigDecimal(350));
-        tiposBecas.setEmpresa(usuario.getEmpresa());
+        Empresa empresa= usuario.getEmpresa();
+        TiposBecas tiposBecas = new TiposBecas("test", Boolean.TRUE, new BigDecimal(12.3),new BigDecimal(12.3), Boolean.TRUE, Boolean.FALSE, 230 , empresa);
         instance.graba(tiposBecas, usuario);
         assertNotNull(tiposBecas.getId());
-        String descripcion = instance.removeTipoBeca(tiposBecas.getId());
+        String descripcion = instance.elimina(tiposBecas.getId());
         assertEquals(descripcion, tiposBecas.getDescripcion());
     }
 }
