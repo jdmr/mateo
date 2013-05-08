@@ -385,6 +385,8 @@ public class Constantes {
      * The request scope attribute that holds the tipoDependiente list
      */
     public static final String TIPODEPENDIENTE_LIST = "tipoDependienteList";
+    
+    public static final String DESCUENTO_LIST = "descuentos";
     /**
      * The request scope attribute that holds the alumnoInscripciones list
      */
