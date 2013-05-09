@@ -10,10 +10,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
@@ -23,11 +21,9 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.colportor.dao.ColportorDao;
 import mx.edu.um.mateo.general.dao.RolDao;
-import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.colportor.utils.FaltaAsociacionException;
 import mx.edu.um.mateo.general.web.BaseController;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -38,8 +34,6 @@ import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.keygen.KeyGenerators;
@@ -85,7 +79,7 @@ public class ColportorController extends BaseController {
             Model modelo) {
         log.debug("Mostrando lista de Colportor");
         Map<String, Object> params = new HashMap<>();
-        params.put(Constantes.ADDATTRIBUTE_ASOCIACION, ((Asociacion) request.getSession().getAttribute(Constantes.SESSION_ASOCIACION)));
+        params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
 
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
@@ -96,11 +90,8 @@ public class ColportorController extends BaseController {
         }
         if (StringUtils.isNotBlank(tipo)) {
             params.put("reporte", true);
-            try {
-                params = colportorDao.lista(params);
-            } catch (FaltaAsociacionException ex) {
-                log.error("Falta asociacion", ex);
-            }
+            params = colportorDao.lista(params);
+            
             try {
                 generaReporte(tipo, (List<Colportor>) params.get("colportores"), response);
                 return null;
@@ -111,12 +102,8 @@ public class ColportorController extends BaseController {
 
         if (StringUtils.isNotBlank(correo)) {
             params.put("reporte", true);
-            try {
-                params = colportorDao.lista(params);
-            } catch (FaltaAsociacionException ex) {
-                log.error("Falta asociacion", ex);
-            }
-
+            params = colportorDao.lista(params);
+            
             params.remove("reporte");
             try {
                 enviaCorreo(correo, (List<Colportor>) params.get("colportores"), request);
@@ -126,13 +113,10 @@ public class ColportorController extends BaseController {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-        try {
-            params = colportorDao.lista(params);
-        } catch (FaltaAsociacionException ex) {
-            log.error("Falta asociacion", ex);
-        }
-        modelo.addAttribute(Constantes.CONTAINSKEY_COLPORTORES, params.get(Constantes.CONTAINSKEY_COLPORTORES));
-        this.pagina(params, modelo, Constantes.CONTAINSKEY_COLPORTORES, pagina);
+        params = colportorDao.lista(params);
+        
+        modelo.addAttribute(Constantes.COLPORTOR_LIST, params.get(Constantes.COLPORTOR_LIST));
+        this.pagina(params, modelo, Constantes.COLPORTOR_LIST, pagina);
 
         return Constantes.PATH_COLPORTOR_LISTA;
     }
@@ -194,8 +178,6 @@ public class ColportorController extends BaseController {
         log.debug("passwordColportor" + password);
 
         try {
-            
-            colportor.setAsociacion((Asociacion) request.getSession().getAttribute(Constantes.SESSION_ASOCIACION));
             colportor.setPassword(password);
             Usuario usuario = ambiente.obtieneUsuario();
             colportor = colportorDao.crea(colportor, usuario);

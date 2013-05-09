@@ -1824,7 +1824,7 @@ public class Constantes {
     /**
      * The request scope attribute that holds the alumnoColportor list.
      */
-    public static final String COLPORTOR_LIST = "coportorList";
+    //public static final String COLPORTOR_LIST = "coportorList";
     // Tipos de documentos
     /**
      * (F)actura - Compras del alumno a GEMA
@@ -2386,8 +2386,7 @@ public class Constantes {
     public static final String CONTAINSKEY_CONCEPTOS = "conceptos";
     public static final String CONTAINSKEY_PERDED = "perdeds";
     public static final String CONTAINSKEY_ASOCIADOS = "asociados";
-    public static final String CONTAINSKEY_CIUDADES = "ciudades";
-    public static final String CONTAINSKEY_COLPORTORES = "colportores";
+    public static final String CONTAINSKEY_CIUDADES = "ciudades";    
     public static final String CONTAINSKEY_DOCUMENTOS = "documentos";
     public static final String CONTAINSKEY_ESTADOS = "estados";
     public static final String CONTAINSKEY_PAISES = "paises";
@@ -2873,4 +2872,7 @@ public class Constantes {
     public static final String ORDENPAGO_PATH_ELIMINA = "/contabilidad/ordenPago/elimina";
     public static final String ORDENPAGO = "ordenPago";
     public static final String ORDENPAGO_LIST = "ordenPagoList";
+    
+    //Valores de Colportor
+    public static final String COLPORTOR_LIST = "colportores";
 }

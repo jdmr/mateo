@@ -188,20 +188,17 @@ public class TemporadaColportorController {
         List<Documento> listaColegios = (List) params.get(Constantes.CONTAINSKEY_COLEGIOS);
         modelo.addAttribute(Constantes.CONTAINSKEY_COLEGIOS, listaColegios);
             log.debug("listaColegios***" + listaColegios.size());
-        try {
-            params = colportorDao.lista(params);
-        } catch (FaltaAsociacionException ex) {
-            log.error("Falta asociacion", ex);
-        }
-        List<Colportor> listaColportores = (List) params.get(Constantes.CONTAINSKEY_COLPORTORES);
-        log.debug("listaColportores***" + listaColportores.size());
-        modelo.addAttribute(Constantes.CONTAINSKEY_COLPORTORES, listaColportores);
+        params = colportorDao.lista(params);
         
+        List<Colportor> listaColportores = (List) params.get(Constantes.COLPORTOR_LIST);
+        log.debug("listaColportores***" + listaColportores.size());
+        modelo.addAttribute(Constantes.COLPORTOR_LIST, listaColportores);
         try {
             params = asociadoDao.lista(params);
         } catch (FaltaAsociacionException ex) {
-            log.error("Falta asociacion", ex);
+            java.util.logging.Logger.getLogger(TemporadaColportorController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         List<Asociado> listaAsociados = (List) params.get(Constantes.CONTAINSKEY_ASOCIADOS);
         log.debug("listaAsociados" + listaAsociados.size());
         modelo.addAttribute(Constantes.CONTAINSKEY_ASOCIADOS, listaAsociados);
@@ -230,8 +227,8 @@ public class TemporadaColportorController {
 //        } catch (FaltaAsociacionException ex) {
 //            log.error("Falta asociacion", ex);
 //        }
-//        modelo.addAttribute(Constantes.CONTAINSKEY_COLPORTORES, colportores.get(Constantes.CONTAINSKEY_COLPORTORES));
-//        modelo.addAttribute(Constantes.CONTAINSKEY_COLPORTORES, params.get(Constantes.CONTAINSKEY_COLPORTORES));
+//        modelo.addAttribute(Constantes.COLPORTOR_LIST, colportores.get(Constantes.COLPORTOR_LIST));
+//        modelo.addAttribute(Constantes.COLPORTOR_LIST, params.get(Constantes.COLPORTOR_LIST));
 //
 //        Map<String, Object> colegios = colegioDao.lista(null);
 //        params = colegioDao.lista(null);
@@ -308,12 +305,9 @@ public class TemporadaColportorController {
         }
         modelo.addAttribute(Constantes.CONTAINSKEY_ASOCIADOS, asociados.get(Constantes.CONTAINSKEY_ASOCIADOS));
         Map<String, Object> colportores = null;
-        try {
-            colportores = colportorDao.lista(null);
-        } catch (FaltaAsociacionException ex) {
-            log.error("Falta asociacion", ex);
-        }
-        modelo.addAttribute(Constantes.CONTAINSKEY_COLPORTORES, colportores.get(Constantes.CONTAINSKEY_COLPORTORES));
+        colportores = colportorDao.lista(null);
+        
+        modelo.addAttribute(Constantes.COLPORTOR_LIST, colportores.get(Constantes.COLPORTOR_LIST));
         Map<String, Object> colegios = colegioDao.lista(null);
         modelo.addAttribute(Constantes.CONTAINSKEY_COLEGIOS, colegios.get(Constantes.CONTAINSKEY_COLEGIOS));
 
