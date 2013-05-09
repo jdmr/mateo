@@ -36,12 +36,13 @@ public class AFEBecaAdicional {
     private String matricula;
     private BigDecimal importe;
     private String status;
+    @ManyToOne
+    private TiposBecas tiposBecas;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Usuario usuarioAlta;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     @Column(name = "fecha")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private TiposBecas tiposBecas;
-    @ManyToOne(fetch = FetchType.LAZY)
     private Date fechaAlta;
     @ManyToOne(optional = false)
     private Empresa empresa;
@@ -113,10 +114,16 @@ public class AFEBecaAdicional {
         this.empresa = empresa;
     }
 
+    public Usuario getUsuarioAlta() {
+        return usuarioAlta;
+    }
+
+    public void setUsuarioAlta(Usuario usuarioAlta) {
+        this.usuarioAlta = usuarioAlta;
+    }
+
     @Override
     public String toString() {
-        return "AFEBecaAdicional{" + "id=" + id + ", version=" + version + ", matricula=" + matricula
-                + ", importe=" + importe + ", status=" + status + ", tiposBecas=" + tiposBecas
-                + ", fechaAlta=" + fechaAlta + ", empresa=" + empresa + '}';
+        return "AFEBecaAdicional{" + "id=" + id + ", version=" + version + ", matricula=" + matricula + ", importe=" + importe + ", status=" + status + ", tiposBecas=" + tiposBecas + ", usuarioAlta=" + usuarioAlta + ", fechaAlta=" + fechaAlta + ", empresa=" + empresa + '}';
     }
 }

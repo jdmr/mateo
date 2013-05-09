@@ -43,7 +43,6 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
     public void testLista() {
         Usuario usuario = obtieneUsuario();
         AFEBecaAdicional becaAdicional = null;
-        TiposBecas tipoBeca = new TiposBecas();
         TiposBecas tiposBecas = new TiposBecas();
         tiposBecas.setDescripcion("test");
         tiposBecas.setDiezma(true);
@@ -54,7 +53,7 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
         tiposBecas.setStatus("a");
         tiposBecas.setTope(new BigDecimal(350));
         tiposBecas.setEmpresa(usuario.getEmpresa());
-        currentSession().save(tipoBeca);
+        currentSession().save(tiposBecas);
         for (int i = 0; i < 20; i++) {
             becaAdicional = new AFEBecaAdicional();
             becaAdicional.setEmpresa(usuario.getEmpresa());
@@ -62,7 +61,8 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
             becaAdicional.setImporte(new BigDecimal("20.8"));
             becaAdicional.setMatricula("1110475");
             becaAdicional.setStatus("A");
-            becaAdicional.setTiposBecas(tipoBeca);
+            becaAdicional.setUsuarioAlta(usuario);
+            becaAdicional.setTiposBecas(tiposBecas);
             instance.crea(becaAdicional, usuario);
             assertNotNull(becaAdicional.getId());
         }
@@ -85,7 +85,6 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
         Usuario usuario = obtieneUsuario();
         String matricula = "1110475";
 
-        TiposBecas tipoBeca = new TiposBecas();
         TiposBecas tiposBecas = new TiposBecas();
         tiposBecas.setDescripcion("test");
         tiposBecas.setDiezma(true);
@@ -96,7 +95,7 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
         tiposBecas.setStatus("a");
         tiposBecas.setTope(new BigDecimal(350));
         tiposBecas.setEmpresa(usuario.getEmpresa());
-        currentSession().save(tipoBeca);
+        currentSession().save(tiposBecas);
 
         AFEBecaAdicional becaAdicional = new AFEBecaAdicional();
         becaAdicional.setEmpresa(usuario.getEmpresa());
@@ -104,7 +103,8 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
         becaAdicional.setImporte(new BigDecimal("20.8"));
         becaAdicional.setMatricula(matricula);
         becaAdicional.setStatus("A");
-        becaAdicional.setTiposBecas(tipoBeca);
+        becaAdicional.setUsuarioAlta(usuario);
+        becaAdicional.setTiposBecas(tiposBecas);
         instance.crea(becaAdicional, usuario);
         assertNotNull(becaAdicional.getId());
 
@@ -121,7 +121,6 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
         Usuario usuario = obtieneUsuario();
         String matricula = "1110475";
 
-        TiposBecas tipoBeca = new TiposBecas();
         TiposBecas tiposBecas = new TiposBecas();
         tiposBecas.setDescripcion("test");
         tiposBecas.setDiezma(true);
@@ -132,15 +131,16 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
         tiposBecas.setStatus("a");
         tiposBecas.setTope(new BigDecimal(350));
         tiposBecas.setEmpresa(usuario.getEmpresa());
-        currentSession().save(tipoBeca);
+        currentSession().save(tiposBecas);
 
         AFEBecaAdicional becaAdicional = new AFEBecaAdicional();
         becaAdicional.setEmpresa(usuario.getEmpresa());
         becaAdicional.setFechaAlta(new Date());
+        becaAdicional.setUsuarioAlta(usuario);
         becaAdicional.setImporte(new BigDecimal("20.8"));
         becaAdicional.setMatricula(matricula);
         becaAdicional.setStatus("A");
-        becaAdicional.setTiposBecas(tipoBeca);
+        becaAdicional.setTiposBecas(tiposBecas);
         instance.crea(becaAdicional, usuario);
         assertNotNull(becaAdicional.getId());
 
@@ -156,7 +156,6 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
         Usuario usuario = obtieneUsuario();
         String matricula = "1110475";
 
-        TiposBecas tipoBeca = new TiposBecas();
         TiposBecas tiposBecas = new TiposBecas();
         tiposBecas.setDescripcion("test");
         tiposBecas.setDiezma(true);
@@ -167,7 +166,7 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
         tiposBecas.setStatus("a");
         tiposBecas.setTope(new BigDecimal(350));
         tiposBecas.setEmpresa(usuario.getEmpresa());
-        currentSession().save(tipoBeca);
+        currentSession().save(tiposBecas);
 
         AFEBecaAdicional becaAdicional = new AFEBecaAdicional();
         becaAdicional.setEmpresa(usuario.getEmpresa());
@@ -175,7 +174,8 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
         becaAdicional.setImporte(new BigDecimal("20.8"));
         becaAdicional.setMatricula(matricula);
         becaAdicional.setStatus("A");
-        becaAdicional.setTiposBecas(tipoBeca);
+        becaAdicional.setUsuarioAlta(usuario);
+        becaAdicional.setTiposBecas(tiposBecas);
         instance.crea(becaAdicional, usuario);
         assertNotNull(becaAdicional.getId());
 
@@ -186,7 +186,7 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
         instance.actualiza(becaAdicional1, usuario);
 
         currentSession().refresh(becaAdicional);
-        assertEquals("1110475", becaAdicional.getMatricula());
+        assertEquals("1110476", becaAdicional.getMatricula());
     }
 
     /**
@@ -196,7 +196,6 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
     public void testElimina() {
         Usuario usuario = obtieneUsuario();
 
-        TiposBecas tipoBeca = new TiposBecas();
         TiposBecas tiposBecas = new TiposBecas();
         tiposBecas.setDescripcion("test");
         tiposBecas.setDiezma(true);
@@ -207,7 +206,7 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
         tiposBecas.setStatus("a");
         tiposBecas.setTope(new BigDecimal(350));
         tiposBecas.setEmpresa(usuario.getEmpresa());
-        currentSession().save(tipoBeca);
+        currentSession().save(tiposBecas);
 
         AFEBecaAdicional becaAdicional = new AFEBecaAdicional();
         becaAdicional.setEmpresa(usuario.getEmpresa());
@@ -215,7 +214,8 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
         becaAdicional.setImporte(new BigDecimal("20.8"));
         becaAdicional.setMatricula("1110475");
         becaAdicional.setStatus("A");
-        becaAdicional.setTiposBecas(tipoBeca);
+        becaAdicional.setTiposBecas(tiposBecas);
+        becaAdicional.setUsuarioAlta(usuario);
         instance.crea(becaAdicional, usuario);
         assertNotNull(becaAdicional.getId());
 
