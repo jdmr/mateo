@@ -2860,4 +2860,13 @@ public class Constantes {
      *
      */
     public static final String CONTAINSKEY_BECASADICIONALES = "becasAdicionales";
+    public static final String PATH_AFE_BECAADICIONAL = "/inscripciones/decaadicional";
+    public static final String PATH_AFE_BECAADICIONAL_LISTA = "/inscripciones/decaadicional/lista";
+    public static final String PATH_AFE_BECAADICIONAL_VER = "/inscripciones/decaadicional/ver";
+    public static final String PATH_AFE_BECAADICIONAL_NUEVO = "/inscripciones/decaadicional/nuevo";
+    public static final String PATH_AFE_BECAADICIONAL_EDITA = "/inscripciones/decaadicional/edita";
+    public static final String PATH_AFE_BECAADICIONAL_GRABA = "/inscripciones/decaadicional/graba";
+    public static final String PATH_AFE_BECAADICIONAL_ACTUALIZA = "/inscripciones/decaadicional/actualiza";
+    public static final String PATH_AFE_BECAADICIONAL_ELIMINA = "/inscripciones/decaadicional/elimina";
+    public static final String ADDATTRIBUTE_BECAADICIONAL = "decaAdicional";
 }
