@@ -64,7 +64,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "entity_type", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("user")
-@Entity
+@Entity 
 @Table(name = "usuarios")
 public class Usuario  implements Serializable, UserDetails {
     protected final transient Logger log = LoggerFactory.getLogger(getClass());

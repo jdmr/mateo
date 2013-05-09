@@ -167,7 +167,7 @@ public class OrdenPagoController extends BaseController {
 		}
 
                 redirectAttributes.addFlashAttribute("message",
-				"ordenPago.creado.message");
+				"ordenPago.graba.message");
 		redirectAttributes.addFlashAttribute("messageAttrs",
 				new String[] { ordenPago.getDescripcion() });
                 
@@ -210,7 +210,7 @@ public class OrdenPagoController extends BaseController {
 
                 
                     redirectAttributes.addFlashAttribute("message",
-				"ordenPago.actualizado.message");
+				"ordenPago.actualiza.message");
 		redirectAttributes.addFlashAttribute("messageAttrs",
 				new String[] { ordenPago.getDescripcion() });
                 
@@ -234,13 +234,13 @@ public class OrdenPagoController extends BaseController {
 			String nombre = mgr.elimina(id);
 
 			redirectAttributes.addFlashAttribute("message",
-					"ordenPago.eliminado.message");
+					"ordenPago.elimina.message");
 			redirectAttributes.addFlashAttribute("messageAttrs",
 					new String[] { nombre });
 		} catch (Exception e) {
 			log.error("No se pudo eliminar la orden de pago " + id, e);
 			bindingResult.addError(new ObjectError("ordenPago",
-					new String[] { "ordenPago.no.eliminado.message" }, null,
+					new String[] { "ordenPago.no.elimina.message" }, null,
 					null));
 			return Constantes.ORDENPAGO_PATH_VER + id;
 		}
