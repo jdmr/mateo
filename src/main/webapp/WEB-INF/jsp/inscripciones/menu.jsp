@@ -22,5 +22,6 @@
         <li<c:if test="${param.menu eq 'prorroga'}"> class="active"</c:if>><a href="<s:url value='/inscripciones/prorroga'/>" ><s:message code="prorroga.lista.label" /></a></li>
         <li<c:if test="${param.menu eq 'alumnoPaquete'}"> class="active"</c:if>><a href="<s:url value='/inscripciones/alumnoPaquete'/>" ><s:message code="alumnoPaquete.lista.label" /></a></li>
         <li<c:if test="${param.menu eq 'afePlaza'}"> class="active"</c:if>><a href="<s:url value='/inscripciones/afePlaza'/>" ><s:message code="afePlaza.lista.label" /></a></li>
+        <li<c:if test="${param.menu eq 'cobroCampo'}"> class="active"</c:if>><a href="<s:url value='/inscripciones/cobroCampo'/>" ><s:message code="cobroCampo.label" /></a></li>
     </ul>
 </nav>

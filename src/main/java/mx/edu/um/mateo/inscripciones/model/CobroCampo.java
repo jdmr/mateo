@@ -7,6 +7,7 @@ package mx.edu.um.mateo.inscripciones.model;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -53,9 +54,9 @@ public class CobroCampo {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     private Date fechaModificacion;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Usuario usuarioAlta;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Usuario usuarioModificacion;
     @ManyToOne(optional = false)
     private Empresa empresa;

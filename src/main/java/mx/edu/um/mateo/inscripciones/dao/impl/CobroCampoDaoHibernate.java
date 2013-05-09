@@ -56,13 +56,13 @@ public class CobroCampoDaoHibernate extends BaseDao implements CobroCampoDao {
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(CobroCampo.class)
-                .setFetchMode("usuarioAlta", FetchMode.SELECT);
-        Criteria countCriteria = currentSession().createCriteria(CobroCampo.class)
-                .setFetchMode("usuarioAlta", FetchMode.SELECT);
-//        Criteria criteria = currentSession().createCriteria(CobroCampo.class);
-//        Criteria countCriteria = currentSession().createCriteria(
-//                CobroCampo.class);
+//        Criteria criteria = currentSession().createCriteria(CobroCampo.class)
+//                .setFetchMode("usuarioAlta", FetchMode.SELECT);
+//        Criteria countCriteria = currentSession().createCriteria(CobroCampo.class)
+//                .setFetchMode("usuarioAlta", FetchMode.SELECT);
+        Criteria criteria = currentSession().createCriteria(CobroCampo.class);
+        Criteria countCriteria = currentSession().createCriteria(
+                CobroCampo.class);
         if (params.containsKey("empresa")) {
             criteria.createCriteria("empresa").add(
                     Restrictions.idEq(params.get("empresa")));
