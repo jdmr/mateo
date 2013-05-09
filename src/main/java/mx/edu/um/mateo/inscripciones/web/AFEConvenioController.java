@@ -196,7 +196,8 @@ public class AFEConvenioController extends BaseController{
      @Transactional
     @RequestMapping(value = "/graba", method = RequestMethod.POST)
     public String graba(HttpServletRequest request, HttpServletResponse response, @Valid AFEConvenio afeConvenio, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
-        for (String nombre : request.getParameterMap().keySet()) {
+         log.debug("ENTRANDO al metodo graba");
+         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
         if (bindingResult.hasErrors()) {
@@ -259,8 +260,7 @@ public class AFEConvenioController extends BaseController{
         return "redirect:" + Constantes.PATH_AFECONVENIO_LISTA ;
     }
     
-    @Transactional
-    @RequestMapping(value = "/asignarConvenio", method = RequestMethod.POST)
+    @RequestMapping(value = "/asignarConvenio")
     public String asignarConvenio(HttpServletRequest request, Model modelo, @Valid AFEConvenio afeConvenio,Errors errors, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         try {
             AFEConvenio afeConvenio2 = afeConvenioManager.asignarConvenio(afeConvenio);
@@ -276,12 +276,12 @@ public class AFEConvenioController extends BaseController{
         return  Constantes.PATH_AFECONVENIO_CONVENIO;
     }
     
-    @Transactional
-    @RequestMapping(value = "/obtenerAlumno", method = RequestMethod.POST)
+    @RequestMapping(value = "/obtenerAlumno")
     public String obtenerAlumno(HttpServletRequest request, Model modelo, @Valid AFEConvenio afeConvenio,Errors errors, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         
           Alumno alumno = alDao.obtiene(afeConvenio.getMatricula());
-          modelo.addAttribute(Constantes.ADDATTRIBUTE_ALUMNO, alumno);
+          afeConvenio.setAlumno(alumno);
+          modelo.addAttribute(Constantes.ADDATTRIBUTE_AFECONVENIO, afeConvenio);
           
           if(alumno == null){
              errors.rejectValue("matricula", "matricula.no.valida.message",

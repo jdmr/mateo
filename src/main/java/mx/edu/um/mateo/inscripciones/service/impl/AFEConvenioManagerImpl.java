@@ -53,7 +53,6 @@ public class AFEConvenioManagerImpl extends BaseDao implements AFEConvenioManage
     @Override
     public void graba(AFEConvenio afeConvenio, Usuario usuario)throws MatriculaInvalidaException{
        if(alDao.obtiene(afeConvenio.getMatricula())!= null){
-           
            afeConvenio.setTipoBeca(tiposDao.obtiene("Servicio Becario"));
            afeConvenio.setDiezma(afeConvenio.getTipoBeca().getDiezma());
            afeConvenio.setNumHoras(afeConvenio.getTipoBeca().getNumHoras());
@@ -62,7 +61,6 @@ public class AFEConvenioManagerImpl extends BaseDao implements AFEConvenioManage
            dao.graba(afeConvenio, usuario);
            
        }else{
-           
            throw new MatriculaInvalidaException() ;
        }
     }

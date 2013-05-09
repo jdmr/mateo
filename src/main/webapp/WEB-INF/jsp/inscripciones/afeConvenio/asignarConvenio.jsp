@@ -9,15 +9,15 @@
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="asignarConvenio" />
+            <jsp:param name="menu" value="afeConvenio" />
         </jsp:include>
 
-        <div id="nuevo-colegio" class="content scaffold-list" role="main">
+        <div id="nuevo-convenio" class="content scaffold-list" role="main">
             <h1><s:message code="afeConvenio.nuevo.label" /></h1>
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/inscripciones/afeConvenio/asignarConvenio'/>"><i class="icon-list icon-white"></i> <s:message code='afeConvenio.lista.label' /></a>
             </p>
-            <form:form commandName="afeConvenio" action="graba" method="post">
+            <form:form commandName="afeConvenio" action="obtenerAlumno" method="post">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -38,63 +38,53 @@
                             <form:errors path="matricula" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <%-- <s:bind path="afeConvenio.status">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="status">
-                                <s:message code="status.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="status" maxlength="2" required="true" />
-                            <form:errors path="status" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
-                    <s:bind path="afeConvenio.diezma">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="diezma">
-                                <s:message code="diezma.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:checkbox path="diezma" cssClass="span3" />
-                            <form:errors path="diezma" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
-                    <s:bind path="afeConvenio.numHoras">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="numHoras">
-                                <s:message code="numHoras.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="numHoras" maxlength="128" required="true" />
-                            <form:errors path="numHoras" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind> 
-                     <s:bind path="afeConvenio.tipoBeca">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="tipoBeca">
-                                <s:message code="tiposBecas.label" />
-                                <span class="required-indicator">*</span>
-                                </label>
-                                <form:select id="tipoBeca" path="tipoBeca.id" required="true" cssClass="span3" >
-                                    <form:options items= "${tiposBecas}" itemValue="id" itemLabel="descripcion" />
-                                </form:select>
-                                <form:errors path="tipoBeca" cssClass="alert alert-error" />
-                                     
-                        </div>
-                    </s:bind>
-                    <s:bind path="afeConvenio.importe">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="importe">
-                                <s:message code="importe.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="importe" maxlength="128" required="true" />
-                            <form:errors path="importe" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind> --%>
                 </fieldset>
+                
+                <c:if test="${afeConvenio.alumno.matricula != null}">
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="nombre.label" /></div>
+                    <div class="span11">${afeConvenio.alumno.nombre}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="apPaterno.label" /></div>
+                    <div class="span11">${afeConvenio.alumno.apPaterno}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="apMaterno.label" /></div>
+                    <div class="span11">${afeConvenio.alumno.apMaterno}</div>
+                </div>
+                 <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="estadoCivil.label" /></div>
+                    <div class="span11">${afeConvenio.alumno.estadoCivil}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="genero.label" /></div>
+                    <div class="span11">${afeConvenio.alumno.genero}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="fechaNacimiento.label" /></div>
+                    <div class="span11">${afeConvenio.alumno.fNacimiento}</div>
+                </div>
+                 <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="telefono.label" /></div>
+                    <div class="span11">${afeConvenio.alumno.telefono}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="email.label" /></div>
+                    <div class="span11">${afeConvenio.alumno.email}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="matricula.label" /></div>
+                    <div class="span11">${afeConvenio.alumno.matricula}</div>
+                </div>
+                
+                    <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="guardar" onclick="graba();" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='guardar.button'/></button>
+                </c:if>
 
                 <p class="well" style="margin-top: 10px;">
-                    <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
+                     <c:if test="${afeConvenio.alumno.matricula == null}">
+                         <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="buscar" onclick="obtenerAlumno();" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='buscar.button'/></button>
+                     </c:if>
                     <a class="btn btn-large" href="<s:url value='/inscripciones/afeConvenio/asignarConvenio/'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
@@ -105,6 +95,18 @@
             $(document).ready(function() {
                 $('input#descripcion').focus();
             });
+            
+            function obtenerAlumno(){
+                document.getElementById("afeConvenio").action=<s:url value='/inscripciones/afeConvenio/asignarConvenio/'/>
+                document.getElementById("afeConvenio").submit();
+                return true;
+            }
+            
+            function graba(){
+                document.getElementById("afeConvenio").action='graba';
+                document.getElementById("afeConvenio").submit();
+                return true;
+            }
         </script>                    
     </content>
 </body>

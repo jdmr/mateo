@@ -202,7 +202,7 @@ public class AFEConvenioControllerTest extends BaseControllerTest{
        
         this.mockMvc.perform(post(Constantes.PATH_AFECONVENIO_ALUMNO)
                 .param("matricula","1060755"))
-                .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_ALUMNO))
+                .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_AFECONVENIO))
                 .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_AFECONVENIO_CONVENIO + ".jsp"));
     }
     
