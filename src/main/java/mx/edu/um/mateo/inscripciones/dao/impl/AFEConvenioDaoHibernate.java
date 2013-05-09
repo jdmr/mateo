@@ -16,6 +16,7 @@ import mx.edu.um.mateo.inscripciones.dao.AlumnoDao;
 import mx.edu.um.mateo.inscripciones.model.AFEConvenio;
 import mx.edu.um.mateo.inscripciones.model.Alumno;
 import org.hibernate.Criteria;
+import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
@@ -101,7 +102,7 @@ public class AFEConvenioDaoHibernate extends BaseDao implements AFEConvenioDao{
             
          AFEConvenio convenio = itr.next();
          log.debug("{}",convenio.getMatricula());
-         convenio.setAlumno(alDao.obtiene(convenio.getMatricula()));;
+         convenio.setAlumno(alDao.obtiene(convenio.getMatricula()));
          
         
         }
@@ -127,13 +128,24 @@ public class AFEConvenioDaoHibernate extends BaseDao implements AFEConvenioDao{
     
     @Override
     public void graba(final AFEConvenio afeConvenio, Usuario usuario) {
+       Session session = currentSession();
         if (usuario != null) {
             afeConvenio.setEmpresa(usuario.getEmpresa());
         }
-        Session session = currentSession();
-        currentSession().saveOrUpdate(afeConvenio);
-        currentSession().merge(afeConvenio);
-        currentSession().flush();
+        try {
+            currentSession().saveOrUpdate(afeConvenio);
+       } catch (NonUniqueObjectException e) {
+           try {
+                currentSession().merge(afeConvenio);  
+                currentSession().flush();
+            } catch (Exception ex) {
+                log.error("No se pudo actualizar el afeConvenio", ex);
+                throw new RuntimeException("No se pudo actualizar el afeConvenio",
+                        ex);
+            }
+       }finally{
+            
+       }
         
     }
 

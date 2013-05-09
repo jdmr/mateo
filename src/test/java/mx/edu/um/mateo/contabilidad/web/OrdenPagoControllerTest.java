@@ -99,7 +99,7 @@ public class OrdenPagoControllerTest extends BaseControllerTest {
                 .param("cheque", "false")
                 .param("fechaPago", "01/01/2012"))
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "ordenPago.creado.message"))
+                .andExpect(flash().attribute("message", "ordenPago.graba.message"))
                 .andExpect(redirectedUrl(Constantes.ORDENPAGO_PATH));
     }
 
@@ -125,7 +125,7 @@ public class OrdenPagoControllerTest extends BaseControllerTest {
                 .param("status", orden.getStatus())
                 .param("statusInterno", orden.getStatusInterno()))
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "ordenPago.actualizado.message"))
+                .andExpect(flash().attribute("message", "ordenPago.actualiza.message"))
                 .andExpect(redirectedUrl(Constantes.ORDENPAGO_PATH));
         
     }
@@ -146,7 +146,7 @@ public class OrdenPagoControllerTest extends BaseControllerTest {
         this.mockMvc.perform(post(Constantes.ORDENPAGO_PATH_ELIMINA)
                 .param("id", orden.getId().toString()))
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "ordenPago.eliminado.message"))
+                .andExpect(flash().attribute("message", "ordenPago.elimina.message"))
                 .andExpect(redirectedUrl(Constantes.ORDENPAGO_PATH));
         
         orden = instance.obtiene(orden.getId());
