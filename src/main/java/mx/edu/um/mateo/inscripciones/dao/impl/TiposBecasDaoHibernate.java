@@ -36,7 +36,7 @@ public class TiposBecasDaoHibernate extends BaseDao implements TiposBecasDao{
      */
 
  @Override
-    public Map<String, Object> getTiposBeca(Map<String, Object> params) {
+    public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de Tipos de Becas con params {}", params);
         if (params == null) {
             params = new HashMap<>();
@@ -105,7 +105,7 @@ public class TiposBecasDaoHibernate extends BaseDao implements TiposBecasDao{
      * @see mx.edu.um.afe.dao.TipoAFEBecaDao#getTipoBeca(Integer id)
      */
     @Override
-    public TiposBecas getTipoBeca(final Integer id) {
+    public TiposBecas obtiene(final Integer id) {
         TiposBecas tipoBeca =  (TiposBecas) currentSession().get(TiposBecas.class, id);
         if (tipoBeca == null) {
             //log.warn("uh oh, tipoBeca with id '" + id + "' not found...");
@@ -143,8 +143,8 @@ public class TiposBecasDaoHibernate extends BaseDao implements TiposBecasDao{
      * @see mx.edu.um.afe.dao.TipoAFEBecaDao#removeTipoBeca(Integer id)
      */
     @Override
-    public String removeTipoBeca(final Integer id) {
-       TiposBecas tiposBecas = this.getTipoBeca(id);
+    public String elimina(final Integer id) {
+       TiposBecas tiposBecas = this.obtiene(id);
        String descripcion = tiposBecas.getDescripcion(); 
        currentSession().delete(tiposBecas);
         currentSession().flush();

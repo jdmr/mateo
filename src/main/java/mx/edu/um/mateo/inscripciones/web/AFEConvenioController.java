@@ -180,6 +180,7 @@ public class AFEConvenioController extends BaseController{
         return Constantes.PATH_AFECONVENIO_VER;
     }
     
+
 //    Se comento porque se a creado un nuevo metodo llamando asignarConvenio
 //     @RequestMapping("/nuevo")
 //    public String nueva(Model modelo) {
@@ -212,7 +213,7 @@ public class AFEConvenioController extends BaseController{
         try {
            log.debug("obteniendo usuario");
             Usuario usuario = ambiente.obtieneUsuario();
-             afeConvenioManager.graba(afeConvenio, usuario);
+            afeConvenioManager.graba(afeConvenio, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo grabar convenio", e);
             return Constantes.PATH_AFECONVENIO_NUEVO;
@@ -234,7 +235,7 @@ public class AFEConvenioController extends BaseController{
         log.debug("Editar convenio {}", id);
         Map<String, Object>params= new HashMap<>();
         AFEConvenio afeConvenio = afeConvenioManager.obtiene(id);
-        params= tiposManager.getTiposBeca(params);
+        params= tiposManager.lista(params);
         List<TiposBecas> listaTipos= (List)params.get(Constantes.CONTAINSKEY_TIPOSBECAS);
         modelo.addAttribute(Constantes.CONTAINSKEY_TIPOSBECAS, listaTipos);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_AFECONVENIO, afeConvenio);

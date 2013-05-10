@@ -109,7 +109,7 @@ public class TiposBecasController extends BaseController {
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = tiposBecasManager.getTiposBeca(params);
+            params = tiposBecasManager.lista(params);
             try {
                 generaReporte(tipo, (List<TiposBecas>) params.get(Constantes.CONTAINSKEY_TIPOSBECAS), response);
                 return null;
@@ -122,7 +122,7 @@ public class TiposBecasController extends BaseController {
 
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = tiposBecasManager.getTiposBeca(params);
+            params = tiposBecasManager.lista(params);
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
@@ -133,7 +133,7 @@ public class TiposBecasController extends BaseController {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-        params = tiposBecasManager.getTiposBeca(params);
+        params = tiposBecasManager.lista(params);
         log.debug("params{}", params.get(Constantes.CONTAINSKEY_TIPOSBECAS));
         modelo.addAttribute(Constantes.CONTAINSKEY_TIPOSBECAS, params.get(Constantes.CONTAINSKEY_TIPOSBECAS));
 
@@ -166,7 +166,7 @@ public class TiposBecasController extends BaseController {
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable String id, Model modelo) {
         log.debug("Mostrando Tipos de Becas {}", id);
-        TiposBecas tiposBecas = tiposBecasManager.getTipoBeca(id);
+        TiposBecas tiposBecas = tiposBecasManager.obtiene(id);
 
         modelo.addAttribute(Constantes.ADDATTRIBUTE_TIPOSBECAS, tiposBecas);
 
@@ -222,7 +222,7 @@ public class TiposBecasController extends BaseController {
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable String id, Model modelo) {
         log.debug("Editar cuenta de tipos de becas {}", id);
-        TiposBecas tiposBecas = tiposBecasManager.getTipoBeca(id);
+        TiposBecas tiposBecas = tiposBecasManager.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_TIPOSBECAS, tiposBecas);
         return Constantes.PATH_TIPOSBECAS_EDITA;
     }
@@ -232,7 +232,7 @@ public class TiposBecasController extends BaseController {
     public String elimina(HttpServletRequest request, @RequestParam String id, Model modelo, @ModelAttribute TiposBecas tiposBecas, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina cuenta de tipos de becas");
         try {
-            tiposBecasManager.removeTipoBeca(id);
+            tiposBecasManager.elimina(id);
 
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "tiposBecas.elimina.message");
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{tiposBecas.getDescripcion()});
