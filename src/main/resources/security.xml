@@ -61,9 +61,11 @@
                 ROLE_ADMIN > ROLE_ASOC
                 ROLE_ORG   > ROLE_EMP
                 ROLE_ORG   > ROLE_JEFE
+                ROLE_ORG   > ROLE_AFE
                 ROLE_ASOC  > ROLE_CLP
                 ROLE_EMP   > ROLE_USER
                 ROLE_JEFE  > ROLE_USER
+                ROLE_AFE   > ROLE_USER
                 ROLE_CLP   > ROLE_USER
                 ROLE_USER  > ROLE_AUTHENTICATED
                 ROLE_AUTHENTICATED > ROLE_UNAUTHENTICATED
