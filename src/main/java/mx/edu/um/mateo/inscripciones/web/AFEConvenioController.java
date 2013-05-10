@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
@@ -20,6 +21,7 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.web.BaseController;
+import mx.edu.um.mateo.inscripciones.dao.AlumnoDao;
 import mx.edu.um.mateo.inscripciones.model.AFEConvenio;
 import mx.edu.um.mateo.inscripciones.model.Alumno;
 import mx.edu.um.mateo.inscripciones.model.TiposBecas;
@@ -73,6 +75,8 @@ public class AFEConvenioController extends BaseController{
     private AFEConvenioManager afeConvenioManager;
     @Autowired
     private TiposBecasManager tiposManager;
+    @Autowired
+    private AlumnoDao alDao;
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
@@ -176,23 +180,25 @@ public class AFEConvenioController extends BaseController{
         return Constantes.PATH_AFECONVENIO_VER;
     }
     
-    
-     @RequestMapping("/nuevo")
-    public String nueva(Model modelo) {
-        log.debug("Nuevo convenio");
-        Map<String, Object>params= new HashMap<>();
-        AFEConvenio afeConvenio = new AFEConvenio();
-        params= tiposManager.lista(params);
-        List<TiposBecas> listaTipos= (List)params.get(Constantes.CONTAINSKEY_TIPOSBECAS);
-        modelo.addAttribute(Constantes.CONTAINSKEY_TIPOSBECAS, listaTipos);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_AFECONVENIO, afeConvenio);
-        return Constantes.PATH_AFECONVENIO_NUEVO;
-    }
+
+//    Se comento porque se a creado un nuevo metodo llamando asignarConvenio
+//     @RequestMapping("/nuevo")
+//    public String nueva(Model modelo) {
+//        log.debug("Nuevo convenio");
+//        Map<String, Object>params= new HashMap<>();
+//        AFEConvenio afeConvenio = new AFEConvenio();
+//        params= tiposManager.getTiposBeca(params);
+//        List<TiposBecas> listaTipos= (List)params.get(Constantes.CONTAINSKEY_TIPOSBECAS);
+//        modelo.addAttribute(Constantes.CONTAINSKEY_TIPOSBECAS, listaTipos);
+//        modelo.addAttribute(Constantes.ADDATTRIBUTE_AFECONVENIO, afeConvenio);
+//        return Constantes.PATH_AFECONVENIO_NUEVO;
+//    }
     
      @Transactional
     @RequestMapping(value = "/graba", method = RequestMethod.POST)
     public String graba(HttpServletRequest request, HttpServletResponse response, @Valid AFEConvenio afeConvenio, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
-        for (String nombre : request.getParameterMap().keySet()) {
+         log.debug("ENTRANDO al metodo graba");
+         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
         if (bindingResult.hasErrors()) {
@@ -207,11 +213,7 @@ public class AFEConvenioController extends BaseController{
         try {
            log.debug("obteniendo usuario");
             Usuario usuario = ambiente.obtieneUsuario();
-           log.debug("Grabando tipoBeca");
-           TiposBecas tipoBeca=tiposManager.obtiene(afeConvenio.getTipoBeca().getId().toString());
-           afeConvenio.setTipoBeca(tipoBeca);
-            log.debug("Entrandoo al  metodo Graba");
-             afeConvenioManager.graba(afeConvenio, usuario);
+            afeConvenioManager.graba(afeConvenio, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo grabar convenio", e);
             return Constantes.PATH_AFECONVENIO_NUEVO;
@@ -259,8 +261,36 @@ public class AFEConvenioController extends BaseController{
         return "redirect:" + Constantes.PATH_AFECONVENIO_LISTA ;
     }
     
+    @RequestMapping(value = "/asignarConvenio")
+    public String asignarConvenio(HttpServletRequest request, Model modelo, @Valid AFEConvenio afeConvenio,Errors errors, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        try {
+            AFEConvenio afeConvenio2 = afeConvenioManager.asignarConvenio(afeConvenio);
+            modelo.addAttribute(Constantes.ADDATTRIBUTE_AFECONVENIO, afeConvenio2);
+            
+        } catch (MatriculaInvalidaException ex) {
+            log.error("No se pudo encontrar matricula del convenio", ex);
+			errors.rejectValue("matricula", "matricula.no.valida.message",
+					new String[] { afeConvenio.getMatricula() }, null);
+                        return Constantes.PATH_AFECONVENIO_CONVENIO;
+        }
+        
+        return  Constantes.PATH_AFECONVENIO_CONVENIO;
+    }
     
-    
+    @RequestMapping(value = "/obtenerAlumno")
+    public String obtenerAlumno(HttpServletRequest request, Model modelo, @Valid AFEConvenio afeConvenio,Errors errors, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        
+          Alumno alumno = alDao.obtiene(afeConvenio.getMatricula());
+          afeConvenio.setAlumno(alumno);
+          modelo.addAttribute(Constantes.ADDATTRIBUTE_AFECONVENIO, afeConvenio);
+          
+          if(alumno == null){
+             errors.rejectValue("matricula", "matricula.no.valida.message",
+					new String[] { afeConvenio.getMatricula() }, null);
+            }
+        
+        return  Constantes.PATH_AFECONVENIO_CONVENIO;
+    }
     
      private void generaReporte(String tipo, List<AFEConvenio> afeConvenios, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);

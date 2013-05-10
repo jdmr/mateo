@@ -8,17 +8,12 @@
 package mx.edu.um.mateo.colportor.web;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.colportor.dao.AsociadoDao;
-import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.colportor.model.Asociado;
-import mx.edu.um.mateo.colportor.model.Union;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
-import mx.edu.um.mateo.inventario.model.Almacen;
 import static org.junit.Assert.assertNotNull;
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -48,185 +43,146 @@ public class AsociadoControllerTest extends BaseControllerTest {
     private AsociadoDao asociadoDao;
     
     @Test
-    public void debieraMostrarListaDeAsociado() throws Exception {
+    public void testLista() throws Exception {
         log.debug("Debiera monstrar lista asociado");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Rol rol = new Rol(Constantes.ROLE_ASO);
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
+        Usuario usuario = obtieneAsociado();
+        authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         for (int i = 0; i < 20; i++) {
             Asociado asociado = new Asociado("test" + i + "@test.com", "test", "test", "test", "test",
                     Constantes.STATUS_ACTIVO, Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE, Constantes.COLONIA,
                     Constantes.MUNICIPIO);
 
-            asociado.setEmpresa(empresa);
-            asociado.setAlmacen(almacen);
-            asociado.setAsociacion(asociacion);
+            asociado.setEmpresa(usuario.getEmpresa());
+            asociado.setAlmacen(usuario.getAlmacen());
+            
             currentSession().save(asociado);
             assertNotNull(asociado.getId());
         }
 
-        this.mockMvc.perform(get(Constantes.PATH_ASOCIADO)
-                .sessionAttr(Constantes.SESSION_ASOCIACION, asociacion))
-                .andExpect(status().isOk())
+        this.mockMvc.perform(get(Constantes.PATH_ASOCIADO))                
                 .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_ASOCIADO_LISTA + ".jsp"))
-                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_ASOCIADOS))
+                .andExpect(model().attributeExists(Constantes.ASOCIADO_LIST))
                 .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION))
                 .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINAS))
                 .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINA));
     }
 
     @Test
-    public void debieraMostrarAsociado() throws Exception {
+    public void testObtiene() throws Exception {
         log.debug("Debiera mostrar  asociado");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Rol rol = new Rol(Constantes.ROLE_ASO);
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
+        Usuario usuario = obtieneAsociado();
+        authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
+        
         Asociado asociado = new Asociado("test@test.com", "test", "test", "test", "test",
                 Constantes.STATUS_ACTIVO, Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE, Constantes.COLONIA,
                 Constantes.MUNICIPIO);
 
-        asociado.setEmpresa(empresa);
-        asociado.setAlmacen(almacen);
-        asociado.setAsociacion(asociacion);
+        asociado.setEmpresa(usuario.getEmpresa());
+        asociado.setAlmacen(usuario.getAlmacen());
+            
         currentSession().save(asociado);
         assertNotNull(asociado.getId());
 
 
         this.mockMvc.perform(get(Constantes.PATH_ASOCIADO_VER + "/" + asociado.getId()))
-                .andExpect(status().isOk())
                 .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_ASOCIADO_VER + ".jsp"))
                 .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_ASOCIADO));
     }
 
     @Test
-    public void debieraCrearAsociado() throws Exception {
+    public void testGraba() throws Exception {
         log.debug("Debiera crear asociado");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Rol rol = new Rol(Constantes.ROLE_ASO);
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
+        Usuario usuario = obtieneAsociado();
+        authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
+        
         Asociado asociado = new Asociado("jalvaradol", "test", "test", "test", "test",
                 Constantes.STATUS_ACTIVO, Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE, Constantes.COLONIA,
                 Constantes.MUNICIPIO);
-        asociado.setEmpresa(empresa);
-        asociado.setAlmacen(almacen);
-        asociado.setAsociacion(asociacion);
+        
+        asociado.setEmpresa(usuario.getEmpresa());
+        asociado.setAlmacen(usuario.getAlmacen());
         currentSession().save(asociado);
         assertNotNull(asociado.getId());
-        this.authenticate(asociado, asociado.getPassword(), new ArrayList<GrantedAuthority>(asociado.getRoles()));
+        
         this.mockMvc.perform(post(Constantes.PATH_ASOCIADO_CREA)
-                .sessionAttr("asociacionId", asociacion.getId())
-                //                .sessionAttr("alamcen", almacen)
-                .param("username", "jalvaradol")
-                .param("nombre", "Jose")
-                .param("apPaterno", "Alvarado")
-                .param("apMaterno", "Lopez")
-                .param("correo", "jalvaradol52@gmail.com")
-                .param(Constantes.ROLES, Constantes.ROLE_ASO))
-                //                .param("username", "jalvaradol52@gmail.com"))
-                .andExpect(status().isOk());
-        //.andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_ASOCIADO));
+                .param("username", "testC1")
+                .param("correo", "test@test.com")
+                .param("password", "test")
+                .param("nombre", "testC1")
+                .param("apPaterno", "test")
+                .param("apMaterno", "test")
+                .param("clave", Constantes.CLAVE)
+                .param("status", Constantes.STATUS_ACTIVO)
+                .param("telefono", Constantes.TELEFONO)
+                .param("calle", Constantes.CALLE)
+                .param("colonia", Constantes.COLONIA)
+                .param("municipio", Constantes.MUNICIPIO)
+                .param("tipoDeColportor", Constantes.TIPO_COLPORTOR)
+                .param("matricula", Constantes.MATRICULA)
+                .param("fechaDeNacimiento", "05/05/2010"))
+                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "asociado.creado.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_ASOCIADO_VER+"/"+asociadoDao.obtiene(asociado.getId()+1).getId()));
     }
 
     @Test
-    public void debieraActualizarAsociado() throws Exception {
+    public void testActualiza() throws Exception {
         log.debug("Debiera actualizar  asociado");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Rol rol = new Rol(Constantes.ROLE_ASO);
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
+        Usuario usuario = obtieneAsociado();
+        authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
+        
         Asociado asociado = new Asociado("jalvaradol", "test", "test", "test", "test",
                 Constantes.STATUS_ACTIVO, Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE, Constantes.COLONIA,
                 Constantes.MUNICIPIO);
-        asociado.setEmpresa(empresa);
-        asociado.setAlmacen(almacen);
-        asociado.setAsociacion(asociacion);
+        asociado.setEmpresa(usuario.getEmpresa());
+        asociado.setAlmacen(usuario.getAlmacen());
+        
         currentSession().save(asociado);
         assertNotNull(asociado.getId());
 
         this.mockMvc.perform(post(Constantes.PATH_ASOCIADO_ACTUALIZA)
-                .param("id", asociado.getId().toString()))
-                .andExpect(status().isOk());
-
-
+            .param("id", asociado.getId().toString())
+            .param("version", asociado.getVersion().toString())
+            .param("roles", "ROLE_COL")
+            .param("roles", Constantes.ROLE_COL)
+            .param("username", "testC2")
+            .param("correo", "test@test.com")
+            .param("password", "test")
+            .param("nombre", "test")
+            .param("apPaterno", "test")
+            .param("apMaterno", "test")
+            .param("clave", Constantes.CLAVE)
+            .param("status", Constantes.STATUS_ACTIVO)
+            .param("telefono", Constantes.TELEFONO)
+            .param("calle", Constantes.CALLE)
+            .param("colonia", Constantes.COLONIA)
+            .param("municipio", Constantes.MUNICIPIO)
+            .param("tipoDeColportor", Constantes.TIPO_COLPORTOR)
+            .param("matricula", Constantes.MATRICULA)
+            .param("fechaDeNacimiento", "05/05/2010"))  
+            .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+            .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "asociado.actualizado.message"))
+            .andExpect(redirectedUrl(Constantes.PATH_ASOCIADO_VER+"/"+asociado.getId()));
     }
 
     @Test
-    public void debieraEliminarAsociacion() throws Exception {
+    public void testElimina() throws Exception {
         log.debug("Debiera eliminar  asociado");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Rol rol = new Rol(Constantes.ROLE_ASO);
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
+        Usuario usuario = obtieneAsociado();
+        authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
+        
         Asociado asociado = new Asociado("jalvaradol", "test", "test", "test", "test",
                 Constantes.STATUS_ACTIVO, Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE, Constantes.COLONIA,
                 Constantes.MUNICIPIO);
-        asociado.setEmpresa(empresa);
-        asociado.setAlmacen(almacen);
-        asociado.setAsociacion(asociacion);
-        currentSession().save(asociado);
+        asociado.setEmpresa(usuario.getEmpresa());
+        asociado.setAlmacen(usuario.getAlmacen());
+        currentSession().save(asociado);        
         assertNotNull(asociado.getId());
+        
         this.mockMvc.perform(post(Constantes.PATH_ASOCIADO_ELIMINA)
                 .param("id", asociado.getId().toString()))
-                .andExpect(status().isOk()).andExpect(flash()
-                .attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "asociado.eliminado.message"));
+                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "asociado.eliminado.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_ASOCIADO));
     }
 }

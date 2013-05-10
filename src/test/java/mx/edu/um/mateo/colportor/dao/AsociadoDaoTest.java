@@ -13,10 +13,10 @@ import mx.edu.um.mateo.colportor.utils.UltimoException;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
+import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inventario.model.Almacen;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,90 +34,51 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class AsociadoDaoTest {
+public class AsociadoDaoTest extends BaseDaoTest {
 
     private static final Logger log = LoggerFactory.getLogger(AsociadoDao.class);
     @Autowired
     private AsociadoDao instance;
-    @Autowired
-    private SessionFactory sessionFactory;
-
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
-
+    
     /**
      * Test of lista method, of class AsociadoDao.
      */
     @Test
-    public void debieraMostrarListaDeAsociado() {
+    public void testLista() {
         log.debug("Debiera mostrar lista de Asociado");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Rol rol = new Rol(Constantes.ROLE_ASO);
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
+        Usuario usuario = obtieneAsociado();
+        
         for (int i = 0; i < 20; i++) {
             Asociado asociado = new Asociado("test" + i + "@test.com", "test", "test", "test", "test",
                     Constantes.STATUS_ACTIVO, Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE, Constantes.COLONIA,
                     Constantes.MUNICIPIO);
             
-            asociado.setEmpresa(empresa);
-            asociado.setAlmacen(almacen);
-            asociado.setAsociacion(asociacion);
+            asociado.setEmpresa(usuario.getEmpresa());
+            asociado.setAlmacen(usuario.getAlmacen());
             currentSession().save(asociado);
             assertNotNull(asociado.getId());
         }
         Map<String, Object> params = new HashMap();
-        params.put(Constantes.ADDATTRIBUTE_ASOCIACION, asociacion);
-        Map result=null;
-        try {
-            result = instance.lista(params);
-        } catch (FaltaAsociacionException ex) {
-            log.error("Falta asociacion", ex);
-        }
-        assertNotNull(result.get(Constantes.CONTAINSKEY_ASOCIADOS));
+        params.put("empresa", usuario.getEmpresa().getId());
+        
+        Map result = instance.lista(params);
+        
+        assertNotNull(result.get(Constantes.ASOCIADO_LIST));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
 
-        assertEquals(10, ((List<Asociado>) result.get(Constantes.CONTAINSKEY_ASOCIADOS)).size());
+        assertEquals(10, ((List<Asociado>) result.get(Constantes.ASOCIADO_LIST)).size());
         assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
 
     @Test
-    public void debieraObtenerAsociado() {
+    public void testObtiene() {
         log.debug("Debiera obtener asociado");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Rol rol = new Rol("ROLE_ASO");
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
-        String nombre = Constantes.MUNICIPIO;
+        Usuario usuario = obtieneAsociado();
         Asociado asociado = new Asociado("test@test.com", "test", "test", "test", "test",
                 Constantes.STATUS_ACTIVO, Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE,
                 Constantes.COLONIA, Constantes.MUNICIPIO);
-        asociado.setEmpresa(empresa);
-        asociado.setAlmacen(almacen);
-        asociado.setAsociacion(asociacion);
+        asociado.setEmpresa(usuario.getEmpresa());
+        asociado.setAlmacen(usuario.getAlmacen());
         currentSession().save(asociado);
         assertNotNull(asociado.getId());
         Long id = asociado.getId();
@@ -125,35 +86,21 @@ public class AsociadoDaoTest {
 
         Asociado result = instance.obtiene(id);
         assertNotNull(result);
-        assertEquals(nombre, result.getMunicipio());
         assertEquals(result, asociado);
     }
 
     @Test
-    public void deberiaCrearAsociado() {
+    public void testCrea() {
         log.debug("Deberia crear asociado");
 
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Rol rol = new Rol("ROLE_ASOC"); //Rol Colportor
-        currentSession().save(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
-
+        Usuario usuario = obtieneAsociado();
+        
         Asociado asociado = new Asociado("test@test.com", "test", "test", "test", "test",
                 Constantes.STATUS_ACTIVO, Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE,
                 Constantes.COLONIA, Constantes.MUNICIPIO);
-        asociado.setEmpresa(empresa);
-        asociado.setAlmacen(almacen);
-        asociado.setAsociacion(asociacion);
-        instance.crea(asociado, null);
+        asociado.setEmpresa(usuario.getEmpresa());
+        asociado.setAlmacen(usuario.getAlmacen());
+        instance.crea(asociado, usuario);
         assertNotNull(asociado.getId());
 
         Asociado asociado2 = instance.obtiene(asociado.getId());
@@ -163,33 +110,17 @@ public class AsociadoDaoTest {
     }
 
     @Test
-    public void deberiaActualizarAsociado() {
+    public void testActualiza() {
         log.debug("Deberia actualizar asociado");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Rol rol = new Rol(Constantes.ROLE_ASO);
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
+        Usuario usuario = obtieneAsociado();
         Asociado asociado = new Asociado("test@test.com", "test", "test", "test", "test",
                 Constantes.STATUS_ACTIVO, Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE,
                 Constantes.COLONIA, Constantes.MUNICIPIO);
-        asociado.setEmpresa(empresa);
-        asociado.setAlmacen(almacen);
-        asociado.setAsociacion(asociacion);
+        asociado.setEmpresa(usuario.getEmpresa());
+        asociado.setAlmacen(usuario.getAlmacen());
         currentSession().save(asociado);
         assertNotNull(asociado.getId());
-        currentSession().save(asociado);
-
+        
         String nombre = "colonia";
         asociado.setColonia(nombre);
 
@@ -197,35 +128,20 @@ public class AsociadoDaoTest {
         assertNotNull(asociado2.getId());
         assertEquals(nombre, asociado.getColonia());
 
-        assertEquals(asociado, asociado2);
     }
 
     @Test
-    public void deberiaEliminarAsociado() throws UltimoException {
+    public void testElimina() {
         log.debug("Debiera eliminar Asociado");
 
         String nom = Constantes.CLAVE;
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Rol rol = new Rol(Constantes.ROLE_ASO);
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
+        Usuario usuario = obtieneAsociado();
+        
         Asociado asociado = new Asociado("test@test.com", "test", "test", "test", "test",
                 Constantes.STATUS_ACTIVO, Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE,
                 Constantes.COLONIA, Constantes.MUNICIPIO);
-        asociado.setEmpresa(empresa);
-        asociado.setAlmacen(almacen);
-        asociado.setAsociacion(asociacion);
+        asociado.setEmpresa(usuario.getEmpresa());
+        asociado.setAlmacen(usuario.getAlmacen());
         currentSession().save(asociado);
         assertNotNull(asociado.getId());
 

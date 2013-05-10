@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -106,5 +107,30 @@ public class TiposBecasDaoTest extends BaseDaoTest{
         assertNotNull(tiposBecas.getId());
         String descripcion = instance.elimina(tiposBecas.getId());
         assertEquals(descripcion, tiposBecas.getDescripcion());
+    }
+    
+     /**
+     * Test of obtiene method, of class TiposBecasDao.
+     */
+    @Test
+    public void testObtienePorDescripcion() {
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        TiposBecas tiposBecas = new TiposBecas();
+        tiposBecas.setDescripcion("test");
+        tiposBecas.setDiezma(true);
+        tiposBecas.setNumHoras(320);
+        tiposBecas.setPerteneceAlumno(false);
+        tiposBecas.setPorcentaje(new BigDecimal(320));
+        tiposBecas.setSoloPostgrado(false);
+        tiposBecas.setStatus("a");
+        tiposBecas.setTope(new BigDecimal(350));
+        tiposBecas.setEmpresa(empresa);
+        currentSession().save(tiposBecas);
+        assertNotNull(tiposBecas.getId());
+        TiposBecas prueba = instance.obtiene(tiposBecas.getDescripcion());
+        assertEquals(prueba.getDescripcion(), tiposBecas.getDescripcion());
     }
 }

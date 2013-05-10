@@ -41,4 +41,11 @@ public interface TiposBecasDao {
      * @param id the tipoBeca's id
      */
     public String elimina(final Integer id);
+    
+    /**
+     * Gets tipoBeca's information based on description
+     * @param descripcion
+     * @return 
+     */
+    public TiposBecas obtiene(final String descripcion);
 }

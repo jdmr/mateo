@@ -23,11 +23,14 @@
  */
 package mx.edu.um.mateo.general.test;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.contabilidad.model.EjercicioPK;
+import mx.edu.um.mateo.colportor.model.Asociado;
+import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
@@ -118,6 +121,79 @@ public abstract class BaseTest {
         log.debug("Usuario creado {}",user);
         
         return user;
+    }
+    
+    protected Usuario obtieneColportor(){
+        log.debug("Entrando a 'obtieneColportor'");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        assertNotNull(organizacion.getId());
+        
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        assertNotNull(empresa.getId());
+        
+        Rol rol = new Rol("ROLE_CLP");
+        currentSession().save(rol);
+        assertNotNull(rol.getId());
+        
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
+        
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        assertNotNull(almacen);
+        
+        Usuario clp = new Colportor("test", "TEST-01", "test@clp.edu.mx", "nombre", "appaterno", "apmaterno", "54321", "A", "826-26-30-900", "Libertad", "Matamoros", "Montemorelos", "L", "999999", new Date());
+        clp.setEmpresa(empresa);
+        clp.setAlmacen(almacen);
+        clp.setRoles(roles);
+        currentSession().save(clp);        
+        Long id = clp.getId();
+        assertNotNull(id);
+        
+        log.debug("Colportor creado {}",clp);
+        
+        return clp;
+    }
+    
+    protected Usuario obtieneAsociado(){
+        log.debug("Entrando a 'obtieneAsociado'");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        assertNotNull(organizacion.getId());
+        
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        assertNotNull(empresa.getId());
+        
+        Set<Rol> roles = new HashSet<>();
+        
+        Rol rol = new Rol("ROLE_ASOC");
+        currentSession().save(rol);
+        assertNotNull(rol.getId());
+        roles.add(rol);
+        rol = new Rol("ROLE_CLP");
+        currentSession().save(rol);
+        assertNotNull(rol.getId());
+        roles.add(rol);
+        
+        
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        assertNotNull(almacen);
+        
+        Usuario asoc = new Asociado("test", "TEST-01", "test@clp.edu.mx", "nombre", "appaterno", "apmaterno", "A", "54321", "8262630900", "Libertad", "Matamoros", "Montemorelos");
+        asoc.setEmpresa(empresa);
+        asoc.setAlmacen(almacen);
+        asoc.setRoles(roles);
+        currentSession().save(asoc);        
+        Long id = asoc.getId();
+        assertNotNull(id);
+        
+        log.debug("Asociado creado {}",asoc);
+        
+        return asoc;
     }
     
 }

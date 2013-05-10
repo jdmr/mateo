@@ -386,7 +386,7 @@ public class Constantes {
      */
     public static final String TIPODEPENDIENTE_LIST = "tipoDependienteList";
     
-    public static final String DESCUENTO_LIST = "descuentos";
+     public static final String DESCUENTO_LIST = "descuentos";
     /**
      * The request scope attribute that holds the alumnoInscripciones list
      */
@@ -1824,7 +1824,7 @@ public class Constantes {
     /**
      * The request scope attribute that holds the alumnoColportor list.
      */
-    public static final String COLPORTOR_LIST = "coportorList";
+    //public static final String COLPORTOR_LIST = "coportorList";
     // Tipos de documentos
     /**
      * (F)actura - Compras del alumno a GEMA
@@ -2384,10 +2384,8 @@ public class Constantes {
     public static final String CONTAINSKEY_NACIONALIDADES = "nacionalidades";
     public static final String CONTAINSKEY_CATEGORIAS = "categorias";
     public static final String CONTAINSKEY_CONCEPTOS = "conceptos";
-    public static final String CONTAINSKEY_PERDED = "perdeds";
-    public static final String CONTAINSKEY_ASOCIADOS = "asociados";
-    public static final String CONTAINSKEY_CIUDADES = "ciudades";
-    public static final String CONTAINSKEY_COLPORTORES = "colportores";
+    public static final String CONTAINSKEY_PERDED = "perdeds";    
+    public static final String CONTAINSKEY_CIUDADES = "ciudades";    
     public static final String CONTAINSKEY_DOCUMENTOS = "documentos";
     public static final String CONTAINSKEY_ESTADOS = "estados";
     public static final String CONTAINSKEY_PAISES = "paises";
@@ -2724,7 +2722,10 @@ public class Constantes {
     public static final String PATH_AFECONVENIO_ACTUALIZA = "/inscripciones/afeConvenio/actualiza";
     public static final String PATH_AFECONVENIO_ELIMINA = "/inscripciones/afeConvenio/elimina";
     public static final String ADDATTRIBUTE_AFECONVENIO = "afeConvenio";
-    /**
+    public static final String PATH_AFECONVENIO_CONVENIO = "/inscripciones/afeConvenio/asignarConvenio";
+    public static final String PATH_AFECONVENIO_ALUMNO = "/inscripciones/afeConvenio/obtenerAlumno";
+    
+   /**
      * Valores para Paquete
      *
      */
@@ -2856,4 +2857,24 @@ public class Constantes {
     public static final String PATH_ALUMNODESCUENTO_ACTUALIZA = "/inscripciones/alumnoDescuento/actualiza";
     public static final String PATH_ALUMNODESCUENTO_ELIMINA = "/inscripciones/alumnoDescuento/elimina";
     public static final String ADDATTRIBUTE_ALUMNODESCUENTO = "alumnoDescuento";
+     public static final String ADDATTRIBUTE_ALUMNO = "alumno";
+    /**
+     * Valores para Ordenes de Pago
+     */
+    public static final String ORDENPAGO_PATH = "/contabilidad/ordenPago";
+    public static final String ORDENPAGO_PATH_LISTA = "contabilidad/ordenPago/lista";
+    public static final String ORDENPAGO_PATH_VER = "/contabilidad/ordenPago/ver";
+    public static final String ORDENPAGO_PATH_NUEVO = "/contabilidad/ordenPago/nuevo";
+    public static final String ORDENPAGO_PATH_EDITA = "/contabilidad/ordenPago/edita";
+    public static final String ORDENPAGO_PATH_GRABA = "/contabilidad/ordenPago/graba";
+    public static final String ORDENPAGO_PATH_ACTUALIZA = "/contabilidad/ordenPago/actualiza";
+    public static final String ORDENPAGO_PATH_ELIMINA = "/contabilidad/ordenPago/elimina";
+    public static final String ORDENPAGO = "ordenPago";
+    public static final String ORDENPAGO_LIST = "ordenPagoList";
+    
+    //Valores de Colportor
+    public static final String COLPORTOR_LIST = "colportores";
+    
+    //Valores de Asociado
+    public static final String ASOCIADO_LIST = "asociados";
 }

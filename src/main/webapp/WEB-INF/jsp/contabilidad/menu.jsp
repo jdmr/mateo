@@ -9,5 +9,6 @@
         <li<c:if test="${param.menu eq 'auxiliar'}"> class="active"</c:if>><a href="<s:url value='/contabilidad/auxiliar'/>" ><s:message code="auxiliares.label" /></a></li>
         <li<c:if test="${param.menu eq 'resultado'}"> class="active"</c:if>><a href="<s:url value='/contabilidad/resultado'/>" ><s:message code="resultados.label" /></a></li>
         <li<c:if test="${param.menu eq 'libro'}"> class="active"</c:if>><a href="<s:url value='/contabilidad/libro'/>" ><s:message code="libros.label" /></a></li>
+        <li<c:if test="${param.menu eq 'ordenPago'}"> class="active"</c:if>><a href="<s:url value='/contabilidad/ordenPago'/>" ><s:message code="ordenPago.label" /></a></li>
     </ul>
 </nav>
