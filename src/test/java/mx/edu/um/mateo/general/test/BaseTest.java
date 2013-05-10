@@ -27,6 +27,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
+import mx.edu.um.mateo.contabilidad.model.EjercicioPK;
 import mx.edu.um.mateo.colportor.model.Asociado;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.general.model.Empresa;
@@ -90,10 +92,28 @@ public abstract class BaseTest {
         currentSession().save(almacen);
         assertNotNull(almacen);
         
+        //Creando Ejercicio para usuario
+        EjercicioPK ejPk= new EjercicioPK();
+        ejPk.setIdEjercicio("001-2013");
+        ejPk.setOrganizacion(organizacion);
+        Ejercicio prueba= new Ejercicio();
+        prueba.setMascAuxiliar("Auxiliar");
+        prueba.setStatus("A");
+        prueba.setId(ejPk);
+        prueba.setMascBalance("MascBalance");
+        prueba.setMascCcosto("CCosto");
+        prueba.setMascResultado("Resultado");
+        prueba.setNivelContable(Byte.MIN_VALUE);
+        prueba.setNivelTauxiliar(Byte.MIN_VALUE);
+        prueba.setNombre("Nombre");
+        currentSession().save(prueba);
+        
+        
         Usuario user = new Usuario("test", "TEST-01", "nombre", "appaterno", "apmaterno", "tset@um.edu.mx");
         user.setEmpresa(empresa);
         user.setAlmacen(almacen);
         user.setRoles(roles);
+        user.setEjercicio(prueba);
         currentSession().save(user);        
         Long id = user.getId();
         assertNotNull(id);
