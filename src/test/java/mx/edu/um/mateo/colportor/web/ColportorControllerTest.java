@@ -161,7 +161,6 @@ public class ColportorControllerTest extends BaseControllerTest {
                 .param("tipoDeColportor", Constantes.TIPO_COLPORTOR)
                 .param("matricula", Constantes.MATRICULA)
                 .param("fechaDeNacimiento", "05/05/2010"))                
-                .andExpect(status().isOk())
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
                 .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "colportor.actualizado.message"));
     }

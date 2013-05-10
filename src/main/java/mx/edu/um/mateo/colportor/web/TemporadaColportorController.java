@@ -199,9 +199,9 @@ public class TemporadaColportorController {
             java.util.logging.Logger.getLogger(TemporadaColportorController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        List<Asociado> listaAsociados = (List) params.get(Constantes.CONTAINSKEY_ASOCIADOS);
+        List<Asociado> listaAsociados = (List) params.get(Constantes.ASOCIADO_LIST);
         log.debug("listaAsociados" + listaAsociados.size());
-        modelo.addAttribute(Constantes.CONTAINSKEY_ASOCIADOS, listaAsociados);
+        modelo.addAttribute(Constantes.ASOCIADO_LIST, listaAsociados);
 //        Map<String, Object> temporadas = temporadaDao.lista(null);
 //        params = temporadaDao.lista(null);
 //        modelo.addAttribute(Constantes.CONTAINSKEY_TEMPORADAS, temporadas.get(Constantes.CONTAINSKEY_TEMPORADAS));
@@ -214,11 +214,11 @@ public class TemporadaColportorController {
 //        } catch (FaltaAsociacionException ex) {
 //            log.error("Falta asociacion", ex);
 //        }
-//        List<Asociado> lista = (List) asociados.get(Constantes.CONTAINSKEY_ASOCIADOS);
+//        List<Asociado> lista = (List) asociados.get(Constantes.ASOCIADO_LIST);
 //        log.debug("asociados" + lista.size());
-//        modelo.addAttribute(Constantes.CONTAINSKEY_ASOCIADOS, lista);
-//        modelo.addAttribute(Constantes.CONTAINSKEY_ASOCIADOS, asociados.get(Constantes.CONTAINSKEY_ASOCIADOS));
-//        modelo.addAttribute(Constantes.CONTAINSKEY_ASOCIADOS, params.get(Constantes.CONTAINSKEY_ASOCIADOS));
+//        modelo.addAttribute(Constantes.ASOCIADO_LIST, lista);
+//        modelo.addAttribute(Constantes.ASOCIADO_LIST, asociados.get(Constantes.ASOCIADO_LIST));
+//        modelo.addAttribute(Constantes.ASOCIADO_LIST, params.get(Constantes.ASOCIADO_LIST));
 //
 //        Map<String, Object> colportores = null;
 //        try {
@@ -303,7 +303,7 @@ public class TemporadaColportorController {
         } catch (FaltaAsociacionException ex) {
             log.error("Falta asociacion", ex);
         }
-        modelo.addAttribute(Constantes.CONTAINSKEY_ASOCIADOS, asociados.get(Constantes.CONTAINSKEY_ASOCIADOS));
+        modelo.addAttribute(Constantes.ASOCIADO_LIST, asociados.get(Constantes.ASOCIADO_LIST));
         Map<String, Object> colportores = null;
         colportores = colportorDao.lista(null);
         

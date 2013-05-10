@@ -2384,8 +2384,7 @@ public class Constantes {
     public static final String CONTAINSKEY_NACIONALIDADES = "nacionalidades";
     public static final String CONTAINSKEY_CATEGORIAS = "categorias";
     public static final String CONTAINSKEY_CONCEPTOS = "conceptos";
-    public static final String CONTAINSKEY_PERDED = "perdeds";
-    public static final String CONTAINSKEY_ASOCIADOS = "asociados";
+    public static final String CONTAINSKEY_PERDED = "perdeds";    
     public static final String CONTAINSKEY_CIUDADES = "ciudades";    
     public static final String CONTAINSKEY_DOCUMENTOS = "documentos";
     public static final String CONTAINSKEY_ESTADOS = "estados";
@@ -2875,4 +2874,7 @@ public class Constantes {
     
     //Valores de Colportor
     public static final String COLPORTOR_LIST = "colportores";
+    
+    //Valores de Asociado
+    public static final String ASOCIADO_LIST = "asociados";
 }
