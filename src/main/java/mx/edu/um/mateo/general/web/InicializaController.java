@@ -59,6 +59,21 @@ public class InicializaController {
 
         return "redirect:/";
     }
+    
+     @RequestMapping(value = "inicializaRoles")
+    public String inicializaRoles() {
+        return "/inicializa/guardaRoles";
+    }
+    
+     @RequestMapping(value = "guardaRoles",method = RequestMethod.POST)
+    public String guardaRoles(@RequestParam String username,
+            @RequestParam String password,@RequestParam String roles) {
+
+        log.debug("Inicializando roles...");
+        inicializaDao.inicializaRoles(username, password, roles);
+
+        return "redirect:/";
+    }
 }
 
 

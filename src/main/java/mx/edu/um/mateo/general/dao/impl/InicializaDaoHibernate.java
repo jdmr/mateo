@@ -202,4 +202,42 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
         usuario.setRoles(rolesClp);
         colportorDao.crea((Colportor)usuario, usuario);
     }
+    
+    
+     @Override
+     public void inicializaRoles(String username, String password, String roles) {
+        reporteDao.inicializa();
+        Organizacion organizacion = new Organizacion("UM", "UM",
+                "Universidad de Montemorelos");
+        organizacion = organizacionDao.crea(organizacion);
+        Long almacenId = 0l;
+        actualizaUsuario:
+        for (Empresa empresa : organizacion.getEmpresas()) {
+            for (Almacen almacen : empresa.getAlmacenes()) {
+                almacenId = almacen.getId();
+                break actualizaUsuario;
+            }
+        }
+        
+        Almacen almacen=almacenDao.obtiene(almacenId);
+        Ejercicio ejercicio = null;
+        for (Ejercicio ej : ejercicioDao.lista(organizacion.getId())) {
+            ejercicio=ej;
+            break;
+        }
+        
+        Rol rol = null;
+         Usuario usuario = null;
+         String[] arrayRol = roles.split(",");
+        for(String r:arrayRol){
+            rol = new Rol(r);
+            rolDao.crea(rol);
+            usuario = new Usuario(username, password, "Hobbit", "frodo","baggins");
+            usuario.setEjercicio(ejercicio);
+            usuario = usuarioDao.crea(usuario, almacenId,new String[]{new Rol(r).getAuthority()});
+        }
+    }
+    
+    
+    
 }
