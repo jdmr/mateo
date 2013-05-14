@@ -214,16 +214,16 @@ public class DocumentoController {
 //        Codigo para Valdiar Pruebas
 
         modelo.addAttribute(Constantes.CONTAINSKEY_DOCUMENTOS, params.get(Constantes.CONTAINSKEY_DOCUMENTOS));
-        modelo.addAttribute(Constantes.CONTAINSKEY_TEMPORADAS, params.get(Constantes.CONTAINSKEY_TEMPORADAS));
+        modelo.addAttribute(Constantes.TEMPORADA_LIST, params.get(Constantes.TEMPORADA_LIST));
 
         List<Documento> lista = (List) params.get(Constantes.CONTAINSKEY_DOCUMENTOS);
         log.debug("Items en lista {}", lista.size());
         Iterator<Documento> iter = lista.iterator();
 
-        List<Temporada> listaTemporada = (List) params.get(Constantes.CONTAINSKEY_TEMPORADAS);
+        List<Temporada> listaTemporada = (List) params.get(Constantes.TEMPORADA_LIST);
 
         Map<String, Object> temporadas = temporadaDao.lista(null);
-        modelo.addAttribute(Constantes.CONTAINSKEY_TEMPORADAS, temporadas.get(Constantes.CONTAINSKEY_TEMPORADAS));
+        modelo.addAttribute(Constantes.TEMPORADA_LIST, temporadas.get(Constantes.TEMPORADA_LIST));
 
         Documento doc = null;
 

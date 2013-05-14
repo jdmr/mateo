@@ -23,7 +23,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/colportaje/temporada'/>"><i class="icon-list icon-white"></i> <s:message code='temporada.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="/colportaje/temporada/graba" />
+            <c:url var="actualizaUrl" value="/colportaje/temporada/crea" />
             <form:form commandName="temporada" method="post" action="${actualizaUrl}">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
@@ -35,6 +35,7 @@
                 </form:errors>
                 <form:hidden path="id" />
                 <form:hidden path="version" />
+                <form:hidden path="status" />
 
                 <fieldset>
                     <s:bind path="temporada.nombre">
@@ -51,7 +52,7 @@
                     <s:bind path="temporada.fechaInicio">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="fechaInicio">
-                                <s:message code="status.fechaInicio" />
+                                <s:message code="fechaInicio.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="fechaInicio" maxlength="2" required="true" />
@@ -62,7 +63,7 @@
                     <s:bind path="temporada.fechaFinal">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="fechaFinal">
-                                <s:message code="status.fechaFinal" />
+                                <s:message code="fechaFinal.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="fechaFinal" maxlength="2" required="true" />
@@ -70,18 +71,7 @@
                         </div>
                     </s:bind>
                     
-                    <s:bind path="temporada.asociacion">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="asociacionId">
-                                <s:message code="asociacion.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:select path="asociacion.id" id="asociacionId" required="true" cssClass="span3" >
-                                <form:options items="${asociaciones}" itemValue="id" itemLabel="nombre" />
-                            </form:select>
-                            <form:errors path="asociacion" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+                    
                     
                 </fieldset>
 

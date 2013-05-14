@@ -22,6 +22,7 @@ import mx.edu.um.mateo.colportor.dao.TemporadaDao;
 import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.colportor.model.Temporada;
 import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.web.BaseController;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -52,13 +53,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping("/colportaje/temporada")
-public class TemporadaController {
+public class TemporadaController extends BaseController {
 
     private static final Logger log = LoggerFactory.getLogger(TemporadaController.class);
     @Autowired
-    private TemporadaDao temporadaDao;
-    @Autowired
-    private AsociacionDao asociacionDao;
+    private TemporadaDao temporadaDao;    
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
@@ -93,7 +92,7 @@ public class TemporadaController {
         //filtrar temporadas por asociacion
 
         Map<String, Object> params = new HashMap<>();
-        params.put(Constantes.SESSION_ASOCIACION, ((Asociacion) request.getSession().getAttribute(Constantes.SESSION_ASOCIACION)));
+        params.put("organizacion", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
 
 
         if (StringUtils.isNotBlank(filtro)) {
@@ -115,7 +114,7 @@ public class TemporadaController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = temporadaDao.lista(params);
             try {
-                generaReporte(tipo, (List<Temporada>) params.get(Constantes.CONTAINSKEY_TEMPORADAS), response);
+                generaReporte(tipo, (List<Temporada>) params.get(Constantes.TEMPORADA_LIST), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -128,7 +127,7 @@ public class TemporadaController {
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<Temporada>) params.get(Constantes.CONTAINSKEY_TEMPORADAS), request);
+                enviaCorreo(correo, (List<Temporada>) params.get(Constantes.TEMPORADA_LIST), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, 
                         new String[]{messageSource.getMessage("temporada.lista.label", 
@@ -140,7 +139,7 @@ public class TemporadaController {
 
 
         params = temporadaDao.lista(params);
-        modelo.addAttribute(Constantes.CONTAINSKEY_TEMPORADAS, params.get(Constantes.CONTAINSKEY_TEMPORADAS));
+        modelo.addAttribute(Constantes.TEMPORADA_LIST, params.get(Constantes.TEMPORADA_LIST));
 
  //        inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
@@ -151,7 +150,7 @@ public class TemporadaController {
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<Temporada> temporadas = (List<Temporada>) params.get(Constantes.CONTAINSKEY_TEMPORADAS);
+        List<Temporada> temporadas = (List<Temporada>) params.get(Constantes.TEMPORADA_LIST);
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (temporadas.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
@@ -161,9 +160,9 @@ public class TemporadaController {
 
         params = temporadaDao.lista(params);
 
-        modelo.addAttribute(Constantes.CONTAINSKEY_TEMPORADAS, params.get(Constantes.CONTAINSKEY_TEMPORADAS));
+        modelo.addAttribute(Constantes.TEMPORADA_LIST, params.get(Constantes.TEMPORADA_LIST));
 
-        List<Temporada> lista = (List) params.get(Constantes.CONTAINSKEY_TEMPORADAS);
+        List<Temporada> lista = (List) params.get(Constantes.TEMPORADA_LIST);
         log.debug("SizeLista " + temporadas.size());
         log.debug("SizeLista " + lista.size());
 
@@ -176,7 +175,7 @@ public class TemporadaController {
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando Temporada {}", id);
         Temporada temporadas = temporadaDao.obtiene(id);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_TEMPORADA, temporadas);
+        modelo.addAttribute(Constantes.TEMPORADA, temporadas);
         return Constantes.PATH_TEMPORADA_VER;
     }
     
@@ -185,8 +184,7 @@ public class TemporadaController {
     public String nueva(Model modelo) {
         log.debug("Nueva Temporada");
         Temporada temporadas = new Temporada();
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_TEMPORADA, temporadas);
-        modelo.addAttribute(Constantes.CONTAINSKEY_ASOCIACIONES, asociacionDao.lista(null).get(Constantes.CONTAINSKEY_ASOCIACIONES));
+        modelo.addAttribute(Constantes.TEMPORADA, temporadas);
         
         return Constantes.PATH_TEMPORADA_NUEVA;
     }
@@ -200,7 +198,6 @@ public class TemporadaController {
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
-            modelo.addAttribute(Constantes.CONTAINSKEY_ASOCIACIONES, asociacionDao.lista(null).get(Constantes.CONTAINSKEY_ASOCIACIONES));
             return Constantes.PATH_TEMPORADA_NUEVA;
         }
         //try fechaInicio
@@ -209,7 +206,6 @@ public class TemporadaController {
             temporada.setFechaInicio(sdf.parse(request.getParameter("fechaInicio")));
         } catch (ConstraintViolationException e) {
             log.error("Fecha de Inicio Incorrecta", e);
-            modelo.addAttribute(Constantes.CONTAINSKEY_ASOCIACIONES, asociacionDao.lista(null).get(Constantes.CONTAINSKEY_ASOCIACIONES));
             return Constantes.PATH_TEMPORADA_NUEVA;
         }
         //try fechaFinal
@@ -218,19 +214,19 @@ public class TemporadaController {
             temporada.setFechaFinal(sdf.parse(request.getParameter("fechaFinal")));
         } catch (ConstraintViolationException e) {
             log.error("Fecha de Final Incorrecta", e);
-            modelo.addAttribute(Constantes.CONTAINSKEY_ASOCIACIONES, asociacionDao.lista(null).get(Constantes.CONTAINSKEY_ASOCIACIONES));
             return Constantes.PATH_TEMPORADA_NUEVA;
         }
 
         try {
             log.debug("Temporada FEcha Inicio" + temporada.getFechaInicio());
-            temporada.setAsociacion((Asociacion)request.getSession().getAttribute(Constantes.SESSION_ASOCIACION));
-            
             log.debug("Temporada FEcha Inicio" + temporada.getFechaFinal());
+            
+            temporada.setOrganizacion(ambiente.obtieneUsuario().getEmpresa().getOrganizacion());            
+            temporada.setStatus(Constantes.STATUS_ACTIVO);
+            
             temporada = temporadaDao.crea(temporada);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la temporada", e);
-            errors.rejectValue("asociacion" , "Asociacion no encontrada");modelo.addAttribute(Constantes.CONTAINSKEY_ASOCIACIONES, asociacionDao.lista(null).get(Constantes.CONTAINSKEY_ASOCIACIONES));
             
             return Constantes.PATH_TEMPORADA_NUEVA;
         }
@@ -245,8 +241,7 @@ public class TemporadaController {
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Edita Temporada {}", id);
         Temporada temporadas = temporadaDao.obtiene(id);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_TEMPORADA, temporadas);
-        modelo.addAttribute(Constantes.CONTAINSKEY_ASOCIACIONES, asociacionDao.lista(null).get(Constantes.CONTAINSKEY_ASOCIACIONES));
+        modelo.addAttribute(Constantes.TEMPORADA, temporadas);
         return Constantes.PATH_TEMPORADA_EDITA;
     }
 
@@ -255,7 +250,7 @@ public class TemporadaController {
     public String actualiza(HttpServletRequest request, @Valid Temporada temporada, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
-            modelo.addAttribute(Constantes.CONTAINSKEY_ASOCIACIONES, asociacionDao.lista(null).get(Constantes.CONTAINSKEY_ASOCIACIONES));
+            this.despliegaBindingResultErrors(bindingResult);
             return Constantes.PATH_TEMPORADA_EDITA;
         }
         //try fechaInicio
@@ -264,7 +259,6 @@ public class TemporadaController {
             temporada.setFechaInicio(sdf.parse(request.getParameter("fechaInicio")));
         } catch (ConstraintViolationException e) {
             log.error("Fecha de Inicio Incorrecta", e);
-            modelo.addAttribute(Constantes.CONTAINSKEY_ASOCIACIONES, asociacionDao.lista(null).get(Constantes.CONTAINSKEY_ASOCIACIONES));
             return Constantes.PATH_TEMPORADA_EDITA;
         }
         //try fechaFinal
@@ -273,18 +267,18 @@ public class TemporadaController {
             temporada.setFechaFinal(sdf.parse(request.getParameter("fechaFinal")));
         } catch (ConstraintViolationException e) {
             log.error("Fecha de Final Incorrecta", e);
-            modelo.addAttribute(Constantes.CONTAINSKEY_ASOCIACIONES, asociacionDao.lista(null).get(Constantes.CONTAINSKEY_ASOCIACIONES));
             return Constantes.PATH_TEMPORADA_EDITA;
         }
         try {
             log.debug("Temporada FEcha Inicio" + temporada.getFechaInicio());
-            temporada.setAsociacion((Asociacion)request.getSession().getAttribute(Constantes.SESSION_ASOCIACION)); //esta
+            temporada.setOrganizacion(ambiente.obtieneUsuario().getEmpresa().getOrganizacion());
+            
             log.debug("Temporada FEcha Inicio" + temporada.getFechaFinal());
             temporada = temporadaDao.actualiza(temporada);
         } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear al Temporada", e);
-            errors.rejectValue("asociacion" , "Asociacion no encontrada");                                          //y esta
-            modelo.addAttribute(Constantes.CONTAINSKEY_ASOCIACIONES, asociacionDao.lista(null).get(Constantes.CONTAINSKEY_ASOCIACIONES));
+            log.error("No se pudo actualizar al Temporada", e);
+            errors.rejectValue("id" , "Error al intentar actualiza ");
+            
             return Constantes.PATH_TEMPORADA_EDITA;
         }
 
@@ -305,7 +299,7 @@ public class TemporadaController {
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
         } catch (Exception e) {
             log.error("No se pudo eliminar el temporada " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.CONTAINSKEY_TEMPORADAS, new String[]{"temporada.no.eliminada.message"}, null, null));
+            bindingResult.addError(new ObjectError(Constantes.TEMPORADA_LIST, new String[]{"temporada.no.eliminada.message"}, null, null));
             return Constantes.PATH_TEMPORADA_VER;
         }
 

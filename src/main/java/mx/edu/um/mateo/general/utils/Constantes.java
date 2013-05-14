@@ -2389,8 +2389,7 @@ public class Constantes {
     public static final String CONTAINSKEY_DOCUMENTOS = "documentos";
     public static final String CONTAINSKEY_ESTADOS = "estados";
     public static final String CONTAINSKEY_PAISES = "paises";
-    public static final String CONTAINSKEY_TEMPORADACOLPORTORES = "temporadaColportores";
-    public static final String CONTAINSKEY_TEMPORADAS = "temporadas";
+    public static final String CONTAINSKEY_TEMPORADACOLPORTORES = "temporadaColportores";    
     public static final String CONTAINSKEY_UNIONES = "uniones";
     public static final String CONTAINSKEY_USUARIOS = "usuarios";
     public static final String CONTAINSKEY_COLEGIOS_COLPORTOR = "colegios";
@@ -2583,18 +2582,7 @@ public class Constantes {
      */
     public static final String TIPO_COLPORTOR = "1";
     public static final String MATRICULA = "1070980";
-    /**
-     * Valores para los Temporada Colportor
-     */
-    public static final String PATH_TEMPORADA = "/colportaje/temporada";
-    public static final String PATH_TEMPORADA_LISTA = "/colportaje/temporada/lista";
-    public static final String PATH_TEMPORADA_VER = "/colportaje/temporada/ver";
-    public static final String PATH_TEMPORADA_NUEVA = "/colportaje/temporada/nueva";
-    public static final String PATH_TEMPORADA_EDITA = "/colportaje/temporada/edita";
-    public static final String PATH_TEMPORADA_CREA = "/colportaje/temporada/crea";
-    public static final String PATH_TEMPORADA_ACTUALIZA = "/colportaje/temporada/actualiza";
-    public static final String PATH_TEMPORADA_ELIMINA = "/colportaje/temporada/elimina";
-    public static final String ADDATTRIBUTE_TEMPORADA = "temporada";
+    
     /**
      * Valores para la exportacion Colportor
      */
@@ -2877,4 +2865,16 @@ public class Constantes {
     
     //Valores de Asociado
     public static final String ASOCIADO_LIST = "asociados";
+    
+    //Valores de Temporada
+    public static final String PATH_TEMPORADA = "/colportaje/temporada";
+    public static final String PATH_TEMPORADA_LISTA = "/colportaje/temporada/lista";
+    public static final String PATH_TEMPORADA_VER = "/colportaje/temporada/ver";
+    public static final String PATH_TEMPORADA_NUEVA = "/colportaje/temporada/nueva";
+    public static final String PATH_TEMPORADA_EDITA = "/colportaje/temporada/edita";
+    public static final String PATH_TEMPORADA_CREA = "/colportaje/temporada/crea";
+    public static final String PATH_TEMPORADA_ACTUALIZA = "/colportaje/temporada/actualiza";
+    public static final String PATH_TEMPORADA_ELIMINA = "/colportaje/temporada/elimina";
+    public static final String TEMPORADA = "temporada";
+    public static final String TEMPORADA_LIST = "temporadas";
 }
