@@ -6,6 +6,7 @@ package mx.edu.um.mateo.inscripciones.web;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
@@ -48,16 +49,8 @@ public class TiposBecasControllerTest extends BaseControllerTest {
         log.debug("Debiera mostrar lista de tipos Becas");
         Usuario usuario = obtieneUsuario();
         for (int i = 0; i < 20; i++) {
-            TiposBecas tiposBecas = new TiposBecas();
-            tiposBecas.setDescripcion("test" + i);
-            tiposBecas.setDiezma(true);
-            tiposBecas.setNumHoras(320);
-            tiposBecas.setPerteneceAlumno(true);
-            tiposBecas.setPorcentaje(new BigDecimal(12.3));
-            tiposBecas.setSoloPostgrado(false);
-            tiposBecas.setStatus("a");
-            tiposBecas.setTope(new BigDecimal(320));
-            tiposBecas.setEmpresa(usuario.getEmpresa());
+            Empresa empresa= usuario.getEmpresa();
+            TiposBecas tiposBecas = new TiposBecas("test", Boolean.TRUE, new BigDecimal(12.3),new BigDecimal(12.3), Boolean.TRUE, Boolean.FALSE, 230 , empresa);
             currentSession().save(tiposBecas);
         }
 
@@ -88,16 +81,8 @@ public class TiposBecasControllerTest extends BaseControllerTest {
     public void testVerTipoBeca() throws Exception {
         log.debug("Debiera mostrar un tipo de beca");
         Usuario usuario = obtieneUsuario();
-        TiposBecas tiposBecas = new TiposBecas();
-        tiposBecas.setDescripcion("test");
-        tiposBecas.setDiezma(true);
-        tiposBecas.setNumHoras(320);
-        tiposBecas.setPerteneceAlumno(true);
-        tiposBecas.setPorcentaje(new BigDecimal(12.3));
-        tiposBecas.setSoloPostgrado(false);
-        tiposBecas.setStatus("a");
-        tiposBecas.setTope(new BigDecimal(320));
-        tiposBecas.setEmpresa(usuario.getEmpresa());
+        Empresa empresa= usuario.getEmpresa();
+        TiposBecas tiposBecas = new TiposBecas("test", Boolean.TRUE, new BigDecimal(12.3),new BigDecimal(12.3), Boolean.TRUE, Boolean.FALSE, 230 , empresa);
         currentSession().save(tiposBecas);
         assertNotNull(tiposBecas.getId());
         this.mockMvc.perform(get(Constantes.PATH_TIPOSBECAS_VER + "/" + tiposBecas.getId())).
@@ -113,16 +98,8 @@ public class TiposBecasControllerTest extends BaseControllerTest {
     public void testEditaTipoBeca() throws Exception {
         log.debug("Test 'edita'");
         Usuario usuario = obtieneUsuario();
-        TiposBecas tiposBecas = new TiposBecas();
-        tiposBecas.setDescripcion("test");
-        tiposBecas.setDiezma(true);
-        tiposBecas.setNumHoras(320);
-        tiposBecas.setPerteneceAlumno(true);
-        tiposBecas.setPorcentaje(new BigDecimal(12.3));
-        tiposBecas.setSoloPostgrado(false);
-        tiposBecas.setStatus("a");
-        tiposBecas.setTope(new BigDecimal(320));
-        tiposBecas.setEmpresa(usuario.getEmpresa());
+        Empresa empresa= usuario.getEmpresa();
+        TiposBecas tiposBecas = new TiposBecas("test", Boolean.TRUE, new BigDecimal(12.3),new BigDecimal(12.3), Boolean.TRUE, Boolean.FALSE, 230 , empresa);
         currentSession().save(tiposBecas);
         assertNotNull(tiposBecas.getId());
                 
@@ -162,16 +139,8 @@ public class TiposBecasControllerTest extends BaseControllerTest {
     public void testActualizaTipoBeca() throws Exception {
         log.debug("Test 'actualiza' un paquete");
         Usuario usuario = obtieneUsuario();        
-        TiposBecas tiposBecas = new TiposBecas();
-        tiposBecas.setDescripcion("test");
-        tiposBecas.setDiezma(true);
-        tiposBecas.setNumHoras(320);
-        tiposBecas.setPerteneceAlumno(true);
-        tiposBecas.setPorcentaje(new BigDecimal(12.3));
-        tiposBecas.setSoloPostgrado(false);
-        tiposBecas.setStatus("a");
-        tiposBecas.setTope(new BigDecimal(320));
-        tiposBecas.setEmpresa(usuario.getEmpresa());
+        Empresa empresa= usuario.getEmpresa();
+        TiposBecas tiposBecas = new TiposBecas("test", Boolean.TRUE, new BigDecimal(12.3),new BigDecimal(12.3), Boolean.TRUE, Boolean.FALSE, 230 , empresa);
         currentSession().save(tiposBecas);
         assertNotNull(tiposBecas.getId());
         
@@ -204,16 +173,8 @@ public class TiposBecasControllerTest extends BaseControllerTest {
     public void testElimina() throws Exception {
         log.debug("Debiera mostrar un tipo de beca");
         Usuario usuario = obtieneUsuario();
-        TiposBecas tiposBecas = new TiposBecas();
-        tiposBecas.setDescripcion("test");
-        tiposBecas.setDiezma(true);
-        tiposBecas.setNumHoras(320);
-        tiposBecas.setPerteneceAlumno(true);
-        tiposBecas.setPorcentaje(new BigDecimal(12.3));
-        tiposBecas.setSoloPostgrado(false);
-        tiposBecas.setStatus("a");
-        tiposBecas.setTope(new BigDecimal(320));
-        tiposBecas.setEmpresa(usuario.getEmpresa());
+        Empresa empresa= usuario.getEmpresa();
+        TiposBecas tiposBecas = new TiposBecas("test", Boolean.TRUE, new BigDecimal(12.3),new BigDecimal(12.3), Boolean.TRUE, Boolean.FALSE, 230 , empresa);
         currentSession().save(tiposBecas);
         assertNotNull(tiposBecas.getId());
         this.mockMvc.perform(post(Constantes.PATH_TIPOSBECAS_ELIMINA)

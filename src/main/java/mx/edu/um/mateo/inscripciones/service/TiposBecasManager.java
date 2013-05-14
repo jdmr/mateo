@@ -18,14 +18,14 @@ public interface TiposBecasManager {
      * @param params
      * @return
      */
-    public Map<String, Object> getTiposBeca(Map<String, Object> params);
+    public Map<String, Object> lista(Map<String, Object> params);
 
     /**
      * Gets tipoBeca's information based on id.
      * @param id the tipoBeca's id
      * @return tipoBeca populated tipoBeca object
      */
-    public TiposBecas getTipoBeca(final String id);
+    public TiposBecas obtiene(final String id);
 
     /**
      * Saves a tipoBeca's information
@@ -37,6 +37,6 @@ public interface TiposBecasManager {
      * Removes a tipoBeca from the database by id
      * @param id the tipoBeca's id
      */
-    public void removeTipoBeca(final String id);
+    public void elimina(final String id);
     
 }

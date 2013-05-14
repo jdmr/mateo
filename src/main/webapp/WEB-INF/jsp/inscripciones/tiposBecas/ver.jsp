@@ -12,12 +12,12 @@
             <jsp:param name="menu" value="tiposBecas" />
         </jsp:include>
 
-        <div id="ver-colegio" class="content scaffold-list" role="main">
+        <div id="ver-tiposBecas" class="content scaffold-list" role="main">
             <h1><s:message code="tiposBecas.ver.label" /></h1>
 
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/inscripciones/tiposBecas'/>"><i class="icon-list icon-white"></i> <s:message code='tiposBecas.lista.label' /></a>
-                <a class="btn btn-primary" href="<s:url value='/inscripciones/tiposBecas/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='colegio.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/inscripciones/tiposBecas/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='tiposBecas.nuevo.label' /></a>
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
