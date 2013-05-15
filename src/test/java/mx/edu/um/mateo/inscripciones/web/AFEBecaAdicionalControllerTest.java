@@ -62,11 +62,9 @@ public class AFEBecaAdicionalControllerTest extends BaseControllerTest {
         for (int i = 0; i < 20; i++) {
             becaAdicional = new AFEBecaAdicional();
             becaAdicional.setEmpresa(usuario.getEmpresa());
-            becaAdicional.setFechaAlta(new Date());
             becaAdicional.setImporte(new BigDecimal("20.8"));
-            becaAdicional.setMatricula("111047" + i);
+            becaAdicional.setMatricula("111047");
             becaAdicional.setStatus("A");
-            becaAdicional.setUsuarioAlta(usuario);
             becaAdicional.setTiposBecas(tiposBecas);
             currentSession().save(becaAdicional);
             assertNotNull(becaAdicional.getId());
@@ -101,9 +99,10 @@ public class AFEBecaAdicionalControllerTest extends BaseControllerTest {
             tiposBecas.setEmpresa(usuario.getEmpresa());
             currentSession().save(tiposBecas);
         }
+
         this.mockMvc.perform(get(Constantes.PATH_AFE_BECAADICIONAL_NUEVO))
                 .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_AFE_BECAADICIONAL_NUEVO + ".jsp"))
-                .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_TIPOSBECAS))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_TIPOSBECAS))
                 .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_BECAADICIONAL));
     }
 
@@ -138,7 +137,7 @@ public class AFEBecaAdicionalControllerTest extends BaseControllerTest {
         assertNotNull(becaAdicional.getId());
         this.mockMvc.perform(get(Constantes.PATH_AFE_BECAADICIONAL_EDITA + "/" + becaAdicional.getId()))
                 .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_AFE_BECAADICIONAL_EDITA + ".jsp"))
-                .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_TIPOSBECAS))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_TIPOSBECAS))
                 .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_BECAADICIONAL))
                 .andExpect(model().attribute(Constantes.ADDATTRIBUTE_BECAADICIONAL, becaAdicional));
     }
@@ -201,8 +200,7 @@ public class AFEBecaAdicionalControllerTest extends BaseControllerTest {
                 .param("matricula", "1110475")
                 .param("importe", "89.6")
                 .param("status", "A")
-                .param("tiposBecas", tiposBecas.getId().toString())
-                .param("usuarioAlta", usuario.getId().toString()))
+                .param("tipoBeca", tiposBecas.getId().toString()))
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message", "becaAdicional.graba.message"))
                 .andExpect(redirectedUrl(Constantes.PATH_AFE_BECAADICIONAL_LISTA));
@@ -240,17 +238,16 @@ public class AFEBecaAdicionalControllerTest extends BaseControllerTest {
 
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
 
-        this.mockMvc.perform(post(Constantes.PATH_PAQUETE_ACTUALIZA)
+        this.mockMvc.perform(post(Constantes.PATH_AFE_BECAADICIONAL_ACTUALIZA)
                 .param("version", becaAdicional.getVersion().toString())
                 .param("id", becaAdicional.getId().toString())
                 .param("matricula", "1110476")
                 .param("importe", "89.6")
                 .param("status", "A")
-                .param("tiposBecas", tiposBecas.getId().toString())
-                .param("usuarioAlta", usuario.getId().toString()))
+                .param("tipoBeca", tiposBecas.getId().toString()))
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "paquete.graba.message"))
-                .andExpect(redirectedUrl(Constantes.PATH_PAQUETE_LISTA));
+                .andExpect(flash().attribute("message", "becaAdicional.graba.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_AFE_BECAADICIONAL_LISTA));
 
         currentSession().refresh(becaAdicional);
         log.debug("{}", becaAdicional);
@@ -292,7 +289,7 @@ public class AFEBecaAdicionalControllerTest extends BaseControllerTest {
         this.mockMvc.perform(post(Constantes.PATH_AFE_BECAADICIONAL_ELIMINA)
                 .param("id", becaAdicional.getId().toString()))
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "paquete.elimina.message"))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "becaAdicional.elimina.message"))
                 .andExpect(redirectedUrl(Constantes.PATH_AFE_BECAADICIONAL_LISTA));
     }
 }

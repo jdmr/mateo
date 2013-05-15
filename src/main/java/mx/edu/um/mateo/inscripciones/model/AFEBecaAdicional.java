@@ -38,7 +38,7 @@ public class AFEBecaAdicional {
     private String status;
     @ManyToOne
     private TiposBecas tiposBecas;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Usuario usuarioAlta;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
@@ -124,6 +124,8 @@ public class AFEBecaAdicional {
 
     @Override
     public String toString() {
-        return "AFEBecaAdicional{" + "id=" + id + ", version=" + version + ", matricula=" + matricula + ", importe=" + importe + ", status=" + status + ", tiposBecas=" + tiposBecas + ", usuarioAlta=" + usuarioAlta + ", fechaAlta=" + fechaAlta + ", empresa=" + empresa + '}';
+        return "AFEBecaAdicional{" + "id=" + id + ", version=" + version + ", matricula=" + matricula + ", importe=" + importe
+                + ", status=" + status + ", tiposBecas=" + tiposBecas + ", usuarioAlta=" + usuarioAlta + ", fechaAlta=" + fechaAlta
+                + ", empresa=" + empresa + '}';
     }
 }

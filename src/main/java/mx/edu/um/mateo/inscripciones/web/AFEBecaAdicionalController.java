@@ -21,8 +21,11 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inscripciones.model.AFEBecaAdicional;
+import mx.edu.um.mateo.inscripciones.model.Institucion;
 import mx.edu.um.mateo.inscripciones.model.Paquete;
+import mx.edu.um.mateo.inscripciones.model.TiposBecas;
 import mx.edu.um.mateo.inscripciones.service.AFEBecaAdicionalManager;
+import mx.edu.um.mateo.inscripciones.service.TiposBecasManager;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -63,6 +66,8 @@ public class AFEBecaAdicionalController extends BaseController {
 
     @Autowired
     private AFEBecaAdicionalManager manager;
+    @Autowired
+    private TiposBecasManager tiposBecasManager;
 
     @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -163,9 +168,12 @@ public class AFEBecaAdicionalController extends BaseController {
     @RequestMapping("/nuevo")
     public String nueva(HttpServletRequest request, Model modelo) {
         log.debug("Nuevo paquete");
+        Map<String, Object> params = new HashMap<>();
+        params = tiposBecasManager.getTiposBeca(params);
+        List<TiposBecas> tiposBecas = (List) params.get(Constantes.CONTAINSKEY_TIPOSBECAS);
+        modelo.addAttribute(Constantes.CONTAINSKEY_TIPOSBECAS, tiposBecas);
         AFEBecaAdicional becaAdicional = new AFEBecaAdicional();
         modelo.addAttribute(Constantes.ADDATTRIBUTE_BECAADICIONAL, becaAdicional);
-        Map<String, Object> params = new HashMap<>();
         params.put("empresa", request.getSession()
                 .getAttribute("empresaId"));
         params.put("reporte", true);
@@ -195,6 +203,7 @@ public class AFEBecaAdicionalController extends BaseController {
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
+            becaAdicional.setUsuarioAlta(usuario);
             manager.crea(becaAdicional, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el tipo de Beca", e);
@@ -213,6 +222,7 @@ public class AFEBecaAdicionalController extends BaseController {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
+        utils.despliegaBindingResultErrors(bindingResult);
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
             Map<String, Object> params = new HashMap<>();
@@ -226,6 +236,7 @@ public class AFEBecaAdicionalController extends BaseController {
 
         try {
             Usuario usuario = ambiente.obtieneUsuario();
+            becaAdicional.setUsuarioAlta(usuario);
             log.debug("Paquete {}", becaAdicional);
             manager.actualiza(becaAdicional, usuario);
         } catch (ConstraintViolationException e) {
@@ -242,6 +253,10 @@ public class AFEBecaAdicionalController extends BaseController {
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Editar cuenta de tipos de becas {}", id);
+        Map<String, Object> params = new HashMap<>();
+        params = tiposBecasManager.getTiposBeca(params);
+        List<TiposBecas> tiposBecas = (List) params.get(Constantes.CONTAINSKEY_TIPOSBECAS);
+        modelo.addAttribute(Constantes.CONTAINSKEY_TIPOSBECAS, tiposBecas);
         AFEBecaAdicional becaAdicional = manager.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_BECAADICIONAL, becaAdicional);
         return Constantes.PATH_AFE_BECAADICIONAL_EDITA;
