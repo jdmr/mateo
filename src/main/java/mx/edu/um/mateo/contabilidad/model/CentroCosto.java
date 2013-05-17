@@ -58,6 +58,7 @@ public class CentroCosto implements Serializable {
     private Boolean seleccionado = Boolean.FALSE;
 
     public CentroCosto() {
+        this.id=new CCostoPK();
     }
 
     /**

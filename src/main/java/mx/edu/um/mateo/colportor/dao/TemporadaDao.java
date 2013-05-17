@@ -9,6 +9,7 @@ import java.util.Map;
 import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.colportor.model.Temporada;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
+import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -30,20 +31,11 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class TemporadaDao {
-    private static final Logger log = LoggerFactory.getLogger(TemporadaDao.class);
-    @Autowired
-    private SessionFactory sessionFactory;
-    
+public class TemporadaDao extends BaseDao {
     public TemporadaDao () {
         log.info("Se ha creado una nueva TemporadaDao");
     }
     
-    
-    
-    private Session currentSession () {
-        return sessionFactory.getCurrentSession();
-    }
     
     
     /**
@@ -78,10 +70,9 @@ public class TemporadaDao {
         Criteria criteria = currentSession().createCriteria(Temporada.class);
         Criteria countCriteria = currentSession().createCriteria(Temporada.class);
         
-        if (params.containsKey(Constantes.ADDATTRIBUTE_ASOCIACION)) {
-//            criteria.createCriteria("asociacion").add(Restrictions.eq("id",((Asociacion)params.get(Constantes.ADDATTRIBUTE_ASOCIACION)).getId()));
-            criteria.add(Restrictions.eq("asociacion",((Asociacion)params.get(Constantes.ADDATTRIBUTE_ASOCIACION))));
-            countCriteria.add(Restrictions.eq("id",((Asociacion)params.get(Constantes.ADDATTRIBUTE_ASOCIACION)).getId()));
+        if (params.containsKey("organizacion")) {
+            criteria.add(Restrictions.eq("organizacion.id",params.get("organizacion")));
+            countCriteria.add(Restrictions.eq("organizacion.id",params.get("organizacion")));
         }
         
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
@@ -108,8 +99,7 @@ public class TemporadaDao {
             criteria.setFirstResult((Integer) params.get(Constantes.CONTAINSKEY_OFFSET));
             criteria.setMaxResults((Integer) params.get(Constantes.CONTAINSKEY_MAX));
         }
-        params.put(Constantes.CONTAINSKEY_TEMPORADAS, criteria.list());
-//        log.debug("Temporadas***"+((List)params.get(Constantes.CONTAINSKEY_TEMPORADAS)).size());
+        params.put(Constantes.TEMPORADA_LIST, criteria.list());
         countCriteria.setProjection(Projections.rowCount());
         params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));
         

@@ -4,35 +4,35 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="afeConvenio.lista.label" /></title>
+        <title><s:message code="ordenPago.lista.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="afeConvenio" />
+            <jsp:param name="menu" value="ordenPago" />
         </jsp:include>
 
-        <h1><s:message code="afeConvenio.lista.label" /></h1>
+        <h1><s:message code="ordenPago.lista.label" /></h1>
         <hr/>
 
-        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/inscripciones/afeConvenio' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/contabilidad/ordenPago' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/inscripciones/afeConvenio/asignarConvenio'/>"><i class="icon-user icon-white"></i> <s:message code='afeConvenio.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/ordenPago/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='ordenPago.nuevo.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block <c:choose><c:when test='${not empty messageStyle}'>${messageStyle}</c:when><c:otherwise>alert-success</c:otherwise></c:choose> fade in" role="status">
-                            <a class="close" data-dismiss="alert">×</a>
+                    <a class="close" data-dismiss="alert">×</a>
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
-            <c:if test="${afeConvenio != null}">
-                <s:bind path="afeConvenio.*">
+            <c:if test="${ordenPago != null}">
+                <s:bind path="ordenPago.*">
                     <c:if test="${not empty status.errorMessages}">
                         <div class="alert alert-block alert-error fade in" role="status">
                             <a class="close" data-dismiss="alert">×</a>
@@ -48,45 +48,47 @@
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="matricula" />
+                            <jsp:param name="columna" value="descripcion" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="tiposBecas" />
-                        </jsp:include>                        
+                            <jsp:param name="columna" value="cheque" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="fechaPago" />
+                        </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="status" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="diezma" />
+                            <jsp:param name="columna" value="userCaptura" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="numHoras" />
+                            <jsp:param name="columna" value="fechaCaptura" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="importe" />
+                            <jsp:param name="columna" value="empresa" />
                         </jsp:include>
                         
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${afeConvenios}" var="afeConvenio" varStatus="status">
+                    <c:forEach items="${ordenPagoList}" var="ordenPago" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            
-                            <td><a href="<c:url value='/inscripciones/afeConvenio/ver/${afeConvenio.id}' />">${afeConvenio.matricula}</a></td> 
-                            <td>${afeConvenio.tipoBeca.descripcion}</td>
-                            <td>${afeConvenio.status}</td>
-                            <td ><input type="checkbox" value="" disabled="true" <c:if test="${afeConvenio.diezma}">checked="checked"</c:if> /></td>
-                            <td>${afeConvenio.numHoras}</td>
-                            <td>${afeConvenio.importe}</td>
-                            
-                            </tr>
+                            <td><a href="<c:url value='/contabilidad/ordenPago/ver/${ordenPago.id}' />">${ordenPago.descripcion}</a></td>
+                            <td><input type="checkbox" value="" disabled="true" <c:if test="${ordenPago.cheque}">checked="checked"</c:if> /></td>
+                            <td>${ordenPago.fechaPago}</td>
+                            <td>${ordenPago.status}</td>
+                            <td>${ordenPago.userCaptura.username}</td>
+                            <td>${ordenPago.fechaCaptura}</td>
+                            <td>${ordenPago.empresa.nombre}</td>                            
+                        </tr>
                     </c:forEach>
                 </tbody>
             </table>
             <jsp:include page="/WEB-INF/jsp/paginacion.jsp" />
         </form>        
-    <content>
-        <script src="<c:url value='/js/lista.js' />"></script>
-    </content>
-</body>
+        <content>
+            <script src="<c:url value='/js/lista.js' />"></script>
+        </content>
+    </body>
 </html>

@@ -24,6 +24,7 @@
 package mx.edu.um.mateo.contabilidad.dao;
 
 import java.util.List;
+import java.util.Map;
 import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.general.model.Usuario;
 
@@ -42,4 +43,6 @@ public interface CentroCostoDao {
     public List<CentroCosto> buscaPorEmpresa(String filtro, Usuario usuario);
 
     public List<CentroCosto> listaPorEmpresa(Usuario usuario);
+    
+    public List<CentroCosto> listaDepartamento (Usuario usuario);
 }

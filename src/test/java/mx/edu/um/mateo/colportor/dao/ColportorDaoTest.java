@@ -23,18 +23,11 @@
  */
 package mx.edu.um.mateo.colportor.dao;
 
-import mx.edu.um.mateo.colportor.model.Union;
 import mx.edu.um.mateo.colportor.model.Colportor;
-import mx.edu.um.mateo.colportor.model.Asociacion;
 import java.util.*;
-import mx.edu.um.mateo.colportor.utils.FaltaAsociacionException;
-import mx.edu.um.mateo.general.model.Empresa;
-import mx.edu.um.mateo.general.model.Organizacion;
-import mx.edu.um.mateo.general.model.Rol;
+import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.inventario.model.Almacen;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,178 +46,81 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class ColportorDaoTest {
+public class ColportorDaoTest extends BaseDaoTest{
 
     private static final Logger log = LoggerFactory.getLogger(ColportorDaoTest.class);
     @Autowired
     private ColportorDao colportorDao;
-    @Autowired
-    private SessionFactory sessionFactory;
-
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
-
+    
     /**
      * Test of lista method, of class ColportorDao.
      */
     @Test
-    public void debieraMostrarListaDeColportor() {
+    public void testLista() {
         log.debug("Debiera mostrar lista de Colportor");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Rol rol = new Rol(Constantes.ROLE_COL);
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
+        Usuario usuario = this.obtieneAsociado();
+        
         for (int i = 0; i < 20; i++) {
-
             Colportor colportor = new Colportor("test" + i + "@test.com", "test", "test", "test", "test", "test", Constantes.STATUS_ACTIVO,
                     "8262652626", "test", "test", "10706" + i, "test", "test001", new Date());
-            colportor.setEmpresa(empresa);
-            colportor.setAlmacen(almacen);
-            colportor.setAsociacion(asociacion);
+            colportor.setEmpresa(usuario.getEmpresa());
+            colportor.setAlmacen(usuario.getAlmacen());
             currentSession().save(colportor);
             assertNotNull(colportor.getId());
-
-
-
         }
+        
         Map<String, Object> params = new HashMap();
-        params.put(Constantes.ADDATTRIBUTE_ASOCIACION, asociacion);
-        Map result=null;
-        try {
-            result = colportorDao.lista(params);
-        } catch (FaltaAsociacionException ex) {
-            log.error("Falta asociacion", ex);
-        }
-        assertNotNull(result.get(Constantes.CONTAINSKEY_COLPORTORES));
+        params.put("empresa", usuario.getEmpresa().getId());
+        
+        Map result = colportorDao.lista(params);
+        
+        assertNotNull(result.get(Constantes.COLPORTOR_LIST));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
 
-        assertEquals(10, ((List<Colportor>) result.get(Constantes.CONTAINSKEY_COLPORTORES)).size());
+        assertEquals(10, ((List<Colportor>) result.get(Constantes.COLPORTOR_LIST)).size());
         assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
 
-    public void debieraBuscarUnColportorYMostrarLaListaDeColportores() {
+    public void testLista_ProbandoFiltro() {
         log.debug("Debiera buscar un Colportor y mostrar lista de Colportores");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Rol rol = new Rol(Constantes.ROLE_COL);
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
+        Usuario usuario = obtieneAsociado();
+        
         for (int i = 0; i < 10; i++) {
-
             Colportor colportor = new Colportor("test" + i + "@test.com", "test", "test", "test", "test", "test", Constantes.STATUS_ACTIVO,
                     "8262652626", "test", "test", "10706" + i, "test", "test001", new Date());
-            colportor.setEmpresa(empresa);
-            colportor.setAlmacen(almacen);
-            colportor.setAsociacion(asociacion);
+            colportor.setEmpresa(usuario.getEmpresa());
+            colportor.setAlmacen(usuario.getAlmacen());
+            
             currentSession().save(colportor);
             assertNotNull(colportor.getId());
-
-
-
         }
-        String filtro="test2";
+        
         Map<String, Object> params = new HashMap();
-        params.put(Constantes.ADDATTRIBUTE_ASOCIACION, asociacion);
-        Map result=null;
-        try {
-            result = colportorDao.lista(params);
-        } catch (FaltaAsociacionException ex) {
-            log.error("Falta asociacion", ex);
-        }
+        params.put("empresa", usuario.getEmpresa().getId());        
+        Map result = colportorDao.lista(params);
+        
+        String filtro="test2";
         params.put("filtro", filtro);
         
-        assertNotNull(result.get(Constantes.CONTAINSKEY_COLPORTORES));
+        assertNotNull(result.get(Constantes.COLPORTOR_LIST));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
-        assertEquals(2, ((List<Colportor>) result.get(Constantes.CONTAINSKEY_COLPORTORES)).size());
+        assertEquals(2, ((List<Colportor>) result.get(Constantes.COLPORTOR_LIST)).size());
         assertEquals(10, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
 
-    /**
-     * Cuadno no hay una asociacion en session
-     */
-    @Test    
-    public void debieraMostrarListaVasiaDeColportor() {
-        log.debug("Debiera mostrar lista vasia de Colportor");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Rol rol = new Rol(Constantes.ROLE_COL);
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
-        for (int i = 0; i < 10; i++) {
-
-            Colportor colportor = new Colportor("test" + i + "@test.com", "test", "test", "test", "test", "test", Constantes.STATUS_ACTIVO,
-                    "8262652626", "test", "test", "10706" + i, "test", "test001", new Date());
-            colportor.setEmpresa(empresa);
-            colportor.setAlmacen(almacen);
-            colportor.setAsociacion(asociacion);
-            currentSession().save(colportor);
-            assertNotNull(colportor.getId());
-
-
-
-        }
-        Map<String, Object> params = null;
-        Map result=null;
-        try {
-            result = colportorDao.lista(params);
-            fail("La prueba debio haber regresado al excepcion de Falta Asociacion");
-        } catch (FaltaAsociacionException ex) {
-            log.error("Paso con exito", ex);
-        }}
-
     @Test
-    public void debieraObtenerColportor() {
+    public void testObtiene() {
         log.debug("Debiera obtener un Colportor");
 
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
+        Usuario usuario = obtieneAsociado();
+        
         Colportor colportor = new Colportor("test@test.com", "test", "test", "test", "test", "test", Constantes.STATUS_ACTIVO,
                 "8262652626", "test", "test", "10706", "test", "test001", new Date());
-        colportor.setEmpresa(empresa);
-        colportor.setAlmacen(almacen);
-        colportor.setAsociacion(asociacion);
+        colportor.setEmpresa(usuario.getEmpresa());
+        colportor.setAlmacen(usuario.getAlmacen());
+        
         currentSession().save(colportor);
+        
         Long id = colportor.getId();
         assertNotNull(id);
 
@@ -233,101 +129,63 @@ public class ColportorDaoTest {
         assertEquals(result, colportor);
         assertEquals("test", result.getClave());
     }
-//
 
     @Test
-    public void deberiaCrearColportor() {
+    public void testGraba() {
         log.debug("Deberia crear un Colportor");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Rol rol = new Rol("ROLE_CLP"); //Rol Colportor
-        currentSession().save(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
+        Usuario usuario = obtieneAsociado();
+        
         Colportor colportor = new Colportor("test@test.com", "test", "test", "test", "test", "test", Constantes.STATUS_ACTIVO,
                 "8262652626", "test", "test", "10706", "test", "test001", new Date());
-        colportor.setEmpresa(empresa);
-        colportor.setAlmacen(almacen);
-        colportor.setAsociacion(asociacion);
-        colportorDao.crea(colportor, null);
+        colportor.setEmpresa(usuario.getEmpresa());
+        colportor.setAlmacen(usuario.getAlmacen());
+        
+        colportorDao.crea(colportor, usuario);
         Colportor colportor2 = colportorDao.obtiene(colportor.getId());
         assertNotNull(colportor2);
         assertNotNull(colportor2.getId());
 
         assertEquals(colportor, colportor2);
     }
-//
 
     @Test
-    public void deberiaActualizarColportor() {
+    public void testActualiza() {
         log.debug("Deberia actualizar Colportor");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
+        Usuario usuario = obtieneAsociado();
+        
         Colportor colportor = new Colportor("test@test.com", "test", "test", "test", "test", "test", Constantes.STATUS_ACTIVO,
                 "8262652626", "test", "test", "10706", "test", "test001", new Date());
-        colportor.setEmpresa(empresa);
-        colportor.setAlmacen(almacen);
-        colportor.setAsociacion(asociacion);
-        currentSession().save(colportor);
+        colportor.setEmpresa(usuario.getEmpresa());
+        colportor.setAlmacen(usuario.getAlmacen());
+        
+        colportorDao.crea(colportor, usuario);
 
-        String colonia = Constantes.COLONIA;
+        String colonia = "TEST";
         colportor.setColonia(colonia);
+        colportorDao.actualiza(colportor);
 
-        Colportor colportor2 = colportorDao.actualiza(colportor);
+        Colportor colportor2 = colportorDao.obtiene(colportor.getId());
         assertNotNull(colportor2);
-        assertEquals(colonia, colportor.getColonia());
-
-        assertEquals(colportor, colportor2);
+        assertEquals(colonia, colportor2.getColonia());
     }
-//
+
 
     @Test
-    public void deberiaEliminarColportor() {
+    public void testElimina() {
         log.debug("Debiera eliminar Colportor");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        Almacen almacen = new Almacen("TST", "TEST", empresa);
-        currentSession().save(almacen);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
+        Usuario usuario = obtieneAsociado();
+        
         Colportor colportor = new Colportor("test@test.com", "test", "test", "test", "test", "test", Constantes.STATUS_ACTIVO,
                 "8262652626", "test", "test", "10706", "test", "test001", new Date());
-        colportor.setEmpresa(empresa);
-        colportor.setAlmacen(almacen);
-        colportor.setAsociacion(asociacion);
+        colportor.setEmpresa(usuario.getEmpresa());
+        colportor.setAlmacen(usuario.getAlmacen());
+        
         currentSession().save(colportor);
         assertNotNull(colportor.getId());
 
         String clave = colportorDao.elimina(colportor.getId());
-        assertEquals(colportor.getClave(), clave);
-
+        
         colportor = colportorDao.obtiene(colportor.getId());
-
         assertEquals(Constantes.STATUS_INACTIVO, (colportor).getStatus());
- 
-        if((colportor).getStatus() != Constantes.STATUS_INACTIVO){
-            fail("Fallo prueba Eliminar");
-        }
     }
 }

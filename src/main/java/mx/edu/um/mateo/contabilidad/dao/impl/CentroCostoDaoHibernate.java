@@ -24,6 +24,7 @@
 package mx.edu.um.mateo.contabilidad.dao.impl;
 
 import java.util.List;
+import java.util.Map;
 import mx.edu.um.mateo.contabilidad.dao.CentroCostoDao;
 import mx.edu.um.mateo.contabilidad.model.CCostoPK;
 import mx.edu.um.mateo.contabilidad.model.CentroCosto;
@@ -37,6 +38,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -50,6 +52,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CentroCostoDaoHibernate implements CentroCostoDao {
 
+    
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -140,6 +143,26 @@ public class CentroCostoDaoHibernate implements CentroCostoDao {
         sb.append("%");
         String cuenta = sb.toString();
         criteria.add(Restrictions.ilike("id.idCosto", cuenta, MatchMode.START));
+        return criteria.list();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CentroCosto> listaDepartamento( Usuario usuario) {
+        Ejercicio ejercicio = usuario.getEjercicio();        
+        Organizacion organizacion = usuario.getEmpresa().getOrganizacion();
+        Criteria criteria = currentSession().createCriteria(CentroCosto.class);
+        criteria.add(Restrictions.eq("id.ejercicio", ejercicio));
+        criteria.add(Restrictions.eq("detalle", "S"));
+        Disjunction or = Restrictions.disjunction();
+        Conjunction and = Restrictions.conjunction();
+        String org = organizacion.getCentroCostoId();
+        StringBuilder sb = new StringBuilder();
+        sb.append(org);
+        sb.append("%");
+        String cuenta = sb.toString();
+        or.add(Restrictions.ilike("id.idCosto", cuenta, MatchMode.START)); 
+        criteria.addOrder(Order.asc("id.idCosto"));
         return criteria.list();
     }
 }

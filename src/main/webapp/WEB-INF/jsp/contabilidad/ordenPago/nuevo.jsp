@@ -1,8 +1,4 @@
-<%-- 
-    Document   : nuevo
-    Created on : Mar 07, 2013, 10:37:52 AM
-    Author     : osoto
---%>
+
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -11,19 +7,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="temporada.nueva.label" /></title>
+        <title><s:message code="ordenPago.nuevo.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="temporada" />
+            <jsp:param name="menu" value="ordenPago" />
         </jsp:include>
 
-        <div id="nuevo-temporada" class="content scaffold-list" role="main">
-            <h1><s:message code="temporada.nueva.label" /></h1>
+        <div id="nueva-ordenPago" class="content scaffold-list" role="main">
+            <h1><s:message code="ordenPago.nuevo.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/colportaje/temporada'/>"><i class="icon-list icon-white"></i> <s:message code='temporada.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/contabilidad/ordenPago'/>"><i class="icon-list icon-white"></i> <s:message code='ordenPago.lista.label' /></a>
             </p>
-            <form:form commandName="temporada" action="crea" method="post">
+            <form:form commandName="ordenPago" action="graba" method="post">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -34,44 +30,50 @@
                 </form:errors>
 
                 <fieldset>
-                    <s:bind path="temporada.nombre">
+                    <s:bind path="ordenPago.descripcion">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombre">
-                                <s:message code="nombre.label" />
+                                <s:message code="descripcion.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="nombre" maxlength="128" required="true" />
-                            <form:errors path="nombre" cssClass="alert alert-error" />
+                            <form:input path="descripcion" maxlength="128" required="true" />
+                            <form:errors path="descripcion" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="temporada.fechaInicio">
+                    <s:bind path="ordenPago.cheque">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="fechaInicio">
-                                <s:message code="fechaInicio.label" />
+                            <label for="cheque">
+                                <s:message code="cheque.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="fechaInicio" maxlength="10" required="true" />
-                            <form:errors path="fechaInicio" cssClass="alert alert-error" />
+                            <form:checkbox path="cheque" cssClass="span3" />
+                            <form:errors path="cheque" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="temporada.fechaFinal">
+                    <s:bind path="ordenPago.fechaPago">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="fechaFinal">
-                                <s:message code="fechaFinal.label" />
+                            <label for="fechaPago">
+                                <s:message code="fechaPago.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="fechaFinal" maxlength="10" required="true" />
-                            <form:errors path="fechaFinal" cssClass="alert alert-error" />
+                            <form:input path="fechaPago" maxlength="10" required="true" />
+                            <form:errors path="fechaPago" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/colportor/temporada'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <a class="btn btn-large" href="<s:url value='/contabilidad/ordenPago'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>
+        <content>
+            <script>
+                $(document).ready(function() {
+                    $('input#nombre').focus();
+                });
+            </script>                    
+        </content>
     </body>
 </html>

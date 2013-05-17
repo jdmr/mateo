@@ -8,6 +8,9 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.*;
+import mx.edu.um.mateo.general.model.Organizacion;
+import mx.edu.um.mateo.general.utils.Constantes;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *
@@ -23,15 +26,20 @@ public class Temporada implements Serializable{
     private Integer version;
     @Column(length = 64)
     private String nombre;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     @Column(nullable = false, name = "fecha_inicio")
     private Date fechaInicio;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     @Column(nullable = false, name = "fecha_final")
     private Date fechaFinal;
+    @Column(nullable = false)
+    private String status;
     @ManyToOne(optional = false)
-    private Asociacion asociacion;
+    private Organizacion organizacion;
 
+    private Asociacion asociacion; //Eliminar
     
     public Temporada(){
         
@@ -41,6 +49,7 @@ public class Temporada implements Serializable{
         Date fecha = new Date();
         this.fechaInicio = fecha;
         this.fechaFinal = fecha;
+        this.status = Constantes.STATUS_ACTIVO;
                 
     }
 
@@ -90,6 +99,34 @@ public class Temporada implements Serializable{
 
     public void setAsociacion(Asociacion asociacion) {
         this.asociacion = asociacion;
+    }
+
+    /**
+     * @return the status
+     */
+    public String getStatus() {
+        return status;
+    }
+
+    /**
+     * @param status the status to set
+     */
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    /**
+     * @return the organizacion
+     */
+    public Organizacion getOrganizacion() {
+        return organizacion;
+    }
+
+    /**
+     * @param organizacion the organizacion to set
+     */
+    public void setOrganizacion(Organizacion organizacion) {
+        this.organizacion = organizacion;
     }
 
     @Override

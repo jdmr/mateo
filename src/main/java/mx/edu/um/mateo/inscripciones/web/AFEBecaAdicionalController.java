@@ -169,7 +169,7 @@ public class AFEBecaAdicionalController extends BaseController {
     public String nueva(HttpServletRequest request, Model modelo) {
         log.debug("Nuevo paquete");
         Map<String, Object> params = new HashMap<>();
-        params = tiposBecasManager.getTiposBeca(params);
+        params = tiposBecasManager.lista(params);
         List<TiposBecas> tiposBecas = (List) params.get(Constantes.CONTAINSKEY_TIPOSBECAS);
         modelo.addAttribute(Constantes.CONTAINSKEY_TIPOSBECAS, tiposBecas);
         AFEBecaAdicional becaAdicional = new AFEBecaAdicional();
@@ -202,7 +202,7 @@ public class AFEBecaAdicionalController extends BaseController {
         }
 
         try {
-            TiposBecas tiposBecas = tiposBecasManager.getTipoBeca(becaAdicional.getTiposBecas().getId().toString());
+            TiposBecas tiposBecas = tiposBecasManager.obtiene(becaAdicional.getTiposBecas().getId().toString());
             becaAdicional.setTiposBecas(tiposBecas);
             Usuario usuario = ambiente.obtieneUsuario();
             becaAdicional.setUsuarioAlta(usuario);
@@ -237,7 +237,7 @@ public class AFEBecaAdicionalController extends BaseController {
         }
 
         try {
-            TiposBecas tiposBecas = tiposBecasManager.getTipoBeca(becaAdicional.getTiposBecas().getId().toString());
+            TiposBecas tiposBecas = tiposBecasManager.obtiene(becaAdicional.getTiposBecas().getId().toString());
             becaAdicional.setTiposBecas(tiposBecas);
             Usuario usuario = ambiente.obtieneUsuario();
             becaAdicional.setUsuarioAlta(usuario);
@@ -258,7 +258,7 @@ public class AFEBecaAdicionalController extends BaseController {
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Editar cuenta de tipos de becas {}", id);
         Map<String, Object> params = new HashMap<>();
-        params = tiposBecasManager.getTiposBeca(params);
+        params = tiposBecasManager.lista(params);
         List<TiposBecas> tiposBecas = (List) params.get(Constantes.CONTAINSKEY_TIPOSBECAS);
         modelo.addAttribute(Constantes.CONTAINSKEY_TIPOSBECAS, tiposBecas);
         AFEBecaAdicional becaAdicional = manager.obtiene(id);
