@@ -35,10 +35,11 @@ public class AFEBecaAdicional {
     @Column(length = 7)
     private String matricula;
     private BigDecimal importe;
+    private BigDecimal total;
     private String status;
     @ManyToOne
     private TiposBecas tiposBecas;
-    @ManyToOne
+    @ManyToOne(fetch= FetchType.LAZY)
     private Usuario usuarioAlta;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
@@ -122,6 +123,15 @@ public class AFEBecaAdicional {
         this.usuarioAlta = usuarioAlta;
     }
 
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
+    
     @Override
     public String toString() {
         return "AFEBecaAdicional{" + "id=" + id + ", version=" + version + ", matricula=" + matricula + ", importe=" + importe

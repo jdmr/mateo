@@ -120,7 +120,7 @@ public class AFEBecaAdicionalController extends BaseController {
             try {
                 enviaCorreo(correo, (List<AFEBecaAdicional>) params.get(Constantes.CONTAINSKEY_PAQUETES), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
-                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("paquete.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("becaAdicional.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
@@ -202,6 +202,8 @@ public class AFEBecaAdicionalController extends BaseController {
         }
 
         try {
+            TiposBecas tiposBecas = tiposBecasManager.getTipoBeca(becaAdicional.getTiposBecas().getId().toString());
+            becaAdicional.setTiposBecas(tiposBecas);
             Usuario usuario = ambiente.obtieneUsuario();
             becaAdicional.setUsuarioAlta(usuario);
             manager.crea(becaAdicional, usuario);
@@ -235,6 +237,8 @@ public class AFEBecaAdicionalController extends BaseController {
         }
 
         try {
+            TiposBecas tiposBecas = tiposBecasManager.getTipoBeca(becaAdicional.getTiposBecas().getId().toString());
+            becaAdicional.setTiposBecas(tiposBecas);
             Usuario usuario = ambiente.obtieneUsuario();
             becaAdicional.setUsuarioAlta(usuario);
             log.debug("Paquete {}", becaAdicional);
