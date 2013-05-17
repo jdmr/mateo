@@ -40,7 +40,7 @@ public class TemporadaDaoTest extends BaseDaoTest{
      */
     @Test
     public void testLista() {
-        log.debug("Debiera mostrar lista Temporada");
+        log.debug("Debiera mostrar lista Temporada"); 
         Usuario asociado = this.obtieneAsociado();
         for (int i = 0; i < 20; i++) {
             Temporada temporada = new Temporada("test" + i);
