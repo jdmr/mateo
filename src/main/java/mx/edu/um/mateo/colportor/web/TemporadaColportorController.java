@@ -179,7 +179,7 @@ public class TemporadaColportorController {
         params.put(Constantes.SESSION_ASOCIACION, request.getSession().getAttribute(Constantes.SESSION_ASOCIACION));
         log.debug("asocicacion***" + request.getSession().getAttribute(Constantes.SESSION_ASOCIACION));
 
-        params.put("organizacion", ambiente.obtieneUsuario().getEmpresa().getOrganizacion());
+        params.put("organizacion", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
         params = temporadaDao.lista(params);
         List<Temporada> listaTemporadas = (List) params.get(Constantes.TEMPORADA_LIST);
         log.debug("Temporadas***" + listaTemporadas.size());
