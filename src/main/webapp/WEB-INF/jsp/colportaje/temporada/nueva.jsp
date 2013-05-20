@@ -69,7 +69,7 @@
 
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/colportor/temporada'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <a class="btn btn-large" href="<s:url value='/colportaje/temporada'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>

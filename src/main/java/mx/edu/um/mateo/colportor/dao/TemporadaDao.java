@@ -12,6 +12,7 @@ import mx.edu.um.mateo.colportor.utils.UltimoException;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
+import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Disjunction;
@@ -67,8 +68,10 @@ public class TemporadaDao extends BaseDao {
             params.put(Constantes.CONTAINSKEY_OFFSET, 0);
         }
         
-        Criteria criteria = currentSession().createCriteria(Temporada.class);
-        Criteria countCriteria = currentSession().createCriteria(Temporada.class);
+        Criteria criteria = currentSession().createCriteria(Temporada.class)
+                .add(Restrictions.eq("status", Constantes.STATUS_ACTIVO));
+        Criteria countCriteria = currentSession().createCriteria(Temporada.class)
+                .add(Restrictions.eq("status", Constantes.STATUS_ACTIVO));
         
         if (params.containsKey("organizacion")) {
             criteria.add(Restrictions.eq("organizacion.id",params.get("organizacion")));
@@ -122,27 +125,23 @@ public class TemporadaDao extends BaseDao {
 
      public Temporada actualiza(Temporada temporada) {
         log.debug("Actualizando Temporada {}", temporada);
+                
+        try{
+            currentSession().update(temporada);
+        }catch(NonUniqueObjectException e){
+            currentSession().merge(temporada);
+            currentSession().flush();
+            
+        }
         
-        //trae el objeto de la DB 
-        Temporada nueva = (Temporada)currentSession().get(Temporada.class, temporada.getId());
-        
-        //actualiza el objeto
-        BeanUtils.copyProperties(temporada, nueva);
-        //lo guarda en la BD
-        
-        currentSession().update(nueva);
-        currentSession().flush();
-        return nueva;
+        return temporada;
     }
 
     public String elimina(Long id) throws UltimoException {
         log.debug("Eliminando Temporada id {}", id);
         Temporada temporada = obtiene(id);
-        Date fecha = new Date();
-        temporada.setFechaInicio(fecha);
-        temporada.setFechaFinal(fecha);
-        currentSession().delete(temporada);
-        currentSession().flush();
+        temporada.setStatus(Constantes.STATUS_INACTIVO);
+        temporada = actualiza(temporada);
         String nombre = temporada.getNombre();
         return nombre;
     }
