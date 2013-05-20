@@ -80,7 +80,7 @@ public class ColportorControllerTest extends BaseControllerTest {
 
     }
 
-    //@Test
+    @Test
     public void testObtiene() throws Exception {
         log.debug("Debiera mostrar colportor");
         Usuario usuario = obtieneAsociado();        
@@ -99,7 +99,7 @@ public class ColportorControllerTest extends BaseControllerTest {
 
     }
     
-    //@Test
+    @Test
     public void testGraba() throws Exception {
         log.debug("Test Graba");
         
@@ -126,7 +126,7 @@ public class ColportorControllerTest extends BaseControllerTest {
                 .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "colportor.creado.message"));
     }
 
-    //@Test
+    @Test
     public void testActualiza() throws Exception {
         log.debug("Debiera actualizar colportor");
         
@@ -165,7 +165,7 @@ public class ColportorControllerTest extends BaseControllerTest {
                 .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "colportor.actualizado.message"));
     }
 
-    //@Test
+    @Test
     public void testElimina() throws Exception {
         log.debug("Debiera eliminar colportor");
         Usuario usuario = obtieneAsociado();        

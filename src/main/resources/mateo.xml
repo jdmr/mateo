@@ -23,8 +23,8 @@
     </context:component-scan>
     
     <task:annotation-driven/>
-    
-    <!--flow:flow-registry id="flowRegistry" base-path="/src/main/resources">
+<!--    
+    <flow:flow-registry id="flowRegistry" base-path="/WEB-INF/flows">
         <flow:flow-location-pattern value="/**/*-flow.xml"/>
     </flow:flow-registry> 
     
@@ -53,8 +53,8 @@
     <bean id="ordenPagoManagerImpl" class="mx.edu.um.mateo.contabilidad.service.impl.OrdenPagoManagerImpl" scope="session">
             <! This requires CGLIB >
             <aop:scoped-proxy/>
-    </bean-->
-        
+    </bean>
+-->
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
      <property name="defaultLocale" value="es"/>
     </bean>
