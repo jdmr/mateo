@@ -23,7 +23,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/colportaje/colegio'/>"><i class="icon-list icon-white"></i> <s:message code='colegio.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="/colportaje/colegio/graba" />
+            <c:url var="actualizaUrl" value="/colportaje/colegio/crea" />
             <form:form commandName="colegio" method="post" action="${actualizaUrl}">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
@@ -35,6 +35,7 @@
                 </form:errors>
                 <form:hidden path="id" />
                 <form:hidden path="version" />
+                <form:hidden path="status" />
 
                 <fieldset>
                     <s:bind path="colegio.nombre">
@@ -47,17 +48,7 @@
                             <form:errors path="nombre" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                <fieldset>
-                    <s:bind path="colegio.status">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="status">
-                                <s:message code="status.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="status" maxlength="2" required="true" />
-                            <form:errors path="status" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+                
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">

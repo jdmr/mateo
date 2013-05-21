@@ -5,7 +5,7 @@
 /**
  * TODO problemas con type long: asociado
  */
-package mx.edu.um.mateo.colportor.web;
+package mx.edu.um.mateo.colportor.test;
 
 import java.util.ArrayList;
 import mx.edu.um.mateo.general.utils.Constantes;

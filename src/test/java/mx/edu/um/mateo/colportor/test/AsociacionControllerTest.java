@@ -24,7 +24,7 @@
 /**
  * TODO problemas con type long: user
  */
-package mx.edu.um.mateo.colportor.web;
+package mx.edu.um.mateo.colportor.test;
 
 import java.util.ArrayList;
 import java.util.HashSet;

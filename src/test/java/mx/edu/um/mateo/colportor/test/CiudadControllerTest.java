@@ -2,10 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.colportor.web;
-import mx.edu.um.mateo.colportor.dao.EstadoDao;
+package mx.edu.um.mateo.colportor.test;
+import mx.edu.um.mateo.colportor.dao.CiudadDao;
+import mx.edu.um.mateo.colportor.model.Ciudad;
 import mx.edu.um.mateo.colportor.model.Estado;
-import mx.edu.um.mateo.colportor.model.Pais;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
@@ -31,91 +31,92 @@ import org.springframework.transaction.annotation.Transactional;
     "classpath:dispatcher-servlet.xml"
 })
 @Transactional
-public class EstadoControllerTest extends BaseControllerTest {
+public class CiudadControllerTest extends BaseControllerTest {
     
     @Autowired
-    private EstadoDao estadoDao;
+    private CiudadDao ciudadDao;
     
     @Test
-    public void debieraMostrarListaDeEstado() throws Exception {
-        log.debug("Debiera monstrar lista estado");
-        Pais pais = new Pais("test3");
-        currentSession().save(pais);
+    public void debieraMostrarListaDeCiudad() throws Exception {
+        log.debug("Debiera monstrar Ciudad");
+        Estado estado = new Estado("test3");
+        currentSession().save(estado);
         for (int i = 0; i < 20; i++) {
-            Estado estado = new Estado(Constantes.NOMBRE+i);
-            estadoDao.crea(estado);
-            assertNotNull(estado);
+            Ciudad ciudad = new Ciudad(Constantes.NOMBRE+i);
+            ciudad.setEstado(estado);
+            ciudadDao.crea(ciudad);
+            assertNotNull(ciudad);
         }
 
-        this.mockMvc.perform(get(Constantes.PATH_ESTADO))
+        this.mockMvc.perform(get(Constantes.PATH_CIUDAD))
                 .andExpect(status().isOk())
-                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_ESTADO_LISTA+ ".jsp"))
-                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_ESTADOS))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_CIUDAD_LISTA+ ".jsp"))
+                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_CIUDADES))
                 .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION))
                 .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINAS))
                 .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINA));
     }
     @Test
-    public void debieraMostrarEstado() throws Exception {
-        log.debug("Debiera mostrar  Estado");
-        Pais pais = new Pais("test3");
-        currentSession().save(pais);
-        Estado estado = new Estado(Constantes.NOMBRE);
-        estado.setPais(pais);
-        estado = estadoDao.crea(estado);
-        assertNotNull(estado);
+    public void debieraMostrarCiudad() throws Exception {
+        log.debug("Debiera mostrar  Ciudad");
+        Estado estado = new Estado("test3");
+        currentSession().save(estado);
+        Ciudad ciudad = new Ciudad(Constantes.NOMBRE);
+        ciudad.setEstado(estado);
+        ciudad = ciudadDao.crea(ciudad);
+        assertNotNull(ciudad);
 
-        this.mockMvc.perform(get(Constantes.PATH_ESTADO_VER +"/"+ estado.getId()))
+        this.mockMvc.perform(get(Constantes.PATH_CIUDAD_VER +"/"+ ciudad.getId()))
                 .andExpect(status().isOk())
-                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_ESTADO_VER + ".jsp"))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_CIUDAD_VER + ".jsp"))
                 .andExpect(model()
-                .attributeExists(Constantes.ADDATTRIBUTE_ESTADO));
+                .attributeExists(Constantes.ADDATTRIBUTE_CIUDAD));
     }
     @Test
-    public void debieraCrearEstado() throws Exception {
-        log.debug("Debiera crear Estado");
-        Pais pais = new Pais("test3");
-        currentSession().save(pais);
+    public void debieraCrearCiudad() throws Exception {
+        log.debug("Debiera crear Ciudad");
+        Estado estado = new Estado("test3");
+        currentSession().save(estado);
         this.mockMvc.perform(
-                post(Constantes.PATH_ESTADO_CREA)
+                post(Constantes.PATH_CIUDAD_CREA)
                 .param("id", "t")
                 .param("version", "id")
                 .param("nombre", Constantes.NOMBRE)
-                .param("pais", pais.getId().toString()))
+                .param("estado", estado.getId().toString()))
                 .andExpect(status().isOk());
 //                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
 //                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "estado.creada.message"));
     }
     @Test
-    public void debieraActualizarPais() throws Exception {
-        log.debug("Debiera actualizar  pais");
-        Pais pais = new Pais("test3");
-        currentSession().save(pais);
-        Estado estado = new Estado(Constantes.NOMBRE);
-        estado.setPais(pais);
-        estado = estadoDao.crea(estado);
-        assertNotNull(estado);
+    public void debieraActualizarCiudad() throws Exception {
+        log.debug("Debiera actualizar  Ciudad");
+        Estado estado = new Estado("test3");
+        currentSession().save(estado);
+        Ciudad ciudad = new Ciudad(Constantes.NOMBRE);
+        ciudad.setEstado(estado);
+        ciudad = ciudadDao.crea(ciudad);
+        assertNotNull(ciudad);
    
-        this.mockMvc.perform(post(Constantes.PATH_ESTADO_ACTUALIZA)
+        this.mockMvc.perform(post(Constantes.PATH_CIUDAD_ACTUALIZA)
                 .param("id","t")
                 .param("version","id")
                 .param("nombre", Constantes.NOMBRE)
-                .param("pais", pais.getId().toString()))
+                .param("estado", estado.getId().toString()))
                 .andExpect(status().isOk());
 //                .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
 //                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "estado.actualizada.message"));
 }
     @Test
     public void debieraEliminarEstado() throws Exception {
-        log.debug("Debiera eliminar Estado");
-        Estado estado = new Estado("test");
-        estadoDao.crea(estado);
-        assertNotNull(estado);
+        log.debug("Debiera eliminar CIudad");
+        Ciudad ciudad = new Ciudad("test");
+        ciudadDao.crea(ciudad);
+        assertNotNull(ciudad);
 
-        this.mockMvc.perform(post(Constantes.PATH_ESTADO_ELIMINA)
-                .param("id", estado.getId().toString()))
+        this.mockMvc.perform(post(Constantes.PATH_CIUDAD_ELIMINA)
+                .param("id", ciudad.getId().toString()))
                 .andExpect(status().isOk())
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "estado.eliminada.message"));
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "ciudad.eliminada.message"));
     }
 }

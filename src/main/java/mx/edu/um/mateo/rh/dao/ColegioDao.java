@@ -18,21 +18,15 @@ public interface ColegioDao  {
      * @param id the colegio's id
      * @return colegio populated colegio object
      */
-    public Colegio getColegio(final Long id);
+    public Colegio obtiene(final Long id);
     
-    public void grabaColegio(Colegio colegio);
-
-    /**
-     * Saves a colegio's information
-     * @param colegio the object to be saved
-     */    
-    
+    public void crea(Colegio colegio);
 
     /**
      * Removes a colegio from the database by id
      * @param id the colegio's id
      */
-    public String removeColegio(final Long id);
+    public String elimina(final Long id);
 }
 
 

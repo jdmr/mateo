@@ -4,9 +4,10 @@
  */
 package mx.edu.um.mateo.rh.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.*;
-import org.hibernate.validator.constraints.NotBlank;
+import mx.edu.um.mateo.general.model.Organizacion;
 
 /**
  * @hibernate.class table="colegios" schema="aron"
@@ -15,17 +16,18 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Entity
 @Table (name = "Colegio")
-public class Colegio {
+public class Colegio implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @NotBlank
+    private Long id;
     @Column (nullable = false, length = 24)
     private String nombre;
     @Column (nullable = false, length = 2)
     private String status;
     @Version
     private Integer version;
+    @ManyToOne
+    private Organizacion organizacion;
 
     public Colegio() {
     }
@@ -39,14 +41,14 @@ public class Colegio {
     /**
      * @return the id
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -90,19 +92,36 @@ public class Colegio {
     public Integer getVersion() {
         return version;
     }
-
-
-    @Override
-    public String toString() {
-        return "Colegio{" + "id=" + id + ", nombre=" + nombre + ", status=" + status + ", version=" + version + '}';
+    
+     /**
+     * @param version the version to set
+     */
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     /**
-     * @param version the version to set
+     * @return the organizacion
      */
+    public Organizacion getOrganizacion() {
+        return organizacion;
+    }
 
-    public void setVersion(Integer version) {
-        this.version = version;
+    /**
+     * @param organizacion the organizacion to set
+     */
+    public void setOrganizacion(Organizacion organizacion) {
+        this.organizacion = organizacion;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 61 * hash + Objects.hashCode(this.id);
+        hash = 61 * hash + Objects.hashCode(this.nombre);
+        hash = 61 * hash + Objects.hashCode(this.version);
+        hash = 61 * hash + Objects.hashCode(this.organizacion.getId());
+        return hash;
     }
 
     @Override
@@ -114,30 +133,28 @@ public class Colegio {
             return false;
         }
         final Colegio other = (Colegio) obj;
-        if (this.id != other.id) {
+        if (!Objects.equals(this.id, other.id)) {
             return false;
         }
         if (!Objects.equals(this.nombre, other.nombre)) {
             return false;
         }
-        if (!Objects.equals(this.status, other.status)) {
+        if (!Objects.equals(this.version, other.version)) {
             return false;
         }
-        if (!Objects.equals(this.version, other.version)) {
+        if (!Objects.equals(this.organizacion.getId(), other.organizacion.getId())) {
             return false;
         }
         return true;
     }
 
     @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 29 * hash + (int) (this.id ^ (this.id >>> 32));
-        hash = 29 * hash + Objects.hashCode(this.nombre);
-        hash = 29 * hash + Objects.hashCode(this.status);
-        hash = 29 * hash + Objects.hashCode(this.version);
-        return hash;
+    public String toString() {
+        return "Colegio{" + "id=" + id + ", nombre=" + nombre + ", status=" + status + ", version=" + version + ", organizacion=" + organizacion.getId().toString() + '}';
     }
 
+   
+
+    
     
 }

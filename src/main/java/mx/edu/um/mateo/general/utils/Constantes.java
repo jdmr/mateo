@@ -2234,16 +2234,7 @@ public class Constantes {
     // TipoSalida-START
     public static final String TIPOSALIDA_LIST = "tipoSalidaList";
     // TipoSalida-END
-    // Colegio-START
-    /**
-     * The request scope attribute that holds the colegio form.
-     */
-    public static final String COLEGIO_KEY = "colegioForm";
-    /**
-     * The request scope attribute that holds the colegio list
-     */
-    public static final String COLEGIO_LIST = "colegioList";
-    // Colegio-END
+    
     // ProcesoPolizas-START
     public static final String PROCESOPOLIZASTIPO_FORM = "procesoPolizasTipoForm";
     public static final String PROCESOPOLIZASTIPO_LIST = "procesoPolizasTipoList";
@@ -2430,15 +2421,7 @@ public class Constantes {
     public static final String PATH_ESTUDIOSEMPLEADO_EDITA = "/rh/estudiosEmpleado/edita";
     public static final String PATH_ESTUDIOSEMPLEADO_CREA = "/rh/estudiosEmpleado/crea";
     public static final String PATH_ESTUDIOSEMPLEADO_ACTUALIZA = "/rh/estudiosEmpleado/actualiza";
-    public static final String PATH_ESTUDIOSEMPLEADO_ELIMINA = "/rh/estudiosEmpleado/elimina";
-    public static final String PATH_COLEGIO = "/colportaje/colegio";
-    public static final String PATH_COLEGIO_LISTA = "/colportaje/colegio/lista";
-    public static final String PATH_COLEGIO_VER = "/colportaje/colegio/ver";
-    public static final String PATH_COLEGIO_NUEVO = "/colportaje/colegio/nuevo";
-    public static final String PATH_COLEGIO_EDITA = "/colportaje/colegio/edita";
-    public static final String PATH_COLEGIO_CREA = "/colportaje/colegio/crea";
-    public static final String PATH_COLEGIO_ACTUALIZA = "/colportaje/colegio/actualiza";
-    public static final String PATH_COLEGIO_ELIMINA = "/colportaje/colegio/elimina";
+    public static final String PATH_ESTUDIOSEMPLEADO_ELIMINA = "/rh/estudiosEmpleado/elimina";    
     public static final String PATH_SECCION = "/rh/seccion";
     public static final String PATH_SECCION_LISTA = "/rh/seccion/lista";
     public static final String PATH_SECCION_VER = "/rh/seccion/ver";
@@ -2877,4 +2860,17 @@ public class Constantes {
     public static final String PATH_TEMPORADA_ELIMINA = "/colportaje/temporada/elimina";
     public static final String TEMPORADA = "temporada";
     public static final String TEMPORADA_LIST = "temporadas";
+    
+    //Valores de Colegio
+    public static final String COLEGIO_PATH = "/colportaje/colegio";
+    public static final String COLEGIO_PATH_LISTA = "/colportaje/colegio/lista";
+    public static final String COLEGIO_PATH_VER = "/colportaje/colegio/ver";
+    public static final String COLEGIO_PATH_NUEVO = "/colportaje/colegio/nuevo";
+    public static final String COLEGIO_PATH_EDITA = "/colportaje/colegio/edita";
+    public static final String COLEGIO_PATH_CREA = "/colportaje/colegio/crea";
+    public static final String COLEGIO_PATH_ACTUALIZA = "/colportaje/colegio/actualiza";
+    public static final String COLEGIO_PATH_ELIMINA = "/colportaje/colegio/elimina";
+    public static final String COLEGIO = "colegioForm";
+    public static final String COLEGIO_LIST = "colegioList";
+    
 }

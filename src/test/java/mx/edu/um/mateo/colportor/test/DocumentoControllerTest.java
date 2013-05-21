@@ -5,7 +5,7 @@
 /**
  * TODO problemas con nullpointerexception
  */
-package mx.edu.um.mateo.colportor.web;
+package mx.edu.um.mateo.colportor.test;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
