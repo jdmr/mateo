@@ -202,8 +202,8 @@ public class AFEBecaAdicionalController extends BaseController {
         }
 
         try {
-            TiposBecas tiposBecas = tiposBecasManager.obtiene(becaAdicional.getTiposBecas().getId().toString());
-            becaAdicional.setTiposBecas(tiposBecas);
+            TiposBecas tiposBecas = tiposBecasManager.obtiene(becaAdicional.getTipoBeca().getId().toString());
+            becaAdicional.setTipoBeca(tiposBecas);
             Usuario usuario = ambiente.obtieneUsuario();
             becaAdicional.setUsuarioAlta(usuario);
             manager.crea(becaAdicional, usuario);
@@ -237,8 +237,8 @@ public class AFEBecaAdicionalController extends BaseController {
         }
 
         try {
-            TiposBecas tiposBecas = tiposBecasManager.obtiene(becaAdicional.getTiposBecas().getId().toString());
-            becaAdicional.setTiposBecas(tiposBecas);
+            TiposBecas tiposBecas = tiposBecasManager.obtiene(becaAdicional.getTipoBeca().getId().toString());
+            becaAdicional.setTipoBeca(tiposBecas);
             Usuario usuario = ambiente.obtieneUsuario();
             becaAdicional.setUsuarioAlta(usuario);
             log.debug("Paquete {}", becaAdicional);

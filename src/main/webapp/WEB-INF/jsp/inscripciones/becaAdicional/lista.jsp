@@ -66,7 +66,7 @@
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/inscripciones/becaAdicional/ver/${becaAdicional.id}' />">${becaAdicional.matricula}</a></td>                            
                             <td>${becaAdicional.importe}</td>
-                            <td>${becaAdicional.tiposBecas.descripcion}</td>
+                            <td>${becaAdicional.tipoBeca.descripcion}</td>
                             <td>${becaAdicional.status}</td>
                         </tr>
                     </c:forEach>

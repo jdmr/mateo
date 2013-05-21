@@ -339,67 +339,67 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
                 .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "temporadaColportor.eliminada.message"));
     }
-
-    @Test
-    public void deberiaProbarNuevaTeporadaColportor() throws Exception {
-        log.debug("Deberia Probar Nueva De TemporadaColportor Controller");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
-        Rol rol = new Rol(Constantes.ROLE_COL);
-        currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
-        Organizacion organizacion = new Organizacion("codigo", "Organizacion", "Organizacion");
-        currentSession().save(organizacion);
-        Empresa empresa = new Empresa("codigo", "empresa", "Empresa", "123456789123", organizacion);
-        currentSession().save(empresa);
-        Almacen almacen = new Almacen("codigo", "nombre", empresa);
-        currentSession().save(almacen);
-        for (int i = 0; i < 10; i++) {
-            Colportor colportor = new Colportor("test-" + i + "@test.com", "test", "test", "test", "test", "test", Constantes.STATUS_ACTIVO,
-                    "8262652626", "test", "test", "10706" + i, "test", "test001", new Date());
-            colportor.setAsociacion(asociacion);
-            colportor.setEmpresa(empresa);
-            colportor.setAlmacen(almacen);
-            currentSession().save(colportor);
-            assertNotNull(colportor.getId());
-        }
-        for (int i = 0; i < 10; i++) {
-            Asociado asociado = new Asociado("test--" + i + "@test.com", "test", "test", "test", "test",
-                    Constantes.STATUS_ACTIVO, Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE, Constantes.COLONIA,
-                    Constantes.MUNICIPIO);
-            asociado.setAsociacion(asociacion);
-            asociado.setEmpresa(empresa);
-            asociado.setAlmacen(almacen);
-            currentSession().save(asociado);
-            assertNotNull(asociado.getId());
-        }
-
-        for (int i = 0; i < 10; i++) {
-            ColegioColportor colegio = new ColegioColportor(Constantes.NOMBRE + "--" + i, Constantes.STATUS_ACTIVO);
-            currentSession().save(colegio);
-            assertNotNull(colegio);
-        }
-        for (int i = 0; i < 10; i++) {
-            Temporada temporada = new Temporada("test"+i);
-            temporada.setOrganizacion(organizacion);
-            currentSession().save(temporada);
-            assertNotNull(temporada.getId());
-        }
-        TemporadaColportor temporadaColportor = new TemporadaColportor();
-        this.mockMvc.perform(post(
-                Constantes.PATH_TEMPORADACOLPORTOR_NUEVA)
-                .sessionAttr(Constantes.SESSION_ASOCIACION, asociacion))
-//                .andExpect(model().attribute("sizeTemporada", 10))
-//                .andExpect(model().attribute("sizeColportor", 10))
-//                .andExpect(model().attribute("sizeAsociado", 10))
-//                .andExpect(model().attribute("sizeColegios", 10))
-                .andExpect(model().attribute("temporadaColportor", temporadaColportor))
-                .andExpect(status().isOk())
-                .andExpect(view().name(Constantes.PATH_TEMPORADACOLPORTOR_NUEVA));
-
-    }
+//
+//    @Test
+//    public void deberiaProbarNuevaTeporadaColportor() throws Exception {
+//        log.debug("Deberia Probar Nueva De TemporadaColportor Controller");
+//        Union union = new Union("test");
+//        union.setStatus(Constantes.STATUS_ACTIVO);
+//        currentSession().save(union);
+//        Rol rol = new Rol(Constantes.ROLE_COL);
+//        currentSession().save(rol);
+//        Set<Rol> roles = new HashSet<>();
+//        roles.add(rol);
+//        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
+//        currentSession().save(asociacion);
+//        Organizacion organizacion = new Organizacion("codigo", "Organizacion", "Organizacion");
+//        currentSession().save(organizacion);
+//        Empresa empresa = new Empresa("codigo", "empresa", "Empresa", "123456789123", organizacion);
+//        currentSession().save(empresa);
+//        Almacen almacen = new Almacen("codigo", "nombre", empresa);
+//        currentSession().save(almacen);
+//        for (int i = 0; i < 10; i++) {
+//            Colportor colportor = new Colportor("test-" + i + "@test.com", "test", "test", "test", "test", "test", Constantes.STATUS_ACTIVO,
+//                    "8262652626", "test", "test", "10706" + i, "test", "test001", new Date());
+//            colportor.setAsociacion(asociacion);
+//            colportor.setEmpresa(empresa);
+//            colportor.setAlmacen(almacen);
+//            currentSession().save(colportor);
+//            assertNotNull(colportor.getId());
+//        }
+//        for (int i = 0; i < 10; i++) {
+//            Asociado asociado = new Asociado("test--" + i + "@test.com", "test", "test", "test", "test",
+//                    Constantes.STATUS_ACTIVO, Constantes.CLAVE, Constantes.TELEFONO, Constantes.CALLE, Constantes.COLONIA,
+//                    Constantes.MUNICIPIO);
+//            asociado.setAsociacion(asociacion);
+//            asociado.setEmpresa(empresa);
+//            asociado.setAlmacen(almacen);
+//            currentSession().save(asociado);
+//            assertNotNull(asociado.getId());
+//        }
+//
+//        for (int i = 0; i < 10; i++) {
+//            ColegioColportor colegio = new ColegioColportor(Constantes.NOMBRE + "--" + i, Constantes.STATUS_ACTIVO);
+//            currentSession().save(colegio);
+//            assertNotNull(colegio);
+//        }
+//        for (int i = 0; i < 10; i++) {
+//            Temporada temporada = new Temporada("test"+i);
+//            temporada.setOrganizacion(organizacion);
+//            currentSession().save(temporada);
+//            assertNotNull(temporada.getId());
+//        }
+//        TemporadaColportor temporadaColportor = new TemporadaColportor();
+//        this.mockMvc.perform(post(
+//                Constantes.PATH_TEMPORADACOLPORTOR_NUEVA)
+//                .sessionAttr(Constantes.SESSION_ASOCIACION, asociacion))
+////                .andExpect(model().attribute("sizeTemporada", 10))
+////                .andExpect(model().attribute("sizeColportor", 10))
+////                .andExpect(model().attribute("sizeAsociado", 10))
+////                .andExpect(model().attribute("sizeColegios", 10))
+//                .andExpect(model().attribute("temporadaColportor", temporadaColportor))
+//                .andExpect(status().isOk())
+//                .andExpect(view().name(Constantes.PATH_TEMPORADACOLPORTOR_NUEVA));
+//
+//    }
 }

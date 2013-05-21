@@ -43,7 +43,7 @@
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="tiposBecas.label" /></div>
-                    <div class="span11">${becaAdicional.tiposBecas.descripcion}</div>
+                    <div class="span11">${becaAdicional.tipoBeca.descripcion}</div>
                 </div>
                 <p class="well">
                     <a href="<c:url value='/inscripciones/becaAdicional/edita/${becaAdicional.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>

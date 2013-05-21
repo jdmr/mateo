@@ -62,7 +62,7 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
             becaAdicional.setMatricula("1110475");
             becaAdicional.setStatus("A");
             becaAdicional.setUsuarioAlta(usuario);
-            becaAdicional.setTiposBecas(tiposBecas);
+            becaAdicional.setTipoBeca(tiposBecas);
             instance.crea(becaAdicional, usuario);
             assertNotNull(becaAdicional.getId());
         }
@@ -104,7 +104,7 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
         becaAdicional.setMatricula(matricula);
         becaAdicional.setStatus("A");
         becaAdicional.setUsuarioAlta(usuario);
-        becaAdicional.setTiposBecas(tiposBecas);
+        becaAdicional.setTipoBeca(tiposBecas);
         instance.crea(becaAdicional, usuario);
         assertNotNull(becaAdicional.getId());
 
@@ -140,7 +140,7 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
         becaAdicional.setImporte(new BigDecimal("20.8"));
         becaAdicional.setMatricula(matricula);
         becaAdicional.setStatus("A");
-        becaAdicional.setTiposBecas(tiposBecas);
+        becaAdicional.setTipoBeca(tiposBecas);
         instance.crea(becaAdicional, usuario);
         assertNotNull(becaAdicional.getId());
 
@@ -175,7 +175,7 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
         becaAdicional.setMatricula(matricula);
         becaAdicional.setStatus("A");
         becaAdicional.setUsuarioAlta(usuario);
-        becaAdicional.setTiposBecas(tiposBecas);
+        becaAdicional.setTipoBeca(tiposBecas);
         instance.crea(becaAdicional, usuario);
         assertNotNull(becaAdicional.getId());
 
@@ -214,7 +214,7 @@ public class AFEBecaAdicionalDaoTest extends BaseDaoTest {
         becaAdicional.setImporte(new BigDecimal("20.8"));
         becaAdicional.setMatricula("1110475");
         becaAdicional.setStatus("A");
-        becaAdicional.setTiposBecas(tiposBecas);
+        becaAdicional.setTipoBeca(tiposBecas);
         becaAdicional.setUsuarioAlta(usuario);
         instance.crea(becaAdicional, usuario);
         assertNotNull(becaAdicional.getId());

@@ -38,7 +38,7 @@ public class AFEBecaAdicional {
     private BigDecimal total;
     private String status;
     @ManyToOne
-    private TiposBecas tiposBecas;
+    private TiposBecas tipoBeca;
     @ManyToOne(fetch= FetchType.LAZY)
     private Usuario usuarioAlta;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
@@ -91,12 +91,12 @@ public class AFEBecaAdicional {
         this.status = status;
     }
 
-    public TiposBecas getTiposBecas() {
-        return tiposBecas;
+    public TiposBecas getTipoBeca() {
+        return tipoBeca;
     }
 
-    public void setTiposBecas(TiposBecas tiposBecas) {
-        this.tiposBecas = tiposBecas;
+    public void setTipoBeca(TiposBecas tiposBecas) {
+        this.tipoBeca = tiposBecas;
     }
 
     public Date getFechaAlta() {
@@ -135,7 +135,7 @@ public class AFEBecaAdicional {
     @Override
     public String toString() {
         return "AFEBecaAdicional{" + "id=" + id + ", version=" + version + ", matricula=" + matricula + ", importe=" + importe
-                + ", status=" + status + ", tiposBecas=" + tiposBecas + ", usuarioAlta=" + usuarioAlta + ", fechaAlta=" + fechaAlta
+                + ", status=" + status + ", tiposBecas=" + tipoBeca + ", usuarioAlta=" + usuarioAlta + ", fechaAlta=" + fechaAlta
                 + ", empresa=" + empresa + '}';
     }
 }

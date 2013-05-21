@@ -49,7 +49,7 @@ public class TemporadaDaoTest extends BaseDaoTest{
             assertNotNull(temporada.getId());
         }
         Map<String, Object> params = new TreeMap<>();
-        params.put("organizacion", asociado.getEmpresa().getOrganizacion());
+        params.put("organizacion.Id", asociado.getEmpresa().getOrganizacion());
         Map result = instance.lista(params);
         assertNotNull(result.get(Constantes.TEMPORADA_LIST));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));

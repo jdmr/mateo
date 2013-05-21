@@ -49,13 +49,13 @@
                             <form:errors path="importe" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="becaAdicional.tiposBecas">
+                    <s:bind path="becaAdicional.tipoBeca">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="tiposBecas">
+                                <label for="tipoBeca">
                                 <s:message code="tiposBecas.label" />
                                 <span class="required-indicator">*</span>
-                                <form:select id="tiposBecasId" path="tiposBecas.id" items="${tiposBecas}" itemLabel="descripcion" itemValue="id" />
-                                <form:errors path="tiposBecas" cssClass="alert alert-error" />
+                                <form:select id="tipoBecaId" path="tipoBeca.id" items="${tiposBecas}" itemLabel="descripcion" itemValue="id" />
+                                <form:errors path="tipoBeca" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                     <s:bind path="becaAdicional.status">

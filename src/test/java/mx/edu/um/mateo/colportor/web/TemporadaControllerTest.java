@@ -122,7 +122,7 @@ public class TemporadaControllerTest extends BaseControllerTest {
         assertNotNull(temporada.getId());
         
         Map<String, Object> params = new TreeMap<>();
-        params.put("organizacion", asociado.getEmpresa().getOrganizacion());
+        params.put("organizacion.Id", asociado.getEmpresa().getOrganizacion());
         Integer nRows = ((List)temporadaDao.lista(params).get(Constantes.TEMPORADA_LIST)).size();
 
         this.mockMvc.perform(post(Constantes.PATH_TEMPORADA_ACTUALIZA)

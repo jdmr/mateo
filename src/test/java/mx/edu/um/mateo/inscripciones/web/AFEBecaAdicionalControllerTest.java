@@ -65,7 +65,7 @@ public class AFEBecaAdicionalControllerTest extends BaseControllerTest {
             becaAdicional.setImporte(new BigDecimal("20.8"));
             becaAdicional.setMatricula("111047");
             becaAdicional.setStatus("A");
-            becaAdicional.setTiposBecas(tiposBecas);
+            becaAdicional.setTipoBeca(tiposBecas);
             currentSession().save(becaAdicional);
             assertNotNull(becaAdicional.getId());
         }
@@ -132,7 +132,7 @@ public class AFEBecaAdicionalControllerTest extends BaseControllerTest {
         becaAdicional.setMatricula("1110475");
         becaAdicional.setStatus("A");
         becaAdicional.setUsuarioAlta(usuario);
-        becaAdicional.setTiposBecas(tiposBecas);
+        becaAdicional.setTipoBeca(tiposBecas);
         currentSession().save(becaAdicional);
         assertNotNull(becaAdicional.getId());
         this.mockMvc.perform(get(Constantes.PATH_AFE_BECAADICIONAL_EDITA + "/" + becaAdicional.getId()))
@@ -168,7 +168,7 @@ public class AFEBecaAdicionalControllerTest extends BaseControllerTest {
         becaAdicional.setMatricula("1110475");
         becaAdicional.setStatus("A");
         becaAdicional.setUsuarioAlta(usuario);
-        becaAdicional.setTiposBecas(tiposBecas);
+        becaAdicional.setTipoBeca(tiposBecas);
         currentSession().save(becaAdicional);
         assertNotNull(becaAdicional.getId());
 
@@ -200,7 +200,7 @@ public class AFEBecaAdicionalControllerTest extends BaseControllerTest {
                 .param("matricula", "1110475")
                 .param("importe", "89.6")
                 .param("status", "A")
-                .param("tipoBeca", tiposBecas.getId().toString()))
+                .param("tipoBeca.Id", tiposBecas.getId().toString()))
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message", "becaAdicional.graba.message"))
                 .andExpect(redirectedUrl(Constantes.PATH_AFE_BECAADICIONAL_LISTA));
@@ -232,7 +232,7 @@ public class AFEBecaAdicionalControllerTest extends BaseControllerTest {
         becaAdicional.setMatricula("1110475");
         becaAdicional.setStatus("A");
         becaAdicional.setUsuarioAlta(usuario);
-        becaAdicional.setTiposBecas(tiposBecas);
+        becaAdicional.setTipoBeca(tiposBecas);
         currentSession().save(becaAdicional);
         assertNotNull(becaAdicional.getId());
 
@@ -244,7 +244,7 @@ public class AFEBecaAdicionalControllerTest extends BaseControllerTest {
                 .param("matricula", "1110476")
                 .param("importe", "89.6")
                 .param("status", "A")
-                .param("tipoBeca", tiposBecas.getId().toString()))
+                .param("tipoBeca.Id", tiposBecas.getId().toString()))
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message", "becaAdicional.graba.message"))
                 .andExpect(redirectedUrl(Constantes.PATH_AFE_BECAADICIONAL_LISTA));
@@ -280,7 +280,7 @@ public class AFEBecaAdicionalControllerTest extends BaseControllerTest {
         becaAdicional.setMatricula("1110475");
         becaAdicional.setStatus("A");
         becaAdicional.setUsuarioAlta(usuario);
-        becaAdicional.setTiposBecas(tiposBecas);
+        becaAdicional.setTipoBeca(tiposBecas);
         currentSession().save(becaAdicional);
         assertNotNull(becaAdicional.getId());
 
