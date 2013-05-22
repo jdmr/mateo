@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
@@ -21,22 +20,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.colportor.dao.AsociadoDao;
-import mx.edu.um.mateo.colportor.dao.ColegioColportorDao;
 import mx.edu.um.mateo.colportor.dao.ColportorDao;
 import mx.edu.um.mateo.colportor.dao.TemporadaColportorDao;
 import mx.edu.um.mateo.colportor.dao.TemporadaDao;
 import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.colportor.model.Asociado;
-import mx.edu.um.mateo.colportor.model.ColegioColportor;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.colportor.model.Documento;
 import mx.edu.um.mateo.colportor.model.Temporada;
 import mx.edu.um.mateo.colportor.model.TemporadaColportor;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.general.dao.*;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.utils.Ambiente;
-import mx.edu.um.mateo.colportor.utils.FaltaAsociacionException;
+import mx.edu.um.mateo.rh.dao.ColegioDao;
 import mx.edu.um.mateo.rh.model.Colegio;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -84,7 +80,7 @@ public class TemporadaColportorController {
     @Autowired
     private ColportorDao colportorDao;
     @Autowired
-    private ColegioColportorDao colegioDao;
+    private ColegioDao colegioDao;
     @Autowired
     private Ambiente ambiente;
 
@@ -119,7 +115,7 @@ public class TemporadaColportorController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = temporadaColportorDao.lista(params);
             try {
-                generaReporte(tipo, (List<TemporadaColportor>) params.get(Constantes.CONTAINSKEY_TEMPORADACOLPORTORES), response);
+                generaReporte(tipo, (List<TemporadaColportor>) params.get(Constantes.TEMPORADACOLPORTOR_LIST), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -132,7 +128,7 @@ public class TemporadaColportorController {
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<TemporadaColportor>) params.get(Constantes.CONTAINSKEY_TEMPORADACOLPORTORES), request);
+                enviaCorreo(correo, (List<TemporadaColportor>) params.get(Constantes.TEMPORADACOLPORTOR_LIST), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("temporadaColportor.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
@@ -140,7 +136,7 @@ public class TemporadaColportorController {
             }
         }
         params = temporadaColportorDao.lista(params);
-        modelo.addAttribute(Constantes.CONTAINSKEY_TEMPORADACOLPORTORES, params.get(Constantes.CONTAINSKEY_TEMPORADACOLPORTORES));
+        modelo.addAttribute(Constantes.TEMPORADACOLPORTOR_LIST, params.get(Constantes.TEMPORADACOLPORTOR_LIST));
 
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
@@ -151,7 +147,7 @@ public class TemporadaColportorController {
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<TemporadaColportor> temporadaColportores = (List<TemporadaColportor>) params.get(Constantes.CONTAINSKEY_TEMPORADACOLPORTORES);
+        List<TemporadaColportor> temporadaColportores = (List<TemporadaColportor>) params.get(Constantes.TEMPORADACOLPORTOR_LIST);
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (temporadaColportores.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
@@ -276,8 +272,8 @@ public class TemporadaColportorController {
             temporadaColportor.setColportor(colportor);
             Asociado asociado = asociadoDao.obtiene(ambiente.obtieneUsuario().getId());
             temporadaColportor.setAsociado(asociado);
-            ColegioColportor colegio = colegioDao.obtiene(temporadaColportor.getColegioColportor().getId());
-            temporadaColportor.setColegioColportor(colegio);
+            Colegio colegio = colegioDao.obtiene(temporadaColportor.getColegio().getId());
+            temporadaColportor.setColegio(colegio);
             temporadaColportor = temporadaColportorDao.crea(temporadaColportor);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la temporada Colportor", e);
@@ -343,8 +339,8 @@ public class TemporadaColportorController {
             Colportor colportor = colportorDao.obtiene(temporadaColportor.getColportor().getId());
             temporadaColportor.setColportor(colportor);
 
-            ColegioColportor colegio = colegioDao.obtiene(temporadaColportor.getColegioColportor().getId());
-            temporadaColportor.setColegioColportor(colegio);
+            Colegio colegio = colegioDao.obtiene(temporadaColportor.getColegio().getId());
+            temporadaColportor.setColegio(colegio);
             temporadaColportor = temporadaColportorDao.actualiza(temporadaColportor);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al Asociacion", e);
@@ -368,7 +364,7 @@ public class TemporadaColportorController {
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
         } catch (Exception e) {
             log.error("No se pudo eliminar el asociado " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.CONTAINSKEY_TEMPORADACOLPORTORES, new String[]{"temporadaColportor.no.eliminada.message"}, null, null));
+            bindingResult.addError(new ObjectError(Constantes.TEMPORADACOLPORTOR_LIST, new String[]{"temporadaColportor.no.eliminada.message"}, null, null));
             return Constantes.PATH_TEMPORADACOLPORTOR_VER;
         }
 

@@ -10,11 +10,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.colportor.dao.ColegioColportorDao;
 import mx.edu.um.mateo.colportor.dao.TemporadaColportorDao;
 import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.colportor.model.Asociado;
-import mx.edu.um.mateo.colportor.model.ColegioColportor;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.colportor.model.Temporada;
 import mx.edu.um.mateo.colportor.model.TemporadaColportor;
@@ -23,6 +21,8 @@ import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import mx.edu.um.mateo.rh.dao.ColegioDao;
+import mx.edu.um.mateo.rh.model.Colegio;
 import static org.junit.Assert.assertNotNull;
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -53,7 +53,7 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
     @Autowired
     private TemporadaColportorDao temporadaColportorDao;    
     @Autowired
-    private ColegioColportorDao colegioDao;
+    private ColegioDao colegioDao;
     
     @Test
     public void debieraMostrarListaDeTemporadaColportor() throws Exception {
@@ -86,7 +86,7 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
         temporada.setOrganizacion(organizacion);
         currentSession().save(temporada);
         assertNotNull(temporada);
-        ColegioColportor colegio = new ColegioColportor("test3", Constantes.STATUS_ACTIVO);
+        Colegio colegio = new Colegio("test3", Constantes.STATUS_ACTIVO);
         currentSession().save(colegio);
         for (int i = 0; i < 20; i++) {
             TemporadaColportor temporadaColportor = new TemporadaColportor(Constantes.STATUS_ACTIVO + i, "TEST", "TEST");
@@ -95,7 +95,7 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
             temporadaColportor.setAsociado(asociado);
             temporadaColportor.setTemporada(temporada);
             temporadaColportor.setUnion(union);
-            temporadaColportor.setColegioColportor(colegio);
+            temporadaColportor.setColegio(colegio);
             temporadaColportorDao.crea(temporadaColportor);
             assertNotNull(temporadaColportor);
         }
@@ -103,7 +103,7 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
         this.mockMvc.perform(get(Constantes.PATH_TEMPORADACOLPORTOR))
                 .andExpect(status().isOk())
                 .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_TEMPORADACOLPORTOR_LISTA + ".jsp"))
-                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_TEMPORADACOLPORTORES))
+                .andExpect(model().attributeExists(Constantes.TEMPORADACOLPORTOR_LIST))
                 .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION))
                 .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINAS))
                 .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINA));
@@ -140,7 +140,7 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
         temporada.setOrganizacion(organizacion);
         currentSession().save(temporada);
         assertNotNull(temporada);
-        ColegioColportor colegio = new ColegioColportor("test3", Constantes.STATUS_ACTIVO);
+        Colegio colegio = new Colegio("test3", Constantes.STATUS_ACTIVO);
         currentSession().save(colegio);
         TemporadaColportor temporadaColportor = null;
         for (int i = 0; i < 20; i++) {
@@ -150,7 +150,7 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
             temporadaColportor.setAsociado(asociado);
             temporadaColportor.setTemporada(temporada);
             temporadaColportor.setUnion(union);
-            temporadaColportor.setColegioColportor(colegio);
+            temporadaColportor.setColegio(colegio);
             temporadaColportorDao.crea(temporadaColportor);
             assertNotNull(temporadaColportor);
         }
@@ -199,7 +199,7 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
         temporada.setOrganizacion(organizacion);
         currentSession().save(temporada);
         assertNotNull(temporada);
-        ColegioColportor colegio = new ColegioColportor("test3", Constantes.STATUS_ACTIVO);
+        Colegio colegio = new Colegio("test3", Constantes.STATUS_ACTIVO);
         currentSession().save(colegio);
         colegioDao.crea(colegio);
         log.debug("colegio" + colegio);
@@ -259,7 +259,7 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
         temporada.setOrganizacion(organizacion);
         currentSession().save(temporada);
         assertNotNull(temporada);
-        ColegioColportor colegio = new ColegioColportor("test3", Constantes.STATUS_ACTIVO);
+        Colegio colegio = new Colegio("test3", Constantes.STATUS_ACTIVO);
         currentSession().save(colegio);
         TemporadaColportor temporadaColportor = new TemporadaColportor(Constantes.STATUS_ACTIVO, "TEST", "TEST");
         temporadaColportor.setColportor((Colportor) colportor);
@@ -267,7 +267,7 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
         temporadaColportor.setAsociado((Asociado) asociado);
         temporadaColportor.setTemporada(temporada);
         temporadaColportor.setUnion(union);
-        temporadaColportor.setColegioColportor(colegio);
+        temporadaColportor.setColegio(colegio);
         temporadaColportorDao.crea(temporadaColportor);
         assertNotNull(temporadaColportor);
         this.authenticate(asociado, asociado.getPassword(), new ArrayList(asociado.getAuthorities()));
@@ -319,7 +319,7 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
         temporada.setOrganizacion(organizacion);
         currentSession().save(temporada);
         assertNotNull(temporada);
-        ColegioColportor colegio = new ColegioColportor("test3", Constantes.STATUS_ACTIVO);
+        Colegio colegio = new Colegio("test3", Constantes.STATUS_ACTIVO);
         currentSession().save(colegio);
         TemporadaColportor temporadaColportor = new TemporadaColportor(Constantes.STATUS_ACTIVO, "TEST", "TEST");
         temporadaColportor.setColportor((Colportor) colportor);
@@ -327,7 +327,7 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
         temporadaColportor.setAsociado((Asociado) asociado);
         temporadaColportor.setTemporada(temporada);
         temporadaColportor.setUnion(union);
-        temporadaColportor.setColegioColportor(colegio);
+        temporadaColportor.setColegio(colegio);
         temporadaColportorDao.crea(temporadaColportor);
         assertNotNull(temporadaColportor);
         this.authenticate(asociado, asociado.getPassword(), new ArrayList(asociado.getAuthorities()));
@@ -379,7 +379,7 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
         }
 
         for (int i = 0; i < 10; i++) {
-            ColegioColportor colegio = new ColegioColportor(Constantes.NOMBRE + "--" + i, Constantes.STATUS_ACTIVO);
+            Colegio colegio = new Colegio(Constantes.NOMBRE + "--" + i, Constantes.STATUS_ACTIVO);
             currentSession().save(colegio);
             assertNotNull(colegio);
         }

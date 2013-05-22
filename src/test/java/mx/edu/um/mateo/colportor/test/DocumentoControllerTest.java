@@ -58,7 +58,7 @@ public class DocumentoControllerTest extends BaseControllerTest {
     @Autowired
     private TemporadaColportorDao temporadaColportorDao;
          
-    @Test
+    /*@Test
     public void debieraMostrarListaDeDocumentoDeColportor() throws Exception {
         log.debug("Debiera monstrar lista de documentos");
         Union union = new Union("test");
@@ -1378,5 +1378,5 @@ public class DocumentoControllerTest extends BaseControllerTest {
                 .andExpect(model().attribute(Constantes.ALCANZADO, new BigDecimal("88.888888").setScale(2, BigDecimal.ROUND_HALF_EVEN)))
                 .andExpect(view().name(Constantes.PATH_DOCUMENTO_LISTA))
                 .andExpect(status().isOk());
-    }
+    }*/
 }

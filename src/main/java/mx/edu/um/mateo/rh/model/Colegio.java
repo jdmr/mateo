@@ -10,12 +10,12 @@ import javax.persistence.*;
 import mx.edu.um.mateo.general.model.Organizacion;
 
 /**
- * @hibernate.class table="colegios" schema="aron"
+ * @hibernate.class table="rh_colegio" schema="aron"
  * @struts.form include-all="true" extends="BaseForm"
  * @author osoto
  */
 @Entity
-@Table (name = "Colegio")
+@Table (name = "colegio")
 public class Colegio implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,10 +32,9 @@ public class Colegio implements Serializable {
     public Colegio() {
     }
 
-    public Colegio(String nombre, String status, Integer version) {
+    public Colegio(String nombre, String status) {
         this.nombre = nombre;
         this.status = status;
-        this.version = version;
     }
 
     /**

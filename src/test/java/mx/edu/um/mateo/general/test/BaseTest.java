@@ -123,6 +123,30 @@ public abstract class BaseTest {
         return user;
     }
     
+    /**
+     * Este metodo crea un colportor, pero toma la organizacion, empresa, roles y demas
+     * del usuario que llega por parametro, el cual debe estar debidamente registrado en la DB
+     * @param usuario
+     * @return 
+     */
+    protected Usuario obtieneColportor(Usuario usuario){
+        Usuario clp = new Colportor("testC2", "TEST-01", "test@clp.edu.mx", "nombre", "appaterno", "apmaterno", "54321", "A", "8262630900", "Libertad", "Matamoros", "Montemorelos", "L", "999999", new Date());
+        clp.setEmpresa(usuario.getEmpresa());
+        clp.setAlmacen(usuario.getAlmacen());
+        clp.setRoles(usuario.getRoles());
+        currentSession().save(clp);        
+        Long id = clp.getId();
+        assertNotNull(id);
+        
+        log.debug("Colportor creado {}",clp);
+        
+        return clp;
+    }
+    
+    /**
+     * Este metodo crea un colportor, junto con la organizacion, empresa, roles y demas
+     * @return 
+     */
     protected Usuario obtieneColportor(){
         log.debug("Entrando a 'obtieneColportor'");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
@@ -144,7 +168,7 @@ public abstract class BaseTest {
         currentSession().save(almacen);
         assertNotNull(almacen);
         
-        Usuario clp = new Colportor("test", "TEST-01", "test@clp.edu.mx", "nombre", "appaterno", "apmaterno", "54321", "A", "826-26-30-900", "Libertad", "Matamoros", "Montemorelos", "L", "999999", new Date());
+        Usuario clp = new Colportor("testC", "TEST-01", "test@clp.edu.mx", "nombre", "appaterno", "apmaterno", "54321", "A", "8262630900", "Libertad", "Matamoros", "Montemorelos", "L", "999999", new Date());
         clp.setEmpresa(empresa);
         clp.setAlmacen(almacen);
         clp.setRoles(roles);
@@ -157,6 +181,30 @@ public abstract class BaseTest {
         return clp;
     }
     
+    /**
+     * Este metodo recibe un usuario, que ya existe en al DB y contiene todos los datos de
+     * organizacion, empresa y demas.
+     * @param usuario
+     * @return 
+     */
+    protected Usuario obtieneAsociado(Usuario usuario){
+        Usuario asoc = new Asociado("testA2", "TEST-01", "test@clp.edu.mx", "nombre", "appaterno", "apmaterno", "A", "54321", "8262630900", "Libertad", "Matamoros", "Montemorelos");
+        asoc.setEmpresa(usuario.getEmpresa());
+        asoc.setAlmacen(usuario.getAlmacen());
+        asoc.setRoles(usuario.getRoles());
+        currentSession().save(asoc);        
+        Long id = asoc.getId();
+        assertNotNull(id);
+        
+        log.debug("Asociado creado {}",asoc);
+        
+        return asoc;
+    }
+    
+    /**
+     * Este metodo crea un asociado, junto con la organizacion, empresa y demas
+     * @return 
+     */
     protected Usuario obtieneAsociado(){
         log.debug("Entrando a 'obtieneAsociado'");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
@@ -176,14 +224,13 @@ public abstract class BaseTest {
         rol = new Rol("ROLE_CLP");
         currentSession().save(rol);
         assertNotNull(rol.getId());
-        roles.add(rol);
-        
+        roles.add(rol);        
         
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         assertNotNull(almacen);
         
-        Usuario asoc = new Asociado("test", "TEST-01", "test@clp.edu.mx", "nombre", "appaterno", "apmaterno", "A", "54321", "8262630900", "Libertad", "Matamoros", "Montemorelos");
+        Usuario asoc = new Asociado("testA", "TEST-01", "test@clp.edu.mx", "nombre", "appaterno", "apmaterno", "A", "54321", "8262630900", "Libertad", "Matamoros", "Montemorelos");
         asoc.setEmpresa(empresa);
         asoc.setAlmacen(almacen);
         asoc.setRoles(roles);

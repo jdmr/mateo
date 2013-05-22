@@ -57,7 +57,7 @@ public class DocumentoDaoTest extends BaseTest {
         return sessionFactory.getCurrentSession();
     }
 
-    @Test
+    /*@Test
     public void deberiaMostrarListaDeDocumento() {
         log.debug("Debiera mostrar lista de documento");
 
@@ -432,5 +432,5 @@ public class DocumentoDaoTest extends BaseTest {
         if (prueba != null) {
             fail("Fallo prueba Eliminar");
         }
-    }
+    }*/
 }

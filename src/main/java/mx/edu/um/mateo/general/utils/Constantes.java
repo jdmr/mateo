@@ -2054,17 +2054,7 @@ public class Constantes {
      */
     public static final String TEMPORADACOLPORTAJE_LIST = "temporadaColportajeList";
     public static final String TEMPORADASCOLPORTAJE_ACTUALES = "TA";
-    // TemporadaColportaje-END
-    // TemporadaColportor-START
-    /**
-     * The request scope attribute that holds the temporadaColportor form.
-     */
-    public static final String TEMPORADACOLPORTOR_KEY = "temporadaColportorForm";
-    /**
-     * The request scope attribute that holds the temporadaColportor list
-     */
-    public static final String TEMPORADACOLPORTOR_LIST = "temporadaColportorList";
-    // TemporadaColportor-END
+    // TemporadaColportaje-END    
     // ContratoFinanciero-START
     /**
      * The request scope attribute that holds the contratoFinanciero form.
@@ -2379,8 +2369,7 @@ public class Constantes {
     public static final String CONTAINSKEY_CIUDADES = "ciudades";    
     public static final String CONTAINSKEY_DOCUMENTOS = "documentos";
     public static final String CONTAINSKEY_ESTADOS = "estados";
-    public static final String CONTAINSKEY_PAISES = "paises";
-    public static final String CONTAINSKEY_TEMPORADACOLPORTORES = "temporadaColportores";    
+    public static final String CONTAINSKEY_PAISES = "paises";    
     public static final String CONTAINSKEY_UNIONES = "uniones";
     public static final String CONTAINSKEY_USUARIOS = "usuarios";
     public static final String CONTAINSKEY_COLEGIOS_COLPORTOR = "colegios";
@@ -2872,5 +2861,8 @@ public class Constantes {
     public static final String COLEGIO_PATH_ELIMINA = "/colportaje/colegio/elimina";
     public static final String COLEGIO = "colegioForm";
     public static final String COLEGIO_LIST = "colegioList";
+    
+    //Temporada Colportor
+    public static final String TEMPORADACOLPORTOR_LIST = "temporadaColportores";    
     
 }

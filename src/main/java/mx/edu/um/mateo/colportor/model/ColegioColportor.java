@@ -11,10 +11,10 @@ import javax.validation.constraints.NotNull;
 
 /**
  *
- * @author wilbert
+ * @author osoto
  */
 @Entity
-@Table(name = "colegios_colportor")
+@Table(name = "colegio_colportor")
 public class ColegioColportor implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

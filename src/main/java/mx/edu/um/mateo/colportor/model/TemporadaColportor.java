@@ -10,13 +10,14 @@ import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.rh.model.Colegio;
 import org.hibernate.validator.constraints.NotBlank;
 /**
  *
- * @author gibrandemetrioo
+ * @author osoto
  */
 @Entity
-@Table (name = "temporadacolportores")
+@Table (name = "temporada_colportor")
 public class TemporadaColportor implements Serializable{
     
     @Id
@@ -24,6 +25,14 @@ public class TemporadaColportor implements Serializable{
     private Long id;
     @Version
     private Integer version;
+    @ManyToOne
+    private Colportor colportor;
+    @ManyToOne
+    private Usuario asociado;
+    @ManyToOne
+    private Temporada temporada;    
+    @ManyToOne
+    private Colegio colegio;
     @Temporal(TemporalType.DATE)
     @Column(nullable = false, name = "fecha")
     private Date fecha;
@@ -36,23 +45,15 @@ public class TemporadaColportor implements Serializable{
     @NotBlank
     @Column(nullable = false, length = 300)
     private String observaciones;
-    @ManyToOne
-    private Colportor colportor;
-    @ManyToOne
+    @ManyToOne(optional = true)
     private Asociacion asociacion;
-    @ManyToOne
-    private Usuario asociado;
-    @ManyToOne
-    private Temporada temporada;
-    @ManyToOne
+    @ManyToOne(optional = true)
     private Union union;
-    @ManyToOne
-    private ColegioColportor colegio;
-
+    
     public TemporadaColportor() {
     }
     
-    public TemporadaColportor(Colportor colportor,Asociacion asociacion,Usuario asociado,Temporada temporada,Union union, ColegioColportor colegio) throws Exception{
+    public TemporadaColportor(Colportor colportor,Asociacion asociacion,Usuario asociado,Temporada temporada,Union union, Colegio colegio) throws Exception{
         this.colportor = colportor;
         this.asociacion = asociacion;
         try{
@@ -161,11 +162,11 @@ public class TemporadaColportor implements Serializable{
         this.version = version;
     }
 
-    public ColegioColportor getColegioColportor() {
+    public Colegio getColegio() {
         return colegio;
     }
 
-    public void setColegioColportor(ColegioColportor colegio) {
+    public void setColegio(Colegio colegio) {
         this.colegio = colegio;
     }
     
