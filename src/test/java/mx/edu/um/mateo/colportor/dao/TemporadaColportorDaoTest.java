@@ -76,7 +76,7 @@ public class TemporadaColportorDaoTest extends BaseDaoTest {
         log.debug("Debiera mostrar lista Campanias por Asociado");
         
         Usuario colportor = obtieneColportor();
-        Usuario asociado = obtieneAsociado();
+        Usuario asociado = obtieneAsociado(colportor);
                 
         Temporada temporada = new Temporada("test");
         temporada.setOrganizacion(asociado.getEmpresa().getOrganizacion());
@@ -112,7 +112,7 @@ public class TemporadaColportorDaoTest extends BaseDaoTest {
         log.debug("Debiera obtener Campania por Id");
         
         Usuario colportor = obtieneColportor();
-        Usuario asociado = obtieneAsociado();
+        Usuario asociado = obtieneAsociado(colportor);
                 
         Temporada temporada = new Temporada("test");
         temporada.setOrganizacion(asociado.getEmpresa().getOrganizacion());
@@ -142,7 +142,7 @@ public class TemporadaColportorDaoTest extends BaseDaoTest {
         log.debug("Debiera obtener una Campania por Colportor");
         
         Usuario colportor = obtieneColportor();
-        Usuario asociado = obtieneAsociado();
+        Usuario asociado = obtieneAsociado(colportor);
                 
         Temporada temporada = new Temporada("test");
         temporada.setOrganizacion(asociado.getEmpresa().getOrganizacion());
@@ -172,7 +172,7 @@ public class TemporadaColportorDaoTest extends BaseDaoTest {
         log.debug("Debiera obtener Temporada Colportor por Colportor");
         
         Usuario colportor = obtieneColportor();
-        Usuario asociado = obtieneAsociado();
+        Usuario asociado = obtieneAsociado(colportor);
                 
         Temporada temporada = new Temporada("test");
         temporada.setOrganizacion(asociado.getEmpresa().getOrganizacion());
@@ -213,7 +213,7 @@ public class TemporadaColportorDaoTest extends BaseDaoTest {
         log.debug("Deberia crear Temporada Colportor");
         
         Usuario colportor = obtieneColportor();
-        Usuario asociado = obtieneAsociado();
+        Usuario asociado = obtieneAsociado(colportor);
                 
         Temporada temporada = new Temporada("test");
         temporada.setOrganizacion(asociado.getEmpresa().getOrganizacion());
@@ -243,7 +243,7 @@ public class TemporadaColportorDaoTest extends BaseDaoTest {
         log.debug("Deberia actualizar Temporada Colportor");
         
         Usuario colportor = obtieneColportor();
-        Usuario asociado = obtieneAsociado();
+        Usuario asociado = obtieneAsociado(colportor);
                 
         Temporada temporada = new Temporada("test");
         temporada.setOrganizacion(asociado.getEmpresa().getOrganizacion());
@@ -276,7 +276,7 @@ public class TemporadaColportorDaoTest extends BaseDaoTest {
         log.debug("Debiera eliminar Temporada Colportor");
         
         Usuario colportor = obtieneColportor();
-        Usuario asociado = obtieneAsociado();
+        Usuario asociado = obtieneAsociado(colportor);
                 
         Temporada temporada = new Temporada("test");
         temporada.setOrganizacion(asociado.getEmpresa().getOrganizacion());
@@ -298,7 +298,7 @@ public class TemporadaColportorDaoTest extends BaseDaoTest {
         assertEquals(nombre2, temporadaColportor.getColportor().getClave());
 
         TemporadaColportor prueba = instance.obtiene(temporadaColportor.getId());
-        if (prueba != null) {
+        if (!prueba.getStatus().equals(Constantes.STATUS_INACTIVO)) {
             fail("Fallo la prueba Eliminar");
         }
     }
