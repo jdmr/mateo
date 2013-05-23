@@ -57,10 +57,10 @@ public class DocumentoDaoTest extends BaseTest {
         return sessionFactory.getCurrentSession();
     }
 
-    /*@Test
+    @Test
     public void deberiaMostrarListaDeDocumento() {
         log.debug("Debiera mostrar lista de documento");
-
+/*
         Union union = new Union("test");
         union.setStatus(Constantes.STATUS_ACTIVO);
         currentSession().save(union);
@@ -119,9 +119,9 @@ public class DocumentoDaoTest extends BaseTest {
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
 
         assertEquals(10, ((List<Documento>) result.get(Constantes.CONTAINSKEY_DOCUMENTOS)).size());
-        assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
+        assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());*/
     }
-
+/*
     @Test
     public void deberiaTraerListaVacia() {
         log.debug("Debiera traer lista Vacia");

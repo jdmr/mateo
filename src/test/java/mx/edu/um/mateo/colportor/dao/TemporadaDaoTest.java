@@ -129,7 +129,7 @@ public class TemporadaDaoTest extends BaseDaoTest{
 
         Temporada prueba = instance.obtiene(temporada.getId());
 
-        if (prueba != null) {
+        if (!prueba.getStatus().equals(Constantes.STATUS_INACTIVO)) {
             fail("Fallo la prueba Eliminar");
 
         }
