@@ -2608,18 +2608,7 @@ public class Constantes {
     public static final String PATH_PAIS_ACTUALIZA = "/colportaje/pais/actualiza";
     public static final String PATH_PAIS_ELIMINA = "/colportaje/pais/elimina";
     public static final String ADDATTRIBUTE_PAIS = "pais";
-    /**
-     * Valores para Temporada Colportor Colportor
-     */
-    public static final String PATH_TEMPORADACOLPORTOR = "/temporadaColportor";
-    public static final String PATH_TEMPORADACOLPORTOR_LISTA = "/temporadaColportor/lista";
-    public static final String PATH_TEMPORADACOLPORTOR_VER = "/temporadaColportor/ver";
-    public static final String PATH_TEMPORADACOLPORTOR_NUEVA = "/temporadaColportor/nueva";
-    public static final String PATH_TEMPORADACOLPORTOR_EDITA = "/temporadaColportor/edita";
-    public static final String PATH_TEMPORADACOLPORTOR_CREA = "/temporadaColportor/crea";
-    public static final String PATH_TEMPORADACOLPORTOR_ACTUALIZA = "/temporadaColportor/actualiza";
-    public static final String PATH_TEMPORADACOLPORTOR_ELIMINA = "/temporadaColportor/elimina";
-    public static final String ADDATTRIBUTE_TEMPORADACOLPORTOR = "temporadaColportor";
+    
     /**
      * Valores para Documentos
      */
@@ -2863,6 +2852,15 @@ public class Constantes {
     public static final String COLEGIO_LIST = "colegioList";
     
     //Temporada Colportor
-    public static final String TEMPORADACOLPORTOR_LIST = "temporadaColportores";    
+    public static final String TEMPORADACOLPORTOR_PATH = "/colportaje/temporadaColportor";
+    public static final String TEMPORADACOLPORTOR_PATH_LISTA = "/colportaje/temporadaColportor/lista";
+    public static final String TEMPORADACOLPORTOR_PATH_VER = "/colportaje/temporadaColportor/ver";
+    public static final String TEMPORADACOLPORTOR_PATH_NUEVA = "/colportaje/temporadaColportor/nueva";
+    public static final String TEMPORADACOLPORTOR_PATH_EDITA = "/colportaje/temporadaColportor/edita";
+    public static final String TEMPORADACOLPORTOR_PATH_CREA = "/colportaje/temporadaColportor/crea";
+    public static final String TEMPORADACOLPORTOR_PATH_ACTUALIZA = "/colportaje/temporadaColportor/actualiza";
+    public static final String TEMPORADACOLPORTOR_PATH_ELIMINA = "/colportaje/temporadaColportor/elimina";
+    public static final String TEMPORADACOLPORTOR = "temporadaColportor";
+    public static final String TEMPORADACOLPORTOR_LIST = "temporadaColportores";
     
 }

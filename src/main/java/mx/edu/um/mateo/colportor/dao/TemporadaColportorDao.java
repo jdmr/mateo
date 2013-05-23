@@ -14,6 +14,7 @@ import mx.edu.um.mateo.colportor.utils.UltimoException;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
+import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Disjunction;
@@ -135,8 +136,13 @@ public class TemporadaColportorDao extends BaseDao {
 
     public TemporadaColportor actualiza(TemporadaColportor temporadaColportor) {
         log.debug("Actualizando Temporada Colportor {}", temporadaColportor);
-        currentSession().update(temporadaColportor);
-        currentSession().flush();
+        try{
+            currentSession().update(temporadaColportor);
+        }catch(NonUniqueObjectException e){
+            currentSession().merge(temporadaColportor);
+            currentSession().flush();
+            
+        }
         return temporadaColportor;
     }
 

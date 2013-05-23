@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.rh.model.Colegio;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.format.annotation.DateTimeFormat;
 /**
  *
  * @author osoto
@@ -33,17 +34,16 @@ public class TemporadaColportor implements Serializable{
     private Temporada temporada;    
     @ManyToOne
     private Colegio colegio;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     @Column(nullable = false, name = "fecha")
     private Date fecha;
-    @NotNull
     @Column(nullable = false, length = 56, name ="status")
     private String status;
     @NotBlank
     @Column(nullable = false, length = 65)
     private String objetivo;
-    @NotBlank
-    @Column(nullable = false, length = 300)
+    @Column(length = 300)
     private String observaciones;
     @ManyToOne(optional = true)
     private Asociacion asociacion;
@@ -86,7 +86,7 @@ public class TemporadaColportor implements Serializable{
         return asociado;
     }
 
-    public void setAsociado(Asociado asociado) {
+    public void setAsociado(Usuario asociado) {
         this.asociado = asociado;
     }
 
