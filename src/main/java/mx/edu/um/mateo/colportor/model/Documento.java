@@ -36,7 +36,7 @@ public class Documento implements Serializable{
     private BigDecimal importe;
     @Column(length = 1000)
     private String observaciones;
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TemporadaColportor temporadaColportor;
   
     

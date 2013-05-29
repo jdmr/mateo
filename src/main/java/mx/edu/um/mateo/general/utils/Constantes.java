@@ -2366,8 +2366,7 @@ public class Constantes {
     public static final String CONTAINSKEY_CATEGORIAS = "categorias";
     public static final String CONTAINSKEY_CONCEPTOS = "conceptos";
     public static final String CONTAINSKEY_PERDED = "perdeds";    
-    public static final String CONTAINSKEY_CIUDADES = "ciudades";    
-    public static final String CONTAINSKEY_DOCUMENTOS = "documentos";
+    public static final String CONTAINSKEY_CIUDADES = "ciudades";        
     public static final String CONTAINSKEY_ESTADOS = "estados";
     public static final String CONTAINSKEY_PAISES = "paises";    
     public static final String CONTAINSKEY_UNIONES = "uniones";
@@ -2608,19 +2607,7 @@ public class Constantes {
     public static final String PATH_PAIS_ACTUALIZA = "/colportaje/pais/actualiza";
     public static final String PATH_PAIS_ELIMINA = "/colportaje/pais/elimina";
     public static final String ADDATTRIBUTE_PAIS = "pais";
-    
-    /**
-     * Valores para Documentos
-     */
-    public static final String PATH_DOCUMENTO = "/documento";
-    public static final String PATH_DOCUMENTO_LISTA = "/documento/lista";
-    public static final String PATH_DOCUMENTO_VER = "/documento/ver";
-    public static final String PATH_DOCUMENTO_NUEVO = "/documento/nuevo";
-    public static final String PATH_DOCUMENTO_EDITA = "/documento/edita";
-    public static final String PATH_DOCUMENTO_CREA = "/documento/crea";
-    public static final String PATH_DOCUMENTO_ACTUALIZA = "/documento/actualiza";
-    public static final String PATH_DOCUMENTO_ELIMINA = "/documento/elimina";
-    public static final String ADDATTRIBUTE_DOCUMENTO = "documento";
+        
     /**
      * Valores para Tipos de Documento
      *
@@ -2862,5 +2849,17 @@ public class Constantes {
     public static final String TEMPORADACOLPORTOR_PATH_ELIMINA = "/colportaje/temporadaColportor/elimina";
     public static final String TEMPORADACOLPORTOR = "temporadaColportor";
     public static final String TEMPORADACOLPORTOR_LIST = "temporadaColportores";
+    
+    //Documentos Colportor        
+    public static final String DOCUMENTOCOLPORTOR_PATH=  "/documento";
+    public static final String DOCUMENTOCOLPORTOR_LISTA = "/documento/lista";
+    public static final String DOCUMENTOCOLPORTOR_VER = "/documento/ver";
+    public static final String DOCUMENTOCOLPORTOR_NUEVO = "/documento/nuevo";
+    public static final String DOCUMENTOCOLPORTOR_EDITA = "/documento/edita";
+    public static final String DOCUMENTOCOLPORTOR_CREA = "/documento/crea";
+    public static final String DOCUMENTOCOLPORTOR_ACTUALIZA = "/documento/actualiza";
+    public static final String DOCUMENTOCOLPORTOR_ELIMINA = "/documento/elimina";
+    public static final String DOCUMENTOCOLPORTOR = "documento";
+    public static final String DOCUMENTOCOLPORTOR_LIST = "documentos";
     
 }

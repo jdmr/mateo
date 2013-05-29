@@ -126,6 +126,32 @@ public abstract class BaseTest {
     /**
      * Este metodo crea un colportor, pero toma la organizacion, empresa, roles y demas
      * del usuario que llega por parametro, el cual debe estar debidamente registrado en la DB
+     * 
+     * @param usuario
+     * @param clave Contiene la clave del colportor
+     * @return 
+     */
+    protected Usuario obtieneColportor(Usuario usuario, String clave){
+        Usuario clp = new Colportor("testC2", "TEST-01", "test@clp.edu.mx", "nombre", "appaterno", "apmaterno", clave, "A", "8262630900", "Libertad", "Matamoros", "Montemorelos", "L", "999999", new Date());
+        clp.setEmpresa(usuario.getEmpresa());
+        clp.setAlmacen(usuario.getAlmacen());
+        Set<Rol> roles = new HashSet<>();        
+        Rol rol = new Rol("ROLE_CLP");
+        currentSession().save(rol);
+        assertNotNull(rol.getId());
+        roles.add(rol);
+        clp.setRoles(roles);
+        currentSession().save(clp);        
+        Long id = clp.getId();
+        assertNotNull(id);
+        
+        log.debug("Colportor creado {}",clp);
+        
+        return clp;
+    }
+    /**
+     * Este metodo crea un colportor, pero toma la organizacion, empresa, roles y demas
+     * del usuario que llega por parametro, el cual debe estar debidamente registrado en la DB
      * @param usuario
      * @return 
      */
@@ -133,7 +159,12 @@ public abstract class BaseTest {
         Usuario clp = new Colportor("testC2", "TEST-01", "test@clp.edu.mx", "nombre", "appaterno", "apmaterno", "54321", "A", "8262630900", "Libertad", "Matamoros", "Montemorelos", "L", "999999", new Date());
         clp.setEmpresa(usuario.getEmpresa());
         clp.setAlmacen(usuario.getAlmacen());
-        clp.setRoles(usuario.getRoles());
+        Set<Rol> roles = new HashSet<>();        
+        Rol rol = new Rol("ROLE_CLP");
+        currentSession().save(rol);
+        assertNotNull(rol.getId());
+        roles.add(rol);
+        clp.setRoles(roles);
         currentSession().save(clp);        
         Long id = clp.getId();
         assertNotNull(id);
@@ -191,7 +222,12 @@ public abstract class BaseTest {
         Usuario asoc = new Asociado("testA2", "TEST-01", "test@clp.edu.mx", "nombre", "appaterno", "apmaterno", "A", "54321", "8262630900", "Libertad", "Matamoros", "Montemorelos");
         asoc.setEmpresa(usuario.getEmpresa());
         asoc.setAlmacen(usuario.getAlmacen());
-        asoc.setRoles(usuario.getRoles());
+        Set<Rol> roles = new HashSet<>();        
+        Rol rol = new Rol("ROLE_ASOC");
+        currentSession().save(rol);
+        assertNotNull(rol.getId());
+        roles.add(rol);        
+        asoc.setRoles(roles);
         currentSession().save(asoc);        
         Long id = asoc.getId();
         assertNotNull(id);
@@ -221,11 +257,7 @@ public abstract class BaseTest {
         currentSession().save(rol);
         assertNotNull(rol.getId());
         roles.add(rol);
-        rol = new Rol("ROLE_CLP");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        roles.add(rol);        
-        
+                
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         assertNotNull(almacen);

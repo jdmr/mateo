@@ -139,7 +139,7 @@ public class Ambiente {
         while (it.hasNext()) {
             ga = (GrantedAuthority) it.next();
 
-            if ((ga).getAuthority().equals("ROLE_ASO")) {
+            if ((ga).getAuthority().equals("ROLE_ASOC")) {
                 esAsociado = true;
                 break;
             }
@@ -149,14 +149,14 @@ public class Ambiente {
     }
 
     public boolean esColportor() {
-        log.debug("COLPORTOR EN SECION");
+        log.debug("COLPORTOR EN SESION");
         boolean esColportor = false;
         GrantedAuthority ga = null;
         Usuario usuario = obtieneUsuario();
         Iterator it = usuario.getAuthorities().iterator();
         while (it.hasNext()) {
             ga = (GrantedAuthority) it.next();
-            if ((ga).getAuthority().equals("ROLE_COL")) {
+            if ((ga).getAuthority().equals("ROLE_CLP")) {
                 esColportor = true;
                 break;
             }
