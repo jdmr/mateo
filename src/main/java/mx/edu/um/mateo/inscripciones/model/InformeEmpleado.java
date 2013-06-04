@@ -32,14 +32,14 @@ public class InformeEmpleado implements Serializable {
     private Long id;
     @Version
     private Integer version;
-    private String NumNomina;
-    private String NombreEmpleado;
+    private String numNomina;
+    private String nombreEmpleado;
     private String RFCProveedor;
-    private String FolioFactura;
-    private String NombreProveedor;
+    private String folioFactura;
+    private String nombreProveedor;
     private BigDecimal subtotal;
     private BigDecimal IVA;
-    private BigDecimal Total;
+    private BigDecimal total;
     private String status;
     private Boolean informe;
     private Boolean pesos;
@@ -76,19 +76,19 @@ public class InformeEmpleado implements Serializable {
     }
 
     public String getNumNomina() {
-        return NumNomina;
+        return numNomina;
     }
 
     public void setNumNomina(String NumNomina) {
-        this.NumNomina = NumNomina;
+        this.numNomina = NumNomina;
     }
 
     public String getNombreEmpleado() {
-        return NombreEmpleado;
+        return nombreEmpleado;
     }
 
     public void setNombreEmpleado(String NombreEmpleado) {
-        this.NombreEmpleado = NombreEmpleado;
+        this.nombreEmpleado = NombreEmpleado;
     }
 
     public String getRFCProveedor() {
@@ -100,19 +100,19 @@ public class InformeEmpleado implements Serializable {
     }
 
     public String getFolioFactura() {
-        return FolioFactura;
+        return folioFactura;
     }
 
     public void setFolioFactura(String FolioFactura) {
-        this.FolioFactura = FolioFactura;
+        this.folioFactura = FolioFactura;
     }
 
     public String getNombreProveedor() {
-        return NombreProveedor;
+        return nombreProveedor;
     }
 
     public void setNombreProveedor(String NombreProveedor) {
-        this.NombreProveedor = NombreProveedor;
+        this.nombreProveedor = NombreProveedor;
     }
 
     public BigDecimal getSubtotal() {
@@ -132,11 +132,11 @@ public class InformeEmpleado implements Serializable {
     }
 
     public BigDecimal getTotal() {
-        return Total;
+        return total;
     }
 
     public void setTotal(BigDecimal Total) {
-        this.Total = Total;
+        this.total = Total;
     }
 
     public Date getFechaInforme() {
@@ -221,10 +221,10 @@ public class InformeEmpleado implements Serializable {
 
     @Override
     public String toString() {
-        return "InformeEmpleado{" + "id=" + id + ", version=" + version + ", NumNomina=" + NumNomina
-                + ", NombreEmpleado=" + NombreEmpleado + ", RFCProveedor=" + RFCProveedor
-                + ", FolioFactura=" + FolioFactura + ", NombreProveedor=" + NombreProveedor
-                + ", subtotal=" + subtotal + ", IVA=" + IVA + ", Total=" + Total
+        return "InformeEmpleado{" + "id=" + id + ", version=" + version + ", NumNomina=" + numNomina
+                + ", NombreEmpleado=" + nombreEmpleado + ", RFCProveedor=" + RFCProveedor
+                + ", FolioFactura=" + folioFactura + ", NombreProveedor=" + nombreProveedor
+                + ", subtotal=" + subtotal + ", IVA=" + IVA + ", Total=" + total
                 + ", status=" + status + ", informe=" + informe + ", pesos=" + pesos
                 + ", dolares=" + dolares + ", reembolso=" + reembolso + ", fechaInforme=" + fechaInforme
                 + ", fechaFactura=" + fechaFactura + ", empresa=" + empresa + ", pathPDF=" + pathPDF + ", pathXMl=" + pathXMl + '}';
