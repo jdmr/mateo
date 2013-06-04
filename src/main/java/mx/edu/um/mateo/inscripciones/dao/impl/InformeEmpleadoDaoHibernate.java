@@ -73,7 +73,7 @@ public class InformeEmpleadoDaoHibernate extends BaseDao implements InformeEmple
             Disjunction propiedades = Restrictions.disjunction();
             propiedades.add(Restrictions.ilike("numNomina", filtro,
                     MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("folioFactura", filtro,
+            propiedades.add(Restrictions.ilike("informe", filtro,
                     MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);

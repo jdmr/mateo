@@ -34,12 +34,6 @@ public class InformeEmpleado implements Serializable {
     private Integer version;
     private String numNomina;
     private String nombreEmpleado;
-    private String RFCProveedor;
-    private String folioFactura;
-    private String nombreProveedor;
-    private BigDecimal subtotal;
-    private BigDecimal IVA;
-    private BigDecimal total;
     private String status;
     private Boolean informe;
     private Boolean pesos;
@@ -48,13 +42,8 @@ public class InformeEmpleado implements Serializable {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     private Date fechaInforme;
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    @Temporal(TemporalType.DATE)
-    private Date fechaFactura;
     @ManyToOne(optional = false)
     private Empresa empresa;
-    private String pathPDF;
-    private String pathXMl;
 
     public InformeEmpleado() {
     }
@@ -91,54 +80,6 @@ public class InformeEmpleado implements Serializable {
         this.nombreEmpleado = NombreEmpleado;
     }
 
-    public String getRFCProveedor() {
-        return RFCProveedor;
-    }
-
-    public void setRFCProveedor(String RFCProveedor) {
-        this.RFCProveedor = RFCProveedor;
-    }
-
-    public String getFolioFactura() {
-        return folioFactura;
-    }
-
-    public void setFolioFactura(String FolioFactura) {
-        this.folioFactura = FolioFactura;
-    }
-
-    public String getNombreProveedor() {
-        return nombreProveedor;
-    }
-
-    public void setNombreProveedor(String NombreProveedor) {
-        this.nombreProveedor = NombreProveedor;
-    }
-
-    public BigDecimal getSubtotal() {
-        return subtotal;
-    }
-
-    public void setSubtotal(BigDecimal subtotal) {
-        this.subtotal = subtotal;
-    }
-
-    public BigDecimal getIVA() {
-        return IVA;
-    }
-
-    public void setIVA(BigDecimal IVA) {
-        this.IVA = IVA;
-    }
-
-    public BigDecimal getTotal() {
-        return total;
-    }
-
-    public void setTotal(BigDecimal Total) {
-        this.total = Total;
-    }
-
     public Date getFechaInforme() {
         return fechaInforme;
     }
@@ -147,44 +88,12 @@ public class InformeEmpleado implements Serializable {
         this.fechaInforme = fechaInforme;
     }
 
-    public Date getFechaFactura() {
-        return fechaFactura;
-    }
-
-    public void setFechaFactura(Date fechaFactura) {
-        this.fechaFactura = fechaFactura;
-    }
-
     public Empresa getEmpresa() {
         return empresa;
     }
 
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
-    }
-
-    public String getPathPDF() {
-        return pathPDF;
-    }
-
-    public void setPathPDF(String pathPDF) {
-        this.pathPDF = pathPDF;
-    }
-
-    public String getPathXMl() {
-        return pathXMl;
-    }
-
-    public void setPathXMl(String pathXMl) {
-        this.pathXMl = pathXMl;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public Boolean getInforme() {
@@ -219,14 +128,20 @@ public class InformeEmpleado implements Serializable {
         this.reembolso = reembolso;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
-        return "InformeEmpleado{" + "id=" + id + ", version=" + version + ", NumNomina=" + numNomina
-                + ", NombreEmpleado=" + nombreEmpleado + ", RFCProveedor=" + RFCProveedor
-                + ", FolioFactura=" + folioFactura + ", NombreProveedor=" + nombreProveedor
-                + ", subtotal=" + subtotal + ", IVA=" + IVA + ", Total=" + total
-                + ", status=" + status + ", informe=" + informe + ", pesos=" + pesos
-                + ", dolares=" + dolares + ", reembolso=" + reembolso + ", fechaInforme=" + fechaInforme
-                + ", fechaFactura=" + fechaFactura + ", empresa=" + empresa + ", pathPDF=" + pathPDF + ", pathXMl=" + pathXMl + '}';
+        return "InformeEmpleado{" + "id=" + id + ", version=" + version + ", numNomina=" + numNomina
+                + ", nombreEmpleado=" + nombreEmpleado + ", status=" + status
+                + ", informe=" + informe + ", pesos=" + pesos
+                + ", dolares=" + dolares + ", reembolso=" + reembolso
+                + ", fechaInforme=" + fechaInforme + ", empresa=" + empresa + '}';
     }
 }
