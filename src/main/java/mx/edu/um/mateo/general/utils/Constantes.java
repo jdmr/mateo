@@ -2885,4 +2885,6 @@ public class Constantes {
     public static final String PATH_TEMPORADA_ELIMINA = "/colportaje/temporada/elimina";
     public static final String TEMPORADA = "temporada";
     public static final String TEMPORADA_LIST = "temporadas";
+    //Valores de Temporada
+    public static final String CONTAINSKEY_INFORMESEMPLEADO = "informes";
 }

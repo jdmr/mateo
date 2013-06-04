@@ -40,6 +40,11 @@ public class InformeEmpleado implements Serializable {
     private BigDecimal subtotal;
     private BigDecimal IVA;
     private BigDecimal Total;
+    private String status;
+    private Boolean informe;
+    private Boolean pesos;
+    private Boolean dolares;
+    private Boolean reembolso;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     private Date fechaInforme;
@@ -174,13 +179,54 @@ public class InformeEmpleado implements Serializable {
         this.pathXMl = pathXMl;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Boolean getInforme() {
+        return informe;
+    }
+
+    public void setInforme(Boolean informe) {
+        this.informe = informe;
+    }
+
+    public Boolean getPesos() {
+        return pesos;
+    }
+
+    public void setPesos(Boolean pesos) {
+        this.pesos = pesos;
+    }
+
+    public Boolean getDolares() {
+        return dolares;
+    }
+
+    public void setDolares(Boolean dolares) {
+        this.dolares = dolares;
+    }
+
+    public Boolean getReembolso() {
+        return reembolso;
+    }
+
+    public void setReembolso(Boolean reembolso) {
+        this.reembolso = reembolso;
+    }
+
     @Override
     public String toString() {
         return "InformeEmpleado{" + "id=" + id + ", version=" + version + ", NumNomina=" + NumNomina
                 + ", NombreEmpleado=" + NombreEmpleado + ", RFCProveedor=" + RFCProveedor
                 + ", FolioFactura=" + FolioFactura + ", NombreProveedor=" + NombreProveedor
                 + ", subtotal=" + subtotal + ", IVA=" + IVA + ", Total=" + Total
-                + ", fechaInforme=" + fechaInforme + ", fechaFactura=" + fechaFactura
-                + ", empresa=" + empresa + ", pathPDF=" + pathPDF + ", pathXMl=" + pathXMl + '}';
+                + ", status=" + status + ", informe=" + informe + ", pesos=" + pesos
+                + ", dolares=" + dolares + ", reembolso=" + reembolso + ", fechaInforme=" + fechaInforme
+                + ", fechaFactura=" + fechaFactura + ", empresa=" + empresa + ", pathPDF=" + pathPDF + ", pathXMl=" + pathXMl + '}';
     }
 }
