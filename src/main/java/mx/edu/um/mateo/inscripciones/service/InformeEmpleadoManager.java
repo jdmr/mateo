@@ -15,7 +15,7 @@ import mx.edu.um.mateo.inscripciones.model.InformeEmpleado;
 public interface InformeEmpleadoManager {
 
     /**
-     * Regresa una lista de Prorrogas.
+     * Regresa una lista de Informes.
      *
      * @param InformeEmpleado
      * @return
@@ -28,7 +28,7 @@ public interface InformeEmpleadoManager {
      * @param id
      * @return
      */
-    public InformeEmpleado obtiene(final Integer id);
+    public InformeEmpleado obtiene(final Long id);
 
     /**
      * graba informacion sobre una nacionalidad
@@ -42,5 +42,5 @@ public interface InformeEmpleadoManager {
      *
      * @param id el id de InformeEmpleado
      */
-    public String elimina(final Integer id);
+    public String elimina(final Long id);
 }
