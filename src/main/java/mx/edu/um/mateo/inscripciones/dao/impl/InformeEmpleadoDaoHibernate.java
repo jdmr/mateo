@@ -87,7 +87,7 @@ public class InformeEmpleadoDaoHibernate extends BaseDao implements InformeEmple
                 criteria.addOrder(Order.asc(campo));
             }
         } else {
-            criteria.addOrder(Order.asc("descripcion"));
+            criteria.addOrder(Order.asc("numNomina"));
         }
 
         if (!params.containsKey("reporte")) {
