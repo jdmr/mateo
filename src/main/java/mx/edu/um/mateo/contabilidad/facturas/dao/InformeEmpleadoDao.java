@@ -2,12 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.inscripciones.dao;
+package mx.edu.um.mateo.contabilidad.facturas.dao;
 
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.inscripciones.model.InformeEmpleado;
-import mx.edu.um.mateo.inscripciones.model.InformeEmpleado;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 
 /**
  *

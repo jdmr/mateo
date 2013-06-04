@@ -6,9 +6,9 @@ package mx.edu.um.mateo.inscripciones.service.impl;
 
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.inscripciones.dao.InformeEmpleadoDao;
+import mx.edu.um.mateo.contabilidad.facturas.dao.InformeEmpleadoDao;
 import mx.edu.um.mateo.inscripciones.dao.ProrrogaDao;
-import mx.edu.um.mateo.inscripciones.model.InformeEmpleado;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.inscripciones.service.InformeEmpleadoManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

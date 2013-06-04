@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.inscripciones.dao;
+package mx.edu.um.mateo.contabilidad.facturas.dao;
 
+import mx.edu.um.mateo.contabilidad.facturas.dao.InformeEmpleadoDao;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +14,7 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inscripciones.model.CobroCampo;
-import mx.edu.um.mateo.inscripciones.model.InformeEmpleado;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.inscripciones.model.Paquete;
 import mx.edu.um.mateo.inscripciones.model.TiposBecas;
 import org.junit.Test;

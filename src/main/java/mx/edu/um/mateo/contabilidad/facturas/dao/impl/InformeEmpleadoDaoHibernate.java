@@ -2,16 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.inscripciones.dao.impl;
+package mx.edu.um.mateo.contabilidad.facturas.dao.impl;
 
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.inscripciones.dao.InformeEmpleadoDao;
-import mx.edu.um.mateo.inscripciones.model.InformeEmpleado;
-import mx.edu.um.mateo.inscripciones.model.InformeEmpleado;
+import mx.edu.um.mateo.contabilidad.facturas.dao.InformeEmpleadoDao;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
