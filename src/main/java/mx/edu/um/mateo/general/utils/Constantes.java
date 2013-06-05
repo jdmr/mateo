@@ -2887,13 +2887,13 @@ public class Constantes {
     public static final String TEMPORADA_LIST = "temporadas";
     //Valores de Temporada
     public static final String CONTAINSKEY_INFORMESEMPLEADO = "informes";
-    public static final String PATH_INFORMEEMPLEADO = "/contabilidad/informe";
-    public static final String PATH_INFORMEEMPLEADO_LISTA = "/contabilidad/informe/lista";
-    public static final String PATH_INFORMEEMPLEADO_VER = "/contabilidad/informe/ver";
-    public static final String PATH_INFORMEEMPLEADO_NUEVO = "/contabilidad/informe/nuevo";
-    public static final String PATH_INFORMEEMPLEADO_EDITA = "/contabilidad/informe/edita";
-    public static final String PATH_INFORMEEMPLEADO_GRABA = "/contabilidad/informe/graba";
-    public static final String PATH_INFORMEEMPLEADO_ACTUALIZA = "/contabilidad/informe/actualiza";
-    public static final String PATH_INFORMEEMPLEADO_ELIMINA = "/contabilidad/informe/elimina";
+    public static final String PATH_INFORMEEMPLEADO = "/factura/informe";
+    public static final String PATH_INFORMEEMPLEADO_LISTA = "/factura/informe/lista";
+    public static final String PATH_INFORMEEMPLEADO_VER = "/factura/informe/ver";
+    public static final String PATH_INFORMEEMPLEADO_NUEVO = "/factura/informe/nuevo";
+    public static final String PATH_INFORMEEMPLEADO_EDITA = "/factura/informe/edita";
+    public static final String PATH_INFORMEEMPLEADO_GRABA = "/factura/informe/graba";
+    public static final String PATH_INFORMEEMPLEADO_ACTUALIZA = "/factura/informe/actualiza";
+    public static final String PATH_INFORMEEMPLEADO_ELIMINA = "/factura/informe/elimina";
     public static final String ADDATTRIBUTE_INFORMEEMPLEADO = "informe";
 }
