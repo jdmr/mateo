@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.inscripciones.service;
+package mx.edu.um.mateo.contabilidad.facturas.service;
 
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -36,6 +36,8 @@ public interface InformeEmpleadoManager {
      * @param InformeEmpleado the object to be saved
      */
     public void graba(InformeEmpleado informe, Usuario usuario);
+
+    public void actualiza(InformeEmpleado informe, Usuario usuario);
 
     /**
      * Cambia el status de la nacionalidad a I
