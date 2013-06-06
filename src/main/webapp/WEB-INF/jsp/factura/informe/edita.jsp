@@ -61,46 +61,58 @@
                             <form:errors path="status" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="informe.informe">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="informe">
-                                <s:message code="informe.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:checkbox path="informe" cssClass="span3" />
-                            <form:errors path="informe" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
-                    <s:bind path="informe.pesos">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="persos">
-                                <s:message code="pesos.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:checkbox path="pesos" cssClass="span3" />
-                            <form:errors path="pesos" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
-                    <s:bind path="informe.dolares">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="dolares">
-                                <s:message code="dolares.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:checkbox path="dolares" cssClass="span3" />
-                            <form:errors path="dolares" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
-                    <s:bind path="informe.reembolso">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="reembolso">
-                                <s:message code="reembolso.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:checkbox path="reembolso" cssClass="span3" />
-                            <form:errors path="reembolso" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+                    <div class="row-fluid">
+                        <s:bind path="informe.pesos" >
+                            <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="pesos" >
+                                    <s:message code="pesos.label" />
+                                    <span class="required-indicator">*</span>
+                                </label>
+                                <div onclick="disableDolares();" >
+                                    <form:checkbox path="pesos"   cssClass="span3" id="pesos" />
+                                    <form:errors path="pesos" cssClass="alert alert-error" />
+                                </div>
+                            </div>
+                        </s:bind>
+                        <s:bind path="informe.dolares">
+                            <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="dolares">
+                                    <s:message code="dolares.label" />
+                                    <span class="required-indicator">*</span>
+                                </label>
+                                <div onclick="disablePesos();" >
+                                    <form:checkbox path="dolares"   cssClass="span3" id="dolares" />
+                                    <form:errors path="dolares" cssClass="alert alert-error" />
+                                </div>
+                            </div>
+                        </s:bind>
+                    </div>
+                    <div class="row-fluid">
+                        <s:bind path="informe.informe" >
+                            <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="informe" >
+                                    <s:message code="informe.label" />
+                                    <span class="required-indicator">*</span>
+                                </label>
+                                <div onclick="disableReembolso()">
+                                    <form:checkbox path="informe"   cssClass="span3" id="1" />
+                                    <form:errors path="informe" cssClass="alert alert-error" />
+                                </div>
+                            </div>
+                        </s:bind>
+                        <s:bind path="informe.reembolso">
+                            <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="reembolso">
+                                    <s:message code="reembolso.label" />
+                                    <span class="required-indicator">*</span>
+                                </label>
+                                <div onclick="disableInforme()">
+                                    <form:checkbox path="reembolso"   cssClass="span3" id="reembolso" />
+                                    <form:errors path="reembolso" cssClass="alert alert-error" />
+                                </div>
+                            </div>
+                        </s:bind>
+                    </div>
                     <s:bind path="informe.fechaInforme">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="fechaInforme">
@@ -121,12 +133,57 @@
             </form:form>
         </div>
     <content>
+        <script language="javascript">
+                                    window.onload = function() {
+                                        disableDolares();
+                                        disableInforme();
+                                        disablePesos();
+                                        disableReembolso();
+
+                                    };
+        </script>
         <script>
             $(document).ready(function() {
                 $('input#nombre').focus();
                 $("input#fechaInforme").datepicker($.datepicker.regional['es']);
                 $("input#fechaInforme").datepicker("option", "firstDay", 0);
             });
+            function disablePesos()
+            {
+                document.getElementById("pesos").disabled = true;
+                if (document.getElementById("dolares").checked === false) {
+                    document.getElementById("pesos").disabled = false;
+                }
+            }
+            function establecerPesos()
+            {
+                if (document.getElementById("dolares").checked === false) {
+                    document.getElementById("pesos").disabled = false;
+                }
+            }
+
+            function disableDolares()
+            {
+                document.getElementById("dolares").disabled = true;
+                if (document.getElementById("pesos").checked === false) {
+                    document.getElementById("dolares").disabled = false;
+                }
+            }
+            function disableReembolso()
+            {
+                document.getElementById("reembolso").disabled = true;
+                if (document.getElementById("1").checked === false) {
+                    document.getElementById("reembolso").disabled = false;
+                }
+            }
+
+            function disableInforme()
+            {
+                document.getElementById("1").disabled = true;
+                if (document.getElementById("reembolso").checked === false) {
+                    document.getElementById("1").disabled = false;
+                }
+            }
         </script>                    
     </content>
 </body>
