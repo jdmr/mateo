@@ -50,10 +50,11 @@ public class InformeEmpleadoDetalleDaoTest extends BaseDaoTest {
         informe.setReembolso(Boolean.TRUE);
         informe.setStatus("a");
         currentSession().save(informe);
+        assertNotNull(informe.getId());
         InformeEmpleadoDetalle detalle = null;
         for (int i = 0; i < 20; i++) {
-            detalle.setInformeEmpleado(informe);
             detalle = new InformeEmpleadoDetalle();
+            detalle.setInformeEmpleado(informe);
             detalle.setFechaFactura(new Date());
             detalle.setFolioFactura("1110475");
             detalle.setIVA(new BigDecimal(".16"));

@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
+import mx.edu.um.mateo.general.model.Empresa;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,9 +48,11 @@ public class InformeEmpleadoDetalle implements Serializable {
     private String pathXMl;
     private String nombrePDF;
     private String nombreXMl;
-    private List<MultipartFile> files;
+//    private List<MultipartFile> files;
     @ManyToOne(optional = false)
     private InformeEmpleado informeEmpleado;
+    @ManyToOne(optional = false)
+    private Empresa empresa;
 
     public String getRFCProveedor() {
         return RFCProveedor;
@@ -163,14 +166,13 @@ public class InformeEmpleadoDetalle implements Serializable {
         this.version = version;
     }
 
-    public List<MultipartFile> getFiles() {
-        return files;
-    }
-
-    public void setFiles(List<MultipartFile> files) {
-        this.files = files;
-    }
-
+//    public List<MultipartFile> getFiles() {
+//        return files;
+//    }
+//
+//    public void setFiles(List<MultipartFile> files) {
+//        this.files = files;
+//    }
     public InformeEmpleado getInformeEmpleado() {
         return informeEmpleado;
     }
@@ -179,14 +181,22 @@ public class InformeEmpleadoDetalle implements Serializable {
         this.informeEmpleado = informeEmpleado;
     }
 
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
+    }
+
     @Override
     public String toString() {
         return "InformeEmpleadoDetalle{" + "id=" + id + ", version=" + version + ", RFCProveedor=" + RFCProveedor
                 + ", folioFactura=" + folioFactura + ", nombreProveedor=" + nombreProveedor
                 + ", subtotal=" + subtotal + ", IVA=" + IVA + ", total=" + total
                 + ", status=" + status + ", fechaFactura=" + fechaFactura
-                + ", pathPDF=" + pathPDF + ", pathXMl=" + pathXMl
-                + ", nombrePDF=" + nombrePDF + ", nombreXMl=" + nombreXMl
-                + ", files=" + files + ", informeEmpleado=" + informeEmpleado + '}';
+                + ", pathPDF=" + pathPDF + ", pathXMl=" + pathXMl + ", nombrePDF=" + nombrePDF
+                + ", nombreXMl=" + nombreXMl + ", informeEmpleado=" + informeEmpleado
+                + ", empresa=" + empresa + '}';
     }
 }
