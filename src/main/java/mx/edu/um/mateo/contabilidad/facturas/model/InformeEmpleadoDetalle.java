@@ -7,6 +7,7 @@ package mx.edu.um.mateo.contabilidad.facturas.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,6 +18,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -45,6 +47,7 @@ public class InformeEmpleadoDetalle implements Serializable {
     private String pathXMl;
     private String nombrePDF;
     private String nombreXMl;
+    private List<MultipartFile> files;
     @ManyToOne(optional = false)
     private InformeEmpleado informeEmpleado;
 
@@ -144,6 +147,38 @@ public class InformeEmpleadoDetalle implements Serializable {
         this.nombreXMl = nombreXMl;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    public List<MultipartFile> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<MultipartFile> files) {
+        this.files = files;
+    }
+
+    public InformeEmpleado getInformeEmpleado() {
+        return informeEmpleado;
+    }
+
+    public void setInformeEmpleado(InformeEmpleado informeEmpleado) {
+        this.informeEmpleado = informeEmpleado;
+    }
+
     @Override
     public String toString() {
         return "InformeEmpleadoDetalle{" + "id=" + id + ", version=" + version + ", RFCProveedor=" + RFCProveedor
@@ -151,8 +186,7 @@ public class InformeEmpleadoDetalle implements Serializable {
                 + ", subtotal=" + subtotal + ", IVA=" + IVA + ", total=" + total
                 + ", status=" + status + ", fechaFactura=" + fechaFactura
                 + ", pathPDF=" + pathPDF + ", pathXMl=" + pathXMl
-                + ", nombrePDF=" + nombrePDF
-                + ", nombreXMl=" + nombreXMl
-                + ", informeEmpleado=" + informeEmpleado + '}';
+                + ", nombrePDF=" + nombrePDF + ", nombreXMl=" + nombreXMl
+                + ", files=" + files + ", informeEmpleado=" + informeEmpleado + '}';
     }
 }

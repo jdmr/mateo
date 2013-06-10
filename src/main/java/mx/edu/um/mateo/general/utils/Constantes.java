@@ -2885,7 +2885,7 @@ public class Constantes {
     public static final String PATH_TEMPORADA_ELIMINA = "/colportaje/temporada/elimina";
     public static final String TEMPORADA = "temporada";
     public static final String TEMPORADA_LIST = "temporadas";
-    //Valores de Temporada
+    //Valores de InformeEmpleado
     public static final String CONTAINSKEY_INFORMESEMPLEADO = "informes";
     public static final String PATH_INFORMEEMPLEADO = "/factura/informe";
     public static final String PATH_INFORMEEMPLEADO_LISTA = "/factura/informe/lista";
@@ -2896,4 +2896,6 @@ public class Constantes {
     public static final String PATH_INFORMEEMPLEADO_ACTUALIZA = "/factura/informe/actualiza";
     public static final String PATH_INFORMEEMPLEADO_ELIMINA = "/factura/informe/elimina";
     public static final String ADDATTRIBUTE_INFORMEEMPLEADO = "informe";
+    //Valores de InformeEmpleado
+    public static final String CONTAINSKEY_INFORMESDETALLES = "detalles";
 }
