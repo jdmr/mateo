@@ -147,7 +147,7 @@ public class InformeEmpleadoDetalleDaoHibernate extends BaseDao implements Infor
         currentSession().saveOrUpdate(detalle);
         currentSession().merge(detalle);
         currentSession().flush();
-        String nomina = detalle.getNombreProveedor();
-        return nomina;
+        String proveedor = detalle.getNombreProveedor();
+        return proveedor;
     }
 }
