@@ -2625,6 +2625,7 @@ public class Constantes {
     public static final String TOTALBOLETIN = "Total_Boletin";
     public static final String TOTALDIEZMOS = "Total_Diezmos";
     public static final String TOTALDEPOSITOS = "Total_Depositos";
+    public static final String TOTALCOMPRAS = "Total_Compras";
     /**
      * Valores para Tabla de Porcentajes
      *
@@ -2851,14 +2852,14 @@ public class Constantes {
     public static final String TEMPORADACOLPORTOR_LIST = "temporadaColportores";
     
     //Documentos Colportor        
-    public static final String DOCUMENTOCOLPORTOR_PATH=  "/documento";
-    public static final String DOCUMENTOCOLPORTOR_LISTA = "/documento/lista";
-    public static final String DOCUMENTOCOLPORTOR_VER = "/documento/ver";
-    public static final String DOCUMENTOCOLPORTOR_NUEVO = "/documento/nuevo";
-    public static final String DOCUMENTOCOLPORTOR_EDITA = "/documento/edita";
-    public static final String DOCUMENTOCOLPORTOR_CREA = "/documento/crea";
-    public static final String DOCUMENTOCOLPORTOR_ACTUALIZA = "/documento/actualiza";
-    public static final String DOCUMENTOCOLPORTOR_ELIMINA = "/documento/elimina";
+    public static final String DOCUMENTOCOLPORTOR_PATH=  "/colportaje/documento";
+    public static final String DOCUMENTOCOLPORTOR_PATH_LISTA = "/colportaje/documento/lista";
+    public static final String DOCUMENTOCOLPORTOR_PATH_VER = "/colportaje/documento/ver";
+    public static final String DOCUMENTOCOLPORTOR_PATH_NUEVO = "/colportaje/documento/nuevo";
+    public static final String DOCUMENTOCOLPORTOR_PATH_EDITA = "/colportaje/documento/edita";
+    public static final String DOCUMENTOCOLPORTOR_PATH_CREA = "/colportaje/documento/crea";
+    public static final String DOCUMENTOCOLPORTOR_PATH_ACTUALIZA = "/colportaje/documento/actualiza";
+    public static final String DOCUMENTOCOLPORTOR_PATH_ELIMINA = "/colportaje/documento/elimina";
     public static final String DOCUMENTOCOLPORTOR = "documento";
     public static final String DOCUMENTOCOLPORTOR_LIST = "documentos";
     

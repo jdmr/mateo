@@ -29,6 +29,7 @@ import mx.edu.um.mateo.colportor.model.Temporada;
 import mx.edu.um.mateo.colportor.model.TemporadaColportor;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.web.BaseController;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -62,7 +63,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping(Constantes.DOCUMENTOCOLPORTOR_PATH)
-public class DocumentoController {
+public class DocumentoController extends BaseController {
 
     private static final Logger log = LoggerFactory.getLogger(DocumentoController.class);
     @Autowired
@@ -79,12 +80,7 @@ public class DocumentoController {
     private ColportorDao colportorDao;
     @Autowired
     private TemporadaDao temporadaDao;
-    @Autowired
-    private SessionFactory sessionFactory;
-
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
+    
     /*
      * DE AQUI @InitBinder public void initBinder(WebDataBinder binder) {
      *
@@ -127,30 +123,27 @@ public class DocumentoController {
         }
         
         log.debug("esAsociado {}, esColportor {}, colportorTmp {}", new Object [] {ambiente.esAsociado(), ambiente.esColportor(), request.getSession().getAttribute("colportorTmp")});
-        TemporadaColportor temporadaColportorTmp = null;
-        if (ambiente.esAsociado() && request.getSession().getAttribute("colportorTmp") == null) {
-            log.debug("Entrando a Documentos como Asociado sin Colportor");
+        TemporadaColportor temporadaColportor = null;
+        
+        if (ambiente.esAsociado()) {
+            log.debug("Entrando a Documentos como Asociado");
             log.debug("clave" + clave);
 
             if (clave != null && !clave.isEmpty()) {
-                log.debug("clave" + colportorDao.obtiene(clave));
                 Colportor colportor = colportorDao.obtiene(clave);
-                request.getSession().setAttribute("colportorTmp", colportor);
-                log.debug("colportor" + colportor);
-                TemporadaColportor temporadaColportor = temporadaColportorDao.obtiene(colportor);
-                request.getSession().setAttribute("temporadaColportorTmp", temporadaColportor);
-                params.put("temporadaColportor", temporadaColportorTmp.getId());
-                log.debug("temporadaColportor" + temporadaColportor);
+                if(colportor == null){
+                    errors.reject("colportor.clave.missing");
+                    return Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA;
+                }
+                log.debug("Colportor {} ", colportor);
+                //TemporadaColportor tempClp = temporadaColportorDao.obtiene(colportor);
+                temporadaColportor = temporadaColportorDao.obtiene(colportor);
+                log.debug("Temporada Colportor {} ", temporadaColportor);
+                params.put("temporadaColportor", temporadaColportor.getId());
             } else {
-                return Constantes.DOCUMENTOCOLPORTOR_LISTA;
+                errors.reject("colportor.clave.missing");
+                return Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA;
             }
-        }
-
-        if (ambiente.esAsociado()) {
-            log.debug("Entrando a Documentos como Asociado con un Colportor");
-
-            temporadaColportorTmp = temporadaColportorDao.obtiene(((Colportor) request.getSession().getAttribute("colportorTmp")));
-            params.put("temporadaColportor", temporadaColportorTmp.getId());
         }
 
         if (ambiente.esColportor()) {
@@ -164,22 +157,22 @@ public class DocumentoController {
             if (request.getParameter("temporada.id") == null) {
                 log.debug("Entrando a Documentos como Colportor {} con Temporada Activa", colportor);
 
-                temporadaColportorTmp = temporadaColportorDao.obtiene(colportor);
-                params.put("temporadaColportor", temporadaColportorTmp.getId());
+                temporadaColportor = temporadaColportorDao.obtiene(colportor);
+                params.put("temporadaColportor", temporadaColportor.getId());
             } else {
                 log.debug("Entrando a Documentos como Colportor con Temporada Inactiva");
                 Temporada temporada = temporadaDao.obtiene(Long.parseLong(request.getParameter("temporada.id")));
                 log.debug("temporada" + temporada.getId());
-                temporadaColportorTmp = temporadaColportorDao.obtiene(colportor, temporada);
-                params.put("temporadaColportor", temporadaColportorTmp.getId());
+                temporadaColportor = temporadaColportorDao.obtiene(colportor, temporada);
+                params.put("temporadaColportor", temporadaColportor.getId());
             }
 //          Codigo para validar prueba
 
-            log.debug("temporadaColportorTmp" + temporadaColportorTmp.getId());
-            request.setAttribute("temporadaColportorTmp", temporadaColportorTmp);
-            modelo.addAttribute("temporadaColportorTmp", temporadaColportorTmp);
-            log.debug("temporadaColportorTmpId" + temporadaColportorTmp.getId());
-            modelo.addAttribute("temporadaColportorPrueba", temporadaColportorTmp.getId().toString());
+            log.debug("temporadaColportorTmp" + temporadaColportor.getId());
+            request.setAttribute("temporadaColportorTmp", temporadaColportor);
+            modelo.addAttribute("temporadaColportorTmp", temporadaColportor);
+            log.debug("temporadaColportorTmpId" + temporadaColportor.getId());
+            modelo.addAttribute("temporadaColportorPrueba", temporadaColportor.getId().toString());
         }
 
         if (StringUtils.isNotBlank(tipo)) {
@@ -222,7 +215,8 @@ public class DocumentoController {
 
         List<Temporada> listaTemporada = (List) params.get(Constantes.TEMPORADA_LIST);
 
-        Map<String, Object> temporadas = temporadaDao.lista(null);
+        params.put("organizacion", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
+        Map<String, Object> temporadas = temporadaDao.lista(params);
         modelo.addAttribute(Constantes.TEMPORADA_LIST, temporadas.get(Constantes.TEMPORADA_LIST));
 
         Documento doc = null;
@@ -230,7 +224,8 @@ public class DocumentoController {
         BigDecimal totalBoletin = new BigDecimal("0");
         BigDecimal totalDiezmos = new BigDecimal("0");
         BigDecimal totalDepositos = new BigDecimal("0");
-        BigDecimal objetivo = new BigDecimal(temporadaColportorTmp.getObjetivo());
+        BigDecimal totalCompras = new BigDecimal("0");
+        BigDecimal objetivo = new BigDecimal(temporadaColportor.getObjetivo());
         BigDecimal fidelidad = new BigDecimal("0");
         BigDecimal alcanzado = new BigDecimal("0");
         
@@ -267,8 +262,8 @@ public class DocumentoController {
                 }
                 case Constantes.NOTAS_DE_COMPRA: {
                     log.debug("importe {}", doc.getImporte());
-                    totalDepositos = totalDepositos.add(doc.getImporte());
-                    log.debug("totalDepositos {}", totalDepositos);
+                    totalCompras = totalCompras.add(doc.getImporte());
+                    log.debug("totalCompras {}", totalCompras);
                     break;
 
                 }
@@ -277,10 +272,11 @@ public class DocumentoController {
 
         }
 
-        modelo.addAttribute(Constantes.TOTALBOLETIN, totalBoletin);
-        modelo.addAttribute(Constantes.TOTALDIEZMOS, totalDiezmos);
-        modelo.addAttribute(Constantes.TOTALDEPOSITOS, totalDepositos);
-        modelo.addAttribute(Constantes.OBJETIVO, objetivo);
+        modelo.addAttribute(Constantes.TOTALBOLETIN, totalBoletin.setScale(2, BigDecimal.ROUND_HALF_EVEN));
+        modelo.addAttribute(Constantes.TOTALDIEZMOS, totalDiezmos.setScale(2, BigDecimal.ROUND_HALF_EVEN));
+        modelo.addAttribute(Constantes.TOTALDEPOSITOS, totalDepositos.setScale(2, BigDecimal.ROUND_HALF_EVEN));
+        modelo.addAttribute(Constantes.TOTALCOMPRAS, totalCompras.setScale(2, BigDecimal.ROUND_HALF_EVEN));
+        modelo.addAttribute(Constantes.OBJETIVO, objetivo.setScale(2, BigDecimal.ROUND_HALF_EVEN));
         
         if (objetivo.compareTo(new BigDecimal("0")) > 0) {
             log.debug("% alcanzado = [totalBoletin {} / objetivo {}] = {}", new Object []{totalBoletin, objetivo, totalBoletin.divide(objetivo, 6, RoundingMode.HALF_EVEN).multiply(new BigDecimal("100"))});
@@ -311,19 +307,19 @@ public class DocumentoController {
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);        
         modelo.addAttribute(Constantes.DOCUMENTOCOLPORTOR_LIST, params.get(Constantes.DOCUMENTOCOLPORTOR_LIST));        
-        modelo.addAttribute("claveTmp", temporadaColportorDao.obtiene(temporadaColportorTmp.getId()).getColportor().getClave());
+        modelo.addAttribute("claveTmp", temporadaColportorDao.obtiene(temporadaColportor.getId()).getColportor().getClave());
         
-        return Constantes.DOCUMENTOCOLPORTOR_LISTA;
+        return Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA;
     }
 
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando documento {}", id);
-        Documento documentos = DocumentoDao.obtiene(id);
+        Documento documento = DocumentoDao.obtiene(id);
+        log.debug("ver documento {} con id {}", documento, id);
+        modelo.addAttribute(Constantes.DOCUMENTOCOLPORTOR, documento);
 
-        modelo.addAttribute(Constantes.DOCUMENTOCOLPORTOR, documentos);
-
-        return Constantes.DOCUMENTOCOLPORTOR_VER;
+        return Constantes.DOCUMENTOCOLPORTOR_PATH_VER;
     }
 
     @RequestMapping("/nuevo")
@@ -331,12 +327,12 @@ public class DocumentoController {
         log.debug("Nuevo documento");
         Documento documentos = new Documento();
         modelo.addAttribute(Constantes.DOCUMENTOCOLPORTOR, documentos);
-        return Constantes.DOCUMENTOCOLPORTOR_NUEVO;
+        return Constantes.DOCUMENTOCOLPORTOR_PATH_NUEVO;
     }
 
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Documento documentos, 
+    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Documento documento, 
         BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
         Map<String, Object> params = new HashMap<>();
         for (String folio : request.getParameterMap().keySet()) {
@@ -344,60 +340,63 @@ public class DocumentoController {
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
-            return Constantes.DOCUMENTOCOLPORTOR_NUEVO;
+            despliegaBindingResultErrors(bindingResult);
+            return Constantes.DOCUMENTOCOLPORTOR_PATH_NUEVO;
         }
-        switch (documentos.getTipoDeDocumento()) {
+        switch (documento.getTipoDeDocumento()) {
             case "0":
-                documentos.setTipoDeDocumento(Constantes.DEPOSITO_CAJA);
+                documento.setTipoDeDocumento(Constantes.DEPOSITO_CAJA);
                 break;
             case "1":
-                documentos.setTipoDeDocumento(Constantes.DEPOSITO_BANCO);
+                documento.setTipoDeDocumento(Constantes.DEPOSITO_BANCO);
                 break;
             case "2":
-                documentos.setTipoDeDocumento(Constantes.DIEZMO);
+                documento.setTipoDeDocumento(Constantes.DIEZMO);
                 break;
             case "3":
-                documentos.setTipoDeDocumento(Constantes.NOTAS_DE_COMPRA);
+                documento.setTipoDeDocumento(Constantes.NOTAS_DE_COMPRA);
                 break;
             case "4":
-                documentos.setTipoDeDocumento(Constantes.BOLETIN);
+                documento.setTipoDeDocumento(Constantes.BOLETIN);
                 break;
             case "5":
-                documentos.setTipoDeDocumento(Constantes.INFORME);
+                documento.setTipoDeDocumento(Constantes.INFORME);
                 break;
         }
 
 
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(Constantes.DATE_SHORT_HUMAN_PATTERN);
-            documentos.setFecha(sdf.parse(request.getParameter("fecha")));
+            documento.setFecha(sdf.parse(request.getParameter("fecha")));
         } catch (ConstraintViolationException e) {
             log.error("Fecha", e);
-            return Constantes.DOCUMENTOCOLPORTOR_NUEVO;
+            return Constantes.DOCUMENTOCOLPORTOR_PATH_NUEVO;
         }
 
         try {
-            log.debug("Documento Fecha" + documentos.getFecha());
+            log.debug("Documento Fecha" + documento.getFecha());
             //294 y 305
-            TemporadaColportor temporadaColportorTmp = temporadaColportorDao.obtiene((Colportor) ambiente.obtieneUsuario());
-            documentos.setTemporadaColportor(temporadaColportorTmp);
-            log.debug("temporadaColportorCrea" + temporadaColportorTmp.getId().toString());
-            params.put("temporadaColportor", temporadaColportorTmp.getId());
-//            modelo.addAttribute("temporadaColportorTmp", temporadaColportorTmp.getId().toString());
-//            modelo.addAttribute("claveTmp", temporadaColportorDao.obtiene(temporadaColportorTmp.getId()).getColportor().getClave());
-//            Codigo para validar prueba
-            request.getSession().setAttribute("temporadaColportorTmp", temporadaColportorTmp);
-            request.getSession().setAttribute("temporadaColportorPrueba", temporadaColportorTmp.getId().toString());
-            documentos = DocumentoDao.crea(documentos);
+            TemporadaColportor temporadaColportorTmp = null;
+            if(ambiente.esColportor()){
+                temporadaColportorTmp = temporadaColportorDao.obtiene((Colportor) ambiente.obtieneUsuario());
+            }
+            else{
+                //Se requiere una clave de colportor
+                Colportor clp = colportorDao.obtiene(documento.getTemporadaColportor().getColportor().getClave());
+                Temporada tmp = temporadaDao.obtiene(documento.getTemporadaColportor().getTemporada().getId());
+                temporadaColportorTmp = temporadaColportorDao.obtiene(clp, tmp);
+            }
+            documento.setTemporadaColportor(temporadaColportorTmp);
+            documento = DocumentoDao.crea(documento);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el documento", e);
-            return Constantes.DOCUMENTOCOLPORTOR_NUEVO;
+            return Constantes.DOCUMENTOCOLPORTOR_PATH_NUEVO;
         }
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "documento.creado.message");
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{documentos.getFolio()});
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{documento.getFolio()});
         
-        return "redirect:" + Constantes.DOCUMENTOCOLPORTOR_VER+"/"+documentos.getId();
+        return "redirect:" + Constantes.DOCUMENTOCOLPORTOR_PATH_VER+"/"+documento.getId();
     }
 
     @RequestMapping("/edita/{id}")
@@ -405,7 +404,7 @@ public class DocumentoController {
         log.debug("Editar documento {}", id);
         Documento documentos = DocumentoDao.obtiene(id);
         modelo.addAttribute(Constantes.DOCUMENTOCOLPORTOR, documentos);
-        return Constantes.DOCUMENTOCOLPORTOR_EDITA;
+        return Constantes.DOCUMENTOCOLPORTOR_PATH_EDITA;
     }
 
     @Transactional
@@ -413,7 +412,7 @@ public class DocumentoController {
     public String actualiza(HttpServletRequest request, @Valid Documento documentos, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
-            return Constantes.DOCUMENTOCOLPORTOR_EDITA;
+            return Constantes.DOCUMENTOCOLPORTOR_PATH_EDITA;
         }
         switch (documentos.getTipoDeDocumento()) {
             case "0":
@@ -441,7 +440,7 @@ public class DocumentoController {
             documentos.setFecha(sdf.parse(request.getParameter("fecha")));
         } catch (ConstraintViolationException e) {
             log.error("Fecha", e);
-            return Constantes.DOCUMENTOCOLPORTOR_EDITA;
+            return Constantes.DOCUMENTOCOLPORTOR_PATH_EDITA;
         }
 
         try {
@@ -450,13 +449,13 @@ public class DocumentoController {
             documentos = DocumentoDao.actualiza(documentos);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo actualizar el documento", e);
-            return Constantes.DOCUMENTOCOLPORTOR_EDITA;
+            return Constantes.DOCUMENTOCOLPORTOR_PATH_EDITA;
         }
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "documento.actualizado.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{documentos.getFolio()});
         
-        return "redirect:" + Constantes.DOCUMENTOCOLPORTOR_VER + "/" + documentos.getId();
+        return "redirect:" + Constantes.DOCUMENTOCOLPORTOR_PATH_VER + "/" + documentos.getId();
     }
 
     @Transactional
@@ -471,7 +470,7 @@ public class DocumentoController {
         } catch (Exception e) {
             log.error("No se pudo eliminar el documento " + id, e);
             bindingResult.addError(new ObjectError(Constantes.DOCUMENTOCOLPORTOR, new String[]{"documento.no.eliminado.message"}, null, null));
-            return Constantes.DOCUMENTOCOLPORTOR_VER;
+            return Constantes.DOCUMENTOCOLPORTOR_PATH_VER;
         }
 
         return "redirect:" + Constantes.DOCUMENTOCOLPORTOR_PATH;

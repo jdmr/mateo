@@ -43,13 +43,13 @@ public class Documento implements Serializable{
     public Documento(){
     }
   
-    public Documento(String tipoDeDocumento, String folio, Date fecha, BigDecimal importe, String observaciones, TemporadaColportor temporadaColporotor) {
+    public Documento(String tipoDeDocumento, String folio, Date fecha, BigDecimal importe, String observaciones, TemporadaColportor temporadaColportor) {
         this.tipoDeDocumento = tipoDeDocumento;
         this.folio = folio;
         this.fecha = fecha;
         this.importe = importe;
         this.observaciones = observaciones;
-        this.temporadaColportor = temporadaColporotor;
+        this.temporadaColportor = temporadaColportor;
     }
 
     public Date getFecha() {
@@ -92,7 +92,7 @@ public class Documento implements Serializable{
         this.observaciones = observaciones;
     }
 
-    public TemporadaColportor getTemporadaColporotor() {
+    public TemporadaColportor getTemporadaColportor() {
         return temporadaColportor;
     }
 

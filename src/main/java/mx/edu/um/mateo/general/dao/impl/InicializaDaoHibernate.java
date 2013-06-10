@@ -27,14 +27,13 @@ import java.lang.String;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 import mx.edu.um.mateo.colportor.dao.AsociacionDao;
 import mx.edu.um.mateo.colportor.dao.AsociadoDao;
 import mx.edu.um.mateo.colportor.dao.ColportorDao;
 import mx.edu.um.mateo.colportor.dao.UnionDao;
-import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.colportor.model.Asociado;
 import mx.edu.um.mateo.colportor.model.Colportor;
-import mx.edu.um.mateo.colportor.model.Union;
 import mx.edu.um.mateo.contabilidad.dao.EjercicioDao;
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.general.dao.BaseDao;
@@ -126,17 +125,15 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
             usuario.setEjercicio(ejercicio);
             break;
         }
-        String[] roles = new String[]{new Rol("ROLE_ADMIN").getAuthority(), 
-            (new Rol("ROLE_CLP")).getAuthority(),(new Rol("ROLE_ASOC")).getAuthority(),
-            (new Rol("ROLE_EMP")).getAuthority()};
+        String[] roles = new String[]{new Rol("ROLE_ADMIN").getAuthority()};
         
         usuario = usuarioDao.crea(usuario, almacenId,roles);
         
         //Datos de colportores
-        Union union = new Union("Unión Mexicana del Norte");
-        unionDao.crea(union, usuario);
-        Asociacion asoc = new Asociacion("Asociación del Noreste", Constantes.STATUS_ACTIVO, union);
-        asociacionDao.crea(asoc,usuario);
+//        Union union = new Union("Unión Mexicana del Norte");
+//        unionDao.crea(union, usuario);
+//        Asociacion asoc = new Asociacion("Asociación del Noreste", Constantes.STATUS_ACTIVO, union);
+//        asociacionDao.crea(asoc,usuario);
         
         //Tipo de Empleado
         TipoEmpleado tipoEmpleado = new TipoEmpleado();
@@ -153,7 +150,6 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
                 "responsabilidad", password, tipoEmpleado);
           
         HashSet rolesEmp = new HashSet();
-        rolesEmp.add(rolDao.obtiene("ROLE_ADMIN"));
         rolesEmp.add(rolDao.obtiene("ROLE_EMP"));
         usuario.setAlmacen(almacen);
         usuario.setEmpresa(almacen.getEmpresa());
@@ -186,6 +182,9 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
             break;
         }
         
+        Set rolesClp = new HashSet();
+        rolesClp.add(rolDao.obtiene("ROLE_ASOC"));
+        usuario.setRoles(rolesClp);
         asociadoDao.crea((Asociado)usuario, null);
                 
         usuario = new Colportor(username + "@clp.um.edu.mx", password, username + "@clp.edu.mx", "test", "apPaterno", "apMaterno", "12345", "A",  "8262630900", "Direccion", "Colonia", "Municipio", "tipoClp", "0890626", new Date());
@@ -198,6 +197,9 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
             break;
         }
         
+        rolesClp = new HashSet();
+        rolesClp.add(rolDao.obtiene("ROLE_CLP"));
+        usuario.setRoles(rolesClp);
         colportorDao.crea((Colportor)usuario, usuario);
     }
 }

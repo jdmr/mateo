@@ -92,8 +92,8 @@ public class Ambiente {
                 }
             
             if (esAsociado() || esColportor()) {
-                session.setAttribute(Constantes.SESSION_UNION, unionDao.obtiene(usuario.getAsociacion().getUnion().getId()));
-                session.setAttribute(Constantes.SESSION_ASOCIACION,asociacionDao.obtiene(usuario.getAsociacion().getId()));
+                //session.setAttribute(Constantes.SESSION_UNION, unionDao.obtiene(usuario.getAsociacion().getUnion().getId()));
+                //session.setAttribute(Constantes.SESSION_ASOCIACION,asociacionDao.obtiene(usuario.getAsociacion().getId()));
                 if (esColportor()) {
                     Colportor colportor = (Colportor) usuario;
                     session.setAttribute(Constantes.SESSION_TEMPORADA_COLPORTOR, tempColportorDao.obtiene(colportor));
