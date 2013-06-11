@@ -3,14 +3,17 @@
  * and open the template in the editor.
  */
 package mx.edu.um.mateo.inscripciones.model;
+
 import java.util.List;
- 
+
 import org.springframework.web.multipart.MultipartFile;
+
 /**
  *
  * @author develop
  */
 public class FileUploadForm {
+
     private List<MultipartFile> files;
 
     public List<MultipartFile> getFiles() {
@@ -20,5 +23,9 @@ public class FileUploadForm {
     public void setFiles(List<MultipartFile> files) {
         this.files = files;
     }
-    
+
+    @Override
+    public String toString() {
+        return "FileUploadForm{" + "files=" + files + '}';
+    }
 }

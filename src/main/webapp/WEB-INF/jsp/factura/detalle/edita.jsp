@@ -86,7 +86,7 @@
                                 <s:message code="total.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:checkbox path="total"    maxlength="150" required="true"   />
+                            <form:input path="total"    maxlength="150" required="true"   />
                             <form:errors path="total" cssClass="alert alert-error" />
                         </div>
                     </s:bind>

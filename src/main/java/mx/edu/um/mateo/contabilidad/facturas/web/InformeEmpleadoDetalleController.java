@@ -217,23 +217,19 @@ public class InformeEmpleadoDetalleController extends BaseController {
                 for (MultipartFile multipartFile : files) {
                     String fileName = multipartFile.getOriginalFilename();
                     fileNames.add(fileName);
-                    //Handle file content - multipartFile.getInputStream()
                     String uploadDir = "/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename();
                     File dirPath = new File(uploadDir);
                     if (!dirPath.exists()) {
                         dirPath.mkdirs();
                     }
                     multipartFile.transferTo(new File("/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename()));
-                    log.debug(fileName);
-                    log.debug("/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
                     if (multipartFile.getOriginalFilename().contains(".pdf")) {
                         detalle.setPathPDF("/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
                         detalle.setNombrePDF(multipartFile.getOriginalFilename());
-                        params.put("pathFilePdf", "/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
-                    } else {
-                        detalle.setPathPDF("/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
-                        detalle.setNombrePDF(multipartFile.getOriginalFilename());
-                        params.put("pathFileXml", "/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
+                    }
+                    if (multipartFile.getOriginalFilename().contains(".xml")) {
+                        detalle.setPathXMl("/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
+                        detalle.setNombreXMl(multipartFile.getOriginalFilename());
                     }
                 }
             }
@@ -242,6 +238,7 @@ public class InformeEmpleadoDetalleController extends BaseController {
             detalle.setInformeEmpleado(informe);
             Usuario usuario = ambiente.obtieneUsuario();
             manager.graba(detalle, usuario);
+            request.getSession().setAttribute("detalleId", detalle.getId());
 
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el detalle", e);
@@ -275,39 +272,13 @@ public class InformeEmpleadoDetalleController extends BaseController {
         }
 
         try {
-            Map<String, Object> params = new HashMap<>();
-            //Subir archivos
-            List<MultipartFile> files = uploadForm.getFiles();
-
-            List<String> fileNames = new ArrayList<String>();
-
-            if (null != files && files.size() > 0) {
-                for (MultipartFile multipartFile : files) {
-                    String fileName = multipartFile.getOriginalFilename();
-                    fileNames.add(fileName);
-                    //Handle file content - multipartFile.getInputStream()
-                    String uploadDir = "/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename();
-                    File dirPath = new File(uploadDir);
-                    if (!dirPath.exists()) {
-                        dirPath.mkdirs();
-                    }
-                    multipartFile.transferTo(new File("/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename()));
-                    log.debug(fileName);
-                    log.debug("/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
-                    if (multipartFile.getOriginalFilename().contains(".pdf")) {
-                        detalle.setPathPDF("/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
-                        detalle.setNombrePDF(multipartFile.getOriginalFilename());
-                        params.put("pathFilePdf", "/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
-                    } else {
-                        detalle.setPathPDF("/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
-                        detalle.setNombrePDF(multipartFile.getOriginalFilename());
-                        params.put("pathFileXml", "/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
-                    }
-                }
-            }
-            ////Subir archivos\\\
             InformeEmpleado informe = managerInforme.obtiene(detalle.getInformeEmpleado().getId());
             detalle.setInformeEmpleado(informe);
+            InformeEmpleadoDetalle detalleTmp = manager.obtiene(detalle.getId());
+            detalle.setNombrePDF(detalleTmp.getNombrePDF());
+            detalle.setNombreXMl(detalleTmp.getNombreXMl());
+            detalle.setPathPDF(detalleTmp.getPathPDF());
+            detalle.setPathXMl(detalleTmp.getPathXMl());
             Usuario usuario = ambiente.obtieneUsuario();
             log.debug("Paquete {}", detalle);
             manager.actualiza(detalle, usuario);
@@ -353,9 +324,11 @@ public class InformeEmpleadoDetalleController extends BaseController {
         return "redirect:" + Constantes.PATH_INFORMEEMPLEADODETALLE_LISTA;
     }
 
-    @RequestMapping(value = "/descargarPdf", method = RequestMethod.GET)
+    @RequestMapping(value = "/descargarPdf/{id}", method = RequestMethod.GET)
     public ModelAndView handleRequestPDF(@PathVariable Long id, Model modelo, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+//        Long detalleId = (Long) (request.getSession().getAttribute("detalleId"));
+//        InformeEmpleadoDetalle detalle = manager.obtiene(detalleId);
         InformeEmpleadoDetalle detalle = manager.obtiene(id);
         try {
             // Suponemos que es un zip lo que se quiere descargar el usuario.
@@ -369,7 +342,7 @@ public class InformeEmpleadoDetalleController extends BaseController {
             response.setHeader("Content-Disposition", "attachment; filename=\""
                     + nombreFichero + "\"");
 
-            InputStream is = new FileInputStream(unPath + nombreFichero);
+            InputStream is = new FileInputStream(unPath);
 
             IOUtils.copy(is, response.getOutputStream());
 
@@ -382,7 +355,7 @@ public class InformeEmpleadoDetalleController extends BaseController {
         return null;
     }
 
-    @RequestMapping(value = "/descargarXML", method = RequestMethod.GET)
+    @RequestMapping(value = "/descargarXML/{id}", method = RequestMethod.GET)
     public ModelAndView handleRequestXML(@PathVariable Long id, Model modelo, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         InformeEmpleadoDetalle detalle = manager.obtiene(id);
@@ -398,7 +371,7 @@ public class InformeEmpleadoDetalleController extends BaseController {
             response.setHeader("Content-Disposition", "attachment; filename=\""
                     + nombreFichero + "\"");
 
-            InputStream is = new FileInputStream(unPath + nombreFichero);
+            InputStream is = new FileInputStream(unPath);
 
             IOUtils.copy(is, response.getOutputStream());
 

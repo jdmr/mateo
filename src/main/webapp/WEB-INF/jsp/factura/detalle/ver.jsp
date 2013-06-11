@@ -46,7 +46,7 @@
                     <div class="span11">${detalle.IVA}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="subtotaltotal.label" /></div>
+                    <div class="span1"><s:message code="subtotal.label" /></div>
                     <div class="span11">${detalle.subtotal}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
@@ -66,8 +66,8 @@
                     <div class="span11">${detalle.informeEmpleado.id}</div>
                 </div>
 
-                <a  href="<s:url value='/factura/detalle/descargarPdf'/>"> Descargar PDF</a>
-                <a  href="<s:url value='/factura/detalle/descargarXML'/>"> Descargar XML</a>
+                <a  href="<s:url value='/factura/detalle/descargarPdf/${detalle.id}'/>"><img src="/mateo/images/pdf.png" width="120" height="100" /></a>
+                <a  href="<s:url value='/factura/detalle/descargarXML/${detalle.id}'/>"><img src="/mateo/images/xml.png" width="120" height="100" /></a>
 
                 <p class="well">
                     <a href="<c:url value='/factura/detalle/edita/${detalle.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>

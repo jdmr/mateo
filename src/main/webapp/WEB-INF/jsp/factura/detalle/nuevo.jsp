@@ -17,7 +17,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/factura/detalle'/>"><i class="icon-list icon-white"></i> <s:message code='detalle.lista.label' /></a>
             </p>
-            <form:form commandName="detalle" action="graba" method="post">
+            <form:form commandName="detalle" action="graba" method="post" enctype="multipart/form-data">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -84,7 +84,7 @@
                                 <s:message code="total.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:checkbox path="total"    maxlength="150" required="true"   />
+                            <form:input path="total"    maxlength="150" required="true"   />
                             <form:errors path="total" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -122,13 +122,11 @@
                     <input id="addFile" type="button" value="Add File" />
                     <table id="fileTable">
                         <tr>
-                        <p>XML*<p/>
-                        <td><img src="/mateo/images/xml.png" width="120" height="100" /><input name="files[0]" type="file" /></td>
+                            <td><img src="/mateo/images/xml.png" width="120" height="100" /><input name="files[0]" type="file" /></td>
                         </tr>
 
                         <tr>
-                        <p>PDF*<p/>
-                        <td><img src="/mateo/images/pdf.png" width="120" height="100" /><input name="files[1]" type="file" /></td>
+                            <td><img src="/mateo/images/pdf.png" width="120" height="100" /><input name="files[1]" type="file" /></td>
                         </tr>
                     </table>
 
@@ -141,9 +139,16 @@
             </form:form>
         </div>
     <content>
+        <%--
         <script
-        src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> --%>
         <script>
+            $(document).ready(function() {
+                $('input#nombre').focus();
+                $("input#fechaFactura").datepicker($.datepicker.regional['es']);
+                $("input#fechaFactura").datepicker("option", "firstDay", 0);
+            });
+
             $(document).ready(function() {
                 //add more file components if Add is clicked
                 $('#addFile').click(function() {
@@ -156,13 +161,7 @@
 
             });
         </script>
-        <script>
-            $(document).ready(function() {
-                $('input#nombre').focus();
-                $("input#fechaInforme").datepicker($.datepicker.regional['es']);
-                $("input#fechaInforme").datepicker("option", "firstDay", 0);
-            });
-        </script>    
+
     </content>
 </body>
 </html>
