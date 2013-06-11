@@ -5,19 +5,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="informe.ver.label" /></title>
+        <title><s:message code="detalle.ver.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="informe" />
+            <jsp:param name="menu" value="detalle" />
         </jsp:include>
 
         <div id="ver-colegio" class="content scaffold-list" role="main">
-            <h1><s:message code="informe.ver.label" /></h1>
+            <h1><s:message code="detalle.ver.label" /></h1>
 
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/factura/informe'/>"><i class="icon-list icon-white"></i> <s:message code='informe.lista.label' /></a>
-                <a class="btn btn-primary" href="<s:url value='/factura/informe/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='informe.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/factura/detalle'/>"><i class="icon-list icon-white"></i> <s:message code='detalle.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/factura/detalle/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='detalle.nuevo.label' /></a>
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
@@ -26,39 +26,51 @@
                 </div>
             </c:if>
 
-            <c:url var="eliminaUrl" value="/factura/informe/elimina" />
-            <form:form commandName="informe" action="${eliminaUrl}" >
+            <c:url var="eliminaUrl" value="/factura/detalle/elimina" />
+            <form:form commandName="detalle" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="numeroNomina.label" /></div>
-                    <div class="span11">${informe.numNomina}</div>
+                    <div class="span1"><s:message code="folio.label" /></div>
+                    <div class="span11">${detalle.folioFactura}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="nombre.label" /></div>
-                    <div class="span11">${informe.nombreEmpleado}</div>
+                    <div class="span1"><s:message code="proveedor.label" /></div>
+                    <div class="span11">${detalle.nombreProveedor}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="informe.label" /></div>
-                    <div class="span11"><form:checkbox path="informe" disabled="true" /></div>
+                    <div class="span1"><s:message code="rfc.label" /></div>
+                    <div class="span11">${detalle.RFCProveedor}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="pesos.label" /></div>
-                    <div class="span11"><form:checkbox path="pesos" disabled="true" /></div>
+                    <div class="span1"><s:message code="iva.label" /></div>
+                    <div class="span11">${detalle.IVA}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="dolares.label" /></div>
-                    <div class="span11"><form:checkbox path="dolares" disabled="true" /></div>
+                    <div class="span1"><s:message code="subtotaltotal.label" /></div>
+                    <div class="span11">${detalle.subtotal}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
-                    <div class="span1"><s:message code="reembolso.label" /></div>
-                    <div class="span11"><form:checkbox path="reembolso" disabled="true" /></div>
+                    <div class="span1"><s:message code="total.label" /></div>
+                    <div class="span11">${detalle.total}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="status.label" /></div>
+                    <div class="span11">${detalle.status}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="fechaFactura.label" /></div>
+                    <div class="span11">${detalle.fechaFactura}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="informeEmpleado.label" /></div>
+                    <div class="span11">${detalle.informeEmpleado.id}</div>
                 </div>
 
-
-
+                <a  href="<s:url value='/factura/detalle/descargarPdf'/>"> Descargar PDF</a>
+                <a  href="<s:url value='/factura/detalle/descargarXML'/>"> Descargar XML</a>
 
                 <p class="well">
-                    <a href="<c:url value='/factura/informe/edita/${informe.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
+                    <a href="<c:url value='/factura/detalle/edita/${detalle.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
                     <form:hidden path="id" />
                     <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="eliminar"  onclick="return confirm('<s:message code="confirma.elimina.message" />');" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='eliminar.button'/></button>
                 </p>

@@ -5,19 +5,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="informe.nuevo.label" /></title>
+        <title><s:message code="detalle.nuevo.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="informe" />
+            <jsp:param name="menu" value="detalle" />
         </jsp:include>
 
         <div id="nuevo-colegio" class="content scaffold-list" role="main">
-            <h1><s:message code="informe.nuevo.label" /></h1>
+            <h1><s:message code="detalle.nuevo.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/factura/informe'/>"><i class="icon-list icon-white"></i> <s:message code='informe.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/factura/detalle'/>"><i class="icon-list icon-white"></i> <s:message code='detalle.lista.label' /></a>
             </p>
-            <form:form commandName="informe" action="graba" method="post">
+            <form:form commandName="detalle" action="graba" method="post">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -28,27 +28,67 @@
                 </form:errors>
 
                 <fieldset>
-                    <s:bind path="informe.numNomina">
+                    <s:bind path="detalle.folioFactura">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="numNomina">
-                                <s:message code="numeroNomina.label" />
+                                <label for="folioFactura">
+                                <s:message code="folio.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="numNomina" maxlength="50" required="true" />
-                            <form:errors path="numNomina" cssClass="alert alert-error" />
+                            <form:input path="folioFactura" maxlength="150" required="true" />
+                            <form:errors path="folioFactura" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="informe.nombreEmpleado">
+                    <s:bind path="detalle.nombreProveedor" >
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="nombreEmpleado">
-                                <s:message code="nombre.label" />
+                                <label for="nombreProveedor" >
+                                <s:message code="proveedor.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="nombreEmpleado" maxlength="150" required="true" />
-                            <form:errors path="nombreEmpleado" cssClass="alert alert-error" />
+                            <form:input path="nombreProveedor"   maxlength="150" required="true"  />
+                            <form:errors path="nombreProveedor" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="informe.status">
+                    <s:bind path="detalle.RFCProveedor">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="RFCProveedor">
+                                <s:message code="rfc.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="RFCProveedor" maxlength="50" required="true" />
+                            <form:errors path="RFCProveedor" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="detalle.IVA" >
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="IVA" >
+                                <s:message code="iva.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="IVA"   maxlength="150" required="true"  />
+                            <form:errors path="IVA" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="detalle.subtotal">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="subtotal">
+                                <s:message code="subtotal.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="subtotal"  maxlength="150" required="true"  />
+                            <form:errors path="subtotal" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="detalle.total">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="total">
+                                <s:message code="total.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:checkbox path="total"    maxlength="150" required="true"   />
+                            <form:errors path="total" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="detalle.status">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="status">
                                 <s:message code="status.label" />
@@ -58,127 +98,71 @@
                             <form:errors path="status" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <div class="row-fluid">
-                        <s:bind path="informe.pesos" >
-                            <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="pesos" >
-                                    <s:message code="pesos.label" />
-                                    <span class="required-indicator">*</span>
-                                </label>
-                                <div onclick="disableDolares();">
-                                    <form:checkbox path="pesos"   cssClass="span3" id="pesos" />
-                                    <form:errors path="pesos" cssClass="alert alert-error" />
-                                </div>
-                            </div>
-                        </s:bind>
-                        <s:bind path="informe.dolares">
-                            <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="dolares">
-                                    <s:message code="dolares.label" />
-                                    <span class="required-indicator">*</span>
-                                </label>
-                                <div onclick="disablePesos();">
-                                    <form:checkbox path="dolares"   cssClass="span3" id="dolares" />
-                                    <form:errors path="dolares" cssClass="alert alert-error" />
-                                </div>
-                            </div>
-                        </s:bind>
-                    </div>
-                    <div class="row-fluid">
-                        <s:bind path="informe.informe" >
-                            <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="informe" >
-                                    <s:message code="informe.label" />
-                                    <span class="required-indicator">*</span>
-                                </label>
-                                <div onclick="disableReembolso()">
-                                    <form:checkbox path="informe"   cssClass="span3" id="1" />
-                                    <form:errors path="informe" cssClass="alert alert-error" />
-                                </div>
-                            </div>
-                        </s:bind>
-                        <s:bind path="informe.reembolso">
-                            <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="reembolso">
-                                    <s:message code="reembolso.label" />
-                                    <span class="required-indicator">*</span>
-                                </label>
-                                <div onclick="disableInforme()">
-                                    <form:checkbox path="reembolso"   cssClass="span3" id="reembolso" />
-                                    <form:errors path="reembolso" cssClass="alert alert-error" />
-                                </div>
-                            </div>
-                        </s:bind>
-                    </div>
-                    <s:bind path="informe.fechaInforme">
+                    <s:bind path="detalle.fechaFactura">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="fechaInforme">
-                                <s:message code="fechaInforme.label" />
+                                <label for="fechaFactura">
+                                <s:message code="fechaFactura.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="fechaInforme" maxlength="12" required="true" />
-                            <form:errors path="fechaInforme" cssClass="alert alert-error" />
+                            <form:input path="fechaFactura" maxlength="12" required="true" />
+                            <form:errors path="fechaFactura" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="detalle.informeEmpleado">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="informeEmpleado">
+                                <s:message code="informeEmpleado.label" />
+                                <span class="required-indicator">*</span>
+                                <form:select id="informEmpleadoId" path="informeEmpleado.id" items="${informes}" itemLabel="numNomina" itemValue="id" />
+                                <form:errors path="informeEmpleado" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
 
+                    <%--Subir archivos --%>
+                    <input id="addFile" type="button" value="Add File" />
+                    <table id="fileTable">
+                        <tr>
+                        <p>XML*<p/>
+                        <td><img src="/mateo/images/xml.png" width="120" height="100" /><input name="files[0]" type="file" /></td>
+                        </tr>
 
-
+                        <tr>
+                        <p>PDF*<p/>
+                        <td><img src="/mateo/images/pdf.png" width="120" height="100" /><input name="files[1]" type="file" /></td>
+                        </tr>
+                    </table>
 
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/factura/informe'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <a class="btn btn-large" href="<s:url value='/factura/detalle'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>
     <content>
+        <script
+        src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
         <script>
-                                    $(document).ready(function() {
-                                        $('input#nombre').focus();
-                                        $("input#fechaInforme").datepicker($.datepicker.regional['es']);
-                                        $("input#fechaInforme").datepicker("option", "firstDay", 0);
-                                    });
+            $(document).ready(function() {
+                //add more file components if Add is clicked
+                $('#addFile').click(function() {
+                    var fileIndex = $('#fileTable tr').children().length - 1;
+                    $('#fileTable').append(
+                            '<tr><td>' +
+                            '   <input type="file" name="files[' + fileIndex + ']" />' +
+                            '</td></tr>');
+                });
 
-
-                                    function disablePesos()
-                                    {
-                                        document.getElementById("pesos").disabled = true;
-                                        if (document.getElementById("dolares").checked === false) {
-                                            document.getElementById("pesos").disabled = false;
-                                        }
-                                    }
-
-                                    function disableDolares()
-                                    {
-                                        document.getElementById("dolares").disabled = true;
-                                        if (document.getElementById("pesos").checked === false) {
-                                            document.getElementById("dolares").disabled = false;
-                                        }
-                                    }
-
-
-
-
-        </script>    
-
-        <script>
-            function disableReembolso()
-            {
-                document.getElementById("reembolso").disabled = true;
-                if (document.getElementById("1").checked === false) {
-                    document.getElementById("reembolso").disabled = false;
-                }
-            }
-
-            function disableInforme()
-            {
-                document.getElementById("1").disabled = true;
-                if (document.getElementById("reembolso").checked === false) {
-                    document.getElementById("1").disabled = false;
-                }
-            }
+            });
         </script>
+        <script>
+            $(document).ready(function() {
+                $('input#nombre').focus();
+                $("input#fechaInforme").datepicker($.datepicker.regional['es']);
+                $("input#fechaInforme").datepicker("option", "firstDay", 0);
+            });
+        </script>    
     </content>
 </body>
 </html>

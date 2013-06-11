@@ -4,24 +4,24 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="informe.lista.label" /></title>
+        <title><s:message code="detalle.lista.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="informe" />
+            <jsp:param name="menu" value="detalle" />
         </jsp:include>
 
-        <h1><s:message code="informe.lista.label" /></h1>
+        <h1><s:message code="detalle.lista.label" /></h1>
         <hr/>
 
-        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/factura/informe' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/factura/detalle' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/factura/informe/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='informe.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/factura/detalle/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='detalle.nuevo.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
@@ -31,8 +31,8 @@
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
-            <c:if test="${informes != null}">
-                <s:bind path="informes.*">
+            <c:if test="${detalles != null}">
+                <s:bind path="detalles.*">
                     <c:if test="${not empty status.errorMessages}">
                         <div class="alert alert-block alert-error fade in" role="status">
                             <a class="close" data-dismiss="alert">×</a>
@@ -43,47 +43,50 @@
                     </c:if>
                 </s:bind>
             </c:if>
-
             <table id="lista" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="numeroNomina" />
+                            <jsp:param name="columna" value="folio" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="nombre" />
+                            <jsp:param name="columna" value="proveedor" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="rfc" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="iva" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="subtotal" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="total" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="status" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="informe" />
+                            <jsp:param name="columna" value="fechaFactura" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="pesos" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="dolares" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="reembolso" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="fechaInforme" />
+                            <jsp:param name="columna" value="informeEmpleado" />
                         </jsp:include>
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${informes}" var="informe" varStatus="status">
+                    <c:forEach items="${detalles}" var="detalle" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/factura/informe/ver/${informe.id}' />">${informe.numNomina}</a></td>                            
-                            <td>${informe.nombreEmpleado}</td>
-                            <td>${informe.status}</td>
-                            <td ><input type="checkbox" value="" disabled="true" <c:if test="${informe.informe}">checked="checked"</c:if> /></td>
-                            <td ><input type="checkbox" value="" disabled="true" <c:if test="${informe.pesos}">checked="checked"</c:if> /></td>
-                            <td ><input type="checkbox" value="" disabled="true" <c:if test="${informe.dolares}">checked="checked"</c:if> /></td>
-                            <td ><input type="checkbox" value="" disabled="true" <c:if test="${informe.reembolso}">checked="checked"</c:if> /></td>
-                            <td>${informe.fechaInforme}</td>
+                            <td><a href="<c:url value='/factura/detalle/ver/${detalle.id}' />">${detalle.folioFactura}</a></td>                            
+                            <td>${detalle.nombreProveedor}</td>
+                            <td>${detalle.RFCProveedor}</td>
+                            <td>${detalle.IVA}</td>
+                            <td>${detalle.subtotal}</td>
+                            <td>${detalle.total}</td>
+                            <td>${detalle.status}</td>
+                            <td>${detalle.fechaFactura}</td>
+                            <td>${detalle.informeEmpleado.id}</td>
                         </tr>
                     </c:forEach>
                 </tbody>
