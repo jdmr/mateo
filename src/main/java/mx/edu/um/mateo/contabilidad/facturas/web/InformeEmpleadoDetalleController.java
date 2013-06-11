@@ -7,7 +7,9 @@ package mx.edu.um.mateo.contabilidad.facturas.web;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +41,7 @@ import net.sf.jasperreports.engine.export.JRCsvExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +58,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -347,6 +351,64 @@ public class InformeEmpleadoDetalleController extends BaseController {
         }
 
         return "redirect:" + Constantes.PATH_INFORMEEMPLEADODETALLE_LISTA;
+    }
+
+    @RequestMapping(value = "/descargarPdf", method = RequestMethod.GET)
+    public ModelAndView handleRequestPDF(@PathVariable Long id, Model modelo, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        InformeEmpleadoDetalle detalle = manager.obtiene(id);
+        try {
+            // Suponemos que es un zip lo que se quiere descargar el usuario.
+            // Aqui se hace a piñón fijo, pero podría obtenerse el fichero
+            // pedido por el usuario a partir de algún parámetro del request
+            // o de la URL con la que nos han llamado.
+            String nombreFichero = detalle.getNombrePDF();
+            String unPath = detalle.getPathPDF();
+
+            response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "attachment; filename=\""
+                    + nombreFichero + "\"");
+
+            InputStream is = new FileInputStream(unPath + nombreFichero);
+
+            IOUtils.copy(is, response.getOutputStream());
+
+            response.flushBuffer();
+
+        } catch (IOException ex) {
+            // Sacar log de error.
+            throw ex;
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/descargarXML", method = RequestMethod.GET)
+    public ModelAndView handleRequestXML(@PathVariable Long id, Model modelo, HttpServletRequest request,
+            HttpServletResponse response) throws Exception {
+        InformeEmpleadoDetalle detalle = manager.obtiene(id);
+        try {
+            // Suponemos que es un zip lo que se quiere descargar el usuario.
+            // Aqui se hace a piñón fijo, pero podría obtenerse el fichero
+            // pedido por el usuario a partir de algún parámetro del request
+            // o de la URL con la que nos han llamado.
+            String nombreFichero = detalle.getNombreXMl();
+            String unPath = detalle.getPathXMl();
+
+            response.setContentType("application/xml");
+            response.setHeader("Content-Disposition", "attachment; filename=\""
+                    + nombreFichero + "\"");
+
+            InputStream is = new FileInputStream(unPath + nombreFichero);
+
+            IOUtils.copy(is, response.getOutputStream());
+
+            response.flushBuffer();
+
+        } catch (IOException ex) {
+            // Sacar log de error.
+            throw ex;
+        }
+        return null;
     }
 
     private void generaReporte(String tipo, List<InformeEmpleadoDetalle> detalle,
