@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.inscripciones.web;
+package mx.edu.um.mateo.general.utils;
 
 import java.io.File;
 import java.util.ArrayList;

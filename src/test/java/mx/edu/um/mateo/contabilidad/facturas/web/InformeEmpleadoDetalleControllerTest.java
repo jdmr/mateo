@@ -13,16 +13,10 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.inscripciones.model.AFEBecaAdicional;
-import mx.edu.um.mateo.inscripciones.model.TiposBecas;
-import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.server.result.MockMvcResultMatchers.forwardedUrl;
-import static org.springframework.test.web.server.result.MockMvcResultMatchers.model;
 import org.springframework.transaction.annotation.Transactional;
 import static org.junit.Assert.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -77,6 +71,7 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
             detalle.setRFCProveedor("1147hgas40q");
             detalle.setSubtotal(new BigDecimal("223"));
             detalle.setTotal(new BigDecimal("250"));
+            detalle.setEmpresa(usuario.getEmpresa());
             currentSession().save(detalle);
             assertNotNull(detalle.getId());
         }
@@ -144,6 +139,7 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
         detalle.setRFCProveedor("1147hgas40q");
         detalle.setSubtotal(new BigDecimal("223"));
         detalle.setTotal(new BigDecimal("250"));
+        detalle.setEmpresa(usuario.getEmpresa());
         currentSession().save(detalle);
         assertNotNull(detalle.getId());
 
@@ -183,6 +179,7 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
         detalle.setRFCProveedor("1147hgas40q");
         detalle.setSubtotal(new BigDecimal("223"));
         detalle.setTotal(new BigDecimal("250"));
+        detalle.setEmpresa(usuario.getEmpresa());
         currentSession().save(detalle);
         assertNotNull(detalle.getId());
 
@@ -222,8 +219,8 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
                 .param("total", "780.16")
                 .param("informeEmpleado.Id", informe.getId().toString()))
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "becaAdicional.graba.message"))
-                .andExpect(redirectedUrl(Constantes.PATH_AFE_BECAADICIONAL_LISTA));
+                .andExpect(flash().attribute("message", "detalle.graba.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_INFORMEEMPLEADODETALLE_LISTA));
     }
 
     @Test
@@ -254,6 +251,7 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
         detalle.setRFCProveedor("1147hgas40q");
         detalle.setSubtotal(new BigDecimal("223"));
         detalle.setTotal(new BigDecimal("250"));
+        detalle.setEmpresa(usuario.getEmpresa());
         currentSession().save(detalle);
         assertNotNull(detalle.getId());
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
@@ -272,7 +270,7 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
                 .param("informeEmpleado.Id", informe.getId().toString()))
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message", "becaAdicional.graba.message"))
-                .andExpect(redirectedUrl(Constantes.PATH_AFE_BECAADICIONAL_LISTA));
+                .andExpect(redirectedUrl(Constantes.PATH_INFORMEEMPLEADODETALLE_LISTA));
         currentSession().refresh(detalle);
         log.debug("{}", informe);
         assertEquals("1110476", detalle.getFolioFactura());
@@ -305,6 +303,7 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
         detalle.setPathXMl("prueba.xml");
         detalle.setRFCProveedor("1147hgas40q");
         detalle.setSubtotal(new BigDecimal("223"));
+        detalle.setEmpresa(usuario.getEmpresa());
         detalle.setTotal(new BigDecimal("250"));
         currentSession().save(detalle);
         assertNotNull(detalle.getId());
