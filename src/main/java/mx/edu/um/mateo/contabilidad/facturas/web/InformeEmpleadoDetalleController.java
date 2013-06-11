@@ -125,7 +125,7 @@ public class InformeEmpleadoDetalleController extends BaseController {
             try {
                 enviaCorreo(correo, (List<InformeEmpleadoDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESDETALLES), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
-                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("informe.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("detalle.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
@@ -244,7 +244,7 @@ public class InformeEmpleadoDetalleController extends BaseController {
             manager.graba(detalle, usuario);
 
         } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear el tipo de Beca", e);
+            log.error("No se pudo crear el detalle", e);
             return Constantes.PATH_INFORMEEMPLEADODETALLE_NUEVO;
         }
 
@@ -312,11 +312,11 @@ public class InformeEmpleadoDetalleController extends BaseController {
             log.debug("Paquete {}", detalle);
             manager.actualiza(detalle, usuario);
         } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear el tipo de Beca", e);
+            log.error("No se pudo crear el detalle", e);
             return Constantes.PATH_INFORMEEMPLEADODETALLE_NUEVO;
         }
 
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "becaAdicional.graba.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "detalle.graba.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{detalle.getNombreProveedor()});
 
         return "redirect:" + Constantes.PATH_INFORMEEMPLEADODETALLE_LISTA;
@@ -324,7 +324,7 @@ public class InformeEmpleadoDetalleController extends BaseController {
 
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
-        log.debug("Editar cuenta de tipos de becas {}", id);
+        log.debug("Editar cuenta de detalles{}", id);
         Map<String, Object> params = new HashMap<>();
         params = managerInforme.lista(params);
         List<InformeEmpleado> informes = (List) params.get(Constantes.CONTAINSKEY_INFORMESEMPLEADO);
@@ -338,15 +338,15 @@ public class InformeEmpleadoDetalleController extends BaseController {
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo,
             @ModelAttribute InformeEmpleadoDetalle detalle, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        log.debug("Elimina cuenta de tipos de becas");
+        log.debug("Elimina cuenta de detalles");
         try {
             manager.elimina(id);
 
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "becaAdicional.elimina.message");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "detalle.elimina.message");
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{detalle.getNombreProveedor()});
         } catch (Exception e) {
             log.error("No se pudo eliminar el tipo de paquete " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEEMPLEADODETALLE, new String[]{"becaAdicional.no.elimina.message"}, null, null));
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEEMPLEADODETALLE, new String[]{"detalle.no.elimina.message"}, null, null));
             return Constantes.PATH_INFORMEEMPLEADODETALLE_VER;
         }
 
