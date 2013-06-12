@@ -50,6 +50,9 @@
                             <jsp:param name="columna" value="folio" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="ccp" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="proveedor" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
@@ -79,6 +82,7 @@
                     <c:forEach items="${detalles}" var="detalle" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/factura/detalle/ver/${detalle.id}' />">${detalle.folioFactura}</a></td>                            
+                            <td>${detalle.ccp}</td>
                             <td>${detalle.nombreProveedor}</td>
                             <td>${detalle.RFCProveedor}</td>
                             <td>${detalle.IVA}</td>

@@ -34,6 +34,10 @@
                     <div class="span11">${detalle.folioFactura}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="folio.label" /></div>
+                    <div class="span11">${detalle.ccp}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="proveedor.label" /></div>
                     <div class="span11">${detalle.nombreProveedor}</div>
                 </div>

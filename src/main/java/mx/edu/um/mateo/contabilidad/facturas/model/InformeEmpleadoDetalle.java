@@ -37,6 +37,7 @@ public class InformeEmpleadoDetalle implements Serializable {
     private String RFCProveedor;
     private String folioFactura;
     private String nombreProveedor;
+    private String ccp;
     private BigDecimal subtotal;
     private BigDecimal IVA;
     private BigDecimal total;
@@ -189,14 +190,22 @@ public class InformeEmpleadoDetalle implements Serializable {
         this.empresa = empresa;
     }
 
+    public String getCcp() {
+        return ccp;
+    }
+
+    public void setCcp(String ccp) {
+        this.ccp = ccp;
+    }
+
     @Override
     public String toString() {
         return "InformeEmpleadoDetalle{" + "id=" + id + ", version=" + version + ", RFCProveedor=" + RFCProveedor
-                + ", folioFactura=" + folioFactura + ", nombreProveedor=" + nombreProveedor
-                + ", subtotal=" + subtotal + ", IVA=" + IVA + ", total=" + total
-                + ", status=" + status + ", fechaFactura=" + fechaFactura
-                + ", pathPDF=" + pathPDF + ", pathXMl=" + pathXMl + ", nombrePDF=" + nombrePDF
-                + ", nombreXMl=" + nombreXMl + ", informeEmpleado=" + informeEmpleado
+                + ", folioFactura=" + folioFactura + ", nombreProveedor=" + nombreProveedor + ", ccp=" + ccp
+                + ", subtotal=" + subtotal + ", IVA=" + IVA + ", total=" + total + ", status=" + status
+                + ", fechaFactura=" + fechaFactura + ", pathPDF=" + pathPDF + ", pathXMl=" + pathXMl
+                + ", nombrePDF=" + nombrePDF + ", nombreXMl=" + nombreXMl
+                + ", informeEmpleado=" + informeEmpleado
                 + ", empresa=" + empresa + '}';
     }
 }

@@ -40,6 +40,16 @@
                             <form:errors path="folioFactura" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
+                    <s:bind path="detalle.ccp">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="ccp">
+                                <s:message code="ccp.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="ccp" maxlength="150" required="true" />
+                            <form:errors path="ccp" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
                     <s:bind path="detalle.nombreProveedor" >
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="nombreProveedor" >
