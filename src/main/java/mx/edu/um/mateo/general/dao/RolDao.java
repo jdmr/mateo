@@ -36,4 +36,5 @@ public interface RolDao {
 	public Rol obtiene(String nombre);
 
 	public Rol crea(Rol rol);
+        
 }

@@ -62,6 +62,8 @@ public interface UsuarioDao {
 	public String elimina(Long id) throws UltimoException;
 
 	public List<Rol> roles();
+        
+        public List<Rol> rolesUsuario(Long id);
 
 	public List<Almacen> obtieneAlmacenes();
 
