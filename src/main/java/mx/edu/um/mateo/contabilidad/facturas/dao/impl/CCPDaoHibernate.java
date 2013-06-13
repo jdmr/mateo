@@ -40,7 +40,7 @@ public class CCPDaoHibernate extends BaseDao implements CCPDao {
             conn = dataSource2.getConnection();
             log.debug("Creando query");
             stmt = conn.prepareStatement(" select count (ap.id_autorizacion) as nreg from mateo.ccp_autorizacion ap where ap.id_autorizacion  =  ? ");
-            stmt.setString(1, folio);
+            stmt.setString(1, folio.trim());
             log.debug("Provando conexion");
             rs = stmt.executeQuery();
             log.debug("Ejecutando Query");

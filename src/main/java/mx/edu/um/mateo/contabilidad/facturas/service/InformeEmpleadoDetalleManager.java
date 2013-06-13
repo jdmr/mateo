@@ -7,6 +7,7 @@ package mx.edu.um.mateo.contabilidad.facturas.service;
 import java.util.Map;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleadoDetalle;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
 
 /**
  *
@@ -35,7 +36,7 @@ public interface InformeEmpleadoDetalleManager {
      *
      * @param InformeEmpleadoDetalle the object to be saved
      */
-    public void graba(InformeEmpleadoDetalle detalle, Usuario usuario);
+    public void graba(InformeEmpleadoDetalle detalle, Usuario usuario) throws AutorizacionCCPlInvalidoException;
 
     public void actualiza(InformeEmpleadoDetalle detalle, Usuario usuario);
 

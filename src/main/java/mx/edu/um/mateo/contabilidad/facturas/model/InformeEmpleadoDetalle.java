@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +19,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import mx.edu.um.mateo.general.model.Empresa;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,6 +39,8 @@ public class InformeEmpleadoDetalle implements Serializable {
     private String RFCProveedor;
     private String folioFactura;
     private String nombreProveedor;
+    @NotBlank
+    @Column(nullable = false, length = 500)
     private String ccp;
     private BigDecimal subtotal;
     private BigDecimal IVA;

@@ -25,6 +25,7 @@ import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleadoDetalle;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeEmpleadoDetalleManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeEmpleadoManager;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inscripciones.model.FileUploadForm;
@@ -206,42 +207,50 @@ public class InformeEmpleadoDetalleController extends BaseController {
             return Constantes.PATH_INFORMEEMPLEADODETALLE_NUEVO;
         }
 
-        try {
-            Map<String, Object> params = new HashMap<>();
-            //Subir archivos
-            List<MultipartFile> files = uploadForm.getFiles();
 
-            List<String> fileNames = new ArrayList<String>();
+        Map<String, Object> params = new HashMap<>();
+        //Subir archivos
+        List<MultipartFile> files = uploadForm.getFiles();
 
-            if (null != files && files.size() > 0) {
-                for (MultipartFile multipartFile : files) {
-                    String fileName = multipartFile.getOriginalFilename();
-                    fileNames.add(fileName);
-                    String uploadDir = "/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename();
-                    File dirPath = new File(uploadDir);
-                    if (!dirPath.exists()) {
-                        dirPath.mkdirs();
-                    }
-                    multipartFile.transferTo(new File("/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename()));
-                    if (multipartFile.getOriginalFilename().contains(".pdf")) {
-                        detalle.setPathPDF("/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
-                        detalle.setNombrePDF(multipartFile.getOriginalFilename());
-                    }
-                    if (multipartFile.getOriginalFilename().contains(".xml")) {
-                        detalle.setPathXMl("/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
-                        detalle.setNombreXMl(multipartFile.getOriginalFilename());
-                    }
+        List<String> fileNames = new ArrayList<String>();
+
+        if (null != files && files.size() > 0) {
+            for (MultipartFile multipartFile : files) {
+                String fileName = multipartFile.getOriginalFilename();
+                fileNames.add(fileName);
+                String uploadDir = "/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename();
+                File dirPath = new File(uploadDir);
+                if (!dirPath.exists()) {
+                    dirPath.mkdirs();
+                }
+                multipartFile.transferTo(new File("/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename()));
+                if (multipartFile.getOriginalFilename().contains(".pdf")) {
+                    detalle.setPathPDF("/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
+                    detalle.setNombrePDF(multipartFile.getOriginalFilename());
+                }
+                if (multipartFile.getOriginalFilename().contains(".xml")) {
+                    detalle.setPathXMl("/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
+                    detalle.setNombreXMl(multipartFile.getOriginalFilename());
                 }
             }
-            ////Subir archivos\\\
-            InformeEmpleado informe = managerInforme.obtiene(detalle.getInformeEmpleado().getId());
-            detalle.setInformeEmpleado(informe);
-            Usuario usuario = ambiente.obtieneUsuario();
+        }
+        ////Subir archivos\\\
+        InformeEmpleado informe = managerInforme.obtiene(detalle.getInformeEmpleado().getId());
+        detalle.setInformeEmpleado(informe);
+        Usuario usuario = ambiente.obtieneUsuario();
+        try {
             manager.graba(detalle, usuario);
             request.getSession().setAttribute("detalleId", detalle.getId());
 
-        } catch (ConstraintViolationException e) {
+        } catch (AutorizacionCCPlInvalidoException e) {
             log.error("No se pudo crear el detalle", e);
+            params = managerInforme.lista(params);
+            List<InformeEmpleado> informes = (List) params.get(Constantes.CONTAINSKEY_INFORMESEMPLEADO);
+            modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESEMPLEADO, informes);
+
+            params.put("empresa", request.getSession().getAttribute("empresaId"));
+            modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEEMPLEADODETALLE, detalle);
+            errors.rejectValue("ccp", "entrada.no.eligio.proveedor.message", null, null);
             return Constantes.PATH_INFORMEEMPLEADODETALLE_NUEVO;
         }
 

@@ -31,6 +31,7 @@ public class CCPDaoTest extends BaseDaoTest {
         log.debug("Obtiene un Alumno");
         String folio = "990236";
         Boolean existe = dao.obtiene(folio);
+        log.debug("prueba**", existe.toString());
         assertTrue(existe);
     }
 }
