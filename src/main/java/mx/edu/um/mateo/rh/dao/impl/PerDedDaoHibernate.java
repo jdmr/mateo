@@ -28,8 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class PerDedDaoHibernate extends BaseDao implements PerDedDao{ 
-    
+public class PerDedDaoHibernate extends BaseDao implements PerDedDao {
+
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de perded con params {}", params);
@@ -52,9 +52,9 @@ public class PerDedDaoHibernate extends BaseDao implements PerDedDao{
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(PerDed.class).add(Restrictions.eq("status",Constantes.STATUS_ACTIVO));
-        Criteria countCriteria = currentSession().createCriteria(PerDed.class).add(Restrictions.eq("status",Constantes.STATUS_ACTIVO));
-        
+        Criteria criteria = currentSession().createCriteria(PerDed.class).add(Restrictions.eq("status", Constantes.STATUS_ACTIVO));
+        Criteria countCriteria = currentSession().createCriteria(PerDed.class).add(Restrictions.eq("status", Constantes.STATUS_ACTIVO));
+
 
         if (params.containsKey("empresa")) {
             criteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
@@ -83,7 +83,7 @@ public class PerDedDaoHibernate extends BaseDao implements PerDedDao{
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put(Constantes.CONTAINSKEY_PERDED, criteria.list());
+        params.put(Constantes.PERDED_LIST, criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
@@ -92,7 +92,7 @@ public class PerDedDaoHibernate extends BaseDao implements PerDedDao{
     }
 
     /**
-     * @see mx.edu.um.mateo.rh.service.PerDedManager#obtiene(java.lang.String) 
+     * @see mx.edu.um.mateo.rh.service.PerDedManager#obtiene(java.lang.String)
      */
     @Override
     public PerDed obtiene(final Long id) {
@@ -106,7 +106,9 @@ public class PerDedDaoHibernate extends BaseDao implements PerDedDao{
     }
 
     /**
-     *  @see mx.edu.um.mateo.rh.service.PerDedManager#graba(mx.edu.um.mateo.rh.model.PerDed, mx.edu.um.mateo.general.model.Usuario) 
+     * @see
+     * mx.edu.um.mateo.rh.service.PerDedManager#graba(mx.edu.um.mateo.rh.model.PerDed,
+     * mx.edu.um.mateo.general.model.Usuario)
      */
     @Override
     public void graba(final PerDed perded, Usuario usuario) {
@@ -121,7 +123,7 @@ public class PerDedDaoHibernate extends BaseDao implements PerDedDao{
     }
 
     /**
-     *  @see mx.edu.um.mateo.rh.service.PerDedManager#elimina(java.lang.String) 
+     * @see mx.edu.um.mateo.rh.service.PerDedManager#elimina(java.lang.String)
      */
     @Override
     public String elimina(final Long id) {
