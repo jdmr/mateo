@@ -57,6 +57,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/colportaje/estado")
 public class EstadoController {
+
     private static final Logger log = (Logger) LoggerFactory.getLogger(EstadoController.class);
     @Autowired
     private EstadoDao estadoDao;
@@ -70,6 +71,7 @@ public class EstadoController {
     private UsuarioDao usuarioDao;
     @Autowired
     private Ambiente ambiente;
+
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -100,7 +102,7 @@ public class EstadoController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = estadoDao.lista(params);
             try {
-                generaReporte(tipo, (List<Estado>) params.get(Constantes.CONTAINSKEY_ESTADOS), response);
+                generaReporte(tipo, (List<Estado>) params.get(Constantes.ESTADO_LIST), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -112,7 +114,7 @@ public class EstadoController {
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<Estado>) params.get(Constantes.CONTAINSKEY_ESTADOS), request);
+                enviaCorreo(correo, (List<Estado>) params.get(Constantes.ESTADO_LIST), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "estado.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("estado.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
@@ -120,8 +122,8 @@ public class EstadoController {
             }
         }
         params = estadoDao.lista(params);
-        log.debug("Rows returned {}",((List)params.get(Constantes.CONTAINSKEY_ESTADOS)).size());
-        modelo.addAttribute(Constantes.CONTAINSKEY_ESTADOS, params.get(Constantes.CONTAINSKEY_ESTADOS));
+        log.debug("Rows returned {}", ((List) params.get(Constantes.ESTADO_LIST)).size());
+        modelo.addAttribute(Constantes.ESTADO_LIST, params.get(Constantes.ESTADO_LIST));
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
         Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
@@ -131,14 +133,15 @@ public class EstadoController {
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<Estado> estado = (List<Estado>) params.get(Constantes.CONTAINSKEY_ESTADOS);
+        List<Estado> estado = (List<Estado>) params.get(Constantes.ESTADO_LIST);
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (estado.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
         return Constantes.PATH_ESTADO_LISTA;
-        }
+    }
+
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando Estado {}", id);
@@ -146,16 +149,18 @@ public class EstadoController {
         modelo.addAttribute(Constantes.ADDATTRIBUTE_ESTADO, estado);
         return Constantes.PATH_ESTADO_VER;
     }
+
     @RequestMapping("/nueva")
     public String nueva(Model modelo) {
         log.debug("Nueva Estado");
         Estado estado = new Estado();
-        
+
         Map<String, Object> paises = paisDao.lista(null);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAISES, paises.get(Constantes.CONTAINSKEY_PAISES));
+        modelo.addAttribute(Constantes.ESTADO_LIST, paises.get(Constantes.ESTADO_LIST));
         modelo.addAttribute(Constantes.ADDATTRIBUTE_ESTADO, estado);
         return Constantes.PATH_ESTADO_NUEVA;
     }
+
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Estado estado, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
@@ -178,15 +183,17 @@ public class EstadoController {
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{estado.getNombre()});
         return "redirect:" + Constantes.PATH_ESTADO_VER + "/" + estado.getId();
     }
+
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Edita Estado {}", id);
         Estado estado = estadoDao.obtiene(id);
         Map<String, Object> paises = paisDao.lista(null);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAISES, paises.get(Constantes.CONTAINSKEY_PAISES));
+        modelo.addAttribute(Constantes.ESTADO_LIST, paises.get(Constantes.ESTADO_LIST));
         modelo.addAttribute(Constantes.ADDATTRIBUTE_ESTADO, estado);
         return Constantes.PATH_ESTADO_EDITA;
     }
+
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid Estado estado, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
@@ -206,6 +213,7 @@ public class EstadoController {
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{estado.getNombre()});
         return "redirect:" + Constantes.PATH_ESTADO_VER + "/" + estado.getId();
     }
+
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Estado estado, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
@@ -216,11 +224,12 @@ public class EstadoController {
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
         } catch (Exception e) {
             log.error("No se pudo eliminar el pais " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.CONTAINSKEY_PAISES, new String[]{"estado.no.eliminada.message"}, null, null));
+            bindingResult.addError(new ObjectError(Constantes.ESTADO_LIST, new String[]{"estado.no.eliminada.message"}, null, null));
             return Constantes.PATH_ESTADO_VER;
         }
         return "redirect:" + Constantes.PATH_ESTADO;
     }
+
     private void generaReporte(String tipo, List<Estado> estado, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;

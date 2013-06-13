@@ -76,9 +76,9 @@ public class EstadoDaoTest {
         }
         Map<String, Object> params = null;
         Map result = instance.lista(params);
-        assertNotNull(result.get(Constantes.CONTAINSKEY_ESTADOS));
+        assertNotNull(result.get(Constantes.ESTADO_LIST));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
-        assertEquals(10, ((List<Estado>) result.get(Constantes.CONTAINSKEY_ESTADOS)).size());
+        assertEquals(10, ((List<Estado>) result.get(Constantes.ESTADO_LIST)).size());
         assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
 

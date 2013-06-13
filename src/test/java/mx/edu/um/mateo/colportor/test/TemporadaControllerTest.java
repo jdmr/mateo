@@ -43,17 +43,17 @@ public class TemporadaControllerTest extends BaseControllerTest {
 
     @Autowired
     private TemporadaDao temporadaDao;
-    
+
     /**
-     * 
-     * @throws Exception 
+     *
+     * @throws Exception
      */
     @Test
     public void testLista() throws Exception {
         log.debug("Debiera monstrar lista TEmporada");
 
         Usuario asociado = this.obtieneAsociado();
-        authenticate(asociado, asociado.getPassword(), new ArrayList <GrantedAuthority> (asociado.getRoles()));
+        authenticate(asociado, asociado.getPassword(), new ArrayList<GrantedAuthority>(asociado.getRoles()));
 
         for (int i = 0; i < 20; i++) {
             Temporada temporada = new Temporada("test" + i);
@@ -71,13 +71,12 @@ public class TemporadaControllerTest extends BaseControllerTest {
 
     }
 
-
     @Test
     public void testVer() throws Exception {
         log.debug("Debiera mostrar  temporada");
         Usuario asociado = this.obtieneAsociado();
-        authenticate(asociado, asociado.getPassword(), new ArrayList <GrantedAuthority> (asociado.getRoles()));
-        
+        authenticate(asociado, asociado.getPassword(), new ArrayList<GrantedAuthority>(asociado.getRoles()));
+
         Temporada temporada = new Temporada("test");
         temporada.setOrganizacion(asociado.getEmpresa().getOrganizacion());
         temporada = temporadaDao.crea(temporada);
@@ -91,13 +90,13 @@ public class TemporadaControllerTest extends BaseControllerTest {
     public void testGraba() throws Exception {
         log.debug("Debiera crear temporada");
         Usuario asociado = this.obtieneAsociado();
-        authenticate(asociado, asociado.getPassword(), new ArrayList <GrantedAuthority> (asociado.getRoles()));
-        
+        authenticate(asociado, asociado.getPassword(), new ArrayList<GrantedAuthority>(asociado.getRoles()));
+
         Temporada temporada = new Temporada("test");
         temporada.setOrganizacion(asociado.getEmpresa().getOrganizacion());
         temporada = temporadaDao.crea(temporada);
         assertNotNull(temporada.getId());
-        
+
         SimpleDateFormat sdf = new SimpleDateFormat(Constantes.DATE_SHORT_HUMAN_PATTERN);
         this.mockMvc.perform(post(Constantes.PATH_TEMPORADA_CREA)
                 .param("nombre", "test")
@@ -105,25 +104,25 @@ public class TemporadaControllerTest extends BaseControllerTest {
                 .param("fechaFinal", sdf.format(new Date())))
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
                 .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "temporada.creada.message"))
-                .andExpect(redirectedUrl(Constantes.PATH_TEMPORADA_VER + "/" + (temporada.getId()+1L)));
+                .andExpect(redirectedUrl(Constantes.PATH_TEMPORADA_VER + "/" + (temporada.getId() + 1L)));
     }
 
     @Test
     public void testActualiza() throws Exception {
         log.debug("Debiera actualizar  temporada");
         SimpleDateFormat sdf = new SimpleDateFormat(Constantes.DATE_SHORT_HUMAN_PATTERN);
-        
+
         Usuario asociado = this.obtieneAsociado();
-        authenticate(asociado, asociado.getPassword(), new ArrayList <GrantedAuthority> (asociado.getRoles()));
-        
+        authenticate(asociado, asociado.getPassword(), new ArrayList<GrantedAuthority>(asociado.getRoles()));
+
         Temporada temporada = new Temporada("test");
         temporada.setOrganizacion(asociado.getEmpresa().getOrganizacion());
         temporada = temporadaDao.crea(temporada);
         assertNotNull(temporada.getId());
-        
+
         Map<String, Object> params = new TreeMap<>();
         params.put("organizacion", asociado.getEmpresa().getOrganizacion().getId());
-        Integer nRows = ((List)temporadaDao.lista(params).get(Constantes.TEMPORADA_LIST)).size();
+        Integer nRows = ((List) temporadaDao.lista(params).get(Constantes.TEMPORADA_LIST)).size();
 
         this.mockMvc.perform(post(Constantes.PATH_TEMPORADA_ACTUALIZA)
                 .param("id", temporada.getId().toString())
@@ -135,17 +134,17 @@ public class TemporadaControllerTest extends BaseControllerTest {
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
                 .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "temporada.actualizada.message"))
                 .andExpect(redirectedUrl(Constantes.PATH_TEMPORADA_VER + "/" + temporada.getId()));
-        
-        assertEquals(nRows, (Integer)((List)temporadaDao.lista(params).get(Constantes.TEMPORADA_LIST)).size());
+
+        assertEquals(nRows, (Integer) ((List) temporadaDao.lista(params).get(Constantes.TEMPORADA_LIST)).size());
     }
 
     @Test
     public void testElimina() throws Exception {
         log.debug("Debiera eliminar  temporada");
-        
+
         Usuario asociado = this.obtieneAsociado();
-        authenticate(asociado, asociado.getPassword(), new ArrayList <GrantedAuthority> (asociado.getRoles()));
-        
+        authenticate(asociado, asociado.getPassword(), new ArrayList<GrantedAuthority>(asociado.getRoles()));
+
         Temporada temporada = new Temporada("test");
         temporada.setOrganizacion(asociado.getEmpresa().getOrganizacion());
         temporadaDao.crea(temporada);

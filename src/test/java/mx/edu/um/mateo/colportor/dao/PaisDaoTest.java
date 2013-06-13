@@ -29,15 +29,17 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
 public class PaisDaoTest {
+
     private static final Logger log = LoggerFactory.getLogger(PaisDaoTest.class);
     @Autowired
     private PaisDao instance;
     @Autowired
     private SessionFactory sessionFactory;
+
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
-    
+
     public PaisDaoTest() {
     }
 
@@ -48,11 +50,11 @@ public class PaisDaoTest {
     @AfterClass
     public static void tearDownClass() throws Exception {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -64,17 +66,18 @@ public class PaisDaoTest {
     public void deberiaMostrarListaDePais() {
         log.debug("Debiera mostrar lista de Pais");
         for (int i = 0; i < 20; i++) {
-            Pais pais = new Pais(Constantes.NOMBRE+i);
+            Pais pais = new Pais(Constantes.NOMBRE + i);
             currentSession().save(pais);
             assertNotNull(pais);
         }
         Map<String, Object> params = null;
         Map result = instance.lista(params);
-        assertNotNull(result.get(Constantes.CONTAINSKEY_PAISES));
+        assertNotNull(result.get(Constantes.PAIS_LIST));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
-        assertEquals(10, ((List<Pais>) result.get(Constantes.CONTAINSKEY_PAISES)).size());
+        assertEquals(10, ((List<Pais>) result.get(Constantes.PAIS_LIST)).size());
         //assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
+
     /**
      * Test of obtiene method, of class PaisDao.
      */
@@ -91,6 +94,7 @@ public class PaisDaoTest {
         assertEquals(nombre, result.getNombre());
         assertEquals(result, pais);
     }
+
     /**
      * Test of crea method, of class PaisDao.
      */
@@ -104,6 +108,7 @@ public class PaisDaoTest {
         assertNotNull(pais2.getId());
         assertEquals(pais, pais2);
     }
+
     /**
      * Test of actualiza method, of class PaisDao.
      */
@@ -120,6 +125,7 @@ public class PaisDaoTest {
         assertEquals(nombre, pais.getNombre());
         assertEquals(pais, pais2);
     }
+
     /**
      * Test of elimina method, of class PaisDao.
      */
@@ -134,7 +140,7 @@ public class PaisDaoTest {
         assertEquals(nom, nombre);
         Pais prueba = instance.obtiene(pais.getId());
 
-        if(prueba != null){
+        if (prueba != null) {
             fail("Fallo la prueba Eliminar");
         }
     }
