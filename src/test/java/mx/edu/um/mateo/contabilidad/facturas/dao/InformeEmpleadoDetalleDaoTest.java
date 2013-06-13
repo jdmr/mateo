@@ -54,6 +54,7 @@ public class InformeEmpleadoDetalleDaoTest extends BaseDaoTest {
         InformeEmpleadoDetalle detalle = null;
         for (int i = 0; i < 20; i++) {
             detalle = new InformeEmpleadoDetalle();
+            detalle.setCcp("990236");
             detalle.setInformeEmpleado(informe);
             detalle.setFechaFactura(new Date());
             detalle.setFolioFactura("1110475");
@@ -97,6 +98,7 @@ public class InformeEmpleadoDetalleDaoTest extends BaseDaoTest {
         InformeEmpleadoDetalle detalle = new InformeEmpleadoDetalle();
         detalle.setInformeEmpleado(informe);
         detalle.setFechaFactura(new Date());
+        detalle.setCcp("990236");
         detalle.setFolioFactura("1110475");
         detalle.setIVA(new BigDecimal(".16"));
         detalle.setNombreProveedor("Lala");
@@ -135,6 +137,7 @@ public class InformeEmpleadoDetalleDaoTest extends BaseDaoTest {
         detalle.setInformeEmpleado(informe);
         detalle.setFechaFactura(new Date());
         detalle.setFolioFactura("1110475");
+        detalle.setCcp("990236");
         detalle.setIVA(new BigDecimal(".16"));
         detalle.setNombreProveedor("Lala");
         detalle.setPathPDF("prueba.pdf");
@@ -174,6 +177,7 @@ public class InformeEmpleadoDetalleDaoTest extends BaseDaoTest {
         detalle.setFolioFactura("1110475");
         detalle.setIVA(new BigDecimal(".16"));
         detalle.setNombreProveedor("Lala");
+        detalle.setCcp("990236");
         detalle.setPathPDF("prueba.pdf");
         detalle.setPathXMl("prueba.xml");
         detalle.setRFCProveedor("1147hgas40q");
@@ -219,6 +223,7 @@ public class InformeEmpleadoDetalleDaoTest extends BaseDaoTest {
         detalle.setIVA(new BigDecimal(".16"));
         detalle.setNombreProveedor("Lala");
         detalle.setPathPDF("prueba.pdf");
+        detalle.setCcp("990236");
         detalle.setPathXMl("prueba.xml");
         detalle.setRFCProveedor("1147hgas40q");
         detalle.setSubtotal(new BigDecimal("223"));

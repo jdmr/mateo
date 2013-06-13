@@ -159,7 +159,7 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.TEMPORADACOLPORTOR_PATH_VER + ".jsp"))
                 .andExpect(model()
-                .attributeExists(Constantes.TEMPORADACOLPORTAJE_KEY));
+                .attributeExists(Constantes.TEMPORADACOLPORTOR));
 
     }
 

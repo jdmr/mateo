@@ -66,6 +66,7 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
             detalle.setFolioFactura("1110475");
             detalle.setIVA(new BigDecimal(".16"));
             detalle.setNombreProveedor("Lala");
+            detalle.setCcp("990236");
             detalle.setPathPDF("prueba.pdf");
             detalle.setPathXMl("prueba.xml");
             detalle.setRFCProveedor("1147hgas40q");
@@ -134,6 +135,7 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
         detalle.setFolioFactura("1110475");
         detalle.setIVA(new BigDecimal(".16"));
         detalle.setNombreProveedor("Lala");
+        detalle.setCcp("990236");
         detalle.setPathPDF("prueba.pdf");
         detalle.setPathXMl("prueba.xml");
         detalle.setRFCProveedor("1147hgas40q");
@@ -173,6 +175,7 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
         detalle.setFechaFactura(new Date());
         detalle.setFolioFactura("1110475");
         detalle.setIVA(new BigDecimal(".16"));
+        detalle.setCcp("990236");
         detalle.setNombreProveedor("Lala");
         detalle.setPathPDF("prueba.pdf");
         detalle.setPathXMl("prueba.xml");
@@ -211,6 +214,7 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
                 .param("fechaFactura", "21/03/2013")
                 .param("folioFactura", "1110475")
                 .param("iva", ".16")
+                .param("ccp", "990236")
                 .param("nombreProveedor", "Lala")
                 .param("pathPDF", "prueba.pdf")
                 .param("pathXML", "prueba.xml")
@@ -247,6 +251,7 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
         detalle.setIVA(new BigDecimal(".16"));
         detalle.setNombreProveedor("Lala");
         detalle.setPathPDF("prueba.pdf");
+        detalle.setCcp("990236");
         detalle.setPathXMl("prueba.xml");
         detalle.setRFCProveedor("1147hgas40q");
         detalle.setSubtotal(new BigDecimal("223"));
@@ -261,6 +266,7 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
                 .param("fechaFactura", "21/03/2013")
                 .param("folioFactura", "1110476")
                 .param("iva", ".16")
+                .param("ccp", "990236")
                 .param("nombreProveedor", "Lala")
                 .param("pathPDF", "prueba.pdf")
                 .param("pathXML", "prueba.xml")
@@ -269,7 +275,7 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
                 .param("total", "780.16")
                 .param("informeEmpleado.Id", informe.getId().toString()))
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "becaAdicional.graba.message"))
+                .andExpect(flash().attribute("message", "detalle.graba.message"))
                 .andExpect(redirectedUrl(Constantes.PATH_INFORMEEMPLEADODETALLE_LISTA));
         currentSession().refresh(detalle);
         log.debug("{}", informe);
@@ -301,6 +307,7 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
         detalle.setNombreProveedor("Lala");
         detalle.setPathPDF("prueba.pdf");
         detalle.setPathXMl("prueba.xml");
+        detalle.setCcp("990236");
         detalle.setRFCProveedor("1147hgas40q");
         detalle.setSubtotal(new BigDecimal("223"));
         detalle.setEmpresa(usuario.getEmpresa());
@@ -311,7 +318,7 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
         this.mockMvc.perform(post(Constantes.PATH_INFORMEEMPLEADODETALLE_ELIMINA)
                 .param("id", detalle.getId().toString()))
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "becaAdicional.elimina.message"))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "detalle.elimina.message"))
                 .andExpect(redirectedUrl(Constantes.PATH_INFORMEEMPLEADODETALLE_LISTA));
     }
 }
