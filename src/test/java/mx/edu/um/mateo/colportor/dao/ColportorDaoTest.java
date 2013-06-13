@@ -134,6 +134,7 @@ public class ColportorDaoTest extends BaseDaoTest{
     public void testGraba() {
         log.debug("Deberia crear un Colportor");
         Usuario usuario = obtieneAsociado();
+        Usuario clp = obtieneColportor(usuario); //para crear los roles de colportor
         
         Colportor colportor = new Colportor("test@test.com", "test", "test", "test", "test", "test", Constantes.STATUS_ACTIVO,
                 "8262652626", "test", "test", "10706", "test", "test001", new Date());
@@ -152,6 +153,7 @@ public class ColportorDaoTest extends BaseDaoTest{
     public void testActualiza() {
         log.debug("Deberia actualizar Colportor");
         Usuario usuario = obtieneAsociado();
+        Usuario clp = obtieneColportor(usuario); //para que cree roles de colportaje
         
         Colportor colportor = new Colportor("test@test.com", "test", "test", "test", "test", "test", Constantes.STATUS_ACTIVO,
                 "8262652626", "test", "test", "10706", "test", "test001", new Date());

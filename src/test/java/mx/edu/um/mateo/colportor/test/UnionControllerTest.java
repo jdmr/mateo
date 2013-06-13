@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package mx.edu.um.mateo.colportor.web;
+package mx.edu.um.mateo.colportor.test;
 
 import java.util.ArrayList;
 import java.util.HashSet;

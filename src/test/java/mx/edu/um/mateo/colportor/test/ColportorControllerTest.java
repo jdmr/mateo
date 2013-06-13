@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.colportor.web;
+package mx.edu.um.mateo.colportor.test;
 
 /**
  * TODO
@@ -104,6 +104,7 @@ public class ColportorControllerTest extends BaseControllerTest {
         log.debug("Test Graba");
         
         Usuario usuario = obtieneAsociado();        
+        Usuario clp = obtieneColportor(usuario);
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         
         this.mockMvc.perform(post(Constantes.PATH_COLPORTOR_CREA)

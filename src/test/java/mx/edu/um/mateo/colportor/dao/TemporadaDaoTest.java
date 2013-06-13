@@ -29,18 +29,18 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class TemporadaDaoTest extends BaseDaoTest{
+public class TemporadaDaoTest extends BaseDaoTest {
 
     private static final Logger log = LoggerFactory.getLogger(TemporadaDao.class);
     @Autowired
     private TemporadaDao instance;
-    
+
     /**
      * Test of lista method, of class TemporaDao.
      */
     @Test
     public void testLista() {
-        log.debug("Debiera mostrar lista Temporada"); 
+        log.debug("Debiera mostrar lista Temporada");
         Usuario asociado = this.obtieneAsociado();
         for (int i = 0; i < 20; i++) {
             Temporada temporada = new Temporada("test" + i);
@@ -49,7 +49,8 @@ public class TemporadaDaoTest extends BaseDaoTest{
             assertNotNull(temporada.getId());
         }
         Map<String, Object> params = new TreeMap<>();
-        params.put("organizacion.Id", asociado.getEmpresa().getOrganizacion());
+
+        params.put("organizacion", asociado.getEmpresa().getOrganizacion().getId());
         Map result = instance.lista(params);
         assertNotNull(result.get(Constantes.TEMPORADA_LIST));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
@@ -60,7 +61,7 @@ public class TemporadaDaoTest extends BaseDaoTest{
     @Test
     public void testObtener() {
         log.debug("Debiera obtener Temporada");
-        
+
         Usuario asociado = this.obtieneAsociado();
 
         String nombre = "test";
@@ -82,7 +83,7 @@ public class TemporadaDaoTest extends BaseDaoTest{
         log.debug("Deberia crear Temporada");
 
         Usuario asociado = this.obtieneAsociado();
-        
+
         Temporada temporada = new Temporada("test");
         temporada.setOrganizacion(asociado.getEmpresa().getOrganizacion());
         temporada.setStatus(Constantes.STATUS_ACTIVO);
@@ -93,9 +94,9 @@ public class TemporadaDaoTest extends BaseDaoTest{
     @Test
     public void testActualiza() {
         log.debug("Deberia actualizar Temporada");
-        
+
         Usuario asociado = this.obtieneAsociado();
-        
+
         Temporada temporada = new Temporada("test");
         temporada.setOrganizacion(asociado.getEmpresa().getOrganizacion());
 
@@ -117,7 +118,7 @@ public class TemporadaDaoTest extends BaseDaoTest{
         log.debug("Debiera eliminar Temporada");
 
         Usuario asociado = this.obtieneAsociado();
-        
+
         String nom = "test";
         Temporada temporada = new Temporada("test");
         temporada.setOrganizacion(asociado.getEmpresa().getOrganizacion());
@@ -129,7 +130,7 @@ public class TemporadaDaoTest extends BaseDaoTest{
 
         Temporada prueba = instance.obtiene(temporada.getId());
 
-        if (prueba != null) {
+        if (!prueba.getStatus().equals(Constantes.STATUS_INACTIVO)) {
             fail("Fallo la prueba Eliminar");
 
         }

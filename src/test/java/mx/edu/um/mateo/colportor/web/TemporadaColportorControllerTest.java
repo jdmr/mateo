@@ -23,6 +23,7 @@ import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import mx.edu.um.mateo.rh.model.Colegio;
 import static org.junit.Assert.assertNotNull;
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -49,12 +50,12 @@ import org.springframework.transaction.annotation.Transactional;
 })
 @Transactional
 public class TemporadaColportorControllerTest extends BaseControllerTest {
-    
+
     @Autowired
-    private TemporadaColportorDao temporadaColportorDao;    
+    private TemporadaColportorDao temporadaColportorDao;
     @Autowired
     private ColegioColportorDao colegioDao;
-    
+
     @Test
     public void debieraMostrarListaDeTemporadaColportor() throws Exception {
         log.debug("Debiera monstrar lista Temporada Colportor");
@@ -86,7 +87,7 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
         temporada.setOrganizacion(organizacion);
         currentSession().save(temporada);
         assertNotNull(temporada);
-        ColegioColportor colegio = new ColegioColportor("test3", Constantes.STATUS_ACTIVO);
+        Colegio colegio = new Colegio("test3", Constantes.STATUS_ACTIVO);
         currentSession().save(colegio);
         for (int i = 0; i < 20; i++) {
             TemporadaColportor temporadaColportor = new TemporadaColportor(Constantes.STATUS_ACTIVO + i, "TEST", "TEST");
@@ -95,14 +96,14 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
             temporadaColportor.setAsociado(asociado);
             temporadaColportor.setTemporada(temporada);
             temporadaColportor.setUnion(union);
-            temporadaColportor.setColegioColportor(colegio);
+            temporadaColportor.setColegio(colegio);
             temporadaColportorDao.crea(temporadaColportor);
             assertNotNull(temporadaColportor);
         }
 
-        this.mockMvc.perform(get(Constantes.PATH_TEMPORADACOLPORTOR))
+        this.mockMvc.perform(get(Constantes.TEMPORADACOLPORTOR_PATH))
                 .andExpect(status().isOk())
-                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_TEMPORADACOLPORTOR_LISTA + ".jsp"))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.TEMPORADACOLPORTOR_PATH_LISTA + ".jsp"))
                 .andExpect(model().attributeExists(Constantes.CONTAINSKEY_TEMPORADACOLPORTORES))
                 .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION))
                 .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINAS))
@@ -140,7 +141,7 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
         temporada.setOrganizacion(organizacion);
         currentSession().save(temporada);
         assertNotNull(temporada);
-        ColegioColportor colegio = new ColegioColportor("test3", Constantes.STATUS_ACTIVO);
+        Colegio colegio = new Colegio("test3", Constantes.STATUS_ACTIVO);
         currentSession().save(colegio);
         TemporadaColportor temporadaColportor = null;
         for (int i = 0; i < 20; i++) {
@@ -150,15 +151,15 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
             temporadaColportor.setAsociado(asociado);
             temporadaColportor.setTemporada(temporada);
             temporadaColportor.setUnion(union);
-            temporadaColportor.setColegioColportor(colegio);
+            temporadaColportor.setColegio(colegio);
             temporadaColportorDao.crea(temporadaColportor);
             assertNotNull(temporadaColportor);
         }
-        this.mockMvc.perform(get(Constantes.PATH_TEMPORADACOLPORTOR_VER + "/" + temporadaColportor.getId()))
+        this.mockMvc.perform(get(Constantes.TEMPORADACOLPORTOR_PATH_VER + "/" + temporadaColportor.getId()))
                 .andExpect(status().isOk())
-                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_TEMPORADACOLPORTOR_VER + ".jsp"))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.TEMPORADACOLPORTOR_PATH_VER + ".jsp"))
                 .andExpect(model()
-                .attributeExists(Constantes.ADDATTRIBUTE_TEMPORADACOLPORTOR));
+                .attributeExists(Constantes.TEMPORADACOLPORTAJE_KEY));
 
     }
 
@@ -208,7 +209,7 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
 
         SimpleDateFormat sdf = new SimpleDateFormat(Constantes.DATE_SHORT_HUMAN_PATTERN);
         this.mockMvc.perform(
-                post(Constantes.PATH_TEMPORADACOLPORTOR_CREA)
+                post(Constantes.TEMPORADACOLPORTOR_PATH_CREA)
                 .param("status", Constantes.STATUS_ACTIVO)
                 .param("fecha", sdf.format(new Date()))
                 .param("objetivo", "test")
@@ -259,7 +260,7 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
         temporada.setOrganizacion(organizacion);
         currentSession().save(temporada);
         assertNotNull(temporada);
-        ColegioColportor colegio = new ColegioColportor("test3", Constantes.STATUS_ACTIVO);
+        Colegio colegio = new Colegio("test3", Constantes.STATUS_ACTIVO);
         currentSession().save(colegio);
         TemporadaColportor temporadaColportor = new TemporadaColportor(Constantes.STATUS_ACTIVO, "TEST", "TEST");
         temporadaColportor.setColportor((Colportor) colportor);
@@ -267,12 +268,12 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
         temporadaColportor.setAsociado((Asociado) asociado);
         temporadaColportor.setTemporada(temporada);
         temporadaColportor.setUnion(union);
-        temporadaColportor.setColegioColportor(colegio);
+        temporadaColportor.setColegio(colegio);
         temporadaColportorDao.crea(temporadaColportor);
         assertNotNull(temporadaColportor);
         this.authenticate(asociado, asociado.getPassword(), new ArrayList(asociado.getAuthorities()));
         SimpleDateFormat sdf = new SimpleDateFormat(Constantes.DATE_SHORT_HUMAN_PATTERN);
-        this.mockMvc.perform(post(Constantes.PATH_TEMPORADACOLPORTOR_ACTUALIZA)
+        this.mockMvc.perform(post(Constantes.TEMPORADACOLPORTOR_PATH_ACTUALIZA)
                 .param("id", temporadaColportor.getId().toString())
                 .param("version", temporadaColportor.getVersion().toString())
                 .param("fecha", sdf.format(new Date()))
@@ -319,7 +320,7 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
         temporada.setOrganizacion(organizacion);
         currentSession().save(temporada);
         assertNotNull(temporada);
-        ColegioColportor colegio = new ColegioColportor("test3", Constantes.STATUS_ACTIVO);
+        Colegio colegio = new Colegio("test3", Constantes.STATUS_ACTIVO);
         currentSession().save(colegio);
         TemporadaColportor temporadaColportor = new TemporadaColportor(Constantes.STATUS_ACTIVO, "TEST", "TEST");
         temporadaColportor.setColportor((Colportor) colportor);
@@ -327,13 +328,13 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
         temporadaColportor.setAsociado((Asociado) asociado);
         temporadaColportor.setTemporada(temporada);
         temporadaColportor.setUnion(union);
-        temporadaColportor.setColegioColportor(colegio);
+        temporadaColportor.setColegio(colegio);
         temporadaColportorDao.crea(temporadaColportor);
         assertNotNull(temporadaColportor);
         this.authenticate(asociado, asociado.getPassword(), new ArrayList(asociado.getAuthorities()));
         SimpleDateFormat sdf = new SimpleDateFormat(Constantes.DATE_SHORT_HUMAN_PATTERN);
         this.mockMvc.perform(post(
-                Constantes.PATH_TEMPORADACOLPORTOR_ELIMINA)
+                Constantes.TEMPORADACOLPORTOR_PATH_ELIMINA)
                 .param("id", temporadaColportor.getId().toString()))
                 .andExpect(status().isOk())
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))

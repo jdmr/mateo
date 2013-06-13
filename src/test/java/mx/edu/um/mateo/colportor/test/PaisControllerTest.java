@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.colportor.web;
+package mx.edu.um.mateo.colportor.test;
 
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.colportor.dao.PaisDao;
@@ -22,6 +22,7 @@ import org.springframework.test.web.server.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.post;
+
 /**
  *
  * @author gibrandemetrioo
@@ -33,13 +34,14 @@ import static org.springframework.test.web.server.request.MockMvcRequestBuilders
     "classpath:dispatcher-servlet.xml"
 })
 public class PaisControllerTest {
+
     private static final Logger log = LoggerFactory.getLogger(PaisControllerTest.class);
     @Autowired
     private WebApplicationContext wac;
     private MockMvc mockMvc;
     @Autowired
     private PaisDao paisDao;
-    
+
     @BeforeClass
     public static void setUpClass() throws Exception {
     }
@@ -56,6 +58,7 @@ public class PaisControllerTest {
     @After
     public void tearDown() {
     }
+
     @Test
     public void debieraMostrarListaDePais() throws Exception {
         log.debug("Debiera monstrar lista Pais");
@@ -66,12 +69,13 @@ public class PaisControllerTest {
         }
         this.mockMvc.perform(get(Constantes.PATH_PAIS))
                 .andExpect(status().isOk())
-                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_PAIS_LISTA+ ".jsp"))
-                .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAISES))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_PAIS_LISTA + ".jsp"))
+                .andExpect(model().attributeExists(Constantes.PAIS_LIST))
                 .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION))
                 .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINAS))
                 .andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINA));
     }
+
     @Test
     public void debieraMostrarPais() throws Exception {
         log.debug("Debiera mostrar  Pais");
@@ -79,12 +83,13 @@ public class PaisControllerTest {
         pais = paisDao.crea(pais);
         assertNotNull(pais);
 
-        this.mockMvc.perform(get(Constantes.PATH_PAIS_VER +"/"+ pais.getId()))
+        this.mockMvc.perform(get(Constantes.PATH_PAIS_VER + "/" + pais.getId()))
                 .andExpect(status().isOk())
                 .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_PAIS_VER + ".jsp"))
                 .andExpect(model()
                 .attributeExists(Constantes.ADDATTRIBUTE_PAIS));
     }
+
     @Test
     public void debieraCrearPais() throws Exception {
         log.debug("Debiera crear Pais");
@@ -94,6 +99,7 @@ public class PaisControllerTest {
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
                 .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "pais.creada.message"));
     }
+
     @Test
     public void debieraActualizarPais() throws Exception {
         log.debug("Debiera actualizar  pais");
@@ -102,13 +108,14 @@ public class PaisControllerTest {
         assertNotNull(pais);
 
         this.mockMvc.perform(post(Constantes.PATH_PAIS_ACTUALIZA)
-                .param("id",pais.getId().toString())
+                .param("id", pais.getId().toString())
                 .param("version", pais.getVersion().toString())
                 .param("nombre", "test1"))
                 .andExpect(status().isOk())
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
                 .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "pais.actualizada.message"));
     }
+
     @Test
     public void debieraEliminarPais() throws Exception {
         log.debug("Debiera eliminar  Pais");

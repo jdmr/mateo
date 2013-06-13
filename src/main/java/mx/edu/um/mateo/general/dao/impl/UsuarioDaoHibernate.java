@@ -227,8 +227,10 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
         Query query = currentSession().createQuery(
                 "select r from Rol r where r.authority = :nombre");
         for (String nombre : nombreDeRoles) {
-            query.setString("nombre", nombre);
+            query.setString("nombre", nombre.trim());
             Rol rol = (Rol) query.uniqueResult();
+            log.debug("Rol*'{}', {}",nombre,rol);
+            
             nuevoUsuario.addRol(rol);
         }
         try {
@@ -322,6 +324,17 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
         return query.list();
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    @Transactional(readOnly = true)
+    public List<Rol> rolesUsuario(Long id) {
+          Usuario usuario = obtiene(id);
+        log.debug("Obteniendo lista de roles");
+        Query query = currentSession().createQuery("select rs from mx.edu.um.mateo.general.model.Usuario u inner join u.roles rs  where u.id = :userId order by rs.prioridad");
+        query.setLong("userId", usuario.getId());
+        return query.list();
+    }
+    
     @SuppressWarnings("unchecked")
     @Override
     @Transactional(readOnly = true)

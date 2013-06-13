@@ -3,9 +3,11 @@ package mx.edu.um.mateo.rh.dao.impl;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.rh.dao.ColegioDao;
 import mx.edu.um.mateo.rh.model.Colegio;
 import org.hibernate.Criteria;
+import org.hibernate.NonUniqueObjectException;
 import org.hibernate.criterion.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,11 +44,11 @@ public class ColegioDaoHibernate extends BaseDao implements ColegioDao {
         Criteria criteria = currentSession().createCriteria(Colegio.class);
         Criteria countCriteria = currentSession().createCriteria(Colegio.class);
 
-        if (params.containsKey("colegio")) {
-            criteria.createCriteria("colegio").add(
-                    Restrictions.idEq(params.get("colegio")));
-            countCriteria.createCriteria("colegio").add(
-                    Restrictions.idEq(params.get("colegio")));
+        if (params.containsKey("organizacion")) {
+            criteria.createCriteria("organizacion")
+                    .add(Restrictions.idEq(params.get("organizacion")));
+            countCriteria.createCriteria("organizacion")
+                    .add(Restrictions.idEq(params.get("organizacion")));
         }
 
         if (params.containsKey("filtro")) {
@@ -96,11 +98,11 @@ public class ColegioDaoHibernate extends BaseDao implements ColegioDao {
         }
      */
     /**
-     * @see mx.edu.um.rh.dao.ColegioDao#getColegio(Integer id)
+     * @see mx.edu.um.rh.dao.ColegioDao#obtiene(Integer id)
      */
 
     @Override
-    public Colegio getColegio(final Long id) {
+    public Colegio obtiene(final Long id) {
         Colegio colegio = (Colegio) currentSession().get(Colegio.class, id);
         return colegio;
     }
@@ -109,19 +111,25 @@ public class ColegioDaoHibernate extends BaseDao implements ColegioDao {
      * @see mx.edu.um.rh.dao.ColegioDao#saveColegio(Colegio colegio)
      */
     @Override
-    public void grabaColegio(final Colegio colegio) {
-        currentSession().saveOrUpdate(colegio);
+    public void crea(final Colegio colegio) {
+        try{
+            currentSession().saveOrUpdate(colegio);
+        }catch(NonUniqueObjectException e){
+            currentSession().merge(colegio);
+            currentSession().flush();
+            
+        }
     }
 
     /**
-     * @see mx.edu.um.rh.dao.ColegioDao#removeColegio(Integer id)
+     * @see mx.edu.um.rh.dao.ColegioDao#elimina(Integer id)
      */
     @Override
-    public String removeColegio(final Long id) {
-       Colegio colegio = this.getColegio(id);
+    public String elimina(final Long id) {
+       Colegio colegio = this.obtiene(id);
         String nombre = colegio.getNombre();
-        currentSession().delete(colegio);
-        currentSession().flush();
+        colegio.setStatus(Constantes.STATUS_INACTIVO);
+        crea(colegio);
         return nombre;
     }
 }

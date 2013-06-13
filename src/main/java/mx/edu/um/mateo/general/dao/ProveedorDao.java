@@ -24,6 +24,7 @@
 package mx.edu.um.mateo.general.dao;
 
 import java.util.Map;
+import mx.edu.um.mateo.contabilidad.utils.ProveedorNotFoundException;
 
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -37,6 +38,8 @@ public interface ProveedorDao {
 	public Map<String, Object> lista(Map<String, Object> params);
 
 	public Proveedor obtiene(Long id);
+        
+        public Proveedor obtiene(String rfc) throws ProveedorNotFoundException;
 
 	public Proveedor crea(Proveedor proveedor, Usuario usuario);
 

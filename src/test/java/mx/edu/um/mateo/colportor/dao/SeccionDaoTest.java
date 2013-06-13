@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.dao.impl;
+package mx.edu.um.mateo.colportor.dao;
 
 import java.util.List;
 import java.util.Map;
@@ -29,11 +29,11 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class SeccionDaoHibernateTest {
+public class SeccionDaoTest {
  
     @Autowired
     private SeccionDao seccionDao;
-    private static final Logger log = LoggerFactory.getLogger(SeccionDaoHibernateTest.class);
+    private static final Logger log = LoggerFactory.getLogger(SeccionDaoTest.class);
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -41,7 +41,7 @@ public class SeccionDaoHibernateTest {
         return sessionFactory.getCurrentSession();
     }
 
-    public SeccionDaoHibernateTest() {
+    public SeccionDaoTest() {
     }
     
     /**

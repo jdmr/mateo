@@ -2053,17 +2053,7 @@ public class Constantes {
      */
     public static final String TEMPORADACOLPORTAJE_LIST = "temporadaColportajeList";
     public static final String TEMPORADASCOLPORTAJE_ACTUALES = "TA";
-    // TemporadaColportaje-END
-    // TemporadaColportor-START
-    /**
-     * The request scope attribute that holds the temporadaColportor form.
-     */
-    public static final String TEMPORADACOLPORTOR_KEY = "temporadaColportorForm";
-    /**
-     * The request scope attribute that holds the temporadaColportor list
-     */
-    public static final String TEMPORADACOLPORTOR_LIST = "temporadaColportorList";
-    // TemporadaColportor-END
+    // TemporadaColportaje-END    
     // ContratoFinanciero-START
     /**
      * The request scope attribute that holds the contratoFinanciero form.
@@ -2233,16 +2223,6 @@ public class Constantes {
     // TipoSalida-START
     public static final String TIPOSALIDA_LIST = "tipoSalidaList";
     // TipoSalida-END
-    // Colegio-START
-    /**
-     * The request scope attribute that holds the colegio form.
-     */
-    public static final String COLEGIO_KEY = "colegioForm";
-    /**
-     * The request scope attribute that holds the colegio list
-     */
-    public static final String COLEGIO_LIST = "colegioList";
-    // Colegio-END
     // ProcesoPolizas-START
     public static final String PROCESOPOLIZASTIPO_FORM = "procesoPolizasTipoForm";
     public static final String PROCESOPOLIZASTIPO_LIST = "procesoPolizasTipoList";
@@ -2383,11 +2363,7 @@ public class Constantes {
     public static final String CONTAINSKEY_NACIONALIDADES = "nacionalidades";
     public static final String CONTAINSKEY_CATEGORIAS = "categorias";
     public static final String CONTAINSKEY_CONCEPTOS = "conceptos";
-    public static final String CONTAINSKEY_PERDED = "perdeds";
-    public static final String CONTAINSKEY_CIUDADES = "ciudades";
     public static final String CONTAINSKEY_DOCUMENTOS = "documentos";
-    public static final String CONTAINSKEY_ESTADOS = "estados";
-    public static final String CONTAINSKEY_PAISES = "paises";
     public static final String CONTAINSKEY_TEMPORADACOLPORTORES = "temporadaColportores";
     public static final String CONTAINSKEY_UNIONES = "uniones";
     public static final String CONTAINSKEY_USUARIOS = "usuarios";
@@ -2430,14 +2406,6 @@ public class Constantes {
     public static final String PATH_ESTUDIOSEMPLEADO_CREA = "/rh/estudiosEmpleado/crea";
     public static final String PATH_ESTUDIOSEMPLEADO_ACTUALIZA = "/rh/estudiosEmpleado/actualiza";
     public static final String PATH_ESTUDIOSEMPLEADO_ELIMINA = "/rh/estudiosEmpleado/elimina";
-    public static final String PATH_COLEGIO = "/colportaje/colegio";
-    public static final String PATH_COLEGIO_LISTA = "/colportaje/colegio/lista";
-    public static final String PATH_COLEGIO_VER = "/colportaje/colegio/ver";
-    public static final String PATH_COLEGIO_NUEVO = "/colportaje/colegio/nuevo";
-    public static final String PATH_COLEGIO_EDITA = "/colportaje/colegio/edita";
-    public static final String PATH_COLEGIO_CREA = "/colportaje/colegio/crea";
-    public static final String PATH_COLEGIO_ACTUALIZA = "/colportaje/colegio/actualiza";
-    public static final String PATH_COLEGIO_ELIMINA = "/colportaje/colegio/elimina";
     public static final String PATH_SECCION = "/rh/seccion";
     public static final String PATH_SECCION_LISTA = "/rh/seccion/lista";
     public static final String PATH_SECCION_VER = "/rh/seccion/ver";
@@ -2635,30 +2603,6 @@ public class Constantes {
     public static final String PATH_PAIS_ELIMINA = "/colportaje/pais/elimina";
     public static final String ADDATTRIBUTE_PAIS = "pais";
     /**
-     * Valores para Temporada Colportor Colportor
-     */
-    public static final String PATH_TEMPORADACOLPORTOR = "/temporadaColportor";
-    public static final String PATH_TEMPORADACOLPORTOR_LISTA = "/temporadaColportor/lista";
-    public static final String PATH_TEMPORADACOLPORTOR_VER = "/temporadaColportor/ver";
-    public static final String PATH_TEMPORADACOLPORTOR_NUEVA = "/temporadaColportor/nueva";
-    public static final String PATH_TEMPORADACOLPORTOR_EDITA = "/temporadaColportor/edita";
-    public static final String PATH_TEMPORADACOLPORTOR_CREA = "/temporadaColportor/crea";
-    public static final String PATH_TEMPORADACOLPORTOR_ACTUALIZA = "/temporadaColportor/actualiza";
-    public static final String PATH_TEMPORADACOLPORTOR_ELIMINA = "/temporadaColportor/elimina";
-    public static final String ADDATTRIBUTE_TEMPORADACOLPORTOR = "temporadaColportor";
-    /**
-     * Valores para Documentos
-     */
-    public static final String PATH_DOCUMENTO = "/documento";
-    public static final String PATH_DOCUMENTO_LISTA = "/documento/lista";
-    public static final String PATH_DOCUMENTO_VER = "/documento/ver";
-    public static final String PATH_DOCUMENTO_NUEVO = "/documento/nuevo";
-    public static final String PATH_DOCUMENTO_EDITA = "/documento/edita";
-    public static final String PATH_DOCUMENTO_CREA = "/documento/crea";
-    public static final String PATH_DOCUMENTO_ACTUALIZA = "/documento/actualiza";
-    public static final String PATH_DOCUMENTO_ELIMINA = "/documento/elimina";
-    public static final String ADDATTRIBUTE_DOCUMENTO = "documento";
-    /**
      * Valores para Tipos de Documento
      *
      */
@@ -2675,6 +2619,7 @@ public class Constantes {
     public static final String TOTALBOLETIN = "Total_Boletin";
     public static final String TOTALDIEZMOS = "Total_Diezmos";
     public static final String TOTALDEPOSITOS = "Total_Depositos";
+    public static final String TOTALCOMPRAS = "Total_Compras";
     /**
      * Valores para Tabla de Porcentajes
      *
@@ -2907,4 +2852,37 @@ public class Constantes {
     public static final String PATH_INFORMEEMPLEADODETALLE_ACTUALIZA = "/factura/detalle/actualiza";
     public static final String PATH_INFORMEEMPLEADODETALLE_ELIMINA = "/factura/detalle/elimina";
     public static final String ADDATTRIBUTE_INFORMEEMPLEADODETALLE = "detalle";
+    //Valores de Colegio
+    public static final String COLEGIO_PATH = "/colportaje/colegio";
+    public static final String COLEGIO_PATH_LISTA = "/colportaje/colegio/lista";
+    public static final String COLEGIO_PATH_VER = "/colportaje/colegio/ver";
+    public static final String COLEGIO_PATH_NUEVO = "/colportaje/colegio/nuevo";
+    public static final String COLEGIO_PATH_EDITA = "/colportaje/colegio/edita";
+    public static final String COLEGIO_PATH_CREA = "/colportaje/colegio/crea";
+    public static final String COLEGIO_PATH_ACTUALIZA = "/colportaje/colegio/actualiza";
+    public static final String COLEGIO_PATH_ELIMINA = "/colportaje/colegio/elimina";
+    public static final String COLEGIO = "colegioForm";
+    public static final String COLEGIO_LIST = "colegioList";
+    //Temporada Colportor
+    public static final String TEMPORADACOLPORTOR_PATH = "/colportaje/temporadaColportor";
+    public static final String TEMPORADACOLPORTOR_PATH_LISTA = "/colportaje/temporadaColportor/lista";
+    public static final String TEMPORADACOLPORTOR_PATH_VER = "/colportaje/temporadaColportor/ver";
+    public static final String TEMPORADACOLPORTOR_PATH_NUEVA = "/colportaje/temporadaColportor/nueva";
+    public static final String TEMPORADACOLPORTOR_PATH_EDITA = "/colportaje/temporadaColportor/edita";
+    public static final String TEMPORADACOLPORTOR_PATH_CREA = "/colportaje/temporadaColportor/crea";
+    public static final String TEMPORADACOLPORTOR_PATH_ACTUALIZA = "/colportaje/temporadaColportor/actualiza";
+    public static final String TEMPORADACOLPORTOR_PATH_ELIMINA = "/colportaje/temporadaColportor/elimina";
+    public static final String TEMPORADACOLPORTOR = "temporadaColportor";
+    public static final String TEMPORADACOLPORTOR_LIST = "temporadaColportores";
+    //Documentos Colportor        
+    public static final String DOCUMENTOCOLPORTOR_PATH = "/colportaje/documento";
+    public static final String DOCUMENTOCOLPORTOR_PATH_LISTA = "/colportaje/documento/lista";
+    public static final String DOCUMENTOCOLPORTOR_PATH_VER = "/colportaje/documento/ver";
+    public static final String DOCUMENTOCOLPORTOR_PATH_NUEVO = "/colportaje/documento/nuevo";
+    public static final String DOCUMENTOCOLPORTOR_PATH_EDITA = "/colportaje/documento/edita";
+    public static final String DOCUMENTOCOLPORTOR_PATH_CREA = "/colportaje/documento/crea";
+    public static final String DOCUMENTOCOLPORTOR_PATH_ACTUALIZA = "/colportaje/documento/actualiza";
+    public static final String DOCUMENTOCOLPORTOR_PATH_ELIMINA = "/colportaje/documento/elimina";
+    public static final String DOCUMENTOCOLPORTOR = "documento";
+    public static final String DOCUMENTOCOLPORTOR_LIST = "documentos";
 }

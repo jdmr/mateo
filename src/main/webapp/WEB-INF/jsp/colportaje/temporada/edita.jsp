@@ -23,7 +23,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/colportaje/temporada'/>"><i class="icon-list icon-white"></i> <s:message code='temporada.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="/colportaje/temporada/crea" />
+            <c:url var="actualizaUrl" value="/colportaje/temporada/actualiza" />
             <form:form commandName="temporada" method="post" action="${actualizaUrl}">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">

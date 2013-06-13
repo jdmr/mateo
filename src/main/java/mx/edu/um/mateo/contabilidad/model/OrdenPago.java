@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.contabilidad.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -25,7 +26,7 @@ import mx.edu.um.mateo.general.utils.Constantes;
  */
 @Entity
 @Table(name = "cont_orden_pago")
-public class OrdenPago {
+public class OrdenPago implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
