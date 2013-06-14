@@ -218,18 +218,18 @@ public class InformeEmpleadoDetalleController extends BaseController {
             for (MultipartFile multipartFile : files) {
                 String fileName = multipartFile.getOriginalFilename();
                 fileNames.add(fileName);
-                String uploadDir = "/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename();
+                String uploadDir = "/home/facturas/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename();
                 File dirPath = new File(uploadDir);
                 if (!dirPath.exists()) {
                     dirPath.mkdirs();
                 }
-                multipartFile.transferTo(new File("/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename()));
+                multipartFile.transferTo(new File("/home/facturas/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename()));
                 if (multipartFile.getOriginalFilename().contains(".pdf")) {
-                    detalle.setPathPDF("/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
+                    detalle.setPathPDF("/home/facturas/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
                     detalle.setNombrePDF(multipartFile.getOriginalFilename());
                 }
                 if (multipartFile.getOriginalFilename().contains(".xml")) {
-                    detalle.setPathXMl("/home/develop/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
+                    detalle.setPathXMl("/home/facturas/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
                     detalle.setNombreXMl(multipartFile.getOriginalFilename());
                 }
             }
