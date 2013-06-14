@@ -1,0 +1,69 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><s:message code="informe.ver.label" /></title>
+    </head>
+    <body>
+        <jsp:include page="../menu.jsp" >
+            <jsp:param name="menu" value="informe" />
+        </jsp:include>
+
+        <div id="ver-colegio" class="content scaffold-list" role="main">
+            <h1><s:message code="informe.ver.label" /></h1>
+
+            <p class="well">
+                <a class="btn btn-primary" href="<s:url value='/factura/informe'/>"><i class="icon-list icon-white"></i> <s:message code='informe.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/factura/informe/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='informe.nuevo.label' /></a>
+            </p>
+            <c:if test="${not empty message}">
+                <div class="alert alert-block alert-success fade in" role="status">
+                    <a class="close" data-dismiss="alert">×</a>
+                    <s:message code="${message}" arguments="${messageAttrs}" />
+                </div>
+            </c:if>
+
+            <c:url var="eliminaUrl" value="/factura/informe/elimina" />
+            <form:form commandName="informe" action="${eliminaUrl}" >
+                <form:errors path="*" cssClass="alert alert-error" element="ul" />
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="numeroNomina.label" /></div>
+                    <div class="span11">${informe.numNomina}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="nombre.label" /></div>
+                    <div class="span11">${informe.nombreEmpleado}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="informe.label" /></div>
+                    <div class="span11"><form:checkbox path="informe" disabled="true" /></div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="pesos.label" /></div>
+                    <div class="span11"><form:checkbox path="pesos" disabled="true" /></div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="dolares.label" /></div>
+                    <div class="span11"><form:checkbox path="dolares" disabled="true" /></div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="reembolso.label" /></div>
+                    <div class="span11"><form:checkbox path="reembolso" disabled="true" /></div>
+                </div>
+
+
+
+
+                <p class="well">
+                    <a href="<c:url value='/factura/informe/edita/${informe.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
+                    <form:hidden path="id" />
+                    <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="eliminar"  onclick="return confirm('<s:message code="confirma.elimina.message" />');" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='eliminar.button'/></button>
+                </p>
+            </form:form>
+        </div>
+    </body>
+</html>
+

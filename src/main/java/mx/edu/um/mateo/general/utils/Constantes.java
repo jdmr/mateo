@@ -385,8 +385,7 @@ public class Constantes {
      * The request scope attribute that holds the tipoDependiente list
      */
     public static final String TIPODEPENDIENTE_LIST = "tipoDependienteList";
-    
-     public static final String DESCUENTO_LIST = "descuentos";
+    public static final String DESCUENTO_LIST = "descuentos";
     /**
      * The request scope attribute that holds the alumnoInscripciones list
      */
@@ -2224,7 +2223,6 @@ public class Constantes {
     // TipoSalida-START
     public static final String TIPOSALIDA_LIST = "tipoSalidaList";
     // TipoSalida-END
-    
     // ProcesoPolizas-START
     public static final String PROCESOPOLIZASTIPO_FORM = "procesoPolizasTipoForm";
     public static final String PROCESOPOLIZASTIPO_LIST = "procesoPolizasTipoList";
@@ -2365,10 +2363,8 @@ public class Constantes {
     public static final String CONTAINSKEY_NACIONALIDADES = "nacionalidades";
     public static final String CONTAINSKEY_CATEGORIAS = "categorias";
     public static final String CONTAINSKEY_CONCEPTOS = "conceptos";
-    public static final String CONTAINSKEY_PERDED = "perdeds";    
-    public static final String CONTAINSKEY_CIUDADES = "ciudades";        
-    public static final String CONTAINSKEY_ESTADOS = "estados";
-    public static final String CONTAINSKEY_PAISES = "paises";    
+    public static final String CONTAINSKEY_DOCUMENTOS = "documentos";
+    public static final String CONTAINSKEY_TEMPORADACOLPORTORES = "temporadaColportores";
     public static final String CONTAINSKEY_UNIONES = "uniones";
     public static final String CONTAINSKEY_USUARIOS = "usuarios";
     public static final String CONTAINSKEY_COLEGIOS_COLPORTOR = "colegios";
@@ -2409,7 +2405,7 @@ public class Constantes {
     public static final String PATH_ESTUDIOSEMPLEADO_EDITA = "/rh/estudiosEmpleado/edita";
     public static final String PATH_ESTUDIOSEMPLEADO_CREA = "/rh/estudiosEmpleado/crea";
     public static final String PATH_ESTUDIOSEMPLEADO_ACTUALIZA = "/rh/estudiosEmpleado/actualiza";
-    public static final String PATH_ESTUDIOSEMPLEADO_ELIMINA = "/rh/estudiosEmpleado/elimina";    
+    public static final String PATH_ESTUDIOSEMPLEADO_ELIMINA = "/rh/estudiosEmpleado/elimina";
     public static final String PATH_SECCION = "/rh/seccion";
     public static final String PATH_SECCION_LISTA = "/rh/seccion/lista";
     public static final String PATH_SECCION_VER = "/rh/seccion/ver";
@@ -2553,7 +2549,6 @@ public class Constantes {
      */
     public static final String TIPO_COLPORTOR = "1";
     public static final String MATRICULA = "1070980";
-    
     /**
      * Valores para la exportacion Colportor
      */
@@ -2607,7 +2602,6 @@ public class Constantes {
     public static final String PATH_PAIS_ACTUALIZA = "/colportaje/pais/actualiza";
     public static final String PATH_PAIS_ELIMINA = "/colportaje/pais/elimina";
     public static final String ADDATTRIBUTE_PAIS = "pais";
-        
     /**
      * Valores para Tipos de Documento
      *
@@ -2661,8 +2655,7 @@ public class Constantes {
     public static final String ADDATTRIBUTE_AFECONVENIO = "afeConvenio";
     public static final String PATH_AFECONVENIO_CONVENIO = "/inscripciones/afeConvenio/asignarConvenio";
     public static final String PATH_AFECONVENIO_ALUMNO = "/inscripciones/afeConvenio/obtenerAlumno";
-    
-   /**
+    /**
      * Valores para Paquete
      *
      */
@@ -2794,7 +2787,21 @@ public class Constantes {
     public static final String PATH_ALUMNODESCUENTO_ACTUALIZA = "/inscripciones/alumnoDescuento/actualiza";
     public static final String PATH_ALUMNODESCUENTO_ELIMINA = "/inscripciones/alumnoDescuento/elimina";
     public static final String ADDATTRIBUTE_ALUMNODESCUENTO = "alumnoDescuento";
-     public static final String ADDATTRIBUTE_ALUMNO = "alumno";
+    /**
+     * Valores para Alumno Descuento
+     *
+     */
+    public static final String CONTAINSKEY_BECASADICIONALES = "becasAdicionales";
+    public static final String PATH_AFE_BECAADICIONAL = "/inscripciones/becaAdicional";
+    public static final String PATH_AFE_BECAADICIONAL_LISTA = "/inscripciones/becaAdicional/lista";
+    public static final String PATH_AFE_BECAADICIONAL_VER = "/inscripciones/becaAdicional/ver";
+    public static final String PATH_AFE_BECAADICIONAL_NUEVO = "/inscripciones/becaAdicional/nuevo";
+    public static final String PATH_AFE_BECAADICIONAL_EDITA = "/inscripciones/becaAdicional/edita";
+    public static final String PATH_AFE_BECAADICIONAL_GRABA = "/inscripciones/becaAdicional/graba";
+    public static final String PATH_AFE_BECAADICIONAL_ACTUALIZA = "/inscripciones/becaAdicional/actualiza";
+    public static final String PATH_AFE_BECAADICIONAL_ELIMINA = "/inscripciones/becaAdicional/elimina";
+    public static final String ADDATTRIBUTE_BECAADICIONAL = "becaAdicional";
+    public static final String ADDATTRIBUTE_ALUMNO = "alumno";
     /**
      * Valores para Ordenes de Pago
      */
@@ -2808,13 +2815,10 @@ public class Constantes {
     public static final String ORDENPAGO_PATH_ELIMINA = "/contabilidad/ordenPago/elimina";
     public static final String ORDENPAGO = "ordenPago";
     public static final String ORDENPAGO_LIST = "ordenPagoList";
-    
     //Valores de Colportor
     public static final String COLPORTOR_LIST = "colportores";
-    
     //Valores de Asociado
     public static final String ASOCIADO_LIST = "asociados";
-    
     //Valores de Temporada
     public static final String PATH_TEMPORADA = "/colportaje/temporada";
     public static final String PATH_TEMPORADA_LISTA = "/colportaje/temporada/lista";
@@ -2826,7 +2830,28 @@ public class Constantes {
     public static final String PATH_TEMPORADA_ELIMINA = "/colportaje/temporada/elimina";
     public static final String TEMPORADA = "temporada";
     public static final String TEMPORADA_LIST = "temporadas";
-    
+    //Valores de InformeEmpleado
+    public static final String CONTAINSKEY_INFORMESEMPLEADO = "informes";
+    public static final String PATH_INFORMEEMPLEADO = "/factura/informe";
+    public static final String PATH_INFORMEEMPLEADO_LISTA = "/factura/informe/lista";
+    public static final String PATH_INFORMEEMPLEADO_VER = "/factura/informe/ver";
+    public static final String PATH_INFORMEEMPLEADO_NUEVO = "/factura/informe/nuevo";
+    public static final String PATH_INFORMEEMPLEADO_EDITA = "/factura/informe/edita";
+    public static final String PATH_INFORMEEMPLEADO_GRABA = "/factura/informe/graba";
+    public static final String PATH_INFORMEEMPLEADO_ACTUALIZA = "/factura/informe/actualiza";
+    public static final String PATH_INFORMEEMPLEADO_ELIMINA = "/factura/informe/elimina";
+    public static final String ADDATTRIBUTE_INFORMEEMPLEADO = "informe";
+    //Valores de InformeEmpleadoDetalle
+    public static final String CONTAINSKEY_INFORMESDETALLES = "detalles";
+    public static final String PATH_INFORMEEMPLEADODETALLE = "/factura/detalle";
+    public static final String PATH_INFORMEEMPLEADODETALLE_LISTA = "/factura/detalle/lista";
+    public static final String PATH_INFORMEEMPLEADODETALLE_VER = "/factura/detalle/ver";
+    public static final String PATH_INFORMEEMPLEADODETALLE_NUEVO = "/factura/detalle/nuevo";
+    public static final String PATH_INFORMEEMPLEADODETALLE_EDITA = "/factura/detalle/edita";
+    public static final String PATH_INFORMEEMPLEADODETALLE_GRABA = "/factura/detalle/graba";
+    public static final String PATH_INFORMEEMPLEADODETALLE_ACTUALIZA = "/factura/detalle/actualiza";
+    public static final String PATH_INFORMEEMPLEADODETALLE_ELIMINA = "/factura/detalle/elimina";
+    public static final String ADDATTRIBUTE_INFORMEEMPLEADODETALLE = "detalle";
     //Valores de Colegio
     public static final String COLEGIO_PATH = "/colportaje/colegio";
     public static final String COLEGIO_PATH_LISTA = "/colportaje/colegio/lista";
@@ -2838,7 +2863,6 @@ public class Constantes {
     public static final String COLEGIO_PATH_ELIMINA = "/colportaje/colegio/elimina";
     public static final String COLEGIO = "colegioForm";
     public static final String COLEGIO_LIST = "colegioList";
-    
     //Temporada Colportor
     public static final String TEMPORADACOLPORTOR_PATH = "/colportaje/temporadaColportor";
     public static final String TEMPORADACOLPORTOR_PATH_LISTA = "/colportaje/temporadaColportor/lista";
@@ -2850,9 +2874,8 @@ public class Constantes {
     public static final String TEMPORADACOLPORTOR_PATH_ELIMINA = "/colportaje/temporadaColportor/elimina";
     public static final String TEMPORADACOLPORTOR = "temporadaColportor";
     public static final String TEMPORADACOLPORTOR_LIST = "temporadaColportores";
-    
     //Documentos Colportor        
-    public static final String DOCUMENTOCOLPORTOR_PATH=  "/colportaje/documento";
+    public static final String DOCUMENTOCOLPORTOR_PATH = "/colportaje/documento";
     public static final String DOCUMENTOCOLPORTOR_PATH_LISTA = "/colportaje/documento/lista";
     public static final String DOCUMENTOCOLPORTOR_PATH_VER = "/colportaje/documento/ver";
     public static final String DOCUMENTOCOLPORTOR_PATH_NUEVO = "/colportaje/documento/nuevo";
@@ -2862,5 +2885,4 @@ public class Constantes {
     public static final String DOCUMENTOCOLPORTOR_PATH_ELIMINA = "/colportaje/documento/elimina";
     public static final String DOCUMENTOCOLPORTOR = "documento";
     public static final String DOCUMENTOCOLPORTOR_LIST = "documentos";
-    
 }
