@@ -244,13 +244,19 @@ public class InformeEmpleadoDetalleController extends BaseController {
 
         } catch (AutorizacionCCPlInvalidoException e) {
             log.error("No se pudo crear el detalle", e);
+            if (e != null) {
+                log.debug("**Enviando mensajes....CCP no encontrado");
+                errors.rejectValue("ccp", "entrada.no.eligio.proveedor.message", null, null);
+                redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "ccp.invalido.message");
+                redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+            }
             params = managerInforme.lista(params);
             List<InformeEmpleado> informes = (List) params.get(Constantes.CONTAINSKEY_INFORMESEMPLEADO);
             modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESEMPLEADO, informes);
 
             params.put("empresa", request.getSession().getAttribute("empresaId"));
             modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEEMPLEADODETALLE, detalle);
-            errors.rejectValue("ccp", "entrada.no.eligio.proveedor.message", null, null);
+
             return Constantes.PATH_INFORMEEMPLEADODETALLE_NUEVO;
         }
 
