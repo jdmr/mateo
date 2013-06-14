@@ -198,7 +198,7 @@ public class InformeEmpleadoController extends BaseController {
         }
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informe.graba.message");
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informe.getNumNomina()});
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informe.getNombreEmpleado()});
 
         return "redirect:" + Constantes.PATH_INFORMEEMPLEADO_LISTA;
     }
@@ -230,7 +230,7 @@ public class InformeEmpleadoController extends BaseController {
         }
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informe.graba.message");
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informe.getNumNomina()});
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informe.getNombreEmpleado()});
 
         return "redirect:" + Constantes.PATH_INFORMEEMPLEADO_LISTA;
     }
@@ -251,7 +251,7 @@ public class InformeEmpleadoController extends BaseController {
             manager.elimina(id);
 
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informe.elimina.message");
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informeEmpleado.getNumNomina()});
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informeEmpleado.getNombreEmpleado()});
         } catch (Exception e) {
             log.error("No se pudo eliminar el tipo de informe " + id, e);
             bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEEMPLEADO, new String[]{"informe.no.elimina.message"}, null, null));
