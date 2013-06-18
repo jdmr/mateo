@@ -118,7 +118,7 @@ public class InformeProveedorControllerTest extends BaseControllerTest {
                 .param("status", "a"))
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message", "informeProveedor.graba.message"))
-                .andExpect(redirectedUrl(Constantes.PATH_PAQUETE_LISTA));
+                .andExpect(redirectedUrl(Constantes.PATH_INFORMEPROVEEDOR_LISTA));
     }
 
     @Test
