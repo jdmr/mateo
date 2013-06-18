@@ -103,7 +103,7 @@ public class InformeProveedorDaoHibernate extends BaseDao implements InformeProv
         InformeProveedor informeProveedor = (InformeProveedor) currentSession().get(InformeProveedor.class, id);
         if (informeProveedor == null) {
             log.warn("uh oh, Informe Proveedor with id '" + id + "' not found...");
-            throw new ObjectRetrievalFailureException(InformeEmpleadoDetalle.class, id);
+            throw new ObjectRetrievalFailureException(InformeProveedor.class, id);
         }
         return informeProveedor;
     }
