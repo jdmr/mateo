@@ -2896,4 +2896,15 @@ public class Constantes {
     public static final String PATH_INFORMEPROVEEDOR_ACTUALIZA = "/factura/informeProveedor/actualiza";
     public static final String PATH_INFORMEPROVEEDOR_ELIMINA = "/factura/informeProveedor/elimina";
     public static final String ADDATTRIBUTE_INFORMEPROVEEDOR = "informeProveedor";
+    //Valores de InformeEmpleado
+    public static final String CONTAINSKEY_INFORMESPROVEEDOR_DETALLE = "informesProveedorDetalle";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE = "/factura/informeProveedorDetalle";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_LISTA = "/factura/informeProveedorDetalle/lista";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_VER = "/factura/informeProveedorDetalle/ver";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_NUEVO = "/factura/informeProveedorDetalle/nuevo";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_EDITA = "/factura/informeProveedorDetalle/edita";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_GRABA = "/factura/informeProveedorDetalle/graba";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_ACTUALIZA = "/factura/informeProveedorDetalle/actualiza";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_ELIMINA = "/factura/informeProveedorDetalle/elimina";
+    public static final String ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE = "informeProveedorDetalle";
 }
