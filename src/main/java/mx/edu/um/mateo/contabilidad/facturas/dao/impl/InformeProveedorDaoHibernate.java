@@ -54,8 +54,8 @@ public class InformeProveedorDaoHibernate extends BaseDao implements InformeProv
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(InformeEmpleadoDetalle.class);
-        Criteria countCriteria = currentSession().createCriteria(InformeEmpleadoDetalle.class);
+        Criteria criteria = currentSession().createCriteria(InformeProveedor.class);
+        Criteria countCriteria = currentSession().createCriteria(InformeProveedor.class);
 
         if (params.containsKey("empresa")) {
             criteria.createCriteria("empresa").add(

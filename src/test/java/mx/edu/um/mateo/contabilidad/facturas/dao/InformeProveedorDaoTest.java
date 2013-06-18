@@ -35,6 +35,7 @@ public class InformeProveedorDaoTest extends BaseDaoTest {
     @Autowired
     private InformeProveedorDao dao;
 
+    @Test
     public void testLista() {
         Usuario usuario = obtieneUsuario();
         InformeProveedor informeProveedor = null;
@@ -54,7 +55,7 @@ public class InformeProveedorDaoTest extends BaseDaoTest {
         Map<String, Object> result = dao.lista(params);
         assertNotNull(result.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
-        assertEquals(10, ((List<InformeEmpleado>) result.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR)).size());
+        assertEquals(10, ((List<InformeProveedor>) result.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR)).size());
         assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
 
