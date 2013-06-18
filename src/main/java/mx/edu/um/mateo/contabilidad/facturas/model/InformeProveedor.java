@@ -10,10 +10,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
+import mx.edu.um.mateo.general.model.Empresa;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -34,6 +36,8 @@ public class InformeProveedor implements Serializable {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     private Date fechaInforme;
+    @ManyToOne(optional = false)
+    private Empresa empresa;
 
     public InformeProveedor() {
     }
@@ -78,10 +82,18 @@ public class InformeProveedor implements Serializable {
         this.fechaInforme = fechaInforme;
     }
 
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
+    }
+
     @Override
     public String toString() {
         return "InformeProveedor{" + "id=" + id + ", version=" + version + ", status=" + status
-                + ", nombreProveedor=" + nombreProveedor
-                + ", fechaInforme=" + fechaInforme + '}';
+                + ", nombreProveedor=" + nombreProveedor + ", fechaInforme=" + fechaInforme
+                + ", empresa=" + empresa + '}';
     }
 }

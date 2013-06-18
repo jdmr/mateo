@@ -2885,4 +2885,6 @@ public class Constantes {
     public static final String DOCUMENTOCOLPORTOR_PATH_ELIMINA = "/colportaje/documento/elimina";
     public static final String DOCUMENTOCOLPORTOR = "documento";
     public static final String DOCUMENTOCOLPORTOR_LIST = "documentos";
+    //Valores de InformeEmpleado
+    public static final String CONTAINSKEY_INFORMESPROVEEDOR = "informesProveedor";
 }
