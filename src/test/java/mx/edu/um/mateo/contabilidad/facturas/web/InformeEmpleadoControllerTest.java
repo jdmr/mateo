@@ -4,7 +4,6 @@
  */
 package mx.edu.um.mateo.contabilidad.facturas.web;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
@@ -12,8 +11,6 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.inscripciones.model.Paquete;
-import mx.edu.um.mateo.inscripciones.model.Prorroga;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -146,7 +143,7 @@ public class InformeEmpleadoControllerTest extends BaseControllerTest {
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
 
 
-        this.mockMvc.perform(post(Constantes.PATH_PAQUETE_GRABA)
+        this.mockMvc.perform(post(Constantes.PATH_INFORMEEMPLEADO_GRABA)
                 .param("numNomina", "0575")
                 .param("nombreEmpleado", "Sam")
                 .param("fechaInforme", "4/06/2013")
@@ -156,8 +153,8 @@ public class InformeEmpleadoControllerTest extends BaseControllerTest {
                 .param("reembolso", "true")
                 .param("status", "a"))
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "paquete.graba.message"))
-                .andExpect(redirectedUrl(Constantes.PATH_PAQUETE_LISTA));
+                .andExpect(flash().attribute("message", "informe.graba.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_INFORMEEMPLEADO_LISTA));
     }
 
     /**

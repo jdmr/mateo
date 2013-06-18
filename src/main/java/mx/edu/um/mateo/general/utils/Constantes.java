@@ -2887,4 +2887,13 @@ public class Constantes {
     public static final String DOCUMENTOCOLPORTOR_LIST = "documentos";
     //Valores de InformeEmpleado
     public static final String CONTAINSKEY_INFORMESPROVEEDOR = "informesProveedor";
+    public static final String PATH_INFORMEPROVEEDOR = "/factura/informeProveedor";
+    public static final String PATH_INFORMEPROVEEDOR_LISTA = "/factura/informeProveedor/lista";
+    public static final String PATH_INFORMEPROVEEDOR_VER = "/factura/informeProveedor/ver";
+    public static final String PATH_INFORMEPROVEEDOR_NUEVO = "/factura/informeProveedor/nuevo";
+    public static final String PATH_INFORMEPROVEEDOR_EDITA = "/factura/informeProveedor/edita";
+    public static final String PATH_INFORMEPROVEEDOR_GRABA = "/factura/informeProveedor/graba";
+    public static final String PATH_INFORMEPROVEEDOR_ACTUALIZA = "/factura/informeProveedor/actualiza";
+    public static final String PATH_INFORMEPROVEEDOR_ELIMINA = "/factura/informeProveedor/elimina";
+    public static final String ADDATTRIBUTE_INFORMEPROVEEDOR = "informeProveedor";
 }
