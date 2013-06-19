@@ -294,7 +294,7 @@ public class InformeProveedorDetalleController extends BaseController {
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "detalle.graba.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{detalle.getNombreProveedor()});
 
-        return "redirect:" + Constantes.PATH_INFORMEEMPLEADODETALLE_LISTA;
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
     }
 
     @RequestMapping("/edita/{id}")
