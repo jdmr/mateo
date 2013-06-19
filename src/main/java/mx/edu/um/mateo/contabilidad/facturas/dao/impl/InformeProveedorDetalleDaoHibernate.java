@@ -92,7 +92,7 @@ public class InformeProveedorDetalleDaoHibernate extends BaseDao implements Info
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put(Constantes.CONTAINSKEY_INFORMESDETALLES, criteria.list());
+        params.put(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE, criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
