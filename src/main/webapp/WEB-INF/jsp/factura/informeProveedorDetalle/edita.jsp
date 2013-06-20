@@ -29,6 +29,14 @@
                 </form:errors>
                 <form:hidden path="id" />
                 <form:hidden path="version" />
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="proveedor.label" /></div>
+                    <div class="span11">${proveedor.nombre}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="rfc.label" /></div>
+                    <div class="span11">${proveedor.rfc}</div>
+                </div>
                 <fieldset>
                     <s:bind path="informeProveedorDetalle.folioFactura">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
@@ -41,26 +49,8 @@
                         </div>
                     </s:bind>
 
-                    <s:bind path="informeProveedorDetalle.nombreProveedor" >
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="nombreProveedor" >
-                                <s:message code="proveedor.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="nombreProveedor"   maxlength="150" required="true"  />
-                            <form:errors path="nombreProveedor" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
-                    <s:bind path="informeProveedorDetalle.RFCProveedor">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="RFCProveedor">
-                                <s:message code="rfc.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="RFCProveedor" maxlength="50" required="true" />
-                            <form:errors path="RFCProveedor" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+
+
                     <s:bind path="informeProveedorDetalle.IVA" >
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="IVA" >

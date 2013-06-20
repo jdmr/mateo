@@ -26,6 +26,8 @@ import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorDetalleManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
+import mx.edu.um.mateo.general.dao.ProveedorDao;
+import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -76,6 +78,8 @@ public class InformeProveedorDetalleController extends BaseController {
     private InformeProveedorDetalleManager manager;
     @Autowired
     private InformeProveedorManager managerInforme;
+    @Autowired
+    private ProveedorDao proveedorDao;
 
     @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -176,6 +180,8 @@ public class InformeProveedorDetalleController extends BaseController {
     @RequestMapping("/nuevo")
     public String nueva(HttpServletRequest request, Model modelo) {
         log.debug("Nuevo paquete");
+        Proveedor proveedor = (Proveedor) request.getSession().getAttribute("proveedor");
+        modelo.addAttribute("proveedor", proveedor);
         Map<String, Object> params = new HashMap<>();
         params = managerInforme.lista(params);
         List<InformeProveedor> informes = (List) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR);
@@ -240,6 +246,12 @@ public class InformeProveedorDetalleController extends BaseController {
         InformeProveedor informe = managerInforme.obtiene(detalle.getInformeProveedor().getId());
         detalle.setInformeProveedor(informe);
         Usuario usuario = ambiente.obtieneUsuario();
+
+        log.debug("requestRFC** {}", request.getSession().getAttribute("proveedor"));
+        Proveedor proveedor = (Proveedor) request.getSession().getAttribute("proveedor");
+        detalle.setNombreProveedor(proveedor.getNombre());
+        detalle.setRFCProveedor(proveedor.getRfc());
+        log.debug("proveedor** {}", proveedor.toString());
         try {
             manager.graba(detalle, usuario);
             request.getSession().setAttribute("detalleId", detalle.getId());
