@@ -159,8 +159,10 @@ public class InformeProveedorController extends BaseController {
         InformeProveedor informeProveedor = manager.obtiene(id);
         request.getSession().setAttribute("informeId", informeProveedor);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informeProveedor);
-
-        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
+        if ("a".equals(informeProveedor.getStatus().trim())) {
+            return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
+        }
+        return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBO;
     }
 
     @RequestMapping("/nuevo")
@@ -196,8 +198,6 @@ public class InformeProveedorController extends BaseController {
         try {
             Proveedor proveedor = (Proveedor) request.getSession().getAttribute("proveedor");
             informe.setNombreProveedor(proveedor.getNombre());
-            informe.setStatus("A");
-            informe.setFechaInforme(new Date());
             Usuario usuario = ambiente.obtieneUsuario();
             manager.graba(informe, usuario);
         } catch (ConstraintViolationException e) {
@@ -270,7 +270,7 @@ public class InformeProveedorController extends BaseController {
     }
 
     @Transactional
-    @RequestMapping(value = "/finaliza", method = RequestMethod.POST)
+    @RequestMapping(value = "/finaliza", method = RequestMethod.GET)
     public String finaliza(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute InformeProveedor informeProveedor, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Finalizando informe");
         try {
