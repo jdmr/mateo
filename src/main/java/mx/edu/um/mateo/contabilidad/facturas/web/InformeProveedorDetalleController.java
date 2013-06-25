@@ -96,6 +96,8 @@ public class InformeProveedorDetalleController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
+        InformeProveedor informeId = (InformeProveedor) request.getSession().getAttribute("informeId");
+        params.put("informeProveedor", informeId.getId());
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }
@@ -183,9 +185,7 @@ public class InformeProveedorDetalleController extends BaseController {
         Proveedor proveedor = (Proveedor) request.getSession().getAttribute("proveedor");
         modelo.addAttribute("proveedor", proveedor);
         Map<String, Object> params = new HashMap<>();
-        params = managerInforme.lista(params);
-        List<InformeProveedor> informes = (List) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR);
-        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESPROVEEDOR, informes);
+
 
         InformeProveedorDetalle detalle = new InformeProveedorDetalle();
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
@@ -243,7 +243,9 @@ public class InformeProveedorDetalleController extends BaseController {
             }
         }
         ////Subir archivos\\\
-        InformeProveedor informe = managerInforme.obtiene(detalle.getInformeProveedor().getId());
+
+
+        InformeProveedor informe = (InformeProveedor) request.getSession().getAttribute("informeId");
         detalle.setInformeProveedor(informe);
         Usuario usuario = ambiente.obtieneUsuario();
 
@@ -288,7 +290,7 @@ public class InformeProveedorDetalleController extends BaseController {
         }
 
         try {
-            InformeProveedor informe = managerInforme.obtiene(detalle.getInformeProveedor().getId());
+            InformeProveedor informe = (InformeProveedor) request.getSession().getAttribute("informeId");
             detalle.setInformeProveedor(informe);
             InformeProveedorDetalle detalleTmp = manager.obtiene(detalle.getId());
             detalle.setNombrePDF(detalleTmp.getNombrePDF());

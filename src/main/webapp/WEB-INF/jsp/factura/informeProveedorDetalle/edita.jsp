@@ -101,15 +101,6 @@
                             <form:errors path="fechaFactura" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="informeProveedorDetalle.informeProveedor">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="informeProveedor">
-                                <s:message code="informeProveedor.label" />
-                                <span class="required-indicator">*</span>
-                                <form:select id="informeProveedorId" path="informeProveedor.id" items="${informesProveedor}" itemLabel="nombreProveedor" itemValue="id" />
-                                <form:errors path="informeProveedor" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
                 </fieldset>
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="actualizarBtn" class="btn btn-primary btn-large" id="actualizar" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='actualizar.button'/></button>

@@ -122,22 +122,25 @@ public class InformeProveedorDaoHibernate extends BaseDao implements InformeProv
     @Override
     public void actualiza(final InformeProveedor informeProveedor, Usuario usuario) {
         Session session = currentSession();
+        log.debug("informe...**dao entrando{}", informeProveedor);
         if (usuario != null) {
             informeProveedor.setEmpresa(usuario.getEmpresa());
         }
         try {
             currentSession().update(informeProveedor);
+            currentSession().flush();
         } catch (NonUniqueObjectException e) {
             try {
                 currentSession().merge(informeProveedor);
+                currentSession().flush();
+
             } catch (Exception ex) {
                 log.error("No se pudo actualizar el informe", ex);
                 throw new RuntimeException("No se pudo actualizar el informe",
                         ex);
             }
-        } finally {
-            currentSession().flush();
         }
+        log.debug("informe...**dao saliendo{}", informeProveedor);
     }
 
     @Override

@@ -8,6 +8,7 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
+import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.web.BaseController;
@@ -151,13 +153,14 @@ public class InformeProveedorController extends BaseController {
     }
 
     @RequestMapping("/ver/{id}")
-    public String ver(@PathVariable Long id, Model modelo) {
+    public String ver(HttpServletRequest request, @PathVariable Long id, Model modelo) {
         log.debug("Mostrando informe {}", id);
-        InformeProveedor informe = manager.obtiene(id);
 
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe);
+        InformeProveedor informeProveedor = manager.obtiene(id);
+        request.getSession().setAttribute("informeId", informeProveedor);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informeProveedor);
 
-        return Constantes.PATH_INFORMEPROVEEDOR_VER;
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
     }
 
     @RequestMapping("/nuevo")
@@ -191,6 +194,10 @@ public class InformeProveedorController extends BaseController {
         }
 
         try {
+            Proveedor proveedor = (Proveedor) request.getSession().getAttribute("proveedor");
+            informe.setNombreProveedor(proveedor.getNombre());
+            informe.setStatus("A");
+            informe.setFechaInforme(new Date());
             Usuario usuario = ambiente.obtieneUsuario();
             manager.graba(informe, usuario);
         } catch (ConstraintViolationException e) {
@@ -256,6 +263,26 @@ public class InformeProveedorController extends BaseController {
         } catch (Exception e) {
             log.error("No se pudo eliminar el tipo de informe " + id, e);
             bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, new String[]{"informeProveedor.no.elimina.message"}, null, null));
+            return Constantes.PATH_INFORMEPROVEEDOR_VER;
+        }
+
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_LISTA;
+    }
+
+    @Transactional
+    @RequestMapping(value = "/finaliza", method = RequestMethod.POST)
+    public String finaliza(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute InformeProveedor informeProveedor, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        log.debug("Finalizando informe");
+        try {
+            Usuario usuario = ambiente.obtieneUsuario();
+            InformeProveedor informe = manager.obtiene(id);
+            log.debug("informe...**controller{}", informe);
+            manager.finaliza(informe, usuario);
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeProveedor.finaliza.message");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informeProveedor.getNombreProveedor()});
+        } catch (Exception e) {
+            log.error("No se pudo finalizar informe " + id, e);
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, new String[]{"informeProveedor.no.finaliza.message"}, null, null));
             return Constantes.PATH_INFORMEPROVEEDOR_VER;
         }
 

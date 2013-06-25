@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -23,6 +24,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/factura/informeProveedorDetalle/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='informeProveedorDetalle.nuevo.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
+
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
             <c:if test="${not empty message}">
@@ -43,6 +45,21 @@
                     </c:if>
                 </s:bind>
             </c:if>
+            <form:form commandName="informeProveedor" action="${eliminaUrl}" >
+                <form:errors path="*" cssClass="alert alert-error" element="ul" />
+                <p class="well">
+                    <a href="<c:url value='/factura/informeProveedor/edita/${informeProveedor.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
+                    <form:hidden path="id" />
+                    <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="eliminar"  onclick="return confirm('<s:message code="confirma.elimina.message" />');" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='eliminar.button'/></button>
+                </p>
+            </form:form>
+            <%--
+            <c:url var="finalizarUrl" value="/factura/informeProveedor/finaliza" />
+            <form:form commandName="informeProveedor" action="${finalizaUrl}" >
+                <form:hidden path="${informeProveedor.id}" />
+                <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="finalizar"  onclick="return confirm('<s:message code="confirma.elimina.message" />');" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='eliminar.button'/></button>
+            </form:form>
+            --%>
             <table id="lista" class="table table-striped table-hover">
                 <thead>
                     <tr>

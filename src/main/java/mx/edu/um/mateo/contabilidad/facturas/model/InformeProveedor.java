@@ -38,6 +38,10 @@ public class InformeProveedor implements Serializable {
     private Date fechaInforme;
     @ManyToOne(optional = false)
     private Empresa empresa;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Temporal(TemporalType.DATE)
+    private Date fechaPago;
+    private String contraRecibo;
 
     public InformeProveedor() {
     }
@@ -90,10 +94,27 @@ public class InformeProveedor implements Serializable {
         this.empresa = empresa;
     }
 
+    public Date getFechaPago() {
+        return fechaPago;
+    }
+
+    public void setFechaPago(Date fechaPago) {
+        this.fechaPago = fechaPago;
+    }
+
+    public String getContraRecibo() {
+        return contraRecibo;
+    }
+
+    public void setContraRecibo(String contraRecibo) {
+        this.contraRecibo = contraRecibo;
+    }
+
     @Override
     public String toString() {
         return "InformeProveedor{" + "id=" + id + ", version=" + version + ", status=" + status
                 + ", nombreProveedor=" + nombreProveedor + ", fechaInforme=" + fechaInforme
-                + ", empresa=" + empresa + '}';
+                + ", empresa=" + empresa + ", fechaPago=" + fechaPago
+                + ", contraRecibo=" + contraRecibo + '}';
     }
 }

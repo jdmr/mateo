@@ -4,16 +4,22 @@
  */
 package mx.edu.um.mateo.contabilidad.facturas.web;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
+import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
+import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.general.utils.Constantes;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -38,6 +44,9 @@ import org.springframework.transaction.annotation.Transactional;
 })
 @Transactional
 public class InformeProveedorControllerTest extends BaseControllerTest {
+
+    @Autowired
+    private InformeProveedorManager manager;
 
     @Test
     public void testLista() throws Exception {
@@ -138,5 +147,49 @@ public class InformeProveedorControllerTest extends BaseControllerTest {
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
                 .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "informeProveedor.elimina.message"))
                 .andExpect(redirectedUrl(Constantes.PATH_INFORMEPROVEEDOR_LISTA));
+    }
+
+    @Test
+    public void testFinaliza() throws Exception {
+        Usuario usuario = obtieneUsuario();
+        InformeProveedor informe = new InformeProveedor();
+        informe.setEmpresa(usuario.getEmpresa());
+        informe.setFechaInforme(new Date());
+        informe.setStatus("a");
+        currentSession().save(informe);
+        assertNotNull(informe.getId());
+        Proveedor proveedor = new Proveedor("Sam789", "samuel", "samuel130620", usuario.getEmpresa());
+        currentSession().save(proveedor);
+//      \\\\////
+        ////\\\\
+        InformeProveedorDetalle detalle = null;
+        for (int i = 0; i < 4; i++) {
+            detalle = new InformeProveedorDetalle();
+            detalle.setInformeProveedor(informe);
+            detalle.setFechaFactura(new Date());
+            detalle.setFolioFactura("1110475");
+            detalle.setIVA(new BigDecimal(".16"));
+            detalle.setNombreProveedor("Lala");
+            detalle.setPathPDF("prueba.pdf");
+            detalle.setPathXMl("prueba.xml");
+            detalle.setRFCProveedor("1147hgas40q");
+            detalle.setSubtotal(new BigDecimal("223"));
+            detalle.setTotal(new BigDecimal("250"));
+            detalle.setEmpresa(usuario.getEmpresa());
+            currentSession().save(detalle);
+            assertNotNull(detalle.getId());
+        }
+        this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
+        this.mockMvc.perform(post(Constantes.PATH_INFORMEPROVEEDOR_FINALIZA)
+                .param("id", informe.getId().toString())
+                .sessionAttr(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe)
+                .sessionAttr("proveedor", proveedor))
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(flash().attribute("message", "informeProveedor.finaliza.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_INFORMEPROVEEDOR_LISTA));
+        currentSession().refresh(informe);
+        InformeProveedor informeProveedor = manager.obtiene(informe.getId());
+        log.debug("informe...**{}", informeProveedor);
+        assertEquals(Constantes.STATUS_FINALIZADO, informeProveedor.getStatus());
     }
 }
