@@ -78,7 +78,8 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
         }
 
 
-        this.mockMvc.perform(get(Constantes.PATH_INFORMEEMPLEADODETALLE)).
+        this.mockMvc.perform(get(Constantes.PATH_INFORMEEMPLEADODETALLE)
+                .sessionAttr("informeEmpleadoId", informe)).
                 andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_INFORMEEMPLEADODETALLE_LISTA + ".jsp")).
                 andExpect(model().attributeExists(Constantes.CONTAINSKEY_INFORMESDETALLES)).
                 andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION)).

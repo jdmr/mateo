@@ -80,7 +80,7 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
 
 
         this.mockMvc.perform(get(Constantes.PATH_INFORMEPROVEEDOR_DETALLE)
-                .sessionAttr(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe)).
+                .sessionAttr("informeId", informe)).
                 andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA + ".jsp")).
                 andExpect(model().attributeExists(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE)).
                 andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION)).

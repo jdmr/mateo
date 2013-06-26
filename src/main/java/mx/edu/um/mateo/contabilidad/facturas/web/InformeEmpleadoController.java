@@ -150,13 +150,15 @@ public class InformeEmpleadoController extends BaseController {
     }
 
     @RequestMapping("/ver/{id}")
-    public String ver(@PathVariable Long id, Model modelo) {
+    public String ver(HttpServletRequest request, @PathVariable Long id, Model modelo) {
         log.debug("Mostrando informe {}", id);
         InformeEmpleado informe = manager.obtiene(id);
-
+        request.getSession().setAttribute("informeEmpleadoId", informe);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEEMPLEADO, informe);
-
-        return Constantes.PATH_INFORMEEMPLEADO_VER;
+        if ("a".equals(informe.getStatus())) {
+            return "redirect:" + Constantes.PATH_INFORMEEMPLEADODETALLE_LISTA;
+        }
+        return "redirect:" + Constantes.PATH_INFORMEEMPLEADODETALLE_CONTRARECIBO;
     }
 
     @RequestMapping("/nuevo")
@@ -255,6 +257,26 @@ public class InformeEmpleadoController extends BaseController {
         } catch (Exception e) {
             log.error("No se pudo eliminar el tipo de informe " + id, e);
             bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEEMPLEADO, new String[]{"informe.no.elimina.message"}, null, null));
+            return Constantes.PATH_INFORMEEMPLEADO_VER;
+        }
+
+        return "redirect:" + Constantes.PATH_INFORMEEMPLEADO_LISTA;
+    }
+
+    @Transactional
+    @RequestMapping(value = "/finaliza", method = RequestMethod.GET)
+    public String finaliza(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute InformeEmpleado informeEmpleado, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        log.debug("Finalizando informe");
+        try {
+            Usuario usuario = ambiente.obtieneUsuario();
+            InformeEmpleado informe = manager.obtiene(id);
+            log.debug("informe...**controller{}", informe);
+            manager.finaliza(informe, usuario);
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informe.finaliza.message");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informeEmpleado.getNombreEmpleado()});
+        } catch (Exception e) {
+            log.error("No se pudo finalizar informe " + id, e);
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEEMPLEADO, new String[]{"informe.no.finaliza.message"}, null, null));
             return Constantes.PATH_INFORMEEMPLEADO_VER;
         }
 

@@ -43,6 +43,11 @@
                     </c:if>
                 </s:bind>
             </c:if>
+            <c:url value="/factura/informe/finaliza" var="linky">
+                <c:param name="id" value="${informeEmpleadoId.id}"/>
+            </c:url>
+            <a class="btn btn-primary" href="<c:out value='${linky}'/>"><i class="icon-user icon-white"></i> <s:message code='finaliza.label' /></a>
+
             <table id="lista" class="table table-striped table-hover">
                 <thead>
                     <tr>

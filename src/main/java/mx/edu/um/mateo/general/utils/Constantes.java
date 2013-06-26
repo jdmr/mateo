@@ -2850,6 +2850,7 @@ public class Constantes {
     public static final String PATH_INFORMEEMPLEADODETALLE_EDITA = "/factura/detalle/edita";
     public static final String PATH_INFORMEEMPLEADODETALLE_GRABA = "/factura/detalle/graba";
     public static final String PATH_INFORMEEMPLEADODETALLE_ACTUALIZA = "/factura/detalle/actualiza";
+    public static final String PATH_INFORMEEMPLEADODETALLE_CONTRARECIBO = "/factura/detalle/contrarecibo";
     public static final String PATH_INFORMEEMPLEADODETALLE_ELIMINA = "/factura/detalle/elimina";
     public static final String ADDATTRIBUTE_INFORMEEMPLEADODETALLE = "detalle";
     //Valores de Colegio

@@ -7,10 +7,9 @@ package mx.edu.um.mateo.contabilidad.facturas.service.impl;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.contabilidad.facturas.dao.InformeEmpleadoDao;
-import mx.edu.um.mateo.inscripciones.dao.ProrrogaDao;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeEmpleadoManager;
-import mx.edu.um.mateo.inscripciones.model.CobroCampo;
+import mx.edu.um.mateo.general.utils.Constantes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,5 +50,12 @@ public class InformeEmpleadoManagerImpl implements InformeEmpleadoManager {
         InformeEmpleado informeEmpleado = dao.obtiene(id);
         dao.elimina(new Long(id));
         return informeEmpleado.getNumNomina();
+    }
+
+    @Override
+    public void finaliza(InformeEmpleado informeEmpleado, Usuario usuario) {
+        informeEmpleado.setStatus(Constantes.STATUS_FINALIZADO);
+        dao.actualiza(informeEmpleado, usuario);
+
     }
 }

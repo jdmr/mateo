@@ -147,16 +147,16 @@ public class InformeEmpleadoDaoHibernate extends BaseDao implements InformeEmple
         }
         try {
             currentSession().update(informe);
+            currentSession().flush();
         } catch (NonUniqueObjectException e) {
             try {
                 currentSession().merge(informe);
+                currentSession().flush();
             } catch (Exception ex) {
                 log.error("No se pudo actualizar el informe", ex);
                 throw new RuntimeException("No se pudo actualizar el informe",
                         ex);
             }
-        } finally {
-            currentSession().flush();
         }
 
     }

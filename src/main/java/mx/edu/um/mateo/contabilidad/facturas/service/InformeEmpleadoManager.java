@@ -45,4 +45,6 @@ public interface InformeEmpleadoManager {
      * @param id el id de InformeEmpleado
      */
     public String elimina(final Long id);
+
+    public void finaliza(InformeEmpleado informe, Usuario usuario);
 }

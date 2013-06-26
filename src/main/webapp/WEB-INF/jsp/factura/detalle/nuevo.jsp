@@ -120,15 +120,7 @@
                             <form:errors path="fechaFactura" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="detalle.informeEmpleado">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="informeEmpleado">
-                                <s:message code="informeEmpleado.label" />
-                                <span class="required-indicator">*</span>
-                                <form:select id="informEmpleadoId" path="informeEmpleado.id" items="${informes}" itemLabel="numNomina" itemValue="id" />
-                                <form:errors path="informeEmpleado" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+
 
                     <%--Subir archivos --%>
                     <input id="addFile" type="button" value="Add File" />
