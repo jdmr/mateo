@@ -169,7 +169,7 @@ public class InformeProveedorDetalleController extends BaseController {
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
     }
 
-    @RequestMapping({"", "/contrarecibo"})
+    @RequestMapping({"/contrarecibo"})
     public String contrarecibo(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
             @RequestParam(required = false) Long pagina,
@@ -180,7 +180,7 @@ public class InformeProveedorDetalleController extends BaseController {
             Usuario usuario,
             Errors errors,
             Model modelo) {
-        log.debug("Mostrando lista de informes");
+        log.debug("Entrando a contrarecibo..**..");
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);

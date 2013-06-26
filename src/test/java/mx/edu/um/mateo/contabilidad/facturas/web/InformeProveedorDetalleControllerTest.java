@@ -89,6 +89,50 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
     }
 
     @Test
+    public void testContrerecibo() throws Exception {
+        log.debug("Debiera mostrar lista de paquetes");
+
+        Usuario usuario = obtieneUsuario();
+        InformeProveedor informe = new InformeProveedor();
+        informe.setEmpresa(usuario.getEmpresa());
+        informe.setNombreProveedor("Sam");
+        informe.setFechaInforme(new Date());
+        informe.setStatus("a");
+        currentSession().save(informe);
+        assertNotNull(informe.getId());
+//     \\\\  ////
+//      \\\\////
+        ////\\\\
+        ////  \\\\
+        InformeProveedorDetalle detalle = null;
+        for (int i = 0; i < 20; i++) {
+            detalle = new InformeProveedorDetalle();
+            detalle.setInformeProveedor(informe);
+            detalle.setFechaFactura(new Date());
+            detalle.setFolioFactura("1110475");
+            detalle.setIVA(new BigDecimal(".16"));
+            detalle.setNombreProveedor("Lala");
+            detalle.setPathPDF("prueba.pdf");
+            detalle.setPathXMl("prueba.xml");
+            detalle.setRFCProveedor("1147hgas40q");
+            detalle.setSubtotal(new BigDecimal("223"));
+            detalle.setTotal(new BigDecimal("250"));
+            detalle.setEmpresa(usuario.getEmpresa());
+            currentSession().save(detalle);
+            assertNotNull(detalle.getId());
+        }
+
+
+        this.mockMvc.perform(get(Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBO)
+                .sessionAttr("informeId", informe)).
+                andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBO + ".jsp")).
+                andExpect(model().attributeExists(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE)).
+                andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION)).
+                andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINAS)).
+                andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINA));
+    }
+
+    @Test
     public void testNuevo() throws Exception {
         log.debug("Test 'nuevo'");
         Usuario usuario = obtieneUsuario();

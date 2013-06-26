@@ -8,6 +8,5 @@
         <li<c:if test="${param.menu eq 'informe'}"> class="active"</c:if>><a href="<s:url value='/factura/informe'/>" ><s:message code="informe.lista.label" /></a></li>
         <li<c:if test="${param.menu eq 'detalle'}"> class="active"</c:if>><a href="<s:url value='/factura/detalle'/>" ><s:message code="detalle.lista.label" /></a></li>
         <li<c:if test="${param.menu eq 'informeProveedor'}"> class="active"</c:if>><a href="<s:url value='/factura/informeProveedor'/>" ><s:message code="informeProveedor.lista.label" /></a></li>
-        <li<c:if test="${param.menu eq 'informeProveedorDetalle'}"> class="active"</c:if>><a href="<s:url value='/factura/informeProveedorDetalle'/>" ><s:message code="informeProveedorDetalle.lista.label" /></a></li>
     </ul>
 </nav>

@@ -162,7 +162,7 @@ public class InformeProveedorController extends BaseController {
         if ("a".equals(informeProveedor.getStatus().trim())) {
             return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
         }
-        return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBO;
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBO;
     }
 
     @RequestMapping("/nuevo")

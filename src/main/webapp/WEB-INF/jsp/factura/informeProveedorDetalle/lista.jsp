@@ -49,8 +49,10 @@
             <c:url value="/factura/informeProveedor/finaliza" var="linky">
                 <c:param name="id" value="${informeId.id}"/>
             </c:url>
+            <a class="btn btn-primary" href="<c:out value='${linky}'/>"><i class="icon-user icon-white"></i> <s:message code='finaliza.label' /></a>
+            <%--
             <a  href='<c:out value="${linky}"/>'>x</a>
-
+            --%>
 
 
             <table id="lista" class="table table-striped table-hover">
