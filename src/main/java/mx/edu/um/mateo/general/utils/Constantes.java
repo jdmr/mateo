@@ -2885,4 +2885,26 @@ public class Constantes {
     public static final String DOCUMENTOCOLPORTOR_PATH_ELIMINA = "/colportaje/documento/elimina";
     public static final String DOCUMENTOCOLPORTOR = "documento";
     public static final String DOCUMENTOCOLPORTOR_LIST = "documentos";
+    //Informe Mensual Colportor        
+    public static final String INFORMEMENSUAL_PATH = "/colportaje/informe";
+    public static final String INFORMEMENSUAL_PATH_LISTA = "/colportaje/informe/lista";
+    public static final String INFORMEMENSUAL_PATH_VER = "/colportaje/informe/ver";
+    public static final String INFORMEMENSUAL_PATH_NUEVO = "/colportaje/informe/nuevo";
+    public static final String INFORMEMENSUAL_PATH_EDITA = "/colportaje/informe/edita";
+    public static final String INFORMEMENSUAL_PATH_CREA = "/colportaje/informe/crea";
+    public static final String INFORMEMENSUAL_PATH_ACTUALIZA = "/colportaje/informe/actualiza";
+    public static final String INFORMEMENSUAL_PATH_ELIMINA = "/colportaje/informe/elimina";
+    public static final String INFORMEMENSUAL = "informe";
+    public static final String INFORMEMENSUAL_LIST = "informes";
+    //Informe Mensual Detalle Colportor        
+    public static final String INFORMEMENSUAL_DETALLE_PATH = "/colportaje/detalle";
+    public static final String INFORMEMENSUAL_DETALLE_PATH_LISTA = "/colportaje/detalle/lista";
+    public static final String INFORMEMENSUAL_DETALLE_PATH_VER = "/colportaje/detalle/ver";
+    public static final String INFORMEMENSUAL_DETALLE_PATH_NUEVO = "/colportaje/detalle/nuevo";
+    public static final String INFORMEMENSUAL_DETALLE_PATH_EDITA = "/colportaje/detalle/edita";
+    public static final String INFORMEMENSUAL_DETALLE_PATH_CREA = "/colportaje/detalle/crea";
+    public static final String INFORMEMENSUAL_DETALLE_PATH_ACTUALIZA = "/colportaje/detalle/actualiza";
+    public static final String INFORMEMENSUAL_DETALLE_PATH_ELIMINA = "/colportaje/detalle/elimina";
+    public static final String INFORMEMENSUAL_DETALLE = "detalle";
+    public static final String INFORMEMENSUAL_DETALLE_LIST = "detalles";
 }

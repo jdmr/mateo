@@ -23,6 +23,8 @@
  */
 package mx.edu.um.mateo.general.dao;
 
+import java.util.Locale;
+import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
@@ -38,6 +40,8 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class BaseDao {
 
 	protected final transient Logger log = LoggerFactory.getLogger(getClass());
+        protected Locale local = new java.util.Locale (Constantes.LOCALE_LANGUAGE, Constantes.LOCALE_COUNTRY, Constantes.LOCALE_VARIANT);
+        
 	@Autowired
 	@Qualifier("sessionFactory")
 	private SessionFactory sessionFactory;
