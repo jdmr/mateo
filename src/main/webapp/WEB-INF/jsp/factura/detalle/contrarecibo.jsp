@@ -70,7 +70,7 @@
             <tbody>
                 <c:forEach items="${detalles}" var="detalle" varStatus="status">
                     <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                        <td><a href="<c:url value='/factura/detalle/ver/${detalle.id}' />">${detalle.folioFactura}</a></td>                            
+                        <td>${detalle.folioFactura}</td>                            
                         <td>${detalle.ccp}</td>
                         <td>${detalle.nombreProveedor}</td>
                         <td>${detalle.RFCProveedor}</td>
