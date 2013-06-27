@@ -105,12 +105,12 @@ public class InformeProveedorControllerTest extends BaseControllerTest {
         informeProveedor.setEmpresa(usuario.getEmpresa());
         informeProveedor.setFechaInforme(new Date());
         informeProveedor.setNombreProveedor("LAla");
-        informeProveedor.setStatus("A");
+        informeProveedor.setStatus("a");
         currentSession().save(informeProveedor);
         assertNotNull(informeProveedor.getId());
 
         this.mockMvc.perform(get(Constantes.PATH_INFORMEPROVEEDOR_VER + "/" + informeProveedor.getId()))
-                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_INFORMEPROVEEDOR_VER + ".jsp"))
+                .andExpect(redirectedUrl(Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA))
                 .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR));
     }
 
@@ -120,8 +120,10 @@ public class InformeProveedorControllerTest extends BaseControllerTest {
         Usuario usuario = obtieneUsuario();
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
 
-
+        Proveedor p = new Proveedor("sam", "sam", "sam123456789", usuario.getEmpresa());
+        currentSession().save(p);
         this.mockMvc.perform(post(Constantes.PATH_INFORMEPROVEEDOR_GRABA)
+                .sessionAttr("proveedor", p)
                 .param("nombreProveedor", "0575")
                 .param("fechaInforme", "4/06/2013")
                 .param("status", "a"))
@@ -180,9 +182,9 @@ public class InformeProveedorControllerTest extends BaseControllerTest {
             assertNotNull(detalle.getId());
         }
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
-        this.mockMvc.perform(post(Constantes.PATH_INFORMEPROVEEDOR_FINALIZA)
+        this.mockMvc.perform(get(Constantes.PATH_INFORMEPROVEEDOR_FINALIZA)
                 .param("id", informe.getId().toString())
-                .sessionAttr(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe)
+                .sessionAttr("informeId", informe)
                 .sessionAttr("proveedor", proveedor))
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message", "informeProveedor.finaliza.message"))

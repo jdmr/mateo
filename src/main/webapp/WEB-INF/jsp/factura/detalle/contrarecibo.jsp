@@ -32,6 +32,51 @@
                 </c:if>
             </s:bind>
         </c:if>
+
+        <table id="lista" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                        <jsp:param name="columna" value="numeroNomina" />
+                    </jsp:include>
+                    <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                        <jsp:param name="columna" value="nombre" />
+                    </jsp:include>
+                    <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                        <jsp:param name="columna" value="status" />
+                    </jsp:include>
+                    <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                        <jsp:param name="columna" value="informe" />
+                    </jsp:include>
+                    <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                        <jsp:param name="columna" value="pesos" />
+                    </jsp:include>
+                    <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                        <jsp:param name="columna" value="dolares" />
+                    </jsp:include>
+                    <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                        <jsp:param name="columna" value="reembolso" />
+                    </jsp:include>
+                    <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                        <jsp:param name="columna" value="fechaInforme" />
+                    </jsp:include>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
+                    <td>${informeEmpleadoId.numNomina}</td>                            
+                    <td>${informeEmpleadoId.nombreEmpleado}</td>
+                    <td>${informeEmpleadoId.status}</td>
+                    <td ><input type="checkbox" value="" disabled="true" <c:if test="${informeEmpleadoId.informe}">checked="checked"</c:if> /></td>
+                    <td ><input type="checkbox" value="" disabled="true" <c:if test="${informeEmpleadoId.pesos}">checked="checked"</c:if> /></td>
+                    <td ><input type="checkbox" value="" disabled="true" <c:if test="${informeEmpleadoId.dolares}">checked="checked"</c:if> /></td>
+                    <td ><input type="checkbox" value="" disabled="true" <c:if test="${informeEmpleadoId.reembolso}">checked="checked"</c:if> /></td>
+                    <td>${informeEmpleadoId.fechaInforme}</td>
+                </tr>
+            </tbody>
+        </table>
+
+
         <table id="lista" class="table table-striped table-hover">
             <thead>
                 <tr>

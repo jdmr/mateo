@@ -235,7 +235,7 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
         ////\\\\
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         this.mockMvc.perform(post(Constantes.PATH_INFORMEPROVEEDOR_DETALLE_GRABA)
-                .sessionAttr(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe)
+                .sessionAttr("informeId", informe)
                 .sessionAttr("proveedor", proveedor)
                 .param("fechaFactura", "21/03/2013")
                 .param("folioFactura", "1110475")
@@ -280,7 +280,7 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
         assertNotNull(detalle.getId());
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         this.mockMvc.perform(post(Constantes.PATH_INFORMEPROVEEDOR_DETALLE_ACTUALIZA)
-                .sessionAttr(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe)
+                .sessionAttr("informeId", informe)
                 .sessionAttr("proveedor", proveedor)
                 .param("version", detalle.getVersion().toString())
                 .param("id", detalle.getId().toString())

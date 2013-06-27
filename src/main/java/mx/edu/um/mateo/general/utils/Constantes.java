@@ -2852,6 +2852,7 @@ public class Constantes {
     public static final String PATH_INFORMEEMPLEADODETALLE_ACTUALIZA = "/factura/detalle/actualiza";
     public static final String PATH_INFORMEEMPLEADODETALLE_CONTRARECIBO = "/factura/detalle/contrarecibo";
     public static final String PATH_INFORMEEMPLEADODETALLE_ELIMINA = "/factura/detalle/elimina";
+    public static final String PATH_INFORMEEMPLEADO_FINALIZA = "/factura/informe/finaliza";
     public static final String ADDATTRIBUTE_INFORMEEMPLEADODETALLE = "detalle";
     //Valores de Colegio
     public static final String COLEGIO_PATH = "/colportaje/colegio";

@@ -88,6 +88,56 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
     }
 
     @Test
+    public void testContrarecibo() throws Exception {
+        log.debug("Debiera mostrar lista de paquetes");
+
+        Usuario usuario = obtieneUsuario();
+        InformeEmpleado informe = new InformeEmpleado();
+        informe.setEmpresa(usuario.getEmpresa());
+        informe.setNumNomina("054");
+        informe.setNombreEmpleado("Sam");
+        informe.setFechaInforme(new Date());
+        informe.setDolares(Boolean.TRUE);
+        informe.setInforme(Boolean.TRUE);
+        informe.setPesos(Boolean.TRUE);
+        informe.setReembolso(Boolean.TRUE);
+        informe.setStatus("a");
+        currentSession().save(informe);
+        assertNotNull(informe.getId());
+//     \\\\  ////
+//      \\\\////
+        ////\\\\
+        ////  \\\\
+        InformeEmpleadoDetalle detalle = null;
+        for (int i = 0; i < 20; i++) {
+            detalle = new InformeEmpleadoDetalle();
+            detalle.setInformeEmpleado(informe);
+            detalle.setFechaFactura(new Date());
+            detalle.setFolioFactura("1110475");
+            detalle.setIVA(new BigDecimal(".16"));
+            detalle.setNombreProveedor("Lala");
+            detalle.setCcp("990236");
+            detalle.setPathPDF("prueba.pdf");
+            detalle.setPathXMl("prueba.xml");
+            detalle.setRFCProveedor("1147hgas40q");
+            detalle.setSubtotal(new BigDecimal("223"));
+            detalle.setTotal(new BigDecimal("250"));
+            detalle.setEmpresa(usuario.getEmpresa());
+            currentSession().save(detalle);
+            assertNotNull(detalle.getId());
+        }
+
+
+        this.mockMvc.perform(get(Constantes.PATH_INFORMEEMPLEADODETALLE_CONTRARECIBO)
+                .sessionAttr("informeEmpleadoId", informe)).
+                andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_INFORMEEMPLEADODETALLE_CONTRARECIBO + ".jsp")).
+                andExpect(model().attributeExists(Constantes.CONTAINSKEY_INFORMESDETALLES)).
+                andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION)).
+                andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINAS)).
+                andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINA));
+    }
+
+    @Test
     public void testNuevo() throws Exception {
         log.debug("Test 'nuevo'");
         Usuario usuario = obtieneUsuario();
@@ -212,6 +262,7 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
         ////\\\\
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         this.mockMvc.perform(post(Constantes.PATH_INFORMEEMPLEADODETALLE_GRABA)
+                .sessionAttr("informeEmpleadoId", informe)
                 .param("fechaFactura", "21/03/2013")
                 .param("folioFactura", "1110475")
                 .param("iva", ".16")
@@ -262,6 +313,7 @@ public class InformeEmpleadoDetalleControllerTest extends BaseControllerTest {
         assertNotNull(detalle.getId());
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         this.mockMvc.perform(post(Constantes.PATH_INFORMEEMPLEADODETALLE_ACTUALIZA)
+                .sessionAttr("informeEmpleadoId", informe)
                 .param("version", detalle.getVersion().toString())
                 .param("id", detalle.getId().toString())
                 .param("fechaFactura", "21/03/2013")
