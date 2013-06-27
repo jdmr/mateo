@@ -37,6 +37,49 @@ public class InformeEmpleadoDetalleDaoTest extends BaseDaoTest {
     private InformeEmpleadoDetalleDao instance;
 
     @Test
+    public void testListaCeros() {
+        Usuario usuario = obtieneUsuario();
+        InformeEmpleado informe = new InformeEmpleado();
+        informe.setEmpresa(usuario.getEmpresa());
+        informe.setNumNomina("054");
+        informe.setNombreEmpleado("Sam");
+        informe.setFechaInforme(new Date());
+        informe.setDolares(Boolean.TRUE);
+        informe.setInforme(Boolean.TRUE);
+        informe.setPesos(Boolean.TRUE);
+        informe.setReembolso(Boolean.TRUE);
+        informe.setStatus("a");
+        currentSession().save(informe);
+        assertNotNull(informe.getId());
+        InformeEmpleadoDetalle detalle = null;
+        for (int i = 0; i < 20; i++) {
+            detalle = new InformeEmpleadoDetalle();
+            detalle.setCcp("990236");
+            detalle.setInformeEmpleado(informe);
+            detalle.setFechaFactura(new Date());
+            detalle.setFolioFactura("1110475");
+            detalle.setIVA(new BigDecimal(".16"));
+            detalle.setNombreProveedor("Lala");
+            detalle.setPathPDF("prueba.pdf");
+            detalle.setPathXMl("prueba.xml");
+            detalle.setRFCProveedor("1147hgas40q");
+            detalle.setSubtotal(new BigDecimal("223"));
+            detalle.setTotal(new BigDecimal("250"));
+            instance.crea(detalle, usuario);
+            assertNotNull(detalle.getId());
+        }
+
+        Map<String, Object> params;
+        params = new TreeMap<>();
+        params.put("empresa", usuario.getEmpresa().getId());
+        Map<String, Object> result = instance.lista(params);
+        assertNotNull(result.get(Constantes.CONTAINSKEY_INFORMESDETALLES));
+        assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
+        assertEquals(0, ((List<InformeEmpleado>) result.get(Constantes.CONTAINSKEY_INFORMESDETALLES)).size());
+        assertEquals(0, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
+    }
+
+    @Test
     public void testLista() {
         Usuario usuario = obtieneUsuario();
         InformeEmpleado informe = new InformeEmpleado();
@@ -72,6 +115,7 @@ public class InformeEmpleadoDetalleDaoTest extends BaseDaoTest {
         Map<String, Object> params;
         params = new TreeMap<>();
         params.put("empresa", usuario.getEmpresa().getId());
+        params.put("informeEmpleado", informe.getId());
         Map<String, Object> result = instance.lista(params);
         assertNotNull(result.get(Constantes.CONTAINSKEY_INFORMESDETALLES));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));

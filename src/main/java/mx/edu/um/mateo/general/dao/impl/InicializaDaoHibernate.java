@@ -39,11 +39,13 @@ import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.dao.InicializaDao;
 import mx.edu.um.mateo.general.dao.OrganizacionDao;
+import mx.edu.um.mateo.general.dao.ProveedorDao;
 import mx.edu.um.mateo.general.dao.ReporteDao;
 import mx.edu.um.mateo.general.dao.RolDao;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
+import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -87,7 +89,8 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
     private AsociadoDao asociadoDao;
     @Autowired
     private ColportorDao colportorDao;
-    
+    @Autowired
+    private ProveedorDao proveedorDao;
 
     @Override
     public void inicializa(String username, String password) {
@@ -107,8 +110,10 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
         rolDao.crea(rol);
         rol = new Rol("ROLE_USER");
         rolDao.crea(rol);
+        rol = new Rol("ROLE_PRV");
+        rolDao.crea(rol);
 
-        Usuario usuario = new Usuario(username, password, "Admin", "User","User");
+        Usuario usuario = new Usuario(username, password, "Admin", "User", "User");
         Long almacenId = 0l;
         actualizaUsuario:
         for (Empresa empresa : organizacion.getEmpresas()) {
@@ -117,38 +122,38 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
                 break actualizaUsuario;
             }
         }
-        
-        Almacen almacen=almacenDao.obtiene(almacenId);
-        
-        
+
+        Almacen almacen = almacenDao.obtiene(almacenId);
+
+
         for (Ejercicio ejercicio : ejercicioDao.lista(organizacion.getId())) {
             usuario.setEjercicio(ejercicio);
             break;
         }
         String[] roles = new String[]{new Rol("ROLE_ADMIN").getAuthority()};
-        
-        usuario = usuarioDao.crea(usuario, almacenId,roles);
-        
+
+        usuario = usuarioDao.crea(usuario, almacenId, roles);
+
         //Datos de colportores
 //        Union union = new Union("Unión Mexicana del Norte");
 //        unionDao.crea(union, usuario);
 //        Asociacion asoc = new Asociacion("Asociación del Noreste", Constantes.STATUS_ACTIVO, union);
 //        asociacionDao.crea(asoc,usuario);
-        
+
         //Tipo de Empleado
         TipoEmpleado tipoEmpleado = new TipoEmpleado();
         tipoEmpleado.setOrganizacion(organizacion);
         tipoEmpleado.setDescripcion("Denominacional");
         tipoEmpleado.setPrefijo("980");
         currentSession().save(tipoEmpleado);
-         
-         //grabando empleado
+
+        //grabando empleado
         usuario = new Empleado("test", "apPaterno", "apMaterno", username + "@um.edu.mx", username, "1080506", Boolean.TRUE, "M", "Direccion", "A",
                 "curp", "RFCSTRI", "Cuenta", "imss",
                 10, 1, new BigDecimal(1), "SI", "ife", "A",
                 "padre", "madre", "A", "conyuge", Boolean.FALSE, Boolean.TRUE, "iglesia",
                 "responsabilidad", password, tipoEmpleado);
-          
+
         HashSet rolesEmp = new HashSet();
         rolesEmp.add(rolDao.obtiene("ROLE_EMP"));
         usuario.setAlmacen(almacen);
@@ -159,7 +164,7 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
             break;
         }
         empleadoManager.saveEmpleado((Empleado) usuario, usuario);
-        
+
         Estatus estatus = new Estatus(Constantes.ABIERTA, 100);
         currentSession().save(estatus);
         estatus = new Estatus(Constantes.PENDIENTE, 200);
@@ -170,42 +175,59 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
         currentSession().save(estatus);
         estatus = new Estatus(Constantes.CANCELADA, 500);
         currentSession().save(estatus);
-                
+
         //Datos de colportores        
-        usuario = new Asociado(username + "@asoc.um.edu.mx", password, username + "@asoc.edu.mx", "test", "apPaterno", "apMaterno", "A",  "12345", "8262630900", "Direccion", "Colonia", "Municipio");
-        
+        usuario = new Asociado(username + "@asoc.um.edu.mx", password, username + "@asoc.edu.mx", "test", "apPaterno", "apMaterno", "A", "12345", "8262630900", "Direccion", "Colonia", "Municipio");
+
         usuario.setAlmacen(almacen);
         usuario.setEmpresa(almacen.getEmpresa());
-        
+
         for (Ejercicio ejercicio : ejercicioDao.lista(organizacion.getId())) {
             usuario.setEjercicio(ejercicio);
             break;
         }
-        
+
         Set rolesClp = new HashSet();
         rolesClp.add(rolDao.obtiene("ROLE_ASOC"));
         usuario.setRoles(rolesClp);
-        asociadoDao.crea((Asociado)usuario, null);
-                
-        usuario = new Colportor(username + "@clp.um.edu.mx", password, username + "@clp.edu.mx", "test", "apPaterno", "apMaterno", "12345", "A",  "8262630900", "Direccion", "Colonia", "Municipio", "tipoClp", "0890626", new Date());
-        
+        asociadoDao.crea((Asociado) usuario, null);
+
+        usuario = new Colportor(username + "@clp.um.edu.mx", password, username + "@clp.edu.mx", "test", "apPaterno", "apMaterno", "12345", "A", "8262630900", "Direccion", "Colonia", "Municipio", "tipoClp", "0890626", new Date());
+
         usuario.setAlmacen(almacen);
         usuario.setEmpresa(almacen.getEmpresa());
-        
+
         for (Ejercicio ejercicio : ejercicioDao.lista(organizacion.getId())) {
             usuario.setEjercicio(ejercicio);
             break;
         }
-        
+
         rolesClp = new HashSet();
         rolesClp.add(rolDao.obtiene("ROLE_CLP"));
         usuario.setRoles(rolesClp);
-        colportorDao.crea((Colportor)usuario, usuario);
+        colportorDao.crea((Colportor) usuario, usuario);
+
+
+        usuario = new Usuario(username + "@prv.um.edu.mx", password, username, username, username, username + "@prv.um.edu.mx");
+
+        usuario.setAlmacen(almacen);
+        usuario.setEmpresa(almacen.getEmpresa());
+
+        for (Ejercicio ejercicio : ejercicioDao.lista(organizacion.getId())) {
+            usuario.setEjercicio(ejercicio);
+            break;
+        }
+
+        Set rolesPrv = new HashSet();
+        rolesPrv.add(rolDao.obtiene("ROLE_PRV"));
+        usuario.setRoles(rolesPrv);
+        usuarioDao.crea(usuario, almacenId, roles);
+        Proveedor proveedor = new Proveedor("Sam789", "samuel", "samuel130620", usuario.getEmpresa());
+        proveedorDao.crea(proveedor, usuario);
     }
-    
-    
-     @Override
-     public void inicializaRoles(String username, String password, String roles) {
+
+    @Override
+    public void inicializaRoles(String username, String password, String roles) {
         reporteDao.inicializa();
         Organizacion organizacion = new Organizacion("UM", "UM",
                 "Universidad de Montemorelos");
@@ -218,26 +240,23 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
                 break actualizaUsuario;
             }
         }
-        
-        Almacen almacen=almacenDao.obtiene(almacenId);
+
+        Almacen almacen = almacenDao.obtiene(almacenId);
         Ejercicio ejercicio = null;
         for (Ejercicio ej : ejercicioDao.lista(organizacion.getId())) {
-            ejercicio=ej;
+            ejercicio = ej;
             break;
         }
-        
+
         Rol rol = null;
-         Usuario usuario = null;
-         String[] arrayRol = roles.split(",");
-        for(String r:arrayRol){
+        Usuario usuario = null;
+        String[] arrayRol = roles.split(",");
+        for (String r : arrayRol) {
             rol = new Rol(r);
             rolDao.crea(rol);
-            usuario = new Usuario(username, password, "Hobbit", "frodo","baggins");
+            usuario = new Usuario(username, password, "Hobbit", "frodo", "baggins");
             usuario.setEjercicio(ejercicio);
-            usuario = usuarioDao.crea(usuario, almacenId,new String[]{new Rol(r).getAuthority()});
+            usuario = usuarioDao.crea(usuario, almacenId, new String[]{new Rol(r).getAuthority()});
         }
     }
-    
-    
-    
 }

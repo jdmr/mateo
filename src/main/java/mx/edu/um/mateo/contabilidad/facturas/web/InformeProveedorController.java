@@ -8,6 +8,7 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,10 +19,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
+import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
+import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.web.BaseController;
-import mx.edu.um.mateo.contabilidad.facturas.service.InformeEmpleadoManager;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -57,11 +60,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author develop
  */
 @Controller
-@RequestMapping(Constantes.PATH_INFORMEEMPLEADO)
-public class InformeEmpleadoController extends BaseController {
+@RequestMapping(Constantes.PATH_INFORMEPROVEEDOR)
+public class InformeProveedorController extends BaseController {
 
     @Autowired
-    private InformeEmpleadoManager manager;
+    private InformeProveedorManager manager;
 
     @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -97,7 +100,7 @@ public class InformeEmpleadoController extends BaseController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = manager.lista(params);
             try {
-                generaReporte(tipo, (List<InformeEmpleado>) params.get(Constantes.CONTAINSKEY_INFORMESEMPLEADO), response);
+                generaReporte(tipo, (List<InformeProveedor>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -112,16 +115,16 @@ public class InformeEmpleadoController extends BaseController {
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<InformeEmpleado>) params.get(Constantes.CONTAINSKEY_INFORMESEMPLEADO), request);
+                enviaCorreo(correo, (List<InformeProveedor>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
-                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("informe.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("informeProveedor.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
         params = manager.lista(params);
-        log.debug("params{}", params.get(Constantes.CONTAINSKEY_INFORMESEMPLEADO));
-        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESEMPLEADO, params.get(Constantes.CONTAINSKEY_INFORMESEMPLEADO));
+        log.debug("params{}", params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR));
+        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESPROVEEDOR, params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR));
 
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
@@ -132,7 +135,7 @@ public class InformeEmpleadoController extends BaseController {
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<InformeEmpleado> informes = (List<InformeEmpleado>) params.get(Constantes.CONTAINSKEY_INFORMESEMPLEADO);
+        List<InformeProveedor> informes = (List<InformeProveedor>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR);
         Long primero = ((pagina - 1) * max) + 1;
         log.debug("primero {}", primero);
         log.debug("informes {}", informes.size());
@@ -146,37 +149,38 @@ public class InformeEmpleadoController extends BaseController {
         log.debug("Pagina{}", pagina);
         // termina paginado
 
-        return Constantes.PATH_INFORMEEMPLEADO_LISTA;
+        return Constantes.PATH_INFORMEPROVEEDOR_LISTA;
     }
 
     @RequestMapping("/ver/{id}")
     public String ver(HttpServletRequest request, @PathVariable Long id, Model modelo) {
         log.debug("Mostrando informe {}", id);
-        InformeEmpleado informe = manager.obtiene(id);
-        request.getSession().setAttribute("informeEmpleadoId", informe);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEEMPLEADO, informe);
-        if ("a".equals(informe.getStatus())) {
-            return "redirect:" + Constantes.PATH_INFORMEEMPLEADODETALLE_LISTA;
+
+        InformeProveedor informeProveedor = manager.obtiene(id);
+        request.getSession().setAttribute("informeId", informeProveedor);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informeProveedor);
+        if ("a".equals(informeProveedor.getStatus().trim())) {
+            return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
         }
-        return "redirect:" + Constantes.PATH_INFORMEEMPLEADODETALLE_CONTRARECIBO;
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBO;
     }
 
     @RequestMapping("/nuevo")
     public String nueva(HttpServletRequest request, Model modelo) {
         log.debug("Nuevo informe");
-        InformeEmpleado informe = new InformeEmpleado();
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEEMPLEADO, informe);
+        InformeProveedor informe = new InformeProveedor();
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe);
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", request.getSession()
                 .getAttribute("empresaId"));
         params.put("reporte", true);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEEMPLEADO, informe);
-        return Constantes.PATH_INFORMEEMPLEADO_NUEVO;
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe);
+        return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
     }
 
     @Transactional
     @RequestMapping(value = "/graba", method = RequestMethod.POST)
-    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid InformeEmpleado informe, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid InformeProveedor informe, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
@@ -188,26 +192,28 @@ public class InformeEmpleadoController extends BaseController {
 
             this.despliegaBindingResultErrors(bindingResult);
 
-            return Constantes.PATH_INFORMEEMPLEADO_NUEVO;
+            return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
         }
 
         try {
+            Proveedor proveedor = (Proveedor) request.getSession().getAttribute("proveedor");
+            informe.setNombreProveedor(proveedor.getNombre());
             Usuario usuario = ambiente.obtieneUsuario();
             manager.graba(informe, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el tipo de Beca", e);
-            return Constantes.PATH_INFORMEEMPLEADO_NUEVO;
+            return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
         }
 
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informe.graba.message");
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informe.getNombreEmpleado()});
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeProveedor.graba.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informe.getNombreProveedor()});
 
-        return "redirect:" + Constantes.PATH_INFORMEEMPLEADO_LISTA;
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_LISTA;
     }
 
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, HttpServletResponse response, @Valid InformeEmpleado informe, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String actualiza(HttpServletRequest request, HttpServletResponse response, @Valid InformeProveedor informe, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
@@ -219,7 +225,7 @@ public class InformeEmpleadoController extends BaseController {
 
             this.despliegaBindingResultErrors(bindingResult);
 
-            return Constantes.PATH_INFORMEEMPLEADO_NUEVO;
+            return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
         }
 
         try {
@@ -228,62 +234,62 @@ public class InformeEmpleadoController extends BaseController {
             manager.actualiza(informe, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el tipo de Beca", e);
-            return Constantes.PATH_INFORMEEMPLEADO_NUEVO;
+            return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
         }
 
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informe.graba.message");
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informe.getNombreEmpleado()});
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeProveedor.graba.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informe.getNombreProveedor()});
 
-        return "redirect:" + Constantes.PATH_INFORMEEMPLEADO_LISTA;
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_LISTA;
     }
 
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Editar cuenta de tipos de becas {}", id);
-        InformeEmpleado informeEmpleado = manager.obtiene(id);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEEMPLEADO, informeEmpleado);
-        return Constantes.PATH_INFORMEEMPLEADO_EDITA;
+        InformeProveedor informeProveedor = manager.obtiene(id);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informeProveedor);
+        return Constantes.PATH_INFORMEPROVEEDOR_EDITA;
     }
 
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute InformeEmpleado informeEmpleado, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute InformeProveedor informeProveedor, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina cuenta de tipos de becas");
         try {
             manager.elimina(id);
 
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informe.elimina.message");
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informeEmpleado.getNombreEmpleado()});
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeProveedor.elimina.message");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informeProveedor.getNombreProveedor()});
         } catch (Exception e) {
             log.error("No se pudo eliminar el tipo de informe " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEEMPLEADO, new String[]{"informe.no.elimina.message"}, null, null));
-            return Constantes.PATH_INFORMEEMPLEADO_VER;
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, new String[]{"informeProveedor.no.elimina.message"}, null, null));
+            return Constantes.PATH_INFORMEPROVEEDOR_VER;
         }
 
-        return "redirect:" + Constantes.PATH_INFORMEEMPLEADO_LISTA;
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_LISTA;
     }
 
     @Transactional
     @RequestMapping(value = "/finaliza", method = RequestMethod.GET)
-    public String finaliza(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute InformeEmpleado informeEmpleado, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String finaliza(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute InformeProveedor informeProveedor, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Finalizando informe");
         try {
             Usuario usuario = ambiente.obtieneUsuario();
-            InformeEmpleado informe = manager.obtiene(id);
+            InformeProveedor informe = manager.obtiene(id);
             log.debug("informe...**controller{}", informe);
             manager.finaliza(informe, usuario);
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informe.finaliza.message");
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informeEmpleado.getNombreEmpleado()});
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeProveedor.finaliza.message");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informeProveedor.getNombreProveedor()});
         } catch (Exception e) {
             log.error("No se pudo finalizar informe " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEEMPLEADO, new String[]{"informe.no.finaliza.message"}, null, null));
-            return Constantes.PATH_INFORMEEMPLEADO_VER;
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, new String[]{"informeProveedor.no.finaliza.message"}, null, null));
+            return Constantes.PATH_INFORMEPROVEEDOR_VER;
         }
 
-        return "redirect:" + Constantes.PATH_INFORMEEMPLEADO_LISTA;
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_LISTA;
     }
 
-    private void generaReporte(String tipo, List<InformeEmpleado> informe, HttpServletResponse response) throws JRException, IOException {
+    private void generaReporte(String tipo, List<InformeProveedor> informe, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
         switch (tipo) {
@@ -312,7 +318,7 @@ public class InformeEmpleadoController extends BaseController {
 
     }
 
-    private void enviaCorreo(String tipo, List<InformeEmpleado> informes, HttpServletRequest request) throws JRException, MessagingException {
+    private void enviaCorreo(String tipo, List<InformeProveedor> informes, HttpServletRequest request) throws JRException, MessagingException {
         log.debug("Enviando correo {}", tipo);
         byte[] archivo = null;
         String tipoContenido = null;
@@ -342,7 +348,7 @@ public class InformeEmpleadoController extends BaseController {
 
     private byte[] generaPdf(List informes) throws JRException {
         Map<String, Object> params = new HashMap<>();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/informes.jrxml"));
+        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/informesProveedor.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(informes));
         byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
@@ -354,7 +360,7 @@ public class InformeEmpleadoController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         JRCsvExporter exporter = new JRCsvExporter();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/informes.jrxml"));
+        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/informesProveedor.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(informes));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
@@ -369,7 +375,7 @@ public class InformeEmpleadoController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         JRXlsExporter exporter = new JRXlsExporter();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/informes.jrxml"));
+        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/informesProveedor.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(informes));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);

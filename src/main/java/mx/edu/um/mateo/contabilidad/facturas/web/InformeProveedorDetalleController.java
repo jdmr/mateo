@@ -22,8 +22,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleadoDetalle;
-import mx.edu.um.mateo.contabilidad.facturas.service.InformeEmpleadoDetalleManager;
-import mx.edu.um.mateo.contabilidad.facturas.service.InformeEmpleadoManager;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
+import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorDetalleManager;
+import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
+import mx.edu.um.mateo.general.dao.ProveedorDao;
+import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -67,13 +71,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author develop
  */
 @Controller
-@RequestMapping(Constantes.PATH_INFORMEEMPLEADODETALLE)
-public class InformeEmpleadoDetalleController extends BaseController {
+@RequestMapping(Constantes.PATH_INFORMEPROVEEDOR_DETALLE)
+public class InformeProveedorDetalleController extends BaseController {
 
     @Autowired
-    private InformeEmpleadoDetalleManager manager;
+    private InformeProveedorDetalleManager manager;
     @Autowired
-    private InformeEmpleadoManager managerInforme;
+    private InformeProveedorManager managerInforme;
+    @Autowired
+    private ProveedorDao proveedorDao;
 
     @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -90,8 +96,8 @@ public class InformeEmpleadoDetalleController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
-        InformeEmpleado informeId = (InformeEmpleado) request.getSession().getAttribute("informeEmpleadoId");
-        params.put("informeEmpleado", informeId.getId());
+        InformeProveedor informeId = (InformeProveedor) request.getSession().getAttribute("informeId");
+        params.put("informeProveedor", informeId.getId());
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }
@@ -111,7 +117,7 @@ public class InformeEmpleadoDetalleController extends BaseController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = manager.lista(params);
             try {
-                generaReporte(tipo, (List<InformeEmpleadoDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESDETALLES), response);
+                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -126,7 +132,7 @@ public class InformeEmpleadoDetalleController extends BaseController {
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<InformeEmpleadoDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESDETALLES), request);
+                enviaCorreo(correo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("detalle.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
@@ -134,8 +140,8 @@ public class InformeEmpleadoDetalleController extends BaseController {
             }
         }
         params = manager.lista(params);
-        log.debug("params{}", params.get(Constantes.CONTAINSKEY_INFORMESDETALLES));
-        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESDETALLES, params.get(Constantes.CONTAINSKEY_INFORMESDETALLES));
+        log.debug("params{}", params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE));
+        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE, params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE));
 
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
@@ -146,7 +152,7 @@ public class InformeEmpleadoDetalleController extends BaseController {
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<InformeEmpleadoDetalle> detalles = (List<InformeEmpleadoDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESDETALLES);
+        List<InformeProveedorDetalle> detalles = (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE);
         Long primero = ((pagina - 1) * max) + 1;
         log.debug("primero {}", primero);
         log.debug("detalles {}", detalles.size());
@@ -160,7 +166,7 @@ public class InformeEmpleadoDetalleController extends BaseController {
         log.debug("Pagina{}", pagina);
         // termina paginado
 
-        return Constantes.PATH_INFORMEEMPLEADODETALLE_LISTA;
+        return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
     }
 
     @RequestMapping({"/contrarecibo"})
@@ -174,12 +180,12 @@ public class InformeEmpleadoDetalleController extends BaseController {
             Usuario usuario,
             Errors errors,
             Model modelo) {
-        log.debug("Mostrando lista de informes");
+        log.debug("Entrando a contrarecibo..**..");
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
-        InformeEmpleado informeId = (InformeEmpleado) request.getSession().getAttribute("informeEmpleadoId");
-        params.put("informeEmpleado", informeId.getId());
+        InformeProveedor informeId = (InformeProveedor) request.getSession().getAttribute("informeId");
+        params.put("informeProveedor", informeId.getId());
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }
@@ -199,7 +205,7 @@ public class InformeEmpleadoDetalleController extends BaseController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = manager.lista(params);
             try {
-                generaReporte(tipo, (List<InformeEmpleadoDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESDETALLES), response);
+                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -214,7 +220,7 @@ public class InformeEmpleadoDetalleController extends BaseController {
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<InformeEmpleadoDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESDETALLES), request);
+                enviaCorreo(correo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("detalle.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
@@ -222,8 +228,8 @@ public class InformeEmpleadoDetalleController extends BaseController {
             }
         }
         params = manager.lista(params);
-        log.debug("params{}", params.get(Constantes.CONTAINSKEY_INFORMESDETALLES));
-        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESDETALLES, params.get(Constantes.CONTAINSKEY_INFORMESDETALLES));
+        log.debug("params{}", params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE));
+        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE, params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE));
 
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
@@ -234,7 +240,7 @@ public class InformeEmpleadoDetalleController extends BaseController {
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<InformeEmpleadoDetalle> detalles = (List<InformeEmpleadoDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESDETALLES);
+        List<InformeProveedorDetalle> detalles = (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE);
         Long primero = ((pagina - 1) * max) + 1;
         log.debug("primero {}", primero);
         log.debug("detalles {}", detalles.size());
@@ -248,39 +254,39 @@ public class InformeEmpleadoDetalleController extends BaseController {
         log.debug("Pagina{}", pagina);
         // termina paginado
 
-        return Constantes.PATH_INFORMEEMPLEADODETALLE_CONTRARECIBO;
+        return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBO;
     }
 
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando paquete {}", id);
-        InformeEmpleadoDetalle detalle = manager.obtiene(id);
+        InformeProveedorDetalle detalle = manager.obtiene(id);
 
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEEMPLEADODETALLE, detalle);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
 
-        return Constantes.PATH_INFORMEEMPLEADODETALLE_VER;
+        return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_VER;
     }
 
     @RequestMapping("/nuevo")
     public String nueva(HttpServletRequest request, Model modelo) {
         log.debug("Nuevo paquete");
+        Proveedor proveedor = (Proveedor) request.getSession().getAttribute("proveedor");
+        modelo.addAttribute("proveedor", proveedor);
         Map<String, Object> params = new HashMap<>();
-        params = managerInforme.lista(params);
-        List<InformeEmpleado> informes = (List) params.get(Constantes.CONTAINSKEY_INFORMESEMPLEADO);
-        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESEMPLEADO, informes);
 
-        InformeEmpleadoDetalle detalle = new InformeEmpleadoDetalle();
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEEMPLEADODETALLE, detalle);
+
+        InformeProveedorDetalle detalle = new InformeProveedorDetalle();
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
         params.put("empresa", request.getSession()
                 .getAttribute("empresaId"));
         params.put("reporte", true);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEEMPLEADODETALLE, detalle);
-        return Constantes.PATH_INFORMEEMPLEADODETALLE_NUEVO;
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
+        return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
     }
 
     @Transactional
     @RequestMapping(value = "/graba", method = RequestMethod.POST)
-    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid InformeEmpleadoDetalle detalle,
+    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid InformeProveedorDetalle detalle,
             BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes,
             @ModelAttribute("uploadForm") FileUploadForm uploadForm) throws Exception {
         for (String nombre : request.getParameterMap().keySet()) {
@@ -294,7 +300,7 @@ public class InformeEmpleadoDetalleController extends BaseController {
 
             this.despliegaBindingResultErrors(bindingResult);
 
-            return Constantes.PATH_INFORMEEMPLEADODETALLE_NUEVO;
+            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
         }
 
 
@@ -325,40 +331,35 @@ public class InformeEmpleadoDetalleController extends BaseController {
             }
         }
         ////Subir archivos\\\
-        InformeEmpleado informe = (InformeEmpleado) request.getSession().getAttribute("informeEmpleadoId");
-        detalle.setInformeEmpleado(informe);
+
+
+        InformeProveedor informe = (InformeProveedor) request.getSession().getAttribute("informeId");
+        detalle.setInformeProveedor(informe);
         Usuario usuario = ambiente.obtieneUsuario();
+
+        log.debug("requestRFC** {}", request.getSession().getAttribute("proveedor"));
+        Proveedor proveedor = (Proveedor) request.getSession().getAttribute("proveedor");
+        detalle.setNombreProveedor(proveedor.getNombre());
+        detalle.setRFCProveedor(proveedor.getRfc());
+        log.debug("proveedor** {}", proveedor.toString());
         try {
             manager.graba(detalle, usuario);
             request.getSession().setAttribute("detalleId", detalle.getId());
 
-        } catch (AutorizacionCCPlInvalidoException e) {
+        } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el detalle", e);
-            if (e != null) {
-                log.debug("**Enviando mensajes....CCP no encontrado");
-                errors.rejectValue("ccp", "entrada.no.eligio.proveedor.message", null, null);
-                redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "ccp.invalido.message");
-                redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
-            }
-            params = managerInforme.lista(params);
-            List<InformeEmpleado> informes = (List) params.get(Constantes.CONTAINSKEY_INFORMESEMPLEADO);
-            modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESEMPLEADO, informes);
-
-            params.put("empresa", request.getSession().getAttribute("empresaId"));
-            modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEEMPLEADODETALLE, detalle);
-
-            return Constantes.PATH_INFORMEEMPLEADODETALLE_NUEVO;
+            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
         }
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "detalle.graba.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{detalle.getNombreProveedor()});
 
-        return "redirect:" + Constantes.PATH_INFORMEEMPLEADODETALLE_LISTA;
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
     }
 
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, HttpServletResponse response, @Valid InformeEmpleadoDetalle detalle,
+    public String actualiza(HttpServletRequest request, HttpServletResponse response, @Valid InformeProveedorDetalle detalle,
             BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes,
             @ModelAttribute("uploadForm") FileUploadForm uploadForm) throws Exception {
         for (String nombre : request.getParameterMap().keySet()) {
@@ -373,13 +374,13 @@ public class InformeEmpleadoDetalleController extends BaseController {
 
             this.despliegaBindingResultErrors(bindingResult);
 
-            return Constantes.PATH_INFORMEEMPLEADODETALLE_NUEVO;
+            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
         }
 
         try {
-            InformeEmpleado informe = (InformeEmpleado) request.getSession().getAttribute("informeEmpleadoId");
-            detalle.setInformeEmpleado(informe);
-            InformeEmpleadoDetalle detalleTmp = manager.obtiene(detalle.getId());
+            InformeProveedor informe = (InformeProveedor) request.getSession().getAttribute("informeId");
+            detalle.setInformeProveedor(informe);
+            InformeProveedorDetalle detalleTmp = manager.obtiene(detalle.getId());
             detalle.setNombrePDF(detalleTmp.getNombrePDF());
             detalle.setNombreXMl(detalleTmp.getNombreXMl());
             detalle.setPathPDF(detalleTmp.getPathPDF());
@@ -389,13 +390,13 @@ public class InformeEmpleadoDetalleController extends BaseController {
             manager.actualiza(detalle, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el detalle", e);
-            return Constantes.PATH_INFORMEEMPLEADODETALLE_NUEVO;
+            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
         }
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "detalle.graba.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{detalle.getNombreProveedor()});
 
-        return "redirect:" + Constantes.PATH_INFORMEEMPLEADODETALLE_LISTA;
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
     }
 
     @RequestMapping("/edita/{id}")
@@ -403,17 +404,17 @@ public class InformeEmpleadoDetalleController extends BaseController {
         log.debug("Editar cuenta de detalles{}", id);
         Map<String, Object> params = new HashMap<>();
         params = managerInforme.lista(params);
-        List<InformeEmpleado> informes = (List) params.get(Constantes.CONTAINSKEY_INFORMESEMPLEADO);
-        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESEMPLEADO, informes);
-        InformeEmpleadoDetalle detalle = manager.obtiene(id);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEEMPLEADODETALLE, detalle);
-        return Constantes.PATH_INFORMEEMPLEADODETALLE_EDITA;
+        List<InformeProveedor> informes = (List) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR);
+        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESPROVEEDOR, informes);
+        InformeProveedorDetalle detalle = manager.obtiene(id);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
+        return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_EDITA;
     }
 
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo,
-            @ModelAttribute InformeEmpleadoDetalle detalle, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+            @ModelAttribute InformeProveedorDetalle detalle, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina cuenta de detalles");
         try {
             manager.elimina(id);
@@ -422,24 +423,18 @@ public class InformeEmpleadoDetalleController extends BaseController {
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{detalle.getNombreProveedor()});
         } catch (Exception e) {
             log.error("No se pudo eliminar el tipo de paquete " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEEMPLEADODETALLE, new String[]{"detalle.no.elimina.message"}, null, null));
-            return Constantes.PATH_INFORMEEMPLEADODETALLE_VER;
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, new String[]{"detalle.no.elimina.message"}, null, null));
+            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_VER;
         }
 
-        return "redirect:" + Constantes.PATH_INFORMEEMPLEADODETALLE_LISTA;
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
     }
 
     @RequestMapping(value = "/descargarPdf/{id}", method = RequestMethod.GET)
     public ModelAndView handleRequestPDF(@PathVariable Long id, Model modelo, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-//        Long detalleId = (Long) (request.getSession().getAttribute("detalleId"));
-//        InformeEmpleadoDetalle detalle = manager.obtiene(detalleId);
-        InformeEmpleadoDetalle detalle = manager.obtiene(id);
+        InformeProveedorDetalle detalle = manager.obtiene(id);
         try {
-            // Suponemos que es un zip lo que se quiere descargar el usuario.
-            // Aqui se hace a piñón fijo, pero podría obtenerse el fichero
-            // pedido por el usuario a partir de algún parámetro del request
-            // o de la URL con la que nos han llamado.
             String nombreFichero = detalle.getNombrePDF();
             String unPath = detalle.getPathPDF();
 
@@ -454,7 +449,6 @@ public class InformeEmpleadoDetalleController extends BaseController {
             response.flushBuffer();
 
         } catch (IOException ex) {
-            // Sacar log de error.
             throw ex;
         }
         return null;
@@ -463,12 +457,8 @@ public class InformeEmpleadoDetalleController extends BaseController {
     @RequestMapping(value = "/descargarXML/{id}", method = RequestMethod.GET)
     public ModelAndView handleRequestXML(@PathVariable Long id, Model modelo, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
-        InformeEmpleadoDetalle detalle = manager.obtiene(id);
+        InformeProveedorDetalle detalle = manager.obtiene(id);
         try {
-            // Suponemos que es un zip lo que se quiere descargar el usuario.
-            // Aqui se hace a piñón fijo, pero podría obtenerse el fichero
-            // pedido por el usuario a partir de algún parámetro del request
-            // o de la URL con la que nos han llamado.
             String nombreFichero = detalle.getNombreXMl();
             String unPath = detalle.getPathXMl();
 
@@ -483,13 +473,12 @@ public class InformeEmpleadoDetalleController extends BaseController {
             response.flushBuffer();
 
         } catch (IOException ex) {
-            // Sacar log de error.
             throw ex;
         }
         return null;
     }
 
-    private void generaReporte(String tipo, List<InformeEmpleadoDetalle> detalle,
+    private void generaReporte(String tipo, List<InformeProveedorDetalle> detalle,
             HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
@@ -518,7 +507,7 @@ public class InformeEmpleadoDetalleController extends BaseController {
         }
     }
 
-    private void enviaCorreo(String tipo, List<InformeEmpleadoDetalle> detalle, HttpServletRequest request)
+    private void enviaCorreo(String tipo, List<InformeProveedorDetalle> detalle, HttpServletRequest request)
             throws JRException, MessagingException {
         log.debug("Enviando correo {}", tipo);
         byte[] archivo = null;

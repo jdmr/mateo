@@ -6,6 +6,6 @@
         <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
         <li<c:if test="${param.menu eq 'principal'}"> class="active"</c:if>><a href="<c:url value='/factura' />"><s:message code="factura.label" /></a></li>
         <li<c:if test="${param.menu eq 'informe'}"> class="active"</c:if>><a href="<s:url value='/factura/informe'/>" ><s:message code="informe.lista.label" /></a></li>
-        <li<c:if test="${param.menu eq 'detalle'}"> class="active"</c:if>><a href="<s:url value='/factura/detalle'/>" ><s:message code="detalle.lista.label" /></a></li>
+        <li<c:if test="${param.menu eq 'informeProveedor'}"> class="active"</c:if>><a href="<s:url value='/factura/informeProveedor'/>" ><s:message code="informeProveedor.lista.label" /></a></li>
     </ul>
 </nav>
