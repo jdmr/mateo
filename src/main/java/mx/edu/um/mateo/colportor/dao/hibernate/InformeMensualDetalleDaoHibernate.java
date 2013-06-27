@@ -97,13 +97,13 @@ public class InformeMensualDetalleDaoHibernate extends BaseDao implements Inform
     }
 
     public InformeMensualDetalle obtiene(Long id) {
-        log.debug("Obtiene informeMensual con id = {}", id);
+        log.debug("Obtiene informeMensualDetalle con id = {}", id);
         InformeMensualDetalle detalle = (InformeMensualDetalle) currentSession().get(InformeMensualDetalle.class, id);
         return detalle;
     }
 
     public InformeMensualDetalle crea(InformeMensualDetalle detalle) {
-        log.debug("Creando informeMensual : {}", detalle);
+        log.debug("Creando informeMensualDetalle : {}", detalle);
         try{
             currentSession().saveOrUpdate(detalle);
         }catch(Exception e){
@@ -111,11 +111,12 @@ public class InformeMensualDetalleDaoHibernate extends BaseDao implements Inform
             currentSession().flush();
             
         }
+        log.debug("Creando informeMensualDetalle : {}", detalle);
         return detalle;
     }
     
     public String elimina(Long id){
-        log.debug("Eliminando informeMensual con id {}", id);
+        log.debug("Eliminando informeMensualDetalle con id {}", id);
         InformeMensualDetalle detalle = obtiene(id);
         Date fecha = detalle.getFecha();
         currentSession().delete(detalle);

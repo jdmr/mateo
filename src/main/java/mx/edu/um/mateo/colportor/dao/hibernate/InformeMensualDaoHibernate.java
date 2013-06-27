@@ -50,12 +50,15 @@ public class InformeMensualDaoHibernate extends BaseDao implements InformeMensua
         Criteria criteria = currentSession().createCriteria(InformeMensual.class);
         Criteria countCriteria = currentSession().createCriteria(InformeMensual.class);
         
+        log.debug("empresa {}", params.get("empresa"));
         if(params.get("empresa")!=null){
             criteria.createCriteria("colportor")
-                .add(Restrictions.idEq(params.get("empresa")));
+                    .createCriteria("empresa")
+                    .add(Restrictions.idEq(params.get("empresa")));
             
             countCriteria.createCriteria("colportor")
-                .add(Restrictions.idEq(params.get("empresa")));
+                    .createCriteria("empresa")
+                    .add(Restrictions.idEq(params.get("empresa")));
         
         }
 
@@ -84,10 +87,12 @@ public class InformeMensualDaoHibernate extends BaseDao implements InformeMensua
         }
         
          if(params.get("empresa") != null){
+            log.debug("Se encontro una empresa");
             params.put(Constantes.INFORMEMENSUAL_LIST, criteria.list());
             countCriteria.setProjection(Projections.rowCount());
             params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));
          }else{
+             log.debug("No se encontro una empresa");
             params.put(Constantes.INFORMEMENSUAL_LIST, new ArrayList());
             params.put(Constantes.CONTAINSKEY_CANTIDAD, 0L);
          }
@@ -106,11 +111,14 @@ public class InformeMensualDaoHibernate extends BaseDao implements InformeMensua
         log.debug("Creando informeMensual : {}", informeMensual);
         try{
             currentSession().saveOrUpdate(informeMensual);
-        }catch(Exception e){
             currentSession().merge(informeMensual);
             currentSession().flush();
+        }catch(Exception e){
+            log.error("Error al intentar crear/actualizar el informe {}",e);
+            currentSession().merge(informeMensual);
             
         }
+        log.debug("informeMensual creado : {}", informeMensual);
         return informeMensual;
     }
     
