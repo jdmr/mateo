@@ -5,46 +5,44 @@
 package mx.edu.um.mateo.contabilidad.facturas.service;
 
 import java.util.Map;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 
 /**
  *
  * @author develop
  */
-public interface InformeEmpleadoManager {
+public interface InformeProveedorDetalleManager {
 
     /**
      * Regresa una lista de Informes.
      *
-     * @param InformeEmpleado
+     * @param InformeProveedor
      * @return
      */
     public Map<String, Object> lista(Map<String, Object> params);
 
     /**
-     * Obtiene una InformeEmpleado
+     * Obtiene una InformeProveedor
      *
      * @param id
      * @return
      */
-    public InformeEmpleado obtiene(final Long id);
+    public InformeProveedorDetalle obtiene(final Long id);
 
     /**
-     * graba informacion sobre una nacionalidad
+     * graba informacion sobre un proveedor
      *
-     * @param InformeEmpleado the object to be saved
+     * @param InformeProveedor the object to be saved
      */
-    public void graba(InformeEmpleado informe, Usuario usuario);
+    public void graba(InformeProveedorDetalle proveedorDetalle, Usuario usuario);
 
-    public void actualiza(InformeEmpleado informe, Usuario usuario);
+    public void actualiza(InformeProveedorDetalle proveedorDetalle, Usuario usuario);
 
     /**
-     * Cambia el status de la nacionalidad a I
+     * Cambia el status de la proveedor a I
      *
      * @param id el id de InformeEmpleado
      */
     public String elimina(final Long id);
-
-    public void finaliza(InformeEmpleado informe, Usuario usuario);
 }

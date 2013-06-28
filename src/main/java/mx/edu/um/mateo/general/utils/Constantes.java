@@ -2850,7 +2850,9 @@ public class Constantes {
     public static final String PATH_INFORMEEMPLEADODETALLE_EDITA = "/factura/detalle/edita";
     public static final String PATH_INFORMEEMPLEADODETALLE_GRABA = "/factura/detalle/graba";
     public static final String PATH_INFORMEEMPLEADODETALLE_ACTUALIZA = "/factura/detalle/actualiza";
+    public static final String PATH_INFORMEEMPLEADODETALLE_CONTRARECIBO = "/factura/detalle/contrarecibo";
     public static final String PATH_INFORMEEMPLEADODETALLE_ELIMINA = "/factura/detalle/elimina";
+    public static final String PATH_INFORMEEMPLEADO_FINALIZA = "/factura/informe/finaliza";
     public static final String ADDATTRIBUTE_INFORMEEMPLEADODETALLE = "detalle";
     //Valores de Colegio
     public static final String COLEGIO_PATH = "/colportaje/colegio";
@@ -2885,6 +2887,7 @@ public class Constantes {
     public static final String DOCUMENTOCOLPORTOR_PATH_ELIMINA = "/colportaje/documento/elimina";
     public static final String DOCUMENTOCOLPORTOR = "documento";
     public static final String DOCUMENTOCOLPORTOR_LIST = "documentos";
+    
     //Informe Mensual Colportor        
     public static final String INFORMEMENSUAL_PATH = "/colportaje/informeMensual";
     public static final String INFORMEMENSUAL_PATH_LISTA = "/colportaje/informeMensual/lista";
@@ -2907,4 +2910,29 @@ public class Constantes {
     public static final String INFORMEMENSUAL_DETALLE_PATH_ELIMINA = "/colportaje/informeMensualDetalle/elimina";
     public static final String INFORMEMENSUAL_DETALLE = "informeMensualDetalle";
     public static final String INFORMEMENSUAL_DETALLE_LIST = "informeMensualDetalles";
+    
+    //Valores de InformeEmpleado
+    public static final String CONTAINSKEY_INFORMESPROVEEDOR = "informesProveedor";
+    public static final String PATH_INFORMEPROVEEDOR = "/factura/informeProveedor";
+    public static final String PATH_INFORMEPROVEEDOR_LISTA = "/factura/informeProveedor/lista";
+    public static final String PATH_INFORMEPROVEEDOR_VER = "/factura/informeProveedor/ver";
+    public static final String PATH_INFORMEPROVEEDOR_NUEVO = "/factura/informeProveedor/nuevo";
+    public static final String PATH_INFORMEPROVEEDOR_EDITA = "/factura/informeProveedor/edita";
+    public static final String PATH_INFORMEPROVEEDOR_GRABA = "/factura/informeProveedor/graba";
+    public static final String PATH_INFORMEPROVEEDOR_ACTUALIZA = "/factura/informeProveedor/actualiza";
+    public static final String PATH_INFORMEPROVEEDOR_FINALIZA = "/factura/informeProveedor/finaliza";
+    public static final String PATH_INFORMEPROVEEDOR_ELIMINA = "/factura/informeProveedor/elimina";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBO = "/factura/informeProveedorDetalle/contrarecibo";
+    public static final String ADDATTRIBUTE_INFORMEPROVEEDOR = "informeProveedor";
+    //Valores de InformeEmpleado
+    public static final String CONTAINSKEY_INFORMESPROVEEDOR_DETALLE = "informesProveedorDetalle";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE = "/factura/informeProveedorDetalle";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_LISTA = "/factura/informeProveedorDetalle/lista";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_VER = "/factura/informeProveedorDetalle/ver";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_NUEVO = "/factura/informeProveedorDetalle/nuevo";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_EDITA = "/factura/informeProveedorDetalle/edita";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_GRABA = "/factura/informeProveedorDetalle/graba";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_ACTUALIZA = "/factura/informeProveedorDetalle/actualiza";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_ELIMINA = "/factura/informeProveedorDetalle/elimina";
+    public static final String ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE = "informeProveedorDetalle";
 }
