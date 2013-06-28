@@ -70,8 +70,8 @@ public class InformeMensualDetalleControllerTest extends BaseControllerTest{
         
         this.authenticate(colportor, colportor.getPassword(), new ArrayList<GrantedAuthority>(colportor.getRoles()));
 
-        this.mockMvc.perform(get(Constantes.INFORMEMENSUAL_DETALLE_PATH)
-                .param("informeMensual.id", informe.getId().toString())).
+        this.mockMvc.perform(get(Constantes.INFORMEMENSUAL_DETALLE_PATH_LISTA)
+                .param("id", informe.getId().toString())).
                 andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.INFORMEMENSUAL_DETALLE_PATH_LISTA + ".jsp")).
                 andExpect(model().attributeExists(Constantes.INFORMEMENSUAL_DETALLE_LIST)).
                 andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION)).
@@ -172,7 +172,7 @@ public class InformeMensualDetalleControllerTest extends BaseControllerTest{
         
         this.mockMvc.perform(post(Constantes.INFORMEMENSUAL_DETALLE_PATH_CREA)
                 .param("hrsTrabajadas", "3.2")
-                .param("librosRegalados", "3")
+                .param("literaturaVendida", "3")
                 .param("totalPedidos", "365.21")
                 .param("totalVentas", "165.21")
                 .param("literaturaGratis", "21")
@@ -184,7 +184,7 @@ public class InformeMensualDetalleControllerTest extends BaseControllerTest{
                 .param("informeMensual.id", informe.getId().toString())
                 .sessionAttr(Constantes.INFORMEMENSUAL, informe))
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "informeMensualDetalle.creada.message"))
+                .andExpect(flash().attribute("message", "informeMensualDetalle.creado.message"))
                 .andExpect(redirectedUrl(Constantes.INFORMEMENSUAL_DETALLE_PATH_LISTA));
     }
     
@@ -212,7 +212,7 @@ public class InformeMensualDetalleControllerTest extends BaseControllerTest{
                 .param("version", detalle.getVersion().toString())
                 .param("hrsTrabajadas", "3.2")
                 .param("hrsTrabajadas", "3.2")
-                .param("librosRegalados", "3")
+                .param("literaturaVendida", "3")
                 .param("totalPedidos", "365.21")
                 .param("totalVentas", "165.21")
                 .param("literaturaGratis", "21")
@@ -224,7 +224,7 @@ public class InformeMensualDetalleControllerTest extends BaseControllerTest{
                 .param("informeMensual.id", informe.getId().toString())
                 .sessionAttr(Constantes.INFORMEMENSUAL, informe))
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "informeMensualDetalle.actualizada.message"))
+                .andExpect(flash().attribute("message", "informeMensualDetalle.actualizado.message"))
                 .andExpect(redirectedUrl(Constantes.INFORMEMENSUAL_DETALLE_PATH_LISTA));
         
         detalle = instance.obtiene(detalle.getId());
@@ -256,7 +256,7 @@ public class InformeMensualDetalleControllerTest extends BaseControllerTest{
                 .param("id", detalle.getId().toString())
                 .sessionAttr(Constantes.INFORMEMENSUAL, informe))
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "informeMensualDetalle.eliminada.message"))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "informeMensualDetalle.eliminado.message"))
                 .andExpect(redirectedUrl(Constantes.INFORMEMENSUAL_DETALLE_PATH_LISTA));
     }
 }

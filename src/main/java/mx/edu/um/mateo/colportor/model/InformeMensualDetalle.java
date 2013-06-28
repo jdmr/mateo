@@ -48,7 +48,7 @@ public class InformeMensualDetalle implements Serializable{
     @Column(name = "horas_trabajadas",nullable = false)
     private Double hrsTrabajadas;
     @Min(0)
-    @Column(name = "libros_regalados",nullable = false)
+    @Column(name = "libros_vendidos",nullable = false)
     private Integer literaturaVendida; //y revistas
     @Min(0)
     @Column(name = "total_pedidos",nullable = false)

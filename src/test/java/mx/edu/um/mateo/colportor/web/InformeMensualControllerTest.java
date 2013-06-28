@@ -140,7 +140,7 @@ public class InformeMensualControllerTest extends BaseControllerTest{
         this.mockMvc.perform(post(Constantes.INFORMEMENSUAL_PATH_CREA)
                 .param("fecha", "01/01/2012"))
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "informeMensual.creada.message"))
+                .andExpect(flash().attribute("message", "informeMensual.creado.message"))
                 .andExpect(redirectedUrl(Constantes.INFORMEMENSUAL_PATH_LISTA));
     }
     
@@ -166,7 +166,7 @@ public class InformeMensualControllerTest extends BaseControllerTest{
                 .param("colportor.id", colportor.getId().toString())
                 .param("fecha", "01/01/2012"))
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "informeMensual.actualizada.message"))
+                .andExpect(flash().attribute("message", "informeMensual.actualizado.message"))
                 .andExpect(redirectedUrl(Constantes.INFORMEMENSUAL_PATH_LISTA));
         
         informe = instance.obtiene(informe.getId());
@@ -193,7 +193,7 @@ public class InformeMensualControllerTest extends BaseControllerTest{
         this.mockMvc.perform(post(Constantes.INFORMEMENSUAL_PATH_ELIMINA)
                 .param("id", informe.getId().toString()))
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "informeMensual.eliminada.message"))
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "informeMensual.eliminado.message"))
                 .andExpect(redirectedUrl(Constantes.INFORMEMENSUAL_PATH_LISTA));
     }
 }

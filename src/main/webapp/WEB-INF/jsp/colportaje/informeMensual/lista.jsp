@@ -61,6 +61,7 @@
                             <td><a href="<c:url value='/colportaje/informeMensualDetalle/lista?id=${informeMensual.id}' />">${informeMensual.fecha}</a></td>
                             <td>${informeMensual.colportor.nombre}</a></td>
                             <td>${informeMensual.fecha}</a></td>
+                            <td><a href="<c:url value='/colportaje/informeMensual/ver/${informeMensual.id}' />">editar</a></td>
                         </tr>
                     </c:forEach>
                 </tbody>
