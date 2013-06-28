@@ -28,7 +28,7 @@
                     login-processing-url="/entrar" 
                     authentication-failure-url="/login.jsp?error=1" 
                     authentication-success-handler-ref="loginHandler" 
-                    />
+        />
         <openid-login
             authentication-failure-url="/login.jsp?error=1"
             authentication-success-handler-ref="loginHandler" 
@@ -41,7 +41,7 @@
         <remember-me key="M4t30"
                      authentication-success-handler-ref="loginHandler"
                      user-service-ref="userDetailsService"
-                     />
+        />
     </http>
 
     
@@ -67,6 +67,7 @@
                 ROLE_JEFE  > ROLE_USER
                 ROLE_AFE   > ROLE_USER
                 ROLE_CLP   > ROLE_USER
+                ROLE_PRV   > ROLE_USER
                 ROLE_USER  > ROLE_AUTHENTICATED
                 ROLE_AUTHENTICATED > ROLE_UNAUTHENTICATED
             </beans:value>

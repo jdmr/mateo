@@ -6,12 +6,12 @@ package mx.edu.um.mateo.contabilidad.facturas.dao.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDao;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleadoDetalle;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.contabilidad.facturas.dao.InformeEmpleadoDao;
-import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
-import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
@@ -30,15 +30,11 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class InformeEmpleadoDaoHibernate extends BaseDao implements InformeEmpleadoDao {
+public class InformeProveedorDaoHibernate extends BaseDao implements InformeProveedorDao {
 
-    /**
-     * @see
-     * mx.edu.um.mateo.inscripciones.dao.InformeEmpleadoDao#lista(java.util.Map)
-     */
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
-        log.debug("Buscando lista de Tipos de Becas con params {}", params);
+        log.debug("Buscando lista de Informes del proveedor con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
@@ -58,8 +54,8 @@ public class InformeEmpleadoDaoHibernate extends BaseDao implements InformeEmple
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        Criteria criteria = currentSession().createCriteria(InformeEmpleado.class);
-        Criteria countCriteria = currentSession().createCriteria(InformeEmpleado.class);
+        Criteria criteria = currentSession().createCriteria(InformeProveedor.class);
+        Criteria countCriteria = currentSession().createCriteria(InformeProveedor.class);
 
         if (params.containsKey("empresa")) {
             criteria.createCriteria("empresa").add(
@@ -71,9 +67,9 @@ public class InformeEmpleadoDaoHibernate extends BaseDao implements InformeEmple
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("numNomina", filtro,
+            propiedades.add(Restrictions.ilike("nombreProveedor", filtro,
                     MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("informe", filtro,
+            propiedades.add(Restrictions.ilike("fechaInforme", filtro,
                     MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
@@ -87,14 +83,14 @@ public class InformeEmpleadoDaoHibernate extends BaseDao implements InformeEmple
                 criteria.addOrder(Order.asc(campo));
             }
         } else {
-            criteria.addOrder(Order.asc("numNomina"));
+            criteria.addOrder(Order.asc("fechaInforme"));
         }
 
         if (!params.containsKey("reporte")) {
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
         }
-        params.put(Constantes.CONTAINSKEY_INFORMESEMPLEADO, criteria.list());
+        params.put(Constantes.CONTAINSKEY_INFORMESPROVEEDOR, criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
@@ -102,77 +98,60 @@ public class InformeEmpleadoDaoHibernate extends BaseDao implements InformeEmple
         return params;
     }
 
-    /**
-     * @see
-     * mx.edu.um.mateo.inscripciones.dao.InformeEmpleadoDao#obtiene(java.lang.Integer)
-     */
     @Override
-    public InformeEmpleado obtiene(final Long id) {
-        InformeEmpleado informe = (InformeEmpleado) currentSession().get(InformeEmpleado.class, id);
-        if (informe == null) {
-            log.warn("uh oh, tipoBeca with id '" + id + "' not found...");
-            throw new ObjectRetrievalFailureException(InformeEmpleado.class, id);
+    public InformeProveedor obtiene(final Long id) {
+        InformeProveedor informeProveedor = (InformeProveedor) currentSession().get(InformeProveedor.class, id);
+        if (informeProveedor == null) {
+            log.warn("uh oh, Informe Proveedor with id '" + id + "' not found...");
+            throw new ObjectRetrievalFailureException(InformeProveedor.class, id);
         }
-
-        return informe;
+        return informeProveedor;
     }
 
-    /**
-     * @see
-     * mx.edu.um.mateo.inscripciones.dao.InformeEmpleadoDao#crea(mx.edu.um.mateo.inscripciones.model.InformeEmpleado,
-     * mx.edu.um.mateo.general.model.Usuario)
-     */
     @Override
-    public void crea(final InformeEmpleado informe, Usuario usuario) {
+    public void crea(final InformeProveedor informeProveedor, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
-            informe.setEmpresa(usuario.getEmpresa());
+            informeProveedor.setEmpresa(usuario.getEmpresa());
         }
-        currentSession().save(informe);
-        currentSession().merge(informe);
+        currentSession().save(informeProveedor);
+        currentSession().merge(informeProveedor);
         currentSession().flush();
-
     }
 
-    /**
-     * @see
-     * mx.edu.um.mateo.inscripciones.dao.InformeEmpleadoDao#actualiza(mx.edu.um.mateo.inscripciones.model.InformeEmpleado,
-     * mx.edu.um.mateo.general.model.Usuario)
-     */
     @Override
-    public void actualiza(final InformeEmpleado informe, Usuario usuario) {
+    public void actualiza(final InformeProveedor informeProveedor, Usuario usuario) {
         Session session = currentSession();
+        log.debug("informe...**dao entrando{}", informeProveedor);
         if (usuario != null) {
-            informe.setEmpresa(usuario.getEmpresa());
+            informeProveedor.setEmpresa(usuario.getEmpresa());
         }
         try {
-            currentSession().update(informe);
+            currentSession().update(informeProveedor);
             currentSession().flush();
         } catch (NonUniqueObjectException e) {
             try {
-                currentSession().merge(informe);
+                currentSession().merge(informeProveedor);
                 currentSession().flush();
+
             } catch (Exception ex) {
                 log.error("No se pudo actualizar el informe", ex);
                 throw new RuntimeException("No se pudo actualizar el informe",
                         ex);
             }
         }
-
+        log.debug("informe...**dao saliendo{}", informeProveedor);
     }
 
-    /**
-     * @see mx.edu.um.mateo.rh.dao.InformeEmpleadoDao#elimina(java.lang.Long)
-     */
     @Override
     public String elimina(Long id) {
-        log.debug("Eliminando prorroga con id {}", id);
-        InformeEmpleado informe = obtiene(id);
-        informe.setStatus("I");
-        currentSession().saveOrUpdate(informe);
-        currentSession().merge(informe);
+        log.debug("Eliminando informe proveedor con id {}", id);
+        InformeProveedor informeProveedor = obtiene(id);
+        informeProveedor.setStatus("I");
+        currentSession().saveOrUpdate(informeProveedor);
+        currentSession().merge(informeProveedor);
         currentSession().flush();
-        String nomina = informe.getNumNomina();
-        return nomina;
+        String proveedor = informeProveedor.getNombreProveedor();
+        return proveedor;
     }
 }

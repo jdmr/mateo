@@ -8,15 +8,21 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleadoDetalle;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
+import mx.edu.um.mateo.contabilidad.facturas.service.InformeEmpleadoManager;
+import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
+import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.inscripciones.model.Paquete;
-import mx.edu.um.mateo.inscripciones.model.Prorroga;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -41,6 +47,9 @@ import org.springframework.transaction.annotation.Transactional;
 })
 @Transactional
 public class InformeEmpleadoControllerTest extends BaseControllerTest {
+
+    @Autowired
+    private InformeEmpleadoManager manager;
 
     /**
      * Prueba la lista de paquetes
@@ -132,7 +141,7 @@ public class InformeEmpleadoControllerTest extends BaseControllerTest {
         assertNotNull(informe.getId());
 
         this.mockMvc.perform(get(Constantes.PATH_INFORMEEMPLEADO_VER + "/" + informe.getId()))
-                .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_INFORMEEMPLEADO_VER + ".jsp"))
+                .andExpect(redirectedUrl(Constantes.PATH_INFORMEEMPLEADODETALLE_LISTA))
                 .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_INFORMEEMPLEADO));
     }
 
@@ -146,7 +155,7 @@ public class InformeEmpleadoControllerTest extends BaseControllerTest {
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
 
 
-        this.mockMvc.perform(post(Constantes.PATH_PAQUETE_GRABA)
+        this.mockMvc.perform(post(Constantes.PATH_INFORMEEMPLEADO_GRABA)
                 .param("numNomina", "0575")
                 .param("nombreEmpleado", "Sam")
                 .param("fechaInforme", "4/06/2013")
@@ -156,8 +165,8 @@ public class InformeEmpleadoControllerTest extends BaseControllerTest {
                 .param("reembolso", "true")
                 .param("status", "a"))
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "paquete.graba.message"))
-                .andExpect(redirectedUrl(Constantes.PATH_PAQUETE_LISTA));
+                .andExpect(flash().attribute("message", "informe.graba.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_INFORMEEMPLEADO_LISTA));
     }
 
     /**
@@ -185,5 +194,49 @@ public class InformeEmpleadoControllerTest extends BaseControllerTest {
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
                 .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "informe.elimina.message"))
                 .andExpect(redirectedUrl(Constantes.PATH_INFORMEEMPLEADO_LISTA));
+    }
+
+    @Test
+    public void testFinaliza() throws Exception {
+        Usuario usuario = obtieneUsuario();
+        InformeEmpleado informe = new InformeEmpleado();
+        informe.setEmpresa(usuario.getEmpresa());
+        informe.setFechaInforme(new Date());
+        informe.setStatus("a");
+        currentSession().save(informe);
+        assertNotNull(informe.getId());
+        Proveedor proveedor = new Proveedor("Sam789", "samuel", "samuel130620", usuario.getEmpresa());
+        currentSession().save(proveedor);
+//      \\\\////
+        ////\\\\
+        InformeEmpleadoDetalle detalle = null;
+        for (int i = 0; i < 4; i++) {
+            detalle = new InformeEmpleadoDetalle();
+            detalle.setInformeEmpleado(informe);
+            detalle.setFechaFactura(new Date());
+            detalle.setFolioFactura("1110475");
+            detalle.setIVA(new BigDecimal(".16"));
+            detalle.setNombreProveedor("Lala");
+            detalle.setCcp("990236");
+            detalle.setPathPDF("prueba.pdf");
+            detalle.setPathXMl("prueba.xml");
+            detalle.setRFCProveedor("1147hgas40q");
+            detalle.setSubtotal(new BigDecimal("223"));
+            detalle.setTotal(new BigDecimal("250"));
+            detalle.setEmpresa(usuario.getEmpresa());
+            currentSession().save(detalle);
+            assertNotNull(detalle.getId());
+        }
+        this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
+        this.mockMvc.perform(get(Constantes.PATH_INFORMEEMPLEADO_FINALIZA)
+                .param("id", informe.getId().toString())
+                .sessionAttr("informeEmpleadoId", informe))
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(flash().attribute("message", "informe.finaliza.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_INFORMEEMPLEADO_LISTA));
+        currentSession().refresh(informe);
+        InformeEmpleado informeEmpleado = manager.obtiene(informe.getId());
+        log.debug("informe...**{}", informeEmpleado);
+        assertEquals(Constantes.STATUS_FINALIZADO, informeEmpleado.getStatus());
     }
 }

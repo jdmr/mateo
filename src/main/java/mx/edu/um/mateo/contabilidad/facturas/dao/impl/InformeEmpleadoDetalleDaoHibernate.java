@@ -4,10 +4,15 @@
  */
 package mx.edu.um.mateo.contabilidad.facturas.dao.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.contabilidad.facturas.dao.InformeEmpleadoDetalleDao;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleadoDetalle;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -62,6 +67,12 @@ public class InformeEmpleadoDetalleDaoHibernate extends BaseDao implements Infor
             countCriteria.createCriteria("empresa").add(
                     Restrictions.idEq(params.get("empresa")));
         }
+        if (params.containsKey("informeEmpleado")) {
+            criteria.createCriteria("informeEmpleado").add(
+                    Restrictions.idEq(params.get("informeEmpleado")));
+            countCriteria.createCriteria("informeEmpleado").add(
+                    Restrictions.idEq(params.get("informeEmpleado")));
+        }
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
@@ -88,6 +99,12 @@ public class InformeEmpleadoDetalleDaoHibernate extends BaseDao implements Infor
         if (!params.containsKey("reporte")) {
             criteria.setFirstResult((Integer) params.get("offset"));
             criteria.setMaxResults((Integer) params.get("max"));
+        }
+        if (!params.containsKey("informeEmpleado")) {
+            List<InformeProveedorDetalle> detalles = new ArrayList<>();
+            params.put(Constantes.CONTAINSKEY_INFORMESDETALLES, detalles);
+            params.put("cantidad", new Long("0"));
+            return params;
         }
         params.put(Constantes.CONTAINSKEY_INFORMESDETALLES, criteria.list());
 
