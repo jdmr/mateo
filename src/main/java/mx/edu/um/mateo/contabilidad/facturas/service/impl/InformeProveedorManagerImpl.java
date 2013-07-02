@@ -66,4 +66,16 @@ public class InformeProveedorManagerImpl extends BaseManager implements InformeP
         dao.actualiza(informeProveedor, usuario);
 
     }
+
+    @Override
+    public void autorizar(InformeProveedor informeProveedor, Usuario usuario) {
+        informeProveedor.setStatus(Constantes.STATUS_AUTORIZADO);
+        dao.actualiza(informeProveedor, usuario);
+    }
+
+    @Override
+    public void rechazar(InformeProveedor informeProveedor, Usuario usuario) {
+        informeProveedor.setStatus(Constantes.STATUS_RECHAZADO);
+        dao.actualiza(informeProveedor, usuario);
+    }
 }

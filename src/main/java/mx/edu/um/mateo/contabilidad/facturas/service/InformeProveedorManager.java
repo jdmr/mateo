@@ -48,4 +48,8 @@ public interface InformeProveedorManager {
     public String elimina(final Long id);
 
     public void finaliza(InformeProveedor informeProveedor, Usuario usuario);
+
+    public void autorizar(InformeProveedor informeProveedor, Usuario usuario);
+
+    public void rechazar(InformeProveedor informeProveedor, Usuario usuario);
 }

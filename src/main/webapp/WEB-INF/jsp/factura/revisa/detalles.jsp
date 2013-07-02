@@ -47,11 +47,11 @@
                 <c:url value="/factura/informe/autorizar" var="linky">
                     <c:param name="id" value="${informeEmpleadoId.id}"/>
                 </c:url>
-                <a class="btn btn-primary" href="<c:out value='${linky}'/>"><i class="icon-user icon-white"></i> <s:message code='autorizar.label' /></a>
+                <a class="btn btn-primary" href="<c:out value='${linky}'/>"><i class="icon-ok icon-white"></i> <s:message code='autorizar.label' /></a>
                 <c:url value="/factura/informe/rechazar" var="linky">
                     <c:param name="id" value="${informeEmpleadoId.id}"/>
                 </c:url>
-                <a class="btn btn-primary" href="<c:out value='${linky}'/>"><i class="icon-user icon-white"></i> <s:message code='rechazar.label' /></a>
+                <a class="btn btn-primary" href="<c:out value='${linky}'/>"><i class="icon-remove icon-white"></i> <s:message code='rechazar.label' /></a>
 
             </c:if>
 

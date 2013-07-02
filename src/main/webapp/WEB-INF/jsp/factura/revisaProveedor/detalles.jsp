@@ -1,20 +1,21 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="informe.lista.label" /></title>
+        <title><s:message code="informeProveedorDetalle.lista.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="revisa" />
+            <jsp:param name="menu" value="informeProveedorDetalle" />
         </jsp:include>
 
-        <h1><s:message code="revisarEmpleado.label" /></h1>
+        <h1><s:message code="informeProveedorDetalle.lista.label" /></h1>
         <hr/>
 
-        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/factura/informe' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/factura/informeProveedorDetalle' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
@@ -22,6 +23,7 @@
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
+
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
             <c:if test="${not empty message}">
@@ -30,8 +32,8 @@
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
-            <c:if test="${informes != null}">
-                <s:bind path="informes.*">
+            <c:if test="${informesProveedorDetalle != null}">
+                <s:bind path="informesProveedorDetalle.*">
                     <c:if test="${not empty status.errorMessages}">
                         <div class="alert alert-block alert-error fade in" role="status">
                             <a class="close" data-dismiss="alert">×</a>
@@ -43,50 +45,70 @@
                 </s:bind>
             </c:if>
 
+            <%--
+            <a  href='<c:out value="${linky}"/>'>x</a>
+            --%>
+
+            <c:if test="${informeId.status == 'Z'}">
+                <c:url value="/factura/informeProveedor/autorizar" var="linky">
+                    <c:param name="id" value="${informeId.id}"/>
+                </c:url>
+                <a class="btn btn-primary" href="<c:out value='${linky}'/>"><i class="icon-ok icon-white"></i> <s:message code='autorizar.label' /></a>
+                <c:url value="/factura/informeProveedor/rechazar" var="linky">
+                    <c:param name="id" value="${informeId.id}"/>
+                </c:url>
+                <a class="btn btn-primary" href="<c:out value='${linky}'/>"><i class="icon-remove icon-white"></i> <s:message code='rechazar.label' /></a>
+
+            </c:if>
             <table id="lista" class="table table-striped table-hover">
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="numeroNomina" />
+                            <jsp:param name="columna" value="folio" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="nombre" />
+                            <jsp:param name="columna" value="proveedor" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="rfc" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="iva" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="subtotal" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="total" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="status" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="informe" />
+                            <jsp:param name="columna" value="fechaFactura" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="pesos" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="dolares" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="reembolso" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="fechaInforme" />
+                            <jsp:param name="columna" value="informeProveedor" />
                         </jsp:include>
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${informes}" var="informe" varStatus="status">
+                    <c:forEach items="${informesProveedorDetalle}" var="informeProveedorDetalle" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/factura/informe/revisar/${informe.id}' />">${informe.numNomina}</a></td>                            
-                            <td>${informe.nombreEmpleado}</td>
-                            <td>${informe.status}</td>
-                            <td ><input type="checkbox" value="" disabled="true" <c:if test="${informe.informe}">checked="checked"</c:if> /></td>
-                            <td ><input type="checkbox" value="" disabled="true" <c:if test="${informe.pesos}">checked="checked"</c:if> /></td>
-                            <td ><input type="checkbox" value="" disabled="true" <c:if test="${informe.dolares}">checked="checked"</c:if> /></td>
-                            <td ><input type="checkbox" value="" disabled="true" <c:if test="${informe.reembolso}">checked="checked"</c:if> /></td>
-                            <td>${informe.fechaInforme}</td>
+                            <td><a href="<c:url value='/factura/informeProveedorDetalle/ver/${informeProveedorDetalle.id}' />">${informeProveedorDetalle.folioFactura}</a></td>                            
+                            <td>${informeProveedorDetalle.nombreProveedor}</td>
+                            <td>${informeProveedorDetalle.RFCProveedor}</td>
+                            <td>${informeProveedorDetalle.IVA}</td>
+                            <td>${informeProveedorDetalle.subtotal}</td>
+                            <td>${informeProveedorDetalle.total}</td>
+                            <td>${informeProveedorDetalle.status}</td>
+                            <td>${informeProveedorDetalle.fechaFactura}</td>
+                            <td>${informeProveedorDetalle.informeProveedor.id}</td>
                         </tr>
                     </c:forEach>
                 </tbody>
             </table>
+
             <jsp:include page="/WEB-INF/jsp/paginacion.jsp" />
         </form>        
     <content>
