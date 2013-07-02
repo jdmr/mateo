@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  *
- * @author wilbert
+ * @author osoto
  */
 @Entity
 @Table(name="documentos")
