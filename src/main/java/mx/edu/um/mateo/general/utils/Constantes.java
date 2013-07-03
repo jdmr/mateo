@@ -2887,7 +2887,6 @@ public class Constantes {
     public static final String DOCUMENTOCOLPORTOR_PATH_ELIMINA = "/colportaje/documento/elimina";
     public static final String DOCUMENTOCOLPORTOR = "documento";
     public static final String DOCUMENTOCOLPORTOR_LIST = "documentos";
-    
     //Informe Mensual Colportor        
     public static final String INFORMEMENSUAL_PATH = "/colportaje/informeMensual";
     public static final String INFORMEMENSUAL_PATH_LISTA = "/colportaje/informeMensual/lista";
@@ -2910,7 +2909,6 @@ public class Constantes {
     public static final String INFORMEMENSUAL_DETALLE_PATH_ELIMINA = "/colportaje/informeMensualDetalle/elimina";
     public static final String INFORMEMENSUAL_DETALLE = "informeMensualDetalle";
     public static final String INFORMEMENSUAL_DETALLE_LIST = "informeMensualDetalles";
-    
     //Valores de InformeEmpleado
     public static final String CONTAINSKEY_INFORMESPROVEEDOR = "informesProveedor";
     public static final String PATH_INFORMEPROVEEDOR = "/factura/informeProveedor";
@@ -2937,4 +2935,6 @@ public class Constantes {
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_ACTUALIZA = "/factura/informeProveedorDetalle/actualiza";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_ELIMINA = "/factura/informeProveedorDetalle/elimina";
     public static final String ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE = "informeProveedorDetalle";
+    //valoresProveedorFacturas
+    public static final String CONTAINSKEY_PROVEEDORESFACTURAS = "proveedoresFacturas";
 }
