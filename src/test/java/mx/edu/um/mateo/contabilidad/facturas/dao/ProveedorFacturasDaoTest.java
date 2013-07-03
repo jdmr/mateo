@@ -40,23 +40,15 @@ public class ProveedorFacturasDaoTest extends BaseDaoTest {
 
     @Test
     public void testLista() {
-        Usuario usuario = obtieneUsuario();
+        Usuario usuario = this.obtieneUsuario();
         ProveedorFacturas proveedorFacturas = null;
         for (int i = 0; i < 20; i++) {
-            proveedorFacturas = new ProveedorFacturas();
-            proveedorFacturas.setBanco("banco");
-            proveedorFacturas.setCURP("curp");
-            proveedorFacturas.setClabe("clabe");
-            proveedorFacturas.setCuentaCheque("cuentaCheque");
-            proveedorFacturas.setDireccion("direccion");
-            proveedorFacturas.setCorreo("proveedor@proveedor.com");
-            proveedorFacturas.setIdFiscal("idfiscal");
-            proveedorFacturas.setTipoTercero("tipotercero");
-            proveedorFacturas.setTelefono("8261368265");
-            proveedorFacturas.setStatus("a");
-            proveedorFacturas.setRfc("rfc");
-            proveedorFacturas.setRazonSocial("razonSocial");
+            proveedorFacturas = new ProveedorFacturas("testA" + i, "TEST-01", "nombre", "appaterno", "apmaterno", "test" + i + "@prv.edu.mx",
+                    "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01",
+                    "TEST-01", "TEST-01", "TEST-01", "a", "TEST-01");
+            proveedorFacturas.setAlmacen(usuario.getAlmacen());
             dao.crea(proveedorFacturas, usuario);
+            assertNotNull(proveedorFacturas.getId());
         }
 
         Map<String, Object> params;
@@ -71,69 +63,48 @@ public class ProveedorFacturasDaoTest extends BaseDaoTest {
 
     @Test
     public void testObtiene() {
-        Usuario usuario = obtieneUsuario();
-        ProveedorFacturas proveedorFacturas = new ProveedorFacturas();
-        proveedorFacturas.setBanco("banco");
-        proveedorFacturas.setCURP("curp");
-        proveedorFacturas.setClabe("clabe");
-        proveedorFacturas.setCuentaCheque("cuentaCheque");
-        proveedorFacturas.setDireccion("direccion");
-        proveedorFacturas.setCorreo("proveedor@proveedor.com");
-        proveedorFacturas.setIdFiscal("idfiscal");
-        proveedorFacturas.setTipoTercero("tipotercero");
-        proveedorFacturas.setTelefono("8261368265");
-        proveedorFacturas.setStatus("a");
-        proveedorFacturas.setRfc("rfc");
-        proveedorFacturas.setRazonSocial("razonSocial");
-        dao.crea(proveedorFacturas, usuario);
+        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) obtieneProveedor();
+
+        dao.crea(proveedorFacturas, proveedorFacturas);
+        assertNotNull(proveedorFacturas.getId());
         ProveedorFacturas proveedorFacturas1 = dao.obtiene(proveedorFacturas.getId());
         assertEquals(proveedorFacturas.getBanco(), proveedorFacturas1.getBanco());
     }
 
-    public void testCrea() {
-        Usuario usuario = obtieneUsuario();
-        ProveedorFacturas proveedorFacturas = new ProveedorFacturas();
-        proveedorFacturas.setBanco("banco");
-        proveedorFacturas.setCURP("curp");
-        proveedorFacturas.setClabe("clabe");
-        proveedorFacturas.setCuentaCheque("cuentaCheque");
-        proveedorFacturas.setDireccion("direccion");
-        proveedorFacturas.setCorreo("proveedor@proveedor.com");
-        proveedorFacturas.setIdFiscal("idfiscal");
-        proveedorFacturas.setTipoTercero("tipotercero");
-        proveedorFacturas.setTelefono("8261368265");
-        proveedorFacturas.setStatus("a");
-        proveedorFacturas.setRfc("rfc");
-        proveedorFacturas.setRazonSocial("razonSocial");
-        dao.crea(proveedorFacturas, usuario);
+    @Test
+    public void testCreas() {
+        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) obtieneProveedor();
 
+        dao.crea(proveedorFacturas, proveedorFacturas);
+        assertNotNull(proveedorFacturas.getId());
         ProveedorFacturas proveedorFacturas1 = dao.obtiene(proveedorFacturas.getId());
         assertEquals(proveedorFacturas.getBanco(), proveedorFacturas1.getBanco());
+    }
+
+    @Test
+    public void testActualiza() {
+        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) obtieneProveedor();
+
+        dao.crea(proveedorFacturas, proveedorFacturas);
+        assertNotNull(proveedorFacturas.getId());
+        ProveedorFacturas proveedorFacturas1 = dao.obtiene(proveedorFacturas.getId());
+        assertEquals(proveedorFacturas.getBanco(), proveedorFacturas1.getBanco());
+
+
         proveedorFacturas1.setBanco("banco1");
-        dao.actualiza(proveedorFacturas1, usuario);
+        dao.actualiza(proveedorFacturas1, proveedorFacturas1);
 
         currentSession().refresh(proveedorFacturas);
         assertEquals(proveedorFacturas.getBanco(), "banco1");
 
     }
 
+    @Test
     public void testElimina() {
-        Usuario usuario = obtieneUsuario();
-        ProveedorFacturas proveedorFacturas = new ProveedorFacturas();
-        proveedorFacturas.setBanco("banco");
-        proveedorFacturas.setCURP("curp");
-        proveedorFacturas.setClabe("clabe");
-        proveedorFacturas.setCuentaCheque("cuentaCheque");
-        proveedorFacturas.setDireccion("direccion");
-        proveedorFacturas.setCorreo("proveedor@proveedor.com");
-        proveedorFacturas.setIdFiscal("idfiscal");
-        proveedorFacturas.setTipoTercero("tipotercero");
-        proveedorFacturas.setTelefono("8261368265");
-        proveedorFacturas.setStatus("A");
-        proveedorFacturas.setRfc("rfc");
-        proveedorFacturas.setRazonSocial("razonSocial");
-        dao.crea(proveedorFacturas, usuario);
+        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) obtieneProveedor();
 
+        dao.crea(proveedorFacturas, proveedorFacturas);
+        assertNotNull(proveedorFacturas.getId());
         String rfc = dao.elimina(proveedorFacturas.getId());
         assertEquals(rfc, proveedorFacturas.getRfc());
 

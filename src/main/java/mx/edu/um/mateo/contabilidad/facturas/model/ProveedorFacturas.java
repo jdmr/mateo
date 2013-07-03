@@ -26,9 +26,28 @@ public class ProveedorFacturas extends Usuario {
     private String tipoTercero;
     private String clabe; //clave interbancaria
     private String banco;
-    private String email;
     private String status;
     private String cuentaCheque;
+
+    public ProveedorFacturas() {
+    }
+
+    public ProveedorFacturas(String username, String password, String nombre, String apPaterno, String apMaterno, String correo,
+            String razonSocial, String rfc, String idFiscal, String CURP, String direccion, String telefono,
+            String tipoTercero, String clabe, String banco, String status, String cuentaCheque) {
+        super(username, password, nombre, apPaterno, apMaterno, correo);
+        this.razonSocial = razonSocial;
+        this.rfc = rfc;
+        this.idFiscal = idFiscal;
+        this.CURP = CURP;
+        this.direccion = direccion;
+        this.telefono = telefono;
+        this.tipoTercero = tipoTercero;
+        this.clabe = clabe;
+        this.banco = banco;
+        this.status = status;
+        this.cuentaCheque = cuentaCheque;
+    }
 
     public String getRazonSocial() {
         return razonSocial;
@@ -102,14 +121,6 @@ public class ProveedorFacturas extends Usuario {
         this.banco = banco;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -130,6 +141,6 @@ public class ProveedorFacturas extends Usuario {
     public String toString() {
         return "ProveedorFacturas{" + "razonSocial=" + razonSocial + ", rfc=" + rfc + ", idFiscal=" + idFiscal + ", CURP=" + CURP
                 + ", direccion=" + direccion + ", telefono=" + telefono + ", tipoTercero=" + tipoTercero + ", clabe=" + clabe
-                + ", banco=" + banco + ", email=" + email + ", status=" + status + ", cuentaCheque=" + cuentaCheque + '}';
+                + ", banco=" + banco + ", status=" + status + ", cuentaCheque=" + cuentaCheque + '}';
     }
 }
