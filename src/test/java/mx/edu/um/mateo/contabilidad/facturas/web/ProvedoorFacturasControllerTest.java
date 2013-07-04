@@ -54,6 +54,7 @@ public class ProvedoorFacturasControllerTest extends BaseControllerTest {
                     "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01",
                     "TEST-01", "TEST-01", "TEST-01", "a", "TEST-01");
             proveedorFacturas.setAlmacen(usuario.getAlmacen());
+            proveedorFacturas.setEmpresa(usuario.getEmpresa());
             currentSession().save(proveedorFacturas);
             assertNotNull(proveedorFacturas.getId());
         }
@@ -84,6 +85,7 @@ public class ProvedoorFacturasControllerTest extends BaseControllerTest {
         ProveedorFacturas proveedorFacturas = new ProveedorFacturas("testA", "TEST-01", "nombre", "appaterno", "apmaterno", "test@prv.edu.mx",
                 "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01",
                 "TEST-01", "TEST-01", "TEST-01", "a", "TEST-01");
+        proveedorFacturas.setEmpresa(usuario.getEmpresa());
         proveedorFacturas.setAlmacen(usuario.getAlmacen());
         currentSession().save(proveedorFacturas);
         assertNotNull(proveedorFacturas.getId());
@@ -102,6 +104,7 @@ public class ProvedoorFacturasControllerTest extends BaseControllerTest {
                 "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01",
                 "TEST-01", "TEST-01", "TEST-01", "a", "TEST-01");
         proveedorFacturas.setAlmacen(usuario.getAlmacen());
+        proveedorFacturas.setEmpresa(usuario.getEmpresa());
         currentSession().save(proveedorFacturas);
         assertNotNull(proveedorFacturas.getId());
 
@@ -117,6 +120,9 @@ public class ProvedoorFacturasControllerTest extends BaseControllerTest {
         Usuario proveedorFacturas = obtieneProveedor();
         this.authenticate(proveedorFacturas, proveedorFacturas.getPassword(), new ArrayList<GrantedAuthority>(proveedorFacturas.getRoles()));
         this.mockMvc.perform(post(Constantes.PATH_PROVEEDORFACTURAS_GRABA)
+                //                .param("almacen", proveedorFacturas.getAlmacen().getId().toString())
+                //                .param("empresa", proveedorFacturas.getEmpresa().getId().toString())
+                .param("username", "testC1")
                 .param("username", "testC1")
                 .param("correo", "test@test.com")
                 .param("password", "test")
@@ -145,10 +151,11 @@ public class ProvedoorFacturasControllerTest extends BaseControllerTest {
                 "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01",
                 "TEST-01", "TEST-01", "TEST-01", "a", "TEST-01");
         proveedorFacturas.setAlmacen(usuario.getAlmacen());
+        proveedorFacturas.setEmpresa(usuario.getEmpresa());
         currentSession().save(proveedorFacturas);
         assertNotNull(proveedorFacturas.getId());
         this.authenticate(proveedorFacturas, proveedorFacturas.getPassword(), new ArrayList<GrantedAuthority>(proveedorFacturas.getRoles()));
-        this.mockMvc.perform(post(Constantes.PATH_INFORMEPROVEEDOR_DETALLE_ACTUALIZA)
+        this.mockMvc.perform(post(Constantes.PATH_PROVEEDORFACTURAS_ACTUALIZA)
                 .param("version", proveedorFacturas.getVersion().toString())
                 .param("id", proveedorFacturas.getId().toString())
                 .param("username", "testC1")
@@ -169,7 +176,7 @@ public class ProvedoorFacturasControllerTest extends BaseControllerTest {
                 .param("tipoTercero", "kjasdkjasd")
                 .param("cuentaCheque", "05052010"))
                 .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "detalle.graba.message"))
+                .andExpect(flash().attribute("message", "proveedor.actualizado.message"))
                 .andExpect(redirectedUrl(Constantes.PATH_PROVEEDORFACTURAS_LISTA));
         currentSession().refresh(proveedorFacturas);
         log.debug("{}", proveedorFacturas);
@@ -178,17 +185,19 @@ public class ProvedoorFacturasControllerTest extends BaseControllerTest {
 
     @Test
     public void testElimina() throws Exception {
+        Usuario usuario = obtieneUsuario();
         ProveedorFacturas proveedorFacturas = new ProveedorFacturas("testA", "TEST-01", "nombre", "appaterno", "apmaterno", "test@prv.edu.mx",
                 "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01",
                 "TEST-01", "TEST-01", "TEST-01", "a", "TEST-01");
-        proveedorFacturas.setAlmacen(proveedorFacturas.getAlmacen());
+        proveedorFacturas.setAlmacen(usuario.getAlmacen());
+        proveedorFacturas.setEmpresa(usuario.getEmpresa());
         currentSession().save(proveedorFacturas);
         assertNotNull(proveedorFacturas.getId());
         this.authenticate(proveedorFacturas, proveedorFacturas.getPassword(), new ArrayList<GrantedAuthority>(proveedorFacturas.getRoles()));
         this.mockMvc.perform(post(Constantes.PATH_PROVEEDORFACTURAS_ELIMINA)
                 .param("id", proveedorFacturas.getId().toString()))
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
-                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "proveedor.elimina.message"))
-                .andExpect(redirectedUrl(Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA));
+                .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "proveedor.eliminado.message"))
+                .andExpect(redirectedUrl(Constantes.PATH_PROVEEDORFACTURAS_LISTA));
     }
 }

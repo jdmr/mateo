@@ -6,13 +6,17 @@ package mx.edu.um.mateo.contabilidad.facturas.dao;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
 import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
+import mx.edu.um.mateo.general.dao.RolDao;
+import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -37,16 +41,23 @@ public class ProveedorFacturasDaoTest extends BaseDaoTest {
 
     @Autowired
     private ProveedorFacturasDao dao;
+    @Autowired
+    private RolDao rolDao;
 
     @Test
     public void testLista() {
         Usuario usuario = this.obtieneUsuario();
         ProveedorFacturas proveedorFacturas = null;
+        Rol rol = new Rol("ROLE_PRV");
+        currentSession().save(rol);
+        Set<Rol> roles = new HashSet<>();
+        roles.add(rol);
         for (int i = 0; i < 20; i++) {
             proveedorFacturas = new ProveedorFacturas("testA" + i, "TEST-01", "nombre", "appaterno", "apmaterno", "test" + i + "@prv.edu.mx",
                     "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01",
                     "TEST-01", "TEST-01", "TEST-01", "a", "TEST-01");
             proveedorFacturas.setAlmacen(usuario.getAlmacen());
+            proveedorFacturas.setRoles(roles);
             dao.crea(proveedorFacturas, usuario);
             assertNotNull(proveedorFacturas.getId());
         }

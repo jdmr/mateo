@@ -122,6 +122,7 @@ public class ProveedorFacturasDaoHibernate extends BaseDao implements ProveedorF
         Session session = currentSession();
         if (usuario != null) {
             proveedorFacturas.setEmpresa(usuario.getEmpresa());
+            proveedorFacturas.setAlmacen(usuario.getAlmacen());
         }
         log.debug("creando proveedor facturas {}" + proveedorFacturas);
         proveedorFacturas.setPassword(passwordEncoder.encodePassword(
@@ -140,6 +141,7 @@ public class ProveedorFacturasDaoHibernate extends BaseDao implements ProveedorF
         Session session = currentSession();
         if (usuario != null) {
             proveedorFacturas.setEmpresa(usuario.getEmpresa());
+            proveedorFacturas.setAlmacen(usuario.getAlmacen());
         }
         try {
             currentSession().update(proveedorFacturas);
