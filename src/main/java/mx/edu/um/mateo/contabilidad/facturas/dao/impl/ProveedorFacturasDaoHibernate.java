@@ -6,6 +6,7 @@ package mx.edu.um.mateo.contabilidad.facturas.dao.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import mx.edu.um.mateo.colportor.dao.RolDao;
 import mx.edu.um.mateo.contabilidad.facturas.dao.ProveedorFacturasDao;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
@@ -20,7 +21,9 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.ObjectRetrievalFailureException;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +34,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class ProveedorFacturasDaoHibernate extends BaseDao implements ProveedorFacturasDao {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private RolDao rolDao;
 
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
@@ -115,6 +123,12 @@ public class ProveedorFacturasDaoHibernate extends BaseDao implements ProveedorF
         if (usuario != null) {
             proveedorFacturas.setEmpresa(usuario.getEmpresa());
         }
+        log.debug("creando proveedor facturas {}" + proveedorFacturas);
+        proveedorFacturas.setPassword(passwordEncoder.encodePassword(
+                proveedorFacturas.getPassword(), proveedorFacturas.getUsername()));
+        log.debug("password" + proveedorFacturas.getPassword());
+        proveedorFacturas.addRol(rolDao.obtiene("ROLE_PRV"));
+        log.debug("rol del proveedor{}" + proveedorFacturas.getRoles());
         currentSession().save(proveedorFacturas);
         currentSession().merge(proveedorFacturas);
         currentSession().flush();
