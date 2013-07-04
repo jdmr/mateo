@@ -2937,4 +2937,13 @@ public class Constantes {
     public static final String ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE = "informeProveedorDetalle";
     //valoresProveedorFacturas
     public static final String CONTAINSKEY_PROVEEDORESFACTURAS = "proveedoresFacturas";
+    public static final String PATH_PROVEEDORFACTURAS = "/factura/proveedorFacturas";
+    public static final String PATH_PROVEEDORFACTURAS_LISTA = "/factura/proveedorFacturas/lista";
+    public static final String PATH_PROVEEDORFACTURAS_VER = "/factura/proveedorFacturas/ver";
+    public static final String PATH_PROVEEDORFACTURAS_NUEVO = "/factura/proveedorFacturas/nuevo";
+    public static final String PATH_PROVEEDORFACTURAS_EDITA = "/factura/proveedorFacturas/edita";
+    public static final String PATH_PROVEEDORFACTURAS_GRABA = "/factura/proveedorFacturas/graba";
+    public static final String PATH_PROVEEDORFACTURAS_ACTUALIZA = "/factura/proveedorFacturas/actualiza";
+    public static final String PATH_PROVEEDORFACTURAS_ELIMINA = "/factura/proveedorFacturas/elimina";
+    public static final String ADDATTRIBUTE_PROVEEDORFACTURAS = "proveedorFacturas";
 }
