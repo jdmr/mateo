@@ -64,23 +64,12 @@
                             <form:errors path="fechaFinal" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="temporada.asociacion">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="asociacion">
-                                <s:message code="asociacion.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:select path="asociacion" id="asociacion.id" required="true" cssClass="span3" >
-                                <form:options items="${asociaciones}" itemValue="id" itemLabel="nombre"/>
-                            </form:select>
-                            <form:errors path="asociacion" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+                    
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/colportor/temporada'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <a class="btn btn-large" href="<s:url value='/colportaje/temporada'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>

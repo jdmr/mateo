@@ -68,7 +68,7 @@ public class ColegioDaoTest {
             Colegio colegio = new Colegio();
             colegio.setNombre("Test");
             colegio.setStatus("A");
-            colegioDao.grabaColegio(colegio);
+            colegioDao.crea(colegio);
             assertNotNull(colegio.getId());
         }
         Map<String, Object> params = null;
@@ -88,9 +88,9 @@ public class ColegioDaoTest {
         Colegio colegio = new Colegio();
         colegio.setNombre("Test");
         colegio.setStatus("A");
-        colegioDao.grabaColegio(colegio);
+        colegioDao.crea(colegio);
         assertNotNull(colegio.getId());
-        Colegio prueba = colegioDao.getColegio(colegio.getId());
+        Colegio prueba = colegioDao.obtiene(colegio.getId());
         assertEquals(prueba.getId(), colegio.getId());
     }
 
@@ -103,7 +103,7 @@ public class ColegioDaoTest {
         Colegio colegio = new Colegio();
         colegio.setNombre("Test");
         colegio.setStatus("A");
-        colegioDao.grabaColegio(colegio);
+        colegioDao.crea(colegio);
         assertNotNull(colegio.getId());
     }
 
@@ -116,10 +116,10 @@ public class ColegioDaoTest {
         Colegio colegio = new Colegio();
         colegio.setNombre("Test");
         colegio.setStatus("A");
-        colegioDao.grabaColegio(colegio);
+        colegioDao.crea(colegio);
         assertNotNull(colegio.getId());
         colegio.setNombre("prueba");
-        colegioDao.grabaColegio(colegio);
+        colegioDao.crea(colegio);
         String prueba = "prueba";
         assertEquals(prueba, colegio.getNombre());
 
@@ -134,9 +134,9 @@ public class ColegioDaoTest {
         Colegio colegio = new Colegio();
         colegio.setNombre("Test");
         colegio.setStatus("A");
-        colegioDao.grabaColegio(colegio);
+        colegioDao.crea(colegio);
         assertNotNull(colegio.getId());
-        colegioDao.removeColegio(colegio.getId());
+        colegioDao.elimina(colegio.getId());
         //assertEquals("I", colegio.getStatus());
     }
 }

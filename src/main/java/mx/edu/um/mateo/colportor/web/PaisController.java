@@ -52,6 +52,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+
 /**
  *
  * @author osoto
@@ -59,6 +60,7 @@ import org.slf4j.Logger;
 @Controller
 @RequestMapping("/colportaje/pais")
 public class PaisController {
+
     private static final Logger log = (Logger) LoggerFactory.getLogger(PaisController.class);
     @Autowired
     private PaisDao paisDao;
@@ -70,6 +72,7 @@ public class PaisController {
     private UsuarioDao usuarioDao;
     @Autowired
     private Ambiente ambiente;
+
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -100,7 +103,7 @@ public class PaisController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = paisDao.lista(params);
             try {
-                generaReporte(tipo, (List<Pais>) params.get(Constantes.CONTAINSKEY_PAISES), response);
+                generaReporte(tipo, (List<Pais>) params.get(Constantes.PAIS_LIST), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -112,7 +115,7 @@ public class PaisController {
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<Pais>) params.get(Constantes.CONTAINSKEY_PAISES), request);
+                enviaCorreo(correo, (List<Pais>) params.get(Constantes.PAIS_LIST), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "pais.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("pais.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
@@ -120,7 +123,7 @@ public class PaisController {
             }
         }
         params = paisDao.lista(params);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAISES, params.get(Constantes.CONTAINSKEY_PAISES));
+        modelo.addAttribute(Constantes.PAIS_LIST, params.get(Constantes.PAIS_LIST));
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
         Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
@@ -130,15 +133,15 @@ public class PaisController {
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<Pais> pais = (List<Pais>) params.get(Constantes.CONTAINSKEY_PAISES);
+        List<Pais> pais = (List<Pais>) params.get(Constantes.PAIS_LIST);
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (pais.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
         return "/colportaje/pais/lista";
-        }
-    
+    }
+
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando Pais {}", id);
@@ -146,6 +149,7 @@ public class PaisController {
         modelo.addAttribute(Constantes.ADDATTRIBUTE_PAIS, paises);
         return Constantes.PATH_PAIS_VER;
     }
+
     @RequestMapping("/nueva")
     public String nueva(Model modelo) {
         log.debug("Nueva Pais");
@@ -153,6 +157,7 @@ public class PaisController {
         modelo.addAttribute(Constantes.ADDATTRIBUTE_PAIS, paises);
         return "/colportaje/pais/nueva";
     }
+
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Pais pais, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
@@ -173,6 +178,7 @@ public class PaisController {
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{pais.getNombre()});
         return "redirect:" + Constantes.PATH_PAIS_VER + "/" + pais.getId();
     }
+
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Edita Pais {}", id);
@@ -180,6 +186,7 @@ public class PaisController {
         modelo.addAttribute(Constantes.ADDATTRIBUTE_PAIS, paises);
         return Constantes.PATH_PAIS_EDITA;
     }
+
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid Pais pais, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
@@ -197,6 +204,7 @@ public class PaisController {
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{pais.getNombre()});
         return "redirect:" + Constantes.PATH_PAIS_VER + "/" + pais.getId();
     }
+
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Pais pais, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
@@ -207,11 +215,12 @@ public class PaisController {
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
         } catch (Exception e) {
             log.error("No se pudo eliminar el pais " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.CONTAINSKEY_PAISES, new String[]{"pais.no.eliminada.message"}, null, null));
+            bindingResult.addError(new ObjectError(Constantes.PAIS_LIST, new String[]{"pais.no.eliminada.message"}, null, null));
             return Constantes.PATH_PAIS_VER;
         }
         return "redirect:" + Constantes.PATH_PAIS;
     }
+
     private void generaReporte(String tipo, List<Pais> pais, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
@@ -314,6 +323,4 @@ public class PaisController {
 
         return archivo;
     }
-    
-    
 }

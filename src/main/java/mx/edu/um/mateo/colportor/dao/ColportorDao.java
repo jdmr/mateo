@@ -68,7 +68,7 @@ public class ColportorDao {
         return sessionFactory.getCurrentSession();
     }
     
-     public Map<String, Object> lista(Map<String, Object> params) throws FaltaAsociacionException{
+     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de colportores con params {}", params);
         log.debug("params"+params);
         if (params == null) {
@@ -90,21 +90,13 @@ public class ColportorDao {
         if (!params.containsKey(Constantes.CONTAINSKEY_OFFSET)) {
             params.put(Constantes.CONTAINSKEY_OFFSET, 0);
         }
-
-        if (!params.containsKey(Constantes.ADDATTRIBUTE_ASOCIACION)) {
-            params.put(Constantes.CONTAINSKEY_COLPORTORES, new ArrayList());
-            params.put(Constantes.CONTAINSKEY_CANTIDAD, 0L);
-
-               throw new FaltaAsociacionException("Asociacion No Encontrada");
-        }
         
         Criteria criteria = currentSession().createCriteria(Colportor.class);
         Criteria countCriteria = currentSession().createCriteria(Colportor.class);
 
-        if (params.containsKey(Constantes.ADDATTRIBUTE_ASOCIACION)) {
-            log.debug("valor de asociacion"+params.get(Constantes.ADDATTRIBUTE_ASOCIACION));
-            criteria.createCriteria(Constantes.ADDATTRIBUTE_ASOCIACION).add(Restrictions.eq("id",((Asociacion)params.get(Constantes.ADDATTRIBUTE_ASOCIACION)).getId()));
-            countCriteria.createCriteria(Constantes.ADDATTRIBUTE_ASOCIACION).add(Restrictions.eq("id",((Asociacion)params.get(Constantes.ADDATTRIBUTE_ASOCIACION)).getId()));
+        if (params.containsKey("empresa")) {
+            criteria.createCriteria("empresa").add(Restrictions.eq("id",params.get("empresa")));
+            countCriteria.createCriteria("empresa").add(Restrictions.eq("id", params.get("empresa")));
         }
 
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
@@ -132,8 +124,8 @@ public class ColportorDao {
             criteria.setFirstResult((Integer) params.get(Constantes.CONTAINSKEY_OFFSET));
             criteria.setMaxResults((Integer) params.get(Constantes.CONTAINSKEY_MAX));
         }
-        params.put(Constantes.CONTAINSKEY_COLPORTORES, criteria.list());
-        log.debug("colportores***"+((List) params.get(Constantes.CONTAINSKEY_COLPORTORES)).size());
+        params.put(Constantes.COLPORTOR_LIST, criteria.list());
+        log.debug("colportores***"+((List) params.get(Constantes.COLPORTOR_LIST)).size());
                
         countCriteria.setProjection(Projections.rowCount());
         params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));

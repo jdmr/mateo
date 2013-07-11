@@ -10,8 +10,6 @@ import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inscripciones.dao.TiposBecasDao;
 import mx.edu.um.mateo.inscripciones.model.TiposBecas;
-import mx.edu.um.mateo.rh.model.Colegio;
-import mx.edu.um.mateo.rh.model.PerDed;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
@@ -38,7 +36,7 @@ public class TiposBecasDaoHibernate extends BaseDao implements TiposBecasDao{
      */
 
  @Override
-    public Map<String, Object> getTiposBeca(Map<String, Object> params) {
+    public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de Tipos de Becas con params {}", params);
         if (params == null) {
             params = new HashMap<>();
@@ -107,7 +105,7 @@ public class TiposBecasDaoHibernate extends BaseDao implements TiposBecasDao{
      * @see mx.edu.um.afe.dao.TipoAFEBecaDao#getTipoBeca(Integer id)
      */
     @Override
-    public TiposBecas getTipoBeca(final Integer id) {
+    public TiposBecas obtiene(final Integer id) {
         TiposBecas tipoBeca =  (TiposBecas) currentSession().get(TiposBecas.class, id);
         if (tipoBeca == null) {
             //log.warn("uh oh, tipoBeca with id '" + id + "' not found...");
@@ -145,14 +143,29 @@ public class TiposBecasDaoHibernate extends BaseDao implements TiposBecasDao{
      * @see mx.edu.um.afe.dao.TipoAFEBecaDao#removeTipoBeca(Integer id)
      */
     @Override
-    public String removeTipoBeca(final Integer id) {
-       TiposBecas tiposBecas = this.getTipoBeca(id);
+    public String elimina(final Integer id) {
+       TiposBecas tiposBecas = this.obtiene(id);
        String descripcion = tiposBecas.getDescripcion(); 
        currentSession().delete(tiposBecas);
         currentSession().flush();
         return descripcion;
         
     }
+    
+     /**
+     * @see mx.edu.um.mateo.inscripciones.dao.TiposBecasDao#obtiene(java.lang.String) 
+     */
+    @Override
+    public TiposBecas obtiene(final String descripcion) {
+        Criteria sql = currentSession().createCriteria(TiposBecas.class);
+        sql.add(Restrictions.eq("descripcion", descripcion));
+        TiposBecas tipoBeca = (TiposBecas)sql.uniqueResult();
+        if (tipoBeca == null) {
+            log.warn("uh oh, tipoBeca with descripcion '" + descripcion + "' not found...");
+//            throw new ObjectRetrievalFailureException(TiposBecas.class, descripcion);
+        }
 
+        return tipoBeca;
+    }
 
 }

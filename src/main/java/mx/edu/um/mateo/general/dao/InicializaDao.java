@@ -30,4 +30,6 @@ package mx.edu.um.mateo.general.dao;
 public interface InicializaDao {
     
     public void inicializa(String username, String password);
+    
+    public void inicializaRoles(String username, String password, String roles);
 }

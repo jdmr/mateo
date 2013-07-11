@@ -15,7 +15,10 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import mx.edu.um.mateo.general.model.Empresa;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  *
@@ -31,6 +34,7 @@ public class AFEConvenio implements Serializable{
 
     @Version
     private Integer version;
+    @NotBlank
     @Column
     String matricula;    
     @Column( length = 2)

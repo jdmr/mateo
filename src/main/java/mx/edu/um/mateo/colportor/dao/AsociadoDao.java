@@ -50,7 +50,7 @@ public class AsociadoDao {
         return sessionFactory.getCurrentSession();
     }
 
-    public Map<String, Object> lista(Map<String, Object> params) throws FaltaAsociacionException{
+    public Map<String, Object> lista(Map<String, Object> params){
         log.debug("Buscando lista de asociado con params {}", params);
               if (params == null) {
             params = new HashMap<>();
@@ -71,20 +71,13 @@ public class AsociadoDao {
         if (!params.containsKey(Constantes.CONTAINSKEY_OFFSET)) {
             params.put(Constantes.CONTAINSKEY_OFFSET, 0);
         }
-
-        if (!params.containsKey(Constantes.ADDATTRIBUTE_ASOCIACION)) {
-            params.put(Constantes.CONTAINSKEY_ASOCIADOS, new ArrayList());
-            params.put(Constantes.CONTAINSKEY_CANTIDAD, 0L);
-            throw new FaltaAsociacionException("Asociacion No Encontrada");
-        }
         
         Criteria criteria = currentSession().createCriteria(Asociado.class);
         Criteria countCriteria = currentSession().createCriteria(Asociado.class);
 
-        if (params.containsKey(Constantes.ADDATTRIBUTE_ASOCIACION)) {
-            log.debug("valor de asociacion"+params.get(Constantes.ADDATTRIBUTE_ASOCIACION));
-            criteria.createCriteria(Constantes.ADDATTRIBUTE_ASOCIACION).add(Restrictions.eq("id",((Asociacion)params.get("asociacion")).getId()));
-            countCriteria.createCriteria(Constantes.ADDATTRIBUTE_ASOCIACION).add(Restrictions.eq("id",((Asociacion)params.get("asociacion")).getId()));
+        if (params.containsKey("empresa")) {
+            criteria.createCriteria("empresa").add(Restrictions.eq("id",params.get("empresa")));
+            countCriteria.createCriteria("empresa").add(Restrictions.eq("id",params.get("empresa")));
         }
 
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
@@ -110,11 +103,11 @@ public class AsociadoDao {
             criteria.setFirstResult((Integer) params.get(Constantes.CONTAINSKEY_OFFSET));
             criteria.setMaxResults((Integer) params.get(Constantes.CONTAINSKEY_MAX));
         }
-        params.put(Constantes.CONTAINSKEY_ASOCIADOS, criteria.list());
+        params.put(Constantes.ASOCIADO_LIST, criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));
-        log.debug("params"+params);
+        
         return params;
     }
 
@@ -125,10 +118,17 @@ public class AsociadoDao {
     }
     
 
-    public Asociado crea(Asociado asociado, String[] nombreDeRoles) {
+    public Asociado crea(Asociado asociado, Usuario usuario) {
         log.debug("Creando cuenta de asociado : {}", asociado);
         asociado.setPassword(passwordEncoder.encodePassword(asociado.getPassword(), asociado.getUsername()));
-        log.debug("password"+asociado.getPassword());
+        
+        if(usuario != null){
+            asociado.setEmpresa(usuario.getEmpresa());
+            asociado.setAlmacen(usuario.getAlmacen());
+        }
+        
+        currentSession().save(asociado);
+        
         asociado.addRol(rolDao.obtiene("ROLE_ASOC"));
         currentSession().save(asociado);
         currentSession().flush();

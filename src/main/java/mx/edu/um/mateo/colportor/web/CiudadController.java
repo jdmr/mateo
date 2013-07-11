@@ -56,6 +56,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/colportaje/ciudad")
 public class CiudadController {
+
     private static final Logger log = (Logger) LoggerFactory.getLogger(CiudadController.class);
     @Autowired
     private CiudadDao ciudadDao;
@@ -69,6 +70,7 @@ public class CiudadController {
     private UsuarioDao usuarioDao;
     @Autowired
     private Ambiente ambiente;
+
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -99,7 +101,7 @@ public class CiudadController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = ciudadDao.lista(params);
             try {
-                generaReporte(tipo, (List<Ciudad>) params.get(Constantes.CONTAINSKEY_CIUDADES), response);
+                generaReporte(tipo, (List<Ciudad>) params.get(Constantes.CIUDAD_LIST), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -111,7 +113,7 @@ public class CiudadController {
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<Ciudad>) params.get(Constantes.CONTAINSKEY_CIUDADES), request);
+                enviaCorreo(correo, (List<Ciudad>) params.get(Constantes.CIUDAD_LIST), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "ciudad.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("ciudad.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
@@ -119,7 +121,7 @@ public class CiudadController {
             }
         }
         params = ciudadDao.lista(params);
-        modelo.addAttribute(Constantes.CONTAINSKEY_CIUDADES, params.get(Constantes.CONTAINSKEY_CIUDADES));
+        modelo.addAttribute(Constantes.CIUDAD_LIST, params.get(Constantes.CIUDAD_LIST));
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
         Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
@@ -129,14 +131,15 @@ public class CiudadController {
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<Ciudad> ciudad = (List<Ciudad>) params.get(Constantes.CONTAINSKEY_CIUDADES);
+        List<Ciudad> ciudad = (List<Ciudad>) params.get(Constantes.CIUDAD_LIST);
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (ciudad.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
         return Constantes.PATH_CIUDAD_LISTA;
-        }
+    }
+
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando Ciudad {}", id);
@@ -144,16 +147,18 @@ public class CiudadController {
         modelo.addAttribute(Constantes.ADDATTRIBUTE_CIUDAD, ciudad);
         return Constantes.PATH_CIUDAD_VER;
     }
+
     @RequestMapping("/nueva")
     public String nueva(Model modelo) {
         log.debug("Nueva Ciudad");
         Ciudad ciudad = new Ciudad();
-        
+
         Map<String, Object> estados = estadoDao.lista(null);
-        modelo.addAttribute(Constantes.CONTAINSKEY_ESTADOS, estados.get(Constantes.CONTAINSKEY_ESTADOS));
+        modelo.addAttribute(Constantes.ESTADO_LIST, estados.get(Constantes.ESTADO_LIST));
         modelo.addAttribute(Constantes.ADDATTRIBUTE_CIUDAD, ciudad);
         return Constantes.PATH_CIUDAD_NUEVA;
     }
+
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Ciudad ciudad, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
@@ -176,15 +181,17 @@ public class CiudadController {
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{ciudad.getNombre()});
         return "redirect:" + Constantes.PATH_CIUDAD_VER + "/" + ciudad.getId();
     }
+
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Edita Ciudad {}", id);
         Map<String, Object> estados = estadoDao.lista(null);
-        modelo.addAttribute(Constantes.CONTAINSKEY_ESTADOS, estados.get(Constantes.CONTAINSKEY_ESTADOS));
+        modelo.addAttribute(Constantes.ESTADO_LIST, estados.get(Constantes.ESTADO_LIST));
         Ciudad ciudad = ciudadDao.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_CIUDAD, ciudad);
         return Constantes.PATH_CIUDAD_EDITA;
     }
+
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid Ciudad ciudad, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
@@ -204,6 +211,7 @@ public class CiudadController {
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{ciudad.getNombre()});
         return "redirect:" + Constantes.PATH_CIUDAD_VER + "/" + ciudad.getId();
     }
+
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Ciudad ciudad, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
@@ -214,11 +222,12 @@ public class CiudadController {
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
         } catch (Exception e) {
             log.error("No se pudo eliminar el pais " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.CONTAINSKEY_PAISES, new String[]{"ciudad.no.eliminada.message"}, null, null));
+            bindingResult.addError(new ObjectError(Constantes.PAIS_LIST, new String[]{"ciudad.no.eliminada.message"}, null, null));
             return Constantes.PATH_CIUDAD_VER;
         }
         return "redirect:" + Constantes.PATH_CIUDAD_LISTA;
     }
+
     private void generaReporte(String tipo, List<Ciudad> ciudad, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;

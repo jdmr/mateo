@@ -21,7 +21,7 @@
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/inscripciones/afeConvenio/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='afeConvenio.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/inscripciones/afeConvenio/asignarConvenio'/>"><i class="icon-user icon-white"></i> <s:message code='afeConvenio.nuevo.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>

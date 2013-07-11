@@ -68,9 +68,7 @@ public class AsociadoController extends BaseController {
             Model modelo) {
         log.debug("Mostrando lista de Asociado");
         Map<String, Object> params = new HashMap<>();
-        //Long asociacionId = (Long) request.getSession().getAttribute("asociacionId");
-        //params.put(Constantes.ADDATTRIBUTE_ASOCIACION, asociacionId);
-        params.put(Constantes.ADDATTRIBUTE_ASOCIACION, ((Asociacion) request.getSession().getAttribute(Constantes.SESSION_ASOCIACION)));
+        params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }
@@ -80,13 +78,10 @@ public class AsociadoController extends BaseController {
         }
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
+            params = asociadoDao.lista(params);
+            
             try {
-                params = asociadoDao.lista(params);
-            } catch (FaltaAsociacionException ex) {
-                log.error("Falta asociacion", ex);
-            }
-            try {
-                generaReporte(tipo, (List<Asociado>) params.get(Constantes.CONTAINSKEY_ASOCIADOS), response, Constantes.CONTAINSKEY_ASOCIADOS, Constantes.ASO, null);
+                generaReporte(tipo, (List<Asociado>) params.get(Constantes.ASOCIADO_LIST), response, Constantes.ASOCIADO_LIST, Constantes.ASO, null);
                 return null;
             } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -96,29 +91,23 @@ public class AsociadoController extends BaseController {
         }
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            try {
-                params = asociadoDao.lista(params);
-            } catch (FaltaAsociacionException ex) {
-                java.util.logging.Logger.getLogger(AsociadoController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            params = asociadoDao.lista(params);
+            
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<Asociado>) params.get(Constantes.CONTAINSKEY_ASOCIADOS), request, Constantes.CONTAINSKEY_ASOCIADOS, Constantes.ASO, null);
+                enviaCorreo(correo, (List<Asociado>) params.get(Constantes.ASOCIADO_LIST), request, Constantes.ASOCIADO_LIST, Constantes.ASO, null);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("asociado.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-        try {
-            params = asociadoDao.lista(params);
-        } catch (FaltaAsociacionException ex) {
-            log.error("Falta asociacion", ex);
-        }
-        log.debug("Asociados" + ((List) params.get(Constantes.CONTAINSKEY_ASOCIADOS)).size());
-        modelo.addAttribute(Constantes.CONTAINSKEY_ASOCIADOS, params.get(Constantes.CONTAINSKEY_ASOCIADOS));
+        params = asociadoDao.lista(params);
+        
+        log.debug("Asociados" + ((List) params.get(Constantes.ASOCIADO_LIST)).size());
+        modelo.addAttribute(Constantes.ASOCIADO_LIST, params.get(Constantes.ASOCIADO_LIST));
 
-        this.pagina(params, modelo, Constantes.CONTAINSKEY_ASOCIADOS, pagina);
+        this.pagina(params, modelo, Constantes.ASOCIADO_LIST, pagina);
 
         return Constantes.PATH_ASOCIADO_LISTA;
     }
@@ -133,37 +122,31 @@ public class AsociadoController extends BaseController {
 
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
-    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Asociado asociados, @Valid Usuario usuario, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Asociado asociado, @Valid Usuario usuario, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
+            this.despliegaBindingResultErrors(bindingResult);
             return Constantes.PATH_ASOCIADO_NUEVO;
         }
         String password = null;
         password = KeyGenerators.string().generateKey();
         log.debug("passwordAsociado" + password);
         try {
-            String[] roles = request.getParameterValues("roles");
-            log.debug("Asignando ROLE_ASO por defecto");
-            roles = new String[]{"ROLE_ASO"};
-            modelo.addAttribute("roles", roles);
-            asociados.setAsociacion((Asociacion) request.getSession().getAttribute(Constantes.SESSION_ASOCIACION));
-            asociados.setPassword(password);
-            asociados = asociadoDao.crea(asociados, roles);
+            asociado.setPassword(password);
+            asociado = asociadoDao.crea(asociado, ambiente.obtieneUsuario());
 
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al asociado", e);
             return Constantes.PATH_ASOCIADO_NUEVO;
-//                (Exception e){
-//            e.printStackTrace();
 
         }
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "asociado.creado.message");
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{asociados.getNombre()});
-        return "redirect:" + Constantes.PATH_ASOCIADO_VER + "/" + asociados.getId();
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{asociado.getNombre()});
+        return "redirect:" + Constantes.PATH_ASOCIADO_VER + "/" + asociado.getId();
     }
 
     @RequestMapping("/ver/{id}")
@@ -223,7 +206,7 @@ public class AsociadoController extends BaseController {
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
         } catch (Exception e) {
             log.error("No se pudo eliminar el asociado " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.CONTAINSKEY_ASOCIADOS, new String[]{"asociado.no.eliminado.message"}, null, null));
+            bindingResult.addError(new ObjectError(Constantes.ASOCIADO_LIST, new String[]{"asociado.no.eliminado.message"}, null, null));
             return Constantes.PATH_ASOCIADO_VER;
         }
 

@@ -25,6 +25,7 @@ package mx.edu.um.mateo.general.dao.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import mx.edu.um.mateo.contabilidad.utils.ProveedorNotFoundException;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.dao.ProveedorDao;
 import mx.edu.um.mateo.general.model.Proveedor;
@@ -129,6 +130,20 @@ public class ProveedorDaoHibernate extends BaseDao implements ProveedorDao {
         Proveedor proveedor = (Proveedor) currentSession().get(Proveedor.class,
                 id);
         return proveedor;
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Proveedor obtiene(String rfc) throws ProveedorNotFoundException {
+        log.debug("RFC: {}", rfc);
+        Criteria sql = getSession().createCriteria(Proveedor.class);
+        sql.add(Restrictions.eq("rfc", rfc));
+        Object p = sql.uniqueResult();
+        if(p == null){
+            //throw new ProveedorNotFoundException("Proveedor con rfc "+rfc+" no existe!");
+            return new Proveedor();
+        }
+        return (Proveedor)p;
     }
 
     @Override

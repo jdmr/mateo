@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  *
- * @author wilbert
+ * @author osoto
  */
 @Entity
 @Table(name="documentos")
@@ -36,20 +36,20 @@ public class Documento implements Serializable{
     private BigDecimal importe;
     @Column(length = 1000)
     private String observaciones;
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private TemporadaColportor temporadaColportor;
   
     
     public Documento(){
     }
   
-    public Documento(String tipoDeDocumento, String folio, Date fecha, BigDecimal importe, String observaciones, TemporadaColportor temporadaColporotor) {
+    public Documento(String tipoDeDocumento, String folio, Date fecha, BigDecimal importe, String observaciones, TemporadaColportor temporadaColportor) {
         this.tipoDeDocumento = tipoDeDocumento;
         this.folio = folio;
         this.fecha = fecha;
         this.importe = importe;
         this.observaciones = observaciones;
-        this.temporadaColportor = temporadaColporotor;
+        this.temporadaColportor = temporadaColportor;
     }
 
     public Date getFecha() {
@@ -92,7 +92,7 @@ public class Documento implements Serializable{
         this.observaciones = observaciones;
     }
 
-    public TemporadaColportor getTemporadaColporotor() {
+    public TemporadaColportor getTemporadaColportor() {
         return temporadaColportor;
     }
 

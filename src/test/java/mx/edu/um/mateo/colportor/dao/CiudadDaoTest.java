@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 package mx.edu.um.mateo.colportor.dao;
+
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.colportor.model.Ciudad;
@@ -75,9 +76,9 @@ public class CiudadDaoTest {
         }
         Map<String, Object> params = null;
         Map result = instance.lista(params);
-        assertNotNull(result.get(Constantes.CONTAINSKEY_CIUDADES));
+        assertNotNull(result.get(Constantes.CIUDAD_LIST));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
-        assertEquals(10, ((List<Ciudad>) result.get(Constantes.CONTAINSKEY_CIUDADES)).size());
+        assertEquals(10, ((List<Ciudad>) result.get(Constantes.CIUDAD_LIST)).size());
         assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
 

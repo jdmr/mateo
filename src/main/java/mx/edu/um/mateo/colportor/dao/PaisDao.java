@@ -14,7 +14,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections; 
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,15 +30,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class PaisDao {
+
     private static final Logger log = LoggerFactory.getLogger(PaisDao.class);
     @Autowired
     private SessionFactory sessionFactory;
+
     public PaisDao() {
         log.info("Nueva instancia de PaisDao");
     }
+
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
+
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de Pais con params {}", params);
         if (params == null) {
@@ -79,23 +83,26 @@ public class PaisDao {
             criteria.setFirstResult((Integer) params.get(Constantes.CONTAINSKEY_OFFSET));
             criteria.setMaxResults((Integer) params.get(Constantes.CONTAINSKEY_MAX));
         }
-        params.put(Constantes.CONTAINSKEY_PAISES, criteria.list());
+        params.put(Constantes.PAIS_LIST, criteria.list());
         countCriteria.setProjection(Projections.rowCount());
         params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));
         return params;
     }
-        public Pais obtiene(Long id) {
+
+    public Pais obtiene(Long id) {
         log.debug("Obtiene Pais con id = {}", id);
         Pais pais = (Pais) currentSession().get(Pais.class, id);
         return pais;
     }
-        public Pais crea(Pais pais) {
+
+    public Pais crea(Pais pais) {
         log.debug("Creando Pais : {}", pais);
         currentSession().save(pais);
         currentSession().flush();
         return pais;
     }
-        public Pais actualiza(Pais pais) {
+
+    public Pais actualiza(Pais pais) {
         log.debug("Actualizando pais {}", pais);
         //trae el objeto de la DB 
         Pais nuevo = (Pais) currentSession().get(Pais.class, pais.getId());
@@ -106,7 +113,8 @@ public class PaisDao {
         currentSession().flush();
         return nuevo;
     }
-        public String elimina(Long id) throws UltimoException {
+
+    public String elimina(Long id) throws UltimoException {
         log.debug("Eliminando pais con id {}", id);
         Pais pais = obtiene(id);
         currentSession().delete(pais);

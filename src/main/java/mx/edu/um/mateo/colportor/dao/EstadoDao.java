@@ -19,7 +19,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils; 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,15 +31,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class EstadoDao {
+
     private static final Logger log = LoggerFactory.getLogger(EstadoDao.class);
     @Autowired
     private SessionFactory sessionFactory;
+
     public EstadoDao() {
         log.info("Nueva instancia de EstadoDao");
     }
+
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
+
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de Estado con params {}", params);
         if (params == null) {
@@ -80,24 +84,27 @@ public class EstadoDao {
             criteria.setFirstResult((Integer) params.get(Constantes.CONTAINSKEY_OFFSET));
             criteria.setMaxResults((Integer) params.get(Constantes.CONTAINSKEY_MAX));
         }
-        params.put(Constantes.CONTAINSKEY_ESTADOS, criteria.list());
-        log.debug("Rows returned {}",((List)params.get(Constantes.CONTAINSKEY_ESTADOS)).size());
+        params.put(Constantes.ESTADO_LIST, criteria.list());
+        log.debug("Rows returned {}", ((List) params.get(Constantes.ESTADO_LIST)).size());
         countCriteria.setProjection(Projections.rowCount());
         params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));
         return params;
     }
-        public Estado obtiene(Long id) {
+
+    public Estado obtiene(Long id) {
         log.debug("Obtiene Estado con id = {}", id);
         Estado estado = (Estado) currentSession().get(Estado.class, id);
         return estado;
     }
-        public Estado crea(Estado estado) {
+
+    public Estado crea(Estado estado) {
         log.debug("Creando Estado : {}", estado);
         currentSession().save(estado);
         currentSession().flush();
         return estado;
     }
-        public Estado actualiza(Estado estado) {
+
+    public Estado actualiza(Estado estado) {
         log.debug("Actualizando Estado {}", estado);
         //trae el objeto de la DB 
         Estado nuevo = (Estado) currentSession().get(Estado.class, estado.getId());
@@ -108,7 +115,8 @@ public class EstadoDao {
         currentSession().flush();
         return nuevo;
     }
-        public String elimina(Long id) throws UltimoException {
+
+    public String elimina(Long id) throws UltimoException {
         log.debug("Eliminando Estado con id {}", id);
         Estado estado = obtiene(id);
         currentSession().delete(estado);
@@ -117,4 +125,3 @@ public class EstadoDao {
         return nombre;
     }
 }
-    

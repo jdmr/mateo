@@ -64,10 +64,13 @@ public class DocumentoDao {
             params.put(Constantes.CONTAINSKEY_OFFSET, 0);
         }
         
-        Criteria criteria = currentSession().createCriteria(Documento.class)
-                .setFetchMode("temporadaColportor", FetchMode.SELECT);
-        Criteria countCriteria = currentSession().createCriteria(Documento.class)
-                .setFetchMode("temporadaColportor", FetchMode.SELECT);
+        Criteria criteria = currentSession().createCriteria(Documento.class);
+        Criteria countCriteria = currentSession().createCriteria(Documento.class);
+        
+        if(params.get("temporadaColportor")!=null){
+            criteria.add(Restrictions.eq("temporadaColportor.id",params.get("temporadaColportor")));
+        
+        }
 
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
             String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);
@@ -77,11 +80,6 @@ public class DocumentoDao {
             propiedades.add(Restrictions.ilike("folio", filtro));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
-        }
-        
-        if(params.get("temporadaColportor")!=null){
-            criteria.add(Restrictions.eq("temporadaColportor",params.get("temporadaColportor")));
-        
         }
 
         if (params.containsKey(Constantes.CONTAINSKEY_ORDER)) {
@@ -99,9 +97,9 @@ public class DocumentoDao {
         }
         
          if(params.get("temporadaColportor")!=null){
-             params.put(Constantes.CONTAINSKEY_DOCUMENTOS, criteria.list());
+             params.put(Constantes.DOCUMENTOCOLPORTOR_LIST, criteria.list());
          }else{
-              params.put(Constantes.CONTAINSKEY_DOCUMENTOS, new ArrayList());
+              params.put(Constantes.DOCUMENTOCOLPORTOR_LIST, new ArrayList());
          }
        
         countCriteria.setProjection(Projections.rowCount());

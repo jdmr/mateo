@@ -20,23 +20,18 @@
         </triggeringPolicy>
     </appender>
     <logger name="mx.edu.um.mateo" level="debug"/>
-    <logger name="mx.edu.um.mateo.colportor" level="debug"/>
-    <logger name="org.springframework.orm.hibernate4" level="ERROR"/>
-    <logger name="org.hibernate.engine.transaction" level="ERROR"/>
-    
-    <logger name="org.hibernate.SQL" level="TRACE"/>
-    <logger name="org.hibernate.type" level="ERROR"/>
+    <logger name="mx.edu.um.mateo.colportor" level="debug"/>    
+    <logger name="mx.edu.um.mateo.contabilidad" level="debug"/>    
     
     <logger name="org.springframework" level="error"/>
     <logger name="org.springframework.security" level="error"/>
-    <logger name="org.hibernate" level="error"/>
+    <logger name="org.springframework.webflow" level="error"/>
     
-    <logger name="org.springframework" level="ERROR"/>
-    <logger name="org.springframework.security" level="ERROR"/>
-     
-    <logger name="org.springframework.orm.hibernate4" level="DEBUG"/>
-    <logger name="org.hibernate.type" level="TRACE"/>
-    <logger name="org.springframework" level="DEBUG"/>
+    <logger name="org.hibernate" level="error"/>
+    <logger name="org.hibernate.SQL" level="error"/>
+    <logger name="org.hibernate.type" level="error"/>
+    <logger name="org.hibernate.engine.transaction" level="ERROR"/>
+    
     <root level="INFO">
         <appender-ref ref="stdout"/>
         <appender-ref ref="R"/>

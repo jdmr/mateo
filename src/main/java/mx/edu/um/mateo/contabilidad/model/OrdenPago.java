@@ -4,10 +4,12 @@
  */
 package mx.edu.um.mateo.contabilidad.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,7 +26,7 @@ import mx.edu.um.mateo.general.utils.Constantes;
  */
 @Entity
 @Table(name = "cont_orden_pago")
-public class OrdenPago {
+public class OrdenPago implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,7 +40,7 @@ public class OrdenPago {
     private Empresa empresa;
     @Column(length = 2, nullable = false)
     private String status;
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Usuario userCaptura;
     @Column(name = "fecha_captura", nullable = false)
     private Date fechaCaptura;
@@ -50,6 +52,19 @@ public class OrdenPago {
     public OrdenPago() {
         statusInterno = Constantes.STATUS_ACTIVO;
     }
+
+    public OrdenPago(String descripcion, Boolean cheque, Date fechaPago, Empresa empresa, String status, Usuario userCaptura, Date fechaCaptura, String statusInterno) {
+        this.descripcion = descripcion;
+        this.cheque = cheque;
+        this.fechaPago = fechaPago;
+        this.empresa = empresa;
+        this.status = status;
+        this.userCaptura = userCaptura;
+        this.fechaCaptura = fechaCaptura;
+        this.statusInterno = statusInterno;
+    }
+    
+    
 
     /**
      * @return the id

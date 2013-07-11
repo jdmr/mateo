@@ -9,8 +9,10 @@ import java.util.Map;
 import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.colportor.model.Temporada;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
+import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
+import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Disjunction;
@@ -30,20 +32,11 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class TemporadaDao {
-    private static final Logger log = LoggerFactory.getLogger(TemporadaDao.class);
-    @Autowired
-    private SessionFactory sessionFactory;
-    
+public class TemporadaDao extends BaseDao {
     public TemporadaDao () {
         log.info("Se ha creado una nueva TemporadaDao");
     }
     
-    
-    
-    private Session currentSession () {
-        return sessionFactory.getCurrentSession();
-    }
     
     
     /**
@@ -75,13 +68,14 @@ public class TemporadaDao {
             params.put(Constantes.CONTAINSKEY_OFFSET, 0);
         }
         
-        Criteria criteria = currentSession().createCriteria(Temporada.class);
-        Criteria countCriteria = currentSession().createCriteria(Temporada.class);
+        Criteria criteria = currentSession().createCriteria(Temporada.class)
+                .add(Restrictions.eq("status", Constantes.STATUS_ACTIVO));
+        Criteria countCriteria = currentSession().createCriteria(Temporada.class)
+                .add(Restrictions.eq("status", Constantes.STATUS_ACTIVO));
         
-        if (params.containsKey(Constantes.ADDATTRIBUTE_ASOCIACION)) {
-//            criteria.createCriteria("asociacion").add(Restrictions.eq("id",((Asociacion)params.get(Constantes.ADDATTRIBUTE_ASOCIACION)).getId()));
-            criteria.add(Restrictions.eq("asociacion",((Asociacion)params.get(Constantes.ADDATTRIBUTE_ASOCIACION))));
-            countCriteria.add(Restrictions.eq("id",((Asociacion)params.get(Constantes.ADDATTRIBUTE_ASOCIACION)).getId()));
+        if (params.containsKey("organizacion")) {
+            criteria.add(Restrictions.eq("organizacion.id",params.get("organizacion")));
+            countCriteria.add(Restrictions.eq("organizacion.id",params.get("organizacion")));
         }
         
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
@@ -108,8 +102,7 @@ public class TemporadaDao {
             criteria.setFirstResult((Integer) params.get(Constantes.CONTAINSKEY_OFFSET));
             criteria.setMaxResults((Integer) params.get(Constantes.CONTAINSKEY_MAX));
         }
-        params.put(Constantes.CONTAINSKEY_TEMPORADAS, criteria.list());
-//        log.debug("Temporadas***"+((List)params.get(Constantes.CONTAINSKEY_TEMPORADAS)).size());
+        params.put(Constantes.TEMPORADA_LIST, criteria.list());
         countCriteria.setProjection(Projections.rowCount());
         params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));
         
@@ -132,27 +125,23 @@ public class TemporadaDao {
 
      public Temporada actualiza(Temporada temporada) {
         log.debug("Actualizando Temporada {}", temporada);
+                
+        try{
+            currentSession().update(temporada);
+        }catch(NonUniqueObjectException e){
+            currentSession().merge(temporada);
+            currentSession().flush();
+            
+        }
         
-        //trae el objeto de la DB 
-        Temporada nueva = (Temporada)currentSession().get(Temporada.class, temporada.getId());
-        
-        //actualiza el objeto
-        BeanUtils.copyProperties(temporada, nueva);
-        //lo guarda en la BD
-        
-        currentSession().update(nueva);
-        currentSession().flush();
-        return nueva;
+        return temporada;
     }
 
     public String elimina(Long id) throws UltimoException {
         log.debug("Eliminando Temporada id {}", id);
         Temporada temporada = obtiene(id);
-        Date fecha = new Date();
-        temporada.setFechaInicio(fecha);
-        temporada.setFechaFinal(fecha);
-        currentSession().delete(temporada);
-        currentSession().flush();
+        temporada.setStatus(Constantes.STATUS_INACTIVO);
+        temporada = actualiza(temporada);
         String nombre = temporada.getNombre();
         return nombre;
     }

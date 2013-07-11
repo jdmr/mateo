@@ -6,13 +6,12 @@ package mx.edu.um.mateo.colportor.dao;
 
 import java.util.List;
 import java.util.Map;
-import mx.edu.um.mateo.colportor.model.Asociacion;
+import java.util.TreeMap;
 import mx.edu.um.mateo.colportor.model.Temporada;
-import mx.edu.um.mateo.colportor.model.Union;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
+import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.Constantes;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,62 +29,44 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:mateo.xml", "classpath:security.xml"})
 @Transactional
-public class TemporadaDaoTest {
+public class TemporadaDaoTest extends BaseDaoTest {
 
     private static final Logger log = LoggerFactory.getLogger(TemporadaDao.class);
     @Autowired
     private TemporadaDao instance;
-    @Autowired
-    private SessionFactory sessionFactory;
 
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
-    @Autowired
-    private UnionDao unionDao;
-    @Autowired
-    private AsociacionDao asociacionDao;
     /**
      * Test of lista method, of class TemporaDao.
      */
     @Test
-    public void debieraMostrarListaDeTePpmorada() {
+    public void testLista() {
         log.debug("Debiera mostrar lista Temporada");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
-
-        Asociacion asociacion = new Asociacion("test", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
+        Usuario asociado = this.obtieneAsociado();
         for (int i = 0; i < 20; i++) {
             Temporada temporada = new Temporada("test" + i);
-            temporada.setAsociacion(asociacion);
+            temporada.setOrganizacion(asociado.getEmpresa().getOrganizacion());
             currentSession().save(temporada);
             assertNotNull(temporada.getId());
         }
-        Map<String, Object> params = null;
+        Map<String, Object> params = new TreeMap<>();
+
+        params.put("organizacion", asociado.getEmpresa().getOrganizacion().getId());
         Map result = instance.lista(params);
-        assertNotNull(result.get(Constantes.CONTAINSKEY_TEMPORADAS));
+        assertNotNull(result.get(Constantes.TEMPORADA_LIST));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
-        assertEquals(10, ((List<Temporada>) result.get(Constantes.CONTAINSKEY_TEMPORADAS)).size());
+        assertEquals(10, ((List<Temporada>) result.get(Constantes.TEMPORADA_LIST)).size());
         assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
 
     @Test
-    public void debieraObtenerTemporada() {
+    public void testObtener() {
         log.debug("Debiera obtener Temporada");
-        
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
 
-        Asociacion asociacion = new Asociacion("test", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
+        Usuario asociado = this.obtieneAsociado();
 
         String nombre = "test";
         Temporada temporada = new Temporada("test");
-        temporada.setAsociacion(asociacion);
-
+        temporada.setOrganizacion(asociado.getEmpresa().getOrganizacion());
         currentSession().save(temporada);
         assertNotNull(temporada.getId());
         Long id = temporada.getId();
@@ -98,38 +79,26 @@ public class TemporadaDaoTest {
     }
 
     @Test
-    public void deberiaCrearTemporada() {
+    public void testCrear() {
         log.debug("Deberia crear Temporada");
 
-        Union union = new Union("test");
-        union = unionDao.crea(union);
-        currentSession().save(union);
-        
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        asociacionDao.crea(asociacion);
-        
+        Usuario asociado = this.obtieneAsociado();
+
         Temporada temporada = new Temporada("test");
-        temporada.setAsociacion(asociacion);
-        assertNotNull(temporada);
-
-        Temporada temporada2 = instance.crea(temporada);
-        assertNotNull(temporada2);
-        assertNotNull(temporada2.getId());
-
-        assertEquals(temporada, temporada2);
+        temporada.setOrganizacion(asociado.getEmpresa().getOrganizacion());
+        temporada.setStatus(Constantes.STATUS_ACTIVO);
+        instance.crea(temporada);
+        assertNotNull(temporada.getId());
     }
 
     @Test
-    public void deberiaActualizarTemporada() {
+    public void testActualiza() {
         log.debug("Deberia actualizar Temporada");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
 
-        Asociacion asociacion = new Asociacion("test", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
+        Usuario asociado = this.obtieneAsociado();
+
         Temporada temporada = new Temporada("test");
-        temporada.setAsociacion(asociacion);
+        temporada.setOrganizacion(asociado.getEmpresa().getOrganizacion());
 
         assertNotNull(temporada);
         currentSession().save(temporada);
@@ -148,16 +117,11 @@ public class TemporadaDaoTest {
     public void deberiaEliminarTemporada() throws UltimoException {
         log.debug("Debiera eliminar Temporada");
 
-        Union union = new Union("test");
-        union = unionDao.crea(union);
-        currentSession().save(union);
-        
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        asociacionDao.crea(asociacion);
-        
+        Usuario asociado = this.obtieneAsociado();
+
         String nom = "test";
         Temporada temporada = new Temporada("test");
-        temporada.setAsociacion(asociacion);
+        temporada.setOrganizacion(asociado.getEmpresa().getOrganizacion());
         currentSession().save(temporada);
         assertNotNull(temporada);
 
@@ -166,7 +130,7 @@ public class TemporadaDaoTest {
 
         Temporada prueba = instance.obtiene(temporada.getId());
 
-        if (prueba != null) {
+        if (!prueba.getStatus().equals(Constantes.STATUS_INACTIVO)) {
             fail("Fallo la prueba Eliminar");
 
         }

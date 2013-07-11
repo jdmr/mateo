@@ -36,7 +36,7 @@ public class DescuentoDaoHibernate extends BaseDao implements DescuentoDao{
    @Override
    public Map<String, Object> lista(Map<String, Object> params) {
 
-        log.debug("Buscando lista de dependiente con params {}", params);
+        log.debug("Buscando lista de descuentos con params {}", params);
         if (params == null) {
             params = new HashMap<>();
         }
@@ -95,7 +95,7 @@ public class DescuentoDaoHibernate extends BaseDao implements DescuentoDao{
     public Descuento obtiene(final Long id) {
         Descuento descuento = (Descuento) currentSession().get(Descuento.class, id);
         if (descuento == null) {
-            log.warn("uh oh, categoria with id '" + id + "' not found...");
+            log.warn("uh oh, descuento with id '" + id + "' not found...");
             try {
                 throw new ObjectRetrievalFailureException(Descuento.class, id);
             } catch (ObjectRetrievalFailureException ex) {

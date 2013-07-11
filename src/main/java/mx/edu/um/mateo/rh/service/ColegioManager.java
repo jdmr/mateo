@@ -20,13 +20,13 @@ public Map<String, Object> lista(Map<String, Object> params) ;
      * Saves a colegio's information
      * @param colegio the object to be saved
      */
-    public void saveColegio(Colegio colegio);
+    public void crea(Colegio colegio);
     
 
     /**
      * Removes a colegio from the database by id
      * @param id the colegio's id
      */
-    public String removeColegio(final Long id);
+    public String elimina(final Long id);
 }
 

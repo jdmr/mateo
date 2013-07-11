@@ -329,10 +329,14 @@ public class UsuarioController extends BaseController {
         } else if (springSecurityUtils.ifAnyGranted("ROLE_ORG")) {
             roles.remove(new Rol("ROLE_ADMIN"));
             roles.remove(new Rol("ROLE_ORG"));
+            roles.remove(new Rol("ROLE_ASOC")); //La organizacion, tambien va a fungir como la union para los colportores
+        } else if (springSecurityUtils.ifAnyGranted("ROLE_ASOC")) {
+            roles.remove(new Rol("ROLE_CLP"));
         } else {
             roles.remove(new Rol("ROLE_ADMIN"));
             roles.remove(new Rol("ROLE_ORG"));
             roles.remove(new Rol("ROLE_EMP"));
+            roles.remove(new Rol("ROLE_JEFE"));
         }
 
         return roles;

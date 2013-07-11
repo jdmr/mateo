@@ -78,9 +78,9 @@ public class OrdenPagoDaoTest extends BaseDaoTest {
         params = new TreeMap<>();
         params.put("empresa", usuario.getEmpresa().getId());
         Map<String, Object> result = instance.lista(params);
-        assertNotNull(result.get(Constantes.CONTAINSKEY_ORDENES_PAGO));
+        assertNotNull(result.get(Constantes.ORDENPAGO_LIST));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
-        assertEquals(10, ((List<OrdenPago>) result.get(Constantes.CONTAINSKEY_ORDENES_PAGO)).size());
+        assertEquals(10, ((List<OrdenPago>) result.get(Constantes.ORDENPAGO_LIST)).size());
         assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
 
@@ -118,7 +118,7 @@ public class OrdenPagoDaoTest extends BaseDaoTest {
         Map<String, Object> params = new TreeMap<>();
         params.put("empresa", usuario.getEmpresa().getId());
         Map<String, Object> result = instance.lista(params);
-        List <OrdenPago> lista = (List)result.get(Constantes.CONTAINSKEY_ORDENES_PAGO);
+        List <OrdenPago> lista = (List)result.get(Constantes.ORDENPAGO_LIST);
         Integer nRows =  lista.size();
         
         OrdenPago ordenPago1 = new OrdenPago();
@@ -138,7 +138,7 @@ public class OrdenPagoDaoTest extends BaseDaoTest {
         
         //Debe haber dos registros en la lista
 //        result = instance.lista(params);
-//        lista = (List)result.get(Constantes.CONTAINSKEY_ORDENES_PAGO);
+//        lista = (List)result.get(Constantes.ORDENPPAGO_LIST);
 //        assertEquals(nRows+1, lista.size());
     }
 
@@ -152,7 +152,7 @@ public class OrdenPagoDaoTest extends BaseDaoTest {
         Map<String, Object> params = new TreeMap<>();
         params.put("empresa", usuario.getEmpresa().getId());
         Map<String, Object> result = instance.lista(params);
-        List <OrdenPago> lista = (List)result.get(Constantes.CONTAINSKEY_ORDENES_PAGO);
+        List <OrdenPago> lista = (List)result.get(Constantes.ORDENPAGO_LIST);
         Integer nRows =  lista.size();
         
         String descripcion = instance.elimina(ordenPago.getId());
@@ -167,7 +167,7 @@ public class OrdenPagoDaoTest extends BaseDaoTest {
         }
         
 //        result = instance.lista(params);
-//        lista = (List)result.get(Constantes.CONTAINSKEY_ORDENES_PAGO);
+//        lista = (List)result.get(Constantes.ORDENPPAGO_LIST);
 //        assertEquals(nRows, new Integer(lista.size()));
         
     }

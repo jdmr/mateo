@@ -236,7 +236,7 @@ public class DescuentoController extends BaseController{
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "descuento.elimina.message");
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{descuento.getDescripcion()});
         } catch (Exception e) {
-            log.error("No se pudo eliminar el tipo de Descuento " + id, e);
+            log.error("No se pudo eliminar el Descuento " + id, e);
             bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_DESCUENTO, new String[]{"descuento.no.elimina.message"}, null, null));
             return Constantes.PATH_DESCUENTO_VER;
         }
@@ -304,7 +304,7 @@ public class DescuentoController extends BaseController{
 
     private byte[] generaPdf(List descuento) throws JRException {
         Map<String, Object> params = new HashMap<>();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/tiposBecas.jrxml"));
+        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/alumnoDescuentos.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(descuento));
         byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
@@ -316,7 +316,7 @@ public class DescuentoController extends BaseController{
         Map<String, Object> params = new HashMap<>();
         JRCsvExporter exporter = new JRCsvExporter();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/tiposBecas.jrxml"));
+        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/alumnoDescuentos.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(descuento));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
@@ -331,7 +331,7 @@ public class DescuentoController extends BaseController{
         Map<String, Object> params = new HashMap<>();
         JRXlsExporter exporter = new JRXlsExporter();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/tiposBecas.jrxml"));
+        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/alumnoDescuentos.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(descuento));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);

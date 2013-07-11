@@ -57,7 +57,7 @@
                             <jsp:param name="columna" value="fechaFinal" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="asociacion" />
+                            <jsp:param name="columna" value="status" />
                         </jsp:include>
                     </tr>
                 </thead>
@@ -67,7 +67,7 @@
                             <td><a href="<c:url value='/colportaje/temporada/ver/${temporada.id}' />">${temporada.nombre}</a></td>
                             <td>${temporada.fechaInicio}</a></td>
                             <td>${temporada.fechaFinal}</a></td>
-                            <td>${temporada.asociacion.nombre}</a></td>
+                            <td>${temporada.status}</a></td>
                         </tr>
                     </c:forEach>
                 </tbody>

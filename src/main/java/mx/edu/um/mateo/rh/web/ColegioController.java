@@ -73,8 +73,7 @@ public class ColegioController extends BaseController {
             Model modelo) {
         log.debug("Mostrando lista de colegios");
         Map<String, Object> params = new HashMap<>();
-        Long empresaId = (Long) request.getSession().getAttribute("empresaId");
-//        params.put("empresa", empresaId);
+        params.put("organizacion", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
         if (StringUtils.isNotBlank(filtro)) {
             params.put("filtro", filtro);
         }
@@ -90,7 +89,7 @@ public class ColegioController extends BaseController {
             params.put("reporte", true);
             params = colegioManager.lista(params);
             try {
-                generaReporte(tipo, (List<Colegio>) params.get(Constantes.CONTAINSKEY_COLEGIOS), response, "colegios", Constantes.EMP, empresaId);
+                generaReporte(tipo, (List<Colegio>) params.get(Constantes.CONTAINSKEY_COLEGIOS), response, "colegios", Constantes.ORG, ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
                 return null;
             } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -103,7 +102,7 @@ public class ColegioController extends BaseController {
 
             params.remove("reporte");
             try {
-                enviaCorreo(correo, (List<Colegio>) params.get(Constantes.CONTAINSKEY_COLEGIOS), request, "colegios", Constantes.EMP, empresaId);
+                enviaCorreo(correo, (List<Colegio>) params.get(Constantes.CONTAINSKEY_COLEGIOS), request, "colegios", Constantes.ORG, ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
                 modelo.addAttribute("message", "lista.enviada.message");
                 modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("colegio.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
@@ -115,7 +114,7 @@ public class ColegioController extends BaseController {
 
         this.pagina(params, modelo, Constantes.CONTAINSKEY_COLEGIOS, pagina);
 
-        return Constantes.PATH_COLEGIO_LISTA;
+        return Constantes.COLEGIO_PATH_LISTA;
     }
 
     @RequestMapping("/ver/{id}")
@@ -125,7 +124,7 @@ public class ColegioController extends BaseController {
 
          modelo.addAttribute(Constantes.ADDATTRIBUTE_COLEGIO, colegio);
 
-        return Constantes.PATH_COLEGIO_VER;
+        return Constantes.COLEGIO_PATH_VER;
     }
 
     @RequestMapping("/nuevo")
@@ -133,10 +132,10 @@ public class ColegioController extends BaseController {
         log.debug("Nuevo colegio");
         Colegio colegio = new Colegio();
         modelo.addAttribute(Constantes.ADDATTRIBUTE_COLEGIO, colegio);
-        return Constantes.PATH_COLEGIO_NUEVO;
+        return Constantes.COLEGIO_PATH_NUEVO;
     }
 
-    @RequestMapping(value = "/graba", method = RequestMethod.POST)
+    @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String graba(HttpServletRequest request, HttpServletResponse response, @Valid Colegio colegio, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
@@ -146,29 +145,30 @@ public class ColegioController extends BaseController {
             for (ObjectError error : bindingResult.getAllErrors()) {
                 log.debug("Error: {}", error);
             }
-            return Constantes.PATH_COLEGIO_NUEVO;
+            return Constantes.COLEGIO_PATH_NUEVO;
         }
+        
+        Boolean isNew = colegio.getId() == null;
 
         try {
+            //La organizacion la asignamos aunque esten modificando el registro
+            //porque considero que es mas vulnerable si tomo organizacion.id de los parametros del jsp
             Usuario usuario = ambiente.obtieneUsuario();
-            //colegio = colegioManager.crea(colegio, usuario);
-            colegioManager.saveColegio(colegio);
-
-            ambiente.actualizaSesion(request.getSession(), usuario);
-        } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear al colegio", e);
-            /**
-             * TODO CORREGIR MENSAJE DE ERROR
-             */
+            colegio.setOrganizacion(usuario.getEmpresa().getOrganizacion());
             
+            colegioManager.crea(colegio);
+            
+        } catch (Exception e) {
+            log.error("No se pudo crear al colegio", e);
             errors.rejectValue("nombre", "colegio.errors.creado", e.toString());
-            return Constantes.PATH_COLEGIO_NUEVO;
+            return Constantes.COLEGIO_PATH_NUEVO;
         }
 
-        redirectAttributes.addFlashAttribute("message", "colegio.creado.message");
+        if(isNew) redirectAttributes.addFlashAttribute("message", "colegio.creado.message");
+        else redirectAttributes.addFlashAttribute("message", "colegio.actualizado.message");
         redirectAttributes.addFlashAttribute("messageAttrs", new String[]{colegio.getNombre()});
 
-        return "redirect:" + Constantes.PATH_COLEGIO;
+        return "redirect:" + Constantes.COLEGIO_PATH;
     }
 
     @RequestMapping("/edita/{id}")
@@ -179,10 +179,10 @@ public class ColegioController extends BaseController {
         } catch (ObjectRetrievalFailureException ex) {
             log.error("No se pudo obtener al colegio", ex);
             errors.rejectValue("colegio", "registro.noEncontrado", new String[]{"colegio"}, null);
-            return Constantes.PATH_COLEGIO;
+            return Constantes.COLEGIO_PATH;
         }
         modelo.addAttribute(Constantes.ADDATTRIBUTE_COLEGIO, colegio);
-        return Constantes.PATH_COLEGIO_EDITA;
+        return Constantes.COLEGIO_PATH_EDITA;
     }
 
 //    @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
@@ -197,7 +197,7 @@ public class ColegioController extends BaseController {
 //
 //        try {
 //            Usuario usuario = ambiente.obtieneUsuario();
-//            //colegio = colegioManager.saveColegio(colegio, usuario);
+//            //colegio = colegioManager.crea(colegio, usuario);
 //            colegioManager.updateColegio(colegio);
 //           
 //            ambiente.actualizaSesion(request.getSession(), usuario);
@@ -217,10 +217,7 @@ public class ColegioController extends BaseController {
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Colegio colegio, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina colegio");
         try {
-            Long empresaId = (Long) request.getSession().getAttribute("empresaId");
-            String nombre = colegioManager.removeColegio(id);
-
-            ambiente.actualizaSesion(request.getSession());
+            String nombre = colegioManager.elimina(id);
 
             redirectAttributes.addFlashAttribute("message", "colegio.eliminado.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{nombre});
@@ -228,9 +225,9 @@ public class ColegioController extends BaseController {
          catch (Exception e) {
             log.error("No se pudo eliminar el colegio " + id, e);
             bindingResult.addError(new ObjectError("colegio", new String[]{"colegio.no.eliminado.message"}, null, null));
-            return Constantes.PATH_COLEGIO_VER;
+            return Constantes.COLEGIO_PATH_VER;
         }
 
-        return "redirect:" + Constantes.PATH_COLEGIO;
+        return "redirect:" + Constantes.COLEGIO_PATH;
     }
 }

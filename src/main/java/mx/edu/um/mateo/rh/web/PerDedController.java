@@ -4,7 +4,6 @@
  */
 package mx.edu.um.mateo.rh.web;
 
-
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -59,26 +58,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-
 /**
  *
  * @author semdariobarbaamaya
  */
 @Controller
 @RequestMapping(Constantes.PATH_PERDED)
-public class PerDedController extends BaseController{
-    
-     private static final Logger log = LoggerFactory.getLogger(mx.edu.um.mateo.rh.web.PerDedController.class);
-     @Autowired
-     private PerDedManager perdedManager;
-     @Autowired
-     private JavaMailSender mailSender;
-     @Autowired
-     private ResourceBundleMessageSource messageSource;
-     @Autowired
-     private Ambiente ambiente;
-     
-     @RequestMapping ({"","/lista"})
+public class PerDedController extends BaseController {
+
+    private static final Logger log = LoggerFactory.getLogger(mx.edu.um.mateo.rh.web.PerDedController.class);
+    @Autowired
+    private PerDedManager perdedManager;
+    @Autowired
+    private JavaMailSender mailSender;
+    @Autowired
+    private ResourceBundleMessageSource messageSource;
+    @Autowired
+    private Ambiente ambiente;
+
+    @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
             @RequestParam(required = false) Long pagina,
@@ -107,12 +105,12 @@ public class PerDedController extends BaseController{
             params.put(Constantes.CONTAINSKEY_ORDER, order);
             params.put(Constantes.CONTAINSKEY_SORT, sort);
         }
-        
+
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = perdedManager.lista(params);
             try {
-                generaReporte(tipo, (List<PerDed>)params.get(Constantes.CONTAINSKEY_PERDED), response);
+                generaReporte(tipo, (List<PerDed>) params.get(Constantes.PERDED_LIST), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -120,14 +118,14 @@ public class PerDedController extends BaseController{
                 //errors.reject("error.generar.reporte");
             }
         }
-        
+
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = perdedManager.lista(params);
-            
+
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<PerDed>) params.get(Constantes.CONTAINSKEY_PERDED), request);
+                enviaCorreo(correo, (List<PerDed>) params.get(Constantes.PERDED_LIST), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("perded.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
@@ -135,8 +133,8 @@ public class PerDedController extends BaseController{
             }
         }
         params = perdedManager.lista(params);
-        log.debug("params{}",params.get(Constantes.CONTAINSKEY_PERDED));
-        modelo.addAttribute(Constantes.CONTAINSKEY_PERDED, params.get(Constantes.CONTAINSKEY_PERDED));
+        log.debug("params{}", params.get(Constantes.PERDED_LIST));
+        modelo.addAttribute(Constantes.PERDED_LIST, params.get(Constantes.PERDED_LIST));
 
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
@@ -147,40 +145,41 @@ public class PerDedController extends BaseController{
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<PerDed> perded = (List<PerDed>) params.get(Constantes.CONTAINSKEY_PERDED);
+        List<PerDed> perded = (List<PerDed>) params.get(Constantes.PERDED_LIST);
         Long primero = ((pagina - 1) * max) + 1;
-        log.debug("primero {}",primero);
-        log.debug("PerDedsize {}",perded.size());
+        log.debug("primero {}", primero);
+        log.debug("PerDedsize {}", perded.size());
         Long ultimo = primero + (perded.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
         log.debug("Paginacion{}", paginacion);
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
-        log.debug("paginas{}",paginas);
+        log.debug("paginas{}", paginas);
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
-        log.debug("Pagina{}",pagina);
+        log.debug("Pagina{}", pagina);
         // termina paginado
 
-        return Constantes.PATH_PERDED_LISTA ;
+        return Constantes.PATH_PERDED_LISTA;
     }
-     
-      @RequestMapping("/ver/{id}")
+
+    @RequestMapping("/ver/{id}")
     public String ver(@PathVariable String id, Model modelo) {
         log.debug("Mostrando perded {}", id);
         PerDed perded = perdedManager.obtiene(id);
-        
+
         modelo.addAttribute(Constantes.ADDATTRIBUTE_PERDED, perded);
-        
+
         return Constantes.PATH_PERDED_VER;
     }
-      @RequestMapping("/nuevo")
+
+    @RequestMapping("/nuevo")
     public String nuevo(Model modelo) {
         log.debug("Nuevo perded");
         PerDed perded = new PerDed();
         modelo.addAttribute(Constantes.ADDATTRIBUTE_PERDED, perded);
         return Constantes.PATH_PERDED_NUEVO;
     }
-      
+
     @Transactional
     @RequestMapping(value = "/graba", method = RequestMethod.POST)
     public String graba(HttpServletRequest request, HttpServletResponse response, @Valid PerDed perded, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
@@ -193,23 +192,23 @@ public class PerDedController extends BaseController{
             modelo.addAttribute(Constantes.ADDATTRIBUTE_PERDED, perded);
             return Constantes.PATH_PERDED_NUEVO;
         }
-        
+
         try {
             Usuario usuario = ambiente.obtieneUsuario();
-             perdedManager.graba(perded,usuario);
+            perdedManager.graba(perded, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo grabar perded", e);
             perded = new PerDed();
             modelo.addAttribute(Constantes.ADDATTRIBUTE_PERDED, perded);
             return Constantes.PATH_PERDED_NUEVO;
         }
-        
+
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "perded.graba.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{perded.getNombre()});
-        
-        return "redirect:" + Constantes.PATH_PERDED_LISTA + "/" ;
+
+        return "redirect:" + Constantes.PATH_PERDED_LISTA + "/";
     }
-    
+
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable String id, Model modelo) {
         log.debug("Editar cuenta de perded {}", id);
@@ -217,14 +216,14 @@ public class PerDedController extends BaseController{
         modelo.addAttribute(Constantes.ADDATTRIBUTE_PERDED, perded);
         return Constantes.PATH_PERDED_EDITA;
     }
-    
+
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute PerDed perded, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina cuenta de perded");
         try {
-           perdedManager.elimina(id);
-            
+            perdedManager.elimina(id);
+
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "perded.elimina.message");
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{perded.getNombre()});
         } catch (Exception e) {
@@ -232,11 +231,11 @@ public class PerDedController extends BaseController{
             bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_PERDED, new String[]{"perded.no.elimina.message"}, null, null));
             return Constantes.PATH_PERDED_VER;
         }
-        
-        return "redirect:" + Constantes.PATH_PERDED_LISTA ;
+
+        return "redirect:" + Constantes.PATH_PERDED_LISTA;
     }
-     
-     private void generaReporte(String tipo, List<PerDed> perded, HttpServletResponse response) throws JRException, IOException {
+
+    private void generaReporte(String tipo, List<PerDed> perded, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
         switch (tipo) {
@@ -262,9 +261,9 @@ public class PerDedController extends BaseController{
                 bos.flush();
             }
         }
-        
+
     }
-    
+
     private void enviaCorreo(String tipo, List<PerDed> perded, HttpServletRequest request) throws JRException, MessagingException {
         log.debug("Enviando correo {}", tipo);
         byte[] archivo = null;
@@ -282,7 +281,7 @@ public class PerDedController extends BaseController{
                 archivo = generaXls(perded);
                 tipoContenido = "application/vnd.ms-excel";
         }
-        
+
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(ambiente.obtieneUsuario().getUsername());
@@ -292,17 +291,17 @@ public class PerDedController extends BaseController{
         helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
         mailSender.send(message);
     }
-    
+
     private byte[] generaPdf(List perded) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/perded.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(perded));
         byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
-        
+
         return archivo;
     }
-    
+
     private byte[] generaCsv(List perded) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRCsvExporter exporter = new JRCsvExporter();
@@ -314,10 +313,10 @@ public class PerDedController extends BaseController{
         exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
         exporter.exportReport();
         byte[] archivo = byteArrayOutputStream.toByteArray();
-        
+
         return archivo;
     }
-    
+
     private byte[] generaXls(List perded) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRXlsExporter exporter = new JRXlsExporter();
@@ -335,7 +334,7 @@ public class PerDedController extends BaseController{
         exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
         exporter.exportReport();
         byte[] archivo = byteArrayOutputStream.toByteArray();
-        
+
         return archivo;
     }
 }

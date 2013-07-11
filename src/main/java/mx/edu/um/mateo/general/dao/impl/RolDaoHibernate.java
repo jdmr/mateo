@@ -23,10 +23,14 @@
  */
 package mx.edu.um.mateo.general.dao.impl;
 
+import java.util.List;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.dao.RolDao;
+import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Rol;
+import mx.edu.um.mateo.general.utils.SpringSecurityUtils;
 import org.hibernate.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +41,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class RolDaoHibernate extends BaseDao implements RolDao {
+    
+    @Autowired
+    private UsuarioDao usuarioDao;
+    @Autowired
+    private SpringSecurityUtils springSecurityUtils;
 
     public RolDaoHibernate() {
         log.info("Nueva instancia de RolDao");
@@ -64,4 +73,5 @@ public class RolDaoHibernate extends BaseDao implements RolDao {
         currentSession().save(rol);
         return rol;
     }
+    
 }

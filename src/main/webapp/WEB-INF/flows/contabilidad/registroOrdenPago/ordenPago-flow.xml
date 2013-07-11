@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.springframework.org/schema/webflow
+http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+    <var name="flowScope.ordenPago" class="mx.edu.um.mateo.contabilidad.model.OrdenPago"/>    
+    <var name="flowScope.proveedor" class="mx.edu.um.mateo.general.model.Proveedor"/>
+    
+    <view-state id="capturaRFC" view="/WEB-INF/jsp/contabilidad/ordenPago/capturaRFC.jsp">
+        <transition on="rfcCapturado" to="identificarProveedor"/>
+        <transition on="cancel" to="cancel"/>
+    </view-state>
+    
+    <action-state id="identificarProveedor">
+        <set name="requestScope.rfc" value="requestParameters.rfc"/>
+        <evaluate expression="proveedorDao.obtiene(requestParameters.rfc)" result="flowScope.proveedor"/>
+        <transition to="capturaOrdenPago"/>
+        <transition on-exception="mx.edu.um.mateo.contabilidad.utils.ProveedorNotFoundException" to="capturaRFC"/>
+    </action-state>
+    
+    <view-state id="capturaOrdenPago" view="/WEB-INF/jsp/contabilidad/ordenPago/capturaOrdenPago.jsp">
+        <var name="ordenPago" class="mx.edu.um.mateo.contabilidad.model.OrdenPago"/>
+        <transition on="ordenCapturada" to="validaOrdenPago"/>
+        <transition on="cancel" to="cancel"/>
+    </view-state>
+    
+    <action-state id="validaOrdenPago">
+        <set name="requestScope.ordenPago" value="requestParameters.ordenPago"/>
+        <evaluate expression="ordenPagoMgr.graba(ordenPago)" result="ordenPago"/>
+        <transition to="imprimeContrarecibo"/>
+    </action-state>
+    
+    <view-state id="imprimeContrarecibo" view="/WEB-INF/jsp/contabilidad/ordenPago/imprimeContrarecibo.jsp">
+        <transition on="ordenImpresa" to="endState"/>
+        <transition on="cancel" to="cancel"/>
+    </view-state>
+    
+<!--        
+    <subflow-state id="identificarProveedor" subflow="ordenPago/proveedor">
+        <output name="proveedor" value="orden.proveedor"/>
+        <transition on="proveedorReady" to="altaOrden" />
+    </subflow-state>
+    
+    <subflow-state id="altaOrden" subflow="ordenPago/orden">
+        <input name="ordenPago" value="ordenPago"/>
+        <transition on="ordenCreated" to="printContrarecibo" />
+    </subflow-state>
+    
+    <subflow-state id="printContrarecibo" subflow="ordenPago/contrarecibo">
+        <input name="ordenPago" value="ordenPago"/>
+        <transition on="contrareciboImpreso" to="saveOrder"/>
+    </subflow-state>
+    
+    <action-state id="saveOrder">
+        <evaluate expression="ordenFlowActions.saveOrder(ordenPago)" />
+        <transition to="thankCustomer" />
+    </action-state>
+
+    <view-state id="thankCustomer">
+        <transition to="endState" />
+    </view-state>
+    -->
+
+    <end-state id="endState" commit="true" view="externalRedirect:contextRelative:/contabilidad/registroOrdenPago" />
+
+    <global-transitions>
+        <transition on="cancel" to="endState" />
+    </global-transitions>
+</flow>

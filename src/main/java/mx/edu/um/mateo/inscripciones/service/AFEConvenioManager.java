@@ -7,7 +7,6 @@ package mx.edu.um.mateo.inscripciones.service;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inscripciones.model.AFEConvenio;
-import mx.edu.um.mateo.inscripciones.model.Alumno;
 import mx.edu.um.mateo.inscripciones.utils.MatriculaInvalidaException;
 
 /**
@@ -42,5 +41,5 @@ public interface AFEConvenioManager {
      */
     public String elimina(final Long id);
     
-
+    public AFEConvenio asignarConvenio(AFEConvenio afeConvenio)throws MatriculaInvalidaException;
 }

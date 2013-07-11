@@ -15,7 +15,7 @@
         <div id="nuevo-colegio" class="content scaffold-list" role="main">
             <h1><s:message code="afeConvenio.nuevo.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/inscripciones/afeConvenio'/>"><i class="icon-list icon-white"></i> <s:message code='afeConvenio.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/inscripciones/afeConvenio/asignarConvenio'/>"><i class="icon-list icon-white"></i> <s:message code='afeConvenio.lista.label' /></a>
             </p>
             <form:form commandName="afeConvenio" action="graba" method="post">
                 <form:errors path="*">
