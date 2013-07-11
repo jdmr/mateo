@@ -31,91 +31,6 @@
                 <fieldset>
                     <div class="row-fluid">
                         <div class="span4">
-                            <s:bind path="activo.codigo">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="codigo">
-                                        <s:message code="codigo.label" />
-                                        <span class="required-indicator">*</span>
-                                    </label>
-                                    <form:input path="codigo" maxlength="64" required="true" cssClass="span6" />
-                                    <form:errors path="codigo" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                        <div class="span4">
-                            <s:bind path="activo.descripcion">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="descripcion">
-                                        <s:message code="descripcion.label" />
-                                        <span class="required-indicator">*</span>
-                                    </label>
-                                    <form:textarea path="descripcion" required="true" cssClass="span11" />
-                                    <form:errors path="descripcion" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="activo.marca">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="marca">
-                                        <s:message code="marca.label" />
-                                    </label>
-                                    <form:input path="marca" maxlength="64" cssClass="span11" />
-                                    <form:errors path="marca" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                        <div class="span4">
-                            <s:bind path="activo.modelo">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="modelo">
-                                        <s:message code="modelo.label" />
-                                    </label>
-                                    <form:input path="modelo" maxlength="64" cssClass="span11" />
-                                    <form:errors path="modelo" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="activo.serial">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="serial">
-                                        <s:message code="serial.label" />
-                                    </label>
-                                    <form:input path="serial" maxlength="64" cssClass="span11" />
-                                    <form:errors path="serial" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                        <div class="span4">
-                            <s:bind path="activo.condicion">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="condicion">
-                                        <s:message code="condicion.label" />
-                                    </label>
-                                    <form:input path="condicion" maxlength="64" cssClass="span11" />
-                                    <form:errors path="condicion" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="activo.factura">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="factura">
-                                        <s:message code="factura.label" />
-                                    </label>
-                                    <form:input path="factura" maxlength="32" cssClass="span6" />
-                                    <form:errors path="factura" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                        <div class="span4">
                             <s:bind path="activo.poliza">
                                 <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                     <label for="poliza">
@@ -123,194 +38,6 @@
                                     </label>
                                     <form:input path="poliza" maxlength="64" cssClass="span11" />
                                     <form:errors path="poliza" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="activo.pedimento">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="pedimento">
-                                        <s:message code="pedimento.label" />
-                                    </label>
-                                    <form:input path="pedimento" maxlength="64" cssClass="span6" />
-                                    <form:errors path="pedimento" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                        <div class="span4">
-                            <s:bind path="activo.procedencia">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="procedencia">
-                                        <s:message code="procedencia.label" />
-                                    </label>
-                                    <form:input path="procedencia" maxlength="64" cssClass="span11" />
-                                    <form:errors path="procedencia" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="activo.moneda">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="moneda">
-                                        <s:message code="moneda.label" />
-                                    </label>
-                                    <form:input path="moneda" maxlength="64" cssClass="span6" />
-                                    <form:errors path="moneda" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                        <div class="span4">
-                            <s:bind path="activo.tipoCambio">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="tipoCambio">
-                                        <s:message code="tipoCambio.label" />
-                                    </label>
-                                    <form:input path="tipoCambio" cssClass="span11" cssStyle="text-align:right;" type="number" step="0.01" min="0" />
-                                    <form:errors path="tipoCambio" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="activo.fechaCompra">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="fechaCompra">
-                                        <s:message code="fechaCompra.label" />
-                                        <span class="required-indicator">*</span>
-                                    </label>
-                                    <form:input path="fechaCompra" maxlength="64" cssClass="span6" required="true" />
-                                    <form:errors path="fechaCompra" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                        <div class="span4">
-                            <s:bind path="activo.ubicacion">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="ubicacion">
-                                        <s:message code="ubicacion.label" />
-                                    </label>
-                                    <form:input path="ubicacion" maxlength="64" cssClass="span11" />
-                                    <form:errors path="ubicacion" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="activo.responsable">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="responsable">
-                                        <s:message code="responsable.label" />
-                                    </label>
-                                    <form:input path="responsable" maxlength="64" cssClass="span11" />
-                                    <form:errors path="responsable" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                        <div class="span4">
-                            <s:bind path="activo.motivo">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="motivo">
-                                        <s:message code="motivo.label" />
-                                    </label>
-                                    <form:select id="motivo" path="motivo" required="true" cssClass="span11" >
-                                        <form:options items="${motivos}" />
-                                    </form:select>
-                                    <form:errors path="motivo" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="activo.moi">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="moi">
-                                        <s:message code="moi.label" />
-                                        <span class="required-indicator">*</span>
-                                    </label>
-                                    <form:input path="moi" cssClass="span11" required="true" cssStyle="text-align:right;" type="number" step="0.01" min="0" />
-                                    <form:errors path="moi" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                        <div class="span4">
-                            <s:bind path="activo.valorRescate">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="valorRescate">
-                                        <s:message code="valorRescate.label" />
-                                        <span class="required-indicator">*</span>
-                                    </label>
-                                    <form:input path="valorRescate" cssClass="span11" required="true" cssStyle="text-align:right;" type="number" step="0.01" min="0" />
-                                    <form:errors path="valorRescate" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="activo.inpc">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="inpc">
-                                        <s:message code="inpc.label" />
-                                    </label>
-                                    <form:input path="inpc" cssClass="span11" required="true" cssStyle="text-align:right;" type="number" step="0.01" min="0" />
-                                    <form:errors path="inpc" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                        <div class="span4">
-                            <s:bind path="activo.seguro">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="seguro">
-                                        <s:message code="seguro.label" />
-                                        <form:checkbox path="seguro" maxlength="64" />
-                                    </label>
-                                    <form:errors path="seguro" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="activo.garantia">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="garantia">
-                                        <s:message code="garantia.label" />
-                                        <form:checkbox path="garantia" maxlength="64" />
-                                    </label>
-                                    <form:errors path="garantia" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                        <div class="span4">
-                            <s:bind path="activo.mesesGarantia">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="mesesGarantia">
-                                        <s:message code="mesesGarantia.label" />
-                                    </label>
-                                    <form:input path="mesesGarantia" cssClass="span11" cssStyle="text-align:right;" type="number" step="1" min="0" max="600" />
-                                    <form:errors path="mesesGarantia" cssClass="alert alert-error" />
-                                </div>
-                            </s:bind>
-                        </div>
-                    </div>
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <s:bind path="activo.proveedor">
-                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                    <label for="proveedorNombre">
-                                        <s:message code="proveedor.label" />
-                                        <span class="required-indicator">*</span>
-                                    </label>
-                                    <form:hidden id="proveedorId" path="proveedor.id" />
-                                    <form:input id="proveedorNombre" path="proveedor.nombre" cssClass="span11" />
-                                    <form:errors path="proveedor" cssClass="alert alert-error" />
                                 </div>
                             </s:bind>
                         </div>
@@ -330,6 +57,251 @@
                     </div>
                     <div class="row-fluid">
                         <div class="span4">
+                            <s:bind path="activo.factura">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="factura">
+                                        <s:message code="factura.label" />
+                                    </label>
+                                    <form:input path="factura" maxlength="32" cssClass="span6" />
+                                    <form:errors path="factura" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                        <div class="span4">
+                            <s:bind path="activo.descripcion">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="descripcion">
+                                        <s:message code="descripcion.label" />
+                                        <span class="required-indicator">*</span>
+                                    </label>
+                                    <form:textarea path="descripcion" required="true" cssClass="span11" />
+                                    <form:errors path="descripcion" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <s:bind path="activo.proveedor">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="proveedorNombre">
+                                        <s:message code="proveedor.label" />
+                                        <span class="required-indicator">*</span>
+                                    </label>
+                                    <form:hidden id="proveedorId" path="proveedor.id" />
+                                    <form:input id="proveedorNombre" path="proveedor.nombre" cssClass="span11" />
+                                    <form:errors path="proveedor" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                        <div class="span4">
+                            <s:bind path="activo.marca">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="marca">
+                                        <s:message code="marca.label" />
+                                    </label>
+                                    <form:input path="marca" maxlength="64" cssClass="span11" />
+                                    <form:errors path="marca" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                    </div>
+                    
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <s:bind path="activo.fechaCompra">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="fechaCompra">
+                                        <s:message code="fechaCompra.label" />
+                                        <span class="required-indicator">*</span>
+                                    </label>
+                                    <form:input path="fechaCompra" maxlength="64" cssClass="span6" required="true" />
+                                    <form:errors path="fechaCompra" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                        <div class="span4">
+                            <s:bind path="activo.modelo">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="modelo">
+                                        <s:message code="modelo.label" />
+                                    </label>
+                                    <form:input path="modelo" maxlength="64" cssClass="span11" />
+                                    <form:errors path="modelo" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <s:bind path="activo.mesesGarantia">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="mesesGarantia">
+                                        <s:message code="mesesGarantia.label" />
+                                    </label>
+                                    <form:input path="mesesGarantia" cssClass="span11" cssStyle="text-align:right;" type="number" step="1" min="0" max="600" />
+                                    <form:errors path="mesesGarantia" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                        <div class="span4">
+                            <s:bind path="activo.serial">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="serial">
+                                        <s:message code="serial.label" />
+                                    </label>
+                                    <form:input path="serial" maxlength="64" cssClass="span11" />
+                                    <form:errors path="serial" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <s:bind path="activo.pedimento">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="pedimento">
+                                        <s:message code="pedimento.label" />
+                                    </label>
+                                    <form:input path="pedimento" maxlength="64" cssClass="span6" />
+                                    <form:errors path="pedimento" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                        <div class="span4">
+                            <s:bind path="activo.ubicacion">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="ubicacion">
+                                        <s:message code="ubicacion.label" />
+                                    </label>
+                                    <form:input path="ubicacion" maxlength="64" cssClass="span11" />
+                                    <form:errors path="ubicacion" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <s:bind path="activo.procedencia">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="procedencia">
+                                        <s:message code="procedencia.label" />
+                                    </label>
+                                    <form:input path="procedencia" maxlength="64" cssClass="span11" />
+                                    <form:errors path="procedencia" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                        <div class="span4">
+                            <s:bind path="activo.responsable">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="responsable">
+                                        <s:message code="responsable.label" />
+                                    </label>
+                                    <form:input path="responsable" maxlength="64" cssClass="span11" />
+                                    <form:errors path="responsable" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <s:bind path="activo.moneda">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="moneda">
+                                        <s:message code="moneda.label" />
+                                    </label>
+                                    <form:input path="moneda" maxlength="64" cssClass="span6" />
+                                    <form:errors path="moneda" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                        <div class="span4">
+                            <s:bind path="activo.seguro">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="seguro">
+                                        <s:message code="seguro.label" />
+                                        <form:checkbox path="seguro" maxlength="64" />
+                                    </label>
+                                    <form:errors path="seguro" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <s:bind path="activo.tipoCambio">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="tipoCambio">
+                                        <s:message code="tipoCambio.label" />
+                                    </label>
+                                    <form:input path="tipoCambio" cssClass="span11" cssStyle="text-align:right;" type="number" step="0.01" min="0" />
+                                    <form:errors path="tipoCambio" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                        <div class="span4">
+                            <div class="control-group">
+                                <label for="imagen">
+                                    <s:message code="imagen.label" />
+                                </label>
+                                <input name="imagen" type="file" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <s:bind path="activo.condicion">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="condicion">
+                                        <s:message code="condicion.label" />
+                                    </label>
+                                    <form:input path="condicion" maxlength="64" cssClass="span11" />
+                                    <form:errors path="condicion" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                        <div class="span4">
+                            <s:bind path="activo.valorRescate">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="valorRescate">
+                                        <s:message code="valorRescate.label" />
+                                        <span class="required-indicator">*</span>
+                                    </label>
+                                    <form:input path="valorRescate" cssClass="span11" required="true" cssStyle="text-align:right;" type="number" step="0.01" min="0" />
+                                    <form:errors path="valorRescate" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <s:bind path="activo.motivo">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="motivo">
+                                        <s:message code="motivo.label" />
+                                    </label>
+                                    <form:select id="motivo" path="motivo" required="true" cssClass="span11" >
+                                        <form:options items="${motivos}" />
+                                    </form:select>
+                                    <form:errors path="motivo" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                        <div class="span4">
+                            <s:bind path="activo.inpc">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="inpc">
+                                        <s:message code="inpc.label" />
+                                    </label>
+                                    <form:input path="inpc" cssClass="span11" required="true" cssStyle="text-align:right;" type="number" step="0.01" min="0" />
+                                    <form:errors path="inpc" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span4">
                             <s:bind path="activo.centroCosto">
                                 <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                     <label for="centroCostoId">
@@ -343,12 +315,41 @@
                             </s:bind>
                         </div>
                         <div class="span4">
-                            <div class="control-group">
-                                <label for="imagen">
-                                    <s:message code="imagen.label" />
-                                </label>
-                                <input name="imagen" type="file" />
-                            </div>
+                            <s:bind path="activo.moi">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="moi">
+                                        <s:message code="moi.label" />
+                                        <span class="required-indicator">*</span>
+                                    </label>
+                                    <form:input path="moi" cssClass="span11" required="true" cssStyle="text-align:right;" type="number" step="0.01" min="0" />
+                                    <form:errors path="moi" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <s:bind path="activo.codigo">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="codigo">
+                                        <s:message code="codigo.label" />
+                                        <span class="required-indicator">*</span>
+                                    </label>
+                                    <form:input path="codigo" maxlength="64" required="true" cssClass="span6" />
+                                    <form:errors path="codigo" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
+                        </div>
+                        <div class="span4">
+                            <s:bind path="activo.garantia">
+                                <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                    <label for="garantia">
+                                        <s:message code="garantia.label" />
+                                        <form:checkbox path="garantia" maxlength="64" />
+                                    </label>
+                                    <form:errors path="garantia" cssClass="alert alert-error" />
+                                </div>
+                            </s:bind>
                         </div>
                     </div>
                 </fieldset>
