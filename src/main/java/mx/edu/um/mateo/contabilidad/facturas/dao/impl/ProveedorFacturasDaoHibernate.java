@@ -124,6 +124,7 @@ public class ProveedorFacturasDaoHibernate extends BaseDao implements ProveedorF
             proveedorFacturas.setEmpresa(usuario.getEmpresa());
             proveedorFacturas.setAlmacen(usuario.getAlmacen());
         }
+        log.debug("usuario logeado... {}" + usuario.getEjercicio());
         log.debug("creando proveedor facturas {}" + proveedorFacturas);
         proveedorFacturas.setPassword(passwordEncoder.encodePassword(
                 proveedorFacturas.getPassword(), proveedorFacturas.getUsername()));
@@ -133,6 +134,7 @@ public class ProveedorFacturasDaoHibernate extends BaseDao implements ProveedorF
         currentSession().save(proveedorFacturas);
         currentSession().merge(proveedorFacturas);
         currentSession().flush();
+        log.debug("usuario logeado grabado{}" + usuario.getEjercicio());
 
     }
 

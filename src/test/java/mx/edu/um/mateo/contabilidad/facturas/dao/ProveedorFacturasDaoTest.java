@@ -50,14 +50,14 @@ public class ProveedorFacturasDaoTest extends BaseDaoTest {
         ProveedorFacturas proveedorFacturas = null;
         Rol rol = new Rol("ROLE_PRV");
         currentSession().save(rol);
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rol);
+        Set rolesPrv = new HashSet();
+        rolesPrv.add(rolDao.obtiene("ROLE_PRV"));
         for (int i = 0; i < 20; i++) {
             proveedorFacturas = new ProveedorFacturas("testA" + i, "TEST-01", "nombre", "appaterno", "apmaterno", "test" + i + "@prv.edu.mx",
                     "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01",
                     "TEST-01", "TEST-01", "TEST-01", "a", "TEST-01");
             proveedorFacturas.setAlmacen(usuario.getAlmacen());
-            proveedorFacturas.setRoles(roles);
+            proveedorFacturas.setRoles(rolesPrv);
             dao.crea(proveedorFacturas, usuario);
             assertNotNull(proveedorFacturas.getId());
         }
@@ -83,11 +83,12 @@ public class ProveedorFacturasDaoTest extends BaseDaoTest {
     }
 
     @Test
-    public void testCreas() {
+    public void testCrea() {
         ProveedorFacturas proveedorFacturas = (ProveedorFacturas) obtieneProveedor();
 
         dao.crea(proveedorFacturas, proveedorFacturas);
         assertNotNull(proveedorFacturas.getId());
+//        assertNotNull(proveedorFacturas.getEjercicio().getId());
         ProveedorFacturas proveedorFacturas1 = dao.obtiene(proveedorFacturas.getId());
         assertEquals(proveedorFacturas.getBanco(), proveedorFacturas1.getBanco());
     }

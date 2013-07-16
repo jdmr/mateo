@@ -35,6 +35,7 @@ import mx.edu.um.mateo.colportor.dao.UnionDao;
 import mx.edu.um.mateo.colportor.model.Asociado;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.contabilidad.dao.EjercicioDao;
+import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.dao.InicializaDao;
@@ -208,8 +209,9 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
         colportorDao.crea((Colportor) usuario, usuario);
 
 
-        usuario = new Usuario(username + "@prv.um.edu.mx", password, username, username, username, username + "@prv.um.edu.mx");
-
+        usuario = new ProveedorFacturas("testA", password, "nombre", "appaterno", "apmaterno", username + "@prv.edu.mx",
+                "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01",
+                "TEST-01", "TEST-01", "TEST-01", "a", "TEST-01");
         usuario.setAlmacen(almacen);
         usuario.setEmpresa(almacen.getEmpresa());
 

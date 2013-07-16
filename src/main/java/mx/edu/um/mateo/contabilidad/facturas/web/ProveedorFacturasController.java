@@ -70,7 +70,7 @@ public class ProveedorFacturasController extends BaseController {
     @Autowired
     private RolDao rolDao;
 
-    @RequestMapping
+    @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
             @RequestParam(required = false) Long pagina,
@@ -166,7 +166,10 @@ public class ProveedorFacturasController extends BaseController {
         try {
 //            proveedorFacturas.setPassword(password);
             Usuario usuario = ambiente.obtieneUsuario();
+            proveedorFacturas.setEjercicio(usuario.getEjercicio());
+            log.debug("usuario logeado ...{}" + usuario.getEjercicio());
             manager.graba(proveedorFacturas, usuario);
+            log.debug("usuario logeado enviado{}" + usuario.getEjercicio());
 
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "proveedor.creado.message");
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{proveedorFacturas.getNombre()});
