@@ -789,7 +789,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
 
         Transaction tx = null;
         try {
-            String ejercicioId = "001-2012";
+            String ejercicioId = "001-2013";
             Map<String, CentroCosto> centrosDeCosto = new HashMap<>();
             Map<String, TipoActivo> tipos = new HashMap<>();
             Query tipoActivoQuery = currentSession()
@@ -841,8 +841,8 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
             XSSFSheet sinCosto = wb.createSheet("SIN-COSTO");
             int sinCostoRow = 0;
 
-            tx = currentSession().beginTransaction();
-            for (idx = 0; idx <= 5; idx++) {
+            //tx = currentSession().beginTransaction();
+            for (idx = 5; idx <= 5; idx++) {
                 XSSFSheet sheet = workbook.getSheetAt(idx);
 
                 int rows = sheet.getPhysicalNumberOfRows();
@@ -852,8 +852,17 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                     if (row.getCell(0) == null) {
                         break;
                     }
-                    String nombreGrupo = row.getCell(0).getStringCellValue()
-                            .trim();
+                    String nombreGrupo = row.getCell(0).getStringCellValue().trim();
+                    
+                    switch (row.getCell(0).getCellType()) {
+                        case XSSFCell.CELL_TYPE_NUMERIC:
+                            nombreGrupo = row.getCell(0).toString().trim();
+                            break;
+                        case XSSFCell.CELL_TYPE_STRING:
+                            nombreGrupo = row.getCell(0).getStringCellValue().trim();
+                            break;
+                    }
+                    
                     TipoActivo tipoActivo = tipos.get(nombreGrupo);
                     if (tipoActivo != null) {
                         String cuentaCCosto = row.getCell(2).toString().trim();
@@ -1068,43 +1077,27 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                                     break;
                             }
                             if (StringUtils.isBlank(codigo)) {
-                                codigo = nf.format(codigoInicial);
-                                XSSFRow renglon = codigoAsignado
-                                        .createRow(codigoAsignadoRow++);
-                                renglon.createCell(0).setCellValue(
-                                        sheet.getSheetName() + ":" + (i + 1));
-                                renglon.createCell(1).setCellValue(
-                                        row.getCell(0).toString());
-                                renglon.createCell(2).setCellValue(
-                                        row.getCell(1).toString());
-                                renglon.createCell(3).setCellValue(
-                                        row.getCell(2).toString());
-                                renglon.createCell(4).setCellValue(
-                                        row.getCell(3).toString());
-                                renglon.createCell(5).setCellValue(
-                                        row.getCell(4).toString());
-                                renglon.createCell(6).setCellValue(
-                                        row.getCell(5).toString());
-                                renglon.createCell(7).setCellValue(
-                                        row.getCell(6).toString());
-                                renglon.createCell(8).setCellValue(
-                                        row.getCell(7).toString());
-                                renglon.createCell(9).setCellValue(
-                                        codigoInicial);
-                                renglon.createCell(10).setCellValue(
-                                        row.getCell(9).toString());
-                                renglon.createCell(11).setCellValue(
-                                        row.getCell(10).toString());
-                                renglon.createCell(12).setCellValue(
-                                        row.getCell(11).toString());
-                                renglon.createCell(13).setCellValue(
-                                        row.getCell(12).toString());
-                                renglon.createCell(14).setCellValue(
-                                        row.getCell(13).toString());
-                                renglon.createCell(15).setCellValue(
-                                        row.getCell(14).toString());
-                                renglon.createCell(16).setCellValue(
-                                        row.getCell(15).toString());
+                                codigo = "SIN CODIGO"+nf.format(codigoInicial);
+
+                                XSSFRow renglon = codigoAsignado.createRow(codigoAsignadoRow++);
+                                
+                                renglon.createCell(0).setCellValue(sheet.getSheetName() + ":" + (i + 1));
+                                renglon.createCell(1).setCellValue(row.getCell(0).toString());
+                                renglon.createCell(2).setCellValue(row.getCell(1).toString());
+                                renglon.createCell(3).setCellValue(row.getCell(2).toString());
+                                renglon.createCell(4).setCellValue(row.getCell(3).toString());
+                                renglon.createCell(5).setCellValue(row.getCell(4).toString());
+                                renglon.createCell(6).setCellValue(row.getCell(5).toString());
+                                renglon.createCell(7).setCellValue(row.getCell(6).toString());
+                                renglon.createCell(8).setCellValue(row.getCell(7).toString());
+                                renglon.createCell(9).setCellValue("SIN CODIGO"+codigoInicial);
+                                renglon.createCell(10).setCellValue(row.getCell(9).toString());
+                                renglon.createCell(11).setCellValue(row.getCell(10).toString());
+                                renglon.createCell(12).setCellValue(row.getCell(11).toString());
+                                renglon.createCell(13).setCellValue(row.getCell(12).toString());
+                                renglon.createCell(14).setCellValue(row.getCell(13).toString());
+                                renglon.createCell(15).setCellValue(row.getCell(14).toString());
+                                renglon.createCell(16).setCellValue(row.getCell(15).toString());
                                 codigoInicial++;
                             } else {
                                 // busca codigo duplicado
@@ -1123,43 +1116,24 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                                 if (activo != null) {
                                     XSSFRow renglon = codigoAsignado
                                             .createRow(codigoAsignadoRow++);
-                                    renglon.createCell(0).setCellValue(
-                                            sheet.getSheetName() + ":"
-                                            + (i + 1));
-                                    renglon.createCell(1).setCellValue(
-                                            row.getCell(0).toString());
-                                    renglon.createCell(2).setCellValue(
-                                            row.getCell(1).toString());
-                                    renglon.createCell(3).setCellValue(
-                                            row.getCell(2).toString());
-                                    renglon.createCell(4).setCellValue(
-                                            row.getCell(3).toString());
-                                    renglon.createCell(5).setCellValue(
-                                            row.getCell(4).toString());
-                                    renglon.createCell(6).setCellValue(
-                                            row.getCell(5).toString());
-                                    renglon.createCell(7).setCellValue(
-                                            row.getCell(6).toString());
-                                    renglon.createCell(8).setCellValue(
-                                            row.getCell(7).toString());
-                                    renglon.createCell(9).setCellValue(
-                                            codigo + "-"
-                                            + nf.format(codigoInicial));
-                                    renglon.createCell(10).setCellValue(
-                                            row.getCell(9).toString());
-                                    renglon.createCell(11).setCellValue(
-                                            row.getCell(10).toString());
-                                    renglon.createCell(12).setCellValue(
-                                            row.getCell(11).toString());
-                                    renglon.createCell(13).setCellValue(
-                                            row.getCell(12).toString());
-                                    renglon.createCell(14).setCellValue(
-                                            row.getCell(13).toString());
-                                    renglon.createCell(15).setCellValue(
-                                            row.getCell(14).toString());
-                                    renglon.createCell(16).setCellValue(
-                                            row.getCell(15).toString());
-                                    codigo = nf.format(codigoInicial);
+                                    renglon.createCell(0).setCellValue(sheet.getSheetName() + ":"+ (i + 1));
+                                    renglon.createCell(1).setCellValue(row.getCell(0).toString());
+                                    renglon.createCell(2).setCellValue(row.getCell(1).toString());
+                                    renglon.createCell(3).setCellValue(row.getCell(2).toString());
+                                    renglon.createCell(4).setCellValue(row.getCell(3).toString());
+                                    renglon.createCell(5).setCellValue(row.getCell(4).toString());
+                                    renglon.createCell(6).setCellValue(row.getCell(5).toString());
+                                    renglon.createCell(7).setCellValue(row.getCell(6).toString());
+                                    renglon.createCell(8).setCellValue(row.getCell(7).toString());
+                                    renglon.createCell(9).setCellValue(codigo + "-"+"SIN CODIGO"+ nf.format(codigoInicial));
+                                    renglon.createCell(10).setCellValue(row.getCell(9).toString());
+                                    renglon.createCell(11).setCellValue(row.getCell(10).toString());
+                                    renglon.createCell(12).setCellValue(row.getCell(11).toString());
+                                    renglon.createCell(13).setCellValue(row.getCell(12).toString());
+                                    renglon.createCell(14).setCellValue(row.getCell(13).toString());
+                                    renglon.createCell(15).setCellValue(row.getCell(14).toString());
+                                    renglon.createCell(16).setCellValue(row.getCell(15).toString());
+                                    codigo = "SIN CODIGO"+nf.format(codigoInicial);
                                     codigoInicial++;
                                 }
                             }
@@ -1374,7 +1348,7 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
                     }
                 }
             }
-            tx.commit();
+            //tx.commit();
             log.debug("################################################");
             log.debug("################################################");
             log.debug("TERMINO EN {} MINS",
@@ -1384,9 +1358,9 @@ public class ActivoDaoHibernate extends BaseDao implements ActivoDao {
 
             wb.write(out);
         } catch (IOException | RuntimeException e) {
-            if (tx != null && tx.isActive()) {
-                tx.rollback();
-            }
+            //if (tx != null && tx.isActive()) {
+                //tx.rollback();
+            //}
             log.error(
                     "Hubo problemas al intentar pasar datos de archivo excel a BD ("
                     + idx + ":" + i + ")", e);
