@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
+import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -240,11 +241,13 @@ public class InformeProveedorController extends BaseController {
     @RequestMapping("/ver/{id}")
     public String ver(HttpServletRequest request, @PathVariable Long id, Model modelo) {
         log.debug("Mostrando informe {}", id);
+        Usuario proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
 
         InformeProveedor informeProveedor = manager.obtiene(id);
         request.getSession().setAttribute("informeId", informeProveedor);
+        request.getSession().setAttribute("proveedorFacturas", proveedorFacturas);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informeProveedor);
-        if ("a".equals(informeProveedor.getStatus().trim())) {
+        if ("a".equals(informeProveedor.getStatus().trim()) || "A".equals(informeProveedor.getStatus().trim())) {
             return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
         }
         return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBO;
@@ -291,9 +294,9 @@ public class InformeProveedorController extends BaseController {
         }
 
         try {
-            Proveedor proveedor = (Proveedor) request.getSession().getAttribute("proveedor");
-            informe.setNombreProveedor(proveedor.getNombre());
+
             Usuario usuario = ambiente.obtieneUsuario();
+            informe.setNombreProveedor(usuario.getNombre());
             manager.graba(informe, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el tipo de Beca", e);

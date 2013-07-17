@@ -11,6 +11,7 @@ import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleadoDetalle;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
+import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseControllerTest;
@@ -222,7 +223,7 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
 
     @Test
     public void testGraba() throws Exception {
-        Usuario usuario = obtieneUsuario();
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
         InformeProveedor informe = new InformeProveedor();
         informe.setEmpresa(usuario.getEmpresa());
         informe.setFechaInforme(new Date());
@@ -236,7 +237,7 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         this.mockMvc.perform(post(Constantes.PATH_INFORMEPROVEEDOR_DETALLE_GRABA)
                 .sessionAttr("informeId", informe)
-                .sessionAttr("proveedor", proveedor)
+                .sessionAttr("proveedorFacturas", usuario)
                 .param("fechaFactura", "21/03/2013")
                 .param("folioFactura", "1110475")
                 .param("iva", ".16")

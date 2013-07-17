@@ -24,6 +24,7 @@ import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleadoDetalle;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
+import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorDetalleManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
 import mx.edu.um.mateo.general.dao.ProveedorDao;
@@ -358,8 +359,8 @@ public class InformeProveedorDetalleController extends BaseController {
     @RequestMapping("/nuevo")
     public String nueva(HttpServletRequest request, Model modelo) {
         log.debug("Nuevo paquete");
-        Proveedor proveedor = (Proveedor) request.getSession().getAttribute("proveedor");
-        modelo.addAttribute("proveedor", proveedor);
+        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) request.getSession().getAttribute("proveedorFacturas");
+        modelo.addAttribute("proveedorFacturas", proveedorFacturas);
         Map<String, Object> params = new HashMap<>();
 
 
@@ -425,11 +426,11 @@ public class InformeProveedorDetalleController extends BaseController {
         detalle.setInformeProveedor(informe);
         Usuario usuario = ambiente.obtieneUsuario();
 
-        log.debug("requestRFC** {}", request.getSession().getAttribute("proveedor"));
-        Proveedor proveedor = (Proveedor) request.getSession().getAttribute("proveedor");
-        detalle.setNombreProveedor(proveedor.getNombre());
-        detalle.setRFCProveedor(proveedor.getRfc());
-        log.debug("proveedor** {}", proveedor.toString());
+        log.debug("requestRFC** {}", request.getSession().getAttribute("proveedorFacturas"));
+        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) request.getSession().getAttribute("proveedorFacturas");
+        detalle.setNombreProveedor(proveedorFacturas.getNombre());
+        detalle.setRFCProveedor(proveedorFacturas.getRfc());
+        log.debug("proveedor** {}", proveedorFacturas.toString());
         try {
             manager.graba(detalle, usuario);
             request.getSession().setAttribute("detalleId", detalle.getId());

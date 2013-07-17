@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
+import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -100,16 +101,18 @@ public class InformeProveedorControllerTest extends BaseControllerTest {
     @Test
     public void testVer() throws Exception {
         log.debug("Debiera mostrar paquetes");
-        Usuario usuario = obtieneUsuario();
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
         InformeProveedor informeProveedor = new InformeProveedor();
         informeProveedor.setEmpresa(usuario.getEmpresa());
         informeProveedor.setFechaInforme(new Date());
         informeProveedor.setNombreProveedor("LAla");
         informeProveedor.setStatus("a");
         currentSession().save(informeProveedor);
+        log.debug("informe{}", informeProveedor);
         assertNotNull(informeProveedor.getId());
-
-        this.mockMvc.perform(get(Constantes.PATH_INFORMEPROVEEDOR_VER + "/" + informeProveedor.getId()))
+        this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
+        this.mockMvc.perform(get(Constantes.PATH_INFORMEPROVEEDOR_VER + "/" + informeProveedor.getId())
+                .sessionAttr("proveedorFacturas", usuario))
                 .andExpect(redirectedUrl(Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA))
                 .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR));
     }
@@ -117,13 +120,13 @@ public class InformeProveedorControllerTest extends BaseControllerTest {
     @Test
     public void testGraba() throws Exception {
         log.debug("Debiera crear paquete");
-        Usuario usuario = obtieneUsuario();
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
 
         Proveedor p = new Proveedor("sam", "sam", "sam123456789", usuario.getEmpresa());
         currentSession().save(p);
         this.mockMvc.perform(post(Constantes.PATH_INFORMEPROVEEDOR_GRABA)
-                .sessionAttr("proveedor", p)
+                .sessionAttr("proveedorFacturas", usuario)
                 .param("nombreProveedor", "0575")
                 .param("fechaInforme", "4/06/2013")
                 .param("status", "a"))

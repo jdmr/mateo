@@ -224,8 +224,7 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
         rolesPrv.add(rolDao.obtiene("ROLE_PRV"));
         usuario.setRoles(rolesPrv);
         usuarioDao.crea(usuario, almacenId, roles);
-        Proveedor proveedor = new Proveedor("Sam789", "samuel", "samuel130620", usuario.getEmpresa());
-        proveedorDao.crea(proveedor, usuario);
+
     }
 
     @Override

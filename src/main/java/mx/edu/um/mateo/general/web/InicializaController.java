@@ -70,11 +70,7 @@ public class InicializaController extends BaseController {
 
         log.debug("Inicializando...");
         inicializaDao.inicializa(username, password);
-        Proveedor proveedor = new Proveedor();
-        proveedor.setNombre("sam");
-        proveedor.setRfc("samuel130620");
-        request.getSession().setAttribute("proveedor", proveedor);
-        log.debug("provedorSesion {}", proveedor.toString());
+
 
         return "redirect:/";
     }
