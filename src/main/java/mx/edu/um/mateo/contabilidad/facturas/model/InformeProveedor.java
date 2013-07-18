@@ -32,6 +32,7 @@ public class InformeProveedor implements Serializable {
     @Version
     private Integer version;
     private String status;
+    private String formaPago;
     private String nombreProveedor;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
@@ -110,11 +111,18 @@ public class InformeProveedor implements Serializable {
         this.contraRecibo = contraRecibo;
     }
 
+    public String getFormaPago() {
+        return formaPago;
+    }
+
+    public void setFormaPago(String formaPago) {
+        this.formaPago = formaPago;
+    }
+
     @Override
     public String toString() {
-        return "InformeProveedor{" + "id=" + id + ", version=" + version + ", status=" + status
-                + ", nombreProveedor=" + nombreProveedor + ", fechaInforme=" + fechaInforme
-                + ", empresa=" + empresa + ", fechaPago=" + fechaPago
-                + ", contraRecibo=" + contraRecibo + '}';
+        return "InformeProveedor{" + "id=" + id + ", version=" + version + ", status=" + status + ", formaPago=" + formaPago
+                + ", nombreProveedor=" + nombreProveedor + ", fechaInforme=" + fechaInforme + ", empresa=" + empresa
+                + ", fechaPago=" + fechaPago + ", contraRecibo=" + contraRecibo + '}';
     }
 }

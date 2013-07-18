@@ -18,10 +18,12 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import mx.edu.um.mateo.contabilidad.facturas.dao.ProveedorFacturasDao;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
+import mx.edu.um.mateo.contabilidad.facturas.service.ProveedorFacturasManager;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -66,6 +68,8 @@ public class InformeProveedorController extends BaseController {
 
     @Autowired
     private InformeProveedorManager manager;
+    @Autowired
+    private ProveedorFacturasManager pFacturasManager;
 
     @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -241,11 +245,11 @@ public class InformeProveedorController extends BaseController {
     @RequestMapping("/ver/{id}")
     public String ver(HttpServletRequest request, @PathVariable Long id, Model modelo) {
         log.debug("Mostrando informe {}", id);
-        Usuario proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
+
 
         InformeProveedor informeProveedor = manager.obtiene(id);
         request.getSession().setAttribute("informeId", informeProveedor);
-        request.getSession().setAttribute("proveedorFacturas", proveedorFacturas);
+
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informeProveedor);
         if ("a".equals(informeProveedor.getStatus().trim()) || "A".equals(informeProveedor.getStatus().trim())) {
             return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
@@ -266,19 +270,27 @@ public class InformeProveedorController extends BaseController {
     @RequestMapping("/nuevo")
     public String nueva(HttpServletRequest request, Model modelo) {
         log.debug("Nuevo informe");
+        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
         InformeProveedor informe = new InformeProveedor();
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe);
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", request.getSession()
                 .getAttribute("empresaId"));
         params.put("reporte", true);
+        String cuenta = proveedorFacturas.getCuentaCheque();
+        String clabe = proveedorFacturas.getClabe();
+        modelo.addAttribute("clabe", clabe);
+        modelo.addAttribute("cuenta", cuenta);
+        request.getSession().setAttribute("proveedorFacturas", proveedorFacturas);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe);
         return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
     }
 
     @Transactional
     @RequestMapping(value = "/graba", method = RequestMethod.POST)
-    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid InformeProveedor informe, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid InformeProveedor informe,
+            BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes,
+            @RequestParam String clabe, @RequestParam String cuenta) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
@@ -292,6 +304,29 @@ public class InformeProveedorController extends BaseController {
 
             return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
         }
+        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
+        String formaPago = informe.getFormaPago();
+        ProveedorFacturas proveedorFacturas1 = pFacturasManager.obtiene(proveedorFacturas.getId());
+        switch (formaPago) {
+            case "T":
+                if (clabe != null && clabe != proveedorFacturas.getClabe() && !clabe.isEmpty()) {
+                    proveedorFacturas1.setClabe(clabe);
+                    pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
+                } else if (clabe == null || clabe.isEmpty()) {
+
+                    return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
+                }
+            case "C":
+                if (cuenta != null && cuenta != proveedorFacturas.getCuentaCheque() && !cuenta.isEmpty()) {
+                    proveedorFacturas1.setCuentaCheque(cuenta);
+                    pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
+                } else if (cuenta == null || cuenta.isEmpty()) {
+
+                    return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
+                }
+        }
+
+
 
         try {
 

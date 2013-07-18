@@ -58,7 +58,35 @@
                             <form:errors path="fechaInforme" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
+
+
+                    <s:bind path="informeProveedor.formaPago">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="formaPago">
+                                <s:message code="formaPago.label" />
+
+                            </label>
+                            <form:radiobutton path="formaPago"  value="T" cssClass="span3" id="tranferencia"/>Transferencia<br />
+                            <form:radiobutton path="formaPago"  value="C"  cssClass="span3" id="cheque"/>Cheque<br />
+                            <form:errors path="formaPago" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <div class="control-group ">
+                        <label for="clabe">
+                            <s:message code="clabe.label" />
+                            <span class="required-indicator">*</span>
+                        </label>
+                        <input type="text" id="clabe"   name="clabe" <c:out value='${clabe}' />>
+                    </div>
+                    <div class="control-group ">
+                        <label for="cuenta">
+                            <s:message code="cuenta.label" />
+                            <span class="required-indicator">*</span>
+                        </label>
+                        <input type="text" id="cuenta"   name="cuenta" <c:out value='${cuenta}' />>
+                    </div>
                 </fieldset>
+
 
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
@@ -73,6 +101,18 @@
                 $("input#fechaInforme").datepicker($.datepicker.regional['es']);
                 $("input#fechaInforme").datepicker("option", "firstDay", 0);
             });
+//            function disableCuenta()
+//            {
+//                document.getElementById("cuenta").disabled = true;
+//                document.getElementById("clabe").disabled = false;
+//
+//            }
+//            function disableClave()
+//            {
+//                document.getElementById("clabe").disabled = true;
+//                document.getElementById("cuenta").disabled = false;
+//
+//            }
         </script>
     </content>
 </body>
