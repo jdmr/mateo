@@ -58,6 +58,26 @@
                             <form:errors path="fechaInforme" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
+                    <s:bind path="informeProveedor.clabe">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="clabe">
+                                <s:message code="clabe.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="clabe" maxlength="12" required="true" />
+                            <form:errors path="clabe" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="informeProveedor.cuentaCheque">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="cuentaCheque">
+                                <s:message code="cuentaCheque.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="cuentaCheque" maxlength="12" required="true" />
+                            <form:errors path="cuentaCheque" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
 
 
                     <s:bind path="informeProveedor.formaPago">
@@ -71,22 +91,60 @@
                             <form:errors path="formaPago" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <div class="control-group ">
+
+                </fieldset>
+                <%--
+                <div class="control-group ">
                         <label for="clabe">
                             <s:message code="clabe.label" />
                             <span class="required-indicator">*</span>
                         </label>
-                        <input type="text" id="clabe"   name="clabe" <c:out value='${clabe}' />>
+                        <input type="text"   name="clabe" <c:out value='${informeProveedor.clabe}' />>
                     </div>
                     <div class="control-group ">
                         <label for="cuenta">
                             <s:message code="cuenta.label" />
                             <span class="required-indicator">*</span>
                         </label>
-                        <input type="text" id="cuenta"   name="cuenta" <c:out value='${cuenta}' />>
+                        <input type="text"   name="cuenta" <c:out value='${cuentaCheque}' />>
                     </div>
-                </fieldset>
+        <s:bind path="proveedorFacturasId.cuenta">
+            <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                    <label for="cuenta">
+                    <s:message code="cuenta.label" />
+                    <span class="required-indicator">*</span>
+                </label>
+                <form:input path="cuenta" maxlength="150" required="true" />
+                <form:errors path="cuenta" cssClass="alert alert-error" />
+            </div>
+        </s:bind>
+                
+                <div class="control-group ">
+                        <label for="clabe">
+                            <s:message code="clabe.label" />
+                            <span class="required-indicator">*</span>
+                        </label>
+                        <input type="text"   name="clabe" <c:out value='${informeProveedor.proveedorFacturas.clabe}' />>
+                    </div>
+                    <div class="control-group ">
+                        <label for="cuenta">
+                            <s:message code="cuenta.label" />
+                            <span class="required-indicator">*</span>
+                        </label>
+                        <input type="text"   name="cuenta" <c:out value='${cuentaCheque}' />>
+                    </div>
+                <s:bind path="informeProveedor.proveedorFacturas.clabe">
+                    <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="clabe">
+                            <s:message code="clabe.label" />
+                            <span class="required-indicator">*</span>
+                        </label>
+                        <form:input path="proveedorFacturas.clabe" maxlength="12" required="true" />
+                        <form:errors path="proveedorFacturas.clabe" cssClass="alert alert-error" />
+                    </div>
+                </s:bind>
 
+                --%>
 
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>

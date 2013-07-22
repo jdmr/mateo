@@ -32,6 +32,8 @@ public class InformeProveedor implements Serializable {
     @Version
     private Integer version;
     private String status;
+    private String cuentaCheque;
+    private String clabe;
     private String formaPago;
     private String nombreProveedor;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
@@ -119,10 +121,27 @@ public class InformeProveedor implements Serializable {
         this.formaPago = formaPago;
     }
 
+    public String getCuentaCheque() {
+        return cuentaCheque;
+    }
+
+    public void setCuentaCheque(String cuentaCheque) {
+        this.cuentaCheque = cuentaCheque;
+    }
+
+    public String getClabe() {
+        return clabe;
+    }
+
+    public void setClabe(String clabe) {
+        this.clabe = clabe;
+    }
+
     @Override
     public String toString() {
-        return "InformeProveedor{" + "id=" + id + ", version=" + version + ", status=" + status + ", formaPago=" + formaPago
-                + ", nombreProveedor=" + nombreProveedor + ", fechaInforme=" + fechaInforme + ", empresa=" + empresa
-                + ", fechaPago=" + fechaPago + ", contraRecibo=" + contraRecibo + '}';
+        return "InformeProveedor{" + "id=" + id + ", version=" + version + ", status=" + status + ", cuentaCheque=" + cuentaCheque
+                + ", clabe=" + clabe + ", formaPago=" + formaPago + ", nombreProveedor=" + nombreProveedor
+                + ", fechaInforme=" + fechaInforme + ", empresa=" + empresa + ", fechaPago=" + fechaPago
+                + ", contraRecibo=" + contraRecibo + '}';
     }
 }

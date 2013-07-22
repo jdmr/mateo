@@ -272,15 +272,15 @@ public class InformeProveedorController extends BaseController {
         log.debug("Nuevo informe");
         ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
         InformeProveedor informe = new InformeProveedor();
+        informe.setClabe(proveedorFacturas.getClabe());
+        informe.setCuentaCheque(proveedorFacturas.getCuentaCheque());
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe);
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", request.getSession()
                 .getAttribute("empresaId"));
         params.put("reporte", true);
-        String cuenta = proveedorFacturas.getCuentaCheque();
-        String clabe = proveedorFacturas.getClabe();
-        modelo.addAttribute("clabe", clabe);
-        modelo.addAttribute("cuenta", cuenta);
+
+        modelo.addAttribute("proveedorFacturasId", proveedorFacturas);
         request.getSession().setAttribute("proveedorFacturas", proveedorFacturas);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe);
         return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
@@ -289,8 +289,7 @@ public class InformeProveedorController extends BaseController {
     @Transactional
     @RequestMapping(value = "/graba", method = RequestMethod.POST)
     public String graba(HttpServletRequest request, HttpServletResponse response, @Valid InformeProveedor informe,
-            BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes,
-            @RequestParam String clabe, @RequestParam String cuenta) {
+            BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
@@ -309,18 +308,18 @@ public class InformeProveedorController extends BaseController {
         ProveedorFacturas proveedorFacturas1 = pFacturasManager.obtiene(proveedorFacturas.getId());
         switch (formaPago) {
             case "T":
-                if (clabe != null && clabe != proveedorFacturas.getClabe() && !clabe.isEmpty()) {
-                    proveedorFacturas1.setClabe(clabe);
+                if (informe.getClabe() != null && informe.getClabe() != proveedorFacturas.getClabe() && !informe.getClabe().isEmpty()) {
+                    proveedorFacturas1.setClabe(informe.getClabe());
                     pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
-                } else if (clabe == null || clabe.isEmpty()) {
+                } else if (informe.getClabe() == null || informe.getClabe().isEmpty()) {
 
                     return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
                 }
             case "C":
-                if (cuenta != null && cuenta != proveedorFacturas.getCuentaCheque() && !cuenta.isEmpty()) {
-                    proveedorFacturas1.setCuentaCheque(cuenta);
+                if (informe.getCuentaCheque() != null && informe.getCuentaCheque() != proveedorFacturas.getCuentaCheque() && !informe.getCuentaCheque().isEmpty()) {
+                    proveedorFacturas1.setCuentaCheque(informe.getCuentaCheque());
                     pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
-                } else if (cuenta == null || cuenta.isEmpty()) {
+                } else if (informe.getCuentaCheque() == null || informe.getCuentaCheque().isEmpty()) {
 
                     return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
                 }
