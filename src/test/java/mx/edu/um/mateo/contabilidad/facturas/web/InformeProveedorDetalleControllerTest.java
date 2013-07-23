@@ -49,14 +49,16 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
     public void testLista() throws Exception {
         log.debug("Debiera mostrar lista de paquetes");
 
-        Usuario usuario = obtieneUsuario();
-        InformeProveedor informe = new InformeProveedor();
-        informe.setEmpresa(usuario.getEmpresa());
-        informe.setNombreProveedor("Sam");
-        informe.setFechaInforme(new Date());
-        informe.setStatus("a");
-        currentSession().save(informe);
-        assertNotNull(informe.getId());
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
+        InformeProveedor informeProveedor = new InformeProveedor();
+        informeProveedor = new InformeProveedor();
+        informeProveedor.setEmpresa(usuario.getEmpresa());
+        informeProveedor.setFechaInforme(new Date());
+        informeProveedor.setNombreProveedor("LAla");
+        informeProveedor.setStatus("A");
+        informeProveedor.setProveedorFacturas(usuario);
+        currentSession().save(informeProveedor);
+        assertNotNull(informeProveedor.getId());
 //     \\\\  ////
 //      \\\\////
         ////\\\\
@@ -64,7 +66,7 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
         InformeProveedorDetalle detalle = null;
         for (int i = 0; i < 20; i++) {
             detalle = new InformeProveedorDetalle();
-            detalle.setInformeProveedor(informe);
+            detalle.setInformeProveedor(informeProveedor);
             detalle.setFechaFactura(new Date());
             detalle.setFolioFactura("1110475");
             detalle.setIVA(new BigDecimal(".16"));
@@ -81,7 +83,7 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
 
 
         this.mockMvc.perform(get(Constantes.PATH_INFORMEPROVEEDOR_DETALLE)
-                .sessionAttr("informeId", informe)).
+                .sessionAttr("informeId", informeProveedor)).
                 andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA + ".jsp")).
                 andExpect(model().attributeExists(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE)).
                 andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION)).
@@ -93,14 +95,16 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
     public void testContrerecibo() throws Exception {
         log.debug("Debiera mostrar lista de paquetes");
 
-        Usuario usuario = obtieneUsuario();
-        InformeProveedor informe = new InformeProveedor();
-        informe.setEmpresa(usuario.getEmpresa());
-        informe.setNombreProveedor("Sam");
-        informe.setFechaInforme(new Date());
-        informe.setStatus("a");
-        currentSession().save(informe);
-        assertNotNull(informe.getId());
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
+        InformeProveedor informeProveedor = new InformeProveedor();
+        informeProveedor = new InformeProveedor();
+        informeProveedor.setEmpresa(usuario.getEmpresa());
+        informeProveedor.setFechaInforme(new Date());
+        informeProveedor.setNombreProveedor("LAla");
+        informeProveedor.setStatus("A");
+        informeProveedor.setProveedorFacturas(usuario);
+        currentSession().save(informeProveedor);
+        assertNotNull(informeProveedor.getId());
 //     \\\\  ////
 //      \\\\////
         ////\\\\
@@ -108,7 +112,7 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
         InformeProveedorDetalle detalle = null;
         for (int i = 0; i < 20; i++) {
             detalle = new InformeProveedorDetalle();
-            detalle.setInformeProveedor(informe);
+            detalle.setInformeProveedor(informeProveedor);
             detalle.setFechaFactura(new Date());
             detalle.setFolioFactura("1110475");
             detalle.setIVA(new BigDecimal(".16"));
@@ -125,7 +129,7 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
 
 
         this.mockMvc.perform(get(Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBO)
-                .sessionAttr("informeId", informe)).
+                .sessionAttr("informeId", informeProveedor)).
                 andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBO + ".jsp")).
                 andExpect(model().attributeExists(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE)).
                 andExpect(model().attributeExists(Constantes.CONTAINSKEY_PAGINACION)).
@@ -136,36 +140,41 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
     @Test
     public void testNuevo() throws Exception {
         log.debug("Test 'nuevo'");
-        Usuario usuario = obtieneUsuario();
-        InformeProveedor informe = null;
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
+        InformeProveedor informeProveedor = null;
         for (int i = 0; i < 20; i++) {
-            informe = new InformeProveedor();
-            informe.setEmpresa(usuario.getEmpresa());
-            informe.setFechaInforme(new Date());
-            informe.setStatus("a");
-            currentSession().save(informe);
-            assertNotNull(informe.getId());
+            informeProveedor = new InformeProveedor();
+            informeProveedor.setEmpresa(usuario.getEmpresa());
+            informeProveedor.setFechaInforme(new Date());
+            informeProveedor.setNombreProveedor("LAla");
+            informeProveedor.setStatus("A");
+            informeProveedor.setProveedorFacturas(usuario);
+            currentSession().save(informeProveedor);
+            assertNotNull(informeProveedor.getId());
         }
 
         this.mockMvc.perform(get(Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO)
-                .sessionAttr(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe))
+                .sessionAttr(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informeProveedor))
                 .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO + ".jsp"))
                 .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE));
     }
 
     @Test
     public void testEdita() throws Exception {
-        Usuario usuario = obtieneUsuario();
-        InformeProveedor informe = new InformeProveedor();
-        informe.setEmpresa(usuario.getEmpresa());
-        informe.setFechaInforme(new Date());
-        informe.setStatus("a");
-        currentSession().save(informe);
-        assertNotNull(informe.getId());
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
+        InformeProveedor informeProveedor = new InformeProveedor();
+        informeProveedor = new InformeProveedor();
+        informeProveedor.setEmpresa(usuario.getEmpresa());
+        informeProveedor.setFechaInforme(new Date());
+        informeProveedor.setNombreProveedor("LAla");
+        informeProveedor.setStatus("A");
+        informeProveedor.setProveedorFacturas(usuario);
+        currentSession().save(informeProveedor);
+        assertNotNull(informeProveedor.getId());
 //      \\\\////
         ////\\\\
         InformeProveedorDetalle detalle = new InformeProveedorDetalle();
-        detalle.setInformeProveedor(informe);
+        detalle.setInformeProveedor(informeProveedor);
         detalle.setFechaFactura(new Date());
         detalle.setFolioFactura("1110475");
         detalle.setIVA(new BigDecimal(".16"));
@@ -181,7 +190,7 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
 
 
         this.mockMvc.perform(get(Constantes.PATH_INFORMEPROVEEDOR_DETALLE_EDITA + "/" + detalle.getId())
-                .sessionAttr(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe))
+                .sessionAttr(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informeProveedor))
                 .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_EDITA + ".jsp"))
                 .andExpect(model().attributeExists(Constantes.CONTAINSKEY_INFORMESPROVEEDOR))
                 .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE))
@@ -190,17 +199,20 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
 
     @Test
     public void testVer() throws Exception {
-        Usuario usuario = obtieneUsuario();
-        InformeProveedor informe = new InformeProveedor();
-        informe.setEmpresa(usuario.getEmpresa());
-        informe.setFechaInforme(new Date());
-        informe.setStatus("a");
-        currentSession().save(informe);
-        assertNotNull(informe.getId());
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
+        InformeProveedor informeProveedor = new InformeProveedor();
+        informeProveedor = new InformeProveedor();
+        informeProveedor.setEmpresa(usuario.getEmpresa());
+        informeProveedor.setFechaInforme(new Date());
+        informeProveedor.setNombreProveedor("LAla");
+        informeProveedor.setStatus("A");
+        informeProveedor.setProveedorFacturas(usuario);
+        currentSession().save(informeProveedor);
+        assertNotNull(informeProveedor.getId());
 //      \\\\////
         ////\\\\
         InformeProveedorDetalle detalle = new InformeProveedorDetalle();
-        detalle.setInformeProveedor(informe);
+        detalle.setInformeProveedor(informeProveedor);
         detalle.setFechaFactura(new Date());
         detalle.setFolioFactura("1110475");
         detalle.setIVA(new BigDecimal(".16"));
@@ -216,7 +228,7 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
 
 
         this.mockMvc.perform(get(Constantes.PATH_INFORMEPROVEEDOR_DETALLE_VER + "/" + detalle.getId())
-                .sessionAttr(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe))
+                .sessionAttr(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informeProveedor))
                 .andExpect(forwardedUrl("/WEB-INF/jsp/" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_VER + ".jsp"))
                 .andExpect(model().attributeExists(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE));
     }
@@ -224,20 +236,20 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
     @Test
     public void testGraba() throws Exception {
         ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
-        InformeProveedor informe = new InformeProveedor();
-        informe.setEmpresa(usuario.getEmpresa());
-        informe.setFechaInforme(new Date());
-        informe.setStatus("a");
-        currentSession().save(informe);
-        assertNotNull(informe.getId());
-        Proveedor proveedor = new Proveedor("Sam789", "samuel", "samuel130620", usuario.getEmpresa());
-        currentSession().save(proveedor);
+        InformeProveedor informeProveedor = new InformeProveedor();
+        informeProveedor = new InformeProveedor();
+        informeProveedor.setEmpresa(usuario.getEmpresa());
+        informeProveedor.setFechaInforme(new Date());
+        informeProveedor.setNombreProveedor("LAla");
+        informeProveedor.setStatus("A");
+        informeProveedor.setProveedorFacturas(usuario);
+        currentSession().save(informeProveedor);
+        assertNotNull(informeProveedor.getId());
         //      \\\\////
         ////\\\\
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         this.mockMvc.perform(post(Constantes.PATH_INFORMEPROVEEDOR_DETALLE_GRABA)
-                .sessionAttr("informeId", informe)
-                .sessionAttr("proveedorFacturas", usuario)
+                .sessionAttr("informeId", informeProveedor)
                 .param("fechaFactura", "21/03/2013")
                 .param("folioFactura", "1110475")
                 .param("iva", ".16")
@@ -254,19 +266,20 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
 
     @Test
     public void testActualiza() throws Exception {
-        Usuario usuario = obtieneUsuario();
-        InformeProveedor informe = new InformeProveedor();
-        informe.setEmpresa(usuario.getEmpresa());
-        informe.setFechaInforme(new Date());
-        informe.setStatus("a");
-        currentSession().save(informe);
-        assertNotNull(informe.getId());
-        Proveedor proveedor = new Proveedor("Sam789", "samuel", "samuel130620", usuario.getEmpresa());
-        currentSession().save(proveedor);
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
+        InformeProveedor informeProveedor = new InformeProveedor();
+        informeProveedor = new InformeProveedor();
+        informeProveedor.setEmpresa(usuario.getEmpresa());
+        informeProveedor.setFechaInforme(new Date());
+        informeProveedor.setNombreProveedor("LAla");
+        informeProveedor.setStatus("A");
+        informeProveedor.setProveedorFacturas(usuario);
+        currentSession().save(informeProveedor);
+        assertNotNull(informeProveedor.getId());
 //      \\\\////
         ////\\\\
         InformeProveedorDetalle detalle = new InformeProveedorDetalle();
-        detalle.setInformeProveedor(informe);
+        detalle.setInformeProveedor(informeProveedor);
         detalle.setFechaFactura(new Date());
         detalle.setFolioFactura("1110475");
         detalle.setIVA(new BigDecimal(".16"));
@@ -281,8 +294,7 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
         assertNotNull(detalle.getId());
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         this.mockMvc.perform(post(Constantes.PATH_INFORMEPROVEEDOR_DETALLE_ACTUALIZA)
-                .sessionAttr("informeId", informe)
-                .sessionAttr("proveedor", proveedor)
+                .sessionAttr("informeId", informeProveedor)
                 .param("version", detalle.getVersion().toString())
                 .param("id", detalle.getId().toString())
                 .param("fechaFactura", "21/03/2013")
@@ -298,23 +310,26 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
                 .andExpect(flash().attribute("message", "detalle.graba.message"))
                 .andExpect(redirectedUrl(Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA));
         currentSession().refresh(detalle);
-        log.debug("{}", informe);
+        log.debug("{}", informeProveedor);
         assertEquals("1110476", detalle.getFolioFactura());
     }
 
     @Test
     public void testElimina() throws Exception {
-        Usuario usuario = obtieneUsuario();
-        InformeProveedor informe = new InformeProveedor();
-        informe.setEmpresa(usuario.getEmpresa());
-        informe.setFechaInforme(new Date());
-        informe.setStatus("a");
-        currentSession().save(informe);
-        assertNotNull(informe.getId());
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
+        InformeProveedor informeProveedor = new InformeProveedor();
+        informeProveedor = new InformeProveedor();
+        informeProveedor.setEmpresa(usuario.getEmpresa());
+        informeProveedor.setFechaInforme(new Date());
+        informeProveedor.setNombreProveedor("LAla");
+        informeProveedor.setStatus("A");
+        informeProveedor.setProveedorFacturas(usuario);
+        currentSession().save(informeProveedor);
+        assertNotNull(informeProveedor.getId());
 //      \\\\////
         ////\\\\
         InformeProveedorDetalle detalle = new InformeProveedorDetalle();
-        detalle.setInformeProveedor(informe);
+        detalle.setInformeProveedor(informeProveedor);
         detalle.setFechaFactura(new Date());
         detalle.setFolioFactura("1110475");
         detalle.setIVA(new BigDecimal(".16"));
@@ -329,7 +344,7 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
         assertNotNull(detalle.getId());
         this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
         this.mockMvc.perform(post(Constantes.PATH_INFORMEPROVEEDOR_DETALLE_ELIMINA)
-                .sessionAttr(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe)
+                .sessionAttr(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informeProveedor)
                 .param("id", detalle.getId().toString()))
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
                 .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "detalle.elimina.message"))

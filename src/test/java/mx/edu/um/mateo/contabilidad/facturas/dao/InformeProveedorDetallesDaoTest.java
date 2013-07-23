@@ -13,6 +13,7 @@ import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleadoDetalle;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
+import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -40,12 +41,14 @@ public class InformeProveedorDetallesDaoTest extends BaseDaoTest {
 
     @Test
     public void testListaCeros() {
-        Usuario usuario = obtieneUsuario();
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
         InformeProveedor informeProveedor = new InformeProveedor();
+        informeProveedor = new InformeProveedor();
         informeProveedor.setEmpresa(usuario.getEmpresa());
         informeProveedor.setFechaInforme(new Date());
         informeProveedor.setNombreProveedor("LAla");
         informeProveedor.setStatus("A");
+        informeProveedor.setProveedorFacturas(usuario);
         currentSession().save(informeProveedor);
         assertNotNull(informeProveedor.getId());
         InformeProveedorDetalle proveedorDetalle = null;
@@ -78,12 +81,14 @@ public class InformeProveedorDetallesDaoTest extends BaseDaoTest {
 
     @Test
     public void testLista() {
-        Usuario usuario = obtieneUsuario();
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
         InformeProveedor informeProveedor = new InformeProveedor();
+        informeProveedor = new InformeProveedor();
         informeProveedor.setEmpresa(usuario.getEmpresa());
         informeProveedor.setFechaInforme(new Date());
         informeProveedor.setNombreProveedor("LAla");
         informeProveedor.setStatus("A");
+        informeProveedor.setProveedorFacturas(usuario);
         currentSession().save(informeProveedor);
         assertNotNull(informeProveedor.getId());
         InformeProveedorDetalle proveedorDetalle = null;
@@ -116,12 +121,14 @@ public class InformeProveedorDetallesDaoTest extends BaseDaoTest {
 
     @Test
     public void testObtiene() {
-        Usuario usuario = obtieneUsuario();
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
         InformeProveedor informeProveedor = new InformeProveedor();
+        informeProveedor = new InformeProveedor();
         informeProveedor.setEmpresa(usuario.getEmpresa());
         informeProveedor.setFechaInforme(new Date());
         informeProveedor.setNombreProveedor("LAla");
         informeProveedor.setStatus("A");
+        informeProveedor.setProveedorFacturas(usuario);
         currentSession().save(informeProveedor);
         assertNotNull(informeProveedor.getId());
         //     \\\\\\//////         
@@ -146,12 +153,14 @@ public class InformeProveedorDetallesDaoTest extends BaseDaoTest {
 
     @Test
     public void testCrea() {
-        Usuario usuario = obtieneUsuario();
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
         InformeProveedor informeProveedor = new InformeProveedor();
+        informeProveedor = new InformeProveedor();
         informeProveedor.setEmpresa(usuario.getEmpresa());
         informeProveedor.setFechaInforme(new Date());
         informeProveedor.setNombreProveedor("LAla");
         informeProveedor.setStatus("A");
+        informeProveedor.setProveedorFacturas(usuario);
         currentSession().save(informeProveedor);
         assertNotNull(informeProveedor.getId());
         //     \\\\\\//////         
@@ -176,12 +185,14 @@ public class InformeProveedorDetallesDaoTest extends BaseDaoTest {
 
     @Test
     public void testActualiza() {
-        Usuario usuario = obtieneUsuario();
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
         InformeProveedor informeProveedor = new InformeProveedor();
+        informeProveedor = new InformeProveedor();
         informeProveedor.setEmpresa(usuario.getEmpresa());
         informeProveedor.setFechaInforme(new Date());
         informeProveedor.setNombreProveedor("LAla");
         informeProveedor.setStatus("A");
+        informeProveedor.setProveedorFacturas(usuario);
         currentSession().save(informeProveedor);
         assertNotNull(informeProveedor.getId());
         //     \\\\\\//////         
@@ -211,12 +222,14 @@ public class InformeProveedorDetallesDaoTest extends BaseDaoTest {
 
     @Test
     public void testElimina() {
-        Usuario usuario = obtieneUsuario();
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
         InformeProveedor informeProveedor = new InformeProveedor();
+        informeProveedor = new InformeProveedor();
         informeProveedor.setEmpresa(usuario.getEmpresa());
         informeProveedor.setFechaInforme(new Date());
         informeProveedor.setNombreProveedor("LAla");
         informeProveedor.setStatus("A");
+        informeProveedor.setProveedorFacturas(usuario);
         currentSession().save(informeProveedor);
         assertNotNull(informeProveedor.getId());
         //     \\\\\\//////         
