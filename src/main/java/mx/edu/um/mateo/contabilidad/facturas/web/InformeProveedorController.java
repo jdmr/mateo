@@ -86,6 +86,8 @@ public class InformeProveedorController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
+        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
+        params.put("proveedorFacturas", proveedorFacturas.getId());
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }
@@ -280,8 +282,6 @@ public class InformeProveedorController extends BaseController {
                 .getAttribute("empresaId"));
         params.put("reporte", true);
 
-        modelo.addAttribute("proveedorFacturasId", proveedorFacturas);
-        request.getSession().setAttribute("proveedorFacturas", proveedorFacturas);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe);
         return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
     }
@@ -331,6 +331,7 @@ public class InformeProveedorController extends BaseController {
 
             Usuario usuario = ambiente.obtieneUsuario();
             informe.setNombreProveedor(usuario.getNombre());
+            informe.setProveedorFacturas(proveedorFacturas);
             manager.graba(informe, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el tipo de Beca", e);

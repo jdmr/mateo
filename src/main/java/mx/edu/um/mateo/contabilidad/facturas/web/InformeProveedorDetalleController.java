@@ -426,11 +426,9 @@ public class InformeProveedorDetalleController extends BaseController {
         detalle.setInformeProveedor(informe);
         Usuario usuario = ambiente.obtieneUsuario();
 
-        log.debug("requestRFC** {}", request.getSession().getAttribute("proveedorFacturas"));
-        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) request.getSession().getAttribute("proveedorFacturas");
+        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
         detalle.setNombreProveedor(proveedorFacturas.getNombre());
         detalle.setRFCProveedor(proveedorFacturas.getRfc());
-        log.debug("proveedor** {}", proveedorFacturas.toString());
         try {
             manager.graba(detalle, usuario);
             request.getSession().setAttribute("detalleId", detalle.getId());
