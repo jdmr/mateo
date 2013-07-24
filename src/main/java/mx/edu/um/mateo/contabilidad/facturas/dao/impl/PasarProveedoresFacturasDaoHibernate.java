@@ -10,25 +10,23 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import javax.sql.DataSource;
 import mx.edu.um.mateo.contabilidad.facturas.dao.PasarProveedoresFacturasDao;
 import mx.edu.um.mateo.contabilidad.facturas.dao.ProveedorFacturasDao;
 import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.inscripciones.model.Alumno;
-import mx.edu.um.mateo.inscripciones.model.AlumnoAcademico;
-import mx.edu.um.mateo.inscripciones.model.Modalidad;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author develop
  */
+@Repository
+@Transactional
 public class PasarProveedoresFacturasDaoHibernate extends BaseDao implements PasarProveedoresFacturasDao {
 
     @Autowired
@@ -38,20 +36,21 @@ public class PasarProveedoresFacturasDaoHibernate extends BaseDao implements Pas
     private ProveedorFacturasDao dao;
 
     @Override
-    @Transactional(readOnly = true)
+//    @Transactional(readOnly = true)
     public void pasar(Usuario usuario) {
 
         //Trallendo de la base de datos.
-        log.debug("Listado de Alumnos");
+        log.debug("Entrando a metodo de paso de proveedores");
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         List<ProveedorFacturas> proveedores = new ArrayList<>();
         try {
+            log.debug("Obteniendo datos de Oracle");
             conn = dataSource2.getConnection();
             stmt = conn.prepareStatement("select prv.ID,prv.VERSION, prv.RAZON_SOCIAL, prv.TIPOPERSONA, prv.RFC, prv.ID_FISCAL,prv.CURP,"
                     + "prv.CALLE, prv.CODIGO_POSTAL_ID, prv.TELEFONO,prv.TIPO_TERCERO_ID,prv.STATUS,prv.CLABE,prv.BANCO,prv.EMAIL "
-                    + "from MATEO.CAT_PROVEEDOR prv, ");
+                    + "from MATEO.CAT_PROVEEDOR prv");
             rs = stmt.executeQuery();
             while (rs.next()) {
                 Long id = rs.getLong("ID");
@@ -69,10 +68,11 @@ public class PasarProveedoresFacturasDaoHibernate extends BaseDao implements Pas
                 String clabe = rs.getString("CLABE");
                 String email = rs.getString("EMAIL");
                 String banco = rs.getString("BANCO");
-                ProveedorFacturas facturas = new ProveedorFacturas(rfc, "prueba", razon_social, razon_social, razon_social,
-                        rfc + "@proveedor.com", razon_social, rfc, id_fiscal, curp, calle, telefono, tipo_tercero_id, clabe, banco,
+                ProveedorFacturas facturas = new ProveedorFacturas("proveedor" + id + "@prv.edu.mx", "prueba", razon_social, razon_social, razon_social,
+                        "proveedor" + id + "@prv.edu.mx", razon_social, rfc, id_fiscal, curp, calle, telefono, tipo_tercero_id, clabe, banco,
                         status, clabe);
                 facturas.setId(id);
+                facturas.setEjercicio(usuario.getEjercicio());
                 facturas.setVersion(version);
                 facturas.setTipoTercero(tipo_tercero_id);
                 proveedores.add(facturas);
@@ -95,9 +95,12 @@ public class PasarProveedoresFacturasDaoHibernate extends BaseDao implements Pas
                 conn = null;
                 rs = null;
             }
-
         }
+
+        log.debug("Pasando datos a tabla en postgres");
         for (ProveedorFacturas proveedorFacturas : proveedores) {
+            log.debug("proveedorFacturas{}", proveedorFacturas.toString());
+            log.debug("proveedorFacturasCorreo{}", proveedorFacturas.getCorreo().toString());
             dao.crea(proveedorFacturas, usuario);
         }
 
