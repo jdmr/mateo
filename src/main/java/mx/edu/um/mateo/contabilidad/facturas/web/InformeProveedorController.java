@@ -191,7 +191,7 @@ public class InformeProveedorController extends BaseController {
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = manager.lista(params);
+            params = manager.revisar(params);
             try {
                 generaReporte(tipo, (List<InformeProveedor>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR), response);
                 return null;
@@ -204,7 +204,7 @@ public class InformeProveedorController extends BaseController {
 
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = manager.lista(params);
+            params = manager.revisar(params);
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
@@ -215,7 +215,7 @@ public class InformeProveedorController extends BaseController {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-        params = manager.lista(params);
+        params = manager.revisar(params);
         log.debug("params{}", params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR));
         modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESPROVEEDOR, params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR));
 
