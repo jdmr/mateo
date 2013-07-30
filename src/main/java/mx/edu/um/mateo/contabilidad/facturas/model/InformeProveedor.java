@@ -47,6 +47,9 @@ public class InformeProveedor implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fechaPago;
     private String contraRecibo;
+    private String moneda;
+    private String contabilidad;
+    private String ccp;
 
     public InformeProveedor() {
     }
@@ -147,12 +150,36 @@ public class InformeProveedor implements Serializable {
         this.proveedorFacturas = proveedorFacturas;
     }
 
+    public String getMoneda() {
+        return moneda;
+    }
+
+    public void setMoneda(String moneda) {
+        this.moneda = moneda;
+    }
+
+    public String getContabilidad() {
+        return contabilidad;
+    }
+
+    public void setContabilidad(String contabilidad) {
+        this.contabilidad = contabilidad;
+    }
+
+    public String getCcp() {
+        return ccp;
+    }
+
+    public void setCcp(String ccp) {
+        this.ccp = ccp;
+    }
+
     @Override
     public String toString() {
         return "InformeProveedor{" + "id=" + id + ", version=" + version + ", status=" + status + ", cuentaCheque=" + cuentaCheque
                 + ", clabe=" + clabe + ", formaPago=" + formaPago + ", nombreProveedor=" + nombreProveedor
-                + ", fechaInforme=" + fechaInforme + ", empresa=" + empresa
-                + ", proveedorFacturas=" + proveedorFacturas
-                + ", fechaPago=" + fechaPago + ", contraRecibo=" + contraRecibo + '}';
+                + ", fechaInforme=" + fechaInforme + ", empresa=" + empresa + ", proveedorFacturas=" + proveedorFacturas
+                + ", fechaPago=" + fechaPago + ", contraRecibo=" + contraRecibo + ", moneda=" + moneda
+                + ", contabilidad=" + contabilidad + ", ccp=" + ccp + '}';
     }
 }
