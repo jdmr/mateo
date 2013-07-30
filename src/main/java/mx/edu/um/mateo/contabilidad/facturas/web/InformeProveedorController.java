@@ -26,6 +26,7 @@ import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.ProveedorFacturasManager;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.web.BaseController;
 import net.sf.jasperreports.engine.JRException;
@@ -289,7 +290,7 @@ public class InformeProveedorController extends BaseController {
     @Transactional
     @RequestMapping(value = "/graba", method = RequestMethod.POST)
     public String graba(HttpServletRequest request, HttpServletResponse response, @Valid InformeProveedor informe,
-            BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+            BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws Exception {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
@@ -303,6 +304,7 @@ public class InformeProveedorController extends BaseController {
 
             return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
         }
+        Map<String, Object> params = new HashMap<>();
         ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
         String formaPago = informe.getFormaPago();
         ProveedorFacturas proveedorFacturas1 = pFacturasManager.obtiene(proveedorFacturas.getId());
@@ -333,8 +335,21 @@ public class InformeProveedorController extends BaseController {
             informe.setNombreProveedor(usuario.getNombre());
             informe.setProveedorFacturas(proveedorFacturas);
             manager.graba(informe, usuario);
-        } catch (ConstraintViolationException e) {
-            log.error("No se pudo crear el tipo de Beca", e);
+        } catch (AutorizacionCCPlInvalidoException e) {
+            log.error("No se pudo crear el detalle", e);
+            if (e != null) {
+                log.debug("**Enviando mensajes....CCP no encontrado");
+                errors.rejectValue("ccp", "entrada.no.eligio.proveedor.message", null, null);
+                redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "ccp.invalido.message");
+                redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+            }
+            params = manager.lista(params);
+            List<InformeEmpleado> informes = (List) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR);
+            modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESEMPLEADO, informes);
+
+            params.put("empresa", request.getSession().getAttribute("empresaId"));
+            modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe);
+
             return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
         }
 

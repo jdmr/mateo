@@ -6,6 +6,7 @@ package mx.edu.um.mateo.contabilidad.facturas.service.impl;
 
 import java.util.Date;
 import java.util.Map;
+import mx.edu.um.mateo.contabilidad.facturas.dao.CCPDao;
 import mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDao;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
@@ -13,6 +14,7 @@ import mx.edu.um.mateo.contabilidad.facturas.service.InformeEmpleadoManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.service.BaseManager;
+import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,8 @@ public class InformeProveedorManagerImpl extends BaseManager implements InformeP
 
     @Autowired
     private InformeProveedorDao dao;
+    @Autowired
+    private CCPDao ccpDao;
 
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
@@ -45,7 +49,14 @@ public class InformeProveedorManagerImpl extends BaseManager implements InformeP
     }
 
     @Override
-    public void graba(InformeProveedor informeProveedor, Usuario usuario) {
+    public void graba(InformeProveedor informeProveedor, Usuario usuario) throws AutorizacionCCPlInvalidoException {
+        String listaCcps = informeProveedor.getCcp();
+        String[] ccps = listaCcps.split(",");
+        for (String ccp : ccps) {
+            if (!ccpDao.obtiene(ccp)) {
+                throw new AutorizacionCCPlInvalidoException(ccp);
+            }
+        }
         dao.crea(informeProveedor, usuario);
     }
 
