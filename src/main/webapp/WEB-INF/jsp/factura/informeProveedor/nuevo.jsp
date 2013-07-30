@@ -28,16 +28,7 @@
                 </form:errors>
 
                 <fieldset>
-                    <s:bind path="informeProveedor.nombreProveedor">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="nombreProveedor">
-                                <s:message code="proveedor.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="nombreProveedor" maxlength="50" required="true" />
-                            <form:errors path="nombreProveedor" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+
                     <s:bind path="informeProveedor.status">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="status">
@@ -78,7 +69,7 @@
                                 <s:message code="clabe.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="clabe" size="18"maxlength="25" required="true" />
+                            <form:input path="clabe" size="18" maxlength="25" required="true" />
                             <form:errors path="clabe" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -88,7 +79,7 @@
                                 <s:message code="cuentaCheque.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="cuentaCheque" size="18"maxlength="25" required="true" />
+                            <form:input path="cuentaCheque" size="18" maxlength="25" required="true" />
                             <form:errors path="cuentaCheque" cssClass="alert alert-error" />
                         </div>
                     </s:bind>

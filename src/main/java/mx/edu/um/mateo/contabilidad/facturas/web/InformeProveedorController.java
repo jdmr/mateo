@@ -328,12 +328,12 @@ public class InformeProveedorController extends BaseController {
         }
 
 
+        Usuario usuario = ambiente.obtieneUsuario();
+        informe.setNombreProveedor(usuario.getNombre());
+        informe.setProveedorFacturas(proveedorFacturas);
 
         try {
 
-            Usuario usuario = ambiente.obtieneUsuario();
-            informe.setNombreProveedor(usuario.getNombre());
-            informe.setProveedorFacturas(proveedorFacturas);
             manager.graba(informe, usuario);
         } catch (AutorizacionCCPlInvalidoException e) {
             log.error("No se pudo crear el detalle", e);
