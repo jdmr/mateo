@@ -273,8 +273,8 @@ public class InformeProveedorDetalleController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
-        InformeProveedor informeId = (InformeProveedor) request.getSession().getAttribute("informeId");
-        params.put("informeProveedor", informeId.getId());
+//        InformeProveedor informeId = (InformeProveedor) request.getSession().getAttribute("informeId");
+//        params.put("informeProveedor", informeId.getId());
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }

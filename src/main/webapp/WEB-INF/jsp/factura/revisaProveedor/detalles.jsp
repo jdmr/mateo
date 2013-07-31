@@ -90,6 +90,12 @@
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="informeProveedor" />
                         </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="xml" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="pdf" />
+                        </jsp:include>
                     </tr>
                 </thead>
                 <tbody>
@@ -104,8 +110,10 @@
                             <td>${informeProveedorDetalle.status}</td>
                             <td>${informeProveedorDetalle.fechaFactura}</td>
                             <td>${informeProveedorDetalle.informeProveedor.id}</td>
-                        </tr>
-                    </c:forEach>
+                            <td ><input type="checkbox" value=""  <c:if test="${informeProveedorDetalle.pathPDF!= null && !informeProveedorDetalle.pathPDF.isEmpty()}">checked="checked"</c:if> /></td>
+                            <td ><input type="checkbox" value=""  <c:if test="${informeProveedorDetalle.pathXMl!= null && !informeProveedorDetalle.pathXMl.isEmpty()}">checked="checked"</c:if> /></td>
+                            </tr>
+                    </c:forEach> 
                 </tbody>
             </table>
 
