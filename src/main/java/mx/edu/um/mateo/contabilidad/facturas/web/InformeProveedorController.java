@@ -314,7 +314,7 @@ public class InformeProveedorController extends BaseController {
                     proveedorFacturas1.setClabe(informe.getClabe());
                     pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
                 } else if (informe.getClabe() == null || informe.getClabe().isEmpty()) {
-
+ 
                     return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
                 }
             case "C":

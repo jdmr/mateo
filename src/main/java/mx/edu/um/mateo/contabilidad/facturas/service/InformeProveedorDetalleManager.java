@@ -22,6 +22,8 @@ public interface InformeProveedorDetalleManager {
      */
     public Map<String, Object> lista(Map<String, Object> params);
 
+    public Map<String, Object> revisar(Map<String, Object> params);
+
     /**
      * Obtiene una InformeProveedor
      *

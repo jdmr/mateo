@@ -17,6 +17,8 @@ public interface InformeProveedorDetallesDao {
 
     public Map<String, Object> lista(Map<String, Object> params);
 
+    public Map<String, Object> revisar(Map<String, Object> params);
+
     /**
      * Gets informe's information based on primary key. An
      * ObjectRetrievalFailureException Runtime Exception is thrown if nothing is
