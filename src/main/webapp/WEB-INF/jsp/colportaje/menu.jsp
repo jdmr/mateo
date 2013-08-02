@@ -5,6 +5,7 @@
     <ul class="nav">
         <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
         <li<c:if test="${param.menu eq 'principal'}"> class="active"</c:if>><a href="<c:url value='/colportaje' />"><s:message code="colportaje.label" /></a></li>
+        <li<c:if test="${param.menu eq 'uploadFile'}"> class="active"</c:if>><a href="<s:url value='/uploadFile'/>" ><s:message code="uploadFile.label" /></a></li>
         <li<c:if test="${param.menu eq 'pais'}"> class="active"</c:if>><a href="<s:url value='/colportaje/pais'/>" ><s:message code="pais.label" /></a></li>
         <li<c:if test="${param.menu eq 'estado'}"> class="active"</c:if>><a href="<s:url value='/colportaje/estado'/>" ><s:message code="estado.label" /></a></li>
         <li<c:if test="${param.menu eq 'ciudad'}"> class="active"</c:if>><a href="<s:url value='/colportaje/ciudad'/>" ><s:message code="ciudad.label" /></a></li>

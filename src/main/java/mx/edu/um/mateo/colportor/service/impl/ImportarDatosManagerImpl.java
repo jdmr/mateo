@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import mx.edu.um.mateo.colportor.service.ImportarDatos;
+import mx.edu.um.mateo.colportor.service.ImportarDatosManager;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.service.BaseManager;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -16,12 +16,14 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.springframework.stereotype.Service;
 
 /**
- *
+ * 
  * @author osoto
  */
-public class ImportarDatosManagerImpl extends BaseManager implements ImportarDatos{
+@Service
+public class ImportarDatosManagerImpl extends BaseManager implements ImportarDatosManager{
     public void importaInformeDeGema(File file, Usuario user) throws Exception{
         log.debug("importaInformeDeGema");
         try{

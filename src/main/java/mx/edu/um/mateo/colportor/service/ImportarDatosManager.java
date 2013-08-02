@@ -11,6 +11,6 @@ import mx.edu.um.mateo.general.model.Usuario;
  *
  * @author osoto
  */
-public interface ImportarDatos {
+public interface ImportarDatosManager {
     public void importaInformeDeGema(File file, Usuario user)  throws Exception;
 }

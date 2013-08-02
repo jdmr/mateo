@@ -11,8 +11,23 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
  * @author osoto
  */
 public class UploadFileForm {
+    private Integer id;
     private String name;
     private CommonsMultipartFile file;
+
+    /**
+     * @return the id
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     /**
      * @return the name
