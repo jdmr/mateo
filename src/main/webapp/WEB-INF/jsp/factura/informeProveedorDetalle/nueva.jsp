@@ -82,7 +82,7 @@
                     <tbody>
                         <c:forEach items="${informesProveedorDetalle}" var="informeProveedorDetalle" varStatus="status">
                             <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                                <td ><input type="checkbox" value="<c:out value="${informeProveedorDetalle.id}"/>" name="checkFacturasid-<c:out value="${informeProveedorDetalle.id}"/>" id="checkFacturasid" /></td>
+                                <td ><input type="checkbox" value="<c:out value="${informeProveedorDetalle.id}"/>" id="checkFacturasid" /></td>
                                 <td><a href="<c:url value='/factura/informeProveedorDetalle/ver/${informeProveedorDetalle.id}' />">${informeProveedorDetalle.folioFactura}</a></td>                            
                                 <td>${informeProveedorDetalle.nombreProveedor}</td>
                                 <td>${informeProveedorDetalle.RFCProveedor}</td>
@@ -100,8 +100,7 @@
                 </table>
 
                 <p class="well" style="margin-top: 10px;">
-                    <button type="submit" name="botonAutorizar" class="btn btn-primary btn-large" id="botonAutorizar" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='autorizar.label'/></button>
-                    <button type="submit" name="botonRechazar" class="btn btn-primary btn-large" id="botonRechazar" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='rechazar.label'/></button>
+                    <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
                     <a class="btn btn-large" href="<s:url value='/factura/informeProveedorDetalle'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>

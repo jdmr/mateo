@@ -314,7 +314,7 @@ public class InformeProveedorController extends BaseController {
                     proveedorFacturas1.setClabe(informe.getClabe());
                     pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
                 } else if (informe.getClabe() == null || informe.getClabe().isEmpty()) {
- 
+
                     return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
                 }
             case "C":
@@ -438,7 +438,7 @@ public class InformeProveedorController extends BaseController {
     }
 
     @Transactional
-    @RequestMapping(value = "/autorizar", method = RequestMethod.GET)
+    @RequestMapping(value = "/autorizar", method = RequestMethod.POST)
     public String autorizar(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute InformeProveedor informeProveedor, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Finalizando informe");
         try {
@@ -458,7 +458,7 @@ public class InformeProveedorController extends BaseController {
     }
 
     @Transactional
-    @RequestMapping(value = "/rechazar", method = RequestMethod.GET)
+    @RequestMapping(value = "/rechazar", method = RequestMethod.POST)
     public String rechazar(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute InformeProveedor informeProveedor, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Finalizando informe");
         try {

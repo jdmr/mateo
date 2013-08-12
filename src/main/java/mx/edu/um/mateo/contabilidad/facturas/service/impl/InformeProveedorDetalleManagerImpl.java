@@ -34,7 +34,7 @@ public class InformeProveedorDetalleManagerImpl implements InformeProveedorDetal
     @Override
     public Map<String, Object> revisar(Map<String, Object> params) {
         return dao.revisar(params);
-    }
+    } 
 
     @Override
     public InformeProveedorDetalle obtiene(final Long id) {

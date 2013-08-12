@@ -11,7 +11,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.mail.MessagingException;
@@ -373,6 +375,23 @@ public class InformeProveedorDetalleController extends BaseController {
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
     }
 
+    @RequestMapping("/nueva")
+    public String nuevo(HttpServletRequest request, Model modelo) {
+        log.debug("Nuevo paquete");
+        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) request.getSession().getAttribute("proveedorFacturas");
+        modelo.addAttribute("proveedorFacturas", proveedorFacturas);
+        Map<String, Object> params = new HashMap<>();
+
+
+        InformeProveedorDetalle detalle = new InformeProveedorDetalle();
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
+        params.put("empresa", request.getSession()
+                .getAttribute("empresaId"));
+        params.put("reporte", true);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
+        return "/factura/informeProveedorDetalle/nueva";
+    }
+
     @Transactional
     @RequestMapping(value = "/graba", method = RequestMethod.POST)
     public String graba(HttpServletRequest request, HttpServletResponse response, @Valid InformeProveedorDetalle detalle,
@@ -563,6 +582,59 @@ public class InformeProveedorDetalleController extends BaseController {
             throw ex;
         }
         return null;
+    }
+
+    @Transactional
+    @RequestMapping(value = "/autorizar", method = RequestMethod.GET)
+    public String autorizar(HttpServletRequest request, Model modelo, RedirectAttributes redirectAttributes) {
+        log.debug("Entrando a Autorizar informe");
+        try {
+            String checks = request.getParameter("checkFacturasid");
+
+            log.debug("map {}", request.getParameterMap().toString());
+            log.debug("names {}", request.getParameterNames().toString());
+            Map<String, String[]> parameterMap = request.getParameterMap();
+            parameterMap.get("key");
+            Boolean autorizar = false;
+            Boolean rechazar = false;
+            ArrayList ids = new ArrayList();
+            Enumeration<String> parameterNames = request.getParameterNames();
+            while (parameterNames.hasMoreElements()) {
+                String nombre = parameterNames.nextElement();
+                if (nombre.startsWith("botonAut")) {
+                    autorizar = true;
+                }
+                if (nombre.startsWith("botonRe")) {
+                    rechazar = true;
+                }
+
+                if (nombre.startsWith("checkFac")) {
+                    String[] id = nombre.split("-");
+                    log.debug("id ={}", id[1]);
+                    ids.add(id[1]);
+                }
+            }
+            if (autorizar) {
+                log.debug("enviando al metodo para autorizar");
+            }
+            if (rechazar) {
+                log.debug("enviando al metodo para rechazar");
+            }
+
+            log.debug("check{}", checks);
+            Usuario usuario = ambiente.obtieneUsuario();
+//            InformeProveedor informe = manager.obtiene(id);
+//            log.debug("informe...**controller{}", informe);
+//            manager.autorizar(informe, usuario);
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeProveedor.finaliza.message");
+//            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informeProveedor.getNombreProveedor()});
+        } catch (Exception e) {
+//            log.error("No se pudo finalizar informe " + id, e);
+//            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, new String[]{"informeProveedor.no.finaliza.message"}, null, null));
+            return Constantes.PATH_INFORMEPROVEEDOR_VER;
+        }
+
+        return "redirect:/factura/informeProveedor/encabezados";
     }
 
     private void generaReporte(String tipo, List<InformeProveedorDetalle> detalle,
