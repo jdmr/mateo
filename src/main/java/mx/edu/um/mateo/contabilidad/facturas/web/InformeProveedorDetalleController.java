@@ -33,7 +33,11 @@ import mx.edu.um.mateo.general.dao.ProveedorDao;
 import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
+import mx.edu.um.mateo.general.utils.BancoNoCoincideException;
+import mx.edu.um.mateo.general.utils.ClabeNoCoincideException;
 import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.general.utils.CuentaChequeNoCoincideException;
+import mx.edu.um.mateo.general.utils.ProveedorNoCoincideException;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inscripciones.model.FileUploadForm;
 import net.sf.jasperreports.engine.JRException;
@@ -616,9 +620,20 @@ public class InformeProveedorDetalleController extends BaseController {
             }
             if (autorizar) {
                 log.debug("enviando al metodo para autorizar");
+                try {
+                    manager.autorizar(ids);
+                } catch (ClabeNoCoincideException e) {
+                } catch (ProveedorNoCoincideException e) {
+                } catch (BancoNoCoincideException e) {
+                } catch (CuentaChequeNoCoincideException e) {
+                }
             }
             if (rechazar) {
                 log.debug("enviando al metodo para rechazar");
+                try {
+                    manager.rechazar(ids);
+                } catch (BancoNoCoincideException e) {
+                }
             }
 
             log.debug("check{}", checks);
