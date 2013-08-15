@@ -12,10 +12,12 @@ import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorDetalleManager;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.service.BaseManager;
 import mx.edu.um.mateo.general.utils.BancoNoCoincideException;
 import mx.edu.um.mateo.general.utils.ClabeNoCoincideException;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.CuentaChequeNoCoincideException;
+import mx.edu.um.mateo.general.utils.FormaPagoNoCoincideException;
 import mx.edu.um.mateo.general.utils.ProveedorNoCoincideException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 @Service
-public class InformeProveedorDetalleManagerImpl implements InformeProveedorDetalleManager {
+public class InformeProveedorDetalleManagerImpl extends BaseManager implements InformeProveedorDetalleManager {
 
     @Autowired
     private InformeProveedorDetallesDao dao;
@@ -70,30 +72,42 @@ public class InformeProveedorDetalleManagerImpl implements InformeProveedorDetal
         String clabe;
         String banco;
         String proveedor;
-        Long id = (Long) ids.get(ids.size() - 1);
-        InformeProveedorDetalle detalle = dao.obtiene(id);
+        String formaPago;
+        String id = (String) ids.get(ids.size() - 1);
+        InformeProveedorDetalle detalle = dao.obtiene(Long.valueOf(id));
         cuentaCheque = detalle.getInformeProveedor().getCuentaCheque();
         clabe = detalle.getInformeProveedor().getClabe();
-        banco = detalle.getInformeProveedor().getProveedorFacturas().getBanco();
+        banco = detalle.getInformeProveedor().getBanco();
         proveedor = detalle.getInformeProveedor().getNombreProveedor();
         detalle.setStatus(Constantes.STATUS_AUTORIZADO);
+        formaPago = detalle.getInformeProveedor().getFormaPago();
         for (Object id2 : ids) {
-            InformeProveedorDetalle detalle2 = dao.obtiene((Long) id2);
+            String ide = (String) id2;
+            InformeProveedorDetalle detalle2 = dao.obtiene(Long.valueOf(ide));
             String cuentaCheque2 = detalle2.getInformeProveedor().getCuentaCheque();
             String clabe2 = detalle2.getInformeProveedor().getClabe();
-            String banco2 = detalle2.getInformeProveedor().getProveedorFacturas().getBanco();
+            String banco2 = detalle2.getInformeProveedor().getBanco();
             String proveedor2 = detalle2.getInformeProveedor().getNombreProveedor();
-            if (!cuentaCheque.equals(cuentaCheque2) || cuentaCheque2.isEmpty() || cuentaCheque2 == null) {
+            String formaPago2 = detalle2.getInformeProveedor().getFormaPago();
+            if (!cuentaCheque.equals(cuentaCheque2)) {
+                log.debug("las cuentas no coinciden");
                 throw new CuentaChequeNoCoincideException(id.toString());
             }
-            if (!clabe.equals(clabe2) || clabe2.isEmpty() || clabe2 == null) {
+            if (!clabe.equals(clabe2)) {
+                log.debug("las clabes no coinciden");
                 throw new ClabeNoCoincideException(id.toString());
             }
-            if (!banco.equals(banco2) || banco2.isEmpty() || banco2 == null) {
+            if (!banco.equals(banco2)) {
+                log.debug("los bancos no coinciden");
                 throw new BancoNoCoincideException(id.toString());
             }
-            if (!proveedor.equals(proveedor2) || proveedor2.isEmpty() || proveedor2 == null) {
+            if (!proveedor.equals(proveedor2)) {
+                log.debug("los proveedores no coinciden");
                 throw new ProveedorNoCoincideException(id.toString());
+            }
+            if (!formaPago.equals(formaPago2)) {
+                log.debug("la forma de pago no coinciden");
+                throw new FormaPagoNoCoincideException(id.toString());
             }
             detalle2.setStatus(Constantes.STATUS_AUTORIZADO);
         }
@@ -102,12 +116,13 @@ public class InformeProveedorDetalleManagerImpl implements InformeProveedorDetal
     @Override
     public void rechazar(List ids) throws Exception {
         String proveedor;
-        Long id = (Long) ids.get(ids.size() - 1);
-        InformeProveedorDetalle detalle = dao.obtiene(id);
+        String id = (String) ids.get(ids.size() - 1);
+        InformeProveedorDetalle detalle = dao.obtiene(Long.valueOf(id));
         proveedor = detalle.getInformeProveedor().getNombreProveedor();
         detalle.setStatus(Constantes.STATUS_RECHAZADO);
         for (Object id2 : ids) {
-            InformeProveedorDetalle detalle2 = dao.obtiene((Long) id2);
+            String ide = (String) id2;
+            InformeProveedorDetalle detalle2 = dao.obtiene(Long.valueOf(ide));
             String proveedor2 = detalle2.getInformeProveedor().getNombreProveedor();
             if (!proveedor.equals(proveedor2) || proveedor2.isEmpty() || proveedor2 == null) {
                 throw new ProveedorNoCoincideException(id.toString());

@@ -50,6 +50,7 @@ public class InformeProveedor implements Serializable {
     private String moneda;
     private String contabilidad;
     private String ccp;
+    private String banco;
 
     public InformeProveedor() {
     }
@@ -174,12 +175,20 @@ public class InformeProveedor implements Serializable {
         this.ccp = ccp;
     }
 
+    public String getBanco() {
+        return banco;
+    }
+
+    public void setBanco(String banco) {
+        this.banco = banco;
+    }
+
     @Override
     public String toString() {
         return "InformeProveedor{" + "id=" + id + ", version=" + version + ", status=" + status + ", cuentaCheque=" + cuentaCheque
                 + ", clabe=" + clabe + ", formaPago=" + formaPago + ", nombreProveedor=" + nombreProveedor
                 + ", fechaInforme=" + fechaInforme + ", empresa=" + empresa + ", proveedorFacturas=" + proveedorFacturas
                 + ", fechaPago=" + fechaPago + ", contraRecibo=" + contraRecibo + ", moneda=" + moneda
-                + ", contabilidad=" + contabilidad + ", ccp=" + ccp + '}';
+                + ", contabilidad=" + contabilidad + ", ccp=" + ccp + ", banco=" + banco + '}';
     }
 }

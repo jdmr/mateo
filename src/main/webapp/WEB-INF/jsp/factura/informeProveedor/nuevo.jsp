@@ -51,6 +51,16 @@
                     </s:bind>
 
 
+                    <s:bind path="informeProveedor.banco">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="banco">
+                                <s:message code="banco.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="banco" size="18" maxlength="25" required="true" />
+                            <form:errors path="banco" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
 
                     <s:bind path="informeProveedor.formaPago">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">

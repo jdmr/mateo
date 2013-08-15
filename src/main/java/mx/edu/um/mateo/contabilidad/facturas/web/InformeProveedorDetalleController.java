@@ -37,6 +37,7 @@ import mx.edu.um.mateo.general.utils.BancoNoCoincideException;
 import mx.edu.um.mateo.general.utils.ClabeNoCoincideException;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.CuentaChequeNoCoincideException;
+import mx.edu.um.mateo.general.utils.FormaPagoNoCoincideException;
 import mx.edu.um.mateo.general.utils.ProveedorNoCoincideException;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inscripciones.model.FileUploadForm;
@@ -590,66 +591,99 @@ public class InformeProveedorDetalleController extends BaseController {
 
     @Transactional
     @RequestMapping(value = "/autorizar", method = RequestMethod.GET)
-    public String autorizar(HttpServletRequest request, Model modelo, RedirectAttributes redirectAttributes) {
+    public String autorizar(HttpServletRequest request, Model modelo, RedirectAttributes redirectAttributes) throws Exception {
         log.debug("Entrando a Autorizar informe");
-        try {
-            String checks = request.getParameter("checkFacturasid");
+        String checks = request.getParameter("checkFacturasid");
 
-            log.debug("map {}", request.getParameterMap().toString());
-            log.debug("names {}", request.getParameterNames().toString());
-            Map<String, String[]> parameterMap = request.getParameterMap();
-            parameterMap.get("key");
-            Boolean autorizar = false;
-            Boolean rechazar = false;
-            ArrayList ids = new ArrayList();
-            Enumeration<String> parameterNames = request.getParameterNames();
-            while (parameterNames.hasMoreElements()) {
-                String nombre = parameterNames.nextElement();
-                if (nombre.startsWith("botonAut")) {
-                    autorizar = true;
-                }
-                if (nombre.startsWith("botonRe")) {
-                    rechazar = true;
-                }
-
-                if (nombre.startsWith("checkFac")) {
-                    String[] id = nombre.split("-");
-                    log.debug("id ={}", id[1]);
-                    ids.add(id[1]);
-                }
+        log.debug("map {}", request.getParameterMap().toString());
+        log.debug("names {}", request.getParameterNames().toString());
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        parameterMap.get("key");
+        Boolean autorizar = false;
+        Boolean rechazar = false;
+        ArrayList ids = new ArrayList();
+        Enumeration<String> parameterNames = request.getParameterNames();
+        while (parameterNames.hasMoreElements()) {
+            String nombre = parameterNames.nextElement();
+            if (nombre.startsWith("botonAut")) {
+                autorizar = true;
             }
-            if (autorizar) {
-                log.debug("enviando al metodo para autorizar");
-                try {
-                    manager.autorizar(ids);
-                } catch (ClabeNoCoincideException e) {
-                } catch (ProveedorNoCoincideException e) {
-                } catch (BancoNoCoincideException e) {
-                } catch (CuentaChequeNoCoincideException e) {
-                }
-            }
-            if (rechazar) {
-                log.debug("enviando al metodo para rechazar");
-                try {
-                    manager.rechazar(ids);
-                } catch (BancoNoCoincideException e) {
-                }
+            if (nombre.startsWith("botonRe")) {
+                rechazar = true;
             }
 
-            log.debug("check{}", checks);
-            Usuario usuario = ambiente.obtieneUsuario();
+            if (nombre.startsWith("checkFac")) {
+                String[] id = nombre.split("-");
+                log.debug("id ={}", id[1]);
+                ids.add(id[1]);
+            }
+        }
+        if (autorizar) {
+            log.debug("enviando al metodo para autorizar");
+            try {
+                manager.autorizar(ids);
+            } catch (ClabeNoCoincideException e) {
+                log.debug("la clabe de la factura con id= {} no coincide", e);
+                if (e != null) {
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "clabe.no.coincide");
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+                }
+                return "/factura/revisaProveedor/detalles";
+            } catch (ProveedorNoCoincideException e) {
+                log.debug("el proveedor de la factura con id= {} no coincide", e);
+                if (e != null) {
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "proveedor.no.coincide");
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+                }
+                return "/factura/revisaProveedor/detalles";
+            } catch (BancoNoCoincideException e) {
+                log.debug("el banco de la factura con id= {} no coincide", e);
+                if (e != null) {
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "banco.no.coincide");
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+                }
+                return "/factura/revisaProveedor/detalles";
+            } catch (CuentaChequeNoCoincideException e) {
+                log.debug("la cuenta de la factura con id= {} no coincide", e);
+                if (e != null) {
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuenta.no.coincide");
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+                }
+                return "/factura/revisaProveedor/detalles";
+
+            } catch (FormaPagoNoCoincideException e) {
+                log.debug("la forma de pago de la factura con id= {} no coincide", e);
+                if (e != null) {
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuenta.no.coincide");
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+                }
+                return "/factura/revisaProveedor/detalles";
+            }
+        }
+        if (rechazar) {
+            log.debug("enviando al metodo para rechazar");
+            try {
+                manager.rechazar(ids);
+            } catch (ProveedorNoCoincideException e) {
+                log.debug("el banco de la factura con id= {} no coincide", e);
+                if (e != null) {
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "banco.no.coincide");
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+                }
+                return "/factura/revisaProveedor/detalles";
+            }
+        }
+
+        log.debug("check{}", checks);
+        Usuario usuario = ambiente.obtieneUsuario();
 //            InformeProveedor informe = manager.obtiene(id);
 //            log.debug("informe...**controller{}", informe);
 //            manager.autorizar(informe, usuario);
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeProveedor.finaliza.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeProveedor.finaliza.message");
 //            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informeProveedor.getNombreProveedor()});
-        } catch (Exception e) {
-//            log.error("No se pudo finalizar informe " + id, e);
-//            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, new String[]{"informeProveedor.no.finaliza.message"}, null, null));
-            return Constantes.PATH_INFORMEPROVEEDOR_VER;
-        }
 
-        return "redirect:/factura/informeProveedor/encabezados";
+
+        return "/factura/revisaProveedor/detalles";
     }
 
     private void generaReporte(String tipo, List<InformeProveedorDetalle> detalle,

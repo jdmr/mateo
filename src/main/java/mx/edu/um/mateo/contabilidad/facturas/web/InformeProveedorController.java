@@ -277,6 +277,7 @@ public class InformeProveedorController extends BaseController {
         InformeProveedor informe = new InformeProveedor();
         informe.setClabe(proveedorFacturas.getClabe());
         informe.setCuentaCheque(proveedorFacturas.getCuentaCheque());
+        informe.setBanco(proveedorFacturas.getBanco());
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe);
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", request.getSession()
@@ -308,6 +309,13 @@ public class InformeProveedorController extends BaseController {
         ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
         String formaPago = informe.getFormaPago();
         ProveedorFacturas proveedorFacturas1 = pFacturasManager.obtiene(proveedorFacturas.getId());
+        if (informe.getBanco() != null && informe.getBanco() != proveedorFacturas.getBanco() && !informe.getBanco().isEmpty()) {
+            proveedorFacturas1.setBanco(informe.getBanco());
+            pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
+        } else if (informe.getBanco() == null || informe.getBanco().isEmpty()) {
+
+            return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
+        }
         switch (formaPago) {
             case "T":
                 if (informe.getClabe() != null && informe.getClabe() != proveedorFacturas.getClabe() && !informe.getClabe().isEmpty()) {
