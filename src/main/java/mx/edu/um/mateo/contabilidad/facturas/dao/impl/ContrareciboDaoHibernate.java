@@ -9,6 +9,7 @@ import java.util.Map;
 import mx.edu.um.mateo.contabilidad.facturas.dao.ContrareciboDao;
 import mx.edu.um.mateo.contabilidad.facturas.model.Contrarecibo;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -19,6 +20,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -106,5 +108,15 @@ public class ContrareciboDaoHibernate extends BaseDao implements ContrareciboDao
         currentSession().merge(contrarecibo);
         currentSession().flush();
 
+    }
+
+    @Override
+    public Contrarecibo obtiene(Long id) {
+        Contrarecibo contrarecibo = (Contrarecibo) currentSession().get(Contrarecibo.class, id);
+        if (contrarecibo == null) {
+            log.warn("uh oh, Informe Proveedor with id '" + id + "' not found...");
+            throw new ObjectRetrievalFailureException(InformeProveedor.class, id);
+        }
+        return contrarecibo;
     }
 }

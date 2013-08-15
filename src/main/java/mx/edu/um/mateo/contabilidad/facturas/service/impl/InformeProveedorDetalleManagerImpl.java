@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDao;
 import mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDetallesDao;
+import mx.edu.um.mateo.contabilidad.facturas.model.Contrarecibo;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
+import mx.edu.um.mateo.contabilidad.facturas.service.ContrareciboManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorDetalleManager;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.service.BaseManager;
@@ -33,6 +35,8 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
 
     @Autowired
     private InformeProveedorDetallesDao dao;
+    @Autowired
+    private ContrareciboManager contrareciboManager;
 
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
@@ -42,6 +46,11 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
     @Override
     public Map<String, Object> revisar(Map<String, Object> params) {
         return dao.revisar(params);
+    }
+
+    @Override
+    public Map<String, Object> contrarecibo(Map<String, Object> params) {
+        return dao.contrarecibo(params);
     }
 
     @Override
@@ -67,18 +76,21 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
     }
 
     @Override
-    public void autorizar(List ids) throws Exception {
+    public void autorizar(List ids, Usuario usuario) throws Exception {
         String cuentaCheque;
         String clabe;
         String banco;
         String proveedor;
         String formaPago;
+        Contrarecibo contrarecibo = new Contrarecibo();
+        contrareciboManager.graba(contrarecibo, usuario);
         String id = (String) ids.get(ids.size() - 1);
         InformeProveedorDetalle detalle = dao.obtiene(Long.valueOf(id));
         cuentaCheque = detalle.getInformeProveedor().getCuentaCheque();
         clabe = detalle.getInformeProveedor().getClabe();
         banco = detalle.getInformeProveedor().getBanco();
         proveedor = detalle.getInformeProveedor().getNombreProveedor();
+        detalle.setContrarecibo(contrarecibo);
         detalle.setStatus(Constantes.STATUS_AUTORIZADO);
         formaPago = detalle.getInformeProveedor().getFormaPago();
         for (Object id2 : ids) {
@@ -110,6 +122,7 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
                 throw new FormaPagoNoCoincideException(id.toString());
             }
             detalle2.setStatus(Constantes.STATUS_AUTORIZADO);
+            detalle2.setContrarecibo(contrarecibo);
         }
     }
 

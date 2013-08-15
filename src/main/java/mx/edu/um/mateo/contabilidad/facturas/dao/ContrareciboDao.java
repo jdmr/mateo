@@ -18,4 +18,6 @@ public interface ContrareciboDao {
     public Map<String, Object> lista(Map<String, Object> params);
 
     public void crea(Contrarecibo contrarecibo, Usuario usuario);
+
+    public Contrarecibo obtiene(Long id);
 }

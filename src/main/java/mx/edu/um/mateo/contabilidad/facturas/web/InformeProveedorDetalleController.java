@@ -13,7 +13,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.mail.MessagingException;
@@ -22,17 +21,15 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
-import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleadoDetalle;
+import mx.edu.um.mateo.contabilidad.facturas.model.Contrarecibo;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
 import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
+import mx.edu.um.mateo.contabilidad.facturas.service.ContrareciboManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorDetalleManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
 import mx.edu.um.mateo.general.dao.ProveedorDao;
-import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
 import mx.edu.um.mateo.general.utils.BancoNoCoincideException;
 import mx.edu.um.mateo.general.utils.ClabeNoCoincideException;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -88,6 +85,8 @@ public class InformeProveedorDetalleController extends BaseController {
     private InformeProveedorManager managerInforme;
     @Autowired
     private ProveedorDao proveedorDao;
+    @Autowired
+    private ContrareciboManager contrareciboManager;
 
     @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -175,6 +174,95 @@ public class InformeProveedorDetalleController extends BaseController {
         // termina paginado
 
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
+    }
+
+    @RequestMapping("/listaContrarecibo")
+    public String listaContrarecibos(HttpServletRequest request, HttpServletResponse response,
+            @RequestParam(required = false) String filtro,
+            @RequestParam(required = false) Long pagina,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) String sort,
+            Usuario usuario,
+            Errors errors,
+            Model modelo) {
+        log.debug("Mostrando lista de informes");
+        Map<String, Object> params = new HashMap<>();
+        Long empresaId = (Long) request.getSession().getAttribute("empresaId");
+        params.put("empresa", empresaId);
+        Long contrareciboId = (Long) request.getSession().getAttribute("contrareciboId");
+        params.put("contrarecibo", contrareciboId);
+
+        if (StringUtils.isNotBlank(filtro)) {
+            params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
+        }
+        if (pagina != null) {
+            params.put(Constantes.CONTAINSKEY_PAGINA, pagina);
+            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        } else {
+            pagina = 1L;
+            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        }
+        if (StringUtils.isNotBlank(order)) {
+            params.put(Constantes.CONTAINSKEY_ORDER, order);
+            params.put(Constantes.CONTAINSKEY_SORT, sort);
+        }
+
+        if (StringUtils.isNotBlank(tipo)) {
+            params.put(Constantes.CONTAINSKEY_REPORTE, true);
+            params = contrareciboManager.lista(params);
+            try {
+                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_CONTRARECIBOS), response);
+                return null;
+            } catch (JRException | IOException e) {
+                log.error("No se pudo generar el reporte", e);
+                params.remove(Constantes.CONTAINSKEY_REPORTE);
+                //errors.reject("error.generar.reporte");
+            }
+        }
+
+        if (StringUtils.isNotBlank(correo)) {
+            params.put(Constantes.CONTAINSKEY_REPORTE, true);
+            params = contrareciboManager.lista(params);
+
+            params.remove(Constantes.CONTAINSKEY_REPORTE);
+            try {
+                enviaCorreo(correo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_CONTRARECIBOS), request);
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("detalle.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+            } catch (JRException | MessagingException e) {
+                log.error("No se pudo enviar el reporte por correo", e);
+            }
+        }
+        params = contrareciboManager.lista(params);
+        log.debug("params{}", params.get(Constantes.CONTAINSKEY_CONTRARECIBOS));
+        modelo.addAttribute(Constantes.CONTAINSKEY_CONTRARECIBOS, params.get(Constantes.CONTAINSKEY_CONTRARECIBOS));
+
+        // inicia paginado
+        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
+        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
+        Long cantidadDePaginas = cantidad / max;
+        List<Long> paginas = new ArrayList<>();
+        long i = 1;
+        do {
+            paginas.add(i);
+        } while (i++ < cantidadDePaginas);
+        List<Contrarecibo> contrarecibos = (List<Contrarecibo>) params.get(Constantes.CONTAINSKEY_CONTRARECIBOS);
+        Long primero = ((pagina - 1) * max) + 1;
+        log.debug("primero {}", primero);
+        log.debug("detalles {}", contrarecibos.size());
+        Long ultimo = primero + (contrarecibos.size() - 1);
+        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
+        log.debug("Paginacion{}", paginacion);
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
+        log.debug("paginas{}", paginas);
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        log.debug("Pagina{}", pagina);
+        // termina paginado
+
+        return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTACONTRARECIBOS;
     }
 
     @RequestMapping({"/contrarecibo"})
@@ -361,6 +449,17 @@ public class InformeProveedorDetalleController extends BaseController {
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
 
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_VER;
+    }
+
+    @RequestMapping("/verContrarecibo/{id}")
+    public String verContrarecibo(HttpServletRequest request, @PathVariable Long id, Model modelo) {
+        log.debug("Mostrando paquete {}", id);
+        Contrarecibo contrarecibo = contrareciboManager.obtiene(id);
+
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_CONTRARECIBO, contrarecibo);
+        request.getSession().setAttribute("contrareciboId", contrarecibo);
+
+        return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTACONTRARECIBOS;
     }
 
     @RequestMapping("/nuevo")
@@ -618,10 +717,11 @@ public class InformeProveedorDetalleController extends BaseController {
                 ids.add(id[1]);
             }
         }
+        Usuario usuario = ambiente.obtieneUsuario();
         if (autorizar) {
             log.debug("enviando al metodo para autorizar");
             try {
-                manager.autorizar(ids);
+                manager.autorizar(ids, usuario);
             } catch (ClabeNoCoincideException e) {
                 log.debug("la clabe de la factura con id= {} no coincide", e);
                 if (e != null) {
@@ -675,7 +775,6 @@ public class InformeProveedorDetalleController extends BaseController {
         }
 
         log.debug("check{}", checks);
-        Usuario usuario = ambiente.obtieneUsuario();
 //            InformeProveedor informe = manager.obtiene(id);
 //            log.debug("informe...**controller{}", informe);
 //            manager.autorizar(informe, usuario);

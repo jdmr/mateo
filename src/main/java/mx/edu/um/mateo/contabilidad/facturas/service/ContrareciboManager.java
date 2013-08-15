@@ -17,4 +17,6 @@ public interface ContrareciboManager {
     public Map<String, Object> lista(Map<String, Object> params);
 
     public void graba(Contrarecibo contrarecibo, Usuario usuario);
+
+    public Contrarecibo obtiene(Long id);
 }

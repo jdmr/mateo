@@ -17,6 +17,8 @@ public interface InformeProveedorDetallesDao {
 
     public Map<String, Object> lista(Map<String, Object> params);
 
+    public Map<String, Object> contrarecibo(Map<String, Object> params);
+
     public Map<String, Object> revisar(Map<String, Object> params);
 
     /**

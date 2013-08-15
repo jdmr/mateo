@@ -23,6 +23,8 @@ public interface InformeProveedorDetalleManager {
      */
     public Map<String, Object> lista(Map<String, Object> params);
 
+    public Map<String, Object> contrarecibo(Map<String, Object> params);
+
     public Map<String, Object> revisar(Map<String, Object> params);
 
     /**
@@ -49,7 +51,7 @@ public interface InformeProveedorDetalleManager {
      */
     public String elimina(final Long id);
 
-    public void autorizar(List ids) throws Exception;
+    public void autorizar(List ids, Usuario usuario) throws Exception;
 
     public void rechazar(List ids) throws Exception;
 }
