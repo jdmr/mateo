@@ -2946,4 +2946,5 @@ public class Constantes {
     public static final String PATH_PROVEEDORFACTURAS_ACTUALIZA = "/factura/proveedorFacturas/actualiza";
     public static final String PATH_PROVEEDORFACTURAS_ELIMINA = "/factura/proveedorFacturas/elimina";
     public static final String ADDATTRIBUTE_PROVEEDORFACTURAS = "proveedorFacturas";
+    public static final String CONTAINSKEY_CONTRARECIBOS = "contrarecibos";
 }
