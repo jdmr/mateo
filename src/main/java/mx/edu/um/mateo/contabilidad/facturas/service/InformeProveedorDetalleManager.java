@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.contabilidad.facturas.service;
 
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -21,6 +22,10 @@ public interface InformeProveedorDetalleManager {
      * @return
      */
     public Map<String, Object> lista(Map<String, Object> params);
+
+    public Map<String, Object> contrarecibo(Map<String, Object> params);
+
+    public Map<String, Object> revisar(Map<String, Object> params);
 
     /**
      * Obtiene una InformeProveedor
@@ -45,4 +50,8 @@ public interface InformeProveedorDetalleManager {
      * @param id el id de InformeEmpleado
      */
     public String elimina(final Long id);
+
+    public void autorizar(List ids, Usuario usuario) throws Exception;
+
+    public void rechazar(List ids) throws Exception;
 }

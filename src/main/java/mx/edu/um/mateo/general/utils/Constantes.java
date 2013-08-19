@@ -2887,7 +2887,6 @@ public class Constantes {
     public static final String DOCUMENTOCOLPORTOR_PATH_ELIMINA = "/colportaje/documento/elimina";
     public static final String DOCUMENTOCOLPORTOR = "documento";
     public static final String DOCUMENTOCOLPORTOR_LIST = "documentos";
-    
     //Informe Mensual Colportor        
     public static final String INFORMEMENSUAL_PATH = "/colportaje/informeMensual";
     public static final String INFORMEMENSUAL_PATH_LISTA = "/colportaje/informeMensual/lista";
@@ -2910,7 +2909,6 @@ public class Constantes {
     public static final String INFORMEMENSUAL_DETALLE_PATH_ELIMINA = "/colportaje/informeMensualDetalle/elimina";
     public static final String INFORMEMENSUAL_DETALLE = "informeMensualDetalle";
     public static final String INFORMEMENSUAL_DETALLE_LIST = "informeMensualDetalles";
-    
     //Valores de InformeEmpleado
     public static final String CONTAINSKEY_INFORMESPROVEEDOR = "informesProveedor";
     public static final String PATH_INFORMEPROVEEDOR = "/factura/informeProveedor";
@@ -2921,6 +2919,8 @@ public class Constantes {
     public static final String PATH_INFORMEPROVEEDOR_GRABA = "/factura/informeProveedor/graba";
     public static final String PATH_INFORMEPROVEEDOR_ACTUALIZA = "/factura/informeProveedor/actualiza";
     public static final String PATH_INFORMEPROVEEDOR_FINALIZA = "/factura/informeProveedor/finaliza";
+    public static final String PATH_INFORMEPROVEEDOR_AUTORIZA = "/factura/informeProveedor/autorizar";
+    public static final String PATH_INFORMEPROVEEDOR_RECHAZA = "/factura/informeProveedor/rechazar";
     public static final String PATH_INFORMEPROVEEDOR_ELIMINA = "/factura/informeProveedor/elimina";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBO = "/factura/informeProveedorDetalle/contrarecibo";
     public static final String ADDATTRIBUTE_INFORMEPROVEEDOR = "informeProveedor";
@@ -2928,6 +2928,8 @@ public class Constantes {
     public static final String CONTAINSKEY_INFORMESPROVEEDOR_DETALLE = "informesProveedorDetalle";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE = "/factura/informeProveedorDetalle";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_LISTA = "/factura/informeProveedorDetalle/lista";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_LISTACONTRARECIBOS = "/factura/informeProveedorDetalle/listaContrarecibo";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS = "/factura/informeProveedorDetalle/contrarecibos";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_VER = "/factura/informeProveedorDetalle/ver";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_NUEVO = "/factura/informeProveedorDetalle/nuevo";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_EDITA = "/factura/informeProveedorDetalle/edita";
@@ -2935,4 +2937,17 @@ public class Constantes {
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_ACTUALIZA = "/factura/informeProveedorDetalle/actualiza";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_ELIMINA = "/factura/informeProveedorDetalle/elimina";
     public static final String ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE = "informeProveedorDetalle";
+    public static final String ADDATTRIBUTE_CONTRARECIBO = "contrarecibo";
+    //valoresProveedorFacturas
+    public static final String CONTAINSKEY_PROVEEDORESFACTURAS = "proveedoresFacturas";
+    public static final String PATH_PROVEEDORFACTURAS = "/factura/proveedorFacturas";
+    public static final String PATH_PROVEEDORFACTURAS_LISTA = "/factura/proveedorFacturas/lista";
+    public static final String PATH_PROVEEDORFACTURAS_VER = "/factura/proveedorFacturas/ver";
+    public static final String PATH_PROVEEDORFACTURAS_NUEVO = "/factura/proveedorFacturas/nuevo";
+    public static final String PATH_PROVEEDORFACTURAS_EDITA = "/factura/proveedorFacturas/edita";
+    public static final String PATH_PROVEEDORFACTURAS_GRABA = "/factura/proveedorFacturas/graba";
+    public static final String PATH_PROVEEDORFACTURAS_ACTUALIZA = "/factura/proveedorFacturas/actualiza";
+    public static final String PATH_PROVEEDORFACTURAS_ELIMINA = "/factura/proveedorFacturas/elimina";
+    public static final String ADDATTRIBUTE_PROVEEDORFACTURAS = "proveedorFacturas";
+    public static final String CONTAINSKEY_CONTRARECIBOS = "contrarecibos";
 }

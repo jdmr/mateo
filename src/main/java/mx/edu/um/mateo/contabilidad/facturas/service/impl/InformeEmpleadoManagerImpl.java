@@ -58,4 +58,18 @@ public class InformeEmpleadoManagerImpl implements InformeEmpleadoManager {
         dao.actualiza(informeEmpleado, usuario);
 
     }
+
+    @Override
+    public void autorizar(InformeEmpleado informeEmpleado, Usuario usuario) {
+        informeEmpleado.setStatus(Constantes.STATUS_AUTORIZADO);
+        dao.actualiza(informeEmpleado, usuario);
+
+    }
+
+    @Override
+    public void rechazar(InformeEmpleado informeEmpleado, Usuario usuario) {
+        informeEmpleado.setStatus(Constantes.STATUS_RECHAZADO);
+        dao.actualiza(informeEmpleado, usuario);
+
+    }
 }

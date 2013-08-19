@@ -17,29 +17,30 @@ import javax.persistence.Table;
  * @author zorch
  */
 @Entity
-@Table(name="cat_modalidad", schema="enoc")
-public class Modalidad implements Serializable{
+@Table(name = "cat_modalidad")
+public class Modalidad implements Serializable {
+
     @Id
     @GeneratedValue
     private Integer id;
-    @Column(name="nombre_modalidad")
+    @Column(name = "nombre_modalidad")
     private String nombre;
-    @Column( length=1)
-    private String  enLinea;
+    @Column(length = 1)
+    private String enLinea;
 
     public Modalidad() {
     }
 
     public Modalidad(String nombre, String enLinea) {
-                this.nombre = nombre;
-                this.enLinea = enLinea;
+        this.nombre = nombre;
+        this.enLinea = enLinea;
     }
-    public Modalidad(Integer id,String nombre, String enLinea) {
-                this.nombre = nombre;
-                this.id=id;
-                this.enLinea = enLinea;
+
+    public Modalidad(Integer id, String nombre, String enLinea) {
+        this.nombre = nombre;
+        this.id = id;
+        this.enLinea = enLinea;
     }
-       
 
     public Integer getId() {
         return id;
@@ -99,6 +100,4 @@ public class Modalidad implements Serializable{
     public String toString() {
         return "Modalidad{" + "id=" + id + ", nombre=" + nombre + ", enLinea=" + enLinea + '}';
     }
-    
-    
 }
