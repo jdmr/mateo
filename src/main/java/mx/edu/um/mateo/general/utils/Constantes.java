@@ -2929,6 +2929,7 @@ public class Constantes {
     public static final String PATH_INFORMEPROVEEDOR_DETALLE = "/factura/informeProveedorDetalle";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_LISTA = "/factura/informeProveedorDetalle/lista";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_LISTACONTRARECIBOS = "/factura/informeProveedorDetalle/listaContrarecibo";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS = "/factura/informeProveedorDetalle/contrarecibos";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_VER = "/factura/informeProveedorDetalle/ver";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_NUEVO = "/factura/informeProveedorDetalle/nuevo";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_EDITA = "/factura/informeProveedorDetalle/edita";

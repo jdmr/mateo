@@ -191,8 +191,96 @@ public class InformeProveedorDetalleController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
-        Long contrareciboId = (Long) request.getSession().getAttribute("contrareciboId");
-        params.put("contrarecibo", contrareciboId);
+        Contrarecibo contrareciboId = (Contrarecibo) request.getSession().getAttribute("contrareciboId");
+        params.put("contrarecibo", contrareciboId.getId());
+
+        if (StringUtils.isNotBlank(filtro)) {
+            params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
+        }
+        if (pagina != null) {
+            params.put(Constantes.CONTAINSKEY_PAGINA, pagina);
+            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        } else {
+            pagina = 1L;
+            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        }
+        if (StringUtils.isNotBlank(order)) {
+            params.put(Constantes.CONTAINSKEY_ORDER, order);
+            params.put(Constantes.CONTAINSKEY_SORT, sort);
+        }
+
+        if (StringUtils.isNotBlank(tipo)) {
+            params.put(Constantes.CONTAINSKEY_REPORTE, true);
+            params = manager.contrarecibo(params);
+            try {
+                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), response);
+                return null;
+            } catch (JRException | IOException e) {
+                log.error("No se pudo generar el reporte", e);
+                params.remove(Constantes.CONTAINSKEY_REPORTE);
+                //errors.reject("error.generar.reporte");
+            }
+        }
+
+        if (StringUtils.isNotBlank(correo)) {
+            params.put(Constantes.CONTAINSKEY_REPORTE, true);
+            params = manager.contrarecibo(params);
+
+            params.remove(Constantes.CONTAINSKEY_REPORTE);
+            try {
+                enviaCorreo(correo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), request);
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("detalle.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+            } catch (JRException | MessagingException e) {
+                log.error("No se pudo enviar el reporte por correo", e);
+            }
+        }
+        params = manager.contrarecibo(params);
+        log.debug("params{}", params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE));
+        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE, params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE));
+
+        // inicia paginado
+        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
+        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
+        Long cantidadDePaginas = cantidad / max;
+        List<Long> paginas = new ArrayList<>();
+        long i = 1;
+        do {
+            paginas.add(i);
+        } while (i++ < cantidadDePaginas);
+        List<InformeProveedorDetalle> detalles = (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE);
+        Long primero = ((pagina - 1) * max) + 1;
+        log.debug("primero {}", primero);
+        log.debug("detalles {}", detalles.size());
+        Long ultimo = primero + (detalles.size() - 1);
+        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
+        log.debug("Paginacion{}", paginacion);
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
+        log.debug("paginas{}", paginas);
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        log.debug("Pagina{}", pagina);
+        // termina paginado
+
+        return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTACONTRARECIBOS;
+    }
+
+    @RequestMapping("/contrarecibos")
+    public String contrarecibos(HttpServletRequest request, HttpServletResponse response,
+            @RequestParam(required = false) String filtro,
+            @RequestParam(required = false) Long pagina,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) String sort,
+            Usuario usuario,
+            Errors errors,
+            Model modelo) {
+        log.debug("Mostrando lista de informes");
+        Map<String, Object> params = new HashMap<>();
+        Long empresaId = (Long) request.getSession().getAttribute("empresaId");
+        params.put("empresa", empresaId);
+
 
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
@@ -262,7 +350,7 @@ public class InformeProveedorDetalleController extends BaseController {
         log.debug("Pagina{}", pagina);
         // termina paginado
 
-        return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTACONTRARECIBOS;
+        return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS;
     }
 
     @RequestMapping({"/contrarecibo"})
@@ -459,7 +547,7 @@ public class InformeProveedorDetalleController extends BaseController {
         modelo.addAttribute(Constantes.ADDATTRIBUTE_CONTRARECIBO, contrarecibo);
         request.getSession().setAttribute("contrareciboId", contrarecibo);
 
-        return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTACONTRARECIBOS;
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTACONTRARECIBOS;
     }
 
     @RequestMapping("/nuevo")
