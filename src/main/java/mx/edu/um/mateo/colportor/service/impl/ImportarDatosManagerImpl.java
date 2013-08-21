@@ -8,14 +8,20 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Date;
+import mx.edu.um.mateo.colportor.dao.ColportorDao;
+import mx.edu.um.mateo.colportor.dao.DocumentoDao;
+import mx.edu.um.mateo.colportor.dao.TemporadaColportorDao;
+import mx.edu.um.mateo.colportor.model.Colportor;
+import mx.edu.um.mateo.colportor.model.Documento;
 import mx.edu.um.mateo.colportor.service.ImportarDatosManager;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.service.BaseManager;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,14 +30,20 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ImportarDatosManagerImpl extends BaseManager implements ImportarDatosManager{
+    @Autowired
+    private TemporadaColportorDao tmpClpDao;
+    @Autowired
+    private ColportorDao clpDao;
+    @Autowired
+    private DocumentoDao docDao;
+    
     public void importaInformeDeGema(File file, Usuario user) throws Exception{
         log.debug("importaInformeDeGema");
         try{
-            POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(file));
-            HSSFWorkbook wb = new HSSFWorkbook(fs);
-            HSSFSheet sheet = wb.getSheetAt(0); 
-            HSSFRow row;
-            HSSFCell cell;
+            XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream(file));
+            XSSFSheet sheet = wb.getSheetAt(0); 
+            XSSFRow row;
+            XSSFCell cell;
 
             int rows; // No of rows
             rows = sheet.getPhysicalNumberOfRows();
@@ -66,6 +78,9 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
             BigDecimal ttDcto = BigDecimal.ZERO;
             BigDecimal ttNeto = BigDecimal.ZERO;
             
+            Documento doc = null;
+            Colportor clp = null;
+            
             Boolean sw = false;
             
             for (int r = 1; r < rows; r++) {
@@ -80,10 +95,13 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                             switch(c){
                                 case 0:{
                                     if(cell.getCellType() == 0){
-                                        log.debug("Numerico {}",cell.getNumericCellValue());                                     
+                                        log.debug("Numerico {}",cell.getNumericCellValue());
+                                        clave = String.valueOf(cell.getNumericCellValue()).split("\\.")[0];
                                     }else{
                                         log.debug("String {}",cell.getStringCellValue());
+                                        clave = cell.getStringCellValue();
                                     }
+                                    log.debug("Clave clp {}", clave);
                                     break;
                                 }
                                 case 1:{
@@ -172,9 +190,22 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                     break;
                                 }
                             } //switch end
+                            
+                            
                         }
                     } //Finalizo de leer todas las celdas de una fila
                     
+                    //Insertar boletin
+                    doc = new Documento();
+                    doc.setFecha(new Date());
+                    doc.setFolio(clave);
+                    doc.setImporte(boletin);
+                    doc.setObservaciones("Boletin Junio");
+                    doc.setTipoDeDocumento("boletin");
+
+                    clp = clpDao.obtiene(clave);
+                    doc.setTemporadaColportor(tmpClpDao.obtiene(clp));
+                    docDao.crea(doc);
                 }
             }
         } catch (IOException ioe) {

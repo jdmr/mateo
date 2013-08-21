@@ -117,6 +117,14 @@ public class AsociadoDao {
         return asociado;
     }
     
+    public Asociado obtiene(String clave) {
+        log.debug("Obtiene asociado con clave = {}", clave);
+        Criteria criteria = currentSession().createCriteria(Asociado.class);
+        criteria.add(Restrictions.eq("clave", clave));
+        Asociado asociado = (Asociado) criteria.uniqueResult();
+        return asociado;
+    }
+    
 
     public Asociado crea(Asociado asociado, Usuario usuario) {
         log.debug("Creando cuenta de asociado : {}", asociado);

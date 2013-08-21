@@ -66,7 +66,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @DiscriminatorValue("user")
 @Entity 
 @Table(name = "usuarios")
-public class Usuario  implements Serializable, UserDetails {
+public class Usuario  implements Serializable, UserDetails, TipoUsuario {
     protected final transient Logger log = LoggerFactory.getLogger(getClass());
 
     /**
@@ -448,4 +448,21 @@ public class Usuario  implements Serializable, UserDetails {
         return "Usuario{" + "username=" + username + ", nombre=" + nombre
                 + ", apPaterno=" + apPaterno + ", apMaterno=" + apMaterno + '}';
     }
+
+    @Override
+    public Boolean isTipoUsuario() {
+        return true;
+    }
+
+    @Override
+    public Boolean isTipoAsociado() {
+        return false;
+    }
+
+    @Override
+    public Boolean isTipoColportor() {
+        return false;
+    }
+    
+    
 }

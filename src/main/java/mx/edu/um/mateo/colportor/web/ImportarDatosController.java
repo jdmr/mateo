@@ -7,6 +7,7 @@ package mx.edu.um.mateo.colportor.web;
 import mx.edu.um.mateo.general.web.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import mx.edu.um.mateo.colportor.service.ImportarDatosManager;
@@ -14,9 +15,7 @@ import mx.edu.um.mateo.general.model.UploadFileForm;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -61,18 +60,25 @@ public class ImportarDatosController extends BaseController {
         UploadFileForm archivo = null;
             List docs = new ArrayList();
             List files = (List)request.getSession().getAttribute(Constantes.FILES_LIST);
-            String[] docIds = request.getParameterValues("archivo");
+            Enumeration docIds = request.getParameterNames();
             if (docIds != null) {
-                for (Integer i = 0; i < docIds.length; i++) {
-                    //log.debug(i+", "+docIds[i]);
+                String str = null;
+                while(docIds.hasMoreElements()){
+                    str = (String)docIds.nextElement();
+                    if(str.startsWith("chk")){
+                        log.debug(str);
+                        archivo = (UploadFileForm)files.get(Integer.parseInt(str.split("-")[1]));
+                    }
                 }
-                archivo = (UploadFileForm)files.get(Integer.parseInt(docIds[0]));
             }
 
             if(archivo == null){
-                return "redirect"+"/importarDatos/listadoArchivos";
+                log.error("archivo null");
+                return "redirect:"+"/colportaje/importarDatos/listadoArchivos";
             }
-            new File(request.getSession().getServletContext().getRealPath("") + "/resources/" + request.getRemoteUser()+"/"+archivo.getName());
-            return "redirect"+"/importarDatos/listadoArchivos";
+            File file = new File(request.getSession().getServletContext().getRealPath("") + "/resources/" + request.getRemoteUser()+"/"+archivo.getName());
+            log.debug("File {}", file);
+            mgr.importaInformeDeGema(file, ambiente.obtieneUsuario());
+            return "redirect:"+"/colportaje/importarDatos/listadoArchivos";
     }
 }

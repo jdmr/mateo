@@ -35,7 +35,7 @@
                     <c:forEach items="${filesList}" var="iDatos" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><c:out value="${iDatos.name}"/></td>
-                            <td><input type="checkbox" name="chkbox" id='<c:out value="${iDatos.id}"/>'</td>
+                            <td><input type="checkbox" name='chk-<c:out value="${iDatos.id}"/>'></td>
                         </tr>
                     </c:forEach>
                 </tbody>

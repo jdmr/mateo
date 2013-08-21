@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * @author zorch
  */
 @Entity
-@Table(name="cat_modalidad", schema="enoc")
+@Table(name="cat_modalidad")
 public class Modalidad implements Serializable{
     @Id
     @GeneratedValue
