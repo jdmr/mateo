@@ -11,4 +11,5 @@ package mx.edu.um.mateo.colportor.dao;
 public interface TraspasoDao {
     public void traspasaColportores() throws Exception;
     public void traspasaTemporadasColportor() throws Exception;
+    public void traspasaDocumentos() throws Exception;
 }

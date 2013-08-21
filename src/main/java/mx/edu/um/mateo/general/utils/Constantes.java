@@ -2606,7 +2606,7 @@ public class Constantes {
      * Valores para Tipos de Documento
      *
      */
-    public static final String BOLETIN = "Boletín";
+    public static final String BOLETIN = "Boletin";
     public static final String DIEZMO = "Diezmo";
     public static final String DEPOSITO_CAJA = "Deposito_Caja";
     public static final String DEPOSITO_BANCO = "Deposito_Banco";

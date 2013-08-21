@@ -60,7 +60,7 @@ public class TraspasoController extends BaseController {
             dao.traspasaColportores();
         } catch (Exception e) {
             log.error("Error al intentar traspasar los colportores ", e);
-            return "traspasoClp";
+            return null;
         }
         return null;
     }
@@ -70,12 +70,23 @@ public class TraspasoController extends BaseController {
     public String traspasoTmpClp(HttpServletRequest request) {
         log.debug("Traspaso Temporadas Colportores");
         try {
-            log.debug("Iniciando traspaso de temporadasClp");
             dao.traspasaTemporadasColportor();
-            log.debug("Finalizando traspaso de temporadasClp");
         } catch (Exception e) {
             log.error("Error al intentar traspasar las temporadas de colportores ", e);
-            return "traspasoTmpClp";
+            return null;
+        }
+        return null;
+    }
+    
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(value = {"/traspasoDocClp"}, method = RequestMethod.GET)
+    public String traspasoDocClp(HttpServletRequest request) {
+        log.debug("Traspaso Documentos Colportores");
+        try {
+            dao.traspasaDocumentos();
+        } catch (Exception e) {
+            log.error("Error al intentar traspasar los documentos de colportores ", e);
+            return null;
         }
         return null;
     }

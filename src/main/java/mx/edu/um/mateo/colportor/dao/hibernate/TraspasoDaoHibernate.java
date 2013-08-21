@@ -35,11 +35,13 @@ import java.util.Set;
 import javax.sql.DataSource;
 import mx.edu.um.mateo.colportor.dao.AsociadoDao;
 import mx.edu.um.mateo.colportor.dao.ColportorDao;
+import mx.edu.um.mateo.colportor.dao.DocumentoDao;
 import mx.edu.um.mateo.colportor.dao.TemporadaColportorDao;
 import mx.edu.um.mateo.colportor.dao.TemporadaDao;
 import mx.edu.um.mateo.colportor.dao.TraspasoDao;
 import mx.edu.um.mateo.colportor.model.Asociado;
 import mx.edu.um.mateo.colportor.model.Colportor;
+import mx.edu.um.mateo.colportor.model.Documento;
 import mx.edu.um.mateo.colportor.model.TemporadaColportor;
 import mx.edu.um.mateo.contabilidad.dao.EjercicioDao;
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
@@ -80,6 +82,8 @@ public class TraspasoDaoHibernate extends BaseDao implements TraspasoDao {
     private TemporadaDao temporadaDao;
     @Autowired
     private TemporadaColportorDao tmpClpDao;
+    @Autowired
+    private DocumentoDao docClpDao;
     @Autowired
     @Qualifier(value = "dataSourcePg")
     private DataSource dsPg;
@@ -212,5 +216,52 @@ public class TraspasoDaoHibernate extends BaseDao implements TraspasoDao {
         }
         
         
+    }
+    
+    public void traspasaDocumentos() throws Exception{
+        String COMANDO = "select a.fecha, a.folio, a.importe, a.observaciones, a.tipodedocumento, u.clave, tc.temporada_id " +
+            "from temporada_colportor tc, app_user u,  " +
+            "(  " +
+            "select fecha, folio, case when tipo_documento_id = 5 then importe_bonificable else importe end as importe, observaciones,   " +
+            "case when tipo_documento_id = 1 then 'Deposito_Caja'   " +
+            "        when tipo_documento_id = 2 then 'Deposito_Banco'   " +
+            "        when tipo_documento_id = 3 then 'Diezmo'   " +
+            "        when tipo_documento_id = 4 then 'Notas_De_Compra'   " +
+            "        when tipo_documento_id = 5 then 'Boletin'   " +
+            "        when tipo_documento_id = 6 then 'Informe'   " +
+            "end as tipodedocumento, temporada_colportor_id  " +
+            "from documento_colportor  " +
+            ") as a  " +
+            "where a.temporada_colportor_id = tc.id  " +
+            "and tc.colportor_id = u.id ";
+        
+        PreparedStatement pstmt = null;
+        ResultSet rset = null;
+        
+        Documento docClp = null;
+        Integer conta = 0;
+
+        try {
+            pstmt = dsPg.getConnection().prepareStatement(COMANDO);
+            rset = pstmt.executeQuery();
+            while (rset.next()) {
+                docClp = new Documento();
+                docClp.setFecha(rset.getDate("fecha"));
+                docClp.setFolio(rset.getString("folio"));
+                docClp.setImporte(rset.getBigDecimal("importe"));
+                docClp.setObservaciones(rset.getString("observaciones"));
+                docClp.setTemporadaColportor(tmpClpDao.obtiene(colportorDao.obtiene(rset.getString("clave")), temporadaDao.obtiene(rset.getLong("temporada_id"))));
+                docClp.setTipoDeDocumento(rset.getString("tipodedocumento"));
+                
+                log.debug("creando documento # {}, {}", conta++, docClp);
+                
+                docClpDao.crea(docClp);
+            }
+        } catch (SQLException ex) {
+            throw new Exception(ex);
+        } finally {
+            pstmt = null;
+            rset = null;
+        }
     }
 }
