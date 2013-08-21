@@ -77,7 +77,6 @@ public class ImportarDatosController extends BaseController {
                 return "redirect:"+"/colportaje/importarDatos/listadoArchivos";
             }
             File file = new File(request.getSession().getServletContext().getRealPath("") + "/resources/" + request.getRemoteUser()+"/"+archivo.getName());
-            log.debug("File {}", file);
             mgr.importaInformeDeGema(file, ambiente.obtieneUsuario());
             return "redirect:"+"/colportaje/importarDatos/listadoArchivos";
     }
