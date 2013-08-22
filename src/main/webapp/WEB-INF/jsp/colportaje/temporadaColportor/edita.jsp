@@ -33,7 +33,6 @@
                 <form:hidden path="version" />
                 <form:hidden path="status" />
                 <form:hidden path="fecha" />
-                <form:hidden path="asociado.id" />
 
                 <fieldset>
                     <s:bind path="temporadaColportor.temporada">

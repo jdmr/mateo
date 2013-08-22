@@ -272,9 +272,11 @@ public class TemporadaColportorController extends BaseController{
 
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, @Valid TemporadaColportor temporadaColportor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
+    public String actualiza(HttpServletRequest request, @Valid TemporadaColportor temporadaColportor, 
+        BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
+            despliegaBindingResultErrors(bindingResult);
             return Constantes.TEMPORADACOLPORTOR_PATH_EDITA;
         }
         //try fechaInicio
