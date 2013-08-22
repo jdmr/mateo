@@ -14,6 +14,8 @@
         <li<c:if test="${param.menu eq 'colegio'}"> class="active"</c:if>><a href="<s:url value='/colportaje/colegio'/>" ><s:message code="colegio.label" /></a></li>
         <li<c:if test="${param.menu eq 'temporada'}"> class="active"</c:if>><a href="<s:url value='/colportaje/temporada'/>" ><s:message code="temporada.label" /></a></li>
         <li<c:if test="${param.menu eq 'temporadaColportor'}"> class="active"</c:if>><a href="<s:url value='/colportaje/temporadaColportor'/>" ><s:message code="temporadaColportor.label" /></a></li>
+        <li<c:if test="${param.menu eq 'documento'}"> class="active"</c:if>><a href="<s:url value='/colportaje/documento'/>" ><s:message code="documento.label" /></a></li>
+        <li<c:if test="${param.menu eq 'importarDatos'}"> class="active"</c:if>><a href="<s:url value='/colportaje/importarDatos'/>" ><s:message code="importarDatos.label" /></a></li>
     </ul>
 </nav>
     

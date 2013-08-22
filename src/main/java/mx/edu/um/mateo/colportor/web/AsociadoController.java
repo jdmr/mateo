@@ -164,7 +164,7 @@ public class AsociadoController extends BaseController {
     public String edita(@PathVariable Long id, Model modelo) {
 
         log.debug("Edita Asociado {}", id);
-        Rol roles = rolDao.obtiene("ROLE_ASO");
+        Rol roles = rolDao.obtiene("ROLE_ASOC");
         Asociado asociados = asociadoDao.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_ASOCIADO, asociados);
         modelo.addAttribute("roles", roles);
@@ -180,8 +180,8 @@ public class AsociadoController extends BaseController {
         }
         try {
             String[] roles = request.getParameterValues("roles");
-            log.debug("Asignando ROLE_ASO por defecto");
-            roles = new String[]{"ROLE_ASO"};
+            log.debug("Asignando ROLE_ASOC por defecto");
+            roles = new String[]{"ROLE_ASOC"};
             modelo.addAttribute("roles", roles);
             asociados = asociadoDao.actualiza(asociados, roles);
         } catch (ConstraintViolationException e) {

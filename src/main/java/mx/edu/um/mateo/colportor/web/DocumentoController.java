@@ -225,7 +225,13 @@ public class DocumentoController extends BaseController {
         BigDecimal totalDiezmos = new BigDecimal("0");
         BigDecimal totalDepositos = new BigDecimal("0");
         BigDecimal totalCompras = new BigDecimal("0");
-        BigDecimal objetivo = new BigDecimal(temporadaColportor.getObjetivo());
+        BigDecimal objetivo = null;
+        try {
+            objetivo = new BigDecimal(temporadaColportor.getObjetivo());
+        } catch (NullPointerException e) {
+            log.error("La temporadaColportor {} no tienen objetivo", temporadaColportor);
+            objetivo = new BigDecimal("0");
+        }
         BigDecimal fidelidad = new BigDecimal("0");
         BigDecimal alcanzado = new BigDecimal("0");
         

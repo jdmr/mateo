@@ -38,13 +38,8 @@
                 <button type="submit" class="btn"><s:message code="buscar.label" /></button>
 
             </p>
-            <p class="well">
-                <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
-                <button type="submit" class="btn"><s:message code="buscar.label" /></button>
-
-            </p>
             
-            <sec:authorize access="hasRole('ROLE_ASO')">
+            <sec:authorize access="hasRole('ROLE_ASOC')">
                 <p>
                     <s:message code="buscarColportor.label" />
                     <input name="clave" type="text" class="input-medium search-query" value="${clave}">

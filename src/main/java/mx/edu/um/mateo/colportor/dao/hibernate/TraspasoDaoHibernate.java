@@ -222,7 +222,7 @@ public class TraspasoDaoHibernate extends BaseDao implements TraspasoDao {
         String COMANDO = "select a.fecha, a.folio, a.importe, a.observaciones, a.tipodedocumento, u.clave, tc.temporada_id " +
             "from temporada_colportor tc, app_user u,  " +
             "(  " +
-            "select fecha, folio, case when tipo_documento_id = 5 then importe_bonificable else importe end as importe, observaciones,   " +
+            "select fecha, folio, case when importe_bonificable = 0 then importe else importe_bonificable end as importe, observaciones,   " +
             "case when tipo_documento_id = 1 then 'Deposito_Caja'   " +
             "        when tipo_documento_id = 2 then 'Deposito_Banco'   " +
             "        when tipo_documento_id = 3 then 'Diezmo'   " +
