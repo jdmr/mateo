@@ -239,4 +239,92 @@ public class InformeEmpleadoControllerTest extends BaseControllerTest {
         log.debug("informe...**{}", informeEmpleado);
         assertEquals(Constantes.STATUS_FINALIZADO, informeEmpleado.getStatus());
     }
+
+    @Test
+    public void testAutoriza() throws Exception {
+        Usuario usuario = obtieneUsuario();
+        InformeEmpleado informe = new InformeEmpleado();
+        informe.setEmpresa(usuario.getEmpresa());
+        informe.setFechaInforme(new Date());
+        informe.setStatus("a");
+        currentSession().save(informe);
+        assertNotNull(informe.getId());
+        Proveedor proveedor = new Proveedor("Sam789", "samuel", "samuel130620", usuario.getEmpresa());
+        currentSession().save(proveedor);
+//      \\\\////
+        ////\\\\
+        InformeEmpleadoDetalle detalle = null;
+        for (int i = 0; i < 4; i++) {
+            detalle = new InformeEmpleadoDetalle();
+            detalle.setInformeEmpleado(informe);
+            detalle.setFechaFactura(new Date());
+            detalle.setFolioFactura("1110475");
+            detalle.setIVA(new BigDecimal(".16"));
+            detalle.setNombreProveedor("Lala");
+            detalle.setCcp("990236");
+            detalle.setPathPDF("prueba.pdf");
+            detalle.setPathXMl("prueba.xml");
+            detalle.setRFCProveedor("1147hgas40q");
+            detalle.setSubtotal(new BigDecimal("223"));
+            detalle.setTotal(new BigDecimal("250"));
+            detalle.setEmpresa(usuario.getEmpresa());
+            currentSession().save(detalle);
+            assertNotNull(detalle.getId());
+        }
+        this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
+        this.mockMvc.perform(get("/factura/informe/autorizar")
+                .param("id", informe.getId().toString())
+                .sessionAttr("informeEmpleadoId", informe))
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(flash().attribute("message", "informe.finaliza.message"))
+                .andExpect(redirectedUrl("/factura/informe/encabezados"));
+        currentSession().refresh(informe);
+        InformeEmpleado informeEmpleado = manager.obtiene(informe.getId());
+        log.debug("informe...**{}", informeEmpleado);
+        assertEquals(Constantes.STATUS_AUTORIZADO, informeEmpleado.getStatus());
+    }
+
+    @Test
+    public void testRechaza() throws Exception {
+        Usuario usuario = obtieneUsuario();
+        InformeEmpleado informe = new InformeEmpleado();
+        informe.setEmpresa(usuario.getEmpresa());
+        informe.setFechaInforme(new Date());
+        informe.setStatus("a");
+        currentSession().save(informe);
+        assertNotNull(informe.getId());
+        Proveedor proveedor = new Proveedor("Sam789", "samuel", "samuel130620", usuario.getEmpresa());
+        currentSession().save(proveedor);
+//      \\\\////
+        ////\\\\
+        InformeEmpleadoDetalle detalle = null;
+        for (int i = 0; i < 4; i++) {
+            detalle = new InformeEmpleadoDetalle();
+            detalle.setInformeEmpleado(informe);
+            detalle.setFechaFactura(new Date());
+            detalle.setFolioFactura("1110475");
+            detalle.setIVA(new BigDecimal(".16"));
+            detalle.setNombreProveedor("Lala");
+            detalle.setCcp("990236");
+            detalle.setPathPDF("prueba.pdf");
+            detalle.setPathXMl("prueba.xml");
+            detalle.setRFCProveedor("1147hgas40q");
+            detalle.setSubtotal(new BigDecimal("223"));
+            detalle.setTotal(new BigDecimal("250"));
+            detalle.setEmpresa(usuario.getEmpresa());
+            currentSession().save(detalle);
+            assertNotNull(detalle.getId());
+        }
+        this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
+        this.mockMvc.perform(get("/factura/informe/rechazar")
+                .param("id", informe.getId().toString())
+                .sessionAttr("informeEmpleadoId", informe))
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(flash().attribute("message", "informe.finaliza.message"))
+                .andExpect(redirectedUrl("/factura/informe/encabezados"));
+        currentSession().refresh(informe);
+        InformeEmpleado informeEmpleado = manager.obtiene(informe.getId());
+        log.debug("informe...**{}", informeEmpleado);
+        assertEquals(Constantes.STATUS_RECHAZADO, informeEmpleado.getStatus());
+    }
 }

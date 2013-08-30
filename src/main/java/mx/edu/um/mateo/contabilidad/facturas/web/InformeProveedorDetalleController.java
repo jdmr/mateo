@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,17 +21,21 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
-import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleadoDetalle;
+import mx.edu.um.mateo.contabilidad.facturas.model.Contrarecibo;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
+import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
+import mx.edu.um.mateo.contabilidad.facturas.service.ContrareciboManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorDetalleManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
 import mx.edu.um.mateo.general.dao.ProveedorDao;
-import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
+import mx.edu.um.mateo.general.utils.BancoNoCoincideException;
+import mx.edu.um.mateo.general.utils.ClabeNoCoincideException;
 import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.general.utils.CuentaChequeNoCoincideException;
+import mx.edu.um.mateo.general.utils.FormaPagoNoCoincideException;
+import mx.edu.um.mateo.general.utils.ProveedorNoCoincideException;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inscripciones.model.FileUploadForm;
 import net.sf.jasperreports.engine.JRException;
@@ -80,6 +85,8 @@ public class InformeProveedorDetalleController extends BaseController {
     private InformeProveedorManager managerInforme;
     @Autowired
     private ProveedorDao proveedorDao;
+    @Autowired
+    private ContrareciboManager contrareciboManager;
 
     @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -167,6 +174,183 @@ public class InformeProveedorDetalleController extends BaseController {
         // termina paginado
 
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
+    }
+
+    @RequestMapping("/listaContrarecibo")
+    public String listaContrarecibos(HttpServletRequest request, HttpServletResponse response,
+            @RequestParam(required = false) String filtro,
+            @RequestParam(required = false) Long pagina,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) String sort,
+            Usuario usuario,
+            Errors errors,
+            Model modelo) {
+        log.debug("Mostrando lista de informes");
+        Map<String, Object> params = new HashMap<>();
+        Long empresaId = (Long) request.getSession().getAttribute("empresaId");
+        params.put("empresa", empresaId);
+        Contrarecibo contrareciboId = (Contrarecibo) request.getSession().getAttribute("contrareciboId");
+        params.put("contrarecibo", contrareciboId.getId());
+
+        if (StringUtils.isNotBlank(filtro)) {
+            params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
+        }
+        if (pagina != null) {
+            params.put(Constantes.CONTAINSKEY_PAGINA, pagina);
+            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        } else {
+            pagina = 1L;
+            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        }
+        if (StringUtils.isNotBlank(order)) {
+            params.put(Constantes.CONTAINSKEY_ORDER, order);
+            params.put(Constantes.CONTAINSKEY_SORT, sort);
+        }
+
+        if (StringUtils.isNotBlank(tipo)) {
+            params.put(Constantes.CONTAINSKEY_REPORTE, true);
+            params = manager.contrarecibo(params);
+            try {
+                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), response);
+                return null;
+            } catch (JRException | IOException e) {
+                log.error("No se pudo generar el reporte", e);
+                params.remove(Constantes.CONTAINSKEY_REPORTE);
+                //errors.reject("error.generar.reporte");
+            }
+        }
+
+        if (StringUtils.isNotBlank(correo)) {
+            params.put(Constantes.CONTAINSKEY_REPORTE, true);
+            params = manager.contrarecibo(params);
+
+            params.remove(Constantes.CONTAINSKEY_REPORTE);
+            try {
+                enviaCorreo(correo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), request);
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("detalle.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+            } catch (JRException | MessagingException e) {
+                log.error("No se pudo enviar el reporte por correo", e);
+            }
+        }
+        params = manager.contrarecibo(params);
+        log.debug("params{}", params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE));
+        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE, params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE));
+
+        // inicia paginado
+        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
+        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
+        Long cantidadDePaginas = cantidad / max;
+        List<Long> paginas = new ArrayList<>();
+        long i = 1;
+        do {
+            paginas.add(i);
+        } while (i++ < cantidadDePaginas);
+        List<InformeProveedorDetalle> detalles = (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE);
+        Long primero = ((pagina - 1) * max) + 1;
+        log.debug("primero {}", primero);
+        log.debug("detalles {}", detalles.size());
+        Long ultimo = primero + (detalles.size() - 1);
+        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
+        log.debug("Paginacion{}", paginacion);
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
+        log.debug("paginas{}", paginas);
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        log.debug("Pagina{}", pagina);
+        // termina paginado
+
+        return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTACONTRARECIBOS;
+    }
+
+    @RequestMapping("/contrarecibos")
+    public String contrarecibos(HttpServletRequest request, HttpServletResponse response,
+            @RequestParam(required = false) String filtro,
+            @RequestParam(required = false) Long pagina,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) String sort,
+            Usuario usuario,
+            Errors errors,
+            Model modelo) {
+        log.debug("Mostrando lista de informes");
+        Map<String, Object> params = new HashMap<>();
+        Long empresaId = (Long) request.getSession().getAttribute("empresaId");
+        params.put("empresa", empresaId);
+
+
+        if (StringUtils.isNotBlank(filtro)) {
+            params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
+        }
+        if (pagina != null) {
+            params.put(Constantes.CONTAINSKEY_PAGINA, pagina);
+            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        } else {
+            pagina = 1L;
+            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        }
+        if (StringUtils.isNotBlank(order)) {
+            params.put(Constantes.CONTAINSKEY_ORDER, order);
+            params.put(Constantes.CONTAINSKEY_SORT, sort);
+        }
+
+        if (StringUtils.isNotBlank(tipo)) {
+            params.put(Constantes.CONTAINSKEY_REPORTE, true);
+            params = contrareciboManager.lista(params);
+            try {
+                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_CONTRARECIBOS), response);
+                return null;
+            } catch (JRException | IOException e) {
+                log.error("No se pudo generar el reporte", e);
+                params.remove(Constantes.CONTAINSKEY_REPORTE);
+                //errors.reject("error.generar.reporte");
+            }
+        }
+
+        if (StringUtils.isNotBlank(correo)) {
+            params.put(Constantes.CONTAINSKEY_REPORTE, true);
+            params = contrareciboManager.lista(params);
+
+            params.remove(Constantes.CONTAINSKEY_REPORTE);
+            try {
+                enviaCorreo(correo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_CONTRARECIBOS), request);
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("detalle.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+            } catch (JRException | MessagingException e) {
+                log.error("No se pudo enviar el reporte por correo", e);
+            }
+        }
+        params = contrareciboManager.lista(params);
+        log.debug("params{}", params.get(Constantes.CONTAINSKEY_CONTRARECIBOS));
+        modelo.addAttribute(Constantes.CONTAINSKEY_CONTRARECIBOS, params.get(Constantes.CONTAINSKEY_CONTRARECIBOS));
+
+        // inicia paginado
+        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
+        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
+        Long cantidadDePaginas = cantidad / max;
+        List<Long> paginas = new ArrayList<>();
+        long i = 1;
+        do {
+            paginas.add(i);
+        } while (i++ < cantidadDePaginas);
+        List<Contrarecibo> contrarecibos = (List<Contrarecibo>) params.get(Constantes.CONTAINSKEY_CONTRARECIBOS);
+        Long primero = ((pagina - 1) * max) + 1;
+        log.debug("primero {}", primero);
+        log.debug("detalles {}", contrarecibos.size());
+        Long ultimo = primero + (contrarecibos.size() - 1);
+        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
+        log.debug("Paginacion{}", paginacion);
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
+        log.debug("paginas{}", paginas);
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        log.debug("Pagina{}", pagina);
+        // termina paginado
+
+        return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS;
     }
 
     @RequestMapping({"/contrarecibo"})
@@ -257,6 +441,94 @@ public class InformeProveedorDetalleController extends BaseController {
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBO;
     }
 
+    @RequestMapping("/revisar")
+    public String revisar(HttpServletRequest request, HttpServletResponse response,
+            @RequestParam(required = false) String filtro,
+            @RequestParam(required = false) Long pagina,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) String sort,
+            Usuario usuario,
+            Errors errors,
+            Model modelo) {
+        log.debug("Entrando a contrarecibo..**..");
+        Map<String, Object> params = new HashMap<>();
+        Long empresaId = (Long) request.getSession().getAttribute("empresaId");
+        params.put("empresa", empresaId);
+//        InformeProveedor informeId = (InformeProveedor) request.getSession().getAttribute("informeId");
+//        params.put("informeProveedor", informeId.getId());
+        if (StringUtils.isNotBlank(filtro)) {
+            params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
+        }
+        if (pagina != null) {
+            params.put(Constantes.CONTAINSKEY_PAGINA, pagina);
+            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        } else {
+            pagina = 1L;
+            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        }
+        if (StringUtils.isNotBlank(order)) {
+            params.put(Constantes.CONTAINSKEY_ORDER, order);
+            params.put(Constantes.CONTAINSKEY_SORT, sort);
+        }
+
+        if (StringUtils.isNotBlank(tipo)) {
+            params.put(Constantes.CONTAINSKEY_REPORTE, true);
+            params = manager.revisar(params);
+            try {
+                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), response);
+                return null;
+            } catch (JRException | IOException e) {
+                log.error("No se pudo generar el reporte", e);
+                params.remove(Constantes.CONTAINSKEY_REPORTE);
+                //errors.reject("error.generar.reporte");
+            }
+        }
+
+        if (StringUtils.isNotBlank(correo)) {
+            params.put(Constantes.CONTAINSKEY_REPORTE, true);
+            params = manager.revisar(params);
+
+            params.remove(Constantes.CONTAINSKEY_REPORTE);
+            try {
+                enviaCorreo(correo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), request);
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("detalle.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+            } catch (JRException | MessagingException e) {
+                log.error("No se pudo enviar el reporte por correo", e);
+            }
+        }
+        params = manager.revisar(params);
+        log.debug("params{}", params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE));
+        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE, params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE));
+
+        // inicia paginado
+        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
+        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
+        Long cantidadDePaginas = cantidad / max;
+        List<Long> paginas = new ArrayList<>();
+        long i = 1;
+        do {
+            paginas.add(i);
+        } while (i++ < cantidadDePaginas);
+        List<InformeProveedorDetalle> detalles = (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE);
+        Long primero = ((pagina - 1) * max) + 1;
+        log.debug("primero {}", primero);
+        log.debug("detalles {}", detalles.size());
+        Long ultimo = primero + (detalles.size() - 1);
+        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
+        log.debug("Paginacion{}", paginacion);
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
+        log.debug("paginas{}", paginas);
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        log.debug("Pagina{}", pagina);
+        // termina paginado
+
+        return "/factura/revisaProveedor/detalles";
+    }
+
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando paquete {}", id);
@@ -267,11 +539,22 @@ public class InformeProveedorDetalleController extends BaseController {
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_VER;
     }
 
+    @RequestMapping("/verContrarecibo/{id}")
+    public String verContrarecibo(HttpServletRequest request, @PathVariable Long id, Model modelo) {
+        log.debug("Mostrando paquete {}", id);
+        Contrarecibo contrarecibo = contrareciboManager.obtiene(id);
+
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_CONTRARECIBO, contrarecibo);
+        request.getSession().setAttribute("contrareciboId", contrarecibo);
+
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTACONTRARECIBOS;
+    }
+
     @RequestMapping("/nuevo")
     public String nueva(HttpServletRequest request, Model modelo) {
         log.debug("Nuevo paquete");
-        Proveedor proveedor = (Proveedor) request.getSession().getAttribute("proveedor");
-        modelo.addAttribute("proveedor", proveedor);
+        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) request.getSession().getAttribute("proveedorFacturas");
+        modelo.addAttribute("proveedorFacturas", proveedorFacturas);
         Map<String, Object> params = new HashMap<>();
 
 
@@ -282,6 +565,23 @@ public class InformeProveedorDetalleController extends BaseController {
         params.put("reporte", true);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
+    }
+
+    @RequestMapping("/nueva")
+    public String nuevo(HttpServletRequest request, Model modelo) {
+        log.debug("Nuevo paquete");
+        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) request.getSession().getAttribute("proveedorFacturas");
+        modelo.addAttribute("proveedorFacturas", proveedorFacturas);
+        Map<String, Object> params = new HashMap<>();
+
+
+        InformeProveedorDetalle detalle = new InformeProveedorDetalle();
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
+        params.put("empresa", request.getSession()
+                .getAttribute("empresaId"));
+        params.put("reporte", true);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
+        return "/factura/informeProveedorDetalle/nueva";
     }
 
     @Transactional
@@ -337,11 +637,9 @@ public class InformeProveedorDetalleController extends BaseController {
         detalle.setInformeProveedor(informe);
         Usuario usuario = ambiente.obtieneUsuario();
 
-        log.debug("requestRFC** {}", request.getSession().getAttribute("proveedor"));
-        Proveedor proveedor = (Proveedor) request.getSession().getAttribute("proveedor");
-        detalle.setNombreProveedor(proveedor.getNombre());
-        detalle.setRFCProveedor(proveedor.getRfc());
-        log.debug("proveedor** {}", proveedor.toString());
+        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
+        detalle.setNombreProveedor(proveedorFacturas.getNombre());
+        detalle.setRFCProveedor(proveedorFacturas.getRfc());
         try {
             manager.graba(detalle, usuario);
             request.getSession().setAttribute("detalleId", detalle.getId());
@@ -476,6 +774,163 @@ public class InformeProveedorDetalleController extends BaseController {
             throw ex;
         }
         return null;
+    }
+
+    @Transactional
+    @RequestMapping(value = "/autorizar", method = RequestMethod.GET)
+    public String autorizar(HttpServletRequest request, Model modelo, RedirectAttributes redirectAttributes) throws Exception {
+        log.debug("Entrando a Autorizar informe");
+        String checks = request.getParameter("checkFacturasid");
+
+        log.debug("map {}", request.getParameterMap().toString());
+        log.debug("names {}", request.getParameterNames().toString());
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        parameterMap.get("key");
+        Boolean autorizar = false;
+        Boolean rechazar = false;
+        Contrarecibo contrarecibo = null;
+        ArrayList ids = new ArrayList();
+        Enumeration<String> parameterNames = request.getParameterNames();
+        while (parameterNames.hasMoreElements()) {
+            String nombre = parameterNames.nextElement();
+            if (nombre.startsWith("botonAut")) {
+                autorizar = true;
+            }
+            if (nombre.startsWith("botonRe")) {
+                rechazar = true;
+            }
+
+            if (nombre.startsWith("checkFac")) {
+                String[] id = nombre.split("-");
+                log.debug("id ={}", id[1]);
+                ids.add(id[1]);
+            }
+        }
+        Usuario usuario = ambiente.obtieneUsuario();
+        if (autorizar) {
+            log.debug("enviando al metodo para autorizar");
+            try {
+                contrarecibo = manager.autorizar(ids, usuario);
+            } catch (ClabeNoCoincideException e) {
+                log.debug("la clabe de la factura con id= {} no coincide", e);
+                if (e != null) {
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "clabe.no.coincide");
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+                }
+                return "redirect:/factura/revisaProveedor/detalles";
+            } catch (ProveedorNoCoincideException e) {
+                log.debug("el proveedor de la factura con id= {} no coincide", e);
+                if (e != null) {
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "proveedor.no.coincide");
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+                }
+                return "redirect:/factura/revisaProveedor/detalles";
+            } catch (BancoNoCoincideException e) {
+                log.debug("el banco de la factura con id= {} no coincide", e);
+                if (e != null) {
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "banco.no.coincide");
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+                }
+                return "redirect:/factura/revisaProveedor/detalles";
+            } catch (CuentaChequeNoCoincideException e) {
+                log.debug("la cuenta de la factura con id= {} no coincide", e);
+                if (e != null) {
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuenta.no.coincide");
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+                }
+                return "redirect:/factura/revisaProveedor/detalles";
+
+            } catch (FormaPagoNoCoincideException e) {
+                log.debug("la forma de pago de la factura con id= {} no coincide", e);
+                if (e != null) {
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuenta.no.coincide");
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+                }
+                return "redirect:/factura/revisaProveedor/detalles";
+            }
+
+        }
+        if (rechazar) {
+            log.debug("enviando al metodo para rechazar");
+            try {
+                manager.rechazar(ids);
+            } catch (ProveedorNoCoincideException e) {
+                log.debug("el banco de la factura con id= {} no coincide", e);
+                if (e != null) {
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "banco.no.coincide");
+                    redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+                }
+                return "redirect:/factura/revisaProveedor/detalles";
+            }
+        }
+
+        log.debug("check{}", checks);
+//            InformeProveedor informe = manager.obtiene(id);
+//            log.debug("informe...**controller{}", informe);
+//            manager.autorizar(informe, usuario);
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeProveedor.finaliza.message");
+//            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informeProveedor.getNombreProveedor()});
+        request.getSession().setAttribute("contrareciboFecha", contrarecibo);
+        Enumeration reqnames = request.getSession().getAttributeNames();
+        reqnames.hasMoreElements();
+        while (reqnames.hasMoreElements()) {
+            log.debug("nombres {}", reqnames.nextElement());
+        }
+        Map<String, Object> params = new HashMap<>();
+
+        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) request.getSession().getAttribute("proveedorFacturas");
+        modelo.addAttribute("proveedorFacturas", proveedorFacturas);
+        InformeProveedorDetalle detalle = new InformeProveedorDetalle();
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
+//        Contrarecibo contrarecibo = (Contrarecibo) request.getSession().getAttribute("contrareciboFecha");
+        modelo.addAttribute("contrarecibo", contrarecibo);
+        log.debug("contrarecibo {}", contrarecibo);
+
+        log.debug("contrarecibo {}", contrarecibo);
+        return "/factura/informeProveedorDetalle/fecha";
+    }
+
+    @RequestMapping("/fecha")
+    public String asignarFecha(HttpServletRequest request, Model modelo) {
+        log.debug("Nuevo paquete");
+
+
+        return "/factura/informeProveedorDetalle/fecha";
+    }
+
+    @Transactional
+    @RequestMapping(value = "/actualizaFecha", method = RequestMethod.POST)
+    public String actualizaFecha(HttpServletRequest request, HttpServletResponse response, @Valid Contrarecibo contrarecibo,
+            BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws Exception {
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
+        }
+        utils.despliegaBindingResultErrors(bindingResult);
+        if (bindingResult.hasErrors()) {
+            log.debug("Hubo algun error en la forma, regresando");
+            Map<String, Object> params = new HashMap<>();
+            params.put("empresa", request.getSession()
+                    .getAttribute("empresaId"));
+
+            this.despliegaBindingResultErrors(bindingResult);
+
+            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
+        }
+
+        try {
+            Contrarecibo c = (Contrarecibo) request.getSession().getAttribute("contrareciboFecha");
+            Usuario usuario = ambiente.obtieneUsuario();
+            c.setFechaPago(contrarecibo.getFechaPago());
+            contrareciboManager.actualiza(c, usuario);
+        } catch (ConstraintViolationException e) {
+            log.error("No se pudo crear el detalle", e);
+            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
+        }
+
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "detalle.graba.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{contrarecibo.getFechaPago().toString()});
+
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS;
     }
 
     private void generaReporte(String tipo, List<InformeProveedorDetalle> detalle,

@@ -31,6 +31,7 @@ import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.contabilidad.model.EjercicioPK;
 import mx.edu.um.mateo.colportor.model.Asociado;
 import mx.edu.um.mateo.colportor.model.Colportor;
+import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Rol;
@@ -53,15 +54,15 @@ import org.springframework.security.core.userdetails.UserDetails;
  * @author J. David Mendoza <jdmendoza@um.edu.mx>
  */
 public abstract class BaseTest {
+
     protected final transient Logger log = LoggerFactory.getLogger(getClass());
-    
     @Autowired
     private SessionFactory sessionFactory;
-    
+
     protected Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
-            
+
     protected Authentication authenticate(UserDetails principal, String credentials, List<GrantedAuthority> authorities) {
         log.debug("Entrando al metodo 'authenticate' ***");
         Authentication authentication = new TestingAuthenticationToken(principal, credentials, authorities);
@@ -70,33 +71,33 @@ public abstract class BaseTest {
         log.debug("Regresando autenticacion {} ***", authentication);
         return authentication;
     }
-    
-    protected Usuario obtieneUsuario(){
+
+    protected Usuario obtieneUsuario() {
         log.debug("Entrando a 'obtieneUsuario'");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         assertNotNull(organizacion.getId());
-        
+
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         assertNotNull(empresa.getId());
-        
+
         Rol rol = new Rol("ROLE_TEST");
         currentSession().save(rol);
         assertNotNull(rol.getId());
-        
+
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        
+
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         assertNotNull(almacen);
-        
+
         //Creando Ejercicio para usuario
-        EjercicioPK ejPk= new EjercicioPK();
+        EjercicioPK ejPk = new EjercicioPK();
         ejPk.setIdEjercicio("001-2013");
         ejPk.setOrganizacion(organizacion);
-        Ejercicio prueba= new Ejercicio();
+        Ejercicio prueba = new Ejercicio();
         prueba.setMascAuxiliar("Auxiliar");
         prueba.setStatus("A");
         prueba.setId(ejPk);
@@ -107,172 +108,219 @@ public abstract class BaseTest {
         prueba.setNivelTauxiliar(Byte.MIN_VALUE);
         prueba.setNombre("Nombre");
         currentSession().save(prueba);
-        
-        
+
+
         Usuario user = new Usuario("test", "TEST-01", "nombre", "appaterno", "apmaterno", "tset@um.edu.mx");
         user.setEmpresa(empresa);
         user.setAlmacen(almacen);
         user.setRoles(roles);
         user.setEjercicio(prueba);
-        currentSession().save(user);        
+        currentSession().save(user);
         Long id = user.getId();
         assertNotNull(id);
-        
-        log.debug("Usuario creado {}",user);
-        
+
+        log.debug("Usuario creado {}", user);
+
         return user;
     }
-    
+
     /**
-     * Este metodo crea un colportor, pero toma la organizacion, empresa, roles y demas
-     * del usuario que llega por parametro, el cual debe estar debidamente registrado en la DB
-     * 
+     * Este metodo crea un colportor, pero toma la organizacion, empresa, roles
+     * y demas del usuario que llega por parametro, el cual debe estar
+     * debidamente registrado en la DB
+     *
      * @param usuario
      * @param clave Contiene la clave del colportor
-     * @return 
+     * @return
      */
-    protected Usuario obtieneColportor(Usuario usuario, String clave){
+    protected Usuario obtieneColportor(Usuario usuario, String clave) {
         Usuario clp = new Colportor("testC2", "TEST-01", "test@clp.edu.mx", "nombre", "appaterno", "apmaterno", clave, "A", "8262630900", "Libertad", "Matamoros", "Montemorelos", "L", "999999", new Date());
         clp.setEmpresa(usuario.getEmpresa());
         clp.setAlmacen(usuario.getAlmacen());
-        Set<Rol> roles = new HashSet<>();        
+        Set<Rol> roles = new HashSet<>();
         Rol rol = new Rol("ROLE_CLP");
         currentSession().save(rol);
         assertNotNull(rol.getId());
         roles.add(rol);
         clp.setRoles(roles);
-        currentSession().save(clp);        
+        currentSession().save(clp);
         Long id = clp.getId();
         assertNotNull(id);
-        
-        log.debug("Colportor creado {}",clp);
-        
+
+        log.debug("Colportor creado {}", clp);
+
         return clp;
     }
+
     /**
-     * Este metodo crea un colportor, pero toma la organizacion, empresa, roles y demas
-     * del usuario que llega por parametro, el cual debe estar debidamente registrado en la DB
+     * Este metodo crea un colportor, pero toma la organizacion, empresa, roles
+     * y demas del usuario que llega por parametro, el cual debe estar
+     * debidamente registrado en la DB
+     *
      * @param usuario
-     * @return 
+     * @return
      */
-    protected Usuario obtieneColportor(Usuario usuario){
+    protected Usuario obtieneColportor(Usuario usuario) {
         Usuario clp = new Colportor("testC2", "TEST-01", "test@clp.edu.mx", "nombre", "appaterno", "apmaterno", "54321", "A", "8262630900", "Libertad", "Matamoros", "Montemorelos", "L", "999999", new Date());
         clp.setEmpresa(usuario.getEmpresa());
         clp.setAlmacen(usuario.getAlmacen());
-        Set<Rol> roles = new HashSet<>();        
+        Set<Rol> roles = new HashSet<>();
         Rol rol = new Rol("ROLE_CLP");
         currentSession().save(rol);
         assertNotNull(rol.getId());
         roles.add(rol);
         clp.setRoles(roles);
-        currentSession().save(clp);        
+        currentSession().save(clp);
         Long id = clp.getId();
         assertNotNull(id);
-        
-        log.debug("Colportor creado {}",clp);
-        
+
+        log.debug("Colportor creado {}", clp);
+
         return clp;
     }
-    
+
     /**
-     * Este metodo crea un colportor, junto con la organizacion, empresa, roles y demas
-     * @return 
+     * Este metodo crea un colportor, junto con la organizacion, empresa, roles
+     * y demas
+     *
+     * @return
      */
-    protected Usuario obtieneColportor(){
+    protected Usuario obtieneColportor() {
         log.debug("Entrando a 'obtieneColportor'");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         assertNotNull(organizacion.getId());
-        
+
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         assertNotNull(empresa.getId());
-        
+
         Rol rol = new Rol("ROLE_CLP");
         currentSession().save(rol);
         assertNotNull(rol.getId());
-        
+
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        
+
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         assertNotNull(almacen);
-        
+
         Usuario clp = new Colportor("testC", "TEST-01", "test@clp.edu.mx", "nombre", "appaterno", "apmaterno", "54321", "A", "8262630900", "Libertad", "Matamoros", "Montemorelos", "L", "999999", new Date());
         clp.setEmpresa(empresa);
         clp.setAlmacen(almacen);
         clp.setRoles(roles);
-        currentSession().save(clp);        
+        currentSession().save(clp);
         Long id = clp.getId();
         assertNotNull(id);
-        
-        log.debug("Colportor creado {}",clp);
-        
+
+        log.debug("Colportor creado {}", clp);
+
         return clp;
     }
-    
+
     /**
-     * Este metodo recibe un usuario, que ya existe en al DB y contiene todos los datos de
-     * organizacion, empresa y demas.
+     * Este metodo recibe un usuario, que ya existe en al DB y contiene todos
+     * los datos de organizacion, empresa y demas.
+     *
      * @param usuario
-     * @return 
+     * @return
      */
-    protected Usuario obtieneAsociado(Usuario usuario){
+    protected Usuario obtieneAsociado(Usuario usuario) {
         Usuario asoc = new Asociado("testA2", "TEST-01", "test@clp.edu.mx", "nombre", "appaterno", "apmaterno", "A", "54321", "8262630900", "Libertad", "Matamoros", "Montemorelos");
         asoc.setEmpresa(usuario.getEmpresa());
         asoc.setAlmacen(usuario.getAlmacen());
-        Set<Rol> roles = new HashSet<>();        
-        Rol rol = new Rol("ROLE_ASOC");
-        currentSession().save(rol);
-        assertNotNull(rol.getId());
-        roles.add(rol);        
-        asoc.setRoles(roles);
-        currentSession().save(asoc);        
-        Long id = asoc.getId();
-        assertNotNull(id);
-        
-        log.debug("Asociado creado {}",asoc);
-        
-        return asoc;
-    }
-    
-    /**
-     * Este metodo crea un asociado, junto con la organizacion, empresa y demas
-     * @return 
-     */
-    protected Usuario obtieneAsociado(){
-        log.debug("Entrando a 'obtieneAsociado'");
-        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
-        currentSession().save(organizacion);
-        assertNotNull(organizacion.getId());
-        
-        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
-        currentSession().save(empresa);
-        assertNotNull(empresa.getId());
-        
         Set<Rol> roles = new HashSet<>();
-        
         Rol rol = new Rol("ROLE_ASOC");
         currentSession().save(rol);
         assertNotNull(rol.getId());
         roles.add(rol);
-                
+        asoc.setRoles(roles);
+        currentSession().save(asoc);
+        Long id = asoc.getId();
+        assertNotNull(id);
+
+        log.debug("Asociado creado {}", asoc);
+
+        return asoc;
+    }
+
+    /**
+     * Este metodo crea un asociado, junto con la organizacion, empresa y demas
+     *
+     * @return
+     */
+    protected Usuario obtieneAsociado() {
+        log.debug("Entrando a 'obtieneAsociado'");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        assertNotNull(organizacion.getId());
+
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        assertNotNull(empresa.getId());
+
+        Set<Rol> roles = new HashSet<>();
+
+        Rol rol = new Rol("ROLE_ASOC");
+        currentSession().save(rol);
+        assertNotNull(rol.getId());
+        roles.add(rol);
+
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         assertNotNull(almacen);
-        
+
         Usuario asoc = new Asociado("testA", "TEST-01", "test@clp.edu.mx", "nombre", "appaterno", "apmaterno", "A", "54321", "8262630900", "Libertad", "Matamoros", "Montemorelos");
         asoc.setEmpresa(empresa);
         asoc.setAlmacen(almacen);
         asoc.setRoles(roles);
-        currentSession().save(asoc);        
+        currentSession().save(asoc);
         Long id = asoc.getId();
         assertNotNull(id);
-        
-        log.debug("Asociado creado {}",asoc);
-        
+
+        log.debug("Asociado creado {}", asoc);
+
         return asoc;
     }
-    
+
+    /**
+     * Este metodo crea un proveedor, junto con la organizacion, empresa y demas
+     *
+     * @return
+     */
+    protected Usuario obtieneProveedor() {
+        log.debug("Entrando a 'obtieneProveedor'");
+        Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
+        currentSession().save(organizacion);
+        assertNotNull(organizacion.getId());
+
+        Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
+        currentSession().save(empresa);
+        assertNotNull(empresa.getId());
+
+        Set<Rol> roles = new HashSet<>();
+
+        Rol rol = new Rol("ROLE_PRV");
+        currentSession().save(rol);
+        assertNotNull(rol.getId());
+        roles.add(rol);
+
+        Almacen almacen = new Almacen("TST", "TEST", empresa);
+        currentSession().save(almacen);
+        assertNotNull(almacen);
+
+        Usuario proveedor = new ProveedorFacturas("testA", "TEST-01", "nombre", "appaterno", "apmaterno", "test@prv.edu.mx",
+                "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01",
+                "TEST-01", "TEST-01", "TEST-01", "a", "TEST-01");
+        proveedor.setAlmacen(almacen);
+        proveedor.setEmpresa(empresa);
+        proveedor.setRoles(roles);
+        currentSession().save(proveedor);
+        Long id = proveedor.getId();
+        assertNotNull(id);
+        log.debug("Asociado creado {}", proveedor);
+
+        return proveedor;
+    }
 }

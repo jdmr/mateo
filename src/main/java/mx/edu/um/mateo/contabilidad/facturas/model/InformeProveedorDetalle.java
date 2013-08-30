@@ -48,6 +48,8 @@ public class InformeProveedorDetalle implements Serializable {
     private String pathXMl;
     private String nombrePDF;
     private String nombreXMl;
+    @ManyToOne
+    private Contrarecibo contrarecibo;
     @ManyToOne(optional = false)
     private InformeProveedor informeProveedor;
     @ManyToOne(optional = false)
@@ -184,14 +186,21 @@ public class InformeProveedorDetalle implements Serializable {
         this.empresa = empresa;
     }
 
+    public Contrarecibo getContrarecibo() {
+        return contrarecibo;
+    }
+
+    public void setContrarecibo(Contrarecibo contrarecibo) {
+        this.contrarecibo = contrarecibo;
+    }
+
     @Override
     public String toString() {
         return "InformeProveedorDetalle{" + "id=" + id + ", version=" + version + ", RFCProveedor=" + RFCProveedor
                 + ", folioFactura=" + folioFactura + ", nombreProveedor=" + nombreProveedor
-                + ", subtotal=" + subtotal + ", IVA=" + IVA + ", total=" + total
-                + ", status=" + status + ", fechaFactura=" + fechaFactura
-                + ", pathPDF=" + pathPDF + ", pathXMl=" + pathXMl
-                + ", nombrePDF=" + nombrePDF + ", nombreXMl=" + nombreXMl
-                + ", informeProveedor=" + informeProveedor + ", empresa=" + empresa + '}';
+                + ", subtotal=" + subtotal + ", IVA=" + IVA + ", total=" + total + ", status=" + status
+                + ", fechaFactura=" + fechaFactura + ", pathPDF=" + pathPDF + ", pathXMl=" + pathXMl + ", nombrePDF=" + nombrePDF
+                + ", nombreXMl=" + nombreXMl + ", contrarecibo=" + contrarecibo + ", informeProveedor=" + informeProveedor
+                + ", empresa=" + empresa + '}';
     }
 }
