@@ -8,7 +8,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.rh.model.Colegio;
 import org.hibernate.validator.constraints.NotBlank;
@@ -29,7 +28,7 @@ public class TemporadaColportor implements Serializable{
     @ManyToOne
     private Colportor colportor;
     @ManyToOne
-    private Usuario asociado;
+    private Asociado asociado;
     @ManyToOne
     private Temporada temporada;    
     @ManyToOne
@@ -87,7 +86,7 @@ public class TemporadaColportor implements Serializable{
     }
 
     public void setAsociado(Usuario asociado) {
-        this.asociado = asociado;
+        this.asociado = (Asociado)asociado;
     }
 
     public Colportor getColportor() {

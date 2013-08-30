@@ -24,10 +24,10 @@
 package mx.edu.um.mateo.colportor.model;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import mx.edu.um.mateo.general.model.TipoUsuario;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -38,7 +38,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  */
 @Entity
 @DiscriminatorValue("colportor")
-public class Colportor extends Usuario{
+public class Colportor extends Usuario implements TipoUsuario{
 
    @Column(  length = 64)
     private String clave;
@@ -251,5 +251,20 @@ public class Colportor extends Usuario{
     @Override
     public String toString() {
         return "Colportor{" + "clave=" + clave + ", status=" + status + ", tipoDeColportor=" + tipoDeColportor + ", matricula=" + matricula + '}';
+    }
+    
+    @Override
+    public Boolean isTipoUsuario() {
+        return false;
+    }
+
+    @Override
+    public Boolean isTipoAsociado() {
+        return false;
+    }
+
+    @Override
+    public Boolean isTipoColportor() {
+        return true;
     }
 }

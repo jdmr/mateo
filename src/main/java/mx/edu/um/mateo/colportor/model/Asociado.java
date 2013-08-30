@@ -4,12 +4,12 @@
  */
 package mx.edu.um.mateo.colportor.model;
 
-import java.util.HashSet;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.validation.constraints.Size;
+import mx.edu.um.mateo.general.model.TipoUsuario;
 import mx.edu.um.mateo.general.model.Usuario;
 
 /**
@@ -18,7 +18,7 @@ import mx.edu.um.mateo.general.model.Usuario;
  */
 @Entity
 @DiscriminatorValue("asociado")
-public class Asociado extends Usuario {
+public class Asociado extends Usuario implements TipoUsuario {
 
 
     @Column(length = 65)
@@ -148,5 +148,20 @@ public class Asociado extends Usuario {
     @Override
     public String toString() {
         return "Asociado{" + "clave=" + clave + ", telefono=" + telefono + ", status=" + status + ", calle=" + calle + ", colonia=" + colonia + ", municipio=" + municipio + '}';
+    }
+    
+    @Override
+    public Boolean isTipoUsuario() {
+        return false;
+    }
+
+    @Override
+    public Boolean isTipoAsociado() {
+        return true;
+    }
+
+    @Override
+    public Boolean isTipoColportor() {
+        return false;
     }
 }

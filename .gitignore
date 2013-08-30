@@ -11,3 +11,5 @@ target
 .settings
 .classpath
 .project
+/Estudio/nbproject/private/
+/Estudio/build/

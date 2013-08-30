@@ -5,6 +5,7 @@
     <ul class="nav">
         <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
         <li<c:if test="${param.menu eq 'principal'}"> class="active"</c:if>><a href="<c:url value='/colportaje' />"><s:message code="colportaje.label" /></a></li>
+        <li<c:if test="${param.menu eq 'uploadFile'}"> class="active"</c:if>><a href="<s:url value='/uploadFile'/>" ><s:message code="uploadFile.label" /></a></li>
         <li<c:if test="${param.menu eq 'pais'}"> class="active"</c:if>><a href="<s:url value='/colportaje/pais'/>" ><s:message code="pais.label" /></a></li>
         <li<c:if test="${param.menu eq 'estado'}"> class="active"</c:if>><a href="<s:url value='/colportaje/estado'/>" ><s:message code="estado.label" /></a></li>
         <li<c:if test="${param.menu eq 'ciudad'}"> class="active"</c:if>><a href="<s:url value='/colportaje/ciudad'/>" ><s:message code="ciudad.label" /></a></li>
@@ -13,6 +14,8 @@
         <li<c:if test="${param.menu eq 'colegio'}"> class="active"</c:if>><a href="<s:url value='/colportaje/colegio'/>" ><s:message code="colegio.label" /></a></li>
         <li<c:if test="${param.menu eq 'temporada'}"> class="active"</c:if>><a href="<s:url value='/colportaje/temporada'/>" ><s:message code="temporada.label" /></a></li>
         <li<c:if test="${param.menu eq 'temporadaColportor'}"> class="active"</c:if>><a href="<s:url value='/colportaje/temporadaColportor'/>" ><s:message code="temporadaColportor.label" /></a></li>
+        <li<c:if test="${param.menu eq 'documento'}"> class="active"</c:if>><a href="<s:url value='/colportaje/documento'/>" ><s:message code="documento.label" /></a></li>
+        <li<c:if test="${param.menu eq 'importarDatos'}"> class="active"</c:if>><a href="<s:url value='/colportaje/importarDatos'/>" ><s:message code="importarDatos.label" /></a></li>
     </ul>
 </nav>
     

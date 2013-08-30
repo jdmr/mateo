@@ -209,7 +209,7 @@ public class Constantes {
     public static final String ROLE_NOMINA_OPERSS = "NOMOperSS";
     public static final String ROL_ADMINISTRADOR = "ROLE_ADMIN";
     public static final String ROLE_TEST = "ROLE_TEST";
-    public static final String ROLE_ASO = "ROLE_ASO";
+    public static final String ROLE_ASOC = "ROLE_ASOC";
     public static final String ROLE_COL = "ROLE_COL";
     // Constantes Open Id
     public static final String OPEN_ID = "openId";
@@ -2606,7 +2606,7 @@ public class Constantes {
      * Valores para Tipos de Documento
      *
      */
-    public static final String BOLETIN = "Boletín";
+    public static final String BOLETIN = "Boletin";
     public static final String DIEZMO = "Diezmo";
     public static final String DEPOSITO_CAJA = "Deposito_Caja";
     public static final String DEPOSITO_BANCO = "Deposito_Banco";

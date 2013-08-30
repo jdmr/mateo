@@ -197,7 +197,6 @@ public class TemporadaColportorControllerTest extends BaseControllerTest {
                 .param("objetivo", "test")
                 .param("observaciones", "modificado")
                 .param("temporada.id", temporada.getId().toString())
-                .param("asociado.id", asociado.getId().toString())
                 .param("colportor.id", colportor.getId().toString())
                 .param("colegio.id", colegio.getId().toString()))
                 .andExpect(redirectedUrl(Constantes.TEMPORADACOLPORTOR_PATH_VER + "/" + temporadaColportor.getId()))

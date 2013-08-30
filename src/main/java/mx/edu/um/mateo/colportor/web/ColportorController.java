@@ -223,8 +223,8 @@ public class ColportorController extends BaseController {
         try {
             log.debug("Colportor FechaDeNacimiento" + colportores.getFechaDeNacimiento());
             String[] roles = request.getParameterValues("roles");
-            log.debug("Asignando ROLE_ASO por defecto");
-            roles = new String[]{"ROLE_ASO"};
+            log.debug("Asignando ROLE_ASOC por defecto");
+            roles = new String[]{"ROLE_ASOC"};
             modelo.addAttribute("roles", roles);
             colportores = colportorDao.actualiza(colportores, roles);
         } catch (ConstraintViolationException e) {
