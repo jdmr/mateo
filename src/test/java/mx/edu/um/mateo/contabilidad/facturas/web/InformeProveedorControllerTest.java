@@ -138,6 +138,9 @@ public class InformeProveedorControllerTest extends BaseControllerTest {
                 .param("status", "a")
                 .param("formaPago", "T")
                 .param("cuentaCheque", "145272")
+                .param("banco", "banamex")
+                .param("moneda", "p")
+                .param("ccp", "990236")
                 .param("clabe", "145272"))
                 .andExpect(flash().attributeExists("message"))
                 .andExpect(flash().attribute("message", "informeProveedor.graba.message"))
@@ -208,94 +211,5 @@ public class InformeProveedorControllerTest extends BaseControllerTest {
         InformeProveedor informeProveedor1 = manager.obtiene(informeProveedor.getId());
         log.debug("informe...**{}", informeProveedor1);
         assertEquals(Constantes.STATUS_FINALIZADO, informeProveedor1.getStatus());
-    }
-
-    @Test
-    public void testAutoriza() throws Exception {
-        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
-        InformeProveedor informeProveedor = new InformeProveedor();
-        informeProveedor = new InformeProveedor();
-        informeProveedor.setEmpresa(usuario.getEmpresa());
-        informeProveedor.setFechaInforme(new Date());
-        informeProveedor.setNombreProveedor("LAla");
-        informeProveedor.setStatus("A");
-        informeProveedor.setProveedorFacturas(usuario);
-        currentSession().save(informeProveedor);
-        assertNotNull(informeProveedor.getId());
-//      \\\\////
-        ////\\\\
-        InformeProveedorDetalle detalle = null;
-        for (int i = 0; i < 4; i++) {
-            detalle = new InformeProveedorDetalle();
-            detalle.setInformeProveedor(informeProveedor);
-            detalle.setFechaFactura(new Date());
-            detalle.setFolioFactura("1110475");
-            detalle.setIVA(new BigDecimal(".16"));
-            detalle.setNombreProveedor("Lala");
-            detalle.setPathPDF("prueba.pdf");
-            detalle.setPathXMl("prueba.xml");
-            detalle.setRFCProveedor("1147hgas40q");
-            detalle.setSubtotal(new BigDecimal("223"));
-            detalle.setTotal(new BigDecimal("250"));
-            detalle.setEmpresa(usuario.getEmpresa());
-            currentSession().save(detalle);
-            assertNotNull(detalle.getId());
-        }
-        this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
-        this.mockMvc.perform(get("/factura/informeProveedor/autorizar")
-                .param("id", informeProveedor.getId().toString())
-                .sessionAttr("informeId", informeProveedor)
-                .sessionAttr("proveedor", informeProveedor))
-                .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "informeProveedor.finaliza.message"))
-                .andExpect(redirectedUrl("/factura/informeProveedor/encabezados"));
-        currentSession().refresh(informeProveedor);
-        InformeProveedor informeProveedor1 = manager.obtiene(informeProveedor.getId());
-        log.debug("informe...**{}", informeProveedor1);
-        assertEquals(Constantes.STATUS_AUTORIZADO, informeProveedor1.getStatus());
-    }
-
-    @Test
-    public void testRechaza() throws Exception {
-        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
-        InformeProveedor informeProveedor = new InformeProveedor();
-        informeProveedor = new InformeProveedor();
-        informeProveedor.setEmpresa(usuario.getEmpresa());
-        informeProveedor.setFechaInforme(new Date());
-        informeProveedor.setNombreProveedor("LAla");
-        informeProveedor.setStatus("A");
-        informeProveedor.setProveedorFacturas(usuario);
-        currentSession().save(informeProveedor);
-        assertNotNull(informeProveedor.getId());
-//      \\\\////
-        ////\\\\
-        InformeProveedorDetalle detalle = null;
-        for (int i = 0; i < 4; i++) {
-            detalle = new InformeProveedorDetalle();
-            detalle.setInformeProveedor(informeProveedor);
-            detalle.setFechaFactura(new Date());
-            detalle.setFolioFactura("1110475");
-            detalle.setIVA(new BigDecimal(".16"));
-            detalle.setNombreProveedor("Lala");
-            detalle.setPathPDF("prueba.pdf");
-            detalle.setPathXMl("prueba.xml");
-            detalle.setRFCProveedor("1147hgas40q");
-            detalle.setSubtotal(new BigDecimal("223"));
-            detalle.setTotal(new BigDecimal("250"));
-            detalle.setEmpresa(usuario.getEmpresa());
-            currentSession().save(detalle);
-            assertNotNull(detalle.getId());
-        }
-        this.authenticate(usuario, usuario.getPassword(), new ArrayList<GrantedAuthority>(usuario.getRoles()));
-        this.mockMvc.perform(get("/factura/informeProveedor/rechazar")
-                .param("id", informeProveedor.getId().toString())
-                .sessionAttr("informeId", informeProveedor))
-                .andExpect(flash().attributeExists("message"))
-                .andExpect(flash().attribute("message", "informeProveedor.finaliza.message"))
-                .andExpect(redirectedUrl("/factura/informeProveedor/encabezados"));
-        currentSession().refresh(informeProveedor);
-        InformeProveedor informeProveedor1 = manager.obtiene(informeProveedor.getId());
-        log.debug("informe...**{}", informeProveedor1);
-        assertEquals(Constantes.STATUS_RECHAZADO, informeProveedor1.getStatus());
     }
 }
