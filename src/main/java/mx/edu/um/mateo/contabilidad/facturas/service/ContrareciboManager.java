@@ -19,4 +19,6 @@ public interface ContrareciboManager {
     public void graba(Contrarecibo contrarecibo, Usuario usuario);
 
     public Contrarecibo obtiene(Long id);
+
+    public void actualiza(Contrarecibo contrarecibo, Usuario usuario);
 }

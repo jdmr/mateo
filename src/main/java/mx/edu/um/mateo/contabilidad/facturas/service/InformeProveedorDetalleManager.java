@@ -6,6 +6,7 @@ package mx.edu.um.mateo.contabilidad.facturas.service;
 
 import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.contabilidad.facturas.model.Contrarecibo;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
 import mx.edu.um.mateo.general.model.Usuario;
 
@@ -51,7 +52,7 @@ public interface InformeProveedorDetalleManager {
      */
     public String elimina(final Long id);
 
-    public void autorizar(List ids, Usuario usuario) throws Exception;
+    public Contrarecibo autorizar(List ids, Usuario usuario) throws Exception;
 
     public void rechazar(List ids) throws Exception;
 }

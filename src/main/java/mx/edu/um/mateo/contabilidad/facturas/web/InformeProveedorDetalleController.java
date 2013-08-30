@@ -788,6 +788,7 @@ public class InformeProveedorDetalleController extends BaseController {
         parameterMap.get("key");
         Boolean autorizar = false;
         Boolean rechazar = false;
+        Contrarecibo contrarecibo = null;
         ArrayList ids = new ArrayList();
         Enumeration<String> parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
@@ -809,35 +810,35 @@ public class InformeProveedorDetalleController extends BaseController {
         if (autorizar) {
             log.debug("enviando al metodo para autorizar");
             try {
-                manager.autorizar(ids, usuario);
+                contrarecibo = manager.autorizar(ids, usuario);
             } catch (ClabeNoCoincideException e) {
                 log.debug("la clabe de la factura con id= {} no coincide", e);
                 if (e != null) {
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "clabe.no.coincide");
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
                 }
-                return "/factura/revisaProveedor/detalles";
+                return "redirect:/factura/revisaProveedor/detalles";
             } catch (ProveedorNoCoincideException e) {
                 log.debug("el proveedor de la factura con id= {} no coincide", e);
                 if (e != null) {
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "proveedor.no.coincide");
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
                 }
-                return "/factura/revisaProveedor/detalles";
+                return "redirect:/factura/revisaProveedor/detalles";
             } catch (BancoNoCoincideException e) {
                 log.debug("el banco de la factura con id= {} no coincide", e);
                 if (e != null) {
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "banco.no.coincide");
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
                 }
-                return "/factura/revisaProveedor/detalles";
+                return "redirect:/factura/revisaProveedor/detalles";
             } catch (CuentaChequeNoCoincideException e) {
                 log.debug("la cuenta de la factura con id= {} no coincide", e);
                 if (e != null) {
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuenta.no.coincide");
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
                 }
-                return "/factura/revisaProveedor/detalles";
+                return "redirect:/factura/revisaProveedor/detalles";
 
             } catch (FormaPagoNoCoincideException e) {
                 log.debug("la forma de pago de la factura con id= {} no coincide", e);
@@ -845,8 +846,9 @@ public class InformeProveedorDetalleController extends BaseController {
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuenta.no.coincide");
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
                 }
-                return "/factura/revisaProveedor/detalles";
+                return "redirect:/factura/revisaProveedor/detalles";
             }
+
         }
         if (rechazar) {
             log.debug("enviando al metodo para rechazar");
@@ -858,7 +860,7 @@ public class InformeProveedorDetalleController extends BaseController {
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "banco.no.coincide");
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
                 }
-                return "/factura/revisaProveedor/detalles";
+                return "redirect:/factura/revisaProveedor/detalles";
             }
         }
 
@@ -868,9 +870,67 @@ public class InformeProveedorDetalleController extends BaseController {
 //            manager.autorizar(informe, usuario);
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeProveedor.finaliza.message");
 //            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informeProveedor.getNombreProveedor()});
+        request.getSession().setAttribute("contrareciboFecha", contrarecibo);
+        Enumeration reqnames = request.getSession().getAttributeNames();
+        reqnames.hasMoreElements();
+        while (reqnames.hasMoreElements()) {
+            log.debug("nombres {}", reqnames.nextElement());
+        }
+        Map<String, Object> params = new HashMap<>();
+
+        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) request.getSession().getAttribute("proveedorFacturas");
+        modelo.addAttribute("proveedorFacturas", proveedorFacturas);
+        InformeProveedorDetalle detalle = new InformeProveedorDetalle();
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
+//        Contrarecibo contrarecibo = (Contrarecibo) request.getSession().getAttribute("contrareciboFecha");
+        modelo.addAttribute("contrarecibo", contrarecibo);
+        log.debug("contrarecibo {}", contrarecibo);
+
+        log.debug("contrarecibo {}", contrarecibo);
+        return "/factura/informeProveedorDetalle/fecha";
+    }
+
+    @RequestMapping("/fecha")
+    public String asignarFecha(HttpServletRequest request, Model modelo) {
+        log.debug("Nuevo paquete");
 
 
-        return "/factura/revisaProveedor/detalles";
+        return "/factura/informeProveedorDetalle/fecha";
+    }
+
+    @Transactional
+    @RequestMapping(value = "/actualizaFecha", method = RequestMethod.POST)
+    public String actualizaFecha(HttpServletRequest request, HttpServletResponse response, @Valid Contrarecibo contrarecibo,
+            BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws Exception {
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
+        }
+        utils.despliegaBindingResultErrors(bindingResult);
+        if (bindingResult.hasErrors()) {
+            log.debug("Hubo algun error en la forma, regresando");
+            Map<String, Object> params = new HashMap<>();
+            params.put("empresa", request.getSession()
+                    .getAttribute("empresaId"));
+
+            this.despliegaBindingResultErrors(bindingResult);
+
+            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
+        }
+
+        try {
+            Contrarecibo c = (Contrarecibo) request.getSession().getAttribute("contrareciboFecha");
+            Usuario usuario = ambiente.obtieneUsuario();
+            c.setFechaPago(contrarecibo.getFechaPago());
+            contrareciboManager.actualiza(c, usuario);
+        } catch (ConstraintViolationException e) {
+            log.error("No se pudo crear el detalle", e);
+            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
+        }
+
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "detalle.graba.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{contrarecibo.getFechaPago().toString()});
+
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS;
     }
 
     private void generaReporte(String tipo, List<InformeProveedorDetalle> detalle,

@@ -14,6 +14,7 @@ import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
+import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
@@ -118,5 +119,29 @@ public class ContrareciboDaoHibernate extends BaseDao implements ContrareciboDao
             throw new ObjectRetrievalFailureException(InformeProveedor.class, id);
         }
         return contrarecibo;
+    }
+
+    @Override
+    public void actualiza(Contrarecibo contrarecibo, Usuario usuario) {
+        Session session = currentSession();
+        log.debug("informe...**dao entrando{}", contrarecibo);
+        if (usuario != null) {
+            contrarecibo.setEmpresa(usuario.getEmpresa());
+        }
+        try {
+            currentSession().update(contrarecibo);
+            currentSession().flush();
+        } catch (NonUniqueObjectException e) {
+            try {
+                currentSession().merge(contrarecibo);
+                currentSession().flush();
+
+            } catch (Exception ex) {
+                log.error("No se pudo actualizar el informe", ex);
+                throw new RuntimeException("No se pudo actualizar el informe",
+                        ex);
+            }
+        }
+        log.debug("informe...**dao saliendo{}", contrarecibo);
     }
 }

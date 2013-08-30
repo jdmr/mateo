@@ -20,4 +20,6 @@ public interface ContrareciboDao {
     public void crea(Contrarecibo contrarecibo, Usuario usuario);
 
     public Contrarecibo obtiene(Long id);
+
+    public void actualiza(Contrarecibo contrarecibo, Usuario usuario);
 }

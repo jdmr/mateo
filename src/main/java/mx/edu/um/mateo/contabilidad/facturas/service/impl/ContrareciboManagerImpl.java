@@ -9,6 +9,7 @@ import mx.edu.um.mateo.contabilidad.facturas.dao.ContrareciboDao;
 import mx.edu.um.mateo.contabilidad.facturas.model.Contrarecibo;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleadoDetalle;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
 import mx.edu.um.mateo.contabilidad.facturas.service.ContrareciboManager;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
@@ -40,5 +41,10 @@ public class ContrareciboManagerImpl implements ContrareciboManager {
     @Override
     public Contrarecibo obtiene(Long id) {
         return dao.obtiene(new Long(id));
+    }
+
+    @Override
+    public void actualiza(Contrarecibo contrarecibo, Usuario usuario) {
+        dao.actualiza(contrarecibo, usuario);
     }
 }

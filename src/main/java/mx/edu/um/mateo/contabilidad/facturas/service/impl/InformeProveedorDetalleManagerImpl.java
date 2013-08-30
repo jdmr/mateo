@@ -76,7 +76,7 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
     }
 
     @Override
-    public void autorizar(List ids, Usuario usuario) throws Exception {
+    public Contrarecibo autorizar(List ids, Usuario usuario) throws Exception {
         String cuentaCheque;
         String clabe;
         String banco;
@@ -124,6 +124,7 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
             detalle2.setStatus(Constantes.STATUS_AUTORIZADO);
             detalle2.setContrarecibo(contrarecibo);
         }
+        return contrarecibo;
     }
 
     @Override

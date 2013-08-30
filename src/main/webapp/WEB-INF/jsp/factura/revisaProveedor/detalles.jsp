@@ -15,7 +15,6 @@
         <div id="nuevo-colegio" class="content scaffold-list" role="main">
             <h1><s:message code="informeProveedorDetalle.nuevo.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/factura/informeProveedorDetalle'/>"><i class="icon-list icon-white"></i> <s:message code='informeProveedorDetalle.lista.label' /></a>
             </p>
             <form:form commandName="informeProveedorDetalle" action="autorizar" method="get" >
                 <form:errors path="*">
@@ -102,7 +101,6 @@
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="botonAutorizar" class="btn btn-primary btn-large" id="botonAutorizar" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='autorizar.label'/></button>
                     <button type="submit" name="botonRechazar" class="btn btn-primary btn-large" id="botonRechazar" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='rechazar.label'/></button>
-                    <a class="btn btn-large" href="<s:url value='/factura/informeProveedorDetalle'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>
