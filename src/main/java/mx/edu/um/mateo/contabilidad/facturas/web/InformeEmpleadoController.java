@@ -149,6 +149,92 @@ public class InformeEmpleadoController extends BaseController {
         return Constantes.PATH_INFORMEEMPLEADO_LISTA;
     }
 
+    @RequestMapping("/encabezados")
+    public String revisa(HttpServletRequest request, HttpServletResponse response,
+            @RequestParam(required = false) String filtro,
+            @RequestParam(required = false) Long pagina,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) String sort,
+            Usuario usuario,
+            Errors errors,
+            Model modelo) {
+        log.debug("Mostrando lista de informes");
+        Map<String, Object> params = new HashMap<>();
+        Long empresaId = (Long) request.getSession().getAttribute("empresaId");
+        params.put("empresa", empresaId);
+        if (StringUtils.isNotBlank(filtro)) {
+            params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
+        }
+        if (pagina != null) {
+            params.put(Constantes.CONTAINSKEY_PAGINA, pagina);
+            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        } else {
+            pagina = 1L;
+            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        }
+        if (StringUtils.isNotBlank(order)) {
+            params.put(Constantes.CONTAINSKEY_ORDER, order);
+            params.put(Constantes.CONTAINSKEY_SORT, sort);
+        }
+
+        if (StringUtils.isNotBlank(tipo)) {
+            params.put(Constantes.CONTAINSKEY_REPORTE, true);
+            params = manager.lista(params);
+            try {
+                generaReporte(tipo, (List<InformeEmpleado>) params.get(Constantes.CONTAINSKEY_INFORMESEMPLEADO), response);
+                return null;
+            } catch (JRException | IOException e) {
+                log.error("No se pudo generar el reporte", e);
+                params.remove(Constantes.CONTAINSKEY_REPORTE);
+                //errors.reject("error.generar.reporte");
+            }
+        }
+
+        if (StringUtils.isNotBlank(correo)) {
+            params.put(Constantes.CONTAINSKEY_REPORTE, true);
+            params = manager.lista(params);
+
+            params.remove(Constantes.CONTAINSKEY_REPORTE);
+            try {
+                enviaCorreo(correo, (List<InformeEmpleado>) params.get(Constantes.CONTAINSKEY_INFORMESEMPLEADO), request);
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("informe.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+            } catch (JRException | MessagingException e) {
+                log.error("No se pudo enviar el reporte por correo", e);
+            }
+        }
+        params = manager.lista(params);
+        log.debug("params{}", params.get(Constantes.CONTAINSKEY_INFORMESEMPLEADO));
+        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESEMPLEADO, params.get(Constantes.CONTAINSKEY_INFORMESEMPLEADO));
+
+        // inicia paginado
+        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
+        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
+        Long cantidadDePaginas = cantidad / max;
+        List<Long> paginas = new ArrayList<>();
+        long i = 1;
+        do {
+            paginas.add(i);
+        } while (i++ < cantidadDePaginas);
+        List<InformeEmpleado> informes = (List<InformeEmpleado>) params.get(Constantes.CONTAINSKEY_INFORMESEMPLEADO);
+        Long primero = ((pagina - 1) * max) + 1;
+        log.debug("primero {}", primero);
+        log.debug("informes {}", informes.size());
+        Long ultimo = primero + (informes.size() - 1);
+        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
+        log.debug("Paginacion{}", paginacion);
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
+        log.debug("paginas{}", paginas);
+        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        log.debug("Pagina{}", pagina);
+        // termina paginado
+
+        return "/factura/revisa/encabezados";
+    }
+
     @RequestMapping("/ver/{id}")
     public String ver(HttpServletRequest request, @PathVariable Long id, Model modelo) {
         log.debug("Mostrando informe {}", id);
@@ -159,6 +245,15 @@ public class InformeEmpleadoController extends BaseController {
             return "redirect:" + Constantes.PATH_INFORMEEMPLEADODETALLE_LISTA;
         }
         return "redirect:" + Constantes.PATH_INFORMEEMPLEADODETALLE_CONTRARECIBO;
+    }
+
+    @RequestMapping("/revisar/{id}")
+    public String revisar(HttpServletRequest request, @PathVariable Long id, Model modelo) {
+        log.debug("Mostrando informe {}", id);
+        InformeEmpleado informe = manager.obtiene(id);
+        request.getSession().setAttribute("informeEmpleadoId", informe);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEEMPLEADO, informe);
+        return "redirect:/factura/detalle/revisar";
     }
 
     @RequestMapping("/nuevo")
@@ -281,6 +376,46 @@ public class InformeEmpleadoController extends BaseController {
         }
 
         return "redirect:" + Constantes.PATH_INFORMEEMPLEADO_LISTA;
+    }
+
+    @Transactional
+    @RequestMapping(value = "/autorizar", method = RequestMethod.GET)
+    public String autorizar(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute InformeEmpleado informeEmpleado, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        log.debug("Finalizando informe");
+        try {
+            Usuario usuario = ambiente.obtieneUsuario();
+            InformeEmpleado informe = manager.obtiene(id);
+            log.debug("informe...**controller{}", informe);
+            manager.autorizar(informe, usuario);
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informe.finaliza.message");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informeEmpleado.getNombreEmpleado()});
+        } catch (Exception e) {
+            log.error("No se pudo finalizar informe " + id, e);
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEEMPLEADO, new String[]{"informe.no.finaliza.message"}, null, null));
+            return Constantes.PATH_INFORMEEMPLEADO_VER;
+        }
+
+        return "redirect:/factura/informe/encabezados";
+    }
+
+    @Transactional
+    @RequestMapping(value = "/rechazar", method = RequestMethod.GET)
+    public String rechazar(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute InformeEmpleado informeEmpleado, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        log.debug("Finalizando informe");
+        try {
+            Usuario usuario = ambiente.obtieneUsuario();
+            InformeEmpleado informe = manager.obtiene(id);
+            log.debug("informe...**controller{}", informe);
+            manager.rechazar(informe, usuario);
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informe.finaliza.message");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informeEmpleado.getNombreEmpleado()});
+        } catch (Exception e) {
+            log.error("No se pudo finalizar informe " + id, e);
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEEMPLEADO, new String[]{"informe.no.finaliza.message"}, null, null));
+            return Constantes.PATH_INFORMEEMPLEADO_VER;
+        }
+
+        return "redirect:/factura/informe/encabezados";
     }
 
     private void generaReporte(String tipo, List<InformeEmpleado> informe, HttpServletResponse response) throws JRException, IOException {

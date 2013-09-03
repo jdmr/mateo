@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
+import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.test.BaseDaoTest;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -37,7 +38,7 @@ public class InformeProveedorDaoTest extends BaseDaoTest {
 
     @Test
     public void testLista() {
-        Usuario usuario = obtieneUsuario();
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
         InformeProveedor informeProveedor = null;
         for (int i = 0; i < 20; i++) {
             informeProveedor = new InformeProveedor();
@@ -45,6 +46,33 @@ public class InformeProveedorDaoTest extends BaseDaoTest {
             informeProveedor.setFechaInforme(new Date());
             informeProveedor.setNombreProveedor("LAla");
             informeProveedor.setStatus("A");
+            informeProveedor.setProveedorFacturas(usuario);
+            dao.crea(informeProveedor, usuario);
+            assertNotNull(informeProveedor.getId());
+        }
+
+        Map<String, Object> params;
+        params = new TreeMap<>();
+        params.put("empresa", usuario.getEmpresa().getId());
+        params.put("proveedorFacturas", usuario.getId());
+        Map<String, Object> result = dao.lista(params);
+        assertNotNull(result.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR));
+        assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
+        assertEquals(10, ((List<InformeProveedor>) result.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR)).size());
+        assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
+    }
+
+    @Test
+    public void testListaCeros() {
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
+        InformeProveedor informeProveedor = null;
+        for (int i = 0; i < 20; i++) {
+            informeProveedor = new InformeProveedor();
+            informeProveedor.setEmpresa(usuario.getEmpresa());
+            informeProveedor.setFechaInforme(new Date());
+            informeProveedor.setNombreProveedor("LAla");
+            informeProveedor.setStatus("A");
+            informeProveedor.setProveedorFacturas(usuario);
             dao.crea(informeProveedor, usuario);
             assertNotNull(informeProveedor.getId());
         }
@@ -55,18 +83,20 @@ public class InformeProveedorDaoTest extends BaseDaoTest {
         Map<String, Object> result = dao.lista(params);
         assertNotNull(result.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR));
         assertNotNull(result.get(Constantes.CONTAINSKEY_CANTIDAD));
-        assertEquals(10, ((List<InformeProveedor>) result.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR)).size());
-        assertEquals(20, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
+        assertEquals(0, ((List<InformeProveedor>) result.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR)).size());
+        assertEquals(0, ((Long) result.get(Constantes.CONTAINSKEY_CANTIDAD)).intValue());
     }
 
     @Test
     public void testObtiene() {
-        Usuario usuario = obtieneUsuario();
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
         InformeProveedor informeProveedor = new InformeProveedor();
+        informeProveedor = new InformeProveedor();
         informeProveedor.setEmpresa(usuario.getEmpresa());
         informeProveedor.setFechaInforme(new Date());
         informeProveedor.setNombreProveedor("LAla");
         informeProveedor.setStatus("A");
+        informeProveedor.setProveedorFacturas(usuario);
         dao.crea(informeProveedor, usuario);
         assertNotNull(informeProveedor.getId());
         InformeProveedor informeEmpleado1 = dao.obtiene(informeProveedor.getId());
@@ -75,12 +105,14 @@ public class InformeProveedorDaoTest extends BaseDaoTest {
 
     @Test
     public void testCrea() {
-        Usuario usuario = obtieneUsuario();
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
         InformeProveedor informeProveedor = new InformeProveedor();
+        informeProveedor = new InformeProveedor();
         informeProveedor.setEmpresa(usuario.getEmpresa());
         informeProveedor.setFechaInforme(new Date());
         informeProveedor.setNombreProveedor("LAla");
         informeProveedor.setStatus("A");
+        informeProveedor.setProveedorFacturas(usuario);
         dao.crea(informeProveedor, usuario);
         assertNotNull(informeProveedor.getId());
         InformeProveedor informeProveedor1 = dao.obtiene(informeProveedor.getId());
@@ -89,12 +121,14 @@ public class InformeProveedorDaoTest extends BaseDaoTest {
 
     @Test
     public void testActualiza() {
-        Usuario usuario = obtieneUsuario();
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
         InformeProveedor informeProveedor = new InformeProveedor();
+        informeProveedor = new InformeProveedor();
         informeProveedor.setEmpresa(usuario.getEmpresa());
         informeProveedor.setFechaInforme(new Date());
         informeProveedor.setNombreProveedor("LAla");
         informeProveedor.setStatus("A");
+        informeProveedor.setProveedorFacturas(usuario);
         dao.crea(informeProveedor, usuario);
         assertNotNull(informeProveedor.getId());
 
@@ -110,12 +144,14 @@ public class InformeProveedorDaoTest extends BaseDaoTest {
 
     @Test
     public void testElimina() {
-        Usuario usuario = obtieneUsuario();
+        ProveedorFacturas usuario = (ProveedorFacturas) obtieneProveedor();
         InformeProveedor informeProveedor = new InformeProveedor();
+        informeProveedor = new InformeProveedor();
         informeProveedor.setEmpresa(usuario.getEmpresa());
         informeProveedor.setFechaInforme(new Date());
         informeProveedor.setNombreProveedor("LAla");
         informeProveedor.setStatus("A");
+        informeProveedor.setProveedorFacturas(usuario);
         dao.crea(informeProveedor, usuario);
         assertNotNull(informeProveedor.getId());
 

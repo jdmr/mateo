@@ -47,4 +47,7 @@ public interface InformeEmpleadoManager {
     public String elimina(final Long id);
 
     public void finaliza(InformeEmpleado informe, Usuario usuario);
+
+    public void autorizar(InformeEmpleado informe, Usuario usuario);
+    public void rechazar(InformeEmpleado informe, Usuario usuario);
 }
