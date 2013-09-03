@@ -4,12 +4,11 @@
  */
 package mx.edu.um.mateo.contabilidad.facturas.service.impl;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDao;
 import mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDetallesDao;
 import mx.edu.um.mateo.contabilidad.facturas.model.Contrarecibo;
-import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
 import mx.edu.um.mateo.contabilidad.facturas.service.ContrareciboManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorDetalleManager;
