@@ -28,16 +28,7 @@
                 </form:errors>
 
                 <fieldset>
-                    <s:bind path="informeProveedor.nombreProveedor">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="nombreProveedor">
-                                <s:message code="proveedor.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="nombreProveedor" maxlength="50" required="true" />
-                            <form:errors path="nombreProveedor" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+
                     <s:bind path="informeProveedor.status">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="status">
@@ -58,7 +49,84 @@
                             <form:errors path="fechaInforme" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
+
+
+                    <s:bind path="informeProveedor.banco">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="banco">
+                                <s:message code="banco.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="banco" size="18" maxlength="25" required="true" />
+                            <form:errors path="banco" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+
+                    <s:bind path="informeProveedor.formaPago">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="formaPago">
+                                <s:message code="formaPago.label" />
+
+                            </label>
+                            <form:radiobutton path="formaPago"  value="T" cssClass="span3" id="tranferencia"/>Transferencia<br />
+                            <form:radiobutton path="formaPago"  value="C"  cssClass="span3" id="cheque"/>Cheque<br />
+                            <form:errors path="formaPago" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="informeProveedor.clabe">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="clabe">
+                                <s:message code="clabe.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="clabe" size="18" maxlength="25" required="true" />
+                            <form:errors path="clabe" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="informeProveedor.cuentaCheque">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="cuentaCheque">
+                                <s:message code="cuentaCheque.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="cuentaCheque" size="18" maxlength="25" required="true" />
+                            <form:errors path="cuentaCheque" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="informeProveedor.moneda">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="moneda">
+                                <s:message code="moneda.label" />
+
+                            </label>
+                            <form:radiobutton path="moneda"  value="P" cssClass="span3" id="pesos"/>Pesos<br />
+                            <form:radiobutton path="moneda"  value="D"  cssClass="span3" id="dolares"/>Dolares<br />
+                            <form:errors path="moneda" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="informeProveedor.contabilidad">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="contabilidad">
+                                <s:message code="contabilidad.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="contabilidad"   maxlength="12" required="true" />
+                            <form:errors path="contabilidad" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="informeProveedor.ccp">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="ccp">
+                                <s:message code="ccp.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="ccp"   maxlength="12" required="true" />
+                            <form:errors path="ccp" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+
                 </fieldset>
+
 
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
@@ -73,6 +141,18 @@
                 $("input#fechaInforme").datepicker($.datepicker.regional['es']);
                 $("input#fechaInforme").datepicker("option", "firstDay", 0);
             });
+//            function disableCuenta()
+//            {
+//                document.getElementById("cuenta").disabled = true;
+//                document.getElementById("clabe").disabled = false;
+//
+//            }
+//            function disableClave()
+//            {
+//                document.getElementById("clabe").disabled = true;
+//                document.getElementById("cuenta").disabled = false;
+//
+//            }
         </script>
     </content>
 </body>

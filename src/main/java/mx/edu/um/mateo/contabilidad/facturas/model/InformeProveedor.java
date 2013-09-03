@@ -32,16 +32,25 @@ public class InformeProveedor implements Serializable {
     @Version
     private Integer version;
     private String status;
+    private String cuentaCheque;
+    private String clabe;
+    private String formaPago;
     private String nombreProveedor;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     private Date fechaInforme;
     @ManyToOne(optional = false)
     private Empresa empresa;
+    @ManyToOne(optional = false)
+    private ProveedorFacturas proveedorFacturas;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     private Date fechaPago;
     private String contraRecibo;
+    private String moneda;
+    private String contabilidad;
+    private String ccp;
+    private String banco;
 
     public InformeProveedor() {
     }
@@ -110,11 +119,76 @@ public class InformeProveedor implements Serializable {
         this.contraRecibo = contraRecibo;
     }
 
+    public String getFormaPago() {
+        return formaPago;
+    }
+
+    public void setFormaPago(String formaPago) {
+        this.formaPago = formaPago;
+    }
+
+    public String getCuentaCheque() {
+        return cuentaCheque;
+    }
+
+    public void setCuentaCheque(String cuentaCheque) {
+        this.cuentaCheque = cuentaCheque;
+    }
+
+    public String getClabe() {
+        return clabe;
+    }
+
+    public void setClabe(String clabe) {
+        this.clabe = clabe;
+    }
+
+    public ProveedorFacturas getProveedorFacturas() {
+        return proveedorFacturas;
+    }
+
+    public void setProveedorFacturas(ProveedorFacturas proveedorFacturas) {
+        this.proveedorFacturas = proveedorFacturas;
+    }
+
+    public String getMoneda() {
+        return moneda;
+    }
+
+    public void setMoneda(String moneda) {
+        this.moneda = moneda;
+    }
+
+    public String getContabilidad() {
+        return contabilidad;
+    }
+
+    public void setContabilidad(String contabilidad) {
+        this.contabilidad = contabilidad;
+    }
+
+    public String getCcp() {
+        return ccp;
+    }
+
+    public void setCcp(String ccp) {
+        this.ccp = ccp;
+    }
+
+    public String getBanco() {
+        return banco;
+    }
+
+    public void setBanco(String banco) {
+        this.banco = banco;
+    }
+
     @Override
     public String toString() {
-        return "InformeProveedor{" + "id=" + id + ", version=" + version + ", status=" + status
-                + ", nombreProveedor=" + nombreProveedor + ", fechaInforme=" + fechaInforme
-                + ", empresa=" + empresa + ", fechaPago=" + fechaPago
-                + ", contraRecibo=" + contraRecibo + '}';
+        return "InformeProveedor{" + "id=" + id + ", version=" + version + ", status=" + status + ", cuentaCheque=" + cuentaCheque
+                + ", clabe=" + clabe + ", formaPago=" + formaPago + ", nombreProveedor=" + nombreProveedor
+                + ", fechaInforme=" + fechaInforme + ", empresa=" + empresa + ", proveedorFacturas=" + proveedorFacturas
+                + ", fechaPago=" + fechaPago + ", contraRecibo=" + contraRecibo + ", moneda=" + moneda
+                + ", contabilidad=" + contabilidad + ", ccp=" + ccp + ", banco=" + banco + '}';
     }
 }

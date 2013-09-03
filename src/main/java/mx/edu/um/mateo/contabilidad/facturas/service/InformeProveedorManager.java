@@ -8,6 +8,7 @@ import java.util.Map;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
 
 /**
  *
@@ -23,6 +24,8 @@ public interface InformeProveedorManager {
      */
     public Map<String, Object> lista(Map<String, Object> params);
 
+    public Map<String, Object> revisar(Map<String, Object> params);
+
     /**
      * Obtiene una InformeProveedor
      *
@@ -36,7 +39,7 @@ public interface InformeProveedorManager {
      *
      * @param InformeProveedor the object to be saved
      */
-    public void graba(InformeProveedor informeProveedor, Usuario usuario);
+    public void graba(InformeProveedor informeProveedor, Usuario usuario) throws AutorizacionCCPlInvalidoException;
 
     public void actualiza(InformeProveedor informeProveedor, Usuario usuario);
 
@@ -48,4 +51,8 @@ public interface InformeProveedorManager {
     public String elimina(final Long id);
 
     public void finaliza(InformeProveedor informeProveedor, Usuario usuario);
+
+    public void autorizar(InformeProveedor informeProveedor, Usuario usuario);
+
+    public void rechazar(InformeProveedor informeProveedor, Usuario usuario);
 }
