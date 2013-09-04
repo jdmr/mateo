@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Activos" pageWidth="612" pageHeight="396" orientation="Landscape" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cea78ae0-a739-4b15-a614-1046599ff60c">
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.1" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.1" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.2" value="pageFooter"/>
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="empresa" class="java.lang.String"/>
+	<field name="folioFactura" class="java.lang.String"/>
+	<field name="fechaFactura" class="java.lang.String"/>
+	<field name="contrarecibo.id" class="java.lang.Long"/>
+	<field name="informeProveedor.proveedorFacturas.razonSocial" class="java.lang.String"/>
+	<field name="subtotal" class="java.math.BigDecimal"/>
+	<field name="IVA" class="java.math.BigDecimal"/>
+	<field name="total" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="51" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="0de229ce-3c52-4219-8e4d-466d9f204832" x="2" y="20" width="186" height="27"/>
+				<textElement textAlignment="Left">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Contrarecibo]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="aca3964c-47c3-4c73-9a6d-374f4f89b0b4" x="450" y="0" width="122" height="20"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{contrarecibo.id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="6f8ca0f6-b246-43e1-be90-db55580b16f0" x="188" y="20" width="384" height="27"/>
+				<textElement>
+					<font size="20"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{informeProveedor.proveedorFacturas.razonSocial}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="15" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="564f4461-43e6-4b84-ab4c-c377a264282c" x="0" y="0" width="95" height="15"/>
+				<textElement/>
+				<text><![CDATA[Folio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1e026ac9-cf24-4044-8aff-9ed45ce3c11d" x="95" y="0" width="93" height="15"/>
+				<textElement/>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="436d19b5-643e-485b-8916-df89ae6082cd" x="188" y="0" width="83" height="15"/>
+				<textElement/>
+				<text><![CDATA[Subtotal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="20ed7bc9-e696-4d29-923d-b0b638b16efd" x="271" y="0" width="81" height="15"/>
+				<textElement/>
+				<text><![CDATA[IVA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d93fa4d9-e5a0-4a11-b2e5-722d424717ff" x="352" y="0" width="81" height="15"/>
+				<textElement/>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="683571ab-8d18-4842-a718-1b2edf93b5a2" x="2" y="0" width="93" height="15"/>
+				<textElement/>
+				<text><![CDATA[folioFactura]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f2022bca-1e72-4bc4-860b-1f96d99e837c" x="95" y="0" width="93" height="15"/>
+				<textElement/>
+				<text><![CDATA[fechaFactura]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="bdba8aec-7ef0-4cf8-b4de-3517baf4bca4" x="188" y="0" width="83" height="15"/>
+				<textElement/>
+				<text><![CDATA[subtotal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d61e8bd5-f11c-42b8-882e-73ab0ae50ba5" x="271" y="0" width="81" height="15"/>
+				<textElement/>
+				<text><![CDATA[IVA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d8c0d1bb-0cf4-42b8-a3c8-1b0422bcb074" x="352" y="0" width="81" height="15"/>
+				<textElement/>
+				<text><![CDATA[total]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

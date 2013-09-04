@@ -176,6 +176,21 @@ public class InformeProveedorDetalleController extends BaseController {
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
     }
 
+    /**
+     * Listado de detalles del contrarecibo
+     * @param request
+     * @param response
+     * @param filtro
+     * @param pagina
+     * @param tipo
+     * @param correo
+     * @param order
+     * @param sort
+     * @param usuario
+     * @param errors
+     * @param modelo
+     * @return 
+     */
     @RequestMapping("/listaContrarecibo")
     public String listaContrarecibos(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -265,6 +280,21 @@ public class InformeProveedorDetalleController extends BaseController {
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTACONTRARECIBOS;
     }
 
+    /**
+     * Listado de contrarecibos 
+     * @param request
+     * @param response
+     * @param filtro
+     * @param pagina
+     * @param tipo
+     * @param correo
+     * @param order
+     * @param sort
+     * @param usuario
+     * @param errors
+     * @param modelo
+     * @return 
+     */
     @RequestMapping("/contrarecibos")
     public String contrarecibos(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -353,6 +383,21 @@ public class InformeProveedorDetalleController extends BaseController {
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS;
     }
 
+    /**
+     * Listado de facturadas enviadas por el proveedor hacia la UM organizadas por encabezado
+     * @param request
+     * @param response
+     * @param filtro
+     * @param pagina
+     * @param tipo
+     * @param correo
+     * @param order
+     * @param sort
+     * @param usuario
+     * @param errors
+     * @param modelo
+     * @return 
+     */
     @RequestMapping({"/contrarecibo"})
     public String contrarecibo(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -941,17 +986,17 @@ public class InformeProveedorDetalleController extends BaseController {
             case "PDF":
                 archivo = generaPdf(detalle);
                 response.setContentType("application/pdf");
-                response.addHeader("Content-Disposition", "attachment; filename=InformeDetalles.pdf");
+                response.addHeader("Content-Disposition", "attachment; filename=ContrareciboDetalles.pdf");
                 break;
             case "CSV":
                 archivo = generaCsv(detalle);
                 response.setContentType("text/csv");
-                response.addHeader("Content-Disposition", "attachment; filename=InformeDetalles.csv");
+                response.addHeader("Content-Disposition", "attachment; filename=ContrareciboDetalles.csv");
                 break;
             case "XLS":
                 archivo = generaXls(detalle);
                 response.setContentType("application/vnd.ms-excel");
-                response.addHeader("Content-Disposition", "attachment; filename=InformeDetalles.xls");
+                response.addHeader("Content-Disposition", "attachment; filename=ContrareciboDetalles.xls");
         }
         if (archivo != null) {
             response.setContentLength(archivo.length);
@@ -993,7 +1038,7 @@ public class InformeProveedorDetalleController extends BaseController {
 
     private byte[] generaPdf(List detalles) throws JRException {
         Map<String, Object> params = new HashMap<>();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/detalles.jrxml"));
+        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/contabilidad/facturas/reportes/contrarecibo.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(detalles));
         byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
@@ -1005,7 +1050,7 @@ public class InformeProveedorDetalleController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         JRCsvExporter exporter = new JRCsvExporter();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/detalles.jrxml"));
+        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/contrarecibo.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(detalles));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
@@ -1020,7 +1065,7 @@ public class InformeProveedorDetalleController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         JRXlsExporter exporter = new JRXlsExporter();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/detalles.jrxml"));
+        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/contrarecibo.jrxml"));
         JasperReport jasperReport = JasperCompileManager.compileReport(jd);
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(detalles));
         exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
