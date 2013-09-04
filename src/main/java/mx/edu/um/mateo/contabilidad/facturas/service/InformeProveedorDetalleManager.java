@@ -54,5 +54,5 @@ public interface InformeProveedorDetalleManager {
 
     public Contrarecibo autorizar(List ids, Usuario usuario) throws Exception;
 
-    public void rechazar(List ids) throws Exception;
+    public void rechazar(List ids, Usuario usuario) throws Exception;
 }

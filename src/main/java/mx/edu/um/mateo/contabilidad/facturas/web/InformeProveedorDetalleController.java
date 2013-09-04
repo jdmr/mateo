@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -636,6 +637,8 @@ public class InformeProveedorDetalleController extends BaseController {
         InformeProveedor informe = (InformeProveedor) request.getSession().getAttribute("informeId");
         detalle.setInformeProveedor(informe);
         Usuario usuario = ambiente.obtieneUsuario();
+        detalle.setFechaCaptura(new Date());
+        detalle.setUsuarioAlta(usuario);
 
         ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
         detalle.setNombreProveedor(proveedorFacturas.getNombre());
@@ -674,6 +677,9 @@ public class InformeProveedorDetalleController extends BaseController {
 
             return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
         }
+        Usuario usuario = ambiente.obtieneUsuario();
+        detalle.setFechaModificacion(new Date());
+        detalle.setUsuarioMOdificacion(usuario);
 
         try {
             InformeProveedor informe = (InformeProveedor) request.getSession().getAttribute("informeId");
@@ -683,7 +689,6 @@ public class InformeProveedorDetalleController extends BaseController {
             detalle.setNombreXMl(detalleTmp.getNombreXMl());
             detalle.setPathPDF(detalleTmp.getPathPDF());
             detalle.setPathXMl(detalleTmp.getPathXMl());
-            Usuario usuario = ambiente.obtieneUsuario();
             log.debug("Paquete {}", detalle);
             manager.actualiza(detalle, usuario);
         } catch (ConstraintViolationException e) {
@@ -853,7 +858,7 @@ public class InformeProveedorDetalleController extends BaseController {
         if (rechazar) {
             log.debug("enviando al metodo para rechazar");
             try {
-                manager.rechazar(ids);
+                manager.rechazar(ids, usuario);
             } catch (ProveedorNoCoincideException e) {
                 log.debug("el banco de la factura con id= {} no coincide", e);
                 if (e != null) {

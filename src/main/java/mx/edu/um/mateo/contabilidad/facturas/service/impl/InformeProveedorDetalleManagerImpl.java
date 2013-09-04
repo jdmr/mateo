@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.contabilidad.facturas.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDao;
@@ -93,6 +94,8 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
         detalle.setContrarecibo(contrarecibo);
         detalle.setStatus(Constantes.STATUS_AUTORIZADO);
         formaPago = detalle.getInformeProveedor().getFormaPago();
+        detalle.setUsuarioAutRech(usuario);
+        detalle.setFechaAutRech(new Date());
         for (Object id2 : ids) {
             String ide = (String) id2;
             InformeProveedorDetalle detalle2 = dao.obtiene(Long.valueOf(ide));
@@ -101,6 +104,8 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
             String banco2 = detalle2.getInformeProveedor().getBanco();
             String proveedor2 = detalle2.getInformeProveedor().getNombreProveedor();
             String formaPago2 = detalle2.getInformeProveedor().getFormaPago();
+            detalle2.setUsuarioAutRech(usuario);
+            detalle2.setFechaAutRech(new Date());
             if (!cuentaCheque.equals(cuentaCheque2)) {
                 log.debug("las cuentas no coinciden");
                 throw new CuentaChequeNoCoincideException(id.toString());
@@ -128,11 +133,13 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
     }
 
     @Override
-    public void rechazar(List ids) throws Exception {
+    public void rechazar(List ids, Usuario usuario) throws Exception {
         String proveedor;
         String id = (String) ids.get(ids.size() - 1);
         InformeProveedorDetalle detalle = dao.obtiene(Long.valueOf(id));
         proveedor = detalle.getInformeProveedor().getNombreProveedor();
+        detalle.setFechaAutRech(new Date());
+        detalle.setUsuarioAutRech(usuario);
         detalle.setStatus(Constantes.STATUS_RECHAZADO);
         for (Object id2 : ids) {
             String ide = (String) id2;
