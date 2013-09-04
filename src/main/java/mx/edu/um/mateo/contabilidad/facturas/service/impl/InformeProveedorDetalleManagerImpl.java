@@ -84,6 +84,8 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
         String proveedor;
         String formaPago;
         Contrarecibo contrarecibo = new Contrarecibo();
+        contrarecibo.setFechaAlta(new Date());
+        contrarecibo.setUsuarioAlta(usuario);
         contrareciboManager.graba(contrarecibo, usuario);
         String id = (String) ids.get(ids.size() - 1);
         InformeProveedorDetalle detalle = dao.obtiene(Long.valueOf(id));
