@@ -58,6 +58,7 @@ import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -86,6 +87,7 @@ public class ReporteController {
 		return sessionFactory.getCurrentSession();
 	}
 
+        @PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping("/compila/{tipo}/{reporte}")
 	public String compila(@PathVariable String tipo,
 			@PathVariable String reporte, RedirectAttributes redirectAttributes) {
@@ -111,6 +113,7 @@ public class ReporteController {
 		return "redirect:/";
 	}
 
+        @PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping("/inicializa")
 	public String inicializa(HttpServletRequest request,
 			RedirectAttributes redirectAttributes) {
