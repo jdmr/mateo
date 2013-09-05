@@ -7,6 +7,7 @@ package mx.edu.um.mateo.contabilidad.facturas.model;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +17,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Usuario;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -36,6 +38,16 @@ public class Contrarecibo implements Serializable {
     private Date fechaPago;
     @ManyToOne(optional = false)
     private Empresa empresa;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Usuario usuarioAlta;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Temporal(TemporalType.DATE)
+    private Date fechaAlta;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Usuario usuarioModificacion;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Temporal(TemporalType.DATE)
+    private Date fechaModificacion;
 
     public Contrarecibo() {
     }
@@ -72,8 +84,42 @@ public class Contrarecibo implements Serializable {
         this.empresa = empresa;
     }
 
+    public Usuario getUsuarioAlta() {
+        return usuarioAlta;
+    }
+
+    public void setUsuarioAlta(Usuario usuarioAlta) {
+        this.usuarioAlta = usuarioAlta;
+    }
+
+    public Date getFechaAlta() {
+        return fechaAlta;
+    }
+
+    public void setFechaAlta(Date fechaAlta) {
+        this.fechaAlta = fechaAlta;
+    }
+
+    public Usuario getUsuarioModificacion() {
+        return usuarioModificacion;
+    }
+
+    public void setUsuarioModificacion(Usuario usuarioModificacion) {
+        this.usuarioModificacion = usuarioModificacion;
+    }
+
+    public Date getFechaModificacion() {
+        return fechaModificacion;
+    }
+
+    public void setFechaModificacion(Date fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
+    }
+
     @Override
     public String toString() {
-        return "Contrarecibo{" + "id=" + id + ", version=" + version + ", fechaPago=" + fechaPago + ", empresa=" + empresa + '}';
+        return "Contrarecibo{" + "id=" + id + ", version=" + version + ", fechaPago=" + fechaPago + ", empresa=" + empresa
+                + ", usuarioAlta=" + usuarioAlta + ", fechaAlta=" + fechaAlta + ", usuarioModificacion=" + usuarioModificacion
+                + ", fechaModificacion=" + fechaModificacion + '}';
     }
 }
