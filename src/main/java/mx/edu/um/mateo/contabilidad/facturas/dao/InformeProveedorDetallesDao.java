@@ -15,10 +15,25 @@ import mx.edu.um.mateo.general.model.Usuario;
  */
 public interface InformeProveedorDetallesDao {
 
+    /**
+     * Regresa listado de detalles por encabezado
+     * @param params
+     * @return 
+     */
     public Map<String, Object> lista(Map<String, Object> params);
 
+    /**
+     * Regresa listado de detalles por contrarrecibo
+     * @param params
+     * @return 
+     */
     public Map<String, Object> contrarecibo(Map<String, Object> params);
 
+    /**
+     * Regresa listado de todos los detalles con estatus ACTIVO
+     * @param params
+     * @return 
+     */
     public Map<String, Object> revisar(Map<String, Object> params);
 
     /**
