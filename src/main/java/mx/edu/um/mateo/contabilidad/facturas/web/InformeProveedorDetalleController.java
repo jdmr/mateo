@@ -639,6 +639,7 @@ public class InformeProveedorDetalleController extends BaseController {
         Usuario usuario = ambiente.obtieneUsuario();
         detalle.setFechaCaptura(new Date());
         detalle.setUsuarioAlta(usuario);
+        detalle.setStatus(Constantes.STATUS_ACTIVO);
 
         ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
         detalle.setNombreProveedor(proveedorFacturas.getNombre());
