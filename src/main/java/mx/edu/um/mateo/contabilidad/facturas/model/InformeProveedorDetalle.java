@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,6 +19,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Usuario;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -54,6 +56,20 @@ public class InformeProveedorDetalle implements Serializable {
     private InformeProveedor informeProveedor;
     @ManyToOne(optional = false)
     private Empresa empresa;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Usuario usuarioAlta;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Usuario usuarioMOdificacion;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Usuario usuarioAutRech;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Temporal(TemporalType.DATE)
+    private Date fechaCaptura;
+    @Temporal(TemporalType.DATE)
+    private Date fechaAutRech;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Temporal(TemporalType.DATE)
+    private Date fechaModificacion;
 
     public InformeProveedorDetalle() {
     }
@@ -194,13 +210,62 @@ public class InformeProveedorDetalle implements Serializable {
         this.contrarecibo = contrarecibo;
     }
 
+    public Usuario getUsuarioAlta() {
+        return usuarioAlta;
+    }
+
+    public void setUsuarioAlta(Usuario usuarioAlta) {
+        this.usuarioAlta = usuarioAlta;
+    }
+
+    public Usuario getUsuarioMOdificacion() {
+        return usuarioMOdificacion;
+    }
+
+    public void setUsuarioMOdificacion(Usuario usuarioMOdificacion) {
+        this.usuarioMOdificacion = usuarioMOdificacion;
+    }
+
+    public Date getFechaCaptura() {
+        return fechaCaptura;
+    }
+
+    public void setFechaCaptura(Date fechaCaptura) {
+        this.fechaCaptura = fechaCaptura;
+    }
+
+    public Date getFechaModificacion() {
+        return fechaModificacion;
+    }
+
+    public void setFechaModificacion(Date fechaModificacion) {
+        this.fechaModificacion = fechaModificacion;
+    }
+
+    public Usuario getUsuarioAutRech() {
+        return usuarioAutRech;
+    }
+
+    public void setUsuarioAutRech(Usuario usuarioAutRech) {
+        this.usuarioAutRech = usuarioAutRech;
+    }
+
+    public Date getFechaAutRech() {
+        return fechaAutRech;
+    }
+
+    public void setFechaAutRech(Date fechaAutRech) {
+        this.fechaAutRech = fechaAutRech;
+    }
+
     @Override
     public String toString() {
-        return "InformeProveedorDetalle{" + "id=" + id + ", version=" + version + ", RFCProveedor=" + RFCProveedor
-                + ", folioFactura=" + folioFactura + ", nombreProveedor=" + nombreProveedor
-                + ", subtotal=" + subtotal + ", IVA=" + IVA + ", total=" + total + ", status=" + status
+        return "InformeProveedorDetalle{" + "id=" + id + ", version=" + version + ", RFCProveedor=" + RFCProveedor + ", folioFactura=" + folioFactura
+                + ", nombreProveedor=" + nombreProveedor + ", subtotal=" + subtotal + ", IVA=" + IVA + ", total=" + total + ", status=" + status
                 + ", fechaFactura=" + fechaFactura + ", pathPDF=" + pathPDF + ", pathXMl=" + pathXMl + ", nombrePDF=" + nombrePDF
                 + ", nombreXMl=" + nombreXMl + ", contrarecibo=" + contrarecibo + ", informeProveedor=" + informeProveedor
-                + ", empresa=" + empresa + '}';
+                + ", empresa=" + empresa + ", usuarioAlta=" + usuarioAlta + ", usuarioMOdificacion=" + usuarioMOdificacion
+                + ", usuarioAutRech=" + usuarioAutRech + ", fechaCaptura=" + fechaCaptura + ", fechaAutRech=" + fechaAutRech
+                + ", fechaModificacion=" + fechaModificacion + '}';
     }
 }
