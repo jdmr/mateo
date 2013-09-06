@@ -22,8 +22,7 @@ public class Asociado extends Usuario implements TipoUsuario {
 
 
     @Column(length = 65)
-    private String clave;
-    @Size(min = 10, max = 12)
+    private String clave;    
     @Column(length = 12)
     private String telefono;
     @Column(length = 23)

@@ -102,7 +102,7 @@ public class TraspasoDaoHibernate extends BaseDao implements TraspasoDao {
                 + "select "
                 + "case when tipo_user = 'S' then 'asociado' when tipo_user = 'Alum' or tipo_user = 'Lin' then 'colportor' end as entity_type, "
                 + "id, 'FALSE', 'FALSE', last_name, '.', email, 'FALSE', 'TRUE', first_name, '71fe4783816d1cf739450b7b9a3fa0a92ce6e591' as password, "
-                + "clave, version, 'A', 'Direccion','Colonia','Municipio','8262630900' as telefono,now(), '0000000', 'tipoClp', "
+                + "clave, version, 'A', address,postal_code,city,phone_number as telefono,now(), '0000000', 'tipoClp', "
                 + "1, '001-2013', 1, 1 "
                 + "from app_user u "
                 + ") a "
@@ -113,19 +113,25 @@ public class TraspasoDaoHibernate extends BaseDao implements TraspasoDao {
         PreparedStatement pstmt = null;
         ResultSet rset = null;
         List <Usuario> mapa = new ArrayList<>();
+        
+        String telefono = "";        
 
         try {
             pstmt = dsPg.getConnection().prepareStatement(COMANDO);
             rset = pstmt.executeQuery();
             while (rset.next()) {
+                
+                telefono = (rset.getString("telefono")== null || rset.getString("telefono").isEmpty()) ? "8262630900" : rset.getString("telefono").trim() ;
+                log.debug("telefono {}", telefono);
+                
                 if (rset.getString("entity_type").equals("asociado")) {
                     usuario = new Asociado(
                             rset.getString("email"), rset.getString("password"), rset.getString("email"), rset.getString("first_name"), rset.getString("last_name"), ".",
-                            "A", ".", "8262630900", "Av. Libertad 1300", "Barrio Matamoros", "Montemorelos");
+                            "A", ".", rset.getString("telefono"), rset.getString("address"), rset.getString("postal_code"), rset.getString("city"));
                 } else if (rset.getString("entity_type").equals("colportor")) {
                     usuario = new Colportor(
                             rset.getString("email"), rset.getString("password"), rset.getString("email"), rset.getString("first_name"), rset.getString("last_name"), ".",
-                            rset.getString("clave"), "A", "8262630900", "Av. Libertad 1300", "Barrio Matamoros", "Montemorelos",
+                            rset.getString("clave"), "A", rset.getString("telefono"), rset.getString("address"), rset.getString("postal_code"), rset.getString("city"),
                             "tipoClp", "0000000", new Date());
                     if (((Colportor) usuario).getClave() == null) {
                         usuario.setUsername(usuario.getCorreo());
