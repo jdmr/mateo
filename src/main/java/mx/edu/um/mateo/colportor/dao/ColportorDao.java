@@ -132,6 +132,13 @@ public class ColportorDao {
 
         return params;
     }
+     
+    public Map<String, Object> obtieneColportores(Map<String, Object> params) {
+        Criteria criteria = currentSession().createCriteria(Colportor.class);
+        criteria.createCriteria("empresa").add(Restrictions.eq("id",params.get("empresa")));
+        params.put(Constantes.COLPORTOR_LIST, criteria.list());
+        return params;
+    }
 
     public Colportor obtiene(Long id) {
         log.debug("Obtiene colportor con id = {}", id);
