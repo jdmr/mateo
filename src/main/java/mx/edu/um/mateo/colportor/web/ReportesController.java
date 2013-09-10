@@ -24,10 +24,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-/**
- *
- * @author wilbert
- */
+
 @Controller
 @RequestMapping(Constantes.PATH_RPT_CLP)
 public class ReportesController extends BaseController {
@@ -55,6 +52,12 @@ public class ReportesController extends BaseController {
             Errors errors,
             Model modelo) {
         log.debug("Mostrando censo de Colportores");
+        log.debug("filtro {}", filtro);
+        log.debug("pagina {}", pagina);
+        log.debug("tipo {}", tipo);
+        log.debug("correo {}", correo);
+        log.debug("order {}", order);
+        log.debug("sort {}", sort);
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
 
@@ -66,16 +69,19 @@ public class ReportesController extends BaseController {
             params.put(Constantes.CONTAINSKEY_SORT, sort);
         }
         if (StringUtils.isNotBlank(tipo)) {
+            log.debug("Entrando a tipo");
             params.put("reporte", true);
             try {
                 params = rclpMgr.censoColportores(params);
             } catch (Exception ex) {
                 log.error("Error al intentar obtener el censo de colportores");
             }
-
+            log.debug("Obtuvo listado");
             try {
+                log.debug("Generando reporte");
                 generaReporte(tipo, (List<Colportor>) params.get("censoColportores"), response,
                         "censoColportores", Constantes.EMP, ambiente.obtieneUsuario().getEmpresa().getId());
+                log.debug("Genero reporte");
                 return null;
             } catch (Exception e) {
                 log.error("No se pudo generar el reporte", e);

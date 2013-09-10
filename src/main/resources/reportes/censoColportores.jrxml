@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="censoColportores" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d76e1d2c-e29e-4c52-8675-294895197b99">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="colportor.clave" class="java.lang.String"/>
+	<field name="colportor.nombre" class="java.lang.String"/>
+	<field name="colportor.apPaterno" class="java.lang.String"/>
+	<field name="colportor.apMaterno" class="java.lang.String"/>
+	<field name="colportor.calle" class="java.lang.String"/>
+	<field name="colportor.municipio" class="java.lang.String"/>
+	<field name="colportor.colonia" class="java.lang.String"/>
+	<field name="colportor.telefono" class="java.lang.String"/>
+	<field name="colportor.correo" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="44" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="80c19d35-9b68-4f8a-9f67-a173e7ec4510" x="0" y="1" width="802" height="43"/>
+				<textElement>
+					<font size="28"/>
+				</textElement>
+				<text><![CDATA[Censo de Colportores]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="db6c0f3e-645b-402f-beb4-009f6833b505" x="678" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="3c524d58-a19e-4773-a8de-2ac7f5b12532" x="758" y="0" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="09ed004a-e9bc-42be-99b5-00774d0779f3" x="0" y="0" width="47" height="20"/>
+				<textElement/>
+				<text><![CDATA[Clave]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e4f30d86-715f-4878-af3d-32f0adbbaad9" x="47" y="0" width="111" height="20"/>
+				<textElement/>
+				<text><![CDATA[Nombre]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b301d386-64c4-4679-a1dc-6efeeb9741c9" x="158" y="0" width="124" height="20"/>
+				<textElement/>
+				<text><![CDATA[Ap. Paterno]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="727b202c-61a9-4f75-9d5c-4d0d7e6f0b65" x="282" y="0" width="144" height="20"/>
+				<textElement/>
+				<text><![CDATA[Direccion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9f87b1af-05b7-4f10-8f2b-6bd35b374e64" x="426" y="0" width="80" height="20"/>
+				<textElement/>
+				<text><![CDATA[Municipio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="61906e98-46b6-4e42-9623-f6a8d2e7c594" x="506" y="0" width="36" height="20"/>
+				<textElement/>
+				<text><![CDATA[CP]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="dd984d2b-968f-466a-ad35-90fff92a2237" x="542" y="0" width="81" height="20"/>
+				<textElement/>
+				<text><![CDATA[Telefono]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="351f4bcc-bb5e-47ec-9443-3432887e3f60" x="623" y="0" width="147" height="20"/>
+				<textElement/>
+				<text><![CDATA[Correo]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="47" splitType="Stretch">
+			<textField>
+				<reportElement uuid="160085ff-908b-4044-930a-f0562c40dc75" x="0" y="0" width="47" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{colportor.clave}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="83083305-a138-483e-9dbb-a4fefdbf5039" x="47" y="0" width="111" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{colportor.nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a505fbab-b4d1-44fe-b528-ba8ee91edec4" x="158" y="0" width="124" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{colportor.apPaterno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="134ee3e1-dcea-44da-b5e8-2534bf69da17" x="282" y="0" width="144" height="47"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{colportor.calle}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c363ef56-f6dd-43b8-a195-cda7583b7f73" x="426" y="0" width="80" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{colportor.municipio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="356d1445-b905-4221-84e3-6f2394487fb8" x="506" y="0" width="36" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{colportor.colonia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b22b0f37-5ee4-4709-b665-9e7a97edcb7b" x="542" y="0" width="81" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{colportor.telefono}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="9267373d-a7f5-4e71-a053-75539e9ad9d9" x="623" y="0" width="147" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{colportor.correo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

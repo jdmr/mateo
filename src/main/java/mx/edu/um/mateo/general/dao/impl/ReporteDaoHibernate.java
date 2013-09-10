@@ -149,9 +149,15 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
     @Override
     @Transactional(readOnly = true)
     public JasperReport obtieneReportePorEmpresa(String nombre, Long empresaId) {
-        System.out.println("Datos:"+nombre+":"+empresaId);
+        log.info("Datos: {} : {} ", nombre,empresaId);
         Reporte reporte = buscaReportePorEmpresa(nombre, empresaId);
-        System.out.println(reporte.toString());
+        try {
+            log.info("{}", reporte.toString());
+        } catch (Exception e) {
+            log.error("No se pudo obtener el reporte {} de la empresa {}", nombre, empresaId);
+            e.printStackTrace();
+            return null;
+        }
         return reporte.getReporte();
     }
 
@@ -251,6 +257,8 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
         nombres.add("usuarios");
         nombres.add("activos");
         nombres.add("tiposDeActivo");
+        //Colportores
+        nombres.add("censoColportores");
 
         empresa.getReportes().clear();
         empresa.getReportes().addAll(inicializaReportes(nombres));
