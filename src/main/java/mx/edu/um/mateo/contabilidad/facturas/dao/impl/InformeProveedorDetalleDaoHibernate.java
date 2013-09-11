@@ -16,6 +16,7 @@ import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.inscripciones.model.ccobro.utils.Constants;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
@@ -36,6 +37,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class InformeProveedorDetalleDaoHibernate extends BaseDao implements InformeProveedorDetallesDao {
 
+    /**
+     * @see mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDetallesDao#lista(Map<String, Object> params)
+     */
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de detalles de informe proveedor con params {}", params);
@@ -82,6 +86,8 @@ public class InformeProveedorDetalleDaoHibernate extends BaseDao implements Info
                     MatchMode.ANYWHERE));
             propiedades.add(Restrictions.ilike("folioFactura", filtro,
                     MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("RFCProveedor", filtro,
+                    MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -115,6 +121,9 @@ public class InformeProveedorDetalleDaoHibernate extends BaseDao implements Info
         return params;
     }
 
+    /**
+     * @see mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDetallesDao#contrarecibo(Map<String, Object> params)
+     */
     @Override
     public Map<String, Object> contrarecibo(Map<String, Object> params) {
         log.debug("Buscando lista de detalles de informe proveedor con params {}", params);
@@ -161,6 +170,8 @@ public class InformeProveedorDetalleDaoHibernate extends BaseDao implements Info
                     MatchMode.ANYWHERE));
             propiedades.add(Restrictions.ilike("folioFactura", filtro,
                     MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("RFCProveedor", filtro,
+                    MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
         }
@@ -194,6 +205,9 @@ public class InformeProveedorDetalleDaoHibernate extends BaseDao implements Info
         return params;
     }
 
+    /**
+     * @see mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDetallesDao#revisar(Map<String, Object> params)
+     */
     @Override
     public Map<String, Object> revisar(Map<String, Object> params) {
         log.debug("Buscando lista de detalles de informe proveedor con params {}", params);
@@ -226,7 +240,8 @@ public class InformeProveedorDetalleDaoHibernate extends BaseDao implements Info
                     Restrictions.idEq(params.get("empresa")));
         }
 
-
+        criteria.add(Restrictions.eq("status", Constants.STATUS_ACTIVO));
+        countCriteria.add(Restrictions.eq("status", Constants.STATUS_ACTIVO));
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
@@ -234,6 +249,8 @@ public class InformeProveedorDetalleDaoHibernate extends BaseDao implements Info
             propiedades.add(Restrictions.ilike("nombreProveedor", filtro,
                     MatchMode.ANYWHERE));
             propiedades.add(Restrictions.ilike("folioFactura", filtro,
+                    MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("RFCProveedor", filtro,
                     MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);

@@ -79,7 +79,7 @@ public class Usuario  implements Serializable, UserDetails, TipoUsuario {
     @Version
     private Integer version;
     @NotEmpty
-    @Column(unique = true, nullable = false, length = 128)
+    @Column(unique = true, nullable = false)
     protected String username;
     @Column(nullable = false)
     protected String password;
@@ -94,13 +94,13 @@ public class Usuario  implements Serializable, UserDetails, TipoUsuario {
     @Column(nullable = false, name = "credentials_expired")
     private Boolean credentialsExpired = false;
     @NotEmpty
-    @Column(nullable = false, length = 128)
+    @Column(nullable = false)
     private String nombre;
     @NotEmpty
-    @Column(nullable = false, length = 128)
+    @Column(nullable = false)
     protected String apPaterno;
     @NotEmpty
-    @Column(nullable = false, length = 128)
+    @Column(nullable = false)
     protected String apMaterno;
     
     @Email

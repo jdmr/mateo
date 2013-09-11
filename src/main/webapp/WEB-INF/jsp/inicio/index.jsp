@@ -21,7 +21,7 @@
             <a class="close" data-dismiss="alert">×</a>
             <h1 class="alert-heading">Novedades</h1>
             <p>Vamos a estar usando este lugar para ir informándoles acerca de las novedades y arreglos a problemas (bugs) del sistema:</p>
-            <h2 class="alert-heading">Inventario</h2>
+<%/*            <h2 class="alert-heading">Inventario</h2>
             <ul>
                 <li>
                     En la lista de salidas y entradas sólo se muestran las del mes en curso, si desean ver más, opriman la flecha que se encuentra
@@ -47,7 +47,7 @@
                     que tenganle paciencia. Esto se debe a que va y busca el historial más reciente producto por producto y esto toma tiempo. En 
                     cuanto tengamos una mejor solución, la publicaremos pero por lo pronto esta funciona.
                 </li>
-            </ul>
+            </ul>*/%>
             <h3 class="alert-heading">Gracias.</h3>
         </div>
     </body>

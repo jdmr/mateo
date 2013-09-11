@@ -34,6 +34,7 @@ import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.colportor.model.Union;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.dao.ReporteDao;
+import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
 import mx.edu.um.mateo.general.model.Reporte;
@@ -46,6 +47,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.hibernate.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,6 +58,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
+    
+    @Autowired
+    private UsuarioDao uDao;
 
     public ReporteDaoHibernate() {
         log.info("Se ha creado una nueva instancia de ReporteDao");
@@ -144,9 +149,15 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
     @Override
     @Transactional(readOnly = true)
     public JasperReport obtieneReportePorEmpresa(String nombre, Long empresaId) {
-        System.out.println("Datos:"+nombre+":"+empresaId);
+        log.info("Datos: {} : {} ", nombre,empresaId);
         Reporte reporte = buscaReportePorEmpresa(nombre, empresaId);
-        System.out.println(reporte.toString());
+        try {
+            log.info("{}", reporte.toString());
+        } catch (Exception e) {
+            log.error("No se pudo obtener el reporte {} de la empresa {}", nombre, empresaId);
+            e.printStackTrace();
+            return null;
+        }
         return reporte.getReporte();
     }
 
@@ -246,6 +257,8 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
         nombres.add("usuarios");
         nombres.add("activos");
         nombres.add("tiposDeActivo");
+        //Colportores
+        nombres.add("censoColportores");
 
         empresa.getReportes().clear();
         empresa.getReportes().addAll(inicializaReportes(nombres));
@@ -329,6 +342,9 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
     @Override
     public void compila(String nombre, String tipo, Usuario usuario) {
         log.debug("Compilando {} de {}", nombre, tipo);
+        
+        usuario = uDao.obtiene(usuario.getUsername());
+        
         Reporte reporte = null;
         switch (tipo) {
             case Constantes.ADMIN:

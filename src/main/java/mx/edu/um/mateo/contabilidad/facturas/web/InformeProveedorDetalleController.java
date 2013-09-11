@@ -37,6 +37,7 @@ import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.CuentaChequeNoCoincideException;
 import mx.edu.um.mateo.general.utils.FormaPagoNoCoincideException;
 import mx.edu.um.mateo.general.utils.ProveedorNoCoincideException;
+import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inscripciones.model.FileUploadForm;
 import net.sf.jasperreports.engine.JRException;
@@ -125,9 +126,10 @@ public class InformeProveedorDetalleController extends BaseController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = manager.lista(params);
             try {
-                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), response);
+                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), 
+                        response, "contrarecibo", Constantes.EMP, empresaId);
                 return null;
-            } catch (JRException | IOException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
                 params.remove(Constantes.CONTAINSKEY_REPORTE);
                 //errors.reject("error.generar.reporte");
@@ -140,10 +142,11 @@ public class InformeProveedorDetalleController extends BaseController {
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), request);
+                enviaCorreo(correo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE),
+                        request, "contrarecibo", Constantes.EMP, empresaId);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("detalle.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
-            } catch (JRException | MessagingException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
@@ -177,6 +180,21 @@ public class InformeProveedorDetalleController extends BaseController {
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
     }
 
+    /**
+     * Listado de detalles del contrarecibo
+     * @param request
+     * @param response
+     * @param filtro
+     * @param pagina
+     * @param tipo
+     * @param correo
+     * @param order
+     * @param sort
+     * @param usuario
+     * @param errors
+     * @param modelo
+     * @return 
+     */
     @RequestMapping("/listaContrarecibo")
     public String listaContrarecibos(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -212,11 +230,12 @@ public class InformeProveedorDetalleController extends BaseController {
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = manager.contrarecibo(params);
+            params = manager.lista(params);
             try {
-                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), response);
+                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), 
+                        response, "contrarecibo", Constantes.EMP, empresaId);
                 return null;
-            } catch (JRException | IOException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
                 params.remove(Constantes.CONTAINSKEY_REPORTE);
                 //errors.reject("error.generar.reporte");
@@ -225,14 +244,15 @@ public class InformeProveedorDetalleController extends BaseController {
 
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = manager.contrarecibo(params);
+            params = manager.lista(params);
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), request);
+                enviaCorreo(correo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE),
+                        request, "contrarecibo", Constantes.EMP, empresaId);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("detalle.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
-            } catch (JRException | MessagingException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
@@ -266,6 +286,21 @@ public class InformeProveedorDetalleController extends BaseController {
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTACONTRARECIBOS;
     }
 
+    /**
+     * Listado de contrarecibos 
+     * @param request
+     * @param response
+     * @param filtro
+     * @param pagina
+     * @param tipo
+     * @param correo
+     * @param order
+     * @param sort
+     * @param usuario
+     * @param errors
+     * @param modelo
+     * @return 
+     */
     @RequestMapping("/contrarecibos")
     public String contrarecibos(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -300,11 +335,12 @@ public class InformeProveedorDetalleController extends BaseController {
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = contrareciboManager.lista(params);
+            params = manager.lista(params);
             try {
-                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_CONTRARECIBOS), response);
+                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), 
+                        response, "contrarecibo", Constantes.EMP, empresaId);
                 return null;
-            } catch (JRException | IOException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
                 params.remove(Constantes.CONTAINSKEY_REPORTE);
                 //errors.reject("error.generar.reporte");
@@ -313,14 +349,15 @@ public class InformeProveedorDetalleController extends BaseController {
 
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = contrareciboManager.lista(params);
+            params = manager.lista(params);
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_CONTRARECIBOS), request);
+                enviaCorreo(correo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE),
+                        request, "contrarecibo", Constantes.EMP, empresaId);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("detalle.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
-            } catch (JRException | MessagingException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
@@ -354,6 +391,21 @@ public class InformeProveedorDetalleController extends BaseController {
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS;
     }
 
+    /**
+     * Listado de facturadas enviadas por el proveedor hacia la UM organizadas por encabezado
+     * @param request
+     * @param response
+     * @param filtro
+     * @param pagina
+     * @param tipo
+     * @param correo
+     * @param order
+     * @param sort
+     * @param usuario
+     * @param errors
+     * @param modelo
+     * @return 
+     */
     @RequestMapping({"/contrarecibo"})
     public String contrarecibo(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -390,9 +442,10 @@ public class InformeProveedorDetalleController extends BaseController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = manager.lista(params);
             try {
-                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), response);
+                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), 
+                        response, "contrarecibo", Constantes.EMP, empresaId);
                 return null;
-            } catch (JRException | IOException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
                 params.remove(Constantes.CONTAINSKEY_REPORTE);
                 //errors.reject("error.generar.reporte");
@@ -405,10 +458,11 @@ public class InformeProveedorDetalleController extends BaseController {
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), request);
+                enviaCorreo(correo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE),
+                        request, "contrarecibo", Constantes.EMP, empresaId);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("detalle.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
-            } catch (JRException | MessagingException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
@@ -476,11 +530,12 @@ public class InformeProveedorDetalleController extends BaseController {
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = manager.revisar(params);
+            params = manager.lista(params);
             try {
-                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), response);
+                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), 
+                        response, "contrarecibo", Constantes.EMP, empresaId);
                 return null;
-            } catch (JRException | IOException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
                 params.remove(Constantes.CONTAINSKEY_REPORTE);
                 //errors.reject("error.generar.reporte");
@@ -489,14 +544,15 @@ public class InformeProveedorDetalleController extends BaseController {
 
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = manager.revisar(params);
+            params = manager.lista(params);
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), request);
+                enviaCorreo(correo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE),
+                        request, "contrarecibo", Constantes.EMP, empresaId);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("detalle.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
-            } catch (JRException | MessagingException e) {
+            } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
@@ -639,6 +695,7 @@ public class InformeProveedorDetalleController extends BaseController {
         Usuario usuario = ambiente.obtieneUsuario();
         detalle.setFechaCaptura(new Date());
         detalle.setUsuarioAlta(usuario);
+        detalle.setStatus(Constantes.STATUS_ACTIVO);
 
         ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
         detalle.setNombreProveedor(proveedorFacturas.getNombre());
@@ -936,109 +993,5 @@ public class InformeProveedorDetalleController extends BaseController {
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{contrarecibo.getFechaPago().toString()});
 
         return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS;
-    }
-
-    private void generaReporte(String tipo, List<InformeProveedorDetalle> detalle,
-            HttpServletResponse response) throws JRException, IOException {
-        log.debug("Generando reporte {}", tipo);
-        byte[] archivo = null;
-        switch (tipo) {
-            case "PDF":
-                archivo = generaPdf(detalle);
-                response.setContentType("application/pdf");
-                response.addHeader("Content-Disposition", "attachment; filename=InformeDetalles.pdf");
-                break;
-            case "CSV":
-                archivo = generaCsv(detalle);
-                response.setContentType("text/csv");
-                response.addHeader("Content-Disposition", "attachment; filename=InformeDetalles.csv");
-                break;
-            case "XLS":
-                archivo = generaXls(detalle);
-                response.setContentType("application/vnd.ms-excel");
-                response.addHeader("Content-Disposition", "attachment; filename=InformeDetalles.xls");
-        }
-        if (archivo != null) {
-            response.setContentLength(archivo.length);
-            try (BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream())) {
-                bos.write(archivo);
-                bos.flush();
-            }
-        }
-    }
-
-    private void enviaCorreo(String tipo, List<InformeProveedorDetalle> detalle, HttpServletRequest request)
-            throws JRException, MessagingException {
-        log.debug("Enviando correo {}", tipo);
-        byte[] archivo = null;
-        String tipoContenido = null;
-        switch (tipo) {
-            case "PDF":
-                archivo = generaPdf(detalle);
-                tipoContenido = "application/pdf";
-                break;
-            case "CSV":
-                archivo = generaCsv(detalle);
-                tipoContenido = "text/csv";
-                break;
-            case "XLS":
-                archivo = generaXls(detalle);
-                tipoContenido = "application/vnd.ms-excel";
-        }
-
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(ambiente.obtieneUsuario().getUsername());
-        String titulo = messageSource.getMessage("detalle.lista.label", null, request.getLocale());
-        helper.setSubject(messageSource.getMessage("envia.correo.titulo.message", new String[]{titulo}, request.getLocale()));
-        helper.setText(messageSource.getMessage("envia.correo.contenido.message", new String[]{titulo}, request.getLocale()), true);
-        helper.addAttachment(titulo + "." + tipo, new ByteArrayDataSource(archivo, tipoContenido));
-        mailSender.send(message);
-    }
-
-    private byte[] generaPdf(List detalles) throws JRException {
-        Map<String, Object> params = new HashMap<>();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/detalles.jrxml"));
-        JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(detalles));
-        byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
-
-        return archivo;
-    }
-
-    private byte[] generaCsv(List detalles) throws JRException {
-        Map<String, Object> params = new HashMap<>();
-        JRCsvExporter exporter = new JRCsvExporter();
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/detalles.jrxml"));
-        JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(detalles));
-        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
-        exporter.exportReport();
-        byte[] archivo = byteArrayOutputStream.toByteArray();
-
-        return archivo;
-    }
-
-    private byte[] generaXls(List detalles) throws JRException {
-        Map<String, Object> params = new HashMap<>();
-        JRXlsExporter exporter = new JRXlsExporter();
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/detalles.jrxml"));
-        JasperReport jasperReport = JasperCompileManager.compileReport(jd);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JRBeanCollectionDataSource(detalles));
-        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-        exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, byteArrayOutputStream);
-        exporter.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, Boolean.FALSE);
-        exporter.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, Boolean.TRUE);
-        exporter.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS, Boolean.TRUE);
-        exporter.setParameter(JRXlsExporterParameter.IS_COLLAPSE_ROW_SPAN, Boolean.TRUE);
-        exporter.setParameter(JRXlsExporterParameter.IGNORE_PAGE_MARGINS, Boolean.TRUE);
-        exporter.setParameter(JRXlsExporterParameter.IS_ONE_PAGE_PER_SHEET, Boolean.FALSE);
-        exporter.exportReport();
-        byte[] archivo = byteArrayOutputStream.toByteArray();
-
-        return archivo;
     }
 }

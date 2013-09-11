@@ -2950,4 +2950,10 @@ public class Constantes {
     public static final String PATH_PROVEEDORFACTURAS_ELIMINA = "/factura/proveedorFacturas/elimina";
     public static final String ADDATTRIBUTE_PROVEEDORFACTURAS = "proveedorFacturas";
     public static final String CONTAINSKEY_CONTRARECIBOS = "contrarecibos";
+    /**
+     * Valores para los Colportores Colportor
+     */
+    public static final String PATH_RPT_CLP = "/colportaje/reportes";
+    public static final String PATH_RPT_CLP_CENSOCOLPORTORES = "/colportaje/reportes/censoColportores";
+    public static final String CONTAINSKEY_CENSOCOLPORTORES = "censoColportores";
 }

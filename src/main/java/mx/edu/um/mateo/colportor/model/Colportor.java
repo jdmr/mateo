@@ -44,7 +44,6 @@ public class Colportor extends Usuario implements TipoUsuario{
     private String clave;
     @Column( length = 2)
     private String status;
-    @Size(min = 10, max = 12)
     @Column(length = 12)
     private String telefono;
     @Column( length = 200)
