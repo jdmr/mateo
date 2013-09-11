@@ -68,14 +68,25 @@ public class PasarProveedoresFacturasDaoHibernate extends BaseDao implements Pas
                 String clabe = rs.getString("CLABE");
                 String email = rs.getString("EMAIL");
                 String banco = rs.getString("BANCO");
-                ProveedorFacturas facturas = new ProveedorFacturas("proveedor" + id + "@prv.edu.mx", "prueba", razon_social, razon_social, razon_social,
-                        "proveedor" + id + "@prv.edu.mx", razon_social, rfc, id_fiscal, curp, calle, telefono, tipo_tercero_id, clabe, banco,
-                        status, clabe);
-                facturas.setId(id);
-                facturas.setEjercicio(usuario.getEjercicio());
-                facturas.setVersion(version);
-                facturas.setTipoTercero(tipo_tercero_id);
-                proveedores.add(facturas);
+                if (email == null || email.isEmpty()) {
+                    ProveedorFacturas facturas = new ProveedorFacturas("proveedor" + id + "@prv.edu.mx", "prueba", razon_social, razon_social, razon_social,
+                            "proveedor" + id + "@prv.edu.mx", razon_social, rfc, id_fiscal, curp, calle, telefono, tipo_tercero_id, clabe, banco,
+                            status, clabe);
+                    facturas.setId(id);
+                    facturas.setEjercicio(usuario.getEjercicio());
+                    facturas.setVersion(version);
+                    facturas.setTipoTercero(tipo_tercero_id);
+                    proveedores.add(facturas);
+                } else {
+                    ProveedorFacturas facturas = new ProveedorFacturas(email, "prueba", razon_social, razon_social, razon_social,
+                            email, razon_social, rfc, id_fiscal, curp, calle, telefono, tipo_tercero_id, clabe, banco,
+                            status, clabe);
+                    facturas.setId(id);
+                    facturas.setEjercicio(usuario.getEjercicio());
+                    facturas.setVersion(version);
+                    facturas.setTipoTercero(tipo_tercero_id);
+                    proveedores.add(facturas);
+                }
 
 
 
