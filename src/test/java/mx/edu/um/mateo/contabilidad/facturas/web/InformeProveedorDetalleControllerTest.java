@@ -6,7 +6,9 @@ package mx.edu.um.mateo.contabilidad.facturas.web;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleadoDetalle;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
@@ -349,5 +351,15 @@ public class InformeProveedorDetalleControllerTest extends BaseControllerTest {
                 .andExpect(flash().attributeExists(Constantes.CONTAINSKEY_MESSAGE))
                 .andExpect(flash().attribute(Constantes.CONTAINSKEY_MESSAGE, "detalle.elimina.message"))
                 .andExpect(redirectedUrl(Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA));
+    }
+
+    @Test
+    public void testPath() throws Exception {
+        Calendar calendar = GregorianCalendar.getInstance();
+        int año = calendar.get(Calendar.YEAR);
+        int mes = calendar.get(Calendar.MONTH);
+        int dia = calendar.get(Calendar.DATE);
+        log.debug("año{}" + año + "mes{}" + mes + "dia{}" + dia);
+
     }
 }
