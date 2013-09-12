@@ -339,6 +339,7 @@ public class InformeProveedorController extends BaseController {
         Usuario usuario = ambiente.obtieneUsuario();
         informe.setNombreProveedor(usuario.getNombre());
         informe.setProveedorFacturas(proveedorFacturas);
+        informe.setStatus(Constantes.STATUS_ACTIVO);
 
         try {
 
@@ -347,9 +348,11 @@ public class InformeProveedorController extends BaseController {
             log.error("No se pudo crear el detalle", e);
             if (e != null) {
                 log.debug("**Enviando mensajes....CCP no encontrado");
-                errors.rejectValue("ccp", "entrada.no.eligio.proveedor.message", null, null);
+                String ccp = e.getMessage();
+                log.debug("cccp**-**{}", ccp);
                 redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "ccp.invalido.message");
                 redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+                errors.rejectValue("ccp", "ccp.invalido.message", ccp);
             }
             params = manager.lista(params);
             List<InformeEmpleado> informes = (List) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR);

@@ -29,16 +29,7 @@
 
                 <fieldset>
 
-                    <s:bind path="informeProveedor.status">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="status">
-                                <s:message code="status.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="status" maxlength="150" required="true" />
-                            <form:errors path="status" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+              
                     <s:bind path="informeProveedor.fechaInforme">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="fechaInforme">
