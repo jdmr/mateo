@@ -17,7 +17,7 @@
 
         <div id="nuevo-colegio" class="content scaffold-list" role="main">
             <h1><s:message code="informeProveedorDetalle.nuevo.label" /></h1>
-            <form name="filtraLista" class="form-search" method="post" action="<c:url value='/factura/informeProveedorDetalle' />">
+            <form name="filtraLista" class="form-search" method="post" action="<c:url value='/factura/informeProveedorDetalle/revisar' />">
                 <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
                 <input type="hidden" name="tipo" id="tipo" value="" />
                 <input type="hidden" name="correo" id="correo" value="" />
