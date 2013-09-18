@@ -137,36 +137,13 @@ public class TemporadaController extends BaseController {
             }
         }
 
-
         params = temporadaDao.lista(params);
         modelo.addAttribute(Constantes.TEMPORADA_LIST, params.get(Constantes.TEMPORADA_LIST));
 
- //        inicia paginado
-        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
-        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<Temporada> temporadas = (List<Temporada>) params.get(Constantes.TEMPORADA_LIST);
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (temporadas.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
-       //  termina paginado
-
-        params = temporadaDao.lista(params);
-
-        modelo.addAttribute(Constantes.TEMPORADA_LIST, params.get(Constantes.TEMPORADA_LIST));
+        pagina = (Long) params.get("pagina");
+        this.pagina(params, modelo, Constantes.TEMPORADA_LIST, pagina);
 
         List<Temporada> lista = (List) params.get(Constantes.TEMPORADA_LIST);
-        log.debug("SizeLista " + temporadas.size());
-        log.debug("SizeLista " + lista.size());
-
-        modelo.addAttribute("SizeTemporadas" , lista.size());
 
         return Constantes.PATH_TEMPORADA_LISTA;
     }
