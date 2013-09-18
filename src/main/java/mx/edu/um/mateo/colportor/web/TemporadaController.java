@@ -141,8 +141,6 @@ public class TemporadaController extends BaseController {
         pagina = (Long) params.get("pagina");
         this.pagina(params, modelo, Constantes.TEMPORADA_LIST, pagina);
 
-        List<Temporada> lista = (List) params.get(Constantes.TEMPORADA_LIST);
-
         return Constantes.PATH_TEMPORADA_LISTA;
     }
 

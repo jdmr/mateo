@@ -139,22 +139,8 @@ public class TemporadaColportorController extends BaseController{
         params = temporadaColportorDao.lista(params);
         modelo.addAttribute(Constantes.TEMPORADACOLPORTOR_LIST, params.get(Constantes.TEMPORADACOLPORTOR_LIST));
 
-        // inicia paginado
-        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
-        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<TemporadaColportor> temporadaColportores = (List<TemporadaColportor>) params.get(Constantes.TEMPORADACOLPORTOR_LIST);
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (temporadaColportores.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
-        // termina paginado
+        pagina = (Long) params.get("pagina");
+        this.pagina(params, modelo, Constantes.TEMPORADACOLPORTOR_LIST, pagina);
 
         return Constantes.TEMPORADACOLPORTOR_PATH_LISTA;
     }

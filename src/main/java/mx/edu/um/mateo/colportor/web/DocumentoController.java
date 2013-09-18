@@ -295,23 +295,9 @@ public class DocumentoController extends BaseController {
         modelo.addAttribute(Constantes.ALCANZADO, alcanzado.setScale(2, BigDecimal.ROUND_HALF_EVEN));
         modelo.addAttribute(Constantes.FIDELIDAD, fidelidad.setScale(2, BigDecimal.ROUND_HALF_EVEN));
         
-        // inicia paginado
-        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
+        pagina = (Long) params.get("pagina");
+        this.pagina(params, modelo, Constantes.DOCUMENTOCOLPORTOR_LIST, pagina);
         
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        
-        List<Documento> documentos = (List<Documento>) params.get(Constantes.DOCUMENTOCOLPORTOR_LIST);
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (documentos.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);        
         modelo.addAttribute(Constantes.DOCUMENTOCOLPORTOR_LIST, params.get(Constantes.DOCUMENTOCOLPORTOR_LIST));        
         modelo.addAttribute("claveTmp", temporadaColportorDao.obtiene(temporadaColportor.getId()).getColportor().getClave());
         

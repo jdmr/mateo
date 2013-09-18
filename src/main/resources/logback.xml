@@ -19,17 +19,17 @@
             <MaxFileSize>1MB</MaxFileSize>
         </triggeringPolicy>
     </appender>
-    <logger name="mx.edu.um.mateo" level="debug"/>
-    <logger name="mx.edu.um.mateo.colportor" level="debug"/>    
-    <logger name="mx.edu.um.mateo.contabilidad" level="debug"/>    
+    <logger name="mx.edu.um.mateo" level="ERROR"/>
+    <logger name="mx.edu.um.mateo.colportor" level="ERROR"/>    
+    <logger name="mx.edu.um.mateo.contabilidad" level="ERROR"/>    
     
-    <logger name="org.springframework" level="error"/>
-    <logger name="org.springframework.security" level="error"/>
-    <logger name="org.springframework.webflow" level="error"/>
+    <logger name="org.springframework" level="ERROR"/>
+    <logger name="org.springframework.security" level="ERROR"/>
+    <logger name="org.springframework.webflow" level="ERROR"/>
     
-    <logger name="org.hibernate" level="error"/>
-    <logger name="org.hibernate.SQL" level="error"/>
-    <logger name="org.hibernate.type" level="error"/>
+    <logger name="org.hibernate" level="ERROR"/>
+    <logger name="org.hibernate.SQL" level="ERROR"/>
+    <logger name="org.hibernate.type" level="ERROR"/>
     <logger name="org.hibernate.engine.transaction" level="ERROR"/>
     
     <root level="INFO">
