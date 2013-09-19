@@ -14,6 +14,7 @@ import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueObjectException;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -67,14 +68,26 @@ public class TemporadaColportorDao extends BaseDao {
         }
         
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
+            
             String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);
             filtro = "%" + filtro + "%";
-            Disjunction propiedades = Restrictions.disjunction();
             
-            //FALTA DEFINIR FILTROS
-
-            //criteria.add(propiedades);
-            //countCriteria.add(propiedades);
+            criteria.createAlias("temporada", "temp");
+            criteria.createAlias("colportor", "clp");
+            criteria.add(Restrictions.or(Restrictions.ilike("temp.nombre", filtro), 
+                    Restrictions.ilike("clp.clave", filtro), 
+                    Restrictions.ilike("clp.nombre", filtro), 
+                    Restrictions.ilike("clp.apMaterno", filtro),
+                    Restrictions.ilike("clp.apPaterno", filtro)));
+            
+            countCriteria.createAlias("temporada", "temp");
+            countCriteria.createAlias("colportor", "clp");
+            countCriteria.add(Restrictions.or(Restrictions.ilike("temp.nombre", filtro), 
+                    Restrictions.ilike("clp.clave", filtro), 
+                    Restrictions.ilike("clp.nombre", filtro), 
+                    Restrictions.ilike("clp.apMaterno", filtro),
+                    Restrictions.ilike("clp.apPaterno", filtro)));
+            
         }
         if (params.containsKey(Constantes.CONTAINSKEY_ORDER)) {
             String campo = (String) params.get(Constantes.CONTAINSKEY_ORDER);
