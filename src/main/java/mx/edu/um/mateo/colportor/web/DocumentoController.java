@@ -304,6 +304,22 @@ public class DocumentoController extends BaseController {
         return Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA;
     }
 
+    
+    
+    @RequestMapping(value="/get_colportor_list",
+                    method = RequestMethod.GET,
+                    headers="Accept=*/*")
+    public @ResponseBody List <String> getColportorList(@RequestParam("term") String query, HttpServletResponse response){
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
+        params.put("filtro", query);
+        colportorDao.lista(params);
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_OK);
+        return (List<String>) params.get(Constantes.COLPORTOR_LIST);
+        
+    }
+    
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando documento {}", id);

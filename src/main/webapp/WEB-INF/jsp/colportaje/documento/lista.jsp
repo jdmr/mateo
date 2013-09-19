@@ -1,17 +1,27 @@
-<%-- 
-    Document   : lista
-    Created on : 4/04/2012, 09:49:49 AM
-    Author     : wilbert
---%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
 <!DOCTYPE html>
 <html>
     <head>
+         
+         <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+         <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+         <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+         <script>
+            $(function() {
+            
+            $( "#clave" ).autocomplete({
+            source: '${pageContext. request. contextPath}/colportaje/documento/get_colportor_list'
+            });
+            });
+          </script>
+            
         <title><s:message code="documento.lista.label" /></title>
     </head>
     <body>
@@ -34,32 +44,19 @@
 
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/colportaje/documento/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='documento.nuevo.label' /></a>
-                <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
+                <input id="clave" name="clave">
+                
+                <label for="temporada">
+                <s:message code="temporada.label" />
+                <select id="temporadaId" name="temporadaId" class="input-large search-query">
+                    <c:forEach items="${temporadas}" var="temporada">
+                        <option value="${temporada.id}">${temporada.nombre}</option>
+                    </c:forEach>
+                </select>
                 <button type="submit" class="btn"><s:message code="buscar.label" /></button>
 
             </p>
             
-            <sec:authorize access="hasRole('ROLE_ASOC')">
-                <p>
-                    <s:message code="buscarColportor.label" />
-                    <input name="clave" type="text" class="input-medium search-query" value="${clave}">
-                    <button type="submit" class="btn"><s:message code="buscar.label" /></button>  
-                </p>
-
-            </sec:authorize>
-            <fieldset>
-                <div class="control-group">
-                    <label for="temporada">
-                        <s:message code="temporada.label" />
-                        <span class="required-indicator">*</span>
-                        <select id="temporadaId" name="temporadaId">
-                            <c:forEach items="${temporadas}" var="temporada">
-                                <option value="${temporada.id}">${temporada.nombre}</option>
-                            </c:forEach>
-                        </select>
-                        <button type="submit" class="btn"><s:message code="buscar.label" /></button>    
-                </div>
-            </fieldset>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
                     <a class="close" data-dismiss="alert">×</a>
@@ -82,12 +79,12 @@
             <table id="totales" class="table">
                 <tbody>
                     <tr> 
-                        <td><b>compras.label </b>${Total_Boletin}</td>
-                        <td><b>objetivo.label </b>${temporadaColportor.objetivo}</td>
-                        <td><b>pctAlcanzado </b>${Alcanzado} %</td>
-                        <td><b>diezmo.label </b>${Total_Diezmos}</td>
-                        <td><b>fidelidad.label </b>${Fidelidad} %</td>
-                        <td><b>depositos.label $</b> ${Total_Depositos}</td>
+                        <td><b><s:message code="compras.label" /> </b>${Total_Boletin}</td>
+                        <td><b><s:message code="objetivo.label" /> </b>${temporadaColportor.objetivo}</td>
+                        <td><b><s:message code="pctAlcanzado.label" /> </b>${Alcanzado}</td>
+                        <td><b><s:message code="diezmo" /> </b>${Total_Diezmos}</td>
+                        <td><b><s:message code="fidelidad" /> </b>${Fidelidad}</td>
+                        <td><b><s:message code="depositos" /></b> ${Total_Depositos}</td>
                     </tr>
                 </tbody>
             </table>
