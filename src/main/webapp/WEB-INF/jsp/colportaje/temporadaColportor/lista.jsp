@@ -2,7 +2,9 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@taglib prefix="s" uri="http://www.springframework.org/tags" %><!DOCTYPE html>
+<%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@include file="../../idioma.jsp"%>
+<!DOCTYPE html>
 <html>
     <head>
         <title><s:message code="temporadaColportor.lista.label" /></title>
@@ -79,13 +81,13 @@
                     <c:forEach items="${temporadaColportores}" var="temporadacolportor" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/colportaje/temporadaColportor/ver/${temporadacolportor.id}' />">${temporadacolportor.temporada.nombre}</a></td>
-                            <td>${temporadacolportor.colportor.nombre}</td>
+                            <td>${temporadacolportor.colportor.nombreCompleto}</td>
                             <td>${temporadacolportor.colegio.nombre}</td>
-                            <td>${temporadacolportor.objetivo}</td>
-                            <td>${temporadacolportor.fecha}</td>
+                            <td><div align="right"><fmt:formatNumber type="currency" currencySymbol="$" value="${temporadacolportor.objetivo}" /></div></td>
+                            <td><fmt:formatDate pattern="dd/MMM/yyyy" value="${temporadacolportor.fecha}" /></td>
                             <td>${temporadacolportor.status}</td>
                             <td>${temporadacolportor.observaciones}</td>
-                            <td>${temporadacolportor.asociado.nombre}</td>
+                            <td>${temporadacolportor.asociado.nombreCompleto}</td>
                         </tr>
                     </c:forEach>
                 </tbody>
