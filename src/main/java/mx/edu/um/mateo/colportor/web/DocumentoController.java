@@ -29,6 +29,7 @@ import mx.edu.um.mateo.colportor.model.Temporada;
 import mx.edu.um.mateo.colportor.model.TemporadaColportor;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.utils.LabelValueBean;
 import mx.edu.um.mateo.general.web.BaseController;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -38,8 +39,6 @@ import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +53,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -302,22 +300,6 @@ public class DocumentoController extends BaseController {
         modelo.addAttribute("claveTmp", temporadaColportorDao.obtiene(temporadaColportor.getId()).getColportor().getClave());
         
         return Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA;
-    }
-
-    
-    
-    @RequestMapping(value="/get_colportor_list",
-                    method = RequestMethod.GET,
-                    headers="Accept=*/*")
-    public @ResponseBody List <String> getColportorList(@RequestParam("term") String query, HttpServletResponse response){
-        Map<String, Object> params = new HashMap<>();
-        params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
-        params.put("filtro", query);
-        colportorDao.lista(params);
-        response.setContentType("application/json");
-        response.setStatus(HttpServletResponse.SC_OK);
-        return (List<String>) params.get(Constantes.COLPORTOR_LIST);
-        
     }
     
     @RequestMapping("/ver/{id}")

@@ -25,6 +25,7 @@ import mx.edu.um.mateo.general.dao.RolDao;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.LabelValueBean;
 import mx.edu.um.mateo.general.web.BaseController;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -120,6 +121,33 @@ public class ColportorController extends BaseController {
         this.pagina(params, modelo, Constantes.COLPORTOR_LIST, pagina);
 
         return Constantes.PATH_COLPORTOR_LISTA;
+    }
+    
+    @RequestMapping(value="/get_colportor_list", method = RequestMethod.GET, headers="Accept=*/*", produces = "application/json")    
+    public @ResponseBody 
+    List <LabelValueBean> getColportorList(@RequestParam("term") String filtro, HttpServletResponse response){
+        log.debug("Buscando colportores por {}", filtro);
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
+        params.put("filtro", filtro);
+        colportorDao.lista(params);
+        
+        List <LabelValueBean> rValues = new ArrayList<>();
+        List <Colportor> clps = (List <Colportor>) params.get(Constantes.COLPORTOR_LIST);
+        for(Colportor c : clps){
+            log.debug("Colportor {}", c.getClave());
+            StringBuilder sb = new StringBuilder();
+            sb.append(c.getClave());
+            sb.append(" | ");
+            sb.append(c.getNombreCompleto());   
+            //Por alguna razon, el jQuery toma el valor del attr value por default.
+            //Asi que en el constructor invertimos los valores: como value va el string, y como nombre la clave
+            rValues.add(new LabelValueBean(c.getId(), sb.toString(), c.getClave()));
+        }        
+        
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_OK);
+        return rValues;        
     }
 
     @RequestMapping("/ver/{id}")

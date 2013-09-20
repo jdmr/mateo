@@ -2535,7 +2535,7 @@ public class Constantes {
     /**
      * Valores para los Colportores Colportor
      */
-    public static final String PATH_COLPORTOR = "/colportor";
+    public static final String PATH_COLPORTOR = "/colportaje/colportor";
     public static final String PATH_COLPORTOR_LISTA = "colportor/lista";
     public static final String PATH_COLPORTOR_VER = "/colportor/ver";
     public static final String PATH_COLPORTOR_NUEVO = "colportor/nuevo";

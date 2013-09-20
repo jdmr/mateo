@@ -9,18 +9,9 @@
 <html>
     <head>
          
-         <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-         <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-         <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+         <link rel="stylesheet" href="<c:url value='/css/chosen.css' />" type="text/css">
 
-         <script>
-            $(function() {
-            
-            $( "#clave" ).autocomplete({
-            source: '${pageContext. request. contextPath}/colportaje/documento/get_colportor_list'
-            });
-            });
-          </script>
+         
             
         <title><s:message code="documento.lista.label" /></title>
     </head>
@@ -48,7 +39,7 @@
                 
                 <label for="temporada">
                 <s:message code="temporada.label" />
-                <select id="temporadaId" name="temporadaId" class="input-large search-query">
+                <select id="temporadaId" name="temporadaId" id="temporadaId" class="input-large search-query">
                     <c:forEach items="${temporadas}" var="temporada">
                         <option value="${temporada.id}">${temporada.nombre}</option>
                     </c:forEach>
@@ -124,6 +115,22 @@
         </form>        
     <content>
         <script src="<c:url value='/js/lista.js' />"></script>
+        <script>
+            $(function() {
+            
+            $( "#clave" ).autocomplete({
+                source: '${pageContext. request. contextPath}/colportaje/colportor/get_colportor_list',
+                select: function(event, ui) {
+                        $("input#clave").val(ui.item.nombre);
+                        var option = $('<option />');
+                        option.attr('value', ui.item.value).text(ui.item.nombre);
+                        $('#temporadaId').append(option);
+                        $("select#temporadaId").focus();
+                        return false;
+                    }
+            })
+            });
+          </script>
     </content>
 </body>
 </html>
