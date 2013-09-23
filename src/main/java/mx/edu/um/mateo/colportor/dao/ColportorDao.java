@@ -23,13 +23,10 @@
  */
 package mx.edu.um.mateo.colportor.dao; 
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.colportor.model.Colportor;
-import mx.edu.um.mateo.colportor.utils.FaltaAsociacionException;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.SpringSecurityUtils;

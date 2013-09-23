@@ -35,7 +35,7 @@
 
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/colportaje/documento/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='documento.nuevo.label' /></a>
-                <input id="clave" name="clave">
+                <input id="clave" name="clave" class="input-medium search-query" value="${param.filtro}">
                 
                 <label for="temporada">
                 <s:message code="temporada.label" />
@@ -122,9 +122,13 @@
                 source: '${pageContext. request. contextPath}/colportaje/colportor/get_colportor_list',
                 select: function(event, ui) {
                         $("input#clave").val(ui.item.nombre);
-                        var option = $('<option />');
-                        option.attr('value', ui.item.value).text(ui.item.nombre);
-                        $('#temporadaId').append(option);
+                        $("#temporadaId").html('');
+                        $.getJSON("${pageContext. request. contextPath}/colportaje/temporadaColportor/get_temporada_clp_list?clave="+ui.item.nombre)
+                        .done(function (result) {
+                            $.each(result, function(idx, item){
+                                $("#temporadaId").append($("<option value=\""+item.id+"\">"+item.value+"</option>"));
+                            });
+                        });
                         $("select#temporadaId").focus();
                         return false;
                     }

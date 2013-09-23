@@ -8,14 +8,13 @@ import mx.edu.um.mateo.colportor.model.Temporada;
 import mx.edu.um.mateo.colportor.model.TemporadaColportor;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueObjectException;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -101,11 +100,24 @@ public class TemporadaColportorDao extends BaseDao {
         if (!params.containsKey(Constantes.CONTAINSKEY_REPORTE)) {
             criteria.setFirstResult((Integer) params.get(Constantes.CONTAINSKEY_OFFSET));
             criteria.setMaxResults((Integer) params.get(Constantes.CONTAINSKEY_MAX));
-        }
+        }        
         params.put(Constantes.TEMPORADACOLPORTOR_LIST, criteria.list());
         countCriteria.setProjection(Projections.rowCount());
         params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));
 
+        return params;
+    }
+    
+    public Map<String, Object> listadoTemporadasPorColportor(Map<String, Object> params) {
+        Criteria criteria = currentSession().createCriteria(TemporadaColportor.class);
+        criteria.createAlias("temporada", "tmp");
+        criteria.createAlias("colportor", "clp");
+        criteria.createAlias("asociado", "asoc");
+        criteria.add(Restrictions.eq("asoc.empresa.id", (Long)params.get("empresa")));
+        criteria.add(Restrictions.eq("asoc.id", (Long)params.get("asociado")));
+        criteria.add(Restrictions.ilike("clp.clave", (String)params.get("filtro")));
+        criteria.addOrder(Order.asc("tmp.nombre"));
+        params.put(Constantes.TEMPORADACOLPORTOR_LIST, criteria.list());
         return params;
     }
 
