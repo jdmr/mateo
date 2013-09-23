@@ -95,11 +95,15 @@ public class DocumentoController extends BaseController {
             @RequestParam(required = false) String order,
             @RequestParam(required = false) String sort,
             @RequestParam(required = false) String clave,
+            @RequestParam(required = false) String temporadaId,
             Usuario usuario,
             Errors errors,
             Model modelo) {
         log.debug("Mostrando lista de documentos");
         Map<String, Object> params = new HashMap<>();
+        params.put("organizacion", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
+        params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
+        params.put("asociado", ambiente.obtieneUsuario().getId());
         
         Integer max = 100;
         if (StringUtils.isNotBlank(filtro)) {
@@ -121,7 +125,7 @@ public class DocumentoController extends BaseController {
         }
         
         log.debug("esAsociado {}, esColportor {}, colportorTmp {}", new Object [] {ambiente.esAsociado(), ambiente.esColportor(), request.getSession().getAttribute("colportorTmp")});
-        TemporadaColportor temporadaColportor = null;
+        TemporadaColportor temporadaColportor = null;        
         
         if (ambiente.esAsociado()) {
             log.debug("Entrando a Documentos como Asociado");
@@ -134,8 +138,14 @@ public class DocumentoController extends BaseController {
                     return Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA;
                 }
                 log.debug("Colportor {} ", colportor);
-                //TemporadaColportor tempClp = temporadaColportorDao.obtiene(colportor);
-                temporadaColportor = temporadaColportorDao.obtiene(colportor);
+                
+                if(temporadaId != null && !temporadaId.isEmpty()){
+                    temporadaColportor = temporadaColportorDao.obtiene(colportor, temporadaDao.obtiene(Long.valueOf(temporadaId)));
+                }
+                else{
+                    temporadaColportor = temporadaColportorDao.obtiene(colportor);                    
+                }
+                
                 log.debug("Temporada Colportor {} ", temporadaColportor);
                 params.put("temporadaColportor", temporadaColportor.getId());
             } else {
@@ -199,26 +209,25 @@ public class DocumentoController extends BaseController {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-
+        
+        List<Documento> lista = null;
+        
         params = DocumentoDao.lista(params);
-        params = temporadaDao.lista(params);
-//        Codigo para Valdiar Pruebas
-
         modelo.addAttribute(Constantes.DOCUMENTOCOLPORTOR_LIST, params.get(Constantes.DOCUMENTOCOLPORTOR_LIST));
-        modelo.addAttribute(Constantes.TEMPORADA_LIST, params.get(Constantes.TEMPORADA_LIST));
 
-        List<Documento> lista = (List) params.get(Constantes.DOCUMENTOCOLPORTOR_LIST);
-        log.debug("Items en lista {}", lista.size());
+        params.put("filtro", clave);
+        List <Temporada> tmps = new ArrayList <>();
+        params = temporadaColportorDao.listadoTemporadasPorColportor(params);
+        List <TemporadaColportor> tmpClps = (List)params.get(Constantes.TEMPORADACOLPORTOR_LIST);
+        for(TemporadaColportor tmpClp : tmpClps){
+            tmps.add(tmpClp.getTemporada());
+        }
+        modelo.addAttribute(Constantes.TEMPORADA_LIST, tmps);
+        lista = (List) params.get(Constantes.DOCUMENTOCOLPORTOR_LIST);
+        
         Iterator<Documento> iter = lista.iterator();
-
-        List<Temporada> listaTemporada = (List) params.get(Constantes.TEMPORADA_LIST);
-
-        params.put("organizacion", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
-        Map<String, Object> temporadas = temporadaDao.lista(params);
-        modelo.addAttribute(Constantes.TEMPORADA_LIST, temporadas.get(Constantes.TEMPORADA_LIST));
-
+        
         Documento doc = null;
-
         BigDecimal totalBoletin = new BigDecimal("0");
         BigDecimal totalDiezmos = new BigDecimal("0");
         BigDecimal totalDepositos = new BigDecimal("0");
@@ -296,8 +305,7 @@ public class DocumentoController extends BaseController {
         pagina = (Long) params.get("pagina");
         this.pagina(params, modelo, Constantes.DOCUMENTOCOLPORTOR_LIST, pagina);
         
-        modelo.addAttribute(Constantes.DOCUMENTOCOLPORTOR_LIST, params.get(Constantes.DOCUMENTOCOLPORTOR_LIST));        
-        modelo.addAttribute("claveTmp", temporadaColportorDao.obtiene(temporadaColportor.getId()).getColportor().getClave());
+        modelo.addAttribute("claveTmp", clave);
         
         return Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA;
     }

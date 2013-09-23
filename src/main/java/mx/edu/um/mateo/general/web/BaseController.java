@@ -101,7 +101,13 @@ public abstract class BaseController {
         Long cantidad = (Long) params.get("cantidad");
         Integer max = (Integer) params.get("max");
         List<Long> paginas = paginacion(pagina, cantidad, max);
-        List<?> listado = (List<?>) params.get(lista);
+        List<?> listado = null;
+        try {
+            listado = (List<?>) params.get(lista);
+        } catch (Exception e) {
+            //Si la lista no existe...
+            listado = new ArrayList<>();
+        }
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (listado.size() - 1);
         String[] paginacion = new String[]{primero.toString(),
