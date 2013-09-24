@@ -138,8 +138,11 @@ public class DocumentoController extends BaseController {
                     return Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA;
                 }
                 log.debug("Colportor {} ", colportor);
+                modelo.addAttribute(Constantes.COLPORTOR, colportor);
                 
                 if(temporadaId != null && !temporadaId.isEmpty()){
+                    log.debug("temporadaId {}", temporadaId);
+                    log.debug("temporada {}", temporadaDao.obtiene(Long.valueOf(temporadaId)));
                     temporadaColportor = temporadaColportorDao.obtiene(colportor, temporadaDao.obtiene(Long.valueOf(temporadaId)));
                 }
                 else{
@@ -147,12 +150,13 @@ public class DocumentoController extends BaseController {
                 }
                 
                 log.debug("Temporada Colportor {} ", temporadaColportor);
+                modelo.addAttribute(Constantes.TEMPORADACOLPORTOR, temporadaColportor);
                 params.put("temporadaColportor", temporadaColportor.getId());
             } else {
                 errors.reject("colportor.clave.missing");
                 return Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA;
             }
-        }
+        }        
 
         if (ambiente.esColportor()) {
             log.debug("Entrando a Documentos como Colportor");
@@ -181,6 +185,7 @@ public class DocumentoController extends BaseController {
             modelo.addAttribute("temporadaColportorTmp", temporadaColportor);
             log.debug("temporadaColportorTmpId" + temporadaColportor.getId());
             modelo.addAttribute("temporadaColportorPrueba", temporadaColportor.getId().toString());
+            modelo.addAttribute(Constantes.COLPORTOR, colportor);
         }
 
         if (StringUtils.isNotBlank(tipo)) {
@@ -304,8 +309,6 @@ public class DocumentoController extends BaseController {
         
         pagina = (Long) params.get("pagina");
         this.pagina(params, modelo, Constantes.DOCUMENTOCOLPORTOR_LIST, pagina);
-        
-        modelo.addAttribute("claveTmp", clave);
         
         return Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA;
     }

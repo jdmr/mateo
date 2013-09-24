@@ -164,7 +164,7 @@ public class TemporadaColportorController extends BaseController{
             sb.append(tc.getTemporada().getNombre()); 
             //Por alguna razon, el jQuery toma el valor del attr value por default.
             //Asi que en el constructor invertimos los valores: como value va el string, y como nombre la clave
-            rValues.add(new LabelValueBean(tc.getId(), sb.toString()));
+            rValues.add(new LabelValueBean(tc.getTemporada().getId(), sb.toString()));
         }        
         
         response.setContentType("application/json");
