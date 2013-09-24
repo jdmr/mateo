@@ -18,12 +18,9 @@
     <body>
         <jsp:include page="../menu.jsp" >
             <jsp:param name="menu" value="documento" />
-        </jsp:include>
-
-        <h1><s:message code="documento.lista.label" /></h1>
-        <h3>  ${temporadaColportor.colportor.clave}&nbsp;${temporadaColportor.colportor.nombre}&nbsp;${temporadaColportor.colportor.apPaterno}&nbsp;${temporadaColportor.colportor.apMaterno}  </h3>
-        <hr/>
-
+        </jsp:include>     
+            
+        <h1><s:message code="documento.lista.label" /></h1>        
 
         <form name="filtraLista" class="form-search" method="post" action="<c:url value='/colportaje/documento' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
@@ -32,21 +29,25 @@
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
 
-
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/colportaje/documento/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='documento.nuevo.label' /></a>
-                <input id="clave" name="clave" class="input-medium search-query" value="${param.filtro}">
+                <input id="clave" name="clave" class="input-medium search-query" value="${colportor.clave}">
                 
                 <label for="temporada">
                 <s:message code="temporada.label" />
-                <select id="temporadaId" name="temporadaId" id="temporadaId" class="input-large search-query">
+                <select id="temporadaId" name="temporadaId" id="temporadaId" class="input-large search-query" value="${temporadaColportor.id}">
                     <c:forEach items="${temporadas}" var="temporada">
                         <option value="${temporada.id}">${temporada.nombre}</option>
                     </c:forEach>
                 </select>
                 <button type="submit" class="btn"><s:message code="buscar.label" /></button>
-
-            </p>
+            </p>   
+            
+            <h3>
+                ${temporadaColportor.colportor.clave}&nbsp;${temporadaColportor.colportor.nombre}&nbsp;${temporadaColportor.colportor.apPaterno}&nbsp;${temporadaColportor.colportor.apMaterno}
+                -
+                ${temporadaColportor.temporada.nombre}
+            </h3>
             
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
