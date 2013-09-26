@@ -54,6 +54,7 @@ public class ProveedorFacturasDaoHibernate extends BaseDao implements ProveedorF
         }
 
         if (params.containsKey("pagina")) {
+            log.debug("entrando a paginacion");
             Long pagina = (Long) params.get("pagina");
             Long offset = (pagina - 1) * (Integer) params.get("max");
             params.put("offset", offset.intValue());
@@ -100,9 +101,9 @@ public class ProveedorFacturasDaoHibernate extends BaseDao implements ProveedorF
         }
         params.put(Constantes.CONTAINSKEY_PROVEEDORESFACTURAS, criteria.list());
 
+        log.debug("listaObjetos{}", criteria.list());
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
-
         return params;
     }
 
@@ -121,7 +122,10 @@ public class ProveedorFacturasDaoHibernate extends BaseDao implements ProveedorF
     public void crea(final ProveedorFacturas proveedorFacturas, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
+            log.debug("usuarioAmbiente++-+{}", usuario.toString());
+            log.debug("empresa--/-{}", usuario.getEmpresa().toString());
             proveedorFacturas.setEmpresa(usuario.getEmpresa());
+
             proveedorFacturas.setAlmacen(usuario.getAlmacen());
         }
         log.debug("usuario logeado... {}" + usuario.getEjercicio());

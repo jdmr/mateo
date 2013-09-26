@@ -50,11 +50,14 @@ public class InformeProveedorManagerImpl extends BaseManager implements InformeP
 
     @Override
     public void graba(InformeProveedor informeProveedor, Usuario usuario) throws AutorizacionCCPlInvalidoException {
-        String listaCcps = informeProveedor.getCcp();
-        String[] ccps = listaCcps.split(",");
-        for (String ccp : ccps) {
-            if (!ccpDao.obtiene(ccp)) {
-                throw new AutorizacionCCPlInvalidoException(ccp);
+        String CCP = informeProveedor.getCcp();
+        if (CCP != null && !CCP.isEmpty()) {
+            String listaCcps = informeProveedor.getCcp();
+            String[] ccps = listaCcps.split(",");
+            for (String ccp : ccps) {
+                if (!ccpDao.obtiene(ccp)) {
+                    throw new AutorizacionCCPlInvalidoException(ccp);
+                }
             }
         }
         dao.crea(informeProveedor, usuario);

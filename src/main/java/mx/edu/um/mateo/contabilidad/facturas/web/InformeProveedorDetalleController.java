@@ -669,36 +669,40 @@ public class InformeProveedorDetalleController extends BaseController {
 
         Map<String, Object> params = new HashMap<>();
         //Subir archivos
-        List<MultipartFile> files = uploadForm.getFiles();
+        try {
+            List<MultipartFile> files = uploadForm.getFiles();
 
-        List<String> fileNames = new ArrayList<String>();
-        Calendar calendar = GregorianCalendar.getInstance();
-        int año = calendar.get(Calendar.YEAR);
-        int mes = calendar.get(Calendar.MONTH);
-        int dia = calendar.get(Calendar.DATE);
+            List<String> fileNames = new ArrayList<String>();
+            Calendar calendar = GregorianCalendar.getInstance();
+            int año = calendar.get(Calendar.YEAR);
+            int mes = calendar.get(Calendar.MONTH);
+            int dia = calendar.get(Calendar.DATE);
 
-        if (null != files && files.size() > 0) {
-            for (MultipartFile multipartFile : files) {
-                String fileName = multipartFile.getOriginalFilename();
-                fileNames.add(fileName);
-                String uploadDir = "/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename();
-                File dirPath = new File(uploadDir);
-                if (!dirPath.exists()) {
-                    dirPath.mkdirs();
-                }
-                multipartFile.transferTo(new File("/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename()));
-                if (multipartFile.getOriginalFilename().contains(".pdf")) {
-                    detalle.setPathPDF("/home/facturas/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
-                    detalle.setNombrePDF(multipartFile.getOriginalFilename());
-                }
-                if (multipartFile.getOriginalFilename().contains(".xml")) {
-                    detalle.setPathXMl("/home/facturas/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
-                    detalle.setNombreXMl(multipartFile.getOriginalFilename());
+            if (null != files && files.size() > 0) {
+                for (MultipartFile multipartFile : files) {
+                    String fileName = multipartFile.getOriginalFilename();
+                    fileNames.add(fileName);
+                    String uploadDir = "/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename();
+                    File dirPath = new File(uploadDir);
+                    if (!dirPath.exists()) {
+                        dirPath.mkdirs();
+                    }
+                    multipartFile.transferTo(new File("/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename()));
+                    if (multipartFile.getOriginalFilename().contains(".pdf")) {
+                        detalle.setPathPDF("/home/facturas/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
+                        detalle.setNombrePDF(multipartFile.getOriginalFilename());
+                    }
+                    if (multipartFile.getOriginalFilename().contains(".xml")) {
+                        detalle.setPathXMl("/home/facturas/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
+                        detalle.setNombreXMl(multipartFile.getOriginalFilename());
+                    }
                 }
             }
+            ////Subir archivos\\\
+        } catch (NullPointerException e) {
+            log.warn("no se subieron archivos");
+            e.printStackTrace();
         }
-        ////Subir archivos\\\
-
 
         InformeProveedor informe = (InformeProveedor) request.getSession().getAttribute("informeId");
         detalle.setInformeProveedor(informe);

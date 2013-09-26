@@ -28,7 +28,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  * @author develop
  */
 @Entity
-@Table(name = "informeReporteDetalle")
+@Table(name = "informereportedetalle")
 public class InformeProveedorDetalle implements Serializable {
 
     @Id
