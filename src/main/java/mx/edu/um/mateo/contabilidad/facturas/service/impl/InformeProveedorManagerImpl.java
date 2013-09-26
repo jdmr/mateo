@@ -42,7 +42,7 @@ public class InformeProveedorManagerImpl extends BaseManager implements InformeP
     public Map<String, Object> revisar(Map<String, Object> params) {
         return dao.revisar(params);
     }
-
+ 
     @Override
     public InformeProveedor obtiene(final Long id) {
         return dao.obtiene(new Long(id));
