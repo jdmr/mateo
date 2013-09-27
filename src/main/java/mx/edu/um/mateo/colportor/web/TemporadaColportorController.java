@@ -31,6 +31,7 @@ import mx.edu.um.mateo.colportor.model.TemporadaColportor;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.utils.LabelValueBean;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.rh.dao.ColegioDao;
 import mx.edu.um.mateo.rh.model.Colegio;
@@ -139,24 +140,36 @@ public class TemporadaColportorController extends BaseController{
         params = temporadaColportorDao.lista(params);
         modelo.addAttribute(Constantes.TEMPORADACOLPORTOR_LIST, params.get(Constantes.TEMPORADACOLPORTOR_LIST));
 
-        // inicia paginado
-        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
-        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<TemporadaColportor> temporadaColportores = (List<TemporadaColportor>) params.get(Constantes.TEMPORADACOLPORTOR_LIST);
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (temporadaColportores.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
-        // termina paginado
+        pagina = (Long) params.get("pagina");
+        this.pagina(params, modelo, Constantes.TEMPORADACOLPORTOR_LIST, pagina);
 
         return Constantes.TEMPORADACOLPORTOR_PATH_LISTA;
+    }
+    
+    @RequestMapping(value="/get_temporada_clp_list", method = RequestMethod.GET, headers="Accept=*/*", produces = "application/json")    
+    public @ResponseBody 
+    List <LabelValueBean> getTemporadaColportorList(@RequestParam("clave") String filtro, HttpServletResponse response){
+        log.debug("Buscando temporadas del colportor por {}", filtro);
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
+        params.put("asociado", ambiente.obtieneUsuario().getId());
+        params.put("filtro", filtro);
+        temporadaColportorDao.listadoTemporadasPorColportor(params);
+        
+        List <LabelValueBean> rValues = new ArrayList<>();
+        List <TemporadaColportor> clps = (List <TemporadaColportor>) params.get(Constantes.TEMPORADACOLPORTOR_LIST);
+        for(TemporadaColportor tc : clps){
+            log.debug("Temporada Colportor {} - {}", tc.getColportor().getClave(), tc.getTemporada().getNombre());
+            StringBuilder sb = new StringBuilder();
+            sb.append(tc.getTemporada().getNombre()); 
+            //Por alguna razon, el jQuery toma el valor del attr value por default.
+            //Asi que en el constructor invertimos los valores: como value va el string, y como nombre la clave
+            rValues.add(new LabelValueBean(tc.getTemporada().getId(), sb.toString()));
+        }        
+        
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_OK);
+        return rValues;        
     }
 
     @RequestMapping("/ver/{id}")

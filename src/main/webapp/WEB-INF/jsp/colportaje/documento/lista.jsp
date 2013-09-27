@@ -1,28 +1,26 @@
-<%-- 
-    Document   : lista
-    Created on : 4/04/2012, 09:49:49 AM
-    Author     : wilbert
---%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
 <!DOCTYPE html>
 <html>
     <head>
+         
+         <link rel="stylesheet" href="<c:url value='/css/chosen.css' />" type="text/css">
+
+         
+            
         <title><s:message code="documento.lista.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
             <jsp:param name="menu" value="documento" />
-        </jsp:include>
-
-        <h1><s:message code="documento.lista.label" /></h1>
-        <h3>  ${temporadaColportor.colportor.clave}&nbsp;${temporadaColportor.colportor.nombre}&nbsp;${temporadaColportor.colportor.apPaterno}&nbsp;${temporadaColportor.colportor.apMaterno}  </h3>
-        <hr/>
-
+        </jsp:include>     
+            
+        <h1><s:message code="documento.lista.label" /></h1>        
 
         <form name="filtraLista" class="form-search" method="post" action="<c:url value='/colportaje/documento' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
@@ -31,35 +29,26 @@
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
 
-
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/colportaje/documento/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='documento.nuevo.label' /></a>
-                <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
+                <input id="clave" name="clave" class="input-medium search-query" value="${colportor.clave}">
+                
+                <label for="temporada">
+                <s:message code="temporada.label" />
+                <select id="temporadaId" name="temporadaId" id="temporadaId" class="input-large search-query" value="${temporadaColportor.id}">
+                    <c:forEach items="${temporadas}" var="temporada">
+                        <option value="${temporada.id}">${temporada.nombre}</option>
+                    </c:forEach>
+                </select>
                 <button type="submit" class="btn"><s:message code="buscar.label" /></button>
-
-            </p>
+            </p>   
             
-            <sec:authorize access="hasRole('ROLE_ASOC')">
-                <p>
-                    <s:message code="buscarColportor.label" />
-                    <input name="clave" type="text" class="input-medium search-query" value="${clave}">
-                    <button type="submit" class="btn"><s:message code="buscar.label" /></button>  
-                </p>
-
-            </sec:authorize>
-            <fieldset>
-                <div class="control-group">
-                    <label for="temporada">
-                        <s:message code="temporada.label" />
-                        <span class="required-indicator">*</span>
-                        <select id="temporadaId" name="temporadaId">
-                            <c:forEach items="${temporadas}" var="temporada">
-                                <option value="${temporada.id}">${temporada.nombre}</option>
-                            </c:forEach>
-                        </select>
-                        <button type="submit" class="btn"><s:message code="buscar.label" /></button>    
-                </div>
-            </fieldset>
+            <h3>
+                ${temporadaColportor.colportor.clave}&nbsp;${temporadaColportor.colportor.nombre}&nbsp;${temporadaColportor.colportor.apPaterno}&nbsp;${temporadaColportor.colportor.apMaterno}
+                -
+                ${temporadaColportor.temporada.nombre}
+            </h3>
+            
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
                     <a class="close" data-dismiss="alert">×</a>
@@ -82,12 +71,12 @@
             <table id="totales" class="table">
                 <tbody>
                     <tr> 
-                        <td><b>compras.label </b>${Total_Boletin}</td>
-                        <td><b>objetivo.label </b>${temporadaColportor.objetivo}</td>
-                        <td><b>pctAlcanzado </b>${Alcanzado} %</td>
-                        <td><b>diezmo.label </b>${Total_Diezmos}</td>
-                        <td><b>fidelidad.label </b>${Fidelidad} %</td>
-                        <td><b>depositos.label $</b> ${Total_Depositos}</td>
+                        <td><b><s:message code="compras.label" /> </b>${Total_Boletin}</td>
+                        <td><b><s:message code="objetivo.label" /> </b>${temporadaColportor.objetivo}</td>
+                        <td><b><s:message code="pctAlcanzado.label" /> </b>${Alcanzado}</td>
+                        <td><b><s:message code="diezmo" /> </b>${Total_Diezmos}</td>
+                        <td><b><s:message code="fidelidad" /> </b>${Fidelidad}</td>
+                        <td><b><s:message code="depositos" /></b> ${Total_Depositos}</td>
                     </tr>
                 </tbody>
             </table>
@@ -127,6 +116,26 @@
         </form>        
     <content>
         <script src="<c:url value='/js/lista.js' />"></script>
+        <script>
+            $(function() {
+            
+            $( "#clave" ).autocomplete({
+                source: '${pageContext. request. contextPath}/colportaje/colportor/get_colportor_list',
+                select: function(event, ui) {
+                        $("input#clave").val(ui.item.nombre);
+                        $("#temporadaId").html('');
+                        $.getJSON("${pageContext. request. contextPath}/colportaje/temporadaColportor/get_temporada_clp_list?clave="+ui.item.nombre)
+                        .done(function (result) {
+                            $.each(result, function(idx, item){
+                                $("#temporadaId").append($("<option value=\""+item.id+"\">"+item.value+"</option>"));
+                            });
+                        });
+                        $("select#temporadaId").focus();
+                        return false;
+                    }
+            })
+            });
+          </script>
     </content>
 </body>
 </html>

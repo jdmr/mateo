@@ -29,6 +29,7 @@ import mx.edu.um.mateo.colportor.model.Temporada;
 import mx.edu.um.mateo.colportor.model.TemporadaColportor;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.utils.LabelValueBean;
 import mx.edu.um.mateo.general.web.BaseController;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
@@ -38,8 +39,6 @@ import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +53,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -97,11 +95,15 @@ public class DocumentoController extends BaseController {
             @RequestParam(required = false) String order,
             @RequestParam(required = false) String sort,
             @RequestParam(required = false) String clave,
+            @RequestParam(required = false) String temporadaId,
             Usuario usuario,
             Errors errors,
             Model modelo) {
         log.debug("Mostrando lista de documentos");
         Map<String, Object> params = new HashMap<>();
+        params.put("organizacion", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
+        params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
+        params.put("asociado", ambiente.obtieneUsuario().getId());
         
         Integer max = 100;
         if (StringUtils.isNotBlank(filtro)) {
@@ -123,7 +125,7 @@ public class DocumentoController extends BaseController {
         }
         
         log.debug("esAsociado {}, esColportor {}, colportorTmp {}", new Object [] {ambiente.esAsociado(), ambiente.esColportor(), request.getSession().getAttribute("colportorTmp")});
-        TemporadaColportor temporadaColportor = null;
+        TemporadaColportor temporadaColportor = null;        
         
         if (ambiente.esAsociado()) {
             log.debug("Entrando a Documentos como Asociado");
@@ -136,15 +138,25 @@ public class DocumentoController extends BaseController {
                     return Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA;
                 }
                 log.debug("Colportor {} ", colportor);
-                //TemporadaColportor tempClp = temporadaColportorDao.obtiene(colportor);
-                temporadaColportor = temporadaColportorDao.obtiene(colportor);
+                modelo.addAttribute(Constantes.COLPORTOR, colportor);
+                
+                if(temporadaId != null && !temporadaId.isEmpty()){
+                    log.debug("temporadaId {}", temporadaId);
+                    log.debug("temporada {}", temporadaDao.obtiene(Long.valueOf(temporadaId)));
+                    temporadaColportor = temporadaColportorDao.obtiene(colportor, temporadaDao.obtiene(Long.valueOf(temporadaId)));
+                }
+                else{
+                    temporadaColportor = temporadaColportorDao.obtiene(colportor);                    
+                }
+                
                 log.debug("Temporada Colportor {} ", temporadaColportor);
+                modelo.addAttribute(Constantes.TEMPORADACOLPORTOR, temporadaColportor);
                 params.put("temporadaColportor", temporadaColportor.getId());
             } else {
                 errors.reject("colportor.clave.missing");
                 return Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA;
             }
-        }
+        }        
 
         if (ambiente.esColportor()) {
             log.debug("Entrando a Documentos como Colportor");
@@ -173,6 +185,7 @@ public class DocumentoController extends BaseController {
             modelo.addAttribute("temporadaColportorTmp", temporadaColportor);
             log.debug("temporadaColportorTmpId" + temporadaColportor.getId());
             modelo.addAttribute("temporadaColportorPrueba", temporadaColportor.getId().toString());
+            modelo.addAttribute(Constantes.COLPORTOR, colportor);
         }
 
         if (StringUtils.isNotBlank(tipo)) {
@@ -201,26 +214,25 @@ public class DocumentoController extends BaseController {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-
+        
+        List<Documento> lista = null;
+        
         params = DocumentoDao.lista(params);
-        params = temporadaDao.lista(params);
-//        Codigo para Valdiar Pruebas
-
         modelo.addAttribute(Constantes.DOCUMENTOCOLPORTOR_LIST, params.get(Constantes.DOCUMENTOCOLPORTOR_LIST));
-        modelo.addAttribute(Constantes.TEMPORADA_LIST, params.get(Constantes.TEMPORADA_LIST));
 
-        List<Documento> lista = (List) params.get(Constantes.DOCUMENTOCOLPORTOR_LIST);
-        log.debug("Items en lista {}", lista.size());
+        params.put("filtro", clave);
+        List <Temporada> tmps = new ArrayList <>();
+        params = temporadaColportorDao.listadoTemporadasPorColportor(params);
+        List <TemporadaColportor> tmpClps = (List)params.get(Constantes.TEMPORADACOLPORTOR_LIST);
+        for(TemporadaColportor tmpClp : tmpClps){
+            tmps.add(tmpClp.getTemporada());
+        }
+        modelo.addAttribute(Constantes.TEMPORADA_LIST, tmps);
+        lista = (List) params.get(Constantes.DOCUMENTOCOLPORTOR_LIST);
+        
         Iterator<Documento> iter = lista.iterator();
-
-        List<Temporada> listaTemporada = (List) params.get(Constantes.TEMPORADA_LIST);
-
-        params.put("organizacion", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
-        Map<String, Object> temporadas = temporadaDao.lista(params);
-        modelo.addAttribute(Constantes.TEMPORADA_LIST, temporadas.get(Constantes.TEMPORADA_LIST));
-
+        
         Documento doc = null;
-
         BigDecimal totalBoletin = new BigDecimal("0");
         BigDecimal totalDiezmos = new BigDecimal("0");
         BigDecimal totalDepositos = new BigDecimal("0");
@@ -295,29 +307,12 @@ public class DocumentoController extends BaseController {
         modelo.addAttribute(Constantes.ALCANZADO, alcanzado.setScale(2, BigDecimal.ROUND_HALF_EVEN));
         modelo.addAttribute(Constantes.FIDELIDAD, fidelidad.setScale(2, BigDecimal.ROUND_HALF_EVEN));
         
-        // inicia paginado
-        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        
-        List<Documento> documentos = (List<Documento>) params.get(Constantes.DOCUMENTOCOLPORTOR_LIST);
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (documentos.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);        
-        modelo.addAttribute(Constantes.DOCUMENTOCOLPORTOR_LIST, params.get(Constantes.DOCUMENTOCOLPORTOR_LIST));        
-        modelo.addAttribute("claveTmp", temporadaColportorDao.obtiene(temporadaColportor.getId()).getColportor().getClave());
+        pagina = (Long) params.get("pagina");
+        this.pagina(params, modelo, Constantes.DOCUMENTOCOLPORTOR_LIST, pagina);
         
         return Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA;
     }
-
+    
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando documento {}", id);
