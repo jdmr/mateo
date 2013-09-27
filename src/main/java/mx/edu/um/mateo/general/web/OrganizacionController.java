@@ -65,7 +65,6 @@ public class OrganizacionController extends BaseController {
 
     @Autowired
     private OrganizacionDao organizacionDao;
-    
     @Autowired
     private CentroCostoDao centroCostoDao;
 
@@ -84,6 +83,7 @@ public class OrganizacionController extends BaseController {
         if (StringUtils.isNotBlank(filtro)) {
             params.put("filtro", filtro);
         }
+
         if (StringUtils.isNotBlank(order)) {
             params.put("order", order);
             params.put("sort", sort);
@@ -118,10 +118,10 @@ public class OrganizacionController extends BaseController {
                 modelo.addAttribute(
                         "messageAttrs",
                         new String[]{
-                            messageSource.getMessage(
-                            "organizacion.lista.label", null,
-                            request.getLocale()),
-                            ambiente.obtieneUsuario().getUsername()});
+                    messageSource.getMessage(
+                    "organizacion.lista.label", null,
+                    request.getLocale()),
+                    ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
