@@ -17,7 +17,8 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/factura/informeProveedorDetalle'/>"><i class="icon-list icon-white"></i> <s:message code='informeProveedorDetalle.lista.label' /></a>
             </p>
-            <form:form commandName="contrarecibo" action="actualizaFecha" method="post" >
+            <c:url var="actualizaUrl" value="/factura/informeProveedorDetalle/actualizaFecha" />
+            <form:form commandName="contrarecibo" method="post" action="${actualizaUrl}" >
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>

@@ -974,6 +974,16 @@ public class InformeProveedorDetalleController extends BaseController {
         return "/factura/informeProveedorDetalle/fecha";
     }
 
+    @RequestMapping("/cambiarFecha/{id}")
+    public String cambiarFecha(@PathVariable Long id, HttpServletRequest request, Model modelo) {
+        log.debug("Nuevo paquete");
+
+        Contrarecibo contrarecibo = contrareciboManager.obtiene(id);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_CONTRARECIBO, contrarecibo);
+        request.getSession().setAttribute("contrareciboFecha", contrarecibo);
+        return "/factura/informeProveedorDetalle/fecha";
+    }
+
     @Transactional
     @RequestMapping(value = "/actualizaFecha", method = RequestMethod.POST)
     public String actualizaFecha(HttpServletRequest request, HttpServletResponse response, @Valid Contrarecibo contrarecibo,
