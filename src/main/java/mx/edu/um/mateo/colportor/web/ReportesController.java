@@ -7,12 +7,10 @@ package mx.edu.um.mateo.colportor.web;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import mx.edu.um.mateo.colportor.dao.ColportorDao;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.general.dao.RolDao;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.colportor.service.ReportesColportorManager;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -23,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
@@ -32,7 +31,7 @@ public class ReportesController extends BaseController {
     @Autowired
     private ReportesColportorManager rclpMgr;
     @Autowired
-    private RolDao rolDao;
+    private ColportorDao clpDao;
 
     @RequestMapping({"/colportaje/reportes"})
     public String index() {
@@ -116,5 +115,90 @@ public class ReportesController extends BaseController {
         modelo.addAttribute(Constantes.CONTAINSKEY_CENSOCOLPORTORES, params.get(Constantes.CONTAINSKEY_CENSOCOLPORTORES));
 
         return Constantes.PATH_RPT_CLP_CENSOCOLPORTORES;
+    }
+    
+    @RequestMapping("concentradoPorTemporadas")
+    public String concentradoPorTemporadas(HttpServletRequest request, HttpServletResponse response,
+            @RequestParam(required = false) String filtro,
+            @RequestParam(required = false) Long pagina,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) Long colportorId,
+            Usuario usuario,
+            Errors errors,
+            Model modelo,  
+            RedirectAttributes redirectAttributes) {
+        log.debug("Mostrando concentrado por temporadas");
+        
+        log.debug("filtro {}", filtro);
+        log.debug("pagina {}", pagina);
+        log.debug("tipo {}", tipo);
+        log.debug("correo {}", correo);
+        log.debug("order {}", order);
+        log.debug("sort {}", sort);
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
+        params.put("colportor", colportorId);
+
+        if (StringUtils.isNotBlank(filtro)) {
+            params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
+        }
+        if (StringUtils.isNotBlank(order)) {
+            params.put(Constantes.CONTAINSKEY_ORDER, order);
+            params.put(Constantes.CONTAINSKEY_SORT, sort);
+        }
+        if (StringUtils.isNotBlank(tipo)) {
+            log.debug("Entrando a tipo");
+            params.put("reporte", true);
+            try {
+                params = rclpMgr.concentradoPorTemporadas(params);
+            } catch (Exception ex) {
+                log.error("Error al intentar obtener el concentrado por temporadas");
+            }
+            log.debug("Obtuvo listado");
+            try {
+                log.debug("Generando reporte");
+                generaReporte(tipo, (List<Colportor>) params.get(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS), response,
+                        Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS, Constantes.EMP, ambiente.obtieneUsuario().getEmpresa().getId());
+                log.debug("Genero reporte");
+                return null;
+            } catch (Exception e) {
+                log.error("No se pudo generar el reporte", e);
+            }
+        }
+
+        if (StringUtils.isNotBlank(correo)) {
+            params.put("reporte", true);
+            try {
+                params = rclpMgr.concentradoPorTemporadas(params);
+            } catch (Exception ex) {
+                log.error("Error al intentar obtener el concentrado por temporadas");
+            }
+
+            params.remove("reporte");
+            try {
+                enviaCorreo(correo, (List<Colportor>) params.get(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS), request,
+                        Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS, Constantes.EMP, ambiente.obtieneUsuario().getEmpresa().getId());
+                modelo.addAttribute("message", "lista.enviada.message");
+                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("colportor.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+            } catch (Exception e) {
+                log.error("No se pudo enviar el reporte por correo", e);
+            }
+        }
+        try {
+            params = rclpMgr.concentradoPorTemporadas(params);
+        } catch (Exception ex) {
+            log.error("Error al intentar obtener el concentrado por temporadas");
+            ex.printStackTrace();
+            redirectAttributes.addFlashAttribute("message", "error.generar.reporte");
+            return "redirect:/colportaje/reportes";
+        }
+
+        modelo.addAttribute(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS, params.get(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS));
+        modelo.addAttribute(Constantes.COLPORTOR, clpDao.obtiene(colportorId));
+                
+        return Constantes.PATH_RPT_CLP_CONCENTRADOPORTEMPORADAS;
     }
 }

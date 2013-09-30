@@ -5,6 +5,7 @@
 package mx.edu.um.mateo.colportor.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  *
@@ -14,6 +15,10 @@ public class ReporteColportorVO implements Serializable{
     private Colportor colportor;
     private Integer col1;
     private Integer col2;
+    
+    private TemporadaColportor temporadaColportor;
+    private BigDecimal acumuladoBoletin;
+    private BigDecimal acumuladoDiezmo;
 
     public Colportor getColportor() {
         return colportor;
@@ -38,6 +43,30 @@ public class ReporteColportorVO implements Serializable{
     public void setCol2(Integer col2) {
         this.col2 = col2;
     }
-    
+
+    public TemporadaColportor getTemporadaColportor() {
+        return temporadaColportor;
+    }
+
+    public void setTemporadaColportor(TemporadaColportor temporadaColportor) {
+        this.temporadaColportor = temporadaColportor;
+    }
+
+    public BigDecimal getAcumuladoBoletin() {
+        return acumuladoBoletin;
+    }
+
+    public void setAcumuladoBoletin(BigDecimal acumuladoBoletin) {
+        this.acumuladoBoletin = acumuladoBoletin;
+    }
+
+    public BigDecimal getAcumuladoDiezmo() {
+        return acumuladoDiezmo;
+    }
+
+    public void setAcumuladoDiezmo(BigDecimal acumuladoDiezmo) {
+        this.acumuladoDiezmo = acumuladoDiezmo;
+    }
+
     
 }

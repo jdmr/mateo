@@ -4,17 +4,20 @@
  */
 package mx.edu.um.mateo.colportor.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import mx.edu.um.mateo.colportor.dao.ColportorDao;
 import mx.edu.um.mateo.colportor.dao.DocumentoDao;
 import mx.edu.um.mateo.colportor.dao.TemporadaColportorDao;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.colportor.model.Documento;
 import mx.edu.um.mateo.colportor.model.ReporteColportorVO;
+import mx.edu.um.mateo.colportor.model.TemporadaColportor;
 import mx.edu.um.mateo.colportor.service.ReportesColportorManager;
 import mx.edu.um.mateo.general.service.BaseManager;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -81,6 +84,53 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         
         return params;
     }
+
+    @Override
+    public Map<String, Object> concentradoPorTemporadas(Map<String, Object> params) throws Exception {
+        Map <Long, ReporteColportorVO> mVOS = new TreeMap<>();
+        TemporadaColportor tmpClp = null;
+        ReporteColportorVO vo = null;
+        
+        params = docDao.concentradoVentasPorColportor(params);
+        List <Object[]> objs = (List<Object[]>) params.get(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS);
+        for(Object[] obj : objs){
+            log.debug("{}",obj[0]);
+            log.debug("{}",obj[1]);
+            log.debug("{}",obj[2]);
+            
+            tmpClp = tmpClpDao.obtiene((Long)obj[1]);
+            
+            if(mVOS.containsKey(tmpClp.getTemporada().getFechaInicio().getTime())){
+                vo = mVOS.get(tmpClp.getTemporada().getFechaInicio().getTime());
+            }
+            else{
+                vo = new ReporteColportorVO();
+                vo.setTemporadaColportor(tmpClp);
+                
+            }
+            
+            switch((String)obj[2]){
+                case "Boletin":
+                {
+                    vo.setAcumuladoBoletin((BigDecimal)obj[0]);
+                    break;
+                }
+                case "Diezmo":
+                {
+                    vo.setAcumuladoDiezmo((BigDecimal)obj[0]);
+                    break;
+                }
+            }
+                        
+            mVOS.put(vo.getTemporadaColportor().getTemporada().getFechaInicio().getTime(),vo);
+        }
+        params.remove(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS);
+        params.put(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS, mVOS.values());
+        
+        log.debug("{}",mVOS.values());
+        return params;
+    }
+    
     
         
 }
