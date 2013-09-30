@@ -2536,13 +2536,13 @@ public class Constantes {
      * Valores para los Colportores Colportor
      */
     public static final String PATH_COLPORTOR = "/colportaje/colportor";
-    public static final String PATH_COLPORTOR_LISTA = "colportor/lista";
-    public static final String PATH_COLPORTOR_VER = "/colportor/ver";
-    public static final String PATH_COLPORTOR_NUEVO = "colportor/nuevo";
-    public static final String PATH_COLPORTOR_EDITA = "colportor/edita";
-    public static final String PATH_COLPORTOR_CREA = "/colportor/crea";
-    public static final String PATH_COLPORTOR_ACTUALIZA = "/colportor/actualiza";
-    public static final String PATH_COLPORTOR_ELIMINA = "/colportor/elimina";
+    public static final String PATH_COLPORTOR_LISTA = "colportaje/colportor/lista";
+    public static final String PATH_COLPORTOR_VER = "/colportaje/colportor/ver";
+    public static final String PATH_COLPORTOR_NUEVO = "colportaje/colportor/nuevo";
+    public static final String PATH_COLPORTOR_EDITA = "colportaje/colportor/edita";
+    public static final String PATH_COLPORTOR_CREA = "/colportaje/colportor/crea";
+    public static final String PATH_COLPORTOR_ACTUALIZA = "/colportaje/colportor/actualiza";
+    public static final String PATH_COLPORTOR_ELIMINA = "/colportaje/colportor/elimina";
     public static final String ADDATTRIBUTE_COLPORTOR = "colportor";
     /**
      * Valores para los Tipo Colportor Colportor

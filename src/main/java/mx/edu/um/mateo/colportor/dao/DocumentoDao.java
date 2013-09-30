@@ -5,17 +5,20 @@
 package mx.edu.um.mateo.colportor.dao;
 import java.util.*;
 import mx.edu.um.mateo.colportor.model.Documento;
+import mx.edu.um.mateo.colportor.model.TemporadaColportor;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
 import org.slf4j.Logger;
@@ -70,7 +73,13 @@ public class DocumentoDao {
         Criteria countCriteria = currentSession().createCriteria(Documento.class);
         
         if(params.get("temporadaColportor")!=null){
-            criteria.add(Restrictions.eq("temporadaColportor.id",params.get("temporadaColportor")));
+            DetachedCriteria dc = DetachedCriteria.forClass(TemporadaColportor.class, "tc");
+            dc.createCriteria("colportor").createCriteria("empresa").add(Restrictions.idEq((Long)params.get("empresa")));
+            dc.add(Restrictions.idEq((Long)params.get("temporadaColportor")));
+            dc.setProjection(Projections.property("id"));
+
+            criteria.add(Subqueries.propertyIn("temporadaColportor.id", dc));
+            countCriteria.add(Subqueries.propertyIn("temporadaColportor.id", dc));
         
         }
 
@@ -87,10 +96,18 @@ public class DocumentoDao {
         if (params.containsKey(Constantes.CONTAINSKEY_ORDER)) {
             String campo = (String) params.get(Constantes.CONTAINSKEY_ORDER);
             if (params.get(Constantes.CONTAINSKEY_SORT).equals(Constantes.CONTAINSKEY_DESC)) {
+                criteria.addOrder(Order.desc("tipoDeDocumento"));
+                criteria.addOrder(Order.desc("fecha"));
                 criteria.addOrder(Order.desc(campo));
             } else {
+                criteria.addOrder(Order.asc("tipoDeDocumento"));
+                criteria.addOrder(Order.desc("fecha"));
                 criteria.addOrder(Order.asc(campo));
             }
+        }
+        else{
+            criteria.addOrder(Order.desc("tipoDeDocumento"));
+            criteria.addOrder(Order.asc("fecha"));
         }
 
         if (!params.containsKey(Constantes.CONTAINSKEY_REPORTE)) {

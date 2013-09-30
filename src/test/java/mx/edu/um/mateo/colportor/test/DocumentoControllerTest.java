@@ -98,6 +98,7 @@ public class DocumentoControllerTest extends BaseControllerTest {
         authenticate(colportor, colportor.getPassword(), new ArrayList <GrantedAuthority> (colportor.getRoles()));
         
         this.mockMvc.perform(get(Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA)
+                .param("clave", "54321")
                 .param("temporada.id", temporada.getId().toString()))
                 .andExpect(model().attributeExists(Constantes.DOCUMENTOCOLPORTOR_LIST))
                 .andExpect(forwardedUrl("/WEB-INF/jsp/"+Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA+".jsp"));
@@ -138,6 +139,7 @@ public class DocumentoControllerTest extends BaseControllerTest {
         authenticate(colportor, colportor.getPassword(), new ArrayList <GrantedAuthority> (colportor.getRoles()));
         
         this.mockMvc.perform(get(Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA)
+                .param("clave", "54321")
                 .param("temporada.id", temporada.getId().toString()))
                 .andExpect(forwardedUrl("/WEB-INF/jsp/"+Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA+".jsp"));
     }
@@ -198,11 +200,13 @@ public class DocumentoControllerTest extends BaseControllerTest {
         authenticate(colportor, colportor.getPassword(), new ArrayList <GrantedAuthority> (colportor.getRoles()));
         
         this.mockMvc.perform(get(Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA)
+                .param("clave", "54321")
                 .param("temporada.id", temporada.getId().toString()))
                 .andExpect(forwardedUrl("/WEB-INF/jsp/"+Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA+".jsp"));
         log.debug("terminaPrimerLlamada");
 
         this.mockMvc.perform(get(Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA)
+                .param("clave", "54321")
                 .param("temporada.id", temporada2.getId().toString()))
                 .andExpect(forwardedUrl("/WEB-INF/jsp/"+Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA+".jsp"));
         log.debug("terminaSegundaLlamada");
@@ -703,7 +707,9 @@ public class DocumentoControllerTest extends BaseControllerTest {
             documento.setTemporadaColportor(temporadaColportor);
             documentoDao.crea(documento);
         }
-        this.mockMvc.perform(get(Constantes.DOCUMENTOCOLPORTOR_PATH))
+        this.mockMvc.perform(get(Constantes.DOCUMENTOCOLPORTOR_PATH)
+                .param("clave", "54321")
+                .param("temporadaId", "1"))
                 .andExpect(model().attributeExists(Constantes.TOTALBOLETIN))
                 .andExpect(model().attributeExists(Constantes.TOTALDIEZMOS))
                 .andExpect(model().attributeExists(Constantes.TOTALDEPOSITOS))
