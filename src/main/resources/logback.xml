@@ -27,6 +27,7 @@
     <logger name="org.springframework.security" level="ERROR"/>
     <logger name="org.springframework.webflow" level="ERROR"/>
     
+
     <logger name="org.hibernate" level="ERROR"/>
     <logger name="org.hibernate.SQL" level="error"/>
     <logger name="org.hibernate.type" level="error"/>

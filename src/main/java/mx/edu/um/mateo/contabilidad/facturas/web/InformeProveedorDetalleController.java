@@ -11,8 +11,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,7 +128,7 @@ public class InformeProveedorDetalleController extends BaseController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = manager.lista(params);
             try {
-                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), 
+                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE),
                         response, "contrarecibo", Constantes.EMP, empresaId);
                 return null;
             } catch (ReporteException e) {
@@ -182,6 +184,7 @@ public class InformeProveedorDetalleController extends BaseController {
 
     /**
      * Listado de detalles del contrarecibo
+     *
      * @param request
      * @param response
      * @param filtro
@@ -193,7 +196,7 @@ public class InformeProveedorDetalleController extends BaseController {
      * @param usuario
      * @param errors
      * @param modelo
-     * @return 
+     * @return
      */
     @RequestMapping("/listaContrarecibo")
     public String listaContrarecibos(HttpServletRequest request, HttpServletResponse response,
@@ -232,7 +235,7 @@ public class InformeProveedorDetalleController extends BaseController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = manager.lista(params);
             try {
-                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), 
+                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE),
                         response, "contrarecibo", Constantes.EMP, empresaId);
                 return null;
             } catch (ReporteException e) {
@@ -287,7 +290,8 @@ public class InformeProveedorDetalleController extends BaseController {
     }
 
     /**
-     * Listado de contrarecibos 
+     * Listado de contrarecibos
+     *
      * @param request
      * @param response
      * @param filtro
@@ -299,7 +303,7 @@ public class InformeProveedorDetalleController extends BaseController {
      * @param usuario
      * @param errors
      * @param modelo
-     * @return 
+     * @return
      */
     @RequestMapping("/contrarecibos")
     public String contrarecibos(HttpServletRequest request, HttpServletResponse response,
@@ -337,7 +341,7 @@ public class InformeProveedorDetalleController extends BaseController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = manager.lista(params);
             try {
-                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), 
+                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE),
                         response, "contrarecibo", Constantes.EMP, empresaId);
                 return null;
             } catch (ReporteException e) {
@@ -392,7 +396,9 @@ public class InformeProveedorDetalleController extends BaseController {
     }
 
     /**
-     * Listado de facturadas enviadas por el proveedor hacia la UM organizadas por encabezado
+     * Listado de facturadas enviadas por el proveedor hacia la UM organizadas
+     * por encabezado
+     *
      * @param request
      * @param response
      * @param filtro
@@ -404,7 +410,7 @@ public class InformeProveedorDetalleController extends BaseController {
      * @param usuario
      * @param errors
      * @param modelo
-     * @return 
+     * @return
      */
     @RequestMapping({"/contrarecibo"})
     public String contrarecibo(HttpServletRequest request, HttpServletResponse response,
@@ -442,7 +448,7 @@ public class InformeProveedorDetalleController extends BaseController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = manager.lista(params);
             try {
-                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), 
+                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE),
                         response, "contrarecibo", Constantes.EMP, empresaId);
                 return null;
             } catch (ReporteException e) {
@@ -532,7 +538,7 @@ public class InformeProveedorDetalleController extends BaseController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = manager.lista(params);
             try {
-                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE), 
+                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE),
                         response, "contrarecibo", Constantes.EMP, empresaId);
                 return null;
             } catch (ReporteException e) {
@@ -663,32 +669,40 @@ public class InformeProveedorDetalleController extends BaseController {
 
         Map<String, Object> params = new HashMap<>();
         //Subir archivos
-        List<MultipartFile> files = uploadForm.getFiles();
+        try {
+            List<MultipartFile> files = uploadForm.getFiles();
 
-        List<String> fileNames = new ArrayList<String>();
+            List<String> fileNames = new ArrayList<String>();
+            Calendar calendar = GregorianCalendar.getInstance();
+            int año = calendar.get(Calendar.YEAR);
+            int mes = calendar.get(Calendar.MONTH);
+            int dia = calendar.get(Calendar.DATE);
 
-        if (null != files && files.size() > 0) {
-            for (MultipartFile multipartFile : files) {
-                String fileName = multipartFile.getOriginalFilename();
-                fileNames.add(fileName);
-                String uploadDir = "/home/facturas/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename();
-                File dirPath = new File(uploadDir);
-                if (!dirPath.exists()) {
-                    dirPath.mkdirs();
-                }
-                multipartFile.transferTo(new File("/home/facturas/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename()));
-                if (multipartFile.getOriginalFilename().contains(".pdf")) {
-                    detalle.setPathPDF("/home/facturas/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
-                    detalle.setNombrePDF(multipartFile.getOriginalFilename());
-                }
-                if (multipartFile.getOriginalFilename().contains(".xml")) {
-                    detalle.setPathXMl("/home/facturas/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
-                    detalle.setNombreXMl(multipartFile.getOriginalFilename());
+            if (null != files && files.size() > 0) {
+                for (MultipartFile multipartFile : files) {
+                    String fileName = multipartFile.getOriginalFilename();
+                    fileNames.add(fileName);
+                    String uploadDir = "/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename();
+                    File dirPath = new File(uploadDir);
+                    if (!dirPath.exists()) {
+                        dirPath.mkdirs();
+                    }
+                    multipartFile.transferTo(new File("/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename()));
+                    if (multipartFile.getOriginalFilename().contains(".pdf")) {
+                        detalle.setPathPDF("/home/facturas/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
+                        detalle.setNombrePDF(multipartFile.getOriginalFilename());
+                    }
+                    if (multipartFile.getOriginalFilename().contains(".xml")) {
+                        detalle.setPathXMl("/home/facturas/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
+                        detalle.setNombreXMl(multipartFile.getOriginalFilename());
+                    }
                 }
             }
+            ////Subir archivos\\\
+        } catch (NullPointerException e) {
+            log.warn("no se subieron archivos");
+            e.printStackTrace();
         }
-        ////Subir archivos\\\
-
 
         InformeProveedor informe = (InformeProveedor) request.getSession().getAttribute("informeId");
         detalle.setInformeProveedor(informe);
@@ -957,6 +971,16 @@ public class InformeProveedorDetalleController extends BaseController {
         log.debug("Nuevo paquete");
 
 
+        return "/factura/informeProveedorDetalle/fecha";
+    }
+
+    @RequestMapping("/cambiarFecha/{id}")
+    public String cambiarFecha(@PathVariable Long id, HttpServletRequest request, Model modelo) {
+        log.debug("Nuevo paquete");
+
+        Contrarecibo contrarecibo = contrareciboManager.obtiene(id);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_CONTRARECIBO, contrarecibo);
+        request.getSession().setAttribute("contrareciboFecha", contrarecibo);
         return "/factura/informeProveedorDetalle/fecha";
     }
 

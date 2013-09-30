@@ -29,16 +29,7 @@
 
                 <fieldset>
 
-                    <s:bind path="informeProveedor.status">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="status">
-                                <s:message code="status.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="status" maxlength="150" required="true" />
-                            <form:errors path="status" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+
                     <s:bind path="informeProveedor.fechaInforme">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="fechaInforme">
@@ -79,7 +70,7 @@
                                 <s:message code="clabe.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="clabe" size="18" maxlength="25" required="true" />
+                            <form:input path="clabe" size="18" maxlength="25" />
                             <form:errors path="clabe" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -89,7 +80,7 @@
                                 <s:message code="cuentaCheque.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="cuentaCheque" size="18" maxlength="25" required="true" />
+                            <form:input path="cuentaCheque" size="18" maxlength="25"  />
                             <form:errors path="cuentaCheque" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -104,14 +95,28 @@
                             <form:errors path="moneda" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
+                    <%--
                     <s:bind path="informeProveedor.contabilidad">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="contabilidad">
-                                <s:message code="contabilidad.label" />
+                                <label for="cliente">
+                                <s:message code="cliente.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="contabilidad"   maxlength="12" required="true" />
                             <form:errors path="contabilidad" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    --%>
+                    <s:bind path="informeProveedor.contabilidad">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="cliente">
+                                <s:message code="cliente.label" />
+                                <span class="required-indicator">*</span>
+                                <select name="contabilidad">  
+                                    <option value="1" selected>Universidad de Montemorelos</option>  
+                                    <option value="2">COVOPROM</option>  
+                                    <option value="5">Patronato</option>  
+                                </select> 
                         </div>
                     </s:bind>
                     <s:bind path="informeProveedor.ccp">
@@ -120,7 +125,7 @@
                                 <s:message code="ccp.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="ccp"   maxlength="12" required="true" />
+                            <form:input path="ccp"   maxlength="12"  />
                             <form:errors path="ccp" cssClass="alert alert-error" />
                         </div>
                     </s:bind>

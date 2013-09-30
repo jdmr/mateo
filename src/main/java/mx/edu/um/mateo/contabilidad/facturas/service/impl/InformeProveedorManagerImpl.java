@@ -42,7 +42,7 @@ public class InformeProveedorManagerImpl extends BaseManager implements InformeP
     public Map<String, Object> revisar(Map<String, Object> params) {
         return dao.revisar(params);
     }
-
+ 
     @Override
     public InformeProveedor obtiene(final Long id) {
         return dao.obtiene(new Long(id));
@@ -50,11 +50,14 @@ public class InformeProveedorManagerImpl extends BaseManager implements InformeP
 
     @Override
     public void graba(InformeProveedor informeProveedor, Usuario usuario) throws AutorizacionCCPlInvalidoException {
-        String listaCcps = informeProveedor.getCcp();
-        String[] ccps = listaCcps.split(",");
-        for (String ccp : ccps) {
-            if (!ccpDao.obtiene(ccp)) {
-                throw new AutorizacionCCPlInvalidoException(ccp);
+        String CCP = informeProveedor.getCcp();
+        if (CCP != null && !CCP.isEmpty()) {
+            String listaCcps = informeProveedor.getCcp();
+            String[] ccps = listaCcps.split(",");
+            for (String ccp : ccps) {
+                if (!ccpDao.obtiene(ccp)) {
+                    throw new AutorizacionCCPlInvalidoException(ccp);
+                }
             }
         }
         dao.crea(informeProveedor, usuario);

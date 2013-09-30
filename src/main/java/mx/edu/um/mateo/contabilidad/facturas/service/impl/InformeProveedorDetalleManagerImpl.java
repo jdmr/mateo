@@ -91,8 +91,8 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
         clabe = detalle.getInformeProveedor().getClabe();
         banco = detalle.getInformeProveedor().getBanco();
         proveedor = detalle.getInformeProveedor().getNombreProveedor();
-        detalle.setContrarecibo(contrarecibo);
-        detalle.setStatus(Constantes.STATUS_AUTORIZADO);
+//        detalle.setContrarecibo(contrarecibo);
+//        detalle.setStatus(Constantes.STATUS_AUTORIZADO);
         formaPago = detalle.getInformeProveedor().getFormaPago();
         detalle.setUsuarioAutRech(usuario);
         detalle.setFechaAutRech(new Date());
@@ -126,9 +126,16 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
                 log.debug("la forma de pago no coinciden");
                 throw new FormaPagoNoCoincideException(id.toString());
             }
-            detalle2.setStatus(Constantes.STATUS_AUTORIZADO);
-            detalle2.setContrarecibo(contrarecibo);
+//            detalle2.setStatus(Constantes.STATUS_AUTORIZADO);
+//            detalle2.setContrarecibo(contrarecibo);
         }
+        for (Object x : ids) {
+            InformeProveedorDetalle detalleAut = dao.obtiene(Long.valueOf(id));
+            detalle.setStatus(Constantes.STATUS_AUTORIZADO);
+            detalle.setContrarecibo(contrarecibo);
+        }
+
+
         return contrarecibo;
     }
 

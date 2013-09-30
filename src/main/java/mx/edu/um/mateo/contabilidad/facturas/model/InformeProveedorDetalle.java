@@ -28,7 +28,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  * @author develop
  */
 @Entity
-@Table(name = "informeReporteDetalle")
+@Table(name = "informereportedetalle")
 public class InformeProveedorDetalle implements Serializable {
 
     @Id
@@ -265,9 +265,19 @@ public class InformeProveedorDetalle implements Serializable {
         return "InformeProveedorDetalle{" + "id=" + id + ", version=" + version + ", RFCProveedor=" + RFCProveedor + ", folioFactura=" + folioFactura
                 + ", nombreProveedor=" + nombreProveedor + ", subtotal=" + subtotal + ", IVA=" + IVA + ", total=" + total + ", status=" + status
                 + ", fechaFactura=" + fechaFactura + ", pathPDF=" + pathPDF + ", pathXMl=" + pathXMl + ", nombrePDF=" + nombrePDF
-                + ", nombreXMl=" + nombreXMl + ", contrarecibo=" + contrarecibo + ", informeProveedor=" + informeProveedor
-                + ", empresa=" + empresa + ", usuarioAlta=" + usuarioAlta + ", usuarioMOdificacion=" + usuarioMOdificacion
-                + ", usuarioAutRech=" + usuarioAutRech + ", fechaCaptura=" + fechaCaptura + ", fechaAutRech=" + fechaAutRech
+                + ", nombreXMl=" + nombreXMl
+                + ", usuarioMOdificacion="
+                + ", fechaCaptura=" + fechaCaptura + ", fechaAutRech=" + fechaAutRech
                 + ", fechaModificacion=" + fechaModificacion + '}';
     }
+//    @Override
+//    public String toString() {
+//        return "InformeProveedorDetalle{" + "id=" + id + ", version=" + version + ", RFCProveedor=" + RFCProveedor + ", folioFactura=" + folioFactura
+//                + ", nombreProveedor=" + nombreProveedor + ", subtotal=" + subtotal + ", IVA=" + IVA + ", total=" + total + ", status=" + status
+//                + ", fechaFactura=" + fechaFactura + ", pathPDF=" + pathPDF + ", pathXMl=" + pathXMl + ", nombrePDF=" + nombrePDF
+//                + ", nombreXMl=" + nombreXMl + ", contrarecibo=" + contrarecibo.getId().toString() + ", informeProveedor=" + informeProveedor.getId().toString()
+//                + ", empresa=" + empresa.getId().toString() + ", usuarioAlta=" + usuarioAlta.getId().toString() + ", usuarioMOdificacion=" + usuarioMOdificacion.getId().toString()
+//                + ", usuarioAutRech=" + usuarioAutRech.getId().toString() + ", fechaCaptura=" + fechaCaptura + ", fechaAutRech=" + fechaAutRech
+//                + ", fechaModificacion=" + fechaModificacion + '}';
+//    }
 }

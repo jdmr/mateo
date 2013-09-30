@@ -29,6 +29,10 @@
             <input type="hidden" name="observaciones" id="observaciones" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6241a834ae3d729b778e6086b96132bca8c7dac1
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/colportaje/documento/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='documento.nuevo.label' /></a>
                 <input id="clave" name="clave" class="input-medium search-query" value="${colportor.clave}">

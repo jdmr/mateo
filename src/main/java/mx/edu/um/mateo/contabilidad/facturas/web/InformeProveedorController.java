@@ -322,23 +322,26 @@ public class InformeProveedorController extends BaseController {
                     proveedorFacturas1.setClabe(informe.getClabe());
                     pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
                 } else if (informe.getClabe() == null || informe.getClabe().isEmpty()) {
-
+                    log.debug("clabe null");
                     return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
                 }
+                break;
             case "C":
                 if (informe.getCuentaCheque() != null && informe.getCuentaCheque() != proveedorFacturas.getCuentaCheque() && !informe.getCuentaCheque().isEmpty()) {
                     proveedorFacturas1.setCuentaCheque(informe.getCuentaCheque());
                     pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
                 } else if (informe.getCuentaCheque() == null || informe.getCuentaCheque().isEmpty()) {
-
+                    log.debug("cuentanull");
                     return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
                 }
+                break;
         }
 
 
         Usuario usuario = ambiente.obtieneUsuario();
         informe.setNombreProveedor(usuario.getNombre());
         informe.setProveedorFacturas(proveedorFacturas);
+        informe.setStatus(Constantes.STATUS_ACTIVO);
 
         try {
 
@@ -347,18 +350,20 @@ public class InformeProveedorController extends BaseController {
             log.error("No se pudo crear el detalle", e);
             if (e != null) {
                 log.debug("**Enviando mensajes....CCP no encontrado");
-                errors.rejectValue("ccp", "entrada.no.eligio.proveedor.message", null, null);
-                redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "ccp.invalido.message");
-                redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+//                String ccp = e.getMessage();
+//                log.debug("cccp**-**{}", ccp);
+//                redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "ccp.invalido.message");
+//                redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+//                errors.rejectValue("ccp", "ccp.invalido.message", ccp);
             }
-            params = manager.lista(params);
-            List<InformeEmpleado> informes = (List) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR);
-            modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESEMPLEADO, informes);
-
-            params.put("empresa", request.getSession().getAttribute("empresaId"));
-            modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe);
-
-            return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
+//            params = manager.lista(params);
+//            List<InformeEmpleado> informes = (List) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR);
+//            modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESEMPLEADO, informes);
+//
+//            params.put("empresa", request.getSession().getAttribute("empresaId"));
+//            modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe);
+//
+//            return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
         }
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeProveedor.graba.message");
