@@ -54,6 +54,9 @@
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="id.contrarecibo" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="fechaPago" />
                         </jsp:include>
 
@@ -62,7 +65,10 @@
                 <tbody>
                     <c:forEach items="${contrarecibos}" var="contrarecibo" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/factura/informeProveedorDetalle/verContrarecibo/${contrarecibo.id}' />">${contrarecibo.fechaPago}</a></td>                            
+                            <td>${contrarecibo.id}</td>                            
+                            <td>${contrarecibo.fechaPago}</td>                            
+                            <td><a href="<c:url value='/factura/informeProveedorDetalle/verContrarecibo/${contrarecibo.id}' />">Detalles</a></td>                            
+                            <td><a href="<c:url value='/factura/informeProveedorDetalle/cambiarFecha/${contrarecibo.id}' />">Fecha</a></td>                            
 
                         </tr>
                     </c:forEach>

@@ -6,12 +6,14 @@ package mx.edu.um.mateo.contabilidad.facturas.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -48,6 +50,8 @@ public class Contrarecibo implements Serializable {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     private Date fechaModificacion;
+    @OneToMany
+    private List<InformeProveedorDetalle> detalles;
 
     public Contrarecibo() {
     }
@@ -116,10 +120,18 @@ public class Contrarecibo implements Serializable {
         this.fechaModificacion = fechaModificacion;
     }
 
+    public List<InformeProveedorDetalle> getDetalles() {
+        return detalles;
+    }
+
+    public void setDetalles(List<InformeProveedorDetalle> detalles) {
+        this.detalles = detalles;
+    }
+
     @Override
     public String toString() {
-        return "Contrarecibo{" + "id=" + id + ", version=" + version + ", fechaPago=" + fechaPago + ", empresa=" + empresa
-                + ", usuarioAlta=" + usuarioAlta + ", fechaAlta=" + fechaAlta + ", usuarioModificacion=" + usuarioModificacion
-                + ", fechaModificacion=" + fechaModificacion + '}';
+        return "Contrarecibo{" + "id=" + id + ", version=" + version + ", fechaPago=" + fechaPago + ", empresa=" + empresa.getId()
+                + ", usuarioAlta=" + usuarioAlta.getId() + ", fechaAlta=" + fechaAlta + ", usuarioModificacion=" + usuarioModificacion.getId()
+                + ", fechaModificacion=" + fechaModificacion + ", detalles=" + detalles + '}';
     }
 }

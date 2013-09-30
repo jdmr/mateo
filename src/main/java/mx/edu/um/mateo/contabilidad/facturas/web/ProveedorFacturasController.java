@@ -85,7 +85,7 @@ public class ProveedorFacturasController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
-
+        log.debug("paginacion{}", pagina);
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }
@@ -104,7 +104,7 @@ public class ProveedorFacturasController extends BaseController {
                 log.error("No se pudo generar el reporte", e);
             }
         }
-
+        log.debug("paramsini{}", params);
         if (StringUtils.isNotBlank(correo)) {
             params.put("reporte", true);
             params = manager.lista(params);
@@ -119,9 +119,9 @@ public class ProveedorFacturasController extends BaseController {
             }
         }
         params = manager.lista(params);
-
         modelo.addAttribute(Constantes.CONTAINSKEY_PROVEEDORESFACTURAS, params.get(Constantes.CONTAINSKEY_PROVEEDORESFACTURAS));
         this.pagina(params, modelo, Constantes.CONTAINSKEY_PROVEEDORESFACTURAS, pagina);
+        log.debug("paramsfin{}", params);
 
         return Constantes.PATH_PROVEEDORFACTURAS_LISTA;
     }

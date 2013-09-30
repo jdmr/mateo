@@ -97,7 +97,7 @@ public class UsuarioController extends BaseController {
                 log.error("No se pudo generar el reporte", e);
             }
         }
-
+        log.debug("paramsini{}", params);
         if (StringUtils.isNotBlank(correo)) {
             params.put("reporte", true);
             params = usuarioDao.lista(params);
@@ -110,9 +110,9 @@ public class UsuarioController extends BaseController {
                 modelo.addAttribute(
                         "messageAttrs",
                         new String[]{
-                            messageSource.getMessage("usuario.lista.label",
-                            null, request.getLocale()),
-                            ambiente.obtieneUsuario().getUsername()});
+                    messageSource.getMessage("usuario.lista.label",
+                    null, request.getLocale()),
+                    ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
@@ -121,7 +121,7 @@ public class UsuarioController extends BaseController {
         modelo.addAttribute("usuarios", params.get("usuarios"));
 
         this.pagina(params, modelo, "usuarios", pagina);
-
+        log.debug("paramsfin{}", params);
         return "admin/usuario/lista";
     }
 
@@ -192,8 +192,8 @@ public class UsuarioController extends BaseController {
                         request.getLocale()));
                 helper.setText(messageSource.getMessage(
                         "envia.correo.password.contenido.message", new String[]{
-                            usuario.getNombre(), usuario.getUsername(),
-                            password}, request.getLocale()), true);
+                    usuario.getNombre(), usuario.getUsername(),
+                    password}, request.getLocale()), true);
                 mailSender.send(message);
             }
 
@@ -210,7 +210,7 @@ public class UsuarioController extends BaseController {
             redirectAttributes.addFlashAttribute("message",
                     "usuario.creado.sin.correo.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{
-                        usuario.getUsername(), password});
+                usuario.getUsername(), password});
 
             return "redirect:/admin/usuario/ver/" + usuario.getId();
         }
@@ -228,13 +228,13 @@ public class UsuarioController extends BaseController {
         log.debug("Edita usuario {}", id);
         Usuario usuario = usuarioDao.obtiene(id);
         List<CentroCosto> centrosDeCosto = usuarioDao.obtieneCentrosDeCosto(usuario.getEjercicio());
-        for(CentroCosto centroCosto : centrosDeCosto) {
+        for (CentroCosto centroCosto : centrosDeCosto) {
             if (usuario.getCentrosDeCosto().contains(centroCosto)) {
                 centroCosto.setSeleccionado(Boolean.TRUE);
             }
         }
         modelo.addAttribute("centrosDeCosto", centrosDeCosto);
-        
+
         List<Rol> roles = obtieneRoles();
         for (Rol rol : usuario.getRoles()) {
             log.debug("ROL: {}", rol.getAuthority());
@@ -255,7 +255,7 @@ public class UsuarioController extends BaseController {
     public String actualiza(HttpServletRequest request, @Valid Usuario usuario,
             BindingResult bindingResult, Errors errors, Model modelo,
             RedirectAttributes redirectAttributes,
-            @RequestParam(required=false) String[] centrosDeCostoIds) {
+            @RequestParam(required = false) String[] centrosDeCostoIds) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
             List<Rol> roles = obtieneRoles();
