@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport 
-    xmlns="http://jasperreports.sourceforge.net/jasperreports" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
-    name="Entradas" 
-    pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
-        <property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="columnHeader"/>
-        <property name="net.sf.jasperreports.export.xls.exclude.origin.band.1" value="pageHeader"/>
-        <property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
-        <property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.1" value="columnHeader"/>
-        <property name="net.sf.jasperreports.export.csv.exclude.origin.band.1" value="pageHeader"/>
-        <property name="net.sf.jasperreports.export.csv.exclude.origin.band.2" value="pageFooter"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Entradas" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bc930e7a-365c-4ea1-a426-86714f512e88">
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.1" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.1" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.2" value="pageFooter"/>
 	<property name="ireport.zoom" value="1.7715610000000082"/>
-	<property name="ireport.x" value="16"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<field name="folio" class="java.lang.String"/>
 	<field name="fechaModificacion" class="java.util.Date"/>
@@ -26,7 +21,7 @@
 	<title>
 		<band height="34" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="572" height="31"/>
+				<reportElement uuid="4d1f6a9f-f759-4bb6-8b57-bbef4c185d4e" x="0" y="0" width="572" height="31"/>
 				<textElement textAlignment="Left">
 					<font size="24" isBold="true"/>
 				</textElement>
@@ -40,32 +35,32 @@
 	<columnHeader>
 		<band height="15" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="150" height="15"/>
+				<reportElement uuid="fde2b62f-20c5-4683-b196-52082a0883f5" x="0" y="0" width="150" height="15"/>
 				<textElement/>
 				<text><![CDATA[Folio]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="150" y="0" width="150" height="15"/>
+				<reportElement uuid="acf9139a-fe64-4b04-af64-11e55dd84e33" x="150" y="0" width="150" height="15"/>
 				<textElement/>
 				<text><![CDATA[Fecha de Salida]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="300" y="0" width="100" height="15"/>
+				<reportElement uuid="d7d871f1-a826-4519-94e5-99361821da43" x="300" y="0" width="100" height="15"/>
 				<textElement/>
 				<text><![CDATA[Estatus]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="400" y="0" width="50" height="15"/>
-				<textElement textAlignment="Right" />
+				<reportElement uuid="93799850-878e-43a7-99d6-22f3e23f79a5" x="400" y="0" width="50" height="15"/>
+				<textElement textAlignment="Right"/>
 				<text><![CDATA[IVA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="450" y="0" width="50" height="15"/>
-				<textElement textAlignment="Right" />
+				<reportElement uuid="0b8c5154-7cfa-4cff-9022-81f117268fd1" x="450" y="0" width="50" height="15"/>
+				<textElement textAlignment="Right"/>
 				<text><![CDATA[TOTAL]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="510" y="0" width="140" height="15"/>
+				<reportElement uuid="214acdbd-d7ff-41f0-8c66-33c4aab743e8" x="510" y="0" width="140" height="15"/>
 				<textElement/>
 				<text><![CDATA[Almacén]]></text>
 			</staticText>
@@ -74,42 +69,42 @@
 	<detail>
 		<band height="15" splitType="Stretch">
 			<textField isStretchWithOverflow="true">
-				<reportElement x="0" y="0" width="150" height="15"/>
+				<reportElement uuid="4fed368b-b3cd-420c-81c0-6ac9f2e53e80" x="0" y="0" width="150" height="15"/>
 				<textElement verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{folio}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="150" y="0" width="150" height="15"/>
+				<reportElement uuid="edca3f13-3927-473f-8fca-76e229f167ff" x="150" y="0" width="150" height="15"/>
 				<textElement verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{fechaModificacion}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="300" y="0" width="100" height="15"/>
+				<reportElement uuid="c64b92d1-af5b-46bd-8480-9e413e761dd8" x="300" y="0" width="100" height="15"/>
 				<textElement verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{estatus.nombre}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="400" y="0" width="50" height="15"/>
-				<textElement verticalAlignment="Middle" textAlignment="Right">
+				<reportElement uuid="e709c0a6-6a5e-4785-b0a8-79cb3d71a2f8" x="400" y="0" width="50" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{iva}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="450" y="0" width="50" height="15"/>
-				<textElement verticalAlignment="Middle" textAlignment="Right">
+				<reportElement uuid="9eb07d58-95f5-465f-86b7-c46e69c22217" x="450" y="0" width="50" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="510" y="0" width="140" height="15"/>
+				<reportElement uuid="c93c926f-d5f8-43a5-a468-a0ce20cc08b9" x="510" y="0" width="140" height="15"/>
 				<textElement verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>

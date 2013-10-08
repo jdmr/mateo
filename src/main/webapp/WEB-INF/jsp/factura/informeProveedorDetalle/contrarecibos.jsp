@@ -69,6 +69,7 @@
                             <td>${contrarecibo.fechaPago}</td>                            
                             <td><a href="<c:url value='/factura/informeProveedorDetalle/verContrarecibo/${contrarecibo.id}' />">Detalles</a></td>                            
                             <td><a href="<c:url value='/factura/informeProveedorDetalle/cambiarFecha/${contrarecibo.id}' />">Fecha</a></td>                            
+                            <td><a href="<c:url value='/factura/informeProveedorDetalle/reporteContrarecibo/${contrarecibo.id}' />">Reporte</a></td>                            
 
                         </tr>
                     </c:forEach>

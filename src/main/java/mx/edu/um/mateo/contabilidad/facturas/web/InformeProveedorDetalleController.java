@@ -24,7 +24,9 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.contabilidad.facturas.model.Contrarecibo;
+import mx.edu.um.mateo.contabilidad.facturas.model.ContrareciboVO;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
 import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
@@ -1017,5 +1019,40 @@ public class InformeProveedorDetalleController extends BaseController {
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{contrarecibo.getFechaPago().toString()});
 
         return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS;
+    }
+
+    @RequestMapping("/reporteContrarecibo/{id}")
+    public String reporteContrarecibo(@PathVariable Long id, HttpServletRequest request, HttpServletResponse response, Model modelo) throws
+            ReporteException {
+        log.debug("Nuevo paquete");
+        Map<String, Object> params = new HashMap<>();
+        Long empresaId = (Long) request.getSession().getAttribute("empresaId");
+        params.put("empresa", empresaId);
+        Contrarecibo contrarecibo = contrareciboManager.obtiene(id);
+        List<ContrareciboVO> vos = contrareciboManager.ListadeContrarecibosVO(id);
+//        params.put(Constantes.CONTAINSKEY_CONTRARECIBOS, contrarecibo);
+        log.debug("Entrando a tipo");
+        params.put("reporte", true);
+        try {
+            params.put(Constantes.CONTAINSKEY_CONTRARECIBOS, vos);
+//            params = contrareciboManager.lista(params);
+        } catch (Exception ex) {
+            log.error("Error al intentar obtener el censo de colportores");
+        }
+        log.debug("listaContrarecibos**-{}", (List<ContrareciboVO>) params.get(Constantes.CONTAINSKEY_CONTRARECIBOS));
+        log.debug("empresa**-{}", ambiente.obtieneUsuario().getEmpresa().getId());
+        log.debug("Obtuvo listado");
+        try {
+            log.debug("Generando reporte");
+            generaReporte("PDF", (List<ContrareciboVO>) params.get(Constantes.CONTAINSKEY_CONTRARECIBOS), response,
+                    "contrareciboFacturas", Constantes.EMP, ambiente.obtieneUsuario().getEmpresa().getId());
+            log.debug("Genero reporte");
+            return null;
+        } catch (Exception e) {
+            log.error("No se pudo generar el reporte", e);
+            e.printStackTrace();
+        }
+
+        return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS;
     }
 }
