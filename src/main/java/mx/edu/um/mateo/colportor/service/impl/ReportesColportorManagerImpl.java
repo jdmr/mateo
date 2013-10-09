@@ -138,6 +138,57 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         return params;
     }
     
+    /**
+     * @see mx.edu.um.mateo.colportor.service.ReportesColportorManagerImpl#concentradoGralPorTemporadas(java.util.Map <String,Object> params)  throws Exception
+     */
+    public Map<String, Object> concentradoGralPorTemporadas(Map<String, Object> params) throws Exception {
+        Map <Long, ReporteColportorVO> mVOS = new TreeMap<>();
+        TemporadaColportor tmpClp = null;
+        ReporteColportorVO vo = null;
+        Colportor clp = null;
+        
+        params = docDao.concentradoGralVentasPorColportor(params);
+        List <Object[]> objs = (List<Object[]>) params.get(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS);
+        for(Object[] obj : objs){
+            log.debug("{}",obj[0]);
+            log.debug("{}",obj[1]);
+            log.debug("{}",obj[2]);
+            
+            tmpClp = tmpClpDao.obtiene((Long)obj[1]);
+            clp = tmpClp.getColportor();
+            
+            if(mVOS.containsKey(tmpClp.getFecha().getTime())){
+                vo = mVOS.get(tmpClp.getFecha().getTime());
+            }
+            else{
+                vo = new ReporteColportorVO();
+                vo.setColportor(tmpClp.getColportor());
+                vo.setTemporadaColportor(tmpClp);
+                
+            }
+            
+            switch((String)obj[2]){
+                case "Boletin":
+                {
+                    vo.setAcumuladoBoletin((BigDecimal)obj[0]);
+                    break;
+                }
+                case "Diezmo":
+                {
+                    vo.setAcumuladoDiezmo((BigDecimal)obj[0]);
+                    break;
+                }
+            }
+                        
+            mVOS.put(vo.getTemporadaColportor().getFecha().getTime(),vo);
+        }
+        params.remove(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS);
+        params.put(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS, mVOS.values());
+        
+        log.debug("{}",mVOS.values());
+        return params;
+    }
+    
     @Override
     /**
      * @see mx.edu.um.mateo.colportor.service.ReportesColportorManagerImpl#concentradoVentas(java.util.Map <String,Object> params)  throws Exception

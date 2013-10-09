@@ -205,6 +205,92 @@ public class ReportesController extends BaseController {
                 
         return Constantes.PATH_RPT_CLP_CONCENTRADOPORTEMPORADAS;
     }
+    
+    @RequestMapping("concentradoGeneralPorTemporadas")
+    public String concentradoGeneralPorTemporadas(HttpServletRequest request, HttpServletResponse response,
+            @RequestParam(required = false) String filtro,
+            @RequestParam(required = false) Long pagina,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) String clave,
+            Usuario usuario,
+            Errors errors,
+            Model modelo,  
+            RedirectAttributes redirectAttributes) {
+        log.debug("Mostrando concentrado por temporadas");
+        
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
+        
+        if(clave != null && !clave.isEmpty()){
+            params.put("colportor", clpDao.obtiene(clave).getId());            
+        }
+        else{
+            return Constantes.PATH_RPT_CLP_CONCENTRADOGRALPORTEMPORADAS;
+        }
+        
+
+        if (StringUtils.isNotBlank(filtro)) {
+            params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
+        }
+        if (StringUtils.isNotBlank(order)) {
+            params.put(Constantes.CONTAINSKEY_ORDER, order);
+            params.put(Constantes.CONTAINSKEY_SORT, sort);
+        }
+        if (StringUtils.isNotBlank(tipo)) {
+            log.debug("Entrando a tipo");
+            params.put("reporte", true);
+            try {
+                params = rclpMgr.concentradoGralPorTemporadas(params);
+            } catch (Exception ex) {
+                log.error("Error al intentar obtener el concentrado por temporadas");
+            }
+            log.debug("Obtuvo listado");
+            try {
+                log.debug("Generando reporte");
+                generaReporte(tipo, (List<Colportor>) params.get(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS), response,
+                        Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS, Constantes.EMP, ambiente.obtieneUsuario().getEmpresa().getId());
+                log.debug("Genero reporte");
+                return null;
+            } catch (Exception e) {
+                log.error("No se pudo generar el reporte", e);
+            }
+        }
+
+        if (StringUtils.isNotBlank(correo)) {
+            params.put("reporte", true);
+            try {
+                params = rclpMgr.concentradoGralPorTemporadas(params);
+            } catch (Exception ex) {
+                log.error("Error al intentar obtener el concentrado por temporadas");
+            }
+
+            params.remove("reporte");
+            try {
+                enviaCorreo(correo, (List<Colportor>) params.get(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS), request,
+                        Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS, Constantes.EMP, ambiente.obtieneUsuario().getEmpresa().getId());
+                modelo.addAttribute("message", "lista.enviada.message");
+                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("colportor.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+            } catch (Exception e) {
+                log.error("No se pudo enviar el reporte por correo", e);
+            }
+        }
+        try {
+            params = rclpMgr.concentradoGralPorTemporadas(params);
+        } catch (Exception ex) {
+            log.error("Error al intentar obtener el concentrado por temporadas");
+            ex.printStackTrace();
+            redirectAttributes.addFlashAttribute("message", "error.generar.reporte");
+            return "redirect:/colportaje/reportes";
+        }
+
+        modelo.addAttribute(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS, params.get(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS));
+                
+        return Constantes.PATH_RPT_CLP_CONCENTRADOGRALPORTEMPORADAS;
+    }
+    
     @RequestMapping("concentradoVentas")
     public String concentradoVentas(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,

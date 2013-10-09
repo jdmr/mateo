@@ -2958,6 +2958,8 @@ public class Constantes {
     public static final String CONTAINSKEY_CENSOCOLPORTORES = "censoColportores";
     public static final String PATH_RPT_CLP_CONCENTRADOPORTEMPORADAS = "/colportaje/reportes/concentradoPorTemporadas";
     public static final String CONTAINSKEY_CONCENTRADOPORTEMPORADAS = "concentradoPorTemporadas";
+    public static final String PATH_RPT_CLP_CONCENTRADOGRALPORTEMPORADAS = "/colportaje/reportes/concentradoGralPorTemporadas";
+    public static final String CONTAINSKEY_CONCENTRADOGRALPORTEMPORADAS = "concentradoGralPorTemporadas";
     public static final String PATH_RPT_CLP_CONCENTRADOVENTAS = "/colportaje/reportes/concentradoVentas";
     public static final String CONTAINSKEY_CONCENTRADOVENTAS = "concentradoVentas";
 }
