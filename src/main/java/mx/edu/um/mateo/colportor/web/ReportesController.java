@@ -10,8 +10,10 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import mx.edu.um.mateo.colportor.dao.ColportorDao;
+import mx.edu.um.mateo.colportor.dao.TemporadaDao;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.colportor.model.Colportor;
+import mx.edu.um.mateo.colportor.model.Temporada;
 import mx.edu.um.mateo.colportor.service.ReportesColportorManager;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.web.BaseController;
@@ -32,6 +34,8 @@ public class ReportesController extends BaseController {
     private ReportesColportorManager rclpMgr;
     @Autowired
     private ColportorDao clpDao;
+    @Autowired
+    private TemporadaDao tmpDao;
 
     @RequestMapping({"/colportaje/reportes"})
     public String index() {
@@ -200,5 +204,95 @@ public class ReportesController extends BaseController {
         modelo.addAttribute(Constantes.COLPORTOR, clpDao.obtiene(colportorId));
                 
         return Constantes.PATH_RPT_CLP_CONCENTRADOPORTEMPORADAS;
+    }
+    @RequestMapping("concentradoVentas")
+    public String concentradoVentas(HttpServletRequest request, HttpServletResponse response,
+            @RequestParam(required = false) String filtro,
+            @RequestParam(required = false) Long pagina,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) Long temporadaId,
+            Usuario usuario,
+            Errors errors,
+            Model modelo,  
+            RedirectAttributes redirectAttributes) {
+        log.debug("Mostrando concentrado ventas");
+        
+        Map<String, Object> params = new HashMap<>();
+        Temporada tmp = null;
+        
+        params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
+        params.put("organizacion", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
+        
+        if(temporadaId != null){
+            tmp = tmpDao.obtiene(temporadaId);
+            params.put("temporada", tmp.getId());
+        }
+        else{
+            modelo.addAttribute(Constantes.TEMPORADA_LIST, tmpDao.lista(params).get(Constantes.TEMPORADA_LIST));
+            return Constantes.PATH_RPT_CLP_CONCENTRADOVENTAS;
+        }            
+
+        if (StringUtils.isNotBlank(filtro)) {
+            params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
+        }
+        if (StringUtils.isNotBlank(order)) {
+            params.put(Constantes.CONTAINSKEY_ORDER, order);
+            params.put(Constantes.CONTAINSKEY_SORT, sort);
+        }
+        if (StringUtils.isNotBlank(tipo)) {
+            log.debug("Entrando a tipo");
+            params.put("reporte", true);
+            try {
+                params = rclpMgr.concentradoVentas(params);
+            } catch (Exception ex) {
+                log.error("Error al intentar obtener el concentrado ventas");
+            }
+            log.debug("Obtuvo listado");
+            try {
+                log.debug("Generando reporte");
+                generaReporte(tipo, (List<Colportor>) params.get(Constantes.CONTAINSKEY_CONCENTRADOVENTAS), response,
+                        Constantes.CONTAINSKEY_CONCENTRADOVENTAS, Constantes.EMP, ambiente.obtieneUsuario().getEmpresa().getId());
+                log.debug("Genero reporte");
+                return null;
+            } catch (Exception e) {
+                log.error("No se pudo generar el reporte", e);
+            }
+        }
+
+        if (StringUtils.isNotBlank(correo)) {
+            params.put("reporte", true);
+            try {
+                params = rclpMgr.concentradoVentas(params);
+            } catch (Exception ex) {
+                log.error("Error al intentar obtener el concentrado por temporadas");
+            }
+
+            params.remove("reporte");
+            try {
+                enviaCorreo(correo, (List<Colportor>) params.get(Constantes.CONTAINSKEY_CONCENTRADOVENTAS), request,
+                        Constantes.CONTAINSKEY_CONCENTRADOVENTAS, Constantes.EMP, ambiente.obtieneUsuario().getEmpresa().getId());
+                modelo.addAttribute("message", "lista.enviada.message");
+                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("colportor.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+            } catch (Exception e) {
+                log.error("No se pudo enviar el reporte por correo", e);
+            }
+        }
+        try {
+            params = rclpMgr.concentradoVentas(params);
+        } catch (Exception ex) {
+            log.error("Error al intentar obtener el concentrado por temporadas");
+            ex.printStackTrace();
+            redirectAttributes.addFlashAttribute("message", "error.generar.reporte");
+            return "redirect:/colportaje/reportes";
+        }
+
+        modelo.addAttribute(Constantes.CONTAINSKEY_CONCENTRADOVENTAS, params.get(Constantes.CONTAINSKEY_CONCENTRADOVENTAS));
+        modelo.addAttribute(Constantes.TEMPORADA_LIST, tmpDao.lista(params).get(Constantes.TEMPORADA_LIST));
+        modelo.addAttribute(Constantes.TEMPORADA, tmp);
+                
+        return Constantes.PATH_RPT_CLP_CONCENTRADOVENTAS;
     }
 }

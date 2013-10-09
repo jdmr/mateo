@@ -38,6 +38,10 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
     private DocumentoDao docDao;
 
     @Override
+    
+    /**
+     * @see mx.edu.um.mateo.colportor.service.ReportesColportorManagerImpl#censoColportores(java.util.Map <String,Object> params)  throws Exception
+     */
     public Map <String, Object> censoColportores(Map <String, Object> params) throws Exception {
         log.debug("Entrando a 'censoColportores'");
         params = clpDao.obtieneColportores(params);        
@@ -86,6 +90,9 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
     }
 
     @Override
+    /**
+     * @see mx.edu.um.mateo.colportor.service.ReportesColportorManagerImpl#concentradoPorTemporadas(java.util.Map <String,Object> params)  throws Exception
+     */
     public Map<String, Object> concentradoPorTemporadas(Map<String, Object> params) throws Exception {
         Map <Long, ReporteColportorVO> mVOS = new TreeMap<>();
         TemporadaColportor tmpClp = null;
@@ -131,6 +138,55 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         return params;
     }
     
-    
+    @Override
+    /**
+     * @see mx.edu.um.mateo.colportor.service.ReportesColportorManagerImpl#concentradoVentas(java.util.Map <String,Object> params)  throws Exception
+     */
+    public Map<String, Object> concentradoVentas(Map<String, Object> params) throws Exception {
+        Map <String, ReporteColportorVO> mVOS = new TreeMap<>();
+        TemporadaColportor tmpClp = null;
+        Colportor clp = null;
+        ReporteColportorVO vo = null;
         
+        params = docDao.concentradoVentas(params);
+        List <Object[]> objs = (List<Object[]>) params.get(Constantes.CONTAINSKEY_CONCENTRADOVENTAS);
+        for(Object[] obj : objs){
+            log.debug("{}",obj[0]);
+            log.debug("{}",obj[1]);
+            log.debug("{}",obj[2]);
+            log.debug("{}",obj[3]);
+            
+            tmpClp = tmpClpDao.obtiene((Long)obj[2]);
+            clp = clpDao.obtiene((Long)obj[1]);
+            
+            if(mVOS.containsKey(clp.getApPaterno()+clp.getApMaterno()+tmpClp.getTemporada().getFechaInicio().getTime())){
+                vo = mVOS.get(clp.getApPaterno()+clp.getApMaterno()+tmpClp.getTemporada().getFechaInicio().getTime());
+            }
+            else{
+                vo = new ReporteColportorVO();
+                vo.setColportor(clp);
+                vo.setTemporadaColportor(tmpClp);
+                
+            }
+            
+            switch((String)obj[3]){
+                case "Boletin":
+                {
+                    vo.setAcumuladoBoletin((BigDecimal)obj[0]);
+                    break;
+                }
+                case "Diezmo":
+                {
+                    vo.setAcumuladoDiezmo((BigDecimal)obj[0]);
+                    break;
+                }
+            }
+                        
+            mVOS.put(clp.getApPaterno()+clp.getApMaterno()+vo.getTemporadaColportor().getTemporada().getFechaInicio().getTime(),vo);
+        }
+        params.put(Constantes.CONTAINSKEY_CONCENTRADOVENTAS, mVOS.values());
+        
+        log.debug("{}",mVOS.values());
+        return params;
+    }
 }

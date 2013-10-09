@@ -76,6 +76,7 @@ public class DocumentoDaoTest extends BaseDaoTest {
 
         Map<String, Object> params = new TreeMap<String, Object>();
         params.put("temporadaColportor", temporadaColportor.getId());
+        params.put("empresa", colportor.getEmpresa().getId());
         Map result = instance.lista(params);
         
         assertNotNull(result.get(Constantes.DOCUMENTOCOLPORTOR_LIST));

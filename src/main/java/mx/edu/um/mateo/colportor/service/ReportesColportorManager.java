@@ -25,4 +25,11 @@ public interface ReportesColportorManager {
      * @throws Exception 
      */
     public Map <String,Object> concentradoPorTemporadas(Map <String,Object> params)  throws Exception;
+    /**
+     * Regresa el listado de TODOS los colportores con sus ventas concentradas en determinada temporada
+     * @param params
+     * @return
+     * @throws Exception 
+     */
+    public Map<String, Object> concentradoVentas(Map<String, Object> params) throws Exception;
 }

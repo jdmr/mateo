@@ -275,6 +275,34 @@ public class DocumentoDao {
         
         return params;
     }
+    /**
+     * Regresa un map, agrupado por colportor, con sus totales de venta.
+     * @param params, se espera que dentro de params venga un Documento (Constantes.DOCUMENTOCOLPORTOR), con una fecha especificada,
+     * de donde se tomar&aacute; el a&ntilde;o
+     * <br>Se espera que params contenga una llave "empresa" y como valor el id de la empresa
+     * <br>Se espera que params contenga una llave "temporada" y como valor el id de la temporada
+     * @return
+     * @throws Exception 
+     */
+    public Map <String, Object> concentradoVentas(Map <String, Object> params) throws Exception{
+        Criteria sql = currentSession().createCriteria(Documento.class);
+        sql.createAlias("temporadaColportor", "tc");
+        sql.createAlias("temporadaColportor.colportor", "clp");
+        sql.createCriteria("clp.empresa").add(Restrictions.idEq((Long)params.get("empresa")));
+        sql.createCriteria("tc.temporada").add(Restrictions.idEq((Long)params.get("temporada")));
+        
+        ProjectionList projs = Projections.projectionList()
+                .add(Projections.sum("importe"));
+        ProjectionList projsGr = Projections.projectionList()
+                .add(Projections.groupProperty("clp.id"))
+                .add(Projections.groupProperty("tc.id"))
+                .add(Projections.groupProperty("tipoDeDocumento"));
+        sql.setProjection(projs.add(projsGr));
+        
+        params.put(Constantes.CONTAINSKEY_CONCENTRADOVENTAS, sql.list());
+        
+        return params;
+    }
     
     
 }

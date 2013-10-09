@@ -89,6 +89,9 @@ public class TemporadaDao extends BaseDao {
             }
             
         }
+        else{
+            criteria.addOrder(Order.asc("nombre"));
+        }
 
         if (!params.containsKey(Constantes.CONTAINSKEY_REPORTE)) {
             criteria.setFirstResult((Integer) params.get(Constantes.CONTAINSKEY_OFFSET));
