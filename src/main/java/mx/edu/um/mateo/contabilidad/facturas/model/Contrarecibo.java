@@ -47,6 +47,8 @@ public class Contrarecibo implements Serializable {
     private Date fechaAlta;
     @ManyToOne(fetch = FetchType.LAZY)
     private Usuario usuarioModificacion;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ProveedorFacturas proveedorFacturas;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     private Date fechaModificacion;
@@ -128,10 +130,20 @@ public class Contrarecibo implements Serializable {
         this.detalles = detalles;
     }
 
+    public ProveedorFacturas getProveedorFacturas() {
+        return proveedorFacturas;
+    }
+
+    public void setProveedorFacturas(ProveedorFacturas proveedorFacturas) {
+        this.proveedorFacturas = proveedorFacturas;
+    }
+
     @Override
     public String toString() {
-        return "Contrarecibo{" + "id=" + id + ", version=" + version + ", fechaPago=" + fechaPago + ", empresa=" + empresa.getId()
-                + ", usuarioAlta=" + usuarioAlta.getId() + ", fechaAlta=" + fechaAlta + ", usuarioModificacion=" + usuarioModificacion.getId()
-                + ", fechaModificacion=" + fechaModificacion + ", detalles=" + detalles + '}';
+        return "Contrarecibo{" + "id=" + id + ", version=" + version + ", fechaPago=" + fechaPago
+                + ", empresa=" + empresa + ", usuarioAlta=" + usuarioAlta
+                + ", fechaAlta=" + fechaAlta + ", usuarioModificacion="
+                + usuarioModificacion + ", proveedorFacturas="
+                + proveedorFacturas + ", fechaModificacion=" + fechaModificacion + ", detalles=" + detalles + '}';
     }
 }

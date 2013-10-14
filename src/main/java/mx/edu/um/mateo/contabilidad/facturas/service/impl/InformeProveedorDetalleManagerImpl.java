@@ -10,6 +10,7 @@ import java.util.Map;
 import mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDetallesDao;
 import mx.edu.um.mateo.contabilidad.facturas.model.Contrarecibo;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
+import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
 import mx.edu.um.mateo.contabilidad.facturas.service.ContrareciboManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorDetalleManager;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -84,9 +85,10 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
         Contrarecibo contrarecibo = new Contrarecibo();
         contrarecibo.setFechaAlta(new Date());
         contrarecibo.setUsuarioAlta(usuario);
-        contrareciboManager.graba(contrarecibo, usuario);
+
         String id = (String) ids.get(ids.size() - 1);
         InformeProveedorDetalle detalle = dao.obtiene(Long.valueOf(id));
+        ProveedorFacturas proveedorFacturas = detalle.getInformeProveedor().getProveedorFacturas();
         cuentaCheque = detalle.getInformeProveedor().getCuentaCheque();
         clabe = detalle.getInformeProveedor().getClabe();
         banco = detalle.getInformeProveedor().getBanco();
@@ -134,8 +136,8 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
             detalle.setStatus(Constantes.STATUS_AUTORIZADO);
             detalle.setContrarecibo(contrarecibo);
         }
-
-
+        contrarecibo.setProveedorFacturas(proveedorFacturas);
+        contrareciboManager.graba(contrarecibo, usuario);
         return contrarecibo;
     }
 
