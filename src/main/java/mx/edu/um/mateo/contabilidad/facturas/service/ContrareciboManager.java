@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.contabilidad.facturas.service;
 
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.contabilidad.facturas.model.Contrarecibo;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -21,4 +22,6 @@ public interface ContrareciboManager {
     public Contrarecibo obtiene(Long id);
 
     public void actualiza(Contrarecibo contrarecibo, Usuario usuario);
+
+    public List ListadeContrarecibosVO(Long id);
 }
