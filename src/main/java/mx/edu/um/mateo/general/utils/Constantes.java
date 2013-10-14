@@ -2536,13 +2536,13 @@ public class Constantes {
      * Valores para los Colportores Colportor
      */
     public static final String PATH_COLPORTOR = "/colportaje/colportor";
-    public static final String PATH_COLPORTOR_LISTA = "colportor/lista";
-    public static final String PATH_COLPORTOR_VER = "/colportor/ver";
-    public static final String PATH_COLPORTOR_NUEVO = "colportor/nuevo";
-    public static final String PATH_COLPORTOR_EDITA = "colportor/edita";
-    public static final String PATH_COLPORTOR_CREA = "/colportor/crea";
-    public static final String PATH_COLPORTOR_ACTUALIZA = "/colportor/actualiza";
-    public static final String PATH_COLPORTOR_ELIMINA = "/colportor/elimina";
+    public static final String PATH_COLPORTOR_LISTA = "colportaje/colportor/lista";
+    public static final String PATH_COLPORTOR_VER = "/colportaje/colportor/ver";
+    public static final String PATH_COLPORTOR_NUEVO = "colportaje/colportor/nuevo";
+    public static final String PATH_COLPORTOR_EDITA = "colportaje/colportor/edita";
+    public static final String PATH_COLPORTOR_CREA = "/colportaje/colportor/crea";
+    public static final String PATH_COLPORTOR_ACTUALIZA = "/colportaje/colportor/actualiza";
+    public static final String PATH_COLPORTOR_ELIMINA = "/colportaje/colportor/elimina";
     public static final String ADDATTRIBUTE_COLPORTOR = "colportor";
     /**
      * Valores para los Tipo Colportor Colportor
@@ -2956,4 +2956,10 @@ public class Constantes {
     public static final String PATH_RPT_CLP = "/colportaje/reportes";
     public static final String PATH_RPT_CLP_CENSOCOLPORTORES = "/colportaje/reportes/censoColportores";
     public static final String CONTAINSKEY_CENSOCOLPORTORES = "censoColportores";
+    public static final String PATH_RPT_CLP_CONCENTRADOPORTEMPORADAS = "/colportaje/reportes/concentradoPorTemporadas";
+    public static final String CONTAINSKEY_CONCENTRADOPORTEMPORADAS = "concentradoPorTemporadas";
+    public static final String PATH_RPT_CLP_CONCENTRADOGRALPORTEMPORADAS = "/colportaje/reportes/concentradoGralPorTemporadas";
+    public static final String CONTAINSKEY_CONCENTRADOGRALPORTEMPORADAS = "concentradoGralPorTemporadas";
+    public static final String PATH_RPT_CLP_CONCENTRADOVENTAS = "/colportaje/reportes/concentradoVentas";
+    public static final String CONTAINSKEY_CONCENTRADOVENTAS = "concentradoVentas";
 }

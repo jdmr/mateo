@@ -5,17 +5,20 @@
 package mx.edu.um.mateo.colportor.dao;
 import java.util.*;
 import mx.edu.um.mateo.colportor.model.Documento;
+import mx.edu.um.mateo.colportor.model.TemporadaColportor;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
 import org.slf4j.Logger;
@@ -70,7 +73,13 @@ public class DocumentoDao {
         Criteria countCriteria = currentSession().createCriteria(Documento.class);
         
         if(params.get("temporadaColportor")!=null){
-            criteria.add(Restrictions.eq("temporadaColportor.id",params.get("temporadaColportor")));
+            DetachedCriteria dc = DetachedCriteria.forClass(TemporadaColportor.class, "tc");
+            dc.createCriteria("colportor").createCriteria("empresa").add(Restrictions.idEq((Long)params.get("empresa")));
+            dc.add(Restrictions.idEq((Long)params.get("temporadaColportor")));
+            dc.setProjection(Projections.property("id"));
+
+            criteria.add(Subqueries.propertyIn("temporadaColportor.id", dc));
+            countCriteria.add(Subqueries.propertyIn("temporadaColportor.id", dc));
         
         }
 
@@ -87,10 +96,18 @@ public class DocumentoDao {
         if (params.containsKey(Constantes.CONTAINSKEY_ORDER)) {
             String campo = (String) params.get(Constantes.CONTAINSKEY_ORDER);
             if (params.get(Constantes.CONTAINSKEY_SORT).equals(Constantes.CONTAINSKEY_DESC)) {
+                criteria.addOrder(Order.desc("tipoDeDocumento"));
+                criteria.addOrder(Order.desc("fecha"));
                 criteria.addOrder(Order.desc(campo));
             } else {
+                criteria.addOrder(Order.asc("tipoDeDocumento"));
+                criteria.addOrder(Order.desc("fecha"));
                 criteria.addOrder(Order.asc(campo));
             }
+        }
+        else{
+            criteria.addOrder(Order.desc("tipoDeDocumento"));
+            criteria.addOrder(Order.asc("fecha"));
         }
 
         if (!params.containsKey(Constantes.CONTAINSKEY_REPORTE)) {
@@ -229,6 +246,89 @@ public class DocumentoDao {
         params.put(Constantes.DOCUMENTOCOLPORTOR_LIST, mapa);
         return params;
 
+    }
+    
+    /**
+     * Regresa un map, agrupado por colportor, con sus totales de venta.
+     * @param params, se espera que dentro de params venga un Documento (Constantes.DOCUMENTOCOLPORTOR), con una fecha especificada,
+     * de donde se tomar&aacute; el a&ntilde;o
+     * <br>Se espera que params contenga una llave "empresa" y como valor el id de la empresa
+     * <br>Se espera que params contenga una llave "colportor" y como valor el id del colportor
+     * @return
+     * @throws Exception 
+     */
+    public Map <String, Object> concentradoVentasPorColportor(Map <String, Object> params) throws Exception{
+        Criteria sql = currentSession().createCriteria(Documento.class);
+        sql.createAlias("temporadaColportor", "tc");
+        sql.createCriteria("temporadaColportor.colportor")
+            .add(Restrictions.idEq((Long)params.get("colportor")))
+            .createCriteria("empresa").add(Restrictions.idEq((Long)params.get("empresa")));
+        
+        ProjectionList projs = Projections.projectionList()
+                .add(Projections.sum("importe"));
+        ProjectionList projsGr = Projections.projectionList()
+                .add(Projections.groupProperty("tc.id"))
+                .add(Projections.groupProperty("tipoDeDocumento"));
+        sql.setProjection(projs.add(projsGr));
+        
+        params.put(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS, sql.list());
+        
+        return params;
+    }
+    
+    /**
+     * Regresa un map, agrupado por colportor, con sus totales de venta de todas las temporadas.
+     * @param params, se espera que dentro de params venga un Documento (Constantes.DOCUMENTOCOLPORTOR), con una fecha especificada,
+     * de donde se tomar&aacute; el a&ntilde;o
+     * <br>Se espera que params contenga una llave "empresa" y como valor el id de la empresa
+     * @return
+     * @throws Exception 
+     */
+    public Map <String, Object> concentradoGralVentasPorColportor(Map <String, Object> params) throws Exception{
+        Criteria sql = currentSession().createCriteria(Documento.class);
+        sql.createAlias("temporadaColportor", "tc");
+        sql.createCriteria("temporadaColportor.colportor")
+            .add(Restrictions.idEq((Long)params.get("colportor")))
+            .createCriteria("empresa").add(Restrictions.idEq((Long)params.get("empresa")));
+        
+        ProjectionList projs = Projections.projectionList()
+                .add(Projections.sum("importe"));
+        ProjectionList projsGr = Projections.projectionList()
+                .add(Projections.groupProperty("tc.id"))
+                .add(Projections.groupProperty("tipoDeDocumento"));
+        sql.setProjection(projs.add(projsGr));
+        
+        params.put(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS, sql.list());
+        
+        return params;
+    }
+    /**
+     * Regresa un map, agrupado por colportor, con sus totales de venta.
+     * @param params, se espera que dentro de params venga un Documento (Constantes.DOCUMENTOCOLPORTOR), con una fecha especificada,
+     * de donde se tomar&aacute; el a&ntilde;o
+     * <br>Se espera que params contenga una llave "empresa" y como valor el id de la empresa
+     * <br>Se espera que params contenga una llave "temporada" y como valor el id de la temporada
+     * @return
+     * @throws Exception 
+     */
+    public Map <String, Object> concentradoVentas(Map <String, Object> params) throws Exception{
+        Criteria sql = currentSession().createCriteria(Documento.class);
+        sql.createAlias("temporadaColportor", "tc");
+        sql.createAlias("temporadaColportor.colportor", "clp");
+        sql.createCriteria("clp.empresa").add(Restrictions.idEq((Long)params.get("empresa")));
+        sql.createCriteria("tc.temporada").add(Restrictions.idEq((Long)params.get("temporada")));
+        
+        ProjectionList projs = Projections.projectionList()
+                .add(Projections.sum("importe"));
+        ProjectionList projsGr = Projections.projectionList()
+                .add(Projections.groupProperty("clp.id"))
+                .add(Projections.groupProperty("tc.id"))
+                .add(Projections.groupProperty("tipoDeDocumento"));
+        sql.setProjection(projs.add(projsGr));
+        
+        params.put(Constantes.CONTAINSKEY_CONCENTRADOVENTAS, sql.list());
+        
+        return params;
     }
     
     

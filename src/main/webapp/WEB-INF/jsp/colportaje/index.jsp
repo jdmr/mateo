@@ -10,14 +10,14 @@
 <!DOCTYPE html>
 <html>
    <head>
-        <title><s:message code="reportes.label" /></title>
+        <title><s:message code="colportaje.label" /></title>
     </head>
      <body>
         <jsp:include page="menu.jsp" >
             <jsp:param name="menu" value="principal" />
         </jsp:include>
 
-        <h1><s:message code="reportes.label" /></h1>
+        <h1><s:message code="colportaje.label" /></h1>
         
          <c:if test="${not empty message}">
             <div class="alert alert-block alert-success fade in" role="status">

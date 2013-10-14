@@ -6,6 +6,8 @@
         <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
         <li<c:if test="${param.menu eq 'principal'}"> class="active"</c:if>><a href="<c:url value='/colportaje' />"><s:message code="colportaje.label" /></a></li>
         <li<c:if test="${param.menu eq 'censoColportores'}"> class="active"</c:if>><a href="<s:url value='/colportaje/reportes/censoColportores'/>" ><s:message code="censoColportores.label" /></a></li>
+        <li<c:if test="${param.menu eq 'concentradoVentas'}"> class="active"</c:if>><a href="<s:url value='/colportaje/reportes/concentradoVentas'/>" ><s:message code="concentradoVentas.label" /></a></li>
+        <li<c:if test="${param.menu eq 'concentradoGral'}"> class="active"</c:if>><a href="<s:url value='/colportaje/reportes/concentradoGeneralPorTemporadas'/>" ><s:message code="concentradoGralPorTemporadas.label" /></a></li>
     </ul>
 </nav>
     

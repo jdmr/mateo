@@ -1,4 +1,5 @@
 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
@@ -37,16 +38,26 @@
                 <s:message code="temporada.label" />
                 <select id="temporadaId" name="temporadaId" id="temporadaId" class="input-large search-query" value="${temporadaColportor.id}">
                     <c:forEach items="${temporadas}" var="temporada">
-                        <option value="${temporada.id}">${temporada.nombre}</option>
+                        <c:if test="${temporada.nombre eq temporadaColportor.temporada.nombre}">
+                            <option value="${temporada.id}" selected="true">${temporada.nombre}</option>
+                        </c:if>
+                        <c:if test="${not (temporada.nombre eq temporadaColportor.temporada.nombre)}">
+                            <option value="${temporada.id}">${temporada.nombre}</option>
+                        </c:if>
+                        
                     </c:forEach>
                 </select>
                 <button type="submit" class="btn"><s:message code="buscar.label" /></button>
             </p>   
             
             <h3>
-                ${temporadaColportor.colportor.clave}&nbsp;${temporadaColportor.colportor.nombre}&nbsp;${temporadaColportor.colportor.apPaterno}&nbsp;${temporadaColportor.colportor.apMaterno}
+                ${temporadaColportor.colportor.clave}&nbsp;${temporadaColportor.colportor.nombreCompleto}
                 -
                 ${temporadaColportor.temporada.nombre}
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <c:if test="${not (temporadaColportor eq null)}">
+                    <a class="btn btn-primary" target="_blank" href="<s:url value='/colportaje/reportes/concentradoPorTemporadas?colportorId=${temporadaColportor.colportor.id}'/>"><i class="icon-user icon-white"></i> <s:message code='concentradoPorTemporadas.label' /></a>
+                </c:if>
             </h3>
             
             <c:if test="${not empty message}">
@@ -71,12 +82,12 @@
             <table id="totales" class="table">
                 <tbody>
                     <tr> 
-                        <td><b><s:message code="compras.label" /> </b>${Total_Boletin}</td>
-                        <td><b><s:message code="objetivo.label" /> </b>${temporadaColportor.objetivo}</td>
-                        <td><b><s:message code="pctAlcanzado.label" /> </b>${Alcanzado}</td>
-                        <td><b><s:message code="diezmo" /> </b>${Total_Diezmos}</td>
-                        <td><b><s:message code="fidelidad" /> </b>${Fidelidad}</td>
-                        <td><b><s:message code="depositos" /></b> ${Total_Depositos}</td>
+                        <td><b><s:message code="compras.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${Total_Boletin}"/></td>
+                        <td><b><s:message code="objetivo.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${temporadaColportor.objetivo}"/></td>
+                        <td><b><s:message code="pctAlcanzado.label" /> </b><fmt:formatNumber type="percent" currencySymbol="%" value="${Alcanzado*10}"/></td>
+                        <td><b><s:message code="diezmo" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${Total_Diezmos}"/></td>
+                        <td><b><s:message code="fidelidad" /> </b><fmt:formatNumber type="percent" currencySymbol="%" value="${Fidelidad*10}"/></td>
+                        <td><b><s:message code="depositos" /></b><fmt:formatNumber type="currency" currencySymbol="$" value="${Total_Depositos}"/></td>
                     </tr>
                 </tbody>
             </table>
@@ -104,9 +115,9 @@
                     <c:forEach items="${documentos}" var="documento" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/colportaje/documento/ver/${documento.id}' />">${documento.tipoDeDocumento}</a></td>
-                            <td>${documento.fecha}</td>
+                            <td><fmt:formatDate pattern="dd/MMM/yyyy" value="${documento.fecha}" /></td>
                             <td>${documento.folio}</td>
-                            <td>${documento.importe}</td>
+                            <td><div align="right"><fmt:formatNumber type="currency" currencySymbol="$" value="${documento.importe}" /></div></td>
                             <td>${documento.observaciones}</td>
                         </tr>
                     </c:forEach>
