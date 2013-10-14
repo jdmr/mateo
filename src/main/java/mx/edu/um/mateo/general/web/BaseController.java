@@ -32,6 +32,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -84,7 +85,6 @@ public abstract class BaseController {
     protected ReporteUtil reporteUtil;
     @Autowired
     protected ReporteDao reporteDao;
-    
     @Autowired
     protected UtilControllerTests utils;
 
@@ -123,7 +123,7 @@ public abstract class BaseController {
             cantidadDePaginas++;
         }
         log.debug("Paginacion: {} {} {} {}", new Object[]{pagina, cantidad,
-                    max, cantidadDePaginas});
+            max, cantidadDePaginas});
         Set<Long> paginas = new LinkedHashSet<>();
         long h = pagina - 1;
         long i = pagina;
@@ -252,6 +252,40 @@ public abstract class BaseController {
         return archivo;
     }
 
+    protected byte[] generaPdfSubreporte(List<?> lista, String nombre, String tipo,
+            Long id) throws JRException {
+        log.debug("Generando PDF");
+        Map<String, Object> params = new HashMap<>();
+        JasperReport jasperReport = null;
+        JasperReport jasperReportSB = null;
+        switch (tipo) {
+            case Constantes.ADMIN:
+                jasperReport = reporteDao.obtieneReporteAdministrativo(nombre);
+                break;
+            case Constantes.ORG:
+                jasperReport = reporteDao.obtieneReportePorOrganizacion(nombre, id);
+                break;
+            case Constantes.EMP:
+                jasperReport = reporteDao.obtieneReportePorEmpresa(nombre, id);
+                jasperReportSB = reporteDao.obtieneReportePorEmpresa("contrareciboFacturasabajo", id);
+
+                break;
+            case Constantes.ALM:
+                jasperReport = reporteDao.obtieneReportePorAlmacen(nombre, id);
+                break;
+        }
+
+        log.debug("subreportarriba*****-*{}", jasperReportSB.toString());
+//        params.put("subreportarriba", jasperReportSB);
+        params.put("parameter1", jasperReportSB);
+
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,
+                params, new JRBeanCollectionDataSource(lista));
+        byte[] archivo = JasperExportManager.exportReportToPdf(jasperPrint);
+
+        return archivo;
+    }
+
     protected byte[] generaCsv(List<?> lista, String nombre, String tipo,
             Long id) throws JRException {
         log.debug("Generando CSV");
@@ -344,7 +378,7 @@ public abstract class BaseController {
             byte[] archivo = null;
             switch (tipo) {
                 case "PDF":
-                    archivo = generaPdf(lista, nombre, tipoReporte, id);
+                    archivo = generaPdfSubreporte(lista, nombre, tipoReporte, id);
                     response.setContentType("application/pdf");
                     response.addHeader("Content-Disposition",
                             "attachment; filename=" + nombre + ".pdf");
@@ -365,7 +399,7 @@ public abstract class BaseController {
             if (archivo != null) {
                 response.setContentLength(archivo.length);
                 try (BufferedOutputStream bos = new BufferedOutputStream(
-                                response.getOutputStream())) {
+                        response.getOutputStream())) {
                     bos.write(archivo);
                     bos.flush();
                 }
@@ -469,12 +503,12 @@ public abstract class BaseController {
         }
         return params;
     }
-    
-    public void despliegaBindingResultErrors(BindingResult bindingResult){
-        List <ObjectError> errores = bindingResult.getAllErrors();
-            for(ObjectError err : errores){
-                log.error("{}",err);
-                
-            }
+
+    public void despliegaBindingResultErrors(BindingResult bindingResult) {
+        List<ObjectError> errores = bindingResult.getAllErrors();
+        for (ObjectError err : errores) {
+            log.error("{}", err);
+
+        }
     }
 }
