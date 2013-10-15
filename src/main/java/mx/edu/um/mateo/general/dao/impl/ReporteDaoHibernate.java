@@ -340,7 +340,7 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
     }
 
     @Override
-    public void compila(String nombre, String tipo, Usuario usuario) {
+    public void compila(String nombre, String tipo, Usuario usuario) throws Exception {
         log.debug("Compilando {} de {}", nombre, tipo);
         
         usuario = uDao.obtiene(usuario.getUsername());
@@ -406,6 +406,7 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
             currentSession().flush();
         } catch (JRException | IOException e) {
             log.error("No se pudo compilar el reporte", e);
+            throw new Exception (e);
         }
     }
 }

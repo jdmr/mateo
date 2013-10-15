@@ -20,8 +20,6 @@
         </triggeringPolicy>
     </appender>
     <logger name="mx.edu.um.mateo" level="debug"/>
-    <logger name="mx.edu.um.mateo.colportor" level="debug"/>    
-    <logger name="mx.edu.um.mateo.contabilidad" level="ERROR"/>    
     
     <logger name="org.springframework" level="ERROR"/>
     <logger name="org.springframework.security" level="ERROR"/>

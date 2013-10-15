@@ -3,26 +3,32 @@
 	<property name="ireport.zoom" value="0.75"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="parameter1" class="net.sf.jasperreports.engine.JasperReport"/>
+	<parameter name="parameter1" class="net.sf.jasperreports.engine.JasperReport" isForPrompting="false"/>
+	<parameter name="subreport_datasource1" class="net.sf.jasperreports.engine.JRDataSource" isForPrompting="false"/>
+	<parameter name="subreport_datasource2" class="net.sf.jasperreports.engine.JRDataSource" isForPrompting="false"/>
+	<parameter name="logo" class="java.awt.Image" isForPrompting="false"/>
+	<field name="informeProveedorDetalle" class="java.util.List"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
-		<band height="394" splitType="Stretch">
-			<staticText>
-				<reportElement uuid="70bc8a25-bf5e-4cad-a64c-4ddf420a5af1" x="89" y="72" width="100" height="20"/>
-				<textElement/>
-				<text><![CDATA[COntrarecibo]]></text>
-			</staticText>
-			<textField>
-				<reportElement uuid="d5d5a123-933b-4a70-8017-6488f77ef225" x="124" y="139" width="300" height="20"/>
-				<textElement/>
-				<textFieldExpression><![CDATA[$P{parameter1}]]></textFieldExpression>
-			</textField>
-		</band>
-		<band height="391">
+		<band height="590" splitType="Stretch">
+			<image>
+				<reportElement uuid="666bb4d6-f277-4309-b5a2-a7cb7aad0ee5" x="177" y="368" width="231" height="222"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement uuid="9ddcaa03-388a-43a4-b6b7-4a573a84ec18" x="177" y="29" width="231" height="222"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
 			<subreport>
-				<reportElement uuid="168c21e4-eceb-4150-83a1-cd24dd1e45b8" x="167" y="30" width="200" height="100"/>
+				<reportElement uuid="5f9a5766-a131-4de4-af13-b570db67d430" x="38" y="23" width="200" height="100"/>
+				<dataSourceExpression><![CDATA[$P{subreport_datasource1}]]></dataSourceExpression>
+				<subreportExpression><![CDATA[$P{parameter1}]]></subreportExpression>
+			</subreport>
+			<subreport isUsingCache="false">
+				<reportElement uuid="168c21e4-eceb-4150-83a1-cd24dd1e45b8" x="38" y="419" width="200" height="100"/>
+				<dataSourceExpression><![CDATA[$P{subreport_datasource2}]]></dataSourceExpression>
 				<subreportExpression><![CDATA[$P{parameter1}]]></subreportExpression>
 			</subreport>
 		</band>
