@@ -65,7 +65,7 @@ public class ContrareciboDaoHibernate extends BaseDao implements ContrareciboDao
                     Restrictions.idEq(params.get("empresa")));
             countCriteria.createCriteria("empresa").add(
                     Restrictions.idEq(params.get("empresa")));
-        } 
+        }  
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
