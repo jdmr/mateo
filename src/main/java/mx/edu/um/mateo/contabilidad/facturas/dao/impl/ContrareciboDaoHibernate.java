@@ -70,9 +70,9 @@ public class ContrareciboDaoHibernate extends BaseDao implements ContrareciboDao
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("fechaPago", filtro,
-                    MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("fechaPago", filtro,
+            criteria.createAlias("proveedorFacturas", "pf");
+            countCriteria.createAlias("proveedorFacturas", "pf");
+            propiedades.add(Restrictions.ilike("pf.nombre", filtro,
                     MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);

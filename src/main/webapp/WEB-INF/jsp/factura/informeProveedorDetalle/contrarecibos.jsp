@@ -15,7 +15,7 @@
         <h1><s:message code="contrarecibo.lista.label" /></h1>
         <hr/>
 
-        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/factura/contrarecibo' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/factura/informeProveedorDetalle/contrarecibos' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
@@ -54,7 +54,10 @@
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="id.contrarecibo" />
+                            <jsp:param name="columna" value="folio" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="proveedor" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="fechaPago" />
@@ -66,6 +69,7 @@
                     <c:forEach items="${contrarecibos}" var="contrarecibo" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td>${contrarecibo.id}</td>                            
+                            <td>${contrarecibo.proveedorFacturas.nombre}</td>                            
                             <td>${contrarecibo.fechaPago}</td>                            
                             <td><a href="<c:url value='/factura/informeProveedorDetalle/verContrarecibo/${contrarecibo.id}' />">Detalles</a></td>                            
                             <td><a href="<c:url value='/factura/informeProveedorDetalle/cambiarFecha/${contrarecibo.id}' />">Fecha</a></td>                            
