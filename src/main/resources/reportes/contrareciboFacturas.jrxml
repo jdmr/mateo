@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contrareciboFacturas" pageWidth="612" pageHeight="792" columnWidth="612" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="06e067f7-05e1-4df0-8577-7c2b23d1895e">
-	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="parameter1" class="net.sf.jasperreports.engine.JasperReport" isForPrompting="false"/>
@@ -9,18 +9,19 @@
 	<parameter name="logo" class="java.awt.Image" isForPrompting="false"/>
 	<field name="informeProveedorDetalle" class="java.util.List"/>
 	<background>
-		<band splitType="Stretch"/>
+		<band height="792" splitType="Stretch">
+			<image>
+				<reportElement uuid="666bb4d6-f277-4309-b5a2-a7cb7aad0ee5" x="195" y="101" width="231" height="222"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement uuid="9ddcaa03-388a-43a4-b6b7-4a573a84ec18" x="195" y="498" width="231" height="222"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+		</band>
 	</background>
 	<detail>
 		<band height="590" splitType="Stretch">
-			<image>
-				<reportElement uuid="666bb4d6-f277-4309-b5a2-a7cb7aad0ee5" x="177" y="368" width="231" height="222"/>
-				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
-			</image>
-			<image>
-				<reportElement uuid="9ddcaa03-388a-43a4-b6b7-4a573a84ec18" x="177" y="29" width="231" height="222"/>
-				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
-			</image>
 			<subreport>
 				<reportElement uuid="5f9a5766-a131-4de4-af13-b570db67d430" x="38" y="23" width="200" height="100"/>
 				<dataSourceExpression><![CDATA[$P{subreport_datasource1}]]></dataSourceExpression>
