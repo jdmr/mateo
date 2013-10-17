@@ -22,4 +22,6 @@ public interface ContrareciboDao {
     public Contrarecibo obtiene(Long id);
 
     public void actualiza(Contrarecibo contrarecibo, Usuario usuario);
+
+    public String elimina(Long id);
 }

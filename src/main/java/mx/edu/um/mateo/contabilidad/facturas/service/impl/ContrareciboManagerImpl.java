@@ -18,6 +18,7 @@ import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
 import mx.edu.um.mateo.contabilidad.facturas.service.ContrareciboManager;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
+import mx.edu.um.mateo.general.utils.Constantes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,5 +78,15 @@ public class ContrareciboManagerImpl implements ContrareciboManager {
         }
 
         return vos;
+    }
+
+    @Override
+    public String elimina(Long id) {
+        Contrarecibo contrarecibo=obtiene(id);
+        List<InformeProveedorDetalle> detalles=contrarecibo.getDetalles();
+        for(InformeProveedorDetalle x:detalles){
+        x.setStatus(Constantes.STATUS_ACTIVO);
+        }
+        return dao.elimina(id);
     }
 }

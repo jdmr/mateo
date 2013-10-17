@@ -1055,4 +1055,16 @@ public class InformeProveedorDetalleController extends BaseController {
 
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS;
     }
+
+    @RequestMapping("/eliminaContrarecibo/{id}")
+    public String eliminaContrarecibo(@PathVariable Long id, Model modelo) {
+        log.debug("Mostrando paquete {}", id);
+        Usuario usuario = ambiente.obtieneUsuario();
+        Contrarecibo contrarecibo = contrareciboManager.obtiene(id);
+        contrarecibo.setFechaModificacion(new Date());
+        contrarecibo.setUsuarioModificacion(usuario);
+        String folio = contrareciboManager.elimina(id);
+
+        return "redirect:"+ Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS;
+    }
 }

@@ -24,4 +24,6 @@ public interface ContrareciboManager {
     public void actualiza(Contrarecibo contrarecibo, Usuario usuario);
 
     public List ListadeContrarecibosVO(Long id);
+
+    public String elimina(Long id);
 }
