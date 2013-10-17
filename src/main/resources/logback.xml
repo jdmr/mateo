@@ -24,11 +24,10 @@
     <logger name="org.springframework" level="ERROR"/>
     <logger name="org.springframework.security" level="ERROR"/>
     <logger name="org.springframework.webflow" level="ERROR"/>
-    
 
     <logger name="org.hibernate" level="ERROR"/>
     <logger name="org.hibernate.SQL" level="debug"/>
-    <logger name="org.hibernate.type" level="error"/>
+    <logger name="org.hibernate.type" level="ERROR"/>
     <logger name="org.hibernate.engine.transaction" level="ERROR"/>
     
     <root level="INFO">

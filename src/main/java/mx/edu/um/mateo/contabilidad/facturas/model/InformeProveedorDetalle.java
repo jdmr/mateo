@@ -20,7 +20,6 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -72,8 +71,11 @@ public class InformeProveedorDetalle implements Serializable {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     private Date fechaModificacion;
+    @Column(name = "dcto_pronto_pago", precision = 9, scale = 2)
+    private BigDecimal dctoProntoPago;
 
     public InformeProveedorDetalle() {
+        dctoProntoPago = BigDecimal.ZERO;
     }
 
     public Long getId() {
@@ -259,6 +261,15 @@ public class InformeProveedorDetalle implements Serializable {
     public void setFechaAutRech(Date fechaAutRech) {
         this.fechaAutRech = fechaAutRech;
     }
+
+    public BigDecimal getDctoProntoPago() {
+        return dctoProntoPago;
+    }
+
+    public void setDctoProntoPago(BigDecimal dctoProntoPago) {
+        this.dctoProntoPago = dctoProntoPago;
+    }
+    
 
     @Override
     public String toString() {

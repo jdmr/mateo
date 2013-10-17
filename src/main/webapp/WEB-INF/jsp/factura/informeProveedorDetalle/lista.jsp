@@ -77,6 +77,9 @@
                             <jsp:param name="columna" value="total" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="dctoProntoPago" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="status" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
@@ -96,6 +99,7 @@
                             <td>${informeProveedorDetalle.IVA}</td>
                             <td>${informeProveedorDetalle.subtotal}</td>
                             <td>${informeProveedorDetalle.total}</td>
+                            <td>${informeProveedorDetalle.dctoProntoPago}</td>
                             <td>${informeProveedorDetalle.status}</td>
                             <td>${informeProveedorDetalle.fechaFactura}</td>
                             <td>${informeProveedorDetalle.informeProveedor.id}</td>

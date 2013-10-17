@@ -58,6 +58,10 @@
                     <div class="span11">${detalle.total}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="dctoProntoPago.label" /></div>
+                    <div class="span11">${detalle.dctoProntoPago}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="status.label" /></div>
                     <div class="span11">${detalle.status}</div>
                 </div>
