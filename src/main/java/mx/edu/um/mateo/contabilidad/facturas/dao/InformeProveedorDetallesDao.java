@@ -5,7 +5,6 @@
 package mx.edu.um.mateo.contabilidad.facturas.dao;
 
 import java.util.Map;
-import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleadoDetalle;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
 import mx.edu.um.mateo.general.model.Usuario;
 
@@ -22,20 +21,8 @@ public interface InformeProveedorDetallesDao {
      */
     public Map<String, Object> lista(Map<String, Object> params);
 
-    /**
-     * Regresa listado de detalles por contrarrecibo
-     * @param params
-     * @return 
-     */
-    public Map<String, Object> contrarecibo(Map<String, Object> params);
-
-    /**
-     * Regresa listado de todos los detalles con estatus ACTIVO
-     * @param params
-     * @return 
-     */
-    public Map<String, Object> revisar(Map<String, Object> params);
-
+    
+    
     /**
      * Gets informe's information based on primary key. An
      * ObjectRetrievalFailureException Runtime Exception is thrown if nothing is

@@ -27,7 +27,7 @@
     
 
     <logger name="org.hibernate" level="ERROR"/>
-    <logger name="org.hibernate.SQL" level="error"/>
+    <logger name="org.hibernate.SQL" level="debug"/>
     <logger name="org.hibernate.type" level="error"/>
     <logger name="org.hibernate.engine.transaction" level="ERROR"/>
     
