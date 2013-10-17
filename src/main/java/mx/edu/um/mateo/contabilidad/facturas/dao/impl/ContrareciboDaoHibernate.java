@@ -66,13 +66,15 @@ public class ContrareciboDaoHibernate extends BaseDao implements ContrareciboDao
             countCriteria.createCriteria("empresa").add(
                     Restrictions.idEq(params.get("empresa")));
         }
+        criteria.add(Restrictions.ilike("status", "A"));
+        countCriteria.add(Restrictions.ilike("status", "A"));
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
-            propiedades.add(Restrictions.ilike("fechaPago", filtro,
-                    MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("fechaPago", filtro,
+            criteria.createAlias("proveedorFacturas", "pf");
+            countCriteria.createAlias("proveedorFacturas", "pf");
+            propiedades.add(Restrictions.ilike("pf.nombre", filtro,
                     MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
@@ -150,5 +152,16 @@ public class ContrareciboDaoHibernate extends BaseDao implements ContrareciboDao
             }
         }
         log.debug("informe...**dao saliendo{}", contrarecibo);
+    }
+
+    @Override
+    public String elimina(Long id) {
+        Contrarecibo contrarecibo = obtiene(id);
+        contrarecibo.setStatus("I");
+        String nombre = contrarecibo.getId().toString();
+        currentSession().saveOrUpdate(contrarecibo);
+        currentSession().merge(contrarecibo);
+        currentSession().flush();
+        return nombre;
     }
 }
