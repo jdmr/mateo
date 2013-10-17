@@ -74,5 +74,5 @@ public interface ReporteDao {
 
 	public void inicializaAlmacen(Almacen almacen);
 
-	public void compila(String nombre, String tipo, Usuario usuario);
+	public void compila(String nombre, String tipo, Usuario usuario) throws Exception;
 }

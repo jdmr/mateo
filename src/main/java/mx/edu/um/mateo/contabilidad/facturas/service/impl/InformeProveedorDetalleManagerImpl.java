@@ -21,6 +21,7 @@ import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.CuentaChequeNoCoincideException;
 import mx.edu.um.mateo.general.utils.FormaPagoNoCoincideException;
 import mx.edu.um.mateo.general.utils.ProveedorNoCoincideException;
+import mx.edu.um.mateo.inscripciones.model.ccobro.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,17 +41,20 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
     
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
+        params.put("status", Constants.STATUS_ACTIVO);
         return dao.lista(params);
     }
     
     @Override
     public Map<String, Object> revisar(Map<String, Object> params) {
-        return dao.revisar(params);
+        //Agregamos al params el estatus de finalizado
+        params.put("status", Constants.STATUS_FINALIZADO);
+        return dao.lista(params);
     }
     
     @Override
     public Map<String, Object> contrarecibo(Map<String, Object> params) {
-        return dao.contrarecibo(params);
+        return dao.lista(params);
     }
     
     @Override

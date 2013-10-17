@@ -17,7 +17,8 @@ import mx.edu.um.mateo.general.model.Usuario;
 public interface InformeProveedorDetalleManager {
 
     /**
-     * Regresa una lista de Informes.
+     * Regresa una lista de Informes finalizados o enviados por el proveedor
+     * En este metodo se asigna el estatus al params
      *
      * @param InformeProveedor
      * @return
@@ -26,6 +27,13 @@ public interface InformeProveedorDetalleManager {
 
     public Map<String, Object> contrarecibo(Map<String, Object> params);
 
+     /**
+     * Regresa una lista de Informes finalizados o enviados por el proveedor
+     * En este metodo se asigna el estatus al params
+     *
+     * @param InformeProveedor
+     * @return
+     */
     public Map<String, Object> revisar(Map<String, Object> params);
 
     /**

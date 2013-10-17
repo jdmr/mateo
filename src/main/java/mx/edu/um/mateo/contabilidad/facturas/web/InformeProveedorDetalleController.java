@@ -1044,7 +1044,7 @@ public class InformeProveedorDetalleController extends BaseController {
         log.debug("Obtuvo listado");
         try {
             log.debug("Generando reporte");
-            generaReporte("PDF", (List<ContrareciboVO>) params.get(Constantes.CONTAINSKEY_CONTRARECIBOS), response,
+            generaReporte("PDF", (List<ContrareciboVO>) params.get(Constantes.CONTAINSKEY_CONTRARECIBOS), response, request,
                     "contrareciboFacturas", Constantes.EMP, ambiente.obtieneUsuario().getEmpresa().getId());
             log.debug("Genero reporte");
             return null;

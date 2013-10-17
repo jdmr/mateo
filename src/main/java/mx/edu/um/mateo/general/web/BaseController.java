@@ -23,8 +23,10 @@
  */
 package mx.edu.um.mateo.general.web;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +34,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
+import java.util.logging.Level;
+import javax.imageio.ImageIO;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -252,7 +255,7 @@ public abstract class BaseController {
         return archivo;
     }
 
-    protected byte[] generaPdfSubreporte(List<?> lista, String nombre, String tipo,
+    protected byte[] generaPdfSubreporte(HttpServletRequest request, List<?> lista, String nombre, String tipo,
             Long id) throws JRException {
         log.debug("Generando PDF");
         Map<String, Object> params = new HashMap<>();
@@ -274,10 +277,20 @@ public abstract class BaseController {
                 jasperReport = reporteDao.obtieneReportePorAlmacen(nombre, id);
                 break;
         }
-
-        log.debug("subreportarriba*****-*{}", jasperReportSB.toString());
-//        params.put("subreportarriba", jasperReportSB);
+        
         params.put("parameter1", jasperReportSB);
+        params.put("subreport_datasource1", new JRBeanCollectionDataSource(lista));
+        params.put("subreport_datasource2", new JRBeanCollectionDataSource(lista));
+        
+        BufferedImage image = null;
+        log.info("Image {}", request.getServletContext().getRealPath("/images/logoum.jpg"));
+        try {
+            image = ImageIO.read(new File(request.getServletContext().getRealPath("/images/logoum.jpg")));
+        } catch (IOException ex) {
+            log.error("Imagen invalida!");
+            ex.printStackTrace();
+        }
+        params.put("logo", image );
 
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,
                 params, new JRBeanCollectionDataSource(lista));
@@ -369,16 +382,57 @@ public abstract class BaseController {
 
         return archivo;
     }
-
+    
     protected void generaReporte(String tipo, List<?> lista,
-            HttpServletResponse response, String nombre, String tipoReporte,
+            HttpServletResponse response, HttpServletRequest request, 
+            String nombre, String tipoReporte,
             Long id) throws ReporteException {
         try {
             log.debug("Generando reporte {}", tipo);
             byte[] archivo = null;
             switch (tipo) {
                 case "PDF":
-                    archivo = generaPdfSubreporte(lista, nombre, tipoReporte, id);
+                    archivo = generaPdfSubreporte(request, lista, nombre, tipoReporte, id);
+                    response.setContentType("application/pdf");
+                    response.addHeader("Content-Disposition",
+                            "attachment; filename=" + nombre + ".pdf");
+                    System.out.println("termina de generar pdf");
+                    break;
+                case "CSV":
+                    archivo = generaCsv(lista, nombre, tipoReporte, id);
+                    response.setContentType("text/csv");
+                    response.addHeader("Content-Disposition",
+                            "attachment; filename=" + nombre + ".csv");
+                    break;
+                case "XLS":
+                    archivo = generaXls(lista, nombre, tipoReporte, id);
+                    response.setContentType("application/vnd.ms-excel");
+                    response.addHeader("Content-Disposition",
+                            "attachment; filename=" + nombre + ".xls");
+            }
+            if (archivo != null) {
+                response.setContentLength(archivo.length);
+                try (BufferedOutputStream bos = new BufferedOutputStream(
+                        response.getOutputStream())) {
+                    bos.write(archivo);
+                    bos.flush();
+                }
+            }
+        } catch (JRException | IOException e) {
+            throw new ReporteException("No se pudo generar el reporte", e);
+        }
+    }
+
+    protected void generaReporte(String tipo, List<?> lista,
+            HttpServletResponse response, 
+            String nombre, String tipoReporte,
+            Long id) throws ReporteException {
+        try {
+            log.debug("Generando reporte {}", tipo);
+            byte[] archivo = null;
+            switch (tipo) {
+                case "PDF":
+                    archivo = generaPdf(lista, nombre, tipoReporte, id);
                     response.setContentType("application/pdf");
                     response.addHeader("Content-Disposition",
                             "attachment; filename=" + nombre + ".pdf");
