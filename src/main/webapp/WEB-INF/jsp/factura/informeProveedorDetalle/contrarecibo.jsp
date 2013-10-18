@@ -37,11 +37,11 @@
 
         <div class="row-fluid" style="padding-bottom: 10px;">
             <div class="span1"><s:message code="proveedor.label" /></div>
-            <div class="span11">${proveedorFacturas.nombre}</div>
+            <div class="span11">${proveedorLogeado.nombre}</div>
         </div>
         <div class="row-fluid" style="padding-bottom: 10px;">
             <div class="span1"><s:message code="rfc.label" /></div>
-            <div class="span11">${proveedorFacturas.rfc}</div>
+            <div class="span11">${proveedorLogeado.rfc}</div>
         </div>
 
         <table id="lista" class="table table-striped table-hover">
@@ -85,7 +85,7 @@
                         <td>${informeProveedorDetalle.IVA}</td>
                         <td>${informeProveedorDetalle.subtotal}</td>
                         <td>${informeProveedorDetalle.total}</td>
-                        <td>${informeProveedorDetalle.status}</td>
+                        <td>${informeProveedorDetalle.statusTexto}</td>
                         <td>${informeProveedorDetalle.fechaFactura}</td>
                         <td>${informeProveedorDetalle.informeProveedor.id}</td>
                     </tr>

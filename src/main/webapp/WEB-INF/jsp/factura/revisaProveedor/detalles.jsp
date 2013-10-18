@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="informeProveedorDetalle.nuevo.label" /></title>
+        <title><s:message code="autorizarFacturas.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -16,7 +16,7 @@
 
 
         <div id="nuevo-colegio" class="content scaffold-list" role="main">
-            <h1><s:message code="informeProveedorDetalle.nuevo.label" /></h1>
+            <h1><s:message code="autorizarFacturas.label" /></h1>
             <form name="filtraLista" class="form-search" method="post" action="<c:url value='/factura/informeProveedorDetalle/revisar' />">
                 <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
                 <input type="hidden" name="tipo" id="tipo" value="" />
@@ -90,7 +90,7 @@
                                     <td>${informeProveedorDetalle.IVA}</td>
                                     <td>${informeProveedorDetalle.subtotal}</td>
                                     <td>${informeProveedorDetalle.total}</td>
-                                    <td>${informeProveedorDetalle.status}</td>
+                                    <td>${informeProveedorDetalle.statusTexto}</td>
                                     <td>${informeProveedorDetalle.fechaFactura}</td>
                                     <td>${informeProveedorDetalle.informeProveedor.id}</td>
                                     <td ><input type="checkbox" disabled="true"  <c:if test="${informeProveedorDetalle.pathXMl!= null && !informeProveedorDetalle.pathXMl.isEmpty()}">checked="checked"</c:if> /></td>
