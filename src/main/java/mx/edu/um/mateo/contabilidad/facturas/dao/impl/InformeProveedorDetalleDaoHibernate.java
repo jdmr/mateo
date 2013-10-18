@@ -58,8 +58,10 @@ public class InformeProveedorDetalleDaoHibernate extends BaseDao implements Info
             params.put("offset", 0);
         }
         
-        Criteria criteria = currentSession().createCriteria(InformeProveedorDetalle.class);
-        Criteria countCriteria = currentSession().createCriteria(InformeProveedorDetalle.class);
+        Criteria criteria = currentSession().createCriteria(InformeProveedorDetalle.class)
+                .createAlias("informeProveedor", "ip");
+        Criteria countCriteria = currentSession().createCriteria(InformeProveedorDetalle.class)
+                .createAlias("informeProveedor", "ip");
 
         if (params.containsKey("empresa")) {            
             criteria.createCriteria("empresa").add(
@@ -68,17 +70,13 @@ public class InformeProveedorDetalleDaoHibernate extends BaseDao implements Info
                     Restrictions.idEq(params.get("empresa")));
         }
         if (params.containsKey("informeProveedor")) {
-            criteria.createCriteria("informeProveedor").add(
-                    Restrictions.idEq(params.get("informeProveedor")));
-            countCriteria.createCriteria("informeProveedor").add(
-                    Restrictions.idEq(params.get("informeProveedor")));
+            criteria.add(Restrictions.eq("ip.id",params.get("informeProveedor")));
+            countCriteria.add(Restrictions.eq("ip.id", params.get("informeProveedor")));
         }
         //Estatus del informeProveedor
         if (params.containsKey("status")) {
-            criteria.createCriteria("informeProveedor")
-                .add(Restrictions.eq("status", params.get("status")));
-            countCriteria.createCriteria("informeProveedor")
-                .add(Restrictions.eq("status", params.get("status")));
+            criteria.add(Restrictions.eq("ip.status", params.get("status")));
+            countCriteria.add(Restrictions.eq("ip.status", params.get("status")));
         }
         if (params.containsKey("contrarecibo")) {
             criteria.createCriteria("contrarecibo").add(
