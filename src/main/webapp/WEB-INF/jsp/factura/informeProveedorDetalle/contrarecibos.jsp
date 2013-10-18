@@ -45,11 +45,6 @@
                 </s:bind>
             </c:if>
 
-            <%--
-            <a  href='<c:out value="${linky}"/>'>x</a>
-            --%>
-
-
             <table id="lista" class="table table-striped table-hover">
                 <thead>
                     <tr>
@@ -71,11 +66,9 @@
                             <td>${contrarecibo.id}</td>                            
                             <td>${contrarecibo.proveedorFacturas.nombre}</td>                            
                             <td>${contrarecibo.fechaPago}</td>                            
-                            <td><a href="<c:url value='/factura/informeProveedorDetalle/verContrarecibo/${contrarecibo.id}' />">Detalles</a></td>                            
-                            <td><a href="<c:url value='/factura/informeProveedorDetalle/cambiarFecha/${contrarecibo.id}' />">Fecha</a></td>                            
-                            <td><a href="<c:url value='/factura/informeProveedorDetalle/reporteContrarecibo/${contrarecibo.id}' />">Reporte</a></td>                            
-                            <td><a href="<c:url value='/factura/informeProveedorDetalle/eliminaContrarecibo/${contrarecibo.id}' />">eliminar</a></td>                            
-
+                            <td><span class="label label-info" <a href="<c:url value='/factura/informeProveedorDetalle/verContrarecibo/${contrarecibo.id}' />">Detalles</a></span></td>
+                            <td><span class="label label-info" <a href="<c:url value='/factura/informeProveedorDetalle/cambiarFecha/${contrarecibo.id}' />">Fecha</a></span></td>
+                            <td><span class="label label-info" <a href="<c:url value='/factura/informeProveedorDetalle/reporteContrarecibo/${contrarecibo.id}' />">Reporte</a></span></td>
                         </tr>
                     </c:forEach>
                 </tbody>

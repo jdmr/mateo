@@ -15,7 +15,15 @@ import mx.edu.um.mateo.general.model.Usuario;
 public interface InformeProveedorDetallesDao {
 
     /**
-     * Regresa listado de detalles por encabezado
+     * Regresa listado de detalles por encabezado.
+     * En params espera lo siguiente:<br>
+     * <ol>
+     * <li><b>empresa:</b>&nbsp;Id de la Empresa. [obligatorio]</li>
+     * <li><b>informeProveedor:</b>&nbsp;Id del informe</li>
+     * <li><b>statusInforme:</b>&nbsp;Estatus del informe. [Si este est&aacute; presente, 
+     * se espera que 'statusFactura' tambi&eacute;n lo est&eacute;]</li>
+     * <li><b>statusFactura:</b>&nbsp;Estatus de la factura</li>
+     * </ol>
      * @param params
      * @return 
      */
