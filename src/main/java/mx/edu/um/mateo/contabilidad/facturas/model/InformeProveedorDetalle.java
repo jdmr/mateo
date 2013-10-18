@@ -20,6 +20,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.UtilStatus;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -142,6 +143,11 @@ public class InformeProveedorDetalle implements Serializable {
 
     public String getStatus() {
         return status;
+    }
+
+    public String getStatusTexto() {
+
+        return UtilStatus.valueStatus(this.status);
     }
 
     public void setStatus(String status) {

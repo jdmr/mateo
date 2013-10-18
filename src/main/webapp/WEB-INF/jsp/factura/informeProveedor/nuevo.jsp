@@ -90,8 +90,8 @@
                                 <s:message code="moneda.label" />
 
                             </label>
-                            <form:radiobutton path="moneda"  value="P" cssClass="span3" id="pesos"/>Pesos<br />
-                            <form:radiobutton path="moneda"  value="D"  cssClass="span3" id="dolares"/>Dolares<br />
+                            <form:radiobutton path="moneda"  value="P" cssClass="span3" id="pesos"/><s:message code="pesos.label"/><br />
+                            <form:radiobutton path="moneda"  value="D"  cssClass="span3" id="dolares"/><s:message code="dolares.label"/><br />
                             <form:errors path="moneda" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
