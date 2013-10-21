@@ -100,7 +100,7 @@
                             <td>${informeProveedorDetalle.subtotal}</td>
                             <td>${informeProveedorDetalle.total}</td>
                             <td>${informeProveedorDetalle.dctoProntoPago}</td>
-                            <td>${informeProveedorDetalle.status}</td>
+                            <td>${informeProveedorDetalle.statusTexto}</td>
                             <td>${informeProveedorDetalle.fechaFactura}</td>
                             <td>${informeProveedorDetalle.informeProveedor.id}</td>
                         </tr>

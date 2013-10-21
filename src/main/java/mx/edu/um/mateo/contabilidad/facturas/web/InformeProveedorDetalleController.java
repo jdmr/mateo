@@ -618,8 +618,9 @@ public class InformeProveedorDetalleController extends BaseController {
     @RequestMapping("/nuevo")
     public String nueva(HttpServletRequest request, Model modelo) {
         log.debug("Nuevo paquete");
-        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) request.getSession().getAttribute("proveedorFacturas");
+        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
         modelo.addAttribute("proveedorFacturas", proveedorFacturas);
+        request.getSession().setAttribute("proveedorLogeado", proveedorFacturas);
         Map<String, Object> params = new HashMap<>();
 
 
@@ -1065,6 +1066,6 @@ public class InformeProveedorDetalleController extends BaseController {
         contrarecibo.setUsuarioModificacion(usuario);
         String folio = contrareciboManager.elimina(id);
 
-        return "redirect:"+ Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS;
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS;
     }
 }

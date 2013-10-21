@@ -66,9 +66,21 @@
                             <td>${contrarecibo.id}</td>                            
                             <td>${contrarecibo.proveedorFacturas.nombre}</td>                            
                             <td>${contrarecibo.fechaPago}</td>                            
-                            <td><span class="label label-info" <a href="<c:url value='/factura/informeProveedorDetalle/verContrarecibo/${contrarecibo.id}' />">Detalles</a></span></td>
-                            <td><span class="label label-info" <a href="<c:url value='/factura/informeProveedorDetalle/cambiarFecha/${contrarecibo.id}' />">Fecha</a></span></td>
-                            <td><span class="label label-info" <a href="<c:url value='/factura/informeProveedorDetalle/reporteContrarecibo/${contrarecibo.id}' />">Reporte</a></span></td>
+                            <td>
+                                <a href="<c:url value='/factura/informeProveedorDetalle/verContrarecibo/${contrarecibo.id}' />">
+                                    <img src="<c:url value='/images/file_edit.png' />"  alt="Editar Detalles" height="35" width="35" title="Editar Detalles"/>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="<c:url value='/factura/informeProveedorDetalle/cambiarFecha/${contrarecibo.id}' />">
+                                    <img src="<c:url value='/images/file_remove.png' />"  alt="Cambiar Fecha de Pago" height="35" width="35" title="Cambiar Fecha de Pago"/>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="<c:url value='/factura/informeProveedorDetalle/reporteContrarecibo/${contrarecibo.id}' />">
+                                    <img src="<c:url value='/images/printer.png' />"  alt="Imprimir Contrarecibo" height="35" width="35" title="Imprimir Contrarecibo"/>
+                                </a>
+                            </td>
                         </tr>
                     </c:forEach>
                 </tbody>

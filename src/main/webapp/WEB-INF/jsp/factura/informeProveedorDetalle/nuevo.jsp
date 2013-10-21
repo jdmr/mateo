@@ -28,11 +28,11 @@
                 </form:errors>
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="proveedor.label" /></div>
-                    <div class="span11">${proveedorFacturas.nombre}</div>
+                    <div class="span11">${proveedorLogeado.nombre}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="rfc.label" /></div>
-                    <div class="span11">${proveedorFacturas.rfc}</div>
+                    <div class="span11">${proveedorLogeado.rfc}</div>
                 </div>
                 <fieldset>
                     <s:bind path="informeProveedorDetalle.folioFactura">

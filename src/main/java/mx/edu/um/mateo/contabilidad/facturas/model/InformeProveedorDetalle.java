@@ -20,6 +20,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.UtilStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -144,6 +145,11 @@ public class InformeProveedorDetalle implements Serializable {
 
     public String getStatus() {
         return status;
+    }
+
+    public String getStatusTexto() {
+
+        return UtilStatus.valueStatus(this.status);
     }
 
     public void setStatus(String status) {
@@ -281,14 +287,4 @@ public class InformeProveedorDetalle implements Serializable {
                 + ", fechaCaptura=" + fechaCaptura + ", fechaAutRech=" + fechaAutRech
                 + ", fechaModificacion=" + fechaModificacion + '}';
     }
-//    @Override
-//    public String toString() {
-//        return "InformeProveedorDetalle{" + "id=" + id + ", version=" + version + ", RFCProveedor=" + RFCProveedor + ", folioFactura=" + folioFactura
-//                + ", nombreProveedor=" + nombreProveedor + ", subtotal=" + subtotal + ", IVA=" + IVA + ", total=" + total + ", status=" + status
-//                + ", fechaFactura=" + fechaFactura + ", pathPDF=" + pathPDF + ", pathXMl=" + pathXMl + ", nombrePDF=" + nombrePDF
-//                + ", nombreXMl=" + nombreXMl + ", contrarecibo=" + contrarecibo.getId().toString() + ", informeProveedor=" + informeProveedor.getId().toString()
-//                + ", empresa=" + empresa.getId().toString() + ", usuarioAlta=" + usuarioAlta.getId().toString() + ", usuarioMOdificacion=" + usuarioMOdificacion.getId().toString()
-//                + ", usuarioAutRech=" + usuarioAutRech.getId().toString() + ", fechaCaptura=" + fechaCaptura + ", fechaAutRech=" + fechaAutRech
-//                + ", fechaModificacion=" + fechaModificacion + '}';
-//    }
 }
