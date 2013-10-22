@@ -76,9 +76,9 @@ public class InformeProveedorDetalleDaoHibernate extends BaseDao implements Info
         //Estatus del informeProveedor
         if (params.containsKey("statusInforme")) {
             criteria.add(Restrictions.eq("ip.status", params.get("statusInforme")));
-            criteria.add(Restrictions.eq("status", params.get("statusInforme"))); //La factura debe tener estatus A
+            criteria.add(Restrictions.eq("status", params.get("statusFactura"))); //La factura debe tener estatus A
             countCriteria.add(Restrictions.eq("ip.status", params.get("statusInforme")));
-            countCriteria.add(Restrictions.eq("status", params.get("statusInforme"))); //La factura debe tener estatus A
+            countCriteria.add(Restrictions.eq("status", params.get("statusFactura"))); //La factura debe tener estatus A
         }
         if (params.containsKey("contrarecibo")) {
             criteria.createCriteria("contrarecibo").add(

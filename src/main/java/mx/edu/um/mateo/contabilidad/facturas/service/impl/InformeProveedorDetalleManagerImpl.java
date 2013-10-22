@@ -49,7 +49,7 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
     public Map<String, Object> revisar(Map<String, Object> params) {
         //Agregamos al params el estatus de finalizado
         params.put("statusInforme", Constants.STATUS_FINALIZADO);
-        params.put("statusFactura", Constants.STATUS_AUTORIZADO);
+        params.put("statusFactura", Constants.STATUS_ACTIVO);
         return dao.lista(params);
     }
     
