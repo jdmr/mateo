@@ -44,6 +44,7 @@ import mx.edu.um.mateo.general.utils.ProveedorNoCoincideException;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inscripciones.model.FileUploadForm;
+import mx.edu.um.mateo.inscripciones.model.ccobro.utils.Constants;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -111,6 +112,8 @@ public class InformeProveedorDetalleController extends BaseController {
         params.put("empresa", empresaId);
         InformeProveedor informeId = (InformeProveedor) request.getSession().getAttribute("informeId");
         params.put("informeProveedor", informeId.getId());
+        params.put("statusInforme", informeId.getStatus());
+        
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }
