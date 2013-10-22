@@ -9,7 +9,7 @@
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="informeProveedorDetalle" />
+            <jsp:param name="menu" value="revisaProveedor" />
         </jsp:include>
 
 
