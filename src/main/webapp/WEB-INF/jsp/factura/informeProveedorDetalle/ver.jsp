@@ -60,6 +60,10 @@
                     <div class="span11">${informeProveedorDetalle.total}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="total.label" /></div>
+                    <div class="span11">${informeProveedorDetalle.dctoProntoPago}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="status.label" /></div>
                     <div class="span11">${informeProveedorDetalle.status}</div>
                 </div>

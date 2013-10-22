@@ -63,6 +63,9 @@
                                 <jsp:param name="columna" value="total" />
                             </jsp:include>
                             <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                                <jsp:param name="columna" value="dctoProntoPago" />
+                            </jsp:include>
+                            <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                                 <jsp:param name="columna" value="status" />
                             </jsp:include>
                             <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >

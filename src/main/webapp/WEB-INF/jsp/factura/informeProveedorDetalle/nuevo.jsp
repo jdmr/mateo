@@ -78,6 +78,16 @@
                             <form:errors path="total" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
+                    <s:bind path="informeProveedorDetalle.dctoProntoPago">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="dctoProntoPago">
+                                <s:message code="dctoProntoPago.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="dctoProntoPago"    maxlength="150" required="true"   />
+                            <form:errors path="dctoProntoPago" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
                     <s:bind path="informeProveedorDetalle.fechaFactura">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="fechaFactura">

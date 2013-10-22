@@ -9,7 +9,7 @@
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="contrarecibo" />
+            <jsp:param name="menu" value="informeProveedorDetalle" />
         </jsp:include>
 
         <h1><s:message code="contrarecibo.lista.label" /></h1>
@@ -45,11 +45,6 @@
                 </s:bind>
             </c:if>
 
-            <%--
-            <a  href='<c:out value="${linky}"/>'>x</a>
-            --%>
-
-
             <table id="lista" class="table table-striped table-hover">
                 <thead>
                     <tr>
@@ -71,11 +66,21 @@
                             <td>${contrarecibo.id}</td>                            
                             <td>${contrarecibo.proveedorFacturas.nombre}</td>                            
                             <td>${contrarecibo.fechaPago}</td>                            
-                            <td><a href="<c:url value='/factura/informeProveedorDetalle/verContrarecibo/${contrarecibo.id}' />">Detalles</a></td>                            
-                            <td><a href="<c:url value='/factura/informeProveedorDetalle/cambiarFecha/${contrarecibo.id}' />">Fecha</a></td>                            
-                            <td><a href="<c:url value='/factura/informeProveedorDetalle/reporteContrarecibo/${contrarecibo.id}' />">Reporte</a></td>                            
-                            <td><a href="<c:url value='/factura/informeProveedorDetalle/eliminaContrarecibo/${contrarecibo.id}' />">eliminar</a></td>                            
-
+                            <td>
+                                <a href="<c:url value='/factura/informeProveedorDetalle/verContrarecibo/${contrarecibo.id}' />">
+                                    <img src="<c:url value='/images/file_edit.png' />"  alt="Editar Detalles" height="35" width="35" title="Editar Detalles"/>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="<c:url value='/factura/informeProveedorDetalle/cambiarFecha/${contrarecibo.id}' />">
+                                    <img src="<c:url value='/images/file_remove.png' />"  alt="Cambiar Fecha de Pago" height="35" width="35" title="Cambiar Fecha de Pago"/>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="<c:url value='/factura/informeProveedorDetalle/reporteContrarecibo/${contrarecibo.id}' />">
+                                    <img src="<c:url value='/images/printer.png' />"  alt="Imprimir Contrarecibo" height="35" width="35" title="Imprimir Contrarecibo"/>
+                                </a>
+                            </td>
                         </tr>
                     </c:forEach>
                 </tbody>

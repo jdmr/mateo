@@ -235,7 +235,7 @@ public class InformeProveedorDetalleController extends BaseController {
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = manager.lista(params);
+            params = manager.contrarecibo(params);
             try {
                 generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE),
                         response, "contrarecibo", Constantes.EMP, empresaId);
@@ -249,7 +249,7 @@ public class InformeProveedorDetalleController extends BaseController {
 
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = manager.lista(params);
+            params = manager.contrarecibo(params);
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
@@ -368,7 +368,7 @@ public class InformeProveedorDetalleController extends BaseController {
             }
         }
         params = contrareciboManager.lista(params);
-        log.debug("params{}", params.get(Constantes.CONTAINSKEY_CONTRARECIBOS));
+        //log.debug("params{}", params.get(Constantes.CONTAINSKEY_CONTRARECIBOS));
         modelo.addAttribute(Constantes.CONTAINSKEY_CONTRARECIBOS, params.get(Constantes.CONTAINSKEY_CONTRARECIBOS));
 
         // inicia paginado
@@ -515,7 +515,7 @@ public class InformeProveedorDetalleController extends BaseController {
             Usuario usuario,
             Errors errors,
             Model modelo) {
-        log.debug("Entrando a contrarecibo..**..");
+        log.debug("Entrando a revisar..**..");
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
@@ -538,7 +538,7 @@ public class InformeProveedorDetalleController extends BaseController {
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = manager.lista(params);
+            params = manager.revisar(params);
             try {
                 generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE),
                         response, "contrarecibo", Constantes.EMP, empresaId);
@@ -552,7 +552,7 @@ public class InformeProveedorDetalleController extends BaseController {
 
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = manager.lista(params);
+            params = manager.revisar(params);
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {

@@ -41,14 +41,16 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
     
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
-        params.put("status", Constants.STATUS_ACTIVO);
+        params.put("statusInforme", Constants.STATUS_ACTIVO);
+        params.put("statusFactura", Constants.STATUS_ACTIVO);
         return dao.lista(params);
     }
     
     @Override
     public Map<String, Object> revisar(Map<String, Object> params) {
         //Agregamos al params el estatus de finalizado
-        params.put("status", Constants.STATUS_FINALIZADO);
+        params.put("statusInforme", Constants.STATUS_FINALIZADO);
+        params.put("statusFactura", Constants.STATUS_AUTORIZADO);
         return dao.lista(params);
     }
     
