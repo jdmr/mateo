@@ -594,7 +594,7 @@ public class InformeProveedorDetalleController extends BaseController {
         log.debug("Pagina{}", pagina);
         // termina paginado
 
-        return "/factura/revisaProveedor/detalles";
+        return "/factura/informeProveedorDetalle/detalles";
     }
 
     @RequestMapping("/ver/{id}")
@@ -899,28 +899,28 @@ public class InformeProveedorDetalleController extends BaseController {
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "clabe.no.coincide");
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
                 }
-                return "redirect:/factura/revisaProveedor/detalles";
+                return "redirect:/factura/informeProveedorDetalle/detalles";
             } catch (ProveedorNoCoincideException e) {
                 log.debug("el proveedor de la factura con id= {} no coincide", e);
                 if (e != null) {
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "proveedor.no.coincide");
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
                 }
-                return "redirect:/factura/revisaProveedor/detalles";
+                return "redirect:/factura/informeProveedorDetalle/detalles";
             } catch (BancoNoCoincideException e) {
                 log.debug("el banco de la factura con id= {} no coincide", e);
                 if (e != null) {
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "banco.no.coincide");
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
                 }
-                return "redirect:/factura/revisaProveedor/detalles";
+                return "redirect:/factura/informeProveedorDetalle/detalles";
             } catch (CuentaChequeNoCoincideException e) {
                 log.debug("la cuenta de la factura con id= {} no coincide", e);
                 if (e != null) {
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuenta.no.coincide");
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
                 }
-                return "redirect:/factura/revisaProveedor/detalles";
+                return "redirect:/factura/informeProveedorDetalle/detalles";
 
             } catch (FormaPagoNoCoincideException e) {
                 log.debug("la forma de pago de la factura con id= {} no coincide", e);
@@ -928,7 +928,7 @@ public class InformeProveedorDetalleController extends BaseController {
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "cuenta.no.coincide");
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
                 }
-                return "redirect:/factura/revisaProveedor/detalles";
+                return "redirect:/factura/informeProveedorDetalle/detalles";
             }
 
         }
@@ -942,7 +942,7 @@ public class InformeProveedorDetalleController extends BaseController {
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "banco.no.coincide");
                     redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
                 }
-                return "redirect:/factura/revisaProveedor/detalles";
+                return "redirect:/factura/informeProveedorDetalle/detalles";
             }
         }
 

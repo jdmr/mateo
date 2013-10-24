@@ -5,14 +5,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="informeProveedorDetalle.contrarecibo.label" /></title>
+        <title><s:message code="contrarecibo.lista.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
             <jsp:param name="menu" value="informeProveedorDetalle" />
         </jsp:include>
 
-        <h1><s:message code="informeProveedorDetalle.contrarecibo.label" /></h1>
+        <h1><s:message code="contrarecibo.lista.label" /></h1>
         <hr/>
 
         <c:if test="${not empty message}">

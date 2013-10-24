@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="informeProveedorDetalle.nuevo.label" /></title>
+        <title><s:message code="fechaCompromiso.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -13,9 +13,9 @@
         </jsp:include>
 
         <div id="nuevo-colegio" class="content scaffold-list" role="main">
-            <h1><s:message code="informeProveedorDetalle.nuevo.label" /></h1>
+            <h1><s:message code="fechaCompromiso.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/factura/informeProveedorDetalle'/>"><i class="icon-list icon-white"></i> <s:message code='informeProveedorDetalle.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/factura/informeProveedorDetalle/revisar'/>"><i class="icon-list icon-white"></i> <s:message code='informeProveedorDetalle.lista.label' /></a>
             </p>
             <c:url var="actualizaUrl" value="/factura/informeProveedorDetalle/actualizaFecha" />
             <form:form commandName="contrarecibo" method="post" action="${actualizaUrl}" >
