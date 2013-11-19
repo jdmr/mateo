@@ -17,7 +17,8 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/factura/detalle'/>"><i class="icon-list icon-white"></i> <s:message code='detalle.lista.label' /></a>
             </p>
-            <form:form commandName="detalle" action="graba" method="post" enctype="multipart/form-data">
+            <form:form commandName="informeEmpleadoDetalle" action="${flowExecutionUrl}" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -28,7 +29,7 @@
                 </form:errors>
 
                 <fieldset>
-                    <s:bind path="detalle.folioFactura">
+                    <s:bind path="informeEmpleadoDetalle.folioFactura">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="folioFactura">
                                 <s:message code="folio.label" />
@@ -39,7 +40,7 @@
                         </div>
                     </s:bind>
 
-                    <s:bind path="detalle.ccp">
+                    <s:bind path="informeEmpleadoDetalle.ccp">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="ccp">
                                 <s:message code="ccp.label" />
@@ -50,7 +51,7 @@
                         </div>
                     </s:bind>
 
-                    <s:bind path="detalle.nombreProveedor" >
+                    <s:bind path="informeEmpleadoDetalle.nombreProveedor" >
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="nombreProveedor" >
                                 <s:message code="proveedor.label" />
@@ -60,7 +61,7 @@
                             <form:errors path="nombreProveedor" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="detalle.RFCProveedor">
+                    <s:bind path="informeEmpleadoDetalle.RFCProveedor">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="RFCProveedor">
                                 <s:message code="rfc.label" />
@@ -70,7 +71,7 @@
                             <form:errors path="RFCProveedor" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="detalle.IVA" >
+                    <s:bind path="informeEmpleadoDetalle.IVA" >
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="IVA" >
                                 <s:message code="iva.label" />
@@ -80,7 +81,7 @@
                             <form:errors path="IVA" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="detalle.subtotal">
+                    <s:bind path="informeEmpleadoDetalle.subtotal">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="subtotal">
                                 <s:message code="subtotal.label" />
@@ -90,7 +91,7 @@
                             <form:errors path="subtotal" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="detalle.total">
+                    <s:bind path="informeEmpleadoDetalle.total">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="total">
                                 <s:message code="total.label" />
@@ -100,7 +101,8 @@
                             <form:errors path="total" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="detalle.dctoProntoPago">
+                    <%--
+                    <s:bind path="informeEmpleadoDetalle.dctoProntoPago">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="dctoProntoPago">
                                 <s:message code="dctoProntoPago.label" />
@@ -110,7 +112,8 @@
                             <form:errors path="dctoProntoPago" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="detalle.status">
+                    --%>
+                    <s:bind path="informeEmpleadoDetalle.status">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="status">
                                 <s:message code="status.label" />
@@ -120,7 +123,7 @@
                             <form:errors path="status" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="detalle.fechaFactura">
+                    <s:bind path="informeEmpleadoDetalle.fechaFactura">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="fechaFactura">
                                 <s:message code="fechaFactura.label" />
@@ -136,19 +139,19 @@
                     <input id="addFile" type="button" value="Add File" />
                     <table id="fileTable">
                         <tr>
-                            <td><img src="/mateo/images/xml.png" width="120" height="100" /><input name="files[0]" type="file" /></td>
+                            <td><img src="/mateo/images/xml.png" width="120" height="100" /><input name="file" type="file" /></td>
                         </tr>
 
                         <tr>
-                            <td><img src="/mateo/images/pdf.png" width="120" height="100" /><input name="files[1]" type="file" /></td>
+                            <td><img src="/mateo/images/pdf.png" width="120" height="100" /><input name="file2" type="file" /></td>
                         </tr>
                     </table>
 
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
-                    <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/factura/detalle'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <button type="submit" name="_eventId_grabaEncabezado" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
+                    <a class="btn btn-large" href="${flowExecutionUrl}&_eventId=endState"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>

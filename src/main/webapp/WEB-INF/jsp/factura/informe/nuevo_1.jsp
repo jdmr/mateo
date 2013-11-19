@@ -17,11 +17,18 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/factura/informe'/>"><i class="icon-list icon-white"></i> <s:message code='informe.lista.label' /></a>
             </p>
+            <form:form commandName="informe" action="graba" method="post">
+                <form:errors path="*">
+                    <div class="alert alert-block alert-error fade in" role="status">
+                        <a class="close" data-dismiss="alert">×</a>
+                        <c:forEach items="${messages}" var="message">
+                            <p>${message}</p>
+                        </c:forEach>
+                    </div>
+                </form:errors>
 
-            <form:form commandName="informeEmpleado" method="post" action="${flowExecutionUrl}">
-                <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
                 <fieldset>
-                    <s:bind path="informeEmpleado.numNomina">
+                    <s:bind path="informe.numNomina">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="numNomina">
                                 <s:message code="numeroNomina.label" />
@@ -31,7 +38,7 @@
                             <form:errors path="numNomina" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="informeEmpleado.nombreEmpleado">
+                    <s:bind path="informe.nombreEmpleado">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="nombreEmpleado">
                                 <s:message code="nombre.label" />
@@ -41,7 +48,7 @@
                             <form:errors path="nombreEmpleado" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="informeEmpleado.status">
+                    <s:bind path="informe.status">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="status">
                                 <s:message code="status.label" />
@@ -52,7 +59,7 @@
                         </div>
                     </s:bind>
                     <div class="row-fluid">
-                        <s:bind path="informeEmpleado.pesos" >
+                        <s:bind path="informe.pesos" >
                             <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                     <label for="pesos" >
                                     <s:message code="pesos.label" />
@@ -64,7 +71,7 @@
                                 </div>
                             </div>
                         </s:bind>
-                        <s:bind path="informeEmpleado.dolares">
+                        <s:bind path="informe.dolares">
                             <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                     <label for="dolares">
                                     <s:message code="dolares.label" />
@@ -78,7 +85,7 @@
                         </s:bind>
                     </div>
                     <div class="row-fluid">
-                        <s:bind path="informeEmpleado.informe" >
+                        <s:bind path="informe.informe" >
                             <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                     <label for="informe" >
                                     <s:message code="informe.label" />
@@ -90,7 +97,7 @@
                                 </div>
                             </div>
                         </s:bind>
-                        <s:bind path="informeEmpleado.reembolso">
+                        <s:bind path="informe.reembolso">
                             <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                     <label for="reembolso">
                                     <s:message code="reembolso.label" />
@@ -103,7 +110,7 @@
                             </div>
                         </s:bind>
                     </div>
-                    <s:bind path="informeEmpleado.fechaInforme">
+                    <s:bind path="informe.fechaInforme">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="fechaInforme">
                                 <s:message code="fechaInforme.label" />
@@ -116,38 +123,39 @@
 
 
 
+
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
-                    <button type="submit" name="_eventId_grabaInforme" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
-                    <a class="btn btn-large" href="${flowExecutionUrl}&_eventId=endState"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
+                    <a class="btn btn-large" href="<s:url value='/factura/informe'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>
     <content>
         <script>
-            $(document).ready(function() {
-                $('input#nombre').focus();
-                $("input#fechaInforme").datepicker($.datepicker.regional['es']);
-                $("input#fechaInforme").datepicker("option", "firstDay", 0);
-            });
+                                    $(document).ready(function() {
+                                        $('input#nombre').focus();
+                                        $("input#fechaInforme").datepicker($.datepicker.regional['es']);
+                                        $("input#fechaInforme").datepicker("option", "firstDay", 0);
+                                    });
 
 
-            function disablePesos()
-            {
-                document.getElementById("pesos").disabled = true;
-                if (document.getElementById("dolares").checked === false) {
-                    document.getElementById("pesos").disabled = false;
-                }
-            }
+                                    function disablePesos()
+                                    {
+                                        document.getElementById("pesos").disabled = true;
+                                        if (document.getElementById("dolares").checked === false) {
+                                            document.getElementById("pesos").disabled = false;
+                                        }
+                                    }
 
-            function disableDolares()
-            {
-                document.getElementById("dolares").disabled = true;
-                if (document.getElementById("pesos").checked === false) {
-                    document.getElementById("dolares").disabled = false;
-                }
-            }
+                                    function disableDolares()
+                                    {
+                                        document.getElementById("dolares").disabled = true;
+                                        if (document.getElementById("pesos").checked === false) {
+                                            document.getElementById("dolares").disabled = false;
+                                        }
+                                    }
 
 
 

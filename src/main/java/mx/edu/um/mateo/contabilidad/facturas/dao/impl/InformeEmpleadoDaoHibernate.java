@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.contabilidad.facturas.dao.impl;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
@@ -30,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class InformeEmpleadoDaoHibernate extends BaseDao implements InformeEmpleadoDao {
+public class InformeEmpleadoDaoHibernate extends BaseDao implements InformeEmpleadoDao, Serializable {
 
     /**
      * @see

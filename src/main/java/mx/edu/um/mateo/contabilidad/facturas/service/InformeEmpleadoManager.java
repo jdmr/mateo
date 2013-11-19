@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.contabilidad.facturas.service;
 
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
@@ -49,5 +50,10 @@ public interface InformeEmpleadoManager {
     public void finaliza(InformeEmpleado informe, Usuario usuario);
 
     public void autorizar(InformeEmpleado informe, Usuario usuario);
+
     public void rechazar(InformeEmpleado informe, Usuario usuario);
+
+    public List<InformeEmpleado> getInformes(Long empresaId);
+    
+    public void crea(InformeEmpleado informe, Usuario usuario);
 }
