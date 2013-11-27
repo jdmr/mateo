@@ -37,7 +37,7 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
     @Autowired
     private DocumentoDao docDao;
     
-    public void importaInformeDeGema(File file, Usuario user) throws Exception{
+    public void importaInformeDeGema(File file, Usuario user) throws NullPointerException, IOException, Exception{
         log.debug("importaInformeDeGema");
         try{
             XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream(file));
@@ -80,10 +80,19 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
             
             Documento doc = null;
             Colportor clp = null;
-            
             Boolean sw = false;
             
-            for (int r = 1; r < rows; r++) {
+            //Obtener descripcion
+            row = sheet.getRow(0);
+            gcFecha.setTime(sdf.parse(row.getCell(0).getStringCellValue()));
+            log.debug("Fecha {}", gcFecha.getTime());
+            
+            row = sheet.getRow(1);
+            String descripcion = row.getCell(0).getStringCellValue();
+            log.debug("Descripcion {}", descripcion);
+            
+            rowLoop:
+            for (int r = 3; r < rows; r++) {
                 row = sheet.getRow(r);
                 if (row != null) {
                     sw =false; //Si no se leyo colportor alguno, entonces no se leen las demas celdas
@@ -102,6 +111,12 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                         clave = cell.getStringCellValue();
                                     }
                                     log.debug("Clave clp {}", clave);
+                                    try{
+                                        Long.parseLong(clave);
+                                    }catch(NumberFormatException e){
+                                        //clave invalida
+                                        break rowLoop;
+                                    }
                                     break;
                                 }
                                 case 1:{
@@ -197,22 +212,28 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                     
                     //Insertar boletin
                     doc = new Documento();
-                    doc.setFecha(new Date());
+                    doc.setFecha(gcFecha.getTime());
                     doc.setFolio(clave);
                     doc.setImporte(boletin);
-                    doc.setObservaciones("Boletin Junio");
-                    doc.setTipoDeDocumento("boletin");
+                    doc.setObservaciones(descripcion);
+                    doc.setTipoDeDocumento("Boletin");
 
                     clp = clpDao.obtiene(clave);
+                    
+                    log.debug("Obtuvo colportor {}", clp);
                     doc.setTemporadaColportor(tmpClpDao.obtiene(clp));
+                    log.debug("Obtuvo temporadaClp {}", doc.getTemporadaColportor());
                     docDao.crea(doc);
                 }
             }
         } catch (IOException ioe) {
             log.error("Error al intentar abrir el archivo");
+            throw ioe;
         } catch (Exception e){
             e.printStackTrace();
-            log.error("Error al intentar generar los registros de ss");
+            log.error("Error al intentar generar los registros de colportores");
+            throw e;
         }
+        
     }
 }

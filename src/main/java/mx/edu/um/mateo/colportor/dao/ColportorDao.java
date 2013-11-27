@@ -145,9 +145,9 @@ public class ColportorDao {
     
     public Colportor obtiene(String clave) {
         log.debug("Obtiene colportor con clave = {}", clave);
-        Criteria criteria = currentSession().createCriteria(Colportor.class);
-        criteria.add(Restrictions.eq("clave", clave));
-        Colportor colportor = (Colportor) criteria.uniqueResult();
+        Query sql = currentSession().createQuery("from Colportor clp where clave = :clave");
+        sql.setString("clave", clave);
+        Colportor colportor = (Colportor) sql.uniqueResult();
         return colportor;
     }
     
