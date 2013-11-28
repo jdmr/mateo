@@ -22,13 +22,14 @@ import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UtilStatus;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
  * @author develop
  */
-@Entity
-@Table(name = "informereportedetalle")
+@Entity(name = "informeProveedorDetalle")
+@Table(name = "informeProveedorDetalle")
 public class InformeProveedorDetalle implements Serializable {
 
     @Id
@@ -74,6 +75,8 @@ public class InformeProveedorDetalle implements Serializable {
     private Date fechaModificacion;
     @Column(name = "dcto_pronto_pago", precision = 9, scale = 2)
     private BigDecimal dctoProntoPago;
+    private transient MultipartFile file;
+    private transient MultipartFile file2;
 
     public InformeProveedorDetalle() {
         dctoProntoPago = BigDecimal.ZERO;
@@ -275,7 +278,22 @@ public class InformeProveedorDetalle implements Serializable {
     public void setDctoProntoPago(BigDecimal dctoProntoPago) {
         this.dctoProntoPago = dctoProntoPago;
     }
-    
+
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+
+    public MultipartFile getFile2() {
+        return file2;
+    }
+
+    public void setFile2(MultipartFile file2) {
+        this.file2 = file2;
+    }
 
     @Override
     public String toString() {

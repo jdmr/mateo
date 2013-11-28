@@ -24,7 +24,7 @@
 
 
             <p class="well">
-                <a class="btn btn-primary" href="/factura/informeProveedor/nuevo"><i class="icon-user icon-white"></i> <s:message code='informeProveedor.nuevo.label' /></a>
+                <a class="btn btn-primary" href="${flowExecutionUrl}&_eventId=crearInformeProveedor"><i class="icon-user icon-white"></i> <s:message code='informeProveedor.nuevo.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>

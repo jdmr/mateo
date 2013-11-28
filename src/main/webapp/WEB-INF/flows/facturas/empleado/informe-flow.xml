@@ -4,31 +4,27 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.springframework.org/schema/webflow
 http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
-    <var name="informeEmpleado" class="mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado"/>    
-    <var name="informeEmpleadoDetalle" class="mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleadoDetalle"/>    
-    <var name="flowScope.proveedor" class="mx.edu.um.mateo.general.model.Proveedor"/>
-    <!--  <var name="informeEmpleadoManagerImpl" class="mx.edu.um.mateo.contabilidad.facturas.service.impl.InformeEmpleadoManagerImpl"/>  
-    -->
+    <var name="informeProveedor" class="mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor"/>    
+    <var name="informeProveedorDetalle" class="mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle"/>    
     
     
-    
-    <view-state id="listaInformes" view="/WEB-INF/jsp/factura/informe/lista.jsp">
+    <view-state id="listaInformes" view="/WEB-INF/jsp/factura/informeProveedor/lista.jsp">
         <on-render>
-            <evaluate expression="informeEmpleadoManager.getInformes(externalContext.sessionMap.empresaId)" result="requestScope.informes"/>
+            <evaluate expression="informeProveedorManager.getInformes(externalContext.sessionMap.empresaId)" result="requestScope.informes"/>
         </on-render>
-        <transition on="crearInforme" to="nuevoInforme"/>
+        <transition on="crearInformeProveedor" to="nuevoInformeProveedor"/>
             
     </view-state>
     
-    <view-state id="nuevoInforme" view="/WEB-INF/jsp/factura/informe/nuevo.jsp" model="informeEmpleado">
-        <transition on="grabaInforme" to="nuevoInformeDetalle">
-            <evaluate expression="informeEmpleadoAction.creaInforme" />
+    <view-state id="nuevoInformeProveedor" view="/WEB-INF/jsp/factura/informeProveedor/nuevo.jsp" model="informeProveedor">
+        <transition on="grabaInforme" to="nuevoInformeProveedorDetalle">
+            <evaluate expression="informeProveedorAction.creaInforme" />
         </transition>
     </view-state>
     
-    <view-state id="nuevoInformeDetalle" view="/WEB-INF/jsp/factura/detalle/nuevo.jsp" model="informeEmpleadoDetalle">
+    <view-state id="nuevoInformeProveedorDetalle" view="/WEB-INF/jsp/factura/informeProveedorDetalle/nuevo.jsp" model="informeProveedorDetalle">
         <transition on="grabaEncabezado" to="endState" >
-            <evaluate expression="informeEmpleadoAction.processFile"/>
+            <evaluate expression="informeProveedorAction.crearDetalle"/>
         </transition>
         <transition on="cancel" to="finish" bind="false"/>
     </view-state>
@@ -40,7 +36,7 @@ http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
         </transition>
     </view-state>
     -->
-    <end-state id="endState" commit="true" view="externalRedirect:contextRelative:/factura/informe" />
+    <end-state id="endState" commit="true" view="externalRedirect:contextRelative:/factura/informeProveedor/lista.jsp" />
 
     <global-transitions>
         <transition on="cancel" to="endState" />
