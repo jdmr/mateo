@@ -61,6 +61,8 @@ public class InformeProveedorDetalle implements Serializable {
     private Empresa empresa;
     @ManyToOne(fetch = FetchType.LAZY)
     private Usuario usuarioAlta;
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    private ProveedorFacturas proveedorFacturas;
     @ManyToOne(fetch = FetchType.LAZY)
     private Usuario usuarioMOdificacion;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -295,14 +297,25 @@ public class InformeProveedorDetalle implements Serializable {
         this.file2 = file2;
     }
 
+    public ProveedorFacturas getProveedorFacturas() {
+        return proveedorFacturas;
+    }
+
+    public void setProveedorFacturas(ProveedorFacturas proveedorFacturas) {
+        this.proveedorFacturas = proveedorFacturas;
+    }
+
     @Override
     public String toString() {
-        return "InformeProveedorDetalle{" + "id=" + id + ", version=" + version + ", RFCProveedor=" + RFCProveedor + ", folioFactura=" + folioFactura
-                + ", nombreProveedor=" + nombreProveedor + ", subtotal=" + subtotal + ", IVA=" + IVA + ", total=" + total + ", status=" + status
-                + ", fechaFactura=" + fechaFactura + ", pathPDF=" + pathPDF + ", pathXMl=" + pathXMl + ", nombrePDF=" + nombrePDF
-                + ", nombreXMl=" + nombreXMl
-                + ", usuarioMOdificacion="
-                + ", fechaCaptura=" + fechaCaptura + ", fechaAutRech=" + fechaAutRech
-                + ", fechaModificacion=" + fechaModificacion + '}';
+        return "InformeProveedorDetalle{" + "id=" + id + ", version=" + version + ", RFCProveedor=" + RFCProveedor
+                + ", folioFactura=" + folioFactura + ", nombreProveedor=" + nombreProveedor + ", subtotal=" + subtotal
+                + ", IVA=" + IVA + ", total=" + total + ", status=" + status + ", fechaFactura=" + fechaFactura + ", pathPDF=" + pathPDF
+                + ", pathXMl=" + pathXMl + ", nombrePDF=" + nombrePDF + ", nombreXMl=" + nombreXMl + ", contrarecibo=" + contrarecibo
+                + ", informeProveedor=" + informeProveedor + ", empresa=" + empresa + ", usuarioAlta=" + usuarioAlta
+                + ", proveedorFacturas=" + proveedorFacturas + ", usuarioMOdificacion=" + usuarioMOdificacion
+                + ", usuarioAutRech=" + usuarioAutRech + ", fechaCaptura=" + fechaCaptura + ", fechaAutRech=" + fechaAutRech
+                + ", fechaModificacion=" + fechaModificacion + ", dctoProntoPago=" + dctoProntoPago + ", file=" + file
+                + ", file2=" + file2 + '}';
     }
+
 }

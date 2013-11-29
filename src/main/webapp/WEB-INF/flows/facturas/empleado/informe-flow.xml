@@ -6,9 +6,10 @@
 http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
     <var name="informeProveedor" class="mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor"/>    
     <var name="informeProveedorDetalle" class="mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle"/>    
+    <var name="rfcProveedor" class="java.lang.String"/>    
     
     
-    <view-state id="listaInformes" view="/WEB-INF/jsp/factura/informeProveedor/lista.jsp">
+    <view-state id="listaInformes" view="/WEB-INF/jsp/factura/informeProveedor/listaEmp.jsp">
         <on-render>
             <evaluate expression="informeProveedorManager.getInformes(externalContext.sessionMap.empresaId)" result="requestScope.informes"/>
         </on-render>
@@ -16,13 +17,13 @@ http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
             
     </view-state>
     
-    <view-state id="nuevoInformeProveedor" view="/WEB-INF/jsp/factura/informeProveedor/nuevo.jsp" model="informeProveedor">
+    <view-state id="nuevoInformeProveedor" view="/WEB-INF/jsp/factura/informeProveedor/nuevoEmp.jsp" model="informeProveedor">
         <transition on="grabaInforme" to="nuevoInformeProveedorDetalle">
             <evaluate expression="informeProveedorAction.creaInforme" />
         </transition>
     </view-state>
     
-    <view-state id="nuevoInformeProveedorDetalle" view="/WEB-INF/jsp/factura/informeProveedorDetalle/nuevo.jsp" model="informeProveedorDetalle">
+    <view-state id="nuevoInformeProveedorDetalle" view="/WEB-INF/jsp/factura/informeProveedorDetalle/nuevoEmp.jsp" model="informeProveedorDetalle">
         <transition on="grabaEncabezado" to="endState" >
             <evaluate expression="informeProveedorAction.crearDetalle"/>
         </transition>
@@ -36,7 +37,7 @@ http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
         </transition>
     </view-state>
     -->
-    <end-state id="endState" commit="true" view="externalRedirect:contextRelative:/factura/informeProveedor/lista.jsp" />
+    <end-state id="endState" commit="true" view="externalRedirect:contextRelative:/factura/informeProveedor" />
 
     <global-transitions>
         <transition on="cancel" to="endState" />

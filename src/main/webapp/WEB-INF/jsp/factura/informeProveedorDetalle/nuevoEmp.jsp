@@ -46,6 +46,16 @@
                             <form:errors path="folioFactura" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
+                    <s:bind path="informeProveedorDetalle.RFCProveedor">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="proveedorRFC">
+                                <s:message code="proveedorRFC.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="RFCProveedor" maxlength="150" required="true" />
+                            <form:errors path="RFCProveedor" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
 
 
 

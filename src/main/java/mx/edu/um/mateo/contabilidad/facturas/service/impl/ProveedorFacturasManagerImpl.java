@@ -36,6 +36,11 @@ public class ProveedorFacturasManagerImpl implements ProveedorFacturasManager {
     }
 
     @Override
+    public ProveedorFacturas obtiene(String rfc) {
+        return dao.obtiene(rfc);
+    }
+
+    @Override
     public void graba(ProveedorFacturas proveedorFacturas, Usuario usuario) {
         dao.crea(proveedorFacturas, usuario);
     }

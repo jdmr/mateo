@@ -27,6 +27,16 @@ public interface ProveedorFacturasDao {
     public ProveedorFacturas obtiene(final Long id);
 
     /**
+     * Gets informe's information based on rfc. An
+     * ObjectRetrievalFailureException Runtime Exception is thrown if nothing is
+     * found.
+     *
+     * @param rfc the informe's rfc
+     * @return informe populated informe object
+     */
+    public ProveedorFacturas obtiene(String rfc);
+
+    /**
      * Saves a informe's information
      *
      * @param informe the object to be saved

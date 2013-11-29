@@ -249,7 +249,6 @@ public class InformeProveedorController extends BaseController {
     public String ver(HttpServletRequest request, @PathVariable Long id, Model modelo) {
         log.debug("Mostrando informe {}", id);
 
-
         InformeProveedor informeProveedor = manager.obtiene(id);
         request.getSession().setAttribute("informeId", informeProveedor);
 
@@ -336,7 +335,6 @@ public class InformeProveedorController extends BaseController {
                 }
                 break;
         }
-
 
         Usuario usuario = ambiente.obtieneUsuario();
         informe.setNombreProveedor(usuario.getNombre());
