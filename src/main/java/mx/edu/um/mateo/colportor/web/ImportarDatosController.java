@@ -6,6 +6,7 @@ package mx.edu.um.mateo.colportor.web;
 
 import mx.edu.um.mateo.general.web.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -16,6 +17,7 @@ import mx.edu.um.mateo.general.utils.Constantes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -78,6 +80,7 @@ public class ImportarDatosController extends BaseController {
             }
             File file = new File(request.getSession().getServletContext().getRealPath("") + "/resources/" + request.getRemoteUser()+"/"+archivo.getName());
             mgr.importaInformeDeGema(file, ambiente.obtieneUsuario());
+            
             return "redirect:"+"/colportaje/importarDatos/listadoArchivos";
     }
 }

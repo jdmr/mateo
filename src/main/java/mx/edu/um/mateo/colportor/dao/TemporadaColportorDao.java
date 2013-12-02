@@ -15,6 +15,7 @@ import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueObjectException;
+import org.hibernate.Query;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -129,11 +130,11 @@ public class TemporadaColportorDao extends BaseDao {
 
     public TemporadaColportor obtiene(Colportor colportor) {
         log.debug("Obtiene Temporada Colportor con Colportor = {}", colportor.getId());
-        Criteria sql = currentSession().createCriteria(TemporadaColportor.class);
-        sql.add(Restrictions.eq("colportor", colportor));
-        sql.add(Restrictions.eq("status", Constantes.STATUS_ACTIVO));
+        Query sql = currentSession().createQuery("select tc from TemporadaColportor as tc inner join tc.colportor as clp where clp.id = :clpId and tc.status = :status ");
+        sql.setLong("clpId", colportor.getId());
+        sql.setString("status", Constantes.STATUS_ACTIVO);
+        
         return (TemporadaColportor) sql.uniqueResult();
-
     }
 
     public TemporadaColportor obtiene(Colportor colportor, Temporada temporada) {

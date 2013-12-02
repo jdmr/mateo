@@ -25,17 +25,7 @@
                     </div>
                 </form:errors>
 
-                <fieldset>                    
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <div class="control-group">
-                                <label for="name">
-                                    <s:message code="name.label" />
-                                </label>
-                                <input name="name" type="input" />
-                            </div>
-                        </div>
-                    </div>
+                <fieldset>
                     <div class="row-fluid">
                         <div class="span4">
                             <div class="control-group">

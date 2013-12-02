@@ -5,6 +5,7 @@
 package mx.edu.um.mateo.colportor.service;
 
 import java.io.File;
+import java.io.IOException;
 import mx.edu.um.mateo.general.model.Usuario;
 
 /**
@@ -12,5 +13,5 @@ import mx.edu.um.mateo.general.model.Usuario;
  * @author osoto
  */
 public interface ImportarDatosManager {
-    public void importaInformeDeGema(File file, Usuario user)  throws Exception;
+    public void importaInformeDeGema(File file, Usuario user)  throws NullPointerException, IOException, Exception;
 }
