@@ -103,11 +103,11 @@
                     <input id="addFile" type="button" value="Add File" />
                     <table id="fileTable">
                         <tr>
-                            <td><img src="/mateo/images/xml.png" width="120" height="100" /><input name="files[0]" type="file" /></td>
+                            <td><img src="/mateo/images/xml.png" width="120" height="100" /><input name="file" type="file" /></td>
                         </tr>
 
                         <tr>
-                            <td><img src="/mateo/images/pdf.png" width="120" height="100" /><input name="files[1]" type="file" /></td>
+                            <td><img src="/mateo/images/pdf.png" width="120" height="100" /><input name="file2" type="file" /></td>
                         </tr>
                     </table>
 

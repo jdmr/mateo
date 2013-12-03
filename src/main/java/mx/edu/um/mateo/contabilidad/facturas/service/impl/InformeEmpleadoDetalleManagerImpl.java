@@ -61,4 +61,9 @@ public class InformeEmpleadoDetalleManagerImpl implements InformeEmpleadoDetalle
         dao.elimina(new Long(id));
         return detalle.getNombreProveedor();
     }
+
+    @Override
+    public void crea(InformeEmpleadoDetalle detalle, Usuario usuario) throws AutorizacionCCPlInvalidoException {
+        graba(detalle, usuario);
+    }
 }

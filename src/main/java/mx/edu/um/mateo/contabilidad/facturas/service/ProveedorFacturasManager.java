@@ -23,12 +23,20 @@ public interface ProveedorFacturasManager {
     public Map<String, Object> lista(Map<String, Object> params);
 
     /**
-     * Obtiene una Proveedor
+     * Obtiene un Proveedor
      *
      * @param id
      * @return
      */
     public ProveedorFacturas obtiene(final Long id);
+
+    /**
+     * Obtiene un Proveedor por su rfc
+     *
+     * @param rfc
+     * @return ProveedorFacturas
+     */
+    public ProveedorFacturas obtiene(String rfc);
 
     /**
      * graba informacion sobre un proveedor

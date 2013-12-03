@@ -16,6 +16,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UtilStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -23,7 +24,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  *
  * @author develop
  */
-@Entity
+@Entity(name = "informeProveedor")
 @Table(name = "informeProveedor")
 public class InformeProveedor implements Serializable {
 
@@ -42,8 +43,10 @@ public class InformeProveedor implements Serializable {
     private Date fechaInforme;
     @ManyToOne(optional = false)
     private Empresa empresa;
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     private ProveedorFacturas proveedorFacturas;
+    @ManyToOne(optional = true)
+    private Usuario empleado;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     private Date fechaPago;
@@ -189,12 +192,21 @@ public class InformeProveedor implements Serializable {
         this.banco = banco;
     }
 
+    public Usuario getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(Usuario empleado) {
+        this.empleado = empleado;
+    }
+
     @Override
     public String toString() {
         return "InformeProveedor{" + "id=" + id + ", version=" + version + ", status=" + status + ", cuentaCheque=" + cuentaCheque
                 + ", clabe=" + clabe + ", formaPago=" + formaPago + ", nombreProveedor=" + nombreProveedor
                 + ", fechaInforme=" + fechaInforme + ", empresa=" + empresa + ", proveedorFacturas=" + proveedorFacturas
-                + ", fechaPago=" + fechaPago + ", contraRecibo=" + contraRecibo + ", moneda=" + moneda
+                + ", usuario=" + empleado + ", fechaPago=" + fechaPago + ", contraRecibo=" + contraRecibo + ", moneda=" + moneda
                 + ", contabilidad=" + contabilidad + ", ccp=" + ccp + ", banco=" + banco + '}';
     }
+
 }

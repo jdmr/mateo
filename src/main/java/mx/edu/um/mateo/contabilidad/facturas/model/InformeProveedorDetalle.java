@@ -22,13 +22,14 @@ import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UtilStatus;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
  * @author develop
  */
-@Entity
-@Table(name = "informereportedetalle")
+@Entity(name = "informeProveedorDetalle")
+@Table(name = "informeProveedorDetalle")
 public class InformeProveedorDetalle implements Serializable {
 
     @Id
@@ -60,6 +61,8 @@ public class InformeProveedorDetalle implements Serializable {
     private Empresa empresa;
     @ManyToOne(fetch = FetchType.LAZY)
     private Usuario usuarioAlta;
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    private ProveedorFacturas proveedorFacturas;
     @ManyToOne(fetch = FetchType.LAZY)
     private Usuario usuarioMOdificacion;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -74,6 +77,8 @@ public class InformeProveedorDetalle implements Serializable {
     private Date fechaModificacion;
     @Column(name = "dcto_pronto_pago", precision = 9, scale = 2)
     private BigDecimal dctoProntoPago;
+    private transient MultipartFile file;
+    private transient MultipartFile file2;
 
     public InformeProveedorDetalle() {
         dctoProntoPago = BigDecimal.ZERO;
@@ -275,16 +280,42 @@ public class InformeProveedorDetalle implements Serializable {
     public void setDctoProntoPago(BigDecimal dctoProntoPago) {
         this.dctoProntoPago = dctoProntoPago;
     }
-    
+
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+
+    public MultipartFile getFile2() {
+        return file2;
+    }
+
+    public void setFile2(MultipartFile file2) {
+        this.file2 = file2;
+    }
+
+    public ProveedorFacturas getProveedorFacturas() {
+        return proveedorFacturas;
+    }
+
+    public void setProveedorFacturas(ProveedorFacturas proveedorFacturas) {
+        this.proveedorFacturas = proveedorFacturas;
+    }
 
     @Override
     public String toString() {
-        return "InformeProveedorDetalle{" + "id=" + id + ", version=" + version + ", RFCProveedor=" + RFCProveedor + ", folioFactura=" + folioFactura
-                + ", nombreProveedor=" + nombreProveedor + ", subtotal=" + subtotal + ", IVA=" + IVA + ", total=" + total + ", status=" + status
-                + ", fechaFactura=" + fechaFactura + ", pathPDF=" + pathPDF + ", pathXMl=" + pathXMl + ", nombrePDF=" + nombrePDF
-                + ", nombreXMl=" + nombreXMl
-                + ", usuarioMOdificacion="
-                + ", fechaCaptura=" + fechaCaptura + ", fechaAutRech=" + fechaAutRech
-                + ", fechaModificacion=" + fechaModificacion + '}';
+        return "InformeProveedorDetalle{" + "id=" + id + ", version=" + version + ", RFCProveedor=" + RFCProveedor
+                + ", folioFactura=" + folioFactura + ", nombreProveedor=" + nombreProveedor + ", subtotal=" + subtotal
+                + ", IVA=" + IVA + ", total=" + total + ", status=" + status + ", fechaFactura=" + fechaFactura + ", pathPDF=" + pathPDF
+                + ", pathXMl=" + pathXMl + ", nombrePDF=" + nombrePDF + ", nombreXMl=" + nombreXMl + ", contrarecibo=" + contrarecibo
+                + ", informeProveedor=" + informeProveedor + ", empresa=" + empresa + ", usuarioAlta=" + usuarioAlta
+                + ", proveedorFacturas=" + proveedorFacturas + ", usuarioMOdificacion=" + usuarioMOdificacion
+                + ", usuarioAutRech=" + usuarioAutRech + ", fechaCaptura=" + fechaCaptura + ", fechaAutRech=" + fechaAutRech
+                + ", fechaModificacion=" + fechaModificacion + ", dctoProntoPago=" + dctoProntoPago + ", file=" + file
+                + ", file2=" + file2 + '}';
     }
+
 }

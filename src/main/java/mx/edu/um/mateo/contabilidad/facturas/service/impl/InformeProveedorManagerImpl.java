@@ -4,8 +4,13 @@
  */
 package mx.edu.um.mateo.contabilidad.facturas.service.impl;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mx.edu.um.mateo.contabilidad.facturas.dao.CCPDao;
 import mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDao;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
@@ -25,8 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @author develop
  */
 @Transactional
-@Service
-public class InformeProveedorManagerImpl extends BaseManager implements InformeProveedorManager {
+@Service("informeProveedorManager")
+public class InformeProveedorManagerImpl extends BaseManager implements InformeProveedorManager, Serializable {
 
     @Autowired
     private InformeProveedorDao dao;
@@ -42,7 +47,7 @@ public class InformeProveedorManagerImpl extends BaseManager implements InformeP
     public Map<String, Object> revisar(Map<String, Object> params) {
         return dao.revisar(params);
     }
- 
+
     @Override
     public InformeProveedor obtiene(final Long id) {
         return dao.obtiene(new Long(id));
@@ -96,5 +101,23 @@ public class InformeProveedorManagerImpl extends BaseManager implements InformeP
     public void rechazar(InformeProveedor informeProveedor, Usuario usuario) {
         informeProveedor.setStatus(Constantes.STATUS_RECHAZADO);
         dao.actualiza(informeProveedor, usuario);
+    }
+
+    @Override
+    public List<InformeProveedor> getInformes(Long empresaId) {
+        log.debug("Entro a getinformes");
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", empresaId);
+        return (List) lista(params).get("informes");
+    }
+
+    @Override
+    public void crea(InformeProveedor informe, Usuario usuario) {
+        log.debug("Entrando a crea{}, usuario{}", informe, usuario);
+        try {
+            graba(informe, usuario);
+        } catch (AutorizacionCCPlInvalidoException ex) {
+            log.debug("CPP invalido");
+        }
     }
 }

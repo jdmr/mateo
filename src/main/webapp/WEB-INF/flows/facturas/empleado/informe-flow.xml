@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow
+http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+    <var name="informeProveedor" class="mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor"/>    
+    <var name="informeProveedorDetalle" class="mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle"/>    
+    <var name="rfcProveedor" class="java.lang.String"/>    
+    
+    
+    <view-state id="listaInformes" view="/WEB-INF/jsp/factura/informeProveedor/listaEmp.jsp">
+        <on-render>
+            <evaluate expression="informeProveedorManager.getInformes(externalContext.sessionMap.empresaId)" result="requestScope.informes"/>
+        </on-render>
+        <transition on="crearInformeProveedor" to="nuevoInformeProveedor"/>
+            
+    </view-state>
+    
+    <view-state id="nuevoInformeProveedor" view="/WEB-INF/jsp/factura/informeProveedor/nuevoEmp.jsp" model="informeProveedor">
+        <transition on="grabaInforme" to="nuevoInformeProveedorDetalle">
+            <evaluate expression="informeProveedorAction.creaInforme" />
+        </transition>
+    </view-state>
+    
+    <view-state id="nuevoInformeProveedorDetalle" view="/WEB-INF/jsp/factura/informeProveedorDetalle/nuevoEmp.jsp" model="informeProveedorDetalle">
+        <transition on="grabaEncabezado" to="endState" >
+            <evaluate expression="informeProveedorAction.crearDetalle"/>
+        </transition>
+        <transition on="cancel" to="finish" bind="false"/>
+    </view-state>
+    
+    <!--
+    <view-state id="nuevoInformeDetalle" view="/WEB-INF/jsp/factura/detalle/nuevo.jsp" model="informeEmpleadoDetalle">
+        <transition on="grabaEncabezado" to="endState">
+            <evaluate expression="informeEmpleadoAction.creaInformeDetalle" />
+        </transition>
+    </view-state>
+    -->
+    <end-state id="endState" commit="true" view="externalRedirect:contextRelative:/factura/informeProveedor" />
+
+    <global-transitions>
+        <transition on="cancel" to="endState" />
+    </global-transitions>
+</flow>
