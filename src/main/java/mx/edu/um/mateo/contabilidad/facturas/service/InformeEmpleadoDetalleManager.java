@@ -46,4 +46,6 @@ public interface InformeEmpleadoDetalleManager {
      * @param id el id de InformeEmpleado
      */
     public String elimina(final Long id);
+
+    public void crea(InformeEmpleadoDetalle detalle, Usuario usuario) throws AutorizacionCCPlInvalidoException;
 }

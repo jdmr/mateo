@@ -9,12 +9,14 @@ import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDetallesDao;
 import mx.edu.um.mateo.contabilidad.facturas.model.Contrarecibo;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleadoDetalle;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
 import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
 import mx.edu.um.mateo.contabilidad.facturas.service.ContrareciboManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorDetalleManager;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.service.BaseManager;
+import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
 import mx.edu.um.mateo.general.utils.BancoNoCoincideException;
 import mx.edu.um.mateo.general.utils.ClabeNoCoincideException;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -165,5 +167,9 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
             }
             detalle2.setStatus(Constantes.STATUS_RECHAZADO);
         }
+    }
+      @Override
+    public void crea(InformeProveedorDetalle detalle, Usuario usuario) throws AutorizacionCCPlInvalidoException {
+        graba(detalle, usuario);
     }
 }

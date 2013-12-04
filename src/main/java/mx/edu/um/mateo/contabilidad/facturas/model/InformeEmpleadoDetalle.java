@@ -27,7 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
  *
  * @author develop
  */
-@Entity
+@Entity(name = "informeEmpleadoDetalle")
 @Table(name = "informeEmpleadoDetalle")
 public class InformeEmpleadoDetalle implements Serializable {
 
@@ -58,6 +58,8 @@ public class InformeEmpleadoDetalle implements Serializable {
     private InformeEmpleado informeEmpleado;
     @ManyToOne(optional = false)
     private Empresa empresa;
+    private transient MultipartFile file;
+    private transient MultipartFile file2;
 
     public String getRFCProveedor() {
         return RFCProveedor;
@@ -202,6 +204,8 @@ public class InformeEmpleadoDetalle implements Serializable {
         this.ccp = ccp;
     }
 
+    
+    
     @Override
     public String toString() {
         return "InformeEmpleadoDetalle{" + "id=" + id + ", version=" + version + ", RFCProveedor=" + RFCProveedor
@@ -211,5 +215,21 @@ public class InformeEmpleadoDetalle implements Serializable {
                 + ", nombrePDF=" + nombrePDF + ", nombreXMl=" + nombreXMl
                 + ", informeEmpleado=" + informeEmpleado
                 + ", empresa=" + empresa + '}';
+    }
+
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+
+    public MultipartFile getFile2() {
+        return file2;
+    }
+
+    public void setFile2(MultipartFile file2) {
+        this.file2 = file2;
     }
 }

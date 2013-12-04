@@ -15,6 +15,7 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueObjectException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
@@ -116,6 +117,15 @@ public class ProveedorFacturasDaoHibernate extends BaseDao implements ProveedorF
         }
 
         return proveedorFacturas;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ProveedorFacturas obtiene(String rfc) {
+        Query query = currentSession().createQuery(
+                "select u from Usuario u where u.rfc = :rfc");
+        query.setString("rfc", rfc);
+        return (ProveedorFacturas) query.uniqueResult();
     }
 
     @Override

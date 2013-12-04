@@ -9,6 +9,7 @@ import java.util.Map;
 import mx.edu.um.mateo.contabilidad.facturas.model.Contrarecibo;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
 
 /**
  *
@@ -17,8 +18,8 @@ import mx.edu.um.mateo.general.model.Usuario;
 public interface InformeProveedorDetalleManager {
 
     /**
-     * Regresa una lista de Informes finalizados o enviados por el proveedor
-     * En este metodo se asigna el estatus al params
+     * Regresa una lista de Informes finalizados o enviados por el proveedor En
+     * este metodo se asigna el estatus al params
      *
      * @param InformeProveedor
      * @return
@@ -27,9 +28,9 @@ public interface InformeProveedorDetalleManager {
 
     public Map<String, Object> contrarecibo(Map<String, Object> params);
 
-     /**
-     * Regresa una lista de Informes finalizados o enviados por el proveedor
-     * En este metodo se asigna el estatus al params
+    /**
+     * Regresa una lista de Informes finalizados o enviados por el proveedor En
+     * este metodo se asigna el estatus al params
      *
      * @param InformeProveedor
      * @return
@@ -63,4 +64,6 @@ public interface InformeProveedorDetalleManager {
     public Contrarecibo autorizar(List ids, Usuario usuario) throws Exception;
 
     public void rechazar(List ids, Usuario usuario) throws Exception;
+
+    public void crea(InformeProveedorDetalle detalle, Usuario usuario) throws AutorizacionCCPlInvalidoException;
 }
