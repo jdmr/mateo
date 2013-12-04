@@ -8,7 +8,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NavigableMap;
 import mx.edu.um.mateo.colportor.dao.ColportorDao;
 import mx.edu.um.mateo.colportor.dao.DocumentoDao;
 import mx.edu.um.mateo.colportor.dao.TemporadaColportorDao;
@@ -224,6 +228,132 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                     doc.setTemporadaColportor(tmpClpDao.obtiene(clp));
                     log.debug("Obtuvo temporadaClp {}", doc.getTemporadaColportor());
                     docDao.crea(doc);
+                }
+            }
+        } catch (IOException ioe) {
+            log.error("Error al intentar abrir el archivo");
+            throw ioe;
+        } catch (Exception e){
+            e.printStackTrace();
+            log.error("Error al intentar generar los registros de colportores");
+            throw e;
+        }
+        
+    }
+    public void importaDiezmos(File file, Usuario user) throws NullPointerException, IOException, Exception{
+        log.debug("importaDiezmos");
+        try{
+            XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream(file));
+            XSSFSheet sheet = wb.getSheetAt(0); 
+            XSSFRow row;
+            XSSFCell cell;
+
+            int rows; // No of rows
+            rows = sheet.getPhysicalNumberOfRows();
+            //log.debug("Rows "+rows);
+
+            int cols = 0; // No of columns
+            int tmp = 0;
+
+            //This trick ensures that we get the data properly even if it doesn't start from first few rows
+            for (int i = 0; i < 10 || i < rows; i++) {
+                row = sheet.getRow(i);
+                if (row != null) {
+                    tmp = sheet.getRow(i).getPhysicalNumberOfCells();
+                    if (tmp > cols) {
+                        cols = tmp;
+                    }
+                }
+            }
+            //log.debug("Cols "+cols);
+            String fecha = null;
+            String nombre = null;
+            BigDecimal diezmo = null;
+            
+            Documento doc = null;
+            Colportor clp = null;
+            Boolean sw = false;
+            
+            Map <String, Object> params = new HashMap<>();
+            params.put("empresa", user.getEmpresa().getId());
+            NavigableMap <String, Colportor> mapa = clpDao.obtieneMapColportores(params);
+            NavigableMap <String, Colportor> smapa = null;
+            
+            rowLoop:
+            for (int r = 2; r < rows; r++) {
+                row = sheet.getRow(r);
+                if (row != null) {
+                    sw =false; //Si no se leyo colportor alguno, entonces no se leen las demas celdas
+
+                    for (int c = 0; c < cols; c++) {
+                        cell = row.getCell(c);
+
+                        if (cell != null) {
+                            switch(c){
+                                case 0:{
+                                    log.debug("String {}",cell.getStringCellValue());
+                                    sdf = new SimpleDateFormat ("dd-MMM-yy", local);
+                                    try {
+                                        gcFecha.setTime(sdf.parse(cell.getStringCellValue()));
+                                    } catch (ParseException parseException) {
+                                        continue rowLoop;
+                                    }
+                                                                        
+                                    break;
+                                }
+                                case 3:{
+                                    log.debug("Nombre {}",cell.getStringCellValue());
+                                    nombre = cell.getStringCellValue();
+                                    nombre = nombre.substring(15);
+                                    log.debug("Nombre {}", nombre);
+                                    String [] arr = nombre.split(",");
+                                    for(String str : arr){
+                                        log.debug("Nombre  {}",str);
+                                        smapa = mapa.tailMap(str, true);
+                                        if(smapa.size() == 1){
+                                            clp = smapa.pollFirstEntry().getValue();
+                                            log.debug("Colportor encontrado {}", clp);
+                                            break;
+                                        }
+                                        if(mapa.size() == 0){
+                                            clp = null;
+                                            log.debug("No se encontro colportor ");
+                                            break;
+                                        }
+                                    }
+                                    log.debug("Nombre colortor {}",arr[0].split("\\s"));
+                                    
+                                    break;
+                                }
+                                case 4:{
+                                    try {
+                                        log.debug("diezmo {}",cell.getNumericCellValue());
+                                        diezmo = new BigDecimal(String.valueOf(cell.getNumericCellValue()));                                        
+                                    } catch (Exception e) {
+                                        diezmo = new BigDecimal("0");
+                                    }
+                                    break;
+                                }
+                            } //switch end
+                            
+                            
+                        }
+                    } //Finalizo de leer todas las celdas de una fila
+                    
+                    //Insertar boletin
+//                    doc = new Documento();
+//                    doc.setFecha(gcFecha.getTime());
+//                    doc.setFolio(clave);
+//                    doc.setImporte(boletin);
+//                    doc.setObservaciones(descripcion);
+//                    doc.setTipoDeDocumento("Boletin");
+//
+//                    clp = clpDao.obtiene(clave);
+//                    
+//                    log.debug("Obtuvo colportor {}", clp);
+//                    doc.setTemporadaColportor(tmpClpDao.obtiene(clp));
+//                    log.debug("Obtuvo temporadaClp {}", doc.getTemporadaColportor());
+//                    docDao.crea(doc);
                 }
             }
         } catch (IOException ioe) {

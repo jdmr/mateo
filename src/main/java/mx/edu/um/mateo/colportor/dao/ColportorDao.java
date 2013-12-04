@@ -26,6 +26,8 @@ package mx.edu.um.mateo.colportor.dao;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -135,6 +137,18 @@ public class ColportorDao {
         criteria.createCriteria("empresa").add(Restrictions.eq("id",params.get("empresa")));
         params.put(Constantes.COLPORTOR_LIST, criteria.list());
         return params;
+    }
+    
+    public NavigableMap<String, Colportor> obtieneMapColportores(Map<String, Object> params) {
+        NavigableMap<String, Colportor> mapa = new TreeMap();
+        
+        Criteria criteria = currentSession().createCriteria(Colportor.class);
+        criteria.createCriteria("empresa").add(Restrictions.eq("id",params.get("empresa")));
+        params.put(Constantes.COLPORTOR_LIST, criteria.list());
+        for(Colportor clp : (List<Colportor>)params.get(Constantes.COLPORTOR_LIST)){
+            mapa.put(clp.getNombre(),clp);
+        }
+        return mapa;
     }
 
     public Colportor obtiene(Long id) {

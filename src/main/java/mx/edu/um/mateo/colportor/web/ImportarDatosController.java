@@ -73,13 +73,20 @@ public class ImportarDatosController extends BaseController {
                     }
                 }
             }
-
-            if(archivo == null){
+            
+            String tipoArchivo = request.getParameter("tipoArchivo");
+            log.debug("archivo {}", archivo);
+            log.debug("tipoArchivo {}", tipoArchivo);
+            if(archivo == null | tipoArchivo == null){
                 log.error("archivo null");
                 return "redirect:"+"/colportaje/importarDatos/listadoArchivos";
             }
             File file = new File(request.getSession().getServletContext().getRealPath("") + "/resources/" + request.getRemoteUser()+"/"+archivo.getName());
-            mgr.importaInformeDeGema(file, ambiente.obtieneUsuario());
+            
+            if(tipoArchivo.equals("IG"))
+                mgr.importaInformeDeGema(file, ambiente.obtieneUsuario());
+            else if(tipoArchivo.equals("ID"))
+                mgr.importaDiezmos(file, ambiente.obtieneUsuario());
             
             return "redirect:"+"/colportaje/importarDatos/listadoArchivos";
     }
