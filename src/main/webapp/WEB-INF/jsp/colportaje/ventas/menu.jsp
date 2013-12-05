@@ -5,6 +5,7 @@
     <ul class="nav">
         <li<c:if test="${param.menu eq 'principal'}"> class="active"</c:if>><a href="<c:url value='/colportaje' />"><s:message code="colportaje.label" /></a></li>
         <li<c:if test="${param.menu eq 'clienteColportor'}"> class="active"</c:if>><a href="<c:url value='/colportaje/ventas/clientes' />"><s:message code="clienteColportor.label" /></a></li>
+        <li<c:if test="${param.menu eq 'pedidoColportor'}"> class="active"</c:if>><a href="<c:url value='/colportaje/ventas/pedidos' />"><s:message code="pedidoColportor.label" /></a></li>
     </ul>
 </nav>
     
