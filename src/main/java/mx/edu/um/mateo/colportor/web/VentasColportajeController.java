@@ -21,30 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package mx.edu.um.mateo.contabilidad.dao;
+package mx.edu.um.mateo.colportor.web;
 
-import java.util.List;
-import java.util.Map;
-import mx.edu.um.mateo.contabilidad.model.CentroCosto;
-import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.contabilidad.web.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- *
- * @author J. David Mendoza <jdmendoza@um.edu.mx>
+ * 
+ * @author osoto
  */
-public interface CentroCostoDao {
+@Controller
+public class VentasColportajeController {
 
-    public CentroCosto crea(CentroCosto ccosto);
-    
-    public CentroCosto obtiene(String centroDeCostoId, Usuario usuario);
+	private static final Logger log = LoggerFactory
+			.getLogger(ContabilidadController.class);
 
-    public List<CentroCosto> busca(String filtro, Usuario usuario);
-
-    public List<CentroCosto> buscaPorOrganizacion(String filtro, Usuario usuario);
-
-    public List<CentroCosto> buscaPorEmpresa(String filtro, Usuario usuario);
-
-    public List<CentroCosto> listaPorEmpresa(Usuario usuario);
-    
-    public List<CentroCosto> listaDepartamento (Usuario usuario);
+	@RequestMapping({ "/colportaje/ventas" })
+	public String index() { 
+		log.debug("Mostrando menu de colportaje/ventas");
+		return "colportaje/ventas/index";
+	}
 }

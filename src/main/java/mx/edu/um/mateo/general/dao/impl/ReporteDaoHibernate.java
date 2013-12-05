@@ -30,8 +30,6 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import mx.edu.um.mateo.colportor.model.Asociacion;
-import mx.edu.um.mateo.colportor.model.Union;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.dao.ReporteDao;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
@@ -108,28 +106,7 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
         return reporte;
     }
     
-    
-    
-     public Reporte buscaReportePorAsociacion(String nombre, Long asociacionId) {
-        Query query = currentSession().createQuery("select r from Asociacion e inner join e.reportes r where e.id = :id and r.nombre = :nombre");
-        query.setLong("id", asociacionId);
-        query.setString("nombre", nombre);
-        Reporte reporte = (Reporte) query.uniqueResult();
-        return reporte;
-    }
-    
-    
-    
-     public Reporte buscaReportePorUnion(String nombre, Long unionId) {
-        Query query = currentSession().createQuery("select r from Union o inner join o.reportes r where o.id = :id and r.nombre = :nombre");
-        query.setLong("id", unionId);
-        query.setString("nombre", nombre);
-        Reporte reporte = (Reporte) query.uniqueResult();
-        return reporte;
-    }
-     
-
-    @Override
+     @Override
     @Transactional(readOnly = true)
     public JasperReport obtieneReporteAdministrativo(String nombre) {
         Reporte reporte = buscaReporteAdminstrativo(nombre);
@@ -169,21 +146,6 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
         return reporte.getReporte();
     }
     
-    @Override
-    @Transactional(readOnly=true)
-    public JasperReport obtieneReportePorAsociacion(String nombre, Long asociacionId){
-        Reporte reporte = buscaReportePorAsociacion(nombre, asociacionId);
-
-        return reporte.getReporte();
-    }
-    
-    @Override
-    @Transactional(readOnly=true)
-    public JasperReport obtieneReportePorUnion(String nombre, Long unionId) {
-        Reporte reporte = buscaReportePorUnion(nombre, unionId);
-        return reporte.getReporte();
-    }
-
     @Override
     public void inicializa() {
         log.debug("Inicializando reportes administrativos");
@@ -285,32 +247,6 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
         almacen.getReportes().clear();
         almacen.getReportes().addAll(inicializaReportes(nombres));
         currentSession().save(almacen);
-        currentSession().flush();
-    }
-    
-     @Override
-    public void inicializaUnion(Union union) {
-        log.debug("Inicializando reportes de la union {}", union);
-        List<String> nombres = new ArrayList<>();
-        nombres.add("asociaciones");
-        nombres.add("usuarios");
-
-        union.getReportes().clear();
-        union.getReportes().addAll(inicializaReportes(nombres));
-        currentSession().save(union);
-        currentSession().flush();
-    }
-     
-     @Override
-     public void inicializaAsociacion(Asociacion asociacion) {
-        log.debug("Inicializando reportes de la asociacion {}", asociacion);
-        List<String> nombres = new ArrayList<>();
-        nombres.add("usuarios");
-        nombres.add("asociados");
-
-        asociacion.getReportes().clear();
-        asociacion.getReportes().addAll(inicializaReportes(nombres));
-        currentSession().save(asociacion);
         currentSession().flush();
     }
 

@@ -12,6 +12,7 @@
         <li<c:if test="${param.menu eq 'documento'}"> class="active"</c:if>><a href="<s:url value='/colportaje/documento'/>" ><s:message code="documento.label" /></a></li>
         <li<c:if test="${param.menu eq 'importarDatos'}"> class="active"</c:if>><a href="<s:url value='/colportaje/importarDatos'/>" ><s:message code="importarDatos.label" /></a></li>
         <li<c:if test="${param.menu eq 'reportes'}"> class="active"</c:if>><a href="<s:url value='/colportaje/reportes'/>" ><s:message code="reportes.label" /></a></li>
+        <li<c:if test="${param.menu eq 'ventas'}"> class="active"</c:if>><a href="<s:url value='/colportaje/ventas'/>" ><s:message code="colportaje.ventas.label" /></a></li>
     </ul>
 </nav>
     

@@ -40,15 +40,7 @@ import net.sf.jasperreports.engine.JasperReport;
  */
 public interface ReporteDao {
 
-        public JasperReport obtieneReportePorAsociacion(String nombre, Long asociacionId);
-        
-        public JasperReport obtieneReportePorUnion(String nombre, Long unionId);
-            
-        public Reporte buscaReportePorAsociacion(String nombre, Long asociacionId);
-        
-        public Reporte buscaReportePorUnion(String nombre, Long unionId);
-                
-	public JasperReport obtieneReporteAdministrativo(String nombre);
+        public JasperReport obtieneReporteAdministrativo(String nombre);
 
 	public JasperReport obtieneReportePorOrganizacion(String nombre,
 			Long organizacionId);
@@ -63,11 +55,7 @@ public interface ReporteDao {
        
 
 	public List<Reporte> inicializaReportes(List<String> nombres);
-         
-        public void inicializaAsociacion(Asociacion asociacion);
         
-        public void inicializaUnion(Union union);
-
 	public void inicializaOrganizacion(Organizacion organizacion);
 
 	public void inicializaEmpresa(Empresa empresa);

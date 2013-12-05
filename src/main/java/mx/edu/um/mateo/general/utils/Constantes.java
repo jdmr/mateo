@@ -1901,16 +1901,7 @@ public class Constantes {
      */
     public static final String GASOLINERA_LIST = "gasolineraList";
     // Gasolinera-END
-    // ClienteColportor-START
-    /**
-     * The request scope attribute that holds the clienteColportor form.
-     */
-    public static final String CLIENTECOLPORTOR_KEY = "clienteColportorForm";
-    /**
-     * The request scope attribute that holds the clienteColportor list
-     */
-    public static final String CLIENTECOLPORTOR_LIST = "clienteColportorList";
-    // ClienteColportor-END
+    
     // SolicitudPermiso-START
     /**
      * The request scope attribute that holds the solicitudPermiso form.
@@ -2962,4 +2953,17 @@ public class Constantes {
     public static final String CONTAINSKEY_CONCENTRADOGRALPORTEMPORADAS = "concentradoGralPorTemporadas";
     public static final String PATH_RPT_CLP_CONCENTRADOVENTAS = "/colportaje/reportes/concentradoVentas";
     public static final String CONTAINSKEY_CONCENTRADOVENTAS = "concentradoVentas";
+    /**
+     * Valores para los Clientes de Colportor
+     */
+    public static final String CLIENTE_COLPORTOR_PATH = "/colportaje/ventas/clientes";
+    public static final String CLIENTE_COLPORTOR_PATH_LISTA = "/colportaje/ventas/clientes/lista";
+    public static final String CLIENTE_COLPORTOR_PATH_VER = "/colportaje/ventas/clientes/ver";
+    public static final String CLIENTE_COLPORTOR_PATH_NUEVO = "/colportaje/ventas/clientes/nuevo";
+    public static final String CLIENTE_COLPORTOR_PATH_EDITA = "/colportaje/ventas/clientes/edita";
+    public static final String CLIENTE_COLPORTOR_PATH_CREA = "/colportaje/ventas/clientes/crea";
+    public static final String CLIENTE_COLPORTOR_PATH_ACTUALIZA = "/colportaje/ventas/clientes/actualiza";
+    public static final String CLIENTE_COLPORTOR_PATH_ELIMINA = "/colportaje/ventas/clientes/elimina";
+    public static final String CLIENTE_COLPORTOR = "clienteColportor";
+    public static final String CLIENTE_COLPORTOR_LIST = "clienteColportores";
 }

@@ -135,12 +135,6 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
 
         usuario = usuarioDao.crea(usuario, almacenId, roles);
 
-        //Datos de colportores
-//        Union union = new Union("Unión Mexicana del Norte");
-//        unionDao.crea(union, usuario);
-//        Asociacion asoc = new Asociacion("Asociación del Noreste", Constantes.STATUS_ACTIVO, union);
-//        asociacionDao.crea(asoc,usuario);
-
         //Tipo de Empleado
         TipoEmpleado tipoEmpleado = new TipoEmpleado();
         tipoEmpleado.setOrganizacion(organizacion);
