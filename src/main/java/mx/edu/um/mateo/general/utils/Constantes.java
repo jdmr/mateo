@@ -2979,4 +2979,17 @@ public class Constantes {
     public static final String PEDIDO_COLPORTOR_PATH_ELIMINA = "/colportaje/ventas/pedidos/elimina";
     public static final String PEDIDO_COLPORTOR = "pedidoColportor";
     public static final String PEDIDO_COLPORTOR_LIST = "pedidoColportores";
+    /**
+     * Valores para los Items de Pedidos de Colportor
+     */
+    public static final String PEDIDO_COLPORTOR_ITEM_PATH = "/colportaje/ventas/items";
+    public static final String PEDIDO_COLPORTOR_ITEM_PATH_LISTA = "/colportaje/ventas/items/lista";
+    public static final String PEDIDO_COLPORTOR_ITEM_PATH_VER = "/colportaje/ventas/items/ver";
+    public static final String PEDIDO_COLPORTOR_ITEM_PATH_NUEVO = "/colportaje/ventas/items/nuevo";
+    public static final String PEDIDO_COLPORTOR_ITEM_PATH_EDITA = "/colportaje/ventas/items/edita";
+    public static final String PEDIDO_COLPORTOR_ITEM_PATH_CREA = "/colportaje/ventas/items/crea";
+    public static final String PEDIDO_COLPORTOR_ITEM_PATH_ACTUALIZA = "/colportaje/ventas/items/actualiza";
+    public static final String PEDIDO_COLPORTOR_ITEM_PATH_ELIMINA = "/colportaje/ventas/items/elimina";
+    public static final String PEDIDO_COLPORTOR_ITEM = "pedidoColportorItem";
+    public static final String PEDIDO_COLPORTOR_ITEM_LIST = "pedidoColportorItems";
 }

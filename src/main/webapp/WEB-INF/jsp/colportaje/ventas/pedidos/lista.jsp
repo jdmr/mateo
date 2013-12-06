@@ -26,6 +26,7 @@
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
+        </form>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
                     <a class="close" data-dismiss="alert">×</a>
@@ -63,18 +64,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${pedidoColportores}" var="pedidoColportor" varStatus="status">
+                    <c:forEach items="${pedidoColportores}" var="pd" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/colportaje/ventas/pedidos/ver/${pedidoColportor.id}' />">${pedidoColportor.numPedido}</a></td>
-                            <td>${pedidoColportor.lugar}</a></td>
-                            <td>${pedidoColportor.fecha}</a></td>
-                            <td>${pedidoColportor.razonSocial}</a></td>
+                            <td><a href="<c:url value='/colportaje/ventas/pedidos/ver/${pd.id}' />">${pd.numPedido}</a></td>
+                            <td>${pd.lugar}</a></td>
+                            <td>${pd.fecha}</a></td>
+                            <td>${pd.razonSocial}</a></td>
                         </tr>
                     </c:forEach>
                 </tbody>
             </table>
             <jsp:include page="/WEB-INF/jsp/paginacion.jsp" />
-        </form>        
+               
         <content>
             <script src="<c:url value='/js/lista.js' />"></script>
         </content>

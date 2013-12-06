@@ -60,6 +60,10 @@ public class PedidoColportorController extends BaseController{
             @RequestParam(required = false) String order,
             @RequestParam(required = false) String sort, Model modelo) {
         log.debug("Mostrando lista de clienteColportores");
+        
+        //Se remueve el pedido de session
+        request.getSession().removeAttribute(Constantes.PEDIDO_COLPORTOR);
+        
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);

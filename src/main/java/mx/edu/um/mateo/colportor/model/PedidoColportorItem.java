@@ -18,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Range;
 
 /**
  *
@@ -34,10 +36,8 @@ public class PedidoColportorItem implements Serializable {
     @NotBlank
     @Column(nullable = false, length=50)
     private String item; //libro, revista, etc.
-    @NotBlank
     @Column(nullable = false)
     private Integer cantidad; //numero de determinado libro o revista
-    @NotBlank
     @Column(nullable = false, scale = 2, precision = 16)
     private BigDecimal precioUnitario;
     @Column(nullable = true, length = 250)
@@ -116,7 +116,7 @@ public class PedidoColportorItem implements Serializable {
         int hash = 5;
         hash = 53 * hash + Objects.hashCode(this.id);
         hash = 53 * hash + Objects.hashCode(this.version);
-        hash = 53 * hash + Objects.hashCode(this.pedido.getId());
+        hash = 53 * hash + Objects.hashCode(this.item);
         return hash;
     }
 
@@ -135,7 +135,7 @@ public class PedidoColportorItem implements Serializable {
         if (!Objects.equals(this.version, other.version)) {
             return false;
         }
-        if (!Objects.equals(this.pedido.getId(), other.pedido.getId())) {
+        if (!Objects.equals(this.item, other.item)) {
             return false;
         }
         return true;
