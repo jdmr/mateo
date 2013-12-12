@@ -129,7 +129,7 @@ public class UnionDao {
             usuario.setAsociacion(asociacion);
         }
         asociacionDao.crea(asociacion, usuario);
-        reporteDao.inicializaUnion(union);
+        //reporteDao.inicializaUnion(union);
         session.refresh(union);
         session.flush();
         return union;

@@ -69,9 +69,8 @@
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="observaciones">
                                 <s:message code="observaciones.label" />
-                                <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="observaciones" maxlength="200" required="true" />
+                            <form:input path="observaciones" maxlength="200"  />
                             <form:errors path="observaciones" cssClass="alert alert-error" />
                         </div>
                     </s:bind>

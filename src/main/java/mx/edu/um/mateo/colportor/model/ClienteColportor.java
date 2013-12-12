@@ -19,6 +19,9 @@ import javax.persistence.Version;
 import mx.edu.um.mateo.general.model.Empresa;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 
 /**
  * ClienteColportors de los colportores
@@ -35,6 +38,7 @@ public class ClienteColportor implements Serializable {
     @NotBlank
     @Column(nullable = false, length = 120)
     private String nombre;
+    @NotBlank
     @Column(nullable = false, length = 120)
     private String apPaterno;
     @Column(nullable = true, length = 120)
@@ -48,6 +52,7 @@ public class ClienteColportor implements Serializable {
     @Email
     @Column(nullable = true, length = 100)
     private String email;
+    @NotBlank
     @Column(nullable = false, length = 200)
     private String direccion1; //Calle, numero
     @Column(nullable = true, length = 150)
@@ -60,6 +65,11 @@ public class ClienteColportor implements Serializable {
     private String status;
     @ManyToOne
     private Empresa empresa;
+    
+    @InitBinder
+    public void inicializar(WebDataBinder binder) {
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+    }
 
     public Long getId() {
         return id;

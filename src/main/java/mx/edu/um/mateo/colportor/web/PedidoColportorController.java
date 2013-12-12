@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.colportor.dao.ClienteColportorDao;
 import mx.edu.um.mateo.colportor.dao.PedidoColportorDao;
+import mx.edu.um.mateo.colportor.model.FormaPago;
 import mx.edu.um.mateo.colportor.model.PedidoColportor;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -140,6 +141,8 @@ public class PedidoColportorController extends BaseController{
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", request.getSession().getAttribute("empresaId"));
         modelo.addAttribute(Constantes.CLIENTE_COLPORTOR_LIST, clienteColportorDao.lista(params).get(Constantes.CLIENTE_COLPORTOR_LIST));
+        
+        modelo.addAttribute("formasPago", FormaPago.values());
 
         return Constantes.PEDIDO_COLPORTOR_PATH_NUEVO;
     }
@@ -160,6 +163,7 @@ public class PedidoColportorController extends BaseController{
             Map<String, Object> params = new HashMap<>();
             params.put("empresa", request.getSession().getAttribute("empresaId"));
             modelo.addAttribute(Constantes.CLIENTE_COLPORTOR_LIST, clienteColportorDao.lista(params).get(Constantes.CLIENTE_COLPORTOR_LIST));
+            modelo.addAttribute("formasPago", FormaPago.values());
             
             return Constantes.PEDIDO_COLPORTOR_PATH_NUEVO;
         }
@@ -178,6 +182,8 @@ public class PedidoColportorController extends BaseController{
             Map<String, Object> params = new HashMap<>();
             params.put("empresa", request.getSession().getAttribute("empresaId"));
             modelo.addAttribute(Constantes.CLIENTE_COLPORTOR_LIST, clienteColportorDao.lista(params).get(Constantes.CLIENTE_COLPORTOR_LIST));
+            
+            modelo.addAttribute("formasPago", FormaPago.values());
             
             return Constantes.PEDIDO_COLPORTOR_PATH_NUEVO;
         }
@@ -202,6 +208,8 @@ public class PedidoColportorController extends BaseController{
         params.put("empresa", request.getSession().getAttribute("empresaId"));
         modelo.addAttribute(Constantes.CLIENTE_COLPORTOR_LIST, clienteColportorDao.lista(params).get(Constantes.CLIENTE_COLPORTOR_LIST));
 
+        modelo.addAttribute("formasPago", FormaPago.values());
+        
         return Constantes.PEDIDO_COLPORTOR_PATH_EDITA;
     }
 
@@ -217,6 +225,8 @@ public class PedidoColportorController extends BaseController{
             params.put("empresa", request.getSession().getAttribute("empresaId"));
             modelo.addAttribute(Constantes.CLIENTE_COLPORTOR_LIST, clienteColportorDao.lista(params));
             
+            modelo.addAttribute("formasPago", FormaPago.values());
+            
             return Constantes.PEDIDO_COLPORTOR_PATH_EDITA;
         }
 
@@ -231,6 +241,8 @@ public class PedidoColportorController extends BaseController{
             Map<String, Object> params = new HashMap<>();
             params.put("empresa", request.getSession().getAttribute("empresaId"));
             modelo.addAttribute(Constantes.CLIENTE_COLPORTOR_LIST, clienteColportorDao.lista(params));
+            
+            modelo.addAttribute("formasPago", FormaPago.values());
             
             return Constantes.PEDIDO_COLPORTOR_PATH_EDITA;
         }

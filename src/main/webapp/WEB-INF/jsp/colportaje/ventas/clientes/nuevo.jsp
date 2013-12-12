@@ -59,9 +59,8 @@
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="apPaterno">
                                 <s:message code="apMaterno.label" />
-                                <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="apMaterno" maxlength="120" required="true" />
+                            <form:input path="apMaterno" maxlength="120"  />
                             <form:errors path="apMaterno" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -69,9 +68,8 @@
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="telefonoCasa">
                                 <s:message code="telefonoCasa.label" />
-                                <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="telefonoCasa" maxlength="10" required="true" />
+                            <form:input path="telefonoCasa" maxlength="10"  />
                             <form:errors path="telefonoCasa" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -79,9 +77,8 @@
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="telefonoTrabajo">
                                 <s:message code="telefonoTrabajo.label" />
-                                <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="telefonoTrabajo" maxlength="10" required="true" />
+                            <form:input path="telefonoTrabajo" maxlength="10"  />
                             <form:errors path="telefonoTrabajo" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -89,9 +86,8 @@
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="telefonoCelular">
                                 <s:message code="telefonoCelular.label" />
-                                <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="telefonoCelular" maxlength="10" required="true" />
+                            <form:input path="telefonoCelular" maxlength="10"  />
                             <form:errors path="telefonoCelular" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -99,9 +95,8 @@
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="email">
                                 <s:message code="email.label" />
-                                <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="email" maxlength="200" required="true" />
+                            <form:input path="email" maxlength="200"  />
                             <form:errors path="email" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -119,9 +114,8 @@
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="direccion2">
                                 <s:message code="direccion2.label" />
-                                <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="direccion2" maxlength="100" required="true" />
+                            <form:input path="direccion2" maxlength="100"  />
                             <form:errors path="direccion2" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -129,9 +123,8 @@
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="colonia">
                                 <s:message code="colonia.label" />
-                                <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="colonia" maxlength="100" required="true" />
+                            <form:input path="colonia" maxlength="100"  />
                             <form:errors path="colonia" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -139,9 +132,8 @@
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="municipio">
                                 <s:message code="municipio.label" />
-                                <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="municipio" maxlength="100" required="true" />
+                            <form:input path="municipio" maxlength="100"  />
                             <form:errors path="municipio" cssClass="alert alert-error" />
                         </div>
                     </s:bind>

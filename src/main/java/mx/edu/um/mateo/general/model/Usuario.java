@@ -106,8 +106,8 @@ public class Usuario  implements Serializable, UserDetails, TipoUsuario {
     @Email
     @NotEmpty
     @Column(nullable = false, name = "correo")
-    protected String correo;
-    @ManyToMany(fetch = FetchType.EAGER)
+    protected String correo; 
+   @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usuarios_roles", joinColumns = {
         @JoinColumn(name = "usuario_id")}, inverseJoinColumns =
     @JoinColumn(name = "rol_id"))
@@ -122,7 +122,7 @@ public class Usuario  implements Serializable, UserDetails, TipoUsuario {
     private Set<CentroCosto> centrosDeCosto;
     @ManyToOne(optional = true)
     private Asociacion asociacion;
-
+    
     public Asociacion getAsociacion() {
         return asociacion;
     }

@@ -1,3 +1,4 @@
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
@@ -21,7 +22,7 @@
                         <b><s:message code="lugar.label" />:</b>&nbsp;<c:out value="${pedidoColportor.lugar}" />
                     </div>
                     <div class="span4">
-                        <b><s:message code="fecha.label" />:</b>&nbsp;<c:out value="${pedidoColportor.fecha}" />
+                        <b><s:message code="fecha.label" />:</b>&nbsp;<fmt:formatDate pattern="dd/MMM/yyyy" value="${pedidoColportor.fechaPedido}" />
                     </div>
                 </div>
                 <div class="row-fluid">

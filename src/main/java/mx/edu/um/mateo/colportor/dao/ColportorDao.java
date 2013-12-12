@@ -167,7 +167,7 @@ public class ColportorDao {
     
     public Colportor crea(Colportor colportor, Usuario usuario) {
         log.debug("Creando colportor : {}", colportor);
-        colportor.setPassword(passwordEncoder.encodePassword(colportor.getPassword(), colportor.getUsername()));
+        colportor.setPassword(passwordEncoder.encodePassword(colportor.getClave(), colportor.getUsername()));
         
         log.debug("password"+colportor.getPassword());
         colportor.setStatus(Constantes.STATUS_ACTIVO);

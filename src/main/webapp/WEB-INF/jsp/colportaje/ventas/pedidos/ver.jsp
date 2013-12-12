@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
@@ -51,8 +52,24 @@
                         <h3>${pedidoColportor.lugar}</h3>
                     </div>
                     <div class="span4">
-                        <h4><s:message code="fecha.label" /></h4>
-                        <h3>${pedidoColportor.fecha}</h3>
+                        <h4><s:message code="fechaPedido.label" /></h4>
+                        <h3><fmt:formatDate pattern="dd/MMM/yyyy" value="${pedidoColportor.fechaPedido}" /></h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="horaPedido.label" /></h4>
+                        <h3>${pedidoColportor.horaPedido}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="fechaEntrega.label" /></h4>
+                        <h3><fmt:formatDate pattern="dd/MMM/yyyy" value="${pedidoColportor.fechaEntrega}" /></h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="horaEntrega.label" /></h4>
+                        <h3>${pedidoColportor.horaEntrega} /></h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="horaEntrega.label" /></h4>
+                        <h3><fmt:formatDate pattern="dd/MMM/yyyy" value="${pedidoColportor.formaPagoNombre}" /></h3>
                     </div>
                     <div class="span4">
                         <h4><s:message code="razonSocial.label" /></h4>

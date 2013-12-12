@@ -50,7 +50,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
- * @author wilbert
+ * @author osoto
  */
 @Controller
 @RequestMapping(Constantes.PATH_COLPORTOR)
@@ -194,7 +194,6 @@ public class ColportorController extends BaseController {
             utils.despliegaBindingResultErrors(bindingResult);
             return Constantes.PATH_COLPORTOR_NUEVO;
         }
-        log.debug("Fechando...");
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(Constantes.DATE_SHORT_HUMAN_PATTERN);
             colportor.setFechaDeNacimiento(sdf.parse(request.getParameter("fechaDeNacimiento")));
@@ -202,12 +201,8 @@ public class ColportorController extends BaseController {
             log.error("FechaDeNacimiento", e);
             return Constantes.PATH_COLPORTOR_NUEVO;
         }
-        String password = null;
-        password = KeyGenerators.string().generateKey();
-        log.debug("passwordColportor" + password);
 
         try {
-            colportor.setPassword(password);
             Usuario usuario = ambiente.obtieneUsuario();
             colportor = colportorDao.crea(colportor, usuario);
 

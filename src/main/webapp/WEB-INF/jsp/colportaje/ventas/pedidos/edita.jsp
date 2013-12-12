@@ -72,14 +72,52 @@
                             <form:errors path="cliente" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="pedidoColportor.fecha">
+                    <s:bind path="pedidoColportor.fechaPedido">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="fecha">
-                                <s:message code="fecha.label" />
+                            <label for="fechaPedido">
+                                <s:message code="fechaPedido.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="fecha" maxlength="15" required="true" />
-                            <form:errors path="fecha" cssClass="alert alert-error" />
+                            <form:input path="fechaPedido" maxlength="15" required="true" />
+                            <form:errors path="fechaPedido" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="pedidoColportor.horaPedido">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="horaPedido">
+                                <s:message code="horaPedido.label" />
+                            </label>
+                            <form:input path="horaPedido" maxlength="15"  />
+                            <form:errors path="horaPedido" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="pedidoColportor.fechaEntrega">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="fechaEntrega">
+                                <s:message code="fechaEntrega.label" />
+                            </label>
+                            <form:input path="fechaEntrega" maxlength="15"  />
+                            <form:errors path="fechaEntrega" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="pedidoColportor.horaEntrega">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="horaEntrega">
+                                <s:message code="horaEntrega.label" />
+                            </label>
+                            <form:input path="horaEntrega" maxlength="15"  />
+                            <form:errors path="horaEntrega" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="pedidoColportor.formaPago">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="formaPago">
+                                <s:message code="formaPago.label" />
+                            </label>
+                            <form:select id="formaPago" path="formaPago" required="true" cssClass="span08" >
+                                <form:options items="${formasPago}" itemValue="inicial" itemLabel="nombre" />
+                            </form:select>
+                            <form:errors path="formaPago" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                     <s:bind path="pedidoColportor.razonSocial">
@@ -96,9 +134,8 @@
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="observaciones">
                                 <s:message code="observaciones.label" />
-                                <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="observaciones" maxlength="250" required="true" />
+                            <form:input path="observaciones" maxlength="250" />
                             <form:errors path="observaciones" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -113,13 +150,14 @@
         </div>
         <content>
         <%--
-        <script
-src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> --%>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> --%>
         <script>
             $(document).ready(function() {
                 $('input#numPedido').focus();
-                $("input#fecha").datepicker($.datepicker.regional['es']);
-                $("input#fecha").datepicker("option", "firstDay", 0);
+                $("input#fechaPedido").datepicker($.datepicker.regional['es']);
+                $("input#fechaPedido").datepicker("option", "firstDay", 0);
+                $("input#fechaEntrega").datepicker($.datepicker.regional['es']);
+                $("input#fechaEntrega").datepicker("option", "firstDay", 0);
             });
 
             $(document).ready(function() {

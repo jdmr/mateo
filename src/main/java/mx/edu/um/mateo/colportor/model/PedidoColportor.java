@@ -43,8 +43,19 @@ public class PedidoColportor implements Serializable{
     private String lugar;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(nullable = false)
-    private Date fecha;
+    @Column(nullable = false, name = "fecha_pedido")
+    private Date fechaPedido; //Fecha pedido
+    @Column(nullable = false, name = "hora_pedido")
+    private Integer horaPedido;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, name = "fecha_entrega")
+    private Date fechaEntrega;
+    @Column(nullable = false, name = "hora_entrega")
+    private Integer horaEntrega;
+    @NotBlank
+    @Column(nullable = false, name = "forma_pago", length = 3)
+    private String formaPago;
     @ManyToOne
     private ClienteColportor cliente;
     @NotBlank
@@ -89,12 +100,47 @@ public class PedidoColportor implements Serializable{
         this.lugar = lugar;
     }
 
-    public Date getFecha() {
-        return fecha;
+    public Date getFechaPedido() {
+        return fechaPedido;
     }
 
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
+    public void setFechaPedido(Date fechaPedido) {
+        this.fechaPedido = fechaPedido;
+    }
+    
+    public Date getFechaEntrega() {
+        return fechaEntrega;
+    }
+
+    public void setFechaEntrega(Date fechaEntrega) {
+        this.fechaEntrega = fechaEntrega;
+    }
+
+    public Integer getHoraPedido() {
+        return horaPedido;
+    }
+
+    public void setHoraPedido(Integer horaPedido) {
+        this.horaPedido = horaPedido;
+    }
+
+    public Integer getHoraEntrega() {
+        return horaEntrega;
+    }
+
+    public void setHoraEntrega(Integer horaEntrega) {
+        this.horaEntrega = horaEntrega;
+    }
+
+    public String getFormaPagoNombre() {
+        return FormaPago.valueOf(formaPago).getNombre();
+    }
+    public String getFormaPago() {
+        return formaPago;
+    }
+
+    public void setFormaPago(String formaPago) {
+        this.formaPago = formaPago;
     }
 
     public ClienteColportor getCliente() {
@@ -170,7 +216,7 @@ public class PedidoColportor implements Serializable{
     @Override
     public String toString() {
         return "PedidoColportor{" + "id=" + id + ", version=" + version + ", numPedido=" + numPedido + ", lugar=" + lugar 
-                + ", fecha=" + fecha + ", cliente=" + cliente.getId() + ", razonSocial=" + razonSocial + ", observaciones=" + observaciones 
+                + ", fecha=" + fechaPedido + ", cliente=" + cliente.getId() + ", razonSocial=" + razonSocial + ", observaciones=" + observaciones 
                 + ", status=" + status + ", colportor=" + colportor.getId() + '}';
     }
     
