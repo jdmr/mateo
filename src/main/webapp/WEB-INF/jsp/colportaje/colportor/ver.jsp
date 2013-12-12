@@ -41,8 +41,44 @@
                         <h3>${colportor.nombre}</h3>
                     </div>
                     <div class="span4">
-                        <h4><s:message code="status.label" /></h4>
-                        <h3>${colportor.status}</h3>
+                        <h4><s:message code="apPaterno.label" /></h4>
+                        <h3>${colportor.apPaterno}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="apMaterno.label" /></h4>
+                        <h3>${colportor.apMaterno}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="clave.label" /></h4>
+                        <h3>${colportor.clave}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="telefono.label" /></h4>
+                        <h3>${colportor.telefono}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="correo.label" /></h4>
+                        <h3>${colportor.telefono}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="calle.label" /></h4>
+                        <h3>${colportor.calle}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="colonia.label" /></h4>
+                        <h3>${colportor.colonia}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="municipio.label" /></h4>
+                        <h3>${colportor.municipio}</h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="fechaDeNacimiento.label" /></h4>
+                        <h3><fmt:formatDate pattern="dd/MMM/yyyy" value="${colportor.fechaDeNacimiento}" /></h3>
+                    </div>
+                    <div class="span4">
+                        <h4><s:message code="matricula.label" /></h4>
+                        <h3>${colportor.matricula}</h3>
                     </div>
                 </div>
 

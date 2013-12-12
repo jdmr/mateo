@@ -30,6 +30,9 @@
                         <b><s:message code="nombre.label" />:</b>&nbsp;<c:out value="${pedidoColportor.cliente.nombreCompleto}" />
                     </div>
                     <div class="span4">
+                        <b><s:message code="formaPago.label" />:</b>&nbsp;<c:out value="${pedidoColportor.formaPagoValue}" />
+                    </div>
+                    <div class="span4">
                         <b><s:message code="razonSocial.label" />:</b>&nbsp;<c:out value="${pedidoColportor.razonSocial}" />
                     </div>
                 </div>    

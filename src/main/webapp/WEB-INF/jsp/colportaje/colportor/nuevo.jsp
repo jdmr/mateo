@@ -32,7 +32,7 @@
                         </c:forEach>
                     </div>
                 </form:errors>
-
+                <form:hidden path="username" />
                 <fieldset>
                     <s:bind path="colportor.nombre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
@@ -64,16 +64,6 @@
                             <form:errors path="apMaterno" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="colportor.correo">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="correo">
-                                <s:message code="correo.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="correo" maxlength="128" required="true" />
-                            <form:errors path="correo" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
                     <s:bind path="colportor.clave">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="clave">
@@ -82,6 +72,26 @@
                             </label>
                             <form:input path="clave" maxlength="128" required="true" />
                             <form:errors path="clave" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="colportor.telefono">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="telefono">
+                                <s:message code="telefono.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="telefono" maxlength="128" required="true" />
+                            <form:errors path="telefono" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="colportor.correo">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="correo">
+                                <s:message code="correo.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="correo" maxlength="128" required="true" />
+                            <form:errors path="correo" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                     <s:bind path="colportor.calle">
@@ -142,5 +152,22 @@
                 </p>
             </form:form>
         </div>
+            <content>
+        <%--
+        <script
+        src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> --%>
+        <script>
+            $(document).ready(function() {
+                $('input#nombre').focus();
+                $("input#fechaDeNacimiento").datepicker($.datepicker.regional['es']);
+                $("input#fechaDeNacimiento").datepicker("option", "firstDay", 0);
+                $("input#correo").change(function(){
+                    $("input#username").val($(this).val());
+                });
+            });
+            
+        </script>
+
+    </content>
     </body>
 </html>

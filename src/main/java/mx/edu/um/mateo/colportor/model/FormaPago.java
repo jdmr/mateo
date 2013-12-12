@@ -11,36 +11,28 @@ package mx.edu.um.mateo.colportor.model;
  * @author osoto
  */
 public enum FormaPago {
-    CONTADO("C", "Contado"),
-    SEMANAL("S", "Semanal"),
-    QUINCENAL("Q", "Quincenal"),
-    MENSUAL("M", "Mensual"),
-    TANDA("T", "Tanda");
+    CON("Contado"),
+    SEM("Semanal"),
+    QUI("Quincenal"),
+    MEN("Mensual"),
+    TAN("Tanda");
     
-    private String inicial;
-    private String nombre;
+    private String value;
     
-    private FormaPago(String inicial, String nombre){
-        this.inicial = inicial;
-        this.nombre = nombre;
-    }
-
-    public String getInicial() {
-        return inicial;
-    }
-
-    public void setInicial(String inicial) {
-        this.inicial = inicial;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    private FormaPago(String value){
+        this.value = value;
     }
     
-    
+    public String getName(){
+        return name();
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
     
 }

@@ -131,10 +131,11 @@ public class PedidoColportor implements Serializable{
     public void setHoraEntrega(Integer horaEntrega) {
         this.horaEntrega = horaEntrega;
     }
-
-    public String getFormaPagoNombre() {
-        return FormaPago.valueOf(formaPago).getNombre();
+    
+    public String getFormaPagoValue() {
+        return FormaPago.valueOf(formaPago).getValue();
     }
+    
     public String getFormaPago() {
         return formaPago;
     }

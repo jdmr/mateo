@@ -65,11 +65,11 @@
                     </div>
                     <div class="span4">
                         <h4><s:message code="horaEntrega.label" /></h4>
-                        <h3>${pedidoColportor.horaEntrega} /></h3>
+                        <h3>${pedidoColportor.horaEntrega}</h3>
                     </div>
                     <div class="span4">
-                        <h4><s:message code="horaEntrega.label" /></h4>
-                        <h3><fmt:formatDate pattern="dd/MMM/yyyy" value="${pedidoColportor.formaPagoNombre}" /></h3>
+                        <h4><s:message code="formaPago.label" /></h4>
+                        <h3>${pedidoColportor.formaPagoValue}</h3>
                     </div>
                     <div class="span4">
                         <h4><s:message code="razonSocial.label" /></h4>

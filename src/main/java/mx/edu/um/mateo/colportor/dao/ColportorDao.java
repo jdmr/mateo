@@ -167,14 +167,19 @@ public class ColportorDao {
     
     public Colportor crea(Colportor colportor, Usuario usuario) {
         log.debug("Creando colportor : {}", colportor);
-        colportor.setPassword(passwordEncoder.encodePassword(colportor.getClave(), colportor.getUsername()));
         
+        colportor.setUsername(colportor.getCorreo());
+        colportor.setPassword(passwordEncoder.encodePassword(colportor.getClave(), colportor.getUsername()));
         log.debug("password"+colportor.getPassword());
+        
         colportor.setStatus(Constantes.STATUS_ACTIVO);
         
         if (usuario != null) {
+            colportor.setEjercicio(usuario.getEjercicio());
             colportor.setEmpresa(usuario.getEmpresa());
             colportor.setAlmacen(usuario.getAlmacen());
+            colportor.setCentrosDeCosto(usuario.getCentrosDeCosto());
+            colportor.setEnabled(Boolean.TRUE);
         }
         currentSession().save(colportor);
         
@@ -187,39 +192,31 @@ public class ColportorDao {
         return colportor;
     }
     
-    public Colportor actualiza(Colportor colportor, String[] nombreDeRoles) {
-        Colportor nuevoColportor= (Colportor) currentSession().get(Usuario.class, colportor.getId());
-        nuevoColportor.setVersion(colportor.getVersion());
-        nuevoColportor.setUsername(colportor.getUsername());
-        nuevoColportor.setNombre(colportor.getNombre());
-        nuevoColportor.setApPaterno(colportor.getApPaterno());
-        nuevoColportor.setApMaterno(colportor.getApMaterno());       
-        log.debug("password"+nuevoColportor.getPassword());
-
-
+    public Colportor actualiza(Colportor colportor) {
+        
         try {
-            currentSession().update(nuevoColportor);
+            currentSession().update(colportor);
             currentSession().flush();
         } catch (NonUniqueObjectException e) {
             log.warn("Ya hay un objeto previamente cargado, intentando hacer merge", e);
-            currentSession().merge(nuevoColportor);
+            currentSession().merge(colportor);
             currentSession().flush();
         }
-        return nuevoColportor;
+        return colportor;
     }
-    public Colportor actualiza(Colportor colportor) {
-        log.debug("Actualizando colportor {}", colportor);
-
-        //trae el objeto de la DB 
-        Colportor nuevo = (Colportor) currentSession().get(Colportor.class, colportor.getId());
-        //actualiza el objeto
-        BeanUtils.copyProperties(colportor, nuevo);
-        //lo guarda en la BD
-
-        currentSession().update(nuevo);
-        currentSession().flush();
-        return nuevo;
-    }
+//    public Colportor actualiza(Colportor colportor) {
+//        log.debug("Actualizando colportor {}", colportor);
+//
+//        //trae el objeto de la DB 
+//        Colportor nuevo = (Colportor) currentSession().get(Colportor.class, colportor.getId());
+//        //actualiza el objeto
+//        BeanUtils.copyProperties(colportor, nuevo);
+//        //lo guarda en la BD
+//
+//        currentSession().update(nuevo);
+//        currentSession().flush();
+//        return nuevo;
+//    }
 
    public String elimina(Long id) {
         log.debug("Eliminando colportor {}", id);

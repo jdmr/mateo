@@ -115,7 +115,7 @@
                                 <s:message code="formaPago.label" />
                             </label>
                             <form:select id="formaPago" path="formaPago" required="true" cssClass="span08" >
-                                <form:options items="${formasPago}" itemValue="inicial" itemLabel="nombre" />
+                                <form:options items="${formasPago}" itemValue="name" itemLabel="value" />
                             </form:select>
                             <form:errors path="formaPago" cssClass="alert alert-error" />
                         </div>
