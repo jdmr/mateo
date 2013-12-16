@@ -21,7 +21,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -414,5 +413,38 @@ public class ReportesController extends BaseController {
         modelo.addAttribute(Constantes.CONTAINSKEY_PLANMENSUALORACION, ((Map<String, Colportor>)params.get(Constantes.CONTAINSKEY_PLANMENSUALORACION)).values());
                 
         return Constantes.PATH_RPT_CLP_PLANMENSUALORACION;
+    }
+    
+    @RequestMapping("planDiarioOracion")
+    public String planDiarioOracion(HttpServletRequest request, HttpServletResponse response,
+            @RequestParam(required = false) String filtro,
+            @RequestParam(required = false) Long pagina,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) String sort,
+            Usuario usuario,
+            Errors errors,
+            Model modelo,  
+            RedirectAttributes redirectAttributes) {
+        log.debug("Mostrando Plan Diario de Oracion");
+        
+        Map<String, Object> params = new HashMap<>();
+        
+        params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
+        params.put("organizacion", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
+        
+        try {
+            params = rclpMgr.planDiarioOracion(params);
+        } catch (Exception ex) {
+            log.error("Error al intentar obtener el plan diario de oracion");
+            ex.printStackTrace();
+            redirectAttributes.addFlashAttribute("message", "error.generar.reporte");
+            return "redirect:/colportaje/reportes";
+        }
+
+        modelo.addAttribute(Constantes.CONTAINSKEY_PLANDIARIOORACION, ((Map<String, Colportor>)params.get(Constantes.CONTAINSKEY_PLANDIARIOORACION)).values());
+                
+        return Constantes.PATH_RPT_CLP_PLANDIARIOORACION;
     }
 }

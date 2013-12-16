@@ -40,10 +40,17 @@ public interface ReportesColportorManager {
      */
     public Map<String, Object> concentradoVentas(Map<String, Object> params) throws Exception;
     /**
-     * Regresa el listad
+     * Regresa el listado mensual de oracion
      * @param params
      * @return
      * @throws Exception 
      */
     public Map<String, Object> planMensualOracion(Map<String, Object> params) throws Exception;
+    /**
+     * Regresa el listado diario de oracion
+     * @param params
+     * @return
+     * @throws Exception 
+     */
+    public Map<String, Object> planDiarioOracion(Map<String, Object> params) throws Exception;
 }

@@ -2955,6 +2955,8 @@ public class Constantes {
     public static final String CONTAINSKEY_CONCENTRADOVENTAS = "concentradoVentas";
     public static final String PATH_RPT_CLP_PLANMENSUALORACION = "/colportaje/reportes/planMensualOracion";
     public static final String CONTAINSKEY_PLANMENSUALORACION = "planMensualOracion";
+    public static final String PATH_RPT_CLP_PLANDIARIOORACION = "/colportaje/reportes/planDiarioOracion";
+    public static final String CONTAINSKEY_PLANDIARIOORACION = "planDiarioOracion";
     /**
      * Valores para los Clientes de Colportor
      */
