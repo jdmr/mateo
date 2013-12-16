@@ -46,7 +46,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
-import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.inventario.model.Almacen;
@@ -120,16 +119,6 @@ public class Usuario  implements Serializable, UserDetails, TipoUsuario {
     private Ejercicio ejercicio;
     @ManyToMany
     private Set<CentroCosto> centrosDeCosto;
-    @ManyToOne(optional = true)
-    private Asociacion asociacion;
-    
-    public Asociacion getAsociacion() {
-        return asociacion;
-    }
-
-    public void setAsociacion(Asociacion asociacion) {
-        this.asociacion = asociacion;
-    }
 
     public Usuario() {
         this.setRoles(new HashSet());

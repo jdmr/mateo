@@ -204,19 +204,6 @@ public class ColportorDao {
         }
         return colportor;
     }
-//    public Colportor actualiza(Colportor colportor) {
-//        log.debug("Actualizando colportor {}", colportor);
-//
-//        //trae el objeto de la DB 
-//        Colportor nuevo = (Colportor) currentSession().get(Colportor.class, colportor.getId());
-//        //actualiza el objeto
-//        BeanUtils.copyProperties(colportor, nuevo);
-//        //lo guarda en la BD
-//
-//        currentSession().update(nuevo);
-//        currentSession().flush();
-//        return nuevo;
-//    }
 
    public String elimina(Long id) {
         log.debug("Eliminando colportor {}", id);

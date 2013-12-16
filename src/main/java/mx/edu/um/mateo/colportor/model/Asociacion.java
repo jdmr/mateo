@@ -30,7 +30,6 @@ import java.util.Objects;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.general.model.Reporte;
-import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -53,10 +52,7 @@ public class Asociacion implements Serializable {
     @NotNull
     @Column(nullable = false, length = 2, name = "status")
     private String status = Constantes.STATUS_ACTIVO;
-    @ManyToOne(optional = false)
-    private Union union;
-    @OneToMany(mappedBy = "asociacion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Usuario> usuarios = new ArrayList<>();
+    
     @ManyToMany
     private List<Reporte> reportes = new ArrayList<>();
 //    @Column(length = 25)
@@ -73,7 +69,6 @@ public class Asociacion implements Serializable {
     public Asociacion(String nombre, String status, Union union) {
         this.nombre = nombre;
         this.status = status;
-        this.union = union;
     }
 
     public Long getId() {
@@ -108,22 +103,6 @@ public class Asociacion implements Serializable {
         this.status = status;
     }
 
-    public Union getUnion() {
-        return union;
-    }
-
-    public void setUnion(Union union) {
-        this.union = union;
-    }
-
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.setUsuarios(usuarios);
-    }
-
     public List<Reporte> getReportes() {
         return reportes;
     }
@@ -134,8 +113,6 @@ public class Asociacion implements Serializable {
     
     public String getNombreCompleto() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getUnion().getNombre());
-        sb.append(" | ");
         sb.append(getNombre());
         return sb.toString();
     }
@@ -144,7 +121,6 @@ public class Asociacion implements Serializable {
     public int hashCode() {
         int hash = 7;
         hash = 37 * hash + Objects.hashCode(this.nombre);
-        hash = 37 * hash + Objects.hashCode(this.union);
         return hash;
     }
 
@@ -160,14 +136,11 @@ public class Asociacion implements Serializable {
         if (!Objects.equals(this.nombre, other.nombre)) {
             return false;
         }
-        if (!Objects.equals(this.union, other.union)) {
-            return false;
-        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "Asociacion{" + "nombre=" + nombre + ", status=" + status + ", union=" + union + '}';
+        return "Asociacion{" + "nombre=" + nombre + ", status=" + status + '}';
     }
 }
