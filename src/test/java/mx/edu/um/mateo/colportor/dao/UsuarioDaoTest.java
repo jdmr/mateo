@@ -29,8 +29,6 @@
 package mx.edu.um.mateo.colportor.dao;
 
 import java.util.*;
-import mx.edu.um.mateo.colportor.model.Asociacion;
-import mx.edu.um.mateo.colportor.model.Union;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
@@ -79,9 +77,6 @@ public class UsuarioDaoTest {
     public void debieraObtenerListaDeUsuarios() {
         log.debug("Debiera obtener lista de usuarios");
 
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
@@ -92,20 +87,16 @@ public class UsuarioDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
-
+        
         for (int i = 0; i < 20; i++) {
             Usuario usuario = new Usuario("test" + i + "@test.com", "test", "test", "test", "test");
             usuario.setEmpresa(empresa);
             usuario.setAlmacen(almacen);
-            usuario.setAsociacion(asociacion);
             usuario.setRoles(roles);
             currentSession().save(usuario);
         }
 
         Map<String, Object> params = new HashMap();
-        params.put(Constantes.ADDATTRIBUTE_ASOCIACION, asociacion);
         Map<String, Object> result = instance.lista(params);
         List<Usuario> usuarios = (List<Usuario>) result.get(Constantes.CONTAINSKEY_USUARIOS);
         Long cantidad = (Long) result.get(Constantes.CONTAINSKEY_CANTIDAD);
@@ -121,9 +112,6 @@ public class UsuarioDaoTest {
     public void debieraObtenerListaVaciaDeUsuarios() {
         log.debug("Debiera obtener lista vacia de usuarios");
 
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
@@ -134,14 +122,11 @@ public class UsuarioDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
 
         for (int i = 0; i < 20; i++) {
             Usuario usuario = new Usuario("test" + i + "@test.com", "test", "test", "test", "test");
             usuario.setEmpresa(empresa);
             usuario.setAlmacen(almacen);
-            usuario.setAsociacion(asociacion);
             usuario.setRoles(roles);
             currentSession().save(usuario);
         }
@@ -160,9 +145,6 @@ public class UsuarioDaoTest {
     @Test
     public void debieraObtenerUsuario() {
         log.debug("Debiera obtener usuario");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
@@ -173,12 +155,9 @@ public class UsuarioDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
         Usuario usuario = new Usuario("test@test.com", "test", "test", "test", "test");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
-        usuario.setAsociacion(asociacion);
         usuario.setRoles(roles);
         currentSession().save(usuario);
         Long id = usuario.getId();
@@ -196,9 +175,6 @@ public class UsuarioDaoTest {
     @Test
     public void debieraCrearUsuario() {
         log.debug("Debiera crear usuario");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
@@ -209,13 +185,11 @@ public class UsuarioDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
 
         Usuario usuario = new Usuario("test@test.com", "test", "test", "test", "test");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
-        usuario = instance.crea(usuario, asociacion.getId(), new String[]{rol.getAuthority()});
+        usuario = instance.crea(usuario, new String[]{rol.getAuthority()});
         Long id = usuario.getId();
         assertNotNull(id);
     }
@@ -226,9 +200,6 @@ public class UsuarioDaoTest {
     @Test
     public void debieraActualizarUsuario() {
         log.debug("Debiera actualizar usuario");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
@@ -239,19 +210,16 @@ public class UsuarioDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
         Usuario usuario = new Usuario("test@test.com", "test", "test", "test", "test");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
-        usuario.setAsociacion(asociacion);
         usuario.setRoles(roles);
         currentSession().save(usuario);
         Long id = usuario.getId();
         assertNotNull(id);
 
         usuario.setNombre("PRUEBA");
-        instance.actualiza(usuario, asociacion.getId(), new String[]{rol.getAuthority()});
+        instance.actualiza(usuario, new String[]{rol.getAuthority()});
 
         Usuario prueba = instance.obtiene(id);
         assertEquals(usuario.getNombre(), prueba.getNombre());
@@ -260,9 +228,6 @@ public class UsuarioDaoTest {
     @Test
     public void debieraCambiarRolDeUsuario() {
         log.debug("Debiera Cambiar Rol de usuario");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
@@ -271,8 +236,6 @@ public class UsuarioDaoTest {
         currentSession().save(almacen);
         Rol rol = new Rol(Constantes.ROLE_COL);
         currentSession().save(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
         Rol rol2 = new Rol("ROLE_TEST2");
         currentSession().save(rol2);
         Set<Rol> roles = new HashSet<>();
@@ -280,7 +243,6 @@ public class UsuarioDaoTest {
         Usuario usuario = new Usuario("test@test.com", "test", "test", "test", "test");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
-        usuario.setAsociacion(asociacion);
         usuario.setRoles(roles);
         currentSession().save(usuario);
         Long id = usuario.getId();
@@ -290,7 +252,7 @@ public class UsuarioDaoTest {
         assertEquals(usuario, result);
         assertTrue(result.getRoles().contains(rol));
 
-        instance.actualiza(result, asociacion.getId(), new String[]{rol2.getAuthority()});
+        instance.actualiza(result, new String[]{rol2.getAuthority()});
 
         assertTrue(result.getRoles().contains(rol2));
     }
@@ -301,9 +263,6 @@ public class UsuarioDaoTest {
     @Test(expected = UltimoException.class)
     public void noDebieraEliminarUsuario() throws UltimoException {
         log.debug("No Debiera Eliminar usuario");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
@@ -314,12 +273,9 @@ public class UsuarioDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
         Usuario usuario = new Usuario("test@test.com", "test", "test", "test", "test");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
-        usuario.setAsociacion(asociacion);
         usuario.setRoles(roles);
         currentSession().save(usuario);
         Long id = usuario.getId();
@@ -336,9 +292,6 @@ public class UsuarioDaoTest {
     @Test
     public void debieraEliminarUsuario() throws UltimoException {
         log.debug("Debiera eliminar usuario");
-        Union union = new Union("test");
-        union.setStatus(Constantes.STATUS_ACTIVO);
-        currentSession().save(union);
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
@@ -349,18 +302,14 @@ public class UsuarioDaoTest {
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        Asociacion asociacion = new Asociacion("TEST01", Constantes.STATUS_ACTIVO, union);
-        currentSession().save(asociacion);
         Usuario usuario = new Usuario("test@test.com", "test", "test", "test", "test");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
-        usuario.setAsociacion(asociacion);
         usuario.setRoles(roles);
         currentSession().save(usuario);
         usuario = new Usuario("test2@test.com", "test", "test", "test", "test");
         usuario.setEmpresa(empresa);
         usuario.setAlmacen(almacen);
-        usuario.setAsociacion(asociacion);
         usuario.setRoles(roles);
         currentSession().save(usuario);
         Long id = usuario.getId();

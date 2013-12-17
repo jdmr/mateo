@@ -8,8 +8,8 @@
         <title><s:message code="concentradoPorTemporadas.label" /></title>
     </head>
     <body>
-        <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="reportes" />
+        <jsp:include page="./menu.jsp" >
+            <jsp:param name="menu" value="concentradoGral" />
         </jsp:include>
 
         <h1><s:message code="concentradoPorTemporadas.label" /></h1>

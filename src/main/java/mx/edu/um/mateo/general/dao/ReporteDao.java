@@ -24,8 +24,6 @@
 package mx.edu.um.mateo.general.dao;
 
 import java.util.List;
-import mx.edu.um.mateo.colportor.model.Asociacion;
-import mx.edu.um.mateo.colportor.model.Union;
 
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;

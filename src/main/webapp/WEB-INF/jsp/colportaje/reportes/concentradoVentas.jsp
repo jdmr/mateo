@@ -8,8 +8,8 @@
         <title><s:message code="concentradoVentas.label" /></title>
     </head>
     <body>
-        <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="reportes" />
+        <jsp:include page="./menu.jsp" >
+            <jsp:param name="menu" value="concentradoVentas" />
         </jsp:include>
 
         <h1><s:message code="concentradoVentas.label" /></h1>

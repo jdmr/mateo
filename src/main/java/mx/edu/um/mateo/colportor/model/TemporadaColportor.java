@@ -44,24 +44,18 @@ public class TemporadaColportor implements Serializable{
     private String objetivo;
     @Column(length = 300)
     private String observaciones;
-    @ManyToOne(optional = true)
-    private Asociacion asociacion;
-    @ManyToOne(optional = true)
-    private Union union;
     
     public TemporadaColportor() {
     }
     
-    public TemporadaColportor(Colportor colportor,Asociacion asociacion,Usuario asociado,Temporada temporada,Union union, Colegio colegio) throws Exception{
+    public TemporadaColportor(Colportor colportor,Usuario asociado,Temporada temporada,Colegio colegio) throws Exception{
         this.colportor = colportor;
-        this.asociacion = asociacion;
         try{
         this.asociado = (Asociado)asociado;
         }catch(ClassCastException e){
             throw new Exception("Se esperaba una clase Asociado pero llego una clase "+asociado.getClass());
         }
         this.temporada = temporada;
-        this.union = union;
         this.colegio = colegio;
         
     }
@@ -72,15 +66,7 @@ public class TemporadaColportor implements Serializable{
         Date f = new Date();
         this.fecha = f;
     }
-    
-    public Asociacion getAsociacion() {
-        return asociacion;
-    }
-
-    public void setAsociacion(Asociacion asociacion) {
-        this.asociacion = asociacion;
-    }
-
+   
     public Usuario getAsociado() {
         return asociado;
     }
@@ -144,15 +130,7 @@ public class TemporadaColportor implements Serializable{
     public void setTemporada(Temporada temporada) {
         this.temporada = temporada;
     }
-
-    public Union getUnion() {
-        return union;
-    }
-
-    public void setUnion(Union union) {
-        this.union = union;
-    }
-
+    
     public Integer getVersion() {
         return version;
     }
@@ -194,7 +172,7 @@ public class TemporadaColportor implements Serializable{
 
     @Override
     public String toString() {
-        return "TemporadaColportor{" + "fecha=" + fecha + ", status=" + status + ", objetivo=" + objetivo + ", observaciones=" + observaciones + ", colportor=" + colportor + ", asociacion=" + asociacion + ", asociado=" + asociado + ", temporada=" + temporada + ", union=" + union + '}';
+        return "TemporadaColportor{" + "fecha=" + fecha + ", status=" + status + ", objetivo=" + objetivo + ", observaciones=" + observaciones + ", colportor=" + colportor + ", asociado=" + asociado + ", temporada=" + temporada + '}';
     }
 
 }

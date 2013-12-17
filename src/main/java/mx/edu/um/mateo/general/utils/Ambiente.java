@@ -25,9 +25,7 @@ package mx.edu.um.mateo.general.utils;
 
 import java.util.Iterator;
 import javax.servlet.http.HttpSession;
-import mx.edu.um.mateo.colportor.dao.AsociacionDao;
 import mx.edu.um.mateo.colportor.dao.TemporadaColportorDao;
-import mx.edu.um.mateo.colportor.dao.UnionDao;
 import mx.edu.um.mateo.colportor.dao.UsuarioDao;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -56,11 +54,6 @@ public class Ambiente {
     private UsuarioDao usuarioDao;
     @Autowired
     private TemporadaColportorDao tempColportorDao;
-    @Autowired
-    private AsociacionDao asociacionDao;
-    @Autowired
-    private UnionDao unionDao;
-    
 
     public void actualizaSesion(HttpSession session) {
         Usuario usuario = obtieneUsuario();
@@ -112,7 +105,6 @@ public class Ambiente {
                 .getAuthentication().getPrincipal();
         return usuario;
     }
-
     
     public Boolean esEmpleado(){
             log.debug("EMPLEADO EN SECION");

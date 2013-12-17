@@ -9,17 +9,12 @@ package mx.edu.um.mateo.colportor.test;
  */
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.colportor.dao.ColportorDao;
-import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.colportor.model.Colportor;
-import mx.edu.um.mateo.colportor.model.Union;
 import mx.edu.um.mateo.general.model.*;
 import mx.edu.um.mateo.general.test.BaseControllerTest;
 import mx.edu.um.mateo.general.test.GenericWebXmlContextLoader;
-import mx.edu.um.mateo.inventario.model.Almacen;
 import static org.junit.Assert.assertNotNull;
 import org.junit.*;
 import org.junit.runner.RunWith;
@@ -34,7 +29,6 @@ import static org.springframework.test.web.server.result.MockMvcResultMatchers.f
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.server.result.MockMvcResultMatchers.status;
 
 /**
  *

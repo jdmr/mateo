@@ -39,7 +39,6 @@ public class Temporada implements Serializable{
     @ManyToOne(optional = false)
     private Organizacion organizacion;
 
-    private Asociacion asociacion; //Eliminar
     
     public Temporada(){
         
@@ -91,14 +90,6 @@ public class Temporada implements Serializable{
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-    
-    public Asociacion getAsociacion() {
-        return asociacion;
-    }
-
-    public void setAsociacion(Asociacion asociacion) {
-        this.asociacion = asociacion;
     }
 
     /**
@@ -153,7 +144,7 @@ public class Temporada implements Serializable{
 
     @Override
     public String toString() {
-        return "Temporada{" + "id=" + id + ", version=" + version + ", nombre=" + nombre + ", fechaInicio=" + fechaInicio + ", fechaFinal=" + fechaFinal + ", asociacion=" + asociacion + '}';
+        return "Temporada{" + "id=" + id + ", version=" + version + ", nombre=" + nombre + ", fechaInicio=" + fechaInicio + ", fechaFinal=" + fechaFinal +  '}';
     }
 
     

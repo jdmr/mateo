@@ -4,7 +4,6 @@
  */
 package mx.edu.um.mateo.colportor.dao;
 
-import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.colportor.model.Asociado;
 import java.util.ArrayList;
 import java.util.HashMap;

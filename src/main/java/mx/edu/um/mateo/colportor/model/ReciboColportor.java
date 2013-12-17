@@ -19,8 +19,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  *
@@ -33,15 +35,14 @@ public class ReciboColportor implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Version
-    private Integer version;
+    private Integer version;  
     @NotBlank
-    @Column(nullable = false)
-    private Integer numRecibo;
-    @NotBlank
+    @Column(nullable = false, name = "num_recibo")
+    private String numRecibo;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date fecha;
-    @NotBlank
     @Column(nullable = false, precision = 16, scale = 2)
     private BigDecimal importe;
     @Column(nullable = true, length = 200)
@@ -67,11 +68,11 @@ public class ReciboColportor implements Serializable{
         this.version = version;
     }
 
-    public Integer getNumRecibo() {
+    public String getNumRecibo() {
         return numRecibo;
     }
 
-    public void setNumRecibo(Integer numRecibo) {
+    public void setNumRecibo(String numRecibo) {
         this.numRecibo = numRecibo;
     }
 
@@ -121,7 +122,6 @@ public class ReciboColportor implements Serializable{
         hash = 79 * hash + Objects.hashCode(this.id);
         hash = 79 * hash + Objects.hashCode(this.version);
         hash = 79 * hash + Objects.hashCode(this.numRecibo);
-        hash = 79 * hash + Objects.hashCode(this.pedido.getId());
         return hash;
     }
 
@@ -141,9 +141,6 @@ public class ReciboColportor implements Serializable{
             return false;
         }
         if (!Objects.equals(this.numRecibo, other.numRecibo)) {
-            return false;
-        }
-        if (!Objects.equals(this.pedido, other.pedido.getId())) {
             return false;
         }
         return true;
