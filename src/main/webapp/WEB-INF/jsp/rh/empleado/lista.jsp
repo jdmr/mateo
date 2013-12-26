@@ -27,7 +27,7 @@
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block <c:choose><c:when test='${not empty messageStyle}'>${messageStyle}</c:when><c:otherwise>alert-success</c:otherwise></c:choose> fade in" role="status">
-                    <a class="close" data-dismiss="alert">×</a>
+                            <a class="close" data-dismiss="alert">×</a>
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
@@ -136,7 +136,6 @@
                 <tbody>
                     <c:forEach items="${empleadoList}" var="empleado" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td>${empleado.nivelEstudios}</td>
                             <td><a href="<c:url value='/rh/empleado/ver/${empleado.id}' />">${empleado.nombre}</a></td>
                             <td>${empleado.apPaterno}</td>
                             <td>${empleado.apMaterno}</td>
