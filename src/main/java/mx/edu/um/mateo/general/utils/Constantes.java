@@ -2388,6 +2388,7 @@ public class Constantes {
     public static final String ADDATTRIBUTE_CATEGORIA = "categoria";
     public static final String ADDATTRIBUTE_NACIONALIDAD = "nacionalidad";
     public static final String ADDATTRIBUTE_PERDED = "perded";
+    public static final String ADDATTRIBUTE_CLAVEEMPLEADO = "claveEmpleado";
     /*
      * Valores para el los path's para las clases
      */
@@ -2963,4 +2964,19 @@ public class Constantes {
     public static final String CONTAINSKEY_CONCENTRADOGRALPORTEMPORADAS = "concentradoGralPorTemporadas";
     public static final String PATH_RPT_CLP_CONCENTRADOVENTAS = "/colportaje/reportes/concentradoVentas";
     public static final String CONTAINSKEY_CONCENTRADOVENTAS = "concentradoVentas";
+    /**
+     * @see mx.edu.um.mateo.rh.web.ClaveEMpleadoController; Valores para claves
+     * de empleadoRH
+     *
+     */
+    public static final String CLAVEEMPLEADO_LIST = "claveEmpleadoList";
+    public static final String PATH_CLAVEEMPLEADO = "/rh/claveEmpleado";
+    public static final String PATH_CLAVEEMPLEADO_LISTA = "/rh/claveEmpleado/lista";
+    public static final String PATH_CLAVEEMPLEADO_VER = "/rh/claveEmpleado/ver";
+    public static final String PATH_CLAVEEMPLEADO_NUEVO = "/rh/claveEmpleado/nuevo";
+    public static final String PATH_CLAVEEMPLEADO_EDITA = "/rh/claveEmpleado/edita";
+    public static final String PATH_CLAVEEMPLEADO_CREA = "/rh/claveEmpleado/crea";
+    public static final String PATH_CLAVEEMPLEADO_ACTUALIZA = "/rh/claveEmpleado/actualiza";
+    public static final String PATH_CLAVEEMPLEADO_ELIMINA = "/rh/claveEmpleado/elimina";
+    public static final String CLAVEEMPLEADO_FORM = "claveEmpleadoForm";
 }

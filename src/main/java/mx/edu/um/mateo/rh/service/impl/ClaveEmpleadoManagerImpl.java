@@ -5,17 +5,22 @@
  */
 package mx.edu.um.mateo.rh.service.impl;
 
+import java.util.Date;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.rh.dao.ClaveEmpleadoDao;
 import mx.edu.um.mateo.rh.model.ClaveEmpleado;
 import mx.edu.um.mateo.rh.service.ClaveEmpleadoManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author develop
  */
+@Transactional
+@Service
 public class ClaveEmpleadoManagerImpl implements ClaveEmpleadoManager {
 
     @Autowired
@@ -51,6 +56,8 @@ public class ClaveEmpleadoManagerImpl implements ClaveEmpleadoManager {
      */
     @Override
     public void graba(ClaveEmpleado claveEmpleado, Usuario usuario) {
+        claveEmpleado.setUsuarioAlta(usuario);
+        claveEmpleado.setFechaAlta(new Date());
         dao.graba(claveEmpleado, usuario);
     }
 
