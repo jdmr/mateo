@@ -6,11 +6,13 @@ package mx.edu.um.mateo.rh.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Digits;
@@ -36,39 +38,39 @@ public class Empleado extends Usuario {
     @Column(length = 7)
     private String clave;
     @NotBlank
-    @Column( length = 1)
+    @Column(length = 1)
     private String genero;
     @NotBlank
-    @Column( length = 200)
+    @Column(length = 200)
     private String direccion;
     @Column(length = 2)
     private String status;
-    @DateTimeFormat(pattern="dd/MM/yyyy",iso=ISO.DATE)
+    @DateTimeFormat(pattern = "dd/MM/yyyy", iso = ISO.DATE)
     @Temporal(TemporalType.TIMESTAMP)
     @Column
     private Date fechaNacimiento;
     @NotBlank
-    @Column( length = 30)
+    @Column(length = 30)
     private String curp;
     @NotBlank
-    @Column( length = 15)
+    @Column(length = 15)
     private String rfc;
     @Column(length = 16)
     private String cuenta;
     @NotBlank
     @Column(length = 15)
     private String imms;
-    @Digits(integer=3,fraction=0,message="El escalafon debe ser un numero de minimo 2 digitos y maximo 3!")
+    @Digits(integer = 3, fraction = 0, message = "El escalafon debe ser un numero de minimo 2 digitos y maximo 3!")
     @Column
     private Integer escalafon;
-    @Range(min=0, max=100, message="El turno no puede ser mayor al 100%!")
+    @Range(min = 0, max = 100, message = "El turno no puede ser mayor al 100%!")
     @Column
     private Integer turno;
-    @DateTimeFormat(pattern="dd/MM/yyyy",iso=ISO.DATE)
+    @DateTimeFormat(pattern = "dd/MM/yyyy", iso = ISO.DATE)
     @Temporal(TemporalType.TIMESTAMP)
     @Column
     private Date fechaAlta;
-    @DateTimeFormat(pattern="dd/MM/yyyy",iso=ISO.DATE)
+    @DateTimeFormat(pattern = "dd/MM/yyyy", iso = ISO.DATE)
     @Temporal(TemporalType.TIMESTAMP)
     @Column
     private Date fechaBaja;
@@ -98,7 +100,7 @@ public class Empleado extends Usuario {
     @Length(max = 100)
     @Column(length = 100)
     private String conyuge;
-    @DateTimeFormat(pattern="dd/MM/yyyy",iso=ISO.DATE)
+    @DateTimeFormat(pattern = "dd/MM/yyyy", iso = ISO.DATE)
     @Temporal(TemporalType.TIMESTAMP)
     @Column
     private Date fechaMatrimonio;
@@ -111,26 +113,28 @@ public class Empleado extends Usuario {
     private String iglesia;
     @Length(max = 100)
     @Column(length = 100)
-    private String responsabilidad;    
+    private String responsabilidad;
     @ManyToOne
     private TipoEmpleado tipoEmpleado;
+    @OneToMany
+    private List<ClaveEmpleado> claves;
 
     public Empleado() {
     }
 
-    public Empleado(String nombre,String apPaterno, String apMaterno,String correo, String username, String clave, 
-            Boolean adventista,String genero, String direccion, String status,
-            String curp, String rfc, String cuenta, String imms, 
+    public Empleado(String nombre, String apPaterno, String apMaterno, String correo, String username, String clave,
+            Boolean adventista, String genero, String direccion, String status,
+            String curp, String rfc, String cuenta, String imms,
             Integer escalafon, Integer turno, BigDecimal experienciaFueraUm,
             String modalidad, String ife, String rango,
             String padre, String madre, String estadoCivil, String conyuge,
             Boolean finadoPadre, Boolean finadoMadre, String iglesia,
             String responsabilidad, String password, TipoEmpleado tipoEmpleado) {
-        super(nombre, apPaterno, apMaterno); 
+        super(nombre, apPaterno, apMaterno);
         this.clave = clave;
-        this.correo=correo;
-        this.username=correo;
-        this.password=password;
+        this.correo = correo;
+        this.username = correo;
+        this.password = password;
         this.genero = genero;
         this.fechaNacimiento = new Date();
         this.direccion = direccion;
@@ -158,7 +162,7 @@ public class Empleado extends Usuario {
         this.iglesia = iglesia;
         this.responsabilidad = responsabilidad;
         this.tipoEmpleado = tipoEmpleado;
-        
+
     }
 
     public String getClave() {
@@ -393,14 +397,14 @@ public class Empleado extends Usuario {
 
     @Override
     public String toString() {
-        return "Empleado{" + ", clave=" + clave + ", nombre = "+ this.getNombreCompleto() +", genero=" + genero + ", direccion=" 
-                + direccion + ", status=" + status + ", fechaNacimiento=" + fechaNacimiento + ", curp=" + curp 
-                + ", rfc=" + rfc + ", cuenta=" + cuenta + ", imms=" + imms + ", escalafon=" + escalafon + ", turno=" 
-                + turno + ", fechaAlta=" + fechaAlta + ", fechaBaja=" + fechaBaja + ", experienciaFueraUm=" 
-                + experienciaFueraUm + ", modalidad=" + modalidad + ", ife=" + ife + ", rango=" + rango + ", adventista=" 
-                + adventista + ", padre=" + padre + ", madre=" + madre + ", estadoCivil=" + estadoCivil + ", conyuge=" 
-                + conyuge + ", fechaMatrimonio=" + fechaMatrimonio + ", finadoPadre=" + finadoPadre + ", finadoMadre=" 
-                + finadoMadre + ", iglesia=" + iglesia + ", responsabilidad=" + responsabilidad + '}';
+        return "Empleado{" + "clave=" + clave + ", genero=" + genero + ", direccion=" + direccion + ", status=" + status
+                + ", fechaNacimiento=" + fechaNacimiento + ", curp=" + curp + ", rfc=" + rfc + ", cuenta=" + cuenta + ", imms=" + imms
+                + ", escalafon=" + escalafon + ", turno=" + turno + ", fechaAlta=" + fechaAlta + ", fechaBaja=" + fechaBaja
+                + ", experienciaFueraUm=" + experienciaFueraUm + ", modalidad=" + modalidad + ", ife=" + ife + ", rango=" + rango
+                + ", adventista=" + adventista + ", padre=" + padre + ", madre=" + madre + ", estadoCivil=" + estadoCivil
+                + ", conyuge=" + conyuge + ", fechaMatrimonio=" + fechaMatrimonio + ", finadoPadre=" + finadoPadre
+                + ", finadoMadre=" + finadoMadre + ", iglesia=" + iglesia + ", responsabilidad=" + responsabilidad
+                + ", tipoEmpleado=" + tipoEmpleado + ", claves=" + claves + '}';
     }
 
     @Override
@@ -428,6 +432,13 @@ public class Empleado extends Usuario {
         }
         return true;
     }
-    
+
+    public List<ClaveEmpleado> getClaves() {
+        return claves;
+    }
+
+    public void setClaves(List<ClaveEmpleado> claves) {
+        this.claves = claves;
+    }
 
 }

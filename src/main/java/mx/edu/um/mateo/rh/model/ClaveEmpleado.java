@@ -49,6 +49,9 @@ public class ClaveEmpleado implements Serializable {
     @ManyToOne(optional = false)
     private Empresa empresa;
 
+    @ManyToOne
+    private Empleado empleado;
+
     public ClaveEmpleado() {
     }
 
@@ -131,11 +134,19 @@ public class ClaveEmpleado implements Serializable {
         this.fechaAlta = fechaAlta;
     }
 
+    public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
+    }
+
     @Override
     public String toString() {
         return "ClaveEmpleado{" + "id=" + id + ", version=" + version + ", clave=" + clave + ", status=" + status
                 + ", observaciones=" + observaciones + ", fecha=" + fecha + ", usuarioAlta=" + usuarioAlta
-                + ", fechaAlta=" + fechaAlta + ", empresa=" + empresa + '}';
+                + ", fechaAlta=" + fechaAlta + ", empresa=" + empresa + ", empleado=" + empleado + '}';
     }
 
 }
