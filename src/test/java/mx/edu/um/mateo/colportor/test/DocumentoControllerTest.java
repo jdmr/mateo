@@ -44,10 +44,10 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  *
  * @author osoto
- * 
- * Para estas pruebas, se existen las siguientes pre-condiciones:
- * - El colportor ya esta logueado, y por lo tanto es facil obtenerlo del ambiente
- * - La captura de cada documento, traera como parametro de entrada la temporada.id
+ 
+ Para estas pruebas, se existen las siguientes pre-condiciones:
+ - El colportor ya esta logueado, y por lo tanto es facil obtenerlo del ambiente
+ - La captura de cada documento, traera como parametro de entrada la temporada.id
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)

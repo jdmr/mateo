@@ -140,7 +140,7 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
     }
     
     /**
-     * @see mx.edu.um.mateo.colportor.service.ReportesColportorManagerImpl#concentradoGralPorTemporadas(java.util.Map <String,Object> params)  throws Exception
+     * @see mx.edu.um.mateo.colportor.service.ReportesColportorManagerImpl#concentradoGralPorTemporadas(java.util.Map <String,Object> params)throws Exception
      */
     public Map<String, Object> concentradoGralPorTemporadas(Map<String, Object> params) throws Exception {
         Map <Long, ReporteColportorVO> mVOS = new TreeMap<>();

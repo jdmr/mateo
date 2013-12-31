@@ -142,7 +142,7 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
     	return dao.getEmpleadoClave(empleado);
     }
          /**
-      * @see mx.edu.um.mateo.rh.service.SolicitudSalidaManager#getDiasVacacionesActuales(SolicitudSalida solicitudSalida) throws Exception
+      * @see mx.edu.um.mateo.rh.service.SolicitudSalidaManager#getDiasVacacionesActuales(SolicitudSalida solicitudSalida)throws Exception
      */
     public void saveDiasVacacionesActuales(Empleado empleado, User user) throws Exception {
 
