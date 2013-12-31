@@ -2381,6 +2381,7 @@ public class Constantes {
     public static final String ADDATTRIBUTE_NACIONALIDAD = "nacionalidad";
     public static final String ADDATTRIBUTE_PERDED = "perded";
     public static final String ADDATTRIBUTE_CLAVEEMPLEADO = "claveEmpleado";
+    public static final String ADDATTRIBUTE_DIAFERIADO = "diaFeriado";
     /*
      * Valores para el los path's para las clases
      */
@@ -3028,4 +3029,18 @@ public class Constantes {
     public static final String RECIBO_COLPORTOR_PATH_ELIMINA = "/colportaje/ventas/recibos/elimina";
     public static final String RECIBO_COLPORTOR = "reciboColportor";
     public static final String RECIBO_COLPORTOR_LIST = "recibosColportor";
+    /**
+     * @see mx.edu.um.mateo.rh.web.DiaFeriadoController; Valores para claves de
+     * calendario
+     *
+     *
+     */
+    public static final String PATH_DIAFERIADO = "/rh/diaFeriado";
+    public static final String PATH_DIAFERIADO_LISTA = "/rh/diaFeriado/lista";
+    public static final String PATH_DIAFERIADO_VER = "/rh/diaFeriado/ver";
+    public static final String PATH_DIAFERIADO_NUEVO = "/rh/diaFeriado/nuevo";
+    public static final String PATH_DIAFERIADO_EDITA = "/rh/diaFeriado/edita";
+    public static final String PATH_DIAFERIADO_CREA = "/rh/diaFeriado/crea";
+    public static final String PATH_DIAFERIADO_ACTUALIZA = "/rh/diaFeriado/actualiza";
+    public static final String PATH_DIAFERIADO_ELIMINA = "/rh/diaFeriado/elimina";
 }
