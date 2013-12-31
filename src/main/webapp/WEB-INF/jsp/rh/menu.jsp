@@ -16,6 +16,8 @@
         <li<c:if test="${param.menu eq 'seccion'}"> class="active"</c:if>><a href="<s:url value='/rh/seccion'/>" ><s:message code="seccion.label" /></a></li>
         <li<c:if test="${param.menu eq 'empleadoPuesto'}"> class="active"</c:if>><a href="<s:url value='/rh/empleadoPuesto'/>" ><s:message code="empleadoPuesto.label" /></a></li>
         <li<c:if test="${param.menu eq 'empleadoEstudios'}"> class="active"</c:if>><a href="<s:url value='/rh/empleadoEstudios'/>" ><s:message code="empleadoEstudios.label" /></a></li>
+        <li<c:if test="${param.menu eq 'diaFeriado'}"> class="active"</c:if>><a href="<s:url value='/rh/diaFeriado'/>" ><s:message code="diaFeriado.label" /></a></li>
+        <li<c:if test="${param.menu eq 'claveEmpleado'}"> class="active"</c:if>><a href="<s:url value='/rh/claveEmpleado'/>" ><s:message code="claveEmpleado.label" /></a></li>
     </ul>
 </nav>
-    
+

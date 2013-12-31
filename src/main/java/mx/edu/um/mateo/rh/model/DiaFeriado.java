@@ -41,6 +41,9 @@ public class DiaFeriado {
     @Temporal(TemporalType.DATE)
     @Column(name = "fechaAlta")
     private Date fechaAlta;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Temporal(TemporalType.DATE)
+    private Date fecha;
     @ManyToOne
     private Empresa empresa;
 
@@ -83,6 +86,10 @@ public class DiaFeriado {
         return dado;
     }
 
+    public Boolean getDado() {
+        return dado;
+    }
+
     public void setDado(Boolean dado) {
         this.dado = dado;
     }
@@ -111,10 +118,18 @@ public class DiaFeriado {
         this.empresa = empresa;
     }
 
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
+
     @Override
     public String toString() {
         return "DiaFeriado{" + "id=" + id + ", version=" + version + ", nombre=" + nombre + ", descripcion=" + descripcion
-                + ", dado=" + dado + ", usuarioAlta=" + usuarioAlta + ", fechaAlta=" + fechaAlta
+                + ", dado=" + dado + ", usuarioAlta=" + usuarioAlta + ", fechaAlta=" + fechaAlta + ", fecha=" + fecha
                 + ", empresa=" + empresa + '}';
     }
 
