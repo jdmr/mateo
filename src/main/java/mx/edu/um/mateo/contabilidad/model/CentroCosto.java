@@ -60,6 +60,15 @@ public class CentroCosto implements Serializable {
     public CentroCosto() {
         this.id=new CCostoPK();
     }
+    
+    public CentroCosto(Ejercicio ejercicio, String idCCosto, String nombre, String detalle, String iniciales){
+        this.id=new CCostoPK();
+        this.getId().setEjercicio(ejercicio);
+        this.getId().setIdCosto(idCCosto);
+        this.setNombre(nombre);
+        this.setIniciales(iniciales);
+        this.setDetalle(detalle);
+    }
 
     /**
      * @return the id

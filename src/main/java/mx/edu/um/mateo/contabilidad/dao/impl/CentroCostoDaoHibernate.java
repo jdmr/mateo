@@ -59,6 +59,15 @@ public class CentroCostoDaoHibernate implements CentroCostoDao {
     private Session currentSession() {
         return sessionFactory.getCurrentSession();
     }
+    
+    @Override
+    @Transactional
+    public CentroCosto crea(CentroCosto ccosto) {
+        currentSession().save(ccosto);
+        currentSession().flush();
+        return ccosto;
+        
+    }
 
     @Override
     @Transactional(readOnly = true)

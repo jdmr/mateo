@@ -19,6 +19,7 @@
             <MaxFileSize>1MB</MaxFileSize>
         </triggeringPolicy>
     </appender>
+    
     <logger name="mx.edu.um.mateo" level="DEBUG"/>
     
     <logger name="org.springframework" level="ERROR"/>

@@ -6,6 +6,7 @@ package mx.edu.um.mateo.colportor.service.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -238,6 +239,84 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         params.put(Constantes.CONTAINSKEY_CONCENTRADOVENTAS, mVOS.values());
         
         log.debug("{}",mVOS.values());
+        return params;
+    }
+    
+    @Override
+    /**
+     * @see mx.edu.um.mateo.colportor.service.ReportesColportorManagerImpl#planMensualOracion(java.util.Map <String,Object> params)  throws Exception
+     */
+    public Map<String, Object> planMensualOracion(Map<String, Object> params) throws Exception {
+        Map <String, Colportor> mVOS = new TreeMap<>();
+        
+        Calendar cal = Calendar.getInstance(local);
+        
+        params = clpDao.obtieneColportores(params);
+        List <Colportor> lista = (List)params.get(Constantes.COLPORTOR_LIST);
+        
+        gcFecha.setTime(new Date()); //Para comparar el mes actual
+        
+        for(Colportor clp : lista){
+            try {
+                cal.setTime(clp.getFechaDeNacimiento());
+            } catch (NullPointerException e) {
+                //Para los colportores que no tienen una fecha de nac. capturada
+                cal.setTime(new Date()); 
+                cal.set(Calendar.DATE, 1);
+                clp.setFechaDeNacimiento(cal.getTime());
+            }
+            
+            log.debug("Colportor {}, Mes Fecha Nac. {}, Mes Actual {}", new Object[]{clp.getNombre(), clp.getFechaDeNacimiento(), gcFecha.get(Calendar.MONTH) });
+            if(gcFecha.get(Calendar.MONTH) == cal.get(Calendar.MONTH)){
+                cal.set(Calendar.YEAR, gcFecha.get(Calendar.YEAR));
+                mVOS.put(cal.getTimeInMillis()+"-"+clp.getNombre(), clp);
+            }
+            
+        }
+        for(Map.Entry<String, Colportor> entry : mVOS.entrySet()){
+            log.debug("key {} - {} ", new Object[]{entry.getKey(), entry.getValue()});
+        }
+        
+        params.put(Constantes.CONTAINSKEY_PLANMENSUALORACION, mVOS);        
+        return params;
+    }
+    
+    @Override
+    /**
+     * @see mx.edu.um.mateo.colportor.service.ReportesColportorManagerImpl#planDiarioOracion(java.util.Map <String,Object> params)  throws Exception
+     */
+    public Map<String, Object> planDiarioOracion(Map<String, Object> params) throws Exception {
+        Map <String, Colportor> mVOS = new TreeMap<>();
+        
+        Calendar cal = Calendar.getInstance(local);
+        
+        params = clpDao.obtieneColportores(params);
+        List <Colportor> lista = (List)params.get(Constantes.COLPORTOR_LIST);
+        
+        gcFecha.setTime(new Date()); //Para comparar el mes actual
+        
+        for(Colportor clp : lista){
+            try {
+                cal.setTime(clp.getFechaDeNacimiento());
+            } catch (NullPointerException e) {
+                //Para los colportores que no tienen una fecha de nac. capturada
+                cal.setTime(new Date()); 
+                cal.set(Calendar.DATE, 1);
+                clp.setFechaDeNacimiento(cal.getTime());
+            }
+            
+            log.debug("Colportor {}, Mes Fecha Nac. {}, Mes Actual {}", new Object[]{clp.getNombre(), clp.getFechaDeNacimiento(), gcFecha.get(Calendar.MONTH) });
+            if(gcFecha.get(Calendar.DATE) == cal.get(Calendar.DATE)){
+                cal.set(Calendar.YEAR, gcFecha.get(Calendar.YEAR));
+                mVOS.put(cal.getTimeInMillis()+"-"+clp.getNombre(), clp);
+            }
+            
+        }
+        for(Map.Entry<String, Colportor> entry : mVOS.entrySet()){
+            log.debug("key {} - {} ", new Object[]{entry.getKey(), entry.getValue()});
+        }
+        
+        params.put(Constantes.CONTAINSKEY_PLANDIARIOORACION, mVOS);        
         return params;
     }
 }

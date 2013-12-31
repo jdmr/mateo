@@ -24,7 +24,7 @@
 package mx.edu.um.mateo.colportor.dao;
 
 import java.util.*;
-import mx.edu.um.mateo.colportor.model.Asociacion;
+
 import mx.edu.um.mateo.colportor.utils.UltimoException;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -93,12 +93,6 @@ public class UsuarioDao {
         Criteria countCriteria = currentSession().createCriteria(Usuario.class);
 
         
-        if (params.containsKey(Constantes.ADDATTRIBUTE_ASOCIACION)) {
-            log.debug("valor de asociacion"+params.get("asociacion"));
-            criteria.createCriteria(Constantes.ADDATTRIBUTE_ASOCIACION).add(Restrictions.eq("id",((Asociacion)params.get(Constantes.ADDATTRIBUTE_ASOCIACION)).getId()));
-            countCriteria.createCriteria(Constantes.ADDATTRIBUTE_ASOCIACION).add(Restrictions.eq("id",((Asociacion)params.get(Constantes.ADDATTRIBUTE_ASOCIACION)).getId()));
-        }
-
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
             String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);
             Disjunction propiedades = Restrictions.disjunction();
@@ -148,9 +142,7 @@ public class UsuarioDao {
         return (Usuario) query.uniqueResult();
     }
 
-    public Usuario crea(Usuario usuario, Long asociacionId, String[] nombreDeRoles) {
-        Asociacion asociacion = (Asociacion) currentSession().get(Asociacion.class, asociacionId);
-        usuario.setAsociacion(asociacion);
+    public Usuario crea(Usuario usuario, String[] nombreDeRoles) {
         usuario.setPassword(passwordEncoder.encodePassword(usuario.getPassword(), usuario.getUsername()));
 
         if (usuario.getRoles() != null) {
@@ -173,7 +165,7 @@ public class UsuarioDao {
         return usuario;
     }
 
-    public Usuario actualiza(Usuario usuario, Long asociacionId, String[] nombreDeRoles) {
+    public Usuario actualiza(Usuario usuario, String[] nombreDeRoles) {
         Usuario nuevoUsuario = (Usuario) currentSession().get(Usuario.class, usuario.getId());
         nuevoUsuario.setVersion(usuario.getVersion());
         nuevoUsuario.setUsername(usuario.getUsername());
@@ -208,8 +200,7 @@ public class UsuarioDao {
         Usuario usuario = obtiene(id);
         Criteria criteria = currentSession().createCriteria(Usuario.class);
         criteria.setProjection(Projections.rowCount());
-        List resultados = criteria.createCriteria(Constantes.ADDATTRIBUTE_ASOCIACION).add(Restrictions.eq("id", usuario.getAsociacion().getId())).list();
-        Long cantidad = (Long) resultados.get(0);
+        Long cantidad = 0L;
         if (cantidad > 1) {
             String nombre = usuario.getUsername();
             currentSession().delete(usuario);
@@ -229,38 +220,5 @@ public class UsuarioDao {
         return sessionFactory.getCurrentSession();
     }
 
-    public List<Asociacion> obtieneAsociaciones() {
-        List<Asociacion> asociaciones;
-        if (springSecurityUtils.ifAnyGranted(Constantes.ROL_ADMINISTRADOR)) {
-            //Query query = currentSession().createQuery("select a from Almacen a order by a.empresa.organizacion, a.empresa, a.nombre");
-            Query query = currentSession().createQuery("select a from Asociacion a order by a.union, a.nombre");
-            asociaciones = query.list();
-        } else if (springSecurityUtils.ifAnyGranted("ROLE_ORG")) {
-            Usuario usuario = springSecurityUtils.obtieneUsuario();
-            Query query = currentSession().createQuery("select a from Asociaciones a where a.union.id = :unionId order by a.asociacion, a.nombre");
-            query.setLong(Constantes.UNION_ID, usuario.getAsociacion().getUnion().getId());
-            asociaciones = query.list();
-        } else {
-            Usuario usuario = springSecurityUtils.obtieneUsuario();
-            Query query = currentSession().createQuery("select a from Asociaciones a where a.asociacion.id = :asociacionId order by a.nombre");
-            query.setLong(Constantes.ASOCIACION_ID, usuario.getAsociacion().getId());
-            asociaciones = query.list();
-        }
-        return asociaciones;
-    }
-
-    public void asignaAsociacion(Usuario usuario, Long asociacionId) {
-        Asociacion asociacion = (Asociacion) currentSession().get(Asociacion.class, asociacionId);
-        if (asociacion != null) {
-            log.debug("Asignando {} a usuario {}", asociacion, usuario);
-            String password = usuario.getPassword();
-            currentSession().refresh(usuario);
-            if (!password.equals(usuario.getPassword())) {
-                usuario.setPassword(passwordEncoder.encodePassword(password, usuario.getUsername()));
-            }
-            usuario.setAsociacion(asociacion);
-            currentSession().update(usuario);
-            currentSession().flush();
-        }
-    }
+    
 }

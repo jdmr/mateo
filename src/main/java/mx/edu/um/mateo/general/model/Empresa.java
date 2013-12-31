@@ -103,6 +103,16 @@ public class Empresa implements Serializable {
         this.rfc = rfc;
         this.organizacion = organizacion;
     }
+    
+    public Empresa(String codigo, String nombre, String nombreCompleto,
+            String rfc, Organizacion organizacion, CentroCosto ccosto) {
+        this.codigo = codigo;
+        this.nombre = nombre;
+        this.nombreCompleto = nombreCompleto;
+        this.rfc = rfc;
+        this.organizacion = organizacion;
+        this.centroCosto = ccosto;
+    }
 
     /**
      * @return the id

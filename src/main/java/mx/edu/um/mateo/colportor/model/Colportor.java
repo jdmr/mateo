@@ -57,8 +57,8 @@ public class Colportor extends Usuario implements TipoUsuario{
     @Size(min = 6, max = 7)
     @Column(length = 7)
     private String matricula;
-    @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern=Constantes.DATE_SHORT_HUMAN_PATTERN)
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Temporal(TemporalType.TIMESTAMP)
     @Column( name = "fecha_nac")
     private Date fechaDeNacimiento;
     

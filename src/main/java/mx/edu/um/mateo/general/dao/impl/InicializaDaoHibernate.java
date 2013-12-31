@@ -28,10 +28,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import mx.edu.um.mateo.colportor.dao.AsociacionDao;
 import mx.edu.um.mateo.colportor.dao.AsociadoDao;
 import mx.edu.um.mateo.colportor.dao.ColportorDao;
-import mx.edu.um.mateo.colportor.dao.UnionDao;
 import mx.edu.um.mateo.colportor.model.Asociado;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.contabilidad.dao.EjercicioDao;
@@ -46,7 +44,6 @@ import mx.edu.um.mateo.general.dao.RolDao;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
-import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -82,10 +79,6 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
     private EmpleadoManager empleadoManager;
     @Autowired
     private AlmacenDao almacenDao;
-    @Autowired
-    private UnionDao unionDao;
-    @Autowired
-    private AsociacionDao asociacionDao;
     @Autowired
     private AsociadoDao asociadoDao;
     @Autowired
@@ -134,12 +127,6 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
         String[] roles = new String[]{new Rol("ROLE_ADMIN").getAuthority()};
 
         usuario = usuarioDao.crea(usuario, almacenId, roles);
-
-        //Datos de colportores
-//        Union union = new Union("Unión Mexicana del Norte");
-//        unionDao.crea(union, usuario);
-//        Asociacion asoc = new Asociacion("Asociación del Noreste", Constantes.STATUS_ACTIVO, union);
-//        asociacionDao.crea(asoc,usuario);
 
         //Tipo de Empleado
         TipoEmpleado tipoEmpleado = new TipoEmpleado();

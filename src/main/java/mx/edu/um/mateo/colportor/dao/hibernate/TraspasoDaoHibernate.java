@@ -28,7 +28,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -53,8 +52,10 @@ import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inventario.dao.AlmacenDao;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import mx.edu.um.mateo.rh.dao.ColegioDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,6 +88,10 @@ public class TraspasoDaoHibernate extends BaseDao implements TraspasoDao {
     @Autowired
     @Qualifier(value = "dataSourcePg")
     private DataSource dsPg;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ColegioDao colegioDao;
 
     @Override
     @Transactional
@@ -103,7 +108,7 @@ public class TraspasoDaoHibernate extends BaseDao implements TraspasoDao {
                 + "case when tipo_user = 'S' then 'asociado' when tipo_user = 'Alum' or tipo_user = 'Lin' then 'colportor' end as entity_type, "
                 + "id, 'FALSE', 'FALSE', last_name, '.', email, 'FALSE', 'TRUE', first_name, '71fe4783816d1cf739450b7b9a3fa0a92ce6e591' as password, "
                 + "clave, version, 'A', address,postal_code,city,phone_number as telefono,now(), '0000000', 'tipoClp', "
-                + "1, '001-2013', 1, 1 "
+                + "1, '001-2013', 1, 1, fecha_nacimiento "
                 + "from app_user u "
                 + ") a "
                 + "where entity_type is not null "
@@ -130,9 +135,9 @@ public class TraspasoDaoHibernate extends BaseDao implements TraspasoDao {
                             "A", ".", rset.getString("telefono"), rset.getString("address"), rset.getString("postal_code"), rset.getString("city"));
                 } else if (rset.getString("entity_type").equals("colportor")) {
                     usuario = new Colportor(
-                            rset.getString("email"), rset.getString("password"), rset.getString("email"), rset.getString("first_name"), rset.getString("last_name"), ".",
+                            rset.getString("email"), passwordEncoder.encodePassword(rset.getString("clave"), rset.getString("email")), rset.getString("email"), rset.getString("first_name"), rset.getString("last_name"), ".",
                             rset.getString("clave"), "A", rset.getString("telefono"), rset.getString("address"), rset.getString("postal_code"), rset.getString("city"),
-                            "tipoClp", "0000000", new Date());
+                            "tipoClp", "0000000", rset.getDate("fecha_nacimiento"));
                     if (((Colportor) usuario).getClave() == null) {
                         usuario.setUsername(usuario.getCorreo());
                         ((Colportor) usuario).setClave("00000");
@@ -189,7 +194,7 @@ public class TraspasoDaoHibernate extends BaseDao implements TraspasoDao {
     
     @Transactional
     public void traspasaTemporadasColportor() throws Exception {
-        String COMANDO = "select u.id, u.clave, tc.status, tc.objetivo, tc.temporada_id, tc.user_captura, tc.fecha_captura, au.clave as asociado " +
+        String COMANDO = "select u.id, u.clave, tc.status, tc.objetivo, tc.temporada_id, tc.user_captura, tc.fecha_captura, au.clave as asociado, u.colegio_id " +
             "from temporada_colportor tc, app_user u, app_user au " +
             "where u.id = colportor_id " +
             "and au.id = user_captura ";
@@ -209,6 +214,9 @@ public class TraspasoDaoHibernate extends BaseDao implements TraspasoDao {
                 tmpClp.setColportor(colportorDao.obtiene(rset.getString("clave")));
                 tmpClp.setFecha(rset.getDate("fecha_captura"));
                 tmpClp.setTemporada(temporadaDao.obtiene(rset.getLong("temporada_id")));
+                
+                log.debug("Colegio - id {}, colegio {} ", rset.getLong("colegio_id"), colegioDao.obtiene(rset.getLong("colegio_id")));
+                tmpClp.setColegio(colegioDao.obtiene(rset.getLong("colegio_id")));
                 
                 log.debug("creando temporadaClp # {}, {}", conta++, tmpClp);
                 

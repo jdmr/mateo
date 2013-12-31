@@ -26,6 +26,8 @@ package mx.edu.um.mateo.general.dao.impl;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import mx.edu.um.mateo.contabilidad.dao.CentroCostoDao;
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.contabilidad.model.EjercicioPK;
 import mx.edu.um.mateo.general.dao.BaseDao;
@@ -63,6 +65,8 @@ public class OrganizacionDaoHibernate extends BaseDao implements OrganizacionDao
     private ReporteDao reporteDao;
     @Autowired
     private EmpresaDao empresaDao;
+    @Autowired
+    private CentroCostoDao ccostoDao;
 
     public OrganizacionDaoHibernate() {
         log.info("Nueva instancia de OrganizacionDao");
@@ -147,12 +151,15 @@ public class OrganizacionDaoHibernate extends BaseDao implements OrganizacionDao
         Byte x = new Byte("0");
         Ejercicio ejercicio = new Ejercicio(ejercicioPK, idEjercicio.toString(), "A", StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY, x, x);
         session.save(ejercicio);
+        CentroCosto ccosto = new CentroCosto(ejercicio, "1", "MATRIZ", "N", "M");
+        ccostoDao.crea(ccosto);
         log.debug("Ejercicio creado {}",ejercicio);
         Empresa empresa = new Empresa("MTZ", "MATRIZ", "MATRIZ",
-                "000000000001", organizacion);
+                "000000000001", organizacion, ccosto);
         if (usuario != null) {
             usuario.setEmpresa(empresa);
         }
+        
         empresaDao.crea(empresa, usuario);
         reporteDao.inicializaOrganizacion(organizacion);
         session.refresh(organizacion);

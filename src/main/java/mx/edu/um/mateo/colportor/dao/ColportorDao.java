@@ -26,6 +26,8 @@ package mx.edu.um.mateo.colportor.dao;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -136,6 +138,18 @@ public class ColportorDao {
         params.put(Constantes.COLPORTOR_LIST, criteria.list());
         return params;
     }
+    
+    public NavigableMap<String, Colportor> obtieneMapColportores(Map<String, Object> params) {
+        NavigableMap<String, Colportor> mapa = new TreeMap();
+        
+        Criteria criteria = currentSession().createCriteria(Colportor.class);
+        criteria.createCriteria("empresa").add(Restrictions.eq("id",params.get("empresa")));
+        params.put(Constantes.COLPORTOR_LIST, criteria.list());
+        for(Colportor clp : (List<Colportor>)params.get(Constantes.COLPORTOR_LIST)){
+            mapa.put(clp.getNombre(),clp);
+        }
+        return mapa;
+    }
 
     public Colportor obtiene(Long id) {
         log.debug("Obtiene colportor con id = {}", id);
@@ -153,14 +167,19 @@ public class ColportorDao {
     
     public Colportor crea(Colportor colportor, Usuario usuario) {
         log.debug("Creando colportor : {}", colportor);
-        colportor.setPassword(passwordEncoder.encodePassword(colportor.getPassword(), colportor.getUsername()));
         
+        colportor.setUsername(colportor.getCorreo());
+        colportor.setPassword(passwordEncoder.encodePassword(colportor.getClave(), colportor.getUsername()));
         log.debug("password"+colportor.getPassword());
+        
         colportor.setStatus(Constantes.STATUS_ACTIVO);
         
         if (usuario != null) {
+            colportor.setEjercicio(usuario.getEjercicio());
             colportor.setEmpresa(usuario.getEmpresa());
             colportor.setAlmacen(usuario.getAlmacen());
+            colportor.setCentrosDeCosto(usuario.getCentrosDeCosto());
+            colportor.setEnabled(Boolean.TRUE);
         }
         currentSession().save(colportor);
         
@@ -173,38 +192,17 @@ public class ColportorDao {
         return colportor;
     }
     
-    public Colportor actualiza(Colportor colportor, String[] nombreDeRoles) {
-        Colportor nuevoColportor= (Colportor) currentSession().get(Usuario.class, colportor.getId());
-        nuevoColportor.setVersion(colportor.getVersion());
-        nuevoColportor.setUsername(colportor.getUsername());
-        nuevoColportor.setNombre(colportor.getNombre());
-        nuevoColportor.setApPaterno(colportor.getApPaterno());
-        nuevoColportor.setApMaterno(colportor.getApMaterno());       
-        log.debug("password"+nuevoColportor.getPassword());
-
-
+    public Colportor actualiza(Colportor colportor) {
+        
         try {
-            currentSession().update(nuevoColportor);
+            currentSession().update(colportor);
             currentSession().flush();
         } catch (NonUniqueObjectException e) {
             log.warn("Ya hay un objeto previamente cargado, intentando hacer merge", e);
-            currentSession().merge(nuevoColportor);
+            currentSession().merge(colportor);
             currentSession().flush();
         }
-        return nuevoColportor;
-    }
-    public Colportor actualiza(Colportor colportor) {
-        log.debug("Actualizando colportor {}", colportor);
-
-        //trae el objeto de la DB 
-        Colportor nuevo = (Colportor) currentSession().get(Colportor.class, colportor.getId());
-        //actualiza el objeto
-        BeanUtils.copyProperties(colportor, nuevo);
-        //lo guarda en la BD
-
-        currentSession().update(nuevo);
-        currentSession().flush();
-        return nuevo;
+        return colportor;
     }
 
    public String elimina(Long id) {

@@ -7,8 +7,8 @@
         <title><s:message code="censoColportores.label" /></title>
     </head>
     <body>
-        <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="reportes" />
+        <jsp:include page="./menu.jsp" >
+            <jsp:param name="menu" value="censoColportores" />
         </jsp:include>
 
         <h1><s:message code="censoColportores.label" /></h1>

@@ -46,7 +46,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
-import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.inventario.model.Almacen;
@@ -106,8 +105,8 @@ public class Usuario  implements Serializable, UserDetails, TipoUsuario {
     @Email
     @NotEmpty
     @Column(nullable = false, name = "correo")
-    protected String correo;
-    @ManyToMany(fetch = FetchType.EAGER)
+    protected String correo; 
+   @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usuarios_roles", joinColumns = {
         @JoinColumn(name = "usuario_id")}, inverseJoinColumns =
     @JoinColumn(name = "rol_id"))
@@ -120,16 +119,6 @@ public class Usuario  implements Serializable, UserDetails, TipoUsuario {
     private Ejercicio ejercicio;
     @ManyToMany
     private Set<CentroCosto> centrosDeCosto;
-    @ManyToOne(optional = true)
-    private Asociacion asociacion;
-
-    public Asociacion getAsociacion() {
-        return asociacion;
-    }
-
-    public void setAsociacion(Asociacion asociacion) {
-        this.asociacion = asociacion;
-    }
 
     public Usuario() {
         this.setRoles(new HashSet());

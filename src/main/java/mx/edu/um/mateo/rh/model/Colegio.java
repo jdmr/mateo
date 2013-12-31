@@ -20,7 +20,7 @@ public class Colegio implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column (nullable = false, length = 24)
+    @Column (nullable = false, length = 64)
     private String nombre;
     @Column (nullable = false, length = 2)
     private String status;

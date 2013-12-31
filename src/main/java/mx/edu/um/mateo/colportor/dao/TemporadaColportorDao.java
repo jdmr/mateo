@@ -8,7 +8,6 @@ import mx.edu.um.mateo.colportor.model.Temporada;
 import mx.edu.um.mateo.colportor.model.TemporadaColportor;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
 import mx.edu.um.mateo.general.dao.BaseDao;
@@ -110,14 +109,13 @@ public class TemporadaColportorDao extends BaseDao {
     }
     
     public Map<String, Object> listadoTemporadasPorColportor(Map<String, Object> params) {
-        Criteria criteria = currentSession().createCriteria(TemporadaColportor.class);
-        criteria.createAlias("temporada", "tmp");
-        criteria.createAlias("colportor", "clp");
-        criteria.createAlias("asociado", "asoc");
-        criteria.add(Restrictions.eq("asoc.empresa.id", (Long)params.get("empresa")));
-        criteria.add(Restrictions.eq("asoc.id", (Long)params.get("asociado")));
-        criteria.add(Restrictions.ilike("clp.clave", (String)params.get("filtro")));
-        criteria.addOrder(Order.asc("tmp.nombre"));
+        log.debug("listadoTemporadasPorColportor");
+        Query criteria = currentSession()
+                .createQuery("select tc from TemporadaColportor tc where tc.colportor.clave = :filtro and tc.colportor.empresa.id = :empresaId and tc.asociado.id = :asociadoId");
+        criteria.setString("filtro", (String)params.get("filtro"));
+        criteria.setLong("empresaId", (Long)params.get("empresa"));
+        criteria.setLong("asociadoId", (Long)params.get("asociado"));
+        
         params.put(Constantes.TEMPORADACOLPORTOR_LIST, criteria.list());
         return params;
     }

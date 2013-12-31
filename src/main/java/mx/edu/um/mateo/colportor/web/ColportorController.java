@@ -50,7 +50,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
- * @author wilbert
+ * @author osoto
  */
 @Controller
 @RequestMapping(Constantes.PATH_COLPORTOR)
@@ -194,20 +194,8 @@ public class ColportorController extends BaseController {
             utils.despliegaBindingResultErrors(bindingResult);
             return Constantes.PATH_COLPORTOR_NUEVO;
         }
-        log.debug("Fechando...");
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat(Constantes.DATE_SHORT_HUMAN_PATTERN);
-            colportor.setFechaDeNacimiento(sdf.parse(request.getParameter("fechaDeNacimiento")));
-        } catch (ParseException e) {
-            log.error("FechaDeNacimiento", e);
-            return Constantes.PATH_COLPORTOR_NUEVO;
-        }
-        String password = null;
-        password = KeyGenerators.string().generateKey();
-        log.debug("passwordColportor" + password);
 
         try {
-            colportor.setPassword(password);
             Usuario usuario = ambiente.obtieneUsuario();
             colportor = colportorDao.crea(colportor, usuario);
 
@@ -223,48 +211,46 @@ public class ColportorController extends BaseController {
     }
 
     @RequestMapping("/edita/{id}")
-    public String edita(@PathVariable Long id, Model modelo) {
+    public String edita(HttpServletRequest request, @PathVariable Long id, Model modelo) {
         log.debug("Editar colportor {}", id);
         Rol roles = rolDao.obtiene("ROLE_COL");
-        Colportor colportores = colportorDao.obtiene(id);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_COLPORTOR, colportores);
-        modelo.addAttribute("roles", roles);
+        Colportor colportor = colportorDao.obtiene(id);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_COLPORTOR, colportor);
+        request.getSession().setAttribute(Constantes.COLPORTOR, colportor);
         return Constantes.PATH_COLPORTOR_EDITA;
     }
 
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
-    public String actualiza(HttpServletRequest request, @Valid Colportor colportores, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
+    public String actualiza(HttpServletRequest request, @Valid Colportor colportor, BindingResult bindingResult, 
+            Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
             utils.despliegaBindingResultErrors(bindingResult);
             return Constantes.PATH_COLPORTOR_EDITA;
         }
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat(Constantes.DATE_SHORT_HUMAN_PATTERN);
-            colportores.setFechaDeNacimiento(sdf.parse(request.getParameter("fechaDeNacimiento")));
-            log.debug("fechaNacimiento" + colportores.getFechaDeNacimiento());
-        } catch (ConstraintViolationException e) {
-            log.error("FechaDeNacimiento", e);
-            return Constantes.PATH_COLPORTOR_EDITA;
-        }
 
         try {
-            log.debug("Colportor FechaDeNacimiento" + colportores.getFechaDeNacimiento());
-            String[] roles = request.getParameterValues("roles");
-            log.debug("Asignando ROLE_ASOC por defecto");
-            roles = new String[]{"ROLE_ASOC"};
-            modelo.addAttribute("roles", roles);
-            colportores = colportorDao.actualiza(colportores, roles);
+            log.debug("Colportor FechaDeNacimiento" + colportor.getFechaDeNacimiento());
+            Colportor clp = (Colportor)request.getSession().getAttribute(Constantes.COLPORTOR);
+            colportor.setEjercicio(clp.getEjercicio());
+            colportor.setEmpresa(clp.getEmpresa());
+            colportor.setAlmacen(clp.getAlmacen());
+            colportor.setCentrosDeCosto(clp.getCentrosDeCosto());
+            colportor.setEnabled(clp.getEnabled());
+            colportor.setPassword(clp.getPassword());
+            colportor = colportorDao.actualiza(colportor);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear la colportor", e);
-            return Constantes.PATH_COLPORTOR_NUEVO;
-        }
+            return Constantes.PATH_COLPORTOR_EDITA;
+        }finally{
+            request.getSession().removeAttribute(Constantes.COLPORTOR);
+        }        
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "colportor.actualizado.message");
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{colportores.getNombre()});
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{colportor.getNombre()});
 
-        return "redirect:" + Constantes.PATH_COLPORTOR_VER + "/" + colportores.getId();
+        return "redirect:" + Constantes.PATH_COLPORTOR_VER + "/" + colportor.getId();
     }
 
     @Transactional

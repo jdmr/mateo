@@ -1901,16 +1901,7 @@ public class Constantes {
      */
     public static final String GASOLINERA_LIST = "gasolineraList";
     // Gasolinera-END
-    // ClienteColportor-START
-    /**
-     * The request scope attribute that holds the clienteColportor form.
-     */
-    public static final String CLIENTECOLPORTOR_KEY = "clienteColportorForm";
-    /**
-     * The request scope attribute that holds the clienteColportor list
-     */
-    public static final String CLIENTECOLPORTOR_LIST = "clienteColportorList";
-    // ClienteColportor-END
+
     // SolicitudPermiso-START
     /**
      * The request scope attribute that holds the solicitudPermiso form.
@@ -2979,4 +2970,61 @@ public class Constantes {
     public static final String PATH_CLAVEEMPLEADO_ACTUALIZA = "/rh/claveEmpleado/actualiza";
     public static final String PATH_CLAVEEMPLEADO_ELIMINA = "/rh/claveEmpleado/elimina";
     public static final String CLAVEEMPLEADO_FORM = "claveEmpleadoForm";
+
+    public static final String PATH_RPT_CLP_PLANMENSUALORACION = "/colportaje/reportes/planMensualOracion";
+    public static final String CONTAINSKEY_PLANMENSUALORACION = "planMensualOracion";
+    public static final String PATH_RPT_CLP_PLANDIARIOORACION = "/colportaje/reportes/planDiarioOracion";
+    public static final String CONTAINSKEY_PLANDIARIOORACION = "planDiarioOracion";
+    /**
+     * Valores para los Clientes de Colportor
+     */
+    public static final String CLIENTE_COLPORTOR_PATH = "/colportaje/ventas/clientes";
+    public static final String CLIENTE_COLPORTOR_PATH_LISTA = "/colportaje/ventas/clientes/lista";
+    public static final String CLIENTE_COLPORTOR_PATH_VER = "/colportaje/ventas/clientes/ver";
+    public static final String CLIENTE_COLPORTOR_PATH_NUEVO = "/colportaje/ventas/clientes/nuevo";
+    public static final String CLIENTE_COLPORTOR_PATH_EDITA = "/colportaje/ventas/clientes/edita";
+    public static final String CLIENTE_COLPORTOR_PATH_CREA = "/colportaje/ventas/clientes/crea";
+    public static final String CLIENTE_COLPORTOR_PATH_ACTUALIZA = "/colportaje/ventas/clientes/actualiza";
+    public static final String CLIENTE_COLPORTOR_PATH_ELIMINA = "/colportaje/ventas/clientes/elimina";
+    public static final String CLIENTE_COLPORTOR = "clienteColportor";
+    public static final String CLIENTE_COLPORTOR_LIST = "clienteColportores";
+    /**
+     * Valores para los Pedidos de Colportor
+     */
+    public static final String PEDIDO_COLPORTOR_PATH = "/colportaje/ventas/pedidos";
+    public static final String PEDIDO_COLPORTOR_PATH_LISTA = "/colportaje/ventas/pedidos/lista";
+    public static final String PEDIDO_COLPORTOR_PATH_VER = "/colportaje/ventas/pedidos/ver";
+    public static final String PEDIDO_COLPORTOR_PATH_NUEVO = "/colportaje/ventas/pedidos/nuevo";
+    public static final String PEDIDO_COLPORTOR_PATH_EDITA = "/colportaje/ventas/pedidos/edita";
+    public static final String PEDIDO_COLPORTOR_PATH_CREA = "/colportaje/ventas/pedidos/crea";
+    public static final String PEDIDO_COLPORTOR_PATH_ACTUALIZA = "/colportaje/ventas/pedidos/actualiza";
+    public static final String PEDIDO_COLPORTOR_PATH_ELIMINA = "/colportaje/ventas/pedidos/elimina";
+    public static final String PEDIDO_COLPORTOR = "pedidoColportor";
+    public static final String PEDIDO_COLPORTOR_LIST = "pedidoColportores";
+    /**
+     * Valores para los Items de Pedidos de Colportor
+     */
+    public static final String PEDIDO_COLPORTOR_ITEM_PATH = "/colportaje/ventas/items";
+    public static final String PEDIDO_COLPORTOR_ITEM_PATH_LISTA = "/colportaje/ventas/items/lista";
+    public static final String PEDIDO_COLPORTOR_ITEM_PATH_VER = "/colportaje/ventas/items/ver";
+    public static final String PEDIDO_COLPORTOR_ITEM_PATH_NUEVO = "/colportaje/ventas/items/nuevo";
+    public static final String PEDIDO_COLPORTOR_ITEM_PATH_EDITA = "/colportaje/ventas/items/edita";
+    public static final String PEDIDO_COLPORTOR_ITEM_PATH_CREA = "/colportaje/ventas/items/crea";
+    public static final String PEDIDO_COLPORTOR_ITEM_PATH_ACTUALIZA = "/colportaje/ventas/items/actualiza";
+    public static final String PEDIDO_COLPORTOR_ITEM_PATH_ELIMINA = "/colportaje/ventas/items/elimina";
+    public static final String PEDIDO_COLPORTOR_ITEM = "pedidoColportorItem";
+    public static final String PEDIDO_COLPORTOR_ITEM_LIST = "pedidoColportorItems";
+    /**
+     * Valores para los Recibos de Colportor
+     */
+    public static final String RECIBO_COLPORTOR_PATH = "/colportaje/ventas/recibos";
+    public static final String RECIBO_COLPORTOR_PATH_LISTA = "/colportaje/ventas/recibos/lista";
+    public static final String RECIBO_COLPORTOR_PATH_VER = "/colportaje/ventas/recibos/ver";
+    public static final String RECIBO_COLPORTOR_PATH_NUEVO = "/colportaje/ventas/recibos/nuevo";
+    public static final String RECIBO_COLPORTOR_PATH_EDITA = "/colportaje/ventas/recibos/edita";
+    public static final String RECIBO_COLPORTOR_PATH_CREA = "/colportaje/ventas/recibos/crea";
+    public static final String RECIBO_COLPORTOR_PATH_ACTUALIZA = "/colportaje/ventas/recibos/actualiza";
+    public static final String RECIBO_COLPORTOR_PATH_ELIMINA = "/colportaje/ventas/recibos/elimina";
+    public static final String RECIBO_COLPORTOR = "reciboColportor";
+    public static final String RECIBO_COLPORTOR_LIST = "recibosColportor";
 }

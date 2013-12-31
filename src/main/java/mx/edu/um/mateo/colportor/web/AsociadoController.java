@@ -4,11 +4,9 @@
  */
 package mx.edu.um.mateo.colportor.web;
 
-import mx.edu.um.mateo.colportor.web.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -16,11 +14,9 @@ import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.colportor.dao.AsociadoDao;
 import mx.edu.um.mateo.general.dao.RolDao;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
-import mx.edu.um.mateo.colportor.model.Asociacion;
 import mx.edu.um.mateo.colportor.model.Asociado;
 import mx.edu.um.mateo.general.model.Rol;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.colportor.utils.FaltaAsociacionException;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import org.apache.commons.lang.StringUtils;
