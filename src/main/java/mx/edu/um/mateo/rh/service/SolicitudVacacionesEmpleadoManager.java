@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.dao;
+package mx.edu.um.mateo.rh.service;
 
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.rh.model.VacacionesEmpleado;
+import mx.edu.um.mateo.rh.model.SolicitudVacacionesEmpleado;
 
 /**
  *
  * @author develop
  */
-public interface VacacionesEmpleadoDao {
+public interface SolicitudVacacionesEmpleadoManager {
 
     /**
      * Regresa una lista de vacaciones.
@@ -29,7 +29,7 @@ public interface VacacionesEmpleadoDao {
      * @param id
      * @return
      */
-    public VacacionesEmpleado obtiene(final Long id);
+    public SolicitudVacacionesEmpleado obtiene(final Long id);
 
     /**
      * graba informacion sobre las vacaciones de algun empleado
@@ -37,7 +37,7 @@ public interface VacacionesEmpleadoDao {
      * @param vacaciones the object to be saved
      * @param usuario
      */
-    public void graba(VacacionesEmpleado vacaciones, Usuario usuario);
+    public void graba(SolicitudVacacionesEmpleado vacaciones, Usuario usuario);
 
     /**
      * Elimina las vacaciones

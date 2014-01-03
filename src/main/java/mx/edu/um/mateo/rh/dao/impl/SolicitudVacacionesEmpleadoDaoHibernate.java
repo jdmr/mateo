@@ -10,8 +10,8 @@ import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.rh.dao.VacacionesEmpleadoDao;
-import mx.edu.um.mateo.rh.model.VacacionesEmpleado;
+import mx.edu.um.mateo.rh.dao.SolicitudVacacionesEmpleadoDao;
+import mx.edu.um.mateo.rh.model.SolicitudVacacionesEmpleado;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 @Repository
-public class VacacionesEmpleadoDaoHibernate extends BaseDao implements VacacionesEmpleadoDao {
+public class SolicitudVacacionesEmpleadoDaoHibernate extends BaseDao implements SolicitudVacacionesEmpleadoDao {
 
     /**
      * @see mx.edu.um.mateo.rh.dao.VacacionesEmpleadoDao#lista(java.util.Map)
@@ -56,8 +56,8 @@ public class VacacionesEmpleadoDaoHibernate extends BaseDao implements Vacacione
         if (!params.containsKey(Constantes.CONTAINSKEY_OFFSET)) {
             params.put(Constantes.CONTAINSKEY_OFFSET, 0);
         }
-        Criteria criteria = currentSession().createCriteria(VacacionesEmpleado.class);
-        Criteria countCriteria = currentSession().createCriteria(VacacionesEmpleado.class);
+        Criteria criteria = currentSession().createCriteria(SolicitudVacacionesEmpleado.class);
+        Criteria countCriteria = currentSession().createCriteria(SolicitudVacacionesEmpleado.class);
 
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
             String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);
@@ -92,12 +92,12 @@ public class VacacionesEmpleadoDaoHibernate extends BaseDao implements Vacacione
      * @see mx.edu.um.mateo.rh.dao.VacacionesEmpleadoDao#obtiene(java.lang.Long)
      */
     @Override
-    public VacacionesEmpleado obtiene(Long id) {
+    public SolicitudVacacionesEmpleado obtiene(Long id) {
         log.debug("Obtiene vacaciones con id = {}", id);
-        VacacionesEmpleado vacaciones = (VacacionesEmpleado) currentSession().get(VacacionesEmpleado.class, id);
+        SolicitudVacacionesEmpleado vacaciones = (SolicitudVacacionesEmpleado) currentSession().get(SolicitudVacacionesEmpleado.class, id);
         if (vacaciones == null) {
             log.warn("uh oh, las vacaciones con el id" + id + "no se encontro...");
-            throw new ObjectRetrievalFailureException(VacacionesEmpleado.class, id);
+            throw new ObjectRetrievalFailureException(SolicitudVacacionesEmpleado.class, id);
 
         }
         return vacaciones;
@@ -110,7 +110,7 @@ public class VacacionesEmpleadoDaoHibernate extends BaseDao implements Vacacione
      * mx.edu.um.mateo.general.model.Usuario)
      */
     @Override
-    public void graba(final VacacionesEmpleado vacaciones, Usuario usuario) {
+    public void graba(final SolicitudVacacionesEmpleado vacaciones, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
             vacaciones.setEmpresa(usuario.getEmpresa());
@@ -128,7 +128,7 @@ public class VacacionesEmpleadoDaoHibernate extends BaseDao implements Vacacione
     @Override
     public String elimina(Long id) {
         log.debug("Eliminando vacaciones con id {}", id);
-        VacacionesEmpleado vacaciones = obtiene(id);
+        SolicitudVacacionesEmpleado vacaciones = obtiene(id);
         currentSession().delete(vacaciones);
         currentSession().flush();
         String nombre = vacaciones.getEmpleado().getNombre();

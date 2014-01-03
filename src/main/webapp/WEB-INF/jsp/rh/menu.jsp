@@ -18,6 +18,7 @@
         <li<c:if test="${param.menu eq 'empleadoEstudios'}"> class="active"</c:if>><a href="<s:url value='/rh/empleadoEstudios'/>" ><s:message code="empleadoEstudios.label" /></a></li>
         <li<c:if test="${param.menu eq 'diaFeriado'}"> class="active"</c:if>><a href="<s:url value='/rh/diaFeriado'/>" ><s:message code="diaFeriado.label" /></a></li>
         <li<c:if test="${param.menu eq 'claveEmpleado'}"> class="active"</c:if>><a href="<s:url value='/rh/claveEmpleado'/>" ><s:message code="claveEmpleado.label" /></a></li>
+        <li<c:if test="${param.menu eq 'vacacionesEmpleado'}"> class="active"</c:if>><a href="<s:url value='/rh/vacacionesEmpleado'/>" ><s:message code="vacaciones.label" /></a></li>
     </ul>
 </nav>
 

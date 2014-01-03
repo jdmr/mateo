@@ -118,6 +118,8 @@ public class Empleado extends Usuario {
     private TipoEmpleado tipoEmpleado;
     @OneToMany
     private List<ClaveEmpleado> claves;
+    @OneToMany
+    private List<SolicitudVacacionesEmpleado> solicitudVacaciones;
 
     public Empleado() {
     }
@@ -396,18 +398,6 @@ public class Empleado extends Usuario {
     }
 
     @Override
-    public String toString() {
-        return "Empleado{" + "clave=" + clave + ", genero=" + genero + ", direccion=" + direccion + ", status=" + status
-                + ", fechaNacimiento=" + fechaNacimiento + ", curp=" + curp + ", rfc=" + rfc + ", cuenta=" + cuenta + ", imms=" + imms
-                + ", escalafon=" + escalafon + ", turno=" + turno + ", fechaAlta=" + fechaAlta + ", fechaBaja=" + fechaBaja
-                + ", experienciaFueraUm=" + experienciaFueraUm + ", modalidad=" + modalidad + ", ife=" + ife + ", rango=" + rango
-                + ", adventista=" + adventista + ", padre=" + padre + ", madre=" + madre + ", estadoCivil=" + estadoCivil
-                + ", conyuge=" + conyuge + ", fechaMatrimonio=" + fechaMatrimonio + ", finadoPadre=" + finadoPadre
-                + ", finadoMadre=" + finadoMadre + ", iglesia=" + iglesia + ", responsabilidad=" + responsabilidad
-                + ", tipoEmpleado=" + tipoEmpleado + ", claves=" + claves + '}';
-    }
-
-    @Override
     public int hashCode() {
         int hash = 5;
         hash = 59 * hash + Objects.hashCode(this.clave);
@@ -439,6 +429,27 @@ public class Empleado extends Usuario {
 
     public void setClaves(List<ClaveEmpleado> claves) {
         this.claves = claves;
+    }
+
+    public List<SolicitudVacacionesEmpleado> getVacaciones() {
+        return solicitudVacaciones;
+    }
+
+    public void setVacaciones(List<SolicitudVacacionesEmpleado> solicitudVacaciones) {
+        this.solicitudVacaciones = solicitudVacaciones;
+    }
+
+    @Override
+    public String toString() {
+        return "Empleado{" + "clave=" + clave + ", genero=" + genero + ", direccion=" + direccion + ", status=" + status
+                + ", fechaNacimiento=" + fechaNacimiento + ", curp=" + curp + ", rfc=" + rfc + ", cuenta=" + cuenta
+                + ", imms=" + imms + ", escalafon=" + escalafon + ", turno=" + turno + ", fechaAlta=" + fechaAlta
+                + ", fechaBaja=" + fechaBaja + ", experienciaFueraUm=" + experienciaFueraUm + ", modalidad=" + modalidad
+                + ", ife=" + ife + ", rango=" + rango + ", adventista=" + adventista + ", padre=" + padre + ", madre=" + madre
+                + ", estadoCivil=" + estadoCivil + ", conyuge=" + conyuge + ", fechaMatrimonio=" + fechaMatrimonio
+                + ", finadoPadre=" + finadoPadre + ", finadoMadre=" + finadoMadre + ", iglesia=" + iglesia
+                + ", responsabilidad=" + responsabilidad + ", tipoEmpleado=" + tipoEmpleado + ", claves=" + claves
+                + ", solicitudVacaciones=" + solicitudVacaciones + '}';
     }
 
 }

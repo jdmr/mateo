@@ -21,8 +21,8 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.web.BaseController;
-import mx.edu.um.mateo.rh.model.VacacionesEmpleado;
-import mx.edu.um.mateo.rh.service.VacacionesEmpleadoManager;
+import mx.edu.um.mateo.rh.model.SolicitudVacacionesEmpleado;
+import mx.edu.um.mateo.rh.service.SolicitudVacacionesEmpleadoManager;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -59,10 +59,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping(Constantes.PATH_VACACIONESEMPLEADO)
-public class VacacionesEmpleadoController extends BaseController {
+public class SolicitudVacacionesEmpleadoController extends BaseController {
 
     @Autowired
-    private VacacionesEmpleadoManager manager;
+    private SolicitudVacacionesEmpleadoManager manager;
 
     @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -98,7 +98,7 @@ public class VacacionesEmpleadoController extends BaseController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = manager.lista(params);
             try {
-                generaReporte(tipo, (List<VacacionesEmpleado>) params.get(Constantes.CONTAINSKEY_VACACIONESEMPLEADO), response);
+                generaReporte(tipo, (List<SolicitudVacacionesEmpleado>) params.get(Constantes.CONTAINSKEY_VACACIONESEMPLEADO), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -113,7 +113,7 @@ public class VacacionesEmpleadoController extends BaseController {
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<VacacionesEmpleado>) params.get(Constantes.CONTAINSKEY_VACACIONESEMPLEADO), request);
+                enviaCorreo(correo, (List<SolicitudVacacionesEmpleado>) params.get(Constantes.CONTAINSKEY_VACACIONESEMPLEADO), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("vacaciones.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
@@ -133,7 +133,7 @@ public class VacacionesEmpleadoController extends BaseController {
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<VacacionesEmpleado> vacacioness = (List<VacacionesEmpleado>) params.get(Constantes.CONTAINSKEY_VACACIONESEMPLEADO);
+        List<SolicitudVacacionesEmpleado> vacacioness = (List<SolicitudVacacionesEmpleado>) params.get(Constantes.CONTAINSKEY_VACACIONESEMPLEADO);
         Long primero = ((pagina - 1) * max) + 1;
         log.debug("primero {}", primero);
         log.debug("clave empleado size {}", vacacioness.size());
@@ -153,7 +153,7 @@ public class VacacionesEmpleadoController extends BaseController {
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando dia feriado {}", id);
-        VacacionesEmpleado vacaciones = manager.obtiene(id);
+        SolicitudVacacionesEmpleado vacaciones = manager.obtiene(id);
 
         modelo.addAttribute(Constantes.ADDATTRIBUTE_VACACIONESEMPLEADO, vacaciones);
 
@@ -163,14 +163,14 @@ public class VacacionesEmpleadoController extends BaseController {
     @RequestMapping("/nuevo")
     public String nueva(Model modelo) {
         log.debug("Nuevo dia feriado");
-        VacacionesEmpleado vacaciones = new VacacionesEmpleado();
+        SolicitudVacacionesEmpleado vacaciones = new SolicitudVacacionesEmpleado();
         modelo.addAttribute(Constantes.ADDATTRIBUTE_VACACIONESEMPLEADO, vacaciones);
         return Constantes.PATH_VACACIONESEMPLEADO_NUEVO;
     }
 
     @Transactional
     @RequestMapping(value = "/graba", method = RequestMethod.POST)
-    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid VacacionesEmpleado vacaciones,
+    public String graba(HttpServletRequest request, HttpServletResponse response, @Valid SolicitudVacacionesEmpleado vacaciones,
             BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
@@ -197,14 +197,14 @@ public class VacacionesEmpleadoController extends BaseController {
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Editar cuenta de nacionalidad {}", id);
-        VacacionesEmpleado vacaciones = manager.obtiene(id);
+        SolicitudVacacionesEmpleado vacaciones = manager.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_VACACIONESEMPLEADO, vacaciones);
-        return Constantes.PATH_VACACIONESEMPLEADO_LISTA;
+        return Constantes.PATH_VACACIONESEMPLEADO_EDITA;
     }
 
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
-    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute VacacionesEmpleado vacaciones,
+    public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute SolicitudVacacionesEmpleado vacaciones,
             BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina clave de empleado");
         try {
@@ -221,7 +221,7 @@ public class VacacionesEmpleadoController extends BaseController {
         return "redirect:" + Constantes.PATH_VACACIONESEMPLEADO_LISTA;
     }
 
-    private void generaReporte(String tipo, List<VacacionesEmpleado> vacacioness, HttpServletResponse response) throws JRException, IOException {
+    private void generaReporte(String tipo, List<SolicitudVacacionesEmpleado> vacacioness, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
         switch (tipo) {
@@ -250,7 +250,7 @@ public class VacacionesEmpleadoController extends BaseController {
 
     }
 
-    private void enviaCorreo(String tipo, List<VacacionesEmpleado> vacacioness, HttpServletRequest request) throws JRException, MessagingException {
+    private void enviaCorreo(String tipo, List<SolicitudVacacionesEmpleado> vacacioness, HttpServletRequest request) throws JRException, MessagingException {
         log.debug("Enviando correo {}", tipo);
         byte[] archivo = null;
         String tipoContenido = null;

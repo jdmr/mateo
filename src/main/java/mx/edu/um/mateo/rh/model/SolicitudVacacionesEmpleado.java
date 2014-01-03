@@ -24,7 +24,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  * @author develop
  */
 @Entity
-public class VacacionesEmpleado {
+public class SolicitudVacacionesEmpleado {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,7 +53,7 @@ public class VacacionesEmpleado {
     @ManyToOne
     private Empresa empresa;
 
-    public VacacionesEmpleado() {
+    public SolicitudVacacionesEmpleado() {
     }
 
     public Long getId() {
@@ -120,6 +120,10 @@ public class VacacionesEmpleado {
         this.fechaAlta = fechaAlta;
     }
 
+    public Boolean getNacional() {
+        return nacional;
+    }
+
     public Boolean isNacional() {
         return nacional;
     }
@@ -129,6 +133,10 @@ public class VacacionesEmpleado {
     }
 
     public Boolean isPrimaVacacional() {
+        return primaVacacional;
+    }
+
+    public Boolean getPrimaVacacional() {
         return primaVacacional;
     }
 

@@ -8,8 +8,9 @@ package mx.edu.um.mateo.rh.service.impl;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.rh.dao.VacacionesEmpleadoDao;
-import mx.edu.um.mateo.rh.model.VacacionesEmpleado;
+import mx.edu.um.mateo.rh.dao.SolicitudVacacionesEmpleadoDao;
+import mx.edu.um.mateo.rh.model.SolicitudVacacionesEmpleado;
+import mx.edu.um.mateo.rh.service.SolicitudVacacionesEmpleadoManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,10 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Transactional
 @Service
-public class VacacionesEmpleadoManagerImpl extends BaseDao {
+public class SolicitudVacacionesEmpleadoManagerImpl extends BaseDao implements SolicitudVacacionesEmpleadoManager {
 
     @Autowired
-    private VacacionesEmpleadoDao dao;
+    private SolicitudVacacionesEmpleadoDao dao;
 
     /**
      * Regresa una lista de vacaciones.
@@ -41,7 +42,7 @@ public class VacacionesEmpleadoManagerImpl extends BaseDao {
      * @param id
      * @return
      */
-    public VacacionesEmpleado obtiene(final Long id) {
+    public SolicitudVacacionesEmpleado obtiene(final Long id) {
         return dao.obtiene(id);
     }
 
@@ -51,7 +52,7 @@ public class VacacionesEmpleadoManagerImpl extends BaseDao {
      * @param vacaciones the object to be saved
      * @param usuario
      */
-    public void graba(VacacionesEmpleado vacaciones, Usuario usuario) {
+    public void graba(SolicitudVacacionesEmpleado vacaciones, Usuario usuario) {
         dao.graba(vacaciones, usuario);
     }
 
