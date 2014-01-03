@@ -2385,6 +2385,7 @@ public class Constantes {
     public static final String ADDATTRIBUTE_CLAVEEMPLEADO = "claveEmpleado";
     public static final String ADDATTRIBUTE_DIAFERIADO = "diaFeriado";
     public static final String ADDATTRIBUTE_SOLICITUDVACACIONESEMPLEADO = "solicitudVacacionEmpleado";
+    public static final String ADDATTRIBUTE_VACACIONESEMPLEADO = "vacacionEmpleado";
     /*
      * Valores para el los path's para las clases
      */

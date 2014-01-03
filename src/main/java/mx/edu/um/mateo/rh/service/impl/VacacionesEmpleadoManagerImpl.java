@@ -11,11 +11,15 @@ import mx.edu.um.mateo.rh.dao.VacacionesEmpleadoDao;
 import mx.edu.um.mateo.rh.model.VacacionesEmpleado;
 import mx.edu.um.mateo.rh.service.VacacionesEmpleadoManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author develop
  */
+@Transactional
+@Service
 public class VacacionesEmpleadoManagerImpl implements VacacionesEmpleadoManager {
 
     @Autowired
