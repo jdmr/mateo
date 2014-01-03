@@ -80,7 +80,7 @@ public class SolicitudVacacionesEmpleadoDaoHibernate extends BaseDao implements 
             criteria.setFirstResult((Integer) params.get(Constantes.CONTAINSKEY_OFFSET));
             criteria.setMaxResults((Integer) params.get(Constantes.CONTAINSKEY_MAX));
         }
-        params.put(Constantes.CONTAINSKEY_VACACIONESEMPLEADO, criteria.list());
+        params.put(Constantes.CONTAINSKEY_SOLICITUDVACACIONESEMPLEADO, criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));

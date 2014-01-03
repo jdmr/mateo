@@ -2368,6 +2368,7 @@ public class Constantes {
     public static final String CONTAINSKEY_ALUMNODESCUENTOS = "alumnoDescuentos";
     public static final String CONTAINSKEY_CLAVEEMPLEADO = "clavesEmpleado";
     public static final String CONTAINSKEY_DIASFERIADOS = "diasFeriados";
+    public static final String CONTAINSKEY_SOLICITUDVACACIONESEMPLEADO = "solicitudEmpleadoVacaciones";
     public static final String CONTAINSKEY_VACACIONESEMPLEADO = "empleadoVacaciones";
     /**
      * Valores para el los addAttribute para las clases
@@ -2383,7 +2384,7 @@ public class Constantes {
     public static final String ADDATTRIBUTE_PERDED = "perded";
     public static final String ADDATTRIBUTE_CLAVEEMPLEADO = "claveEmpleado";
     public static final String ADDATTRIBUTE_DIAFERIADO = "diaFeriado";
-    public static final String ADDATTRIBUTE_VACACIONESEMPLEADO = "vacacionEmpleado";
+    public static final String ADDATTRIBUTE_SOLICITUDVACACIONESEMPLEADO = "solicitudVacacionEmpleado";
     /*
      * Valores para el los path's para las clases
      */
@@ -2960,8 +2961,8 @@ public class Constantes {
     public static final String PATH_RPT_CLP_CONCENTRADOVENTAS = "/colportaje/reportes/concentradoVentas";
     public static final String CONTAINSKEY_CONCENTRADOVENTAS = "concentradoVentas";
     /**
-     * @see mx.edu.um.mateo.rh.web.ClaveEMpleadoController;Valores para claves
-     * de empleadoRH
+     * @see
+     * mx.edu.um.mateo.rh.web.ClaveEMpleadoController;ValoresparaclavesdeempleadoRH
      *
      */
     public static final String CLAVEEMPLEADO_LIST = "claveEmpleadoList";
@@ -3032,8 +3033,8 @@ public class Constantes {
     public static final String RECIBO_COLPORTOR = "reciboColportor";
     public static final String RECIBO_COLPORTOR_LIST = "recibosColportor";
     /**
-     * @see mx.edu.um.mateo.rh.web.DiaFeriadoController;Valores para claves de
-     * calendario
+     * @see
+     * mx.edu.um.mateo.rh.web.DiaFeriadoController;Valoresparaclavesdecalendario
      *
      *
      */
@@ -3045,6 +3046,19 @@ public class Constantes {
     public static final String PATH_DIAFERIADO_CREA = "/rh/diaFeriado/crea";
     public static final String PATH_DIAFERIADO_ACTUALIZA = "/rh/diaFeriado/actualiza";
     public static final String PATH_DIAFERIADO_ELIMINA = "/rh/diaFeriado/elimina";
+    /**
+     * @see
+     * mx.edu.um.mateo.rh.web.VacacionesEmpleadoController;Valoresparavacaionesdeempleado
+     *
+     */
+    public static final String PATH_SOLICITUDVACACIONESEMPLEADO = "/rh/solicitudVacacionesEmpleado";
+    public static final String PATH_SOLICITUDVACACIONESEMPLEADO_LISTA = "/rh/solicitudVacacionesEmpleado/lista";
+    public static final String PATH_SOLICITUDVACACIONESEMPLEADO_VER = "/rh/solicitudVacacionesEmpleado/ver";
+    public static final String PATH_SOLICITUDVACACIONESEMPLEADO_NUEVO = "/rh/solicitudVacacionesEmpleado/nuevo";
+    public static final String PATH_SOLICITUDVACACIONESEMPLEADO_EDITA = "/rh/solicitudVacacionesEmpleado/edita";
+    public static final String PATH_SOLICITUDVACACIONESEMPLEADO_CREA = "/rh/solicitudVacacionesEmpleado/crea";
+    public static final String PATH_SOLICITUDVACACIONESEMPLEADO_ACTUALIZA = "/rh/solicitudVacacionesEmpleado/actualiza";
+    public static final String PATH_SOLICITUDVACACIONESEMPLEADO_ELIMINA = "/rh/solicitudVacacionesEmpleado/elimina";
     /**
      * @see mx.edu.um.mateo.rh.web.VacacionesEmpleadoController;Valores para
      * vacaiones de empleado

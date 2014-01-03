@@ -58,7 +58,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author develop
  */
 @Controller
-@RequestMapping(Constantes.PATH_VACACIONESEMPLEADO)
+@RequestMapping(Constantes.PATH_SOLICITUDVACACIONESEMPLEADO)
 public class SolicitudVacacionesEmpleadoController extends BaseController {
 
     @Autowired
@@ -98,7 +98,7 @@ public class SolicitudVacacionesEmpleadoController extends BaseController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = manager.lista(params);
             try {
-                generaReporte(tipo, (List<SolicitudVacacionesEmpleado>) params.get(Constantes.CONTAINSKEY_VACACIONESEMPLEADO), response);
+                generaReporte(tipo, (List<SolicitudVacacionesEmpleado>) params.get(Constantes.CONTAINSKEY_SOLICITUDVACACIONESEMPLEADO), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -113,7 +113,7 @@ public class SolicitudVacacionesEmpleadoController extends BaseController {
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<SolicitudVacacionesEmpleado>) params.get(Constantes.CONTAINSKEY_VACACIONESEMPLEADO), request);
+                enviaCorreo(correo, (List<SolicitudVacacionesEmpleado>) params.get(Constantes.CONTAINSKEY_SOLICITUDVACACIONESEMPLEADO), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("vacaciones.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
@@ -121,8 +121,8 @@ public class SolicitudVacacionesEmpleadoController extends BaseController {
             }
         }
         params = manager.lista(params);
-        log.debug("params{}", params.get(Constantes.CONTAINSKEY_VACACIONESEMPLEADO));
-        modelo.addAttribute(Constantes.CONTAINSKEY_VACACIONESEMPLEADO, params.get(Constantes.CONTAINSKEY_VACACIONESEMPLEADO));
+        log.debug("params{}", params.get(Constantes.CONTAINSKEY_SOLICITUDVACACIONESEMPLEADO));
+        modelo.addAttribute(Constantes.CONTAINSKEY_SOLICITUDVACACIONESEMPLEADO, params.get(Constantes.CONTAINSKEY_SOLICITUDVACACIONESEMPLEADO));
 
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
@@ -133,7 +133,7 @@ public class SolicitudVacacionesEmpleadoController extends BaseController {
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<SolicitudVacacionesEmpleado> vacacioness = (List<SolicitudVacacionesEmpleado>) params.get(Constantes.CONTAINSKEY_VACACIONESEMPLEADO);
+        List<SolicitudVacacionesEmpleado> vacacioness = (List<SolicitudVacacionesEmpleado>) params.get(Constantes.CONTAINSKEY_SOLICITUDVACACIONESEMPLEADO);
         Long primero = ((pagina - 1) * max) + 1;
         log.debug("primero {}", primero);
         log.debug("clave empleado size {}", vacacioness.size());
@@ -147,7 +147,7 @@ public class SolicitudVacacionesEmpleadoController extends BaseController {
         log.debug("Pagina{}", pagina);
         // termina paginado
 
-        return Constantes.PATH_VACACIONESEMPLEADO_LISTA;
+        return Constantes.PATH_SOLICITUDVACACIONESEMPLEADO_LISTA;
     }
 
     @RequestMapping("/ver/{id}")
@@ -155,17 +155,17 @@ public class SolicitudVacacionesEmpleadoController extends BaseController {
         log.debug("Mostrando dia feriado {}", id);
         SolicitudVacacionesEmpleado vacaciones = manager.obtiene(id);
 
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_VACACIONESEMPLEADO, vacaciones);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_SOLICITUDVACACIONESEMPLEADO, vacaciones);
 
-        return Constantes.PATH_VACACIONESEMPLEADO_VER;
+        return Constantes.PATH_SOLICITUDVACACIONESEMPLEADO_VER;
     }
 
     @RequestMapping("/nuevo")
     public String nueva(Model modelo) {
         log.debug("Nuevo dia feriado");
         SolicitudVacacionesEmpleado vacaciones = new SolicitudVacacionesEmpleado();
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_VACACIONESEMPLEADO, vacaciones);
-        return Constantes.PATH_VACACIONESEMPLEADO_NUEVO;
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_SOLICITUDVACACIONESEMPLEADO, vacaciones);
+        return Constantes.PATH_SOLICITUDVACACIONESEMPLEADO_NUEVO;
     }
 
     @Transactional
@@ -177,7 +177,7 @@ public class SolicitudVacacionesEmpleadoController extends BaseController {
         }
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
-            return Constantes.PATH_VACACIONESEMPLEADO_NUEVO;
+            return Constantes.PATH_SOLICITUDVACACIONESEMPLEADO_NUEVO;
         }
 
         try {
@@ -185,21 +185,21 @@ public class SolicitudVacacionesEmpleadoController extends BaseController {
             manager.graba(vacaciones, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear dia feriado", e);
-            return Constantes.PATH_VACACIONESEMPLEADO_NUEVO;
+            return Constantes.PATH_SOLICITUDVACACIONESEMPLEADO_NUEVO;
         }
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "vacaciones.graba.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{vacaciones.getEmpleado().getNombre()});
 
-        return "redirect:" + Constantes.PATH_VACACIONESEMPLEADO_LISTA + "/";
+        return "redirect:" + Constantes.PATH_SOLICITUDVACACIONESEMPLEADO_LISTA + "/";
     }
 
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Editar cuenta de nacionalidad {}", id);
         SolicitudVacacionesEmpleado vacaciones = manager.obtiene(id);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_VACACIONESEMPLEADO, vacaciones);
-        return Constantes.PATH_VACACIONESEMPLEADO_EDITA;
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_SOLICITUDVACACIONESEMPLEADO, vacaciones);
+        return Constantes.PATH_SOLICITUDVACACIONESEMPLEADO_EDITA;
     }
 
     @Transactional
@@ -214,11 +214,11 @@ public class SolicitudVacacionesEmpleadoController extends BaseController {
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{vacaciones.getEmpleado().getNombre()});
         } catch (Exception e) {
             log.error("No se pudo eliminar la clave con id" + id, e);
-            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_VACACIONESEMPLEADO, new String[]{"vacaciones.no.elimina.message"}, null, null));
-            return Constantes.PATH_VACACIONESEMPLEADO_VER;
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_SOLICITUDVACACIONESEMPLEADO, new String[]{"vacaciones.no.elimina.message"}, null, null));
+            return Constantes.PATH_SOLICITUDVACACIONESEMPLEADO_VER;
         }
 
-        return "redirect:" + Constantes.PATH_VACACIONESEMPLEADO_LISTA;
+        return "redirect:" + Constantes.PATH_SOLICITUDVACACIONESEMPLEADO_LISTA;
     }
 
     private void generaReporte(String tipo, List<SolicitudVacacionesEmpleado> vacacioness, HttpServletResponse response) throws JRException, IOException {
