@@ -5,20 +5,20 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="diaFeriado.edita.label" /></title>
+        <title><s:message code="jefe.edita.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="diaFeriado" />
+            <jsp:param name="menu" value="jefe" />
         </jsp:include>
 
         <div id="nuevo-nacionalidad" class="content scaffold-list" role="main">
-            <h1><s:message code="diaFeriado.edita.label" /></h1>
+            <h1><s:message code="jefe.edita.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/rh/diaFeriado'/>"><i class="icon-list icon-white"></i> <s:message code='diaFeriado.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/rh/jefe'/>"><i class="icon-list icon-white"></i> <s:message code='jefe.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="/rh/diaFeriado/graba" />
-            <form:form commandName="diaFeriado" action="${actualizaUrl}" method="post">
+            <c:url var="actualizaUrl" value="/rh/jefe/graba" />
+            <form:form commandName="jefe" action="${actualizaUrl}" method="post">
                 <form:hidden path="id" />
                 <form:hidden path="version" />
                 <form:errors path="*">
@@ -31,62 +31,52 @@
                 </form:errors>
 
                 <fieldset>
-                    <s:bind path="diaFeriado.nombre">
+                    <s:bind path="jefe.centroCosto">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="nombre">
-                                <s:message code="nombre.label" />
+                                <label for="centroCosto">
+                                <s:message code="centroCosto.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="nombre" maxlength="128" required="true" cssClass="span3" />
-                            <form:errors path="nombre" cssClass="alert alert-error" />
+                            <form:input id="nombreCentroCosto" path="centroCosto.nombre" maxlength="128" required="true" cssClass="span3" />
+                            <form:errors path="centroCosto" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="diaFeriado.fecha">
+                    <s:bind path="jefe.jefe">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="fecha">
-                                <s:message code="fecha.label" />
+                                <label for="jefe">
+                                <s:message code="jefe.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="fecha" maxlength="128" required="true" cssClass="span3" />
-                            <form:errors path="fecha" cssClass="alert alert-error" />
+                            <form:input id="nombreJefe" path="jefe.nombre" maxlength="128" required="true" cssClass="span3" />
+                            <form:errors path="jefe" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
 
-                    <s:bind path="diaFeriado.descripcion">
+                    <s:bind path="jefe.subjefe">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="descripcion">
-                                <s:message code="descripcion.label" />
+                                <label for="subjefe">
+                                <s:message code="subjefe.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="descripcion" maxlength="128" required="true" cssClass="span3" />
-                            <form:errors path="descripcion" cssClass="alert alert-error" />
+                            <form:input id="nombreJefe" path="subjefe.nombre" maxlength="128" required="true" cssClass="span3" />
+                            <form:errors path="subjefe" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="diaFeriado.descripcion">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="descripcion">
-                                <s:message code="descripcion.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:checkbox path="descripcion" value="true" required="true" cssClass="span3" />
-                            <form:errors path="descripcion" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+
 
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="actualizarBtn" class="btn btn-primary btn-large" id="actualizar" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='actualizar.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/rh/diaFeriado/ver/${diaFeriado.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <a class="btn btn-large" href="<s:url value='/rh/jefe/ver/${diaFeriado.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>
     <content>
         <script>
             $(document).ready(function() {
-                $('input#nombre').focus();
-                $("input#fecha").datepicker($.datepicker.regional['es']);
-                $("input#fecha").datepicker("option", "firstDay", 0);
+                $('input#centroCosto').focus();
+
             });
         </script>                    
     </content>

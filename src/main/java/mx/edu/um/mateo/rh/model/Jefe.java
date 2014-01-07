@@ -34,8 +34,11 @@ public class Jefe implements Serializable {
     private Long id;
     @Version
     private Integer version;
+    @ManyToOne
     private CentroCosto centroCosto;
+    @ManyToOne
     private Empleado jefe;
+    @ManyToOne
     private Empleado subjefe;
     @ManyToOne(fetch = FetchType.LAZY)
     private Usuario usuarioAlta;
