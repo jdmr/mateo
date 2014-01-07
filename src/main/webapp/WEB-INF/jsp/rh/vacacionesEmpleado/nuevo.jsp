@@ -19,7 +19,7 @@
         <div id="nuevo-nacionalidad" class="content scaffold-list" role="main">
             <h1><s:message code="vacacionesEmpleado.nuevo.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/rh/solicitudVacacionesEmpleado'/>"><i class="icon-list icon-white"></i> <s:message code='vacacionesEmpleado.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/rh/vacacionesEmpleado'/>"><i class="icon-list icon-white"></i> <s:message code='vacacionesEmpleado.lista.label' /></a>
             </p>
             <form:form commandName="vacacionEmpleado" action="graba" method="post">
                 <form:errors path="*">

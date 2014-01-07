@@ -28,9 +28,10 @@ public class VacacionesEmpleadoManagerImpl implements VacacionesEmpleadoManager 
     /**
      * Regresa una lista de vacacionesEmpleadoes.
      *
-     * @param vacacionesEmpleado
+     * @param params
      * @return
      */
+    @Override
     public Map<String, Object> lista(Map<String, Object> params) {
         return dao.lista(params);
     }
@@ -41,6 +42,7 @@ public class VacacionesEmpleadoManagerImpl implements VacacionesEmpleadoManager 
      * @param id
      * @return
      */
+    @Override
     public VacacionesEmpleado obtiene(final Long id) {
         return dao.obtiene(id);
     }
@@ -49,7 +51,9 @@ public class VacacionesEmpleadoManagerImpl implements VacacionesEmpleadoManager 
      * graba informacion sobre una vacacionesEmpleado
      *
      * @param vacacionesEmpleado the object to be saved
+     * @param usuario
      */
+    @Override
     public void graba(VacacionesEmpleado vacacionesEmpleado, Usuario usuario) {
         dao.graba(vacacionesEmpleado, usuario);
     }
@@ -58,8 +62,19 @@ public class VacacionesEmpleadoManagerImpl implements VacacionesEmpleadoManager 
      * Elimina las vacaciones
      *
      * @param id el id de vacacionesEmpleado
+     * @return
      */
+    @Override
     public String elimina(final Long id) {
         return dao.elimina(id);
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public Integer totalDias() {
+        return dao.totalDias();
     }
 }

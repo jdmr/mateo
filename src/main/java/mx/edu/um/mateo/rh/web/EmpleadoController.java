@@ -37,6 +37,7 @@ import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.rh.model.Empleado;
 import mx.edu.um.mateo.rh.model.NivelEstudios;
 import mx.edu.um.mateo.rh.service.EmpleadoManager;
+import mx.edu.um.mateo.rh.service.VacacionesEmpleadoManager;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,8 @@ public class EmpleadoController extends BaseController {
 
     @Autowired
     private EmpleadoManager empleadoManager;
-    
+    @Autowired
+    private VacacionesEmpleadoManager vacacionesManager;
 
     public EmpleadoController() {
         log.info("Se ha creado una nueva instancia de EmpleadoController");
@@ -127,12 +129,14 @@ public class EmpleadoController extends BaseController {
     @RequestMapping("/ver/{id}")
     public String ver(HttpServletRequest request, @PathVariable Long id, Model modelo) throws ObjectRetrievalFailureException {
         log.debug("Mostrando empleado {}", id);
+        int diasLibres = vacacionesManager.totalDias();
         Empleado empleado = empleadoManager.obtiene(id);
 
+        modelo.addAttribute("diasLibres", diasLibres);
         modelo.addAttribute(Constantes.EMPLEADO_KEY, empleado);
-         
+
         request.getSession().setAttribute(Constantes.EMPLEADO_KEY, empleado);
-        
+
         return Constantes.PATH_EMPLEADO_VER;
     }
 
@@ -213,7 +217,7 @@ public class EmpleadoController extends BaseController {
     @RequestMapping("/datos/{id}")
     public String datos(@PathVariable Long id, Model modelo) throws ObjectRetrievalFailureException {
         log.debug("Mostrando empleado {}", id);
-        
+
         Empleado empleado = empleadoManager.obtiene(id);
 
         modelo.addAttribute(Constantes.EMPLEADO_KEY, empleado);

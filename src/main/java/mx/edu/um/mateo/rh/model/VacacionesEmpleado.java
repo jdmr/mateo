@@ -26,6 +26,7 @@ public class VacacionesEmpleado {
     @Version
     private Integer version;
     private String descripcion;
+    private String signo;
     private Integer numDias;
     @ManyToOne
     private Empresa empresa;
@@ -83,10 +84,18 @@ public class VacacionesEmpleado {
         this.empleado = empleado;
     }
 
+    public String getSigno() {
+        return signo;
+    }
+
+    public void setSigno(String signo) {
+        this.signo = signo;
+    }
+
     @Override
     public String toString() {
-        return "VacacionesEmpleado{" + "id=" + id + ", version=" + version + ", descripcion=" + descripcion + ", numDias=" + numDias
-                + ", empresa=" + empresa + ", empleado=" + empleado + '}';
+        return "VacacionesEmpleado{" + "id=" + id + ", version=" + version + ", descripcion=" + descripcion + ", signo=" + signo
+                + ", numDias=" + numDias + ", empresa=" + empresa + ", empleado=" + empleado + '}';
     }
 
 }

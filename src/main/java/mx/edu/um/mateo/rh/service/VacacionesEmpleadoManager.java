@@ -44,4 +44,11 @@ public interface VacacionesEmpleadoManager {
      * @param id el id de vacacionesEmpleado
      */
     public String elimina(final Long id);
+
+    /**
+     * Obtiene el numero total de dias disponibles para el usuario.
+     *
+     * @return el numero total de dias disponibles
+     */
+    public Integer totalDias();
 }

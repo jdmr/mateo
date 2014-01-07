@@ -31,9 +31,9 @@
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="nombre.label" /></div>
-                    <div class="span11">${empleado.nivelEstudios}</div>
+                    <div class="span11">${empleado.nombre}</div>
                 </div>
-                
+
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="nombre.label" /></div>
                     <div class="span11">${empleado.nombre}</div>
@@ -77,59 +77,59 @@
                     <div class="span1"><s:message code="modalidad.label" /></div>
                     <div class="span11">${empleado.modalidad}</div>
                 </div>
-                 <div class="row-fluid" style="padding-bottom: 10px;">
+                <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="rfc.label" /></div>
                     <div class="span11">${empleado.rfc}</div>
                 </div>
-                 <div class="row-fluid" style="padding-bottom: 10px;">
+                <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="cuenta.label" /></div>
                     <div class="span11">${empleado.cuenta}</div>
                 </div>
-                 <div class="row-fluid" style="padding-bottom: 10px;">
+                <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="imms.label" /></div>
                     <div class="span11">${empleado.imms}</div>
                 </div>
-                 <div class="row-fluid" style="padding-bottom: 10px;">
+                <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="ife.label" /></div>
                     <div class="span11">${empleado.ife}</div>
                 </div>
-                 <div class="row-fluid" style="padding-bottom: 10px;">
+                <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="rango.label" /></div>
                     <div class="span11">${empleado.rango}</div>
                 </div>
-                 <div class="row-fluid" style="padding-bottom: 10px;">
+                <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="madre.label" /></div>
                     <div class="span11">${empleado.madre}</div>
                 </div>
-                 <div class="row-fluid" style="padding-bottom: 10px;">
+                <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="padre.label" /></div>
                     <div class="span11">${empleado.padre}</div>
                 </div>
-                 <div class="row-fluid" style="padding-bottom: 10px;">
+                <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="estadoCivil.label" /></div>
                     <div class="span11">${empleado.estadoCivil}</div>
                 </div>
-                 <div class="row-fluid" style="padding-bottom: 10px;">
+                <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="conyuge.label" /></div>
                     <div class="span11">${empleado.conyuge}</div>
                 </div>
-                 <div class="row-fluid" style="padding-bottom: 10px;">
+                <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="iglesia.label" /></div>
                     <div class="span11">${empleado.iglesia}</div>
                 </div>
-                 <div class="row-fluid" style="padding-bottom: 10px;">
+                <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="responsabilidad.label" /></div>
                     <div class="span11">${empleado.responsabilidad}</div>
                 </div>
-                   <div class="row-fluid" style="padding-bottom: 10px;">
+                <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="finadoPadre.label" /></div>
                     <div class="span11"><form:checkbox path="finadoPadre" disabled="true" /></div>
                 </div>
-                   <div class="row-fluid" style="padding-bottom: 10px;">
+                <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="finadoMadre.label" /></div>
                     <div class="span11"><form:checkbox path="finadoMadre" disabled="true" /></div>
                 </div>
-                 <div class="row-fluid" style="padding-bottom: 10px;">
+                <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="adventista.label" /></div>
                     <div class="span11"><form:checkbox path="adventista" disabled="true" /></div>
                 </div>
@@ -144,6 +144,10 @@
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="experienciaFueraUm.label" /></div>
                     <div class="span11">${empleado.experienciaFueraUm}</div>
+                </div>
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="span1"><s:message code="dias.label" /></div>
+                    <div class="span11">${diasLibres}</div>
                 </div>
                 <p class="well">
                     <a href="<c:url value='/rh/empleado/edita/${empleado.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>

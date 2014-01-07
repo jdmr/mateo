@@ -6,6 +6,7 @@
 package mx.edu.um.mateo.rh.dao.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -13,6 +14,7 @@ import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.rh.dao.VacacionesEmpleadoDao;
 import mx.edu.um.mateo.rh.model.VacacionesEmpleado;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
@@ -133,5 +135,26 @@ public class VacacionesEmpleadoDaoHibernate extends BaseDao implements Vacacione
         currentSession().flush();
         String nombre = vacacionesEmpleado.getDescripcion();
         return nombre;
+    }
+
+    @Override
+    public Integer totalDias() {
+        int diasDisponibles = 0;
+        Query query = currentSession().createQuery("select d from VacacionesEmpleado d");
+
+        List<VacacionesEmpleado> vacacionesEmpleados = query.list();
+
+        for (VacacionesEmpleado x : vacacionesEmpleados) {
+            int dias = x.getNumDias();
+            log.debug("vacaciones{}", x);
+            if (x.getSigno().equals("+")) {
+                diasDisponibles += dias;
+                log.debug("dias+{}", diasDisponibles);
+            } else {
+                diasDisponibles -= dias;
+                log.debug("dias-{}", diasDisponibles);
+            }
+        }
+        return diasDisponibles;
     }
 }

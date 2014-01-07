@@ -44,4 +44,11 @@ public interface VacacionesEmpleadoDao {
      * @param id el id de vacacionesEmpleado
      */
     public String elimina(final Long id);
+
+    /**
+     * Obtiene el numero total de los días disponibles que tiene el usuario
+     *
+     * @return el numero de Días discponibles
+     */
+    public Integer totalDias();
 }

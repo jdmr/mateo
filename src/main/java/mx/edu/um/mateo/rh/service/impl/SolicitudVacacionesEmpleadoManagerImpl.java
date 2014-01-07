@@ -79,15 +79,11 @@ public class SolicitudVacacionesEmpleadoManagerImpl extends BaseDao implements S
             String dia = diaSemana(numDia);
             if (numDia == 1 || numDia == 7 || feriadoDao.esFeriado(prueba)) {
                 sabDom++;
-                log.debug("feriado++");
             }
-            log.debug("diaSemana{}", cal.get(Calendar.DAY_OF_WEEK));
-            log.debug("fecha{}", prueba);
-            log.debug("antes{}", contador);
             contador++;
-            log.debug("despues{}", contador);
             c.setTime(prueba);
         } while (!fechaFinal.equals(prueba));
+        int diasT = contador - sabDom;
         dao.graba(vacaciones, usuario);
     }
 
