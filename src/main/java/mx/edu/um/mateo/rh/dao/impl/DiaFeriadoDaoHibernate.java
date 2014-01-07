@@ -5,6 +5,7 @@
  */
 package mx.edu.um.mateo.rh.dao.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
@@ -13,6 +14,7 @@ import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.rh.dao.DiaFeriadoDao;
 import mx.edu.um.mateo.rh.model.DiaFeriado;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
@@ -101,6 +103,23 @@ public class DiaFeriadoDaoHibernate extends BaseDao implements DiaFeriadoDao {
 
         }
         return diaFeriado;
+    }
+
+    /**
+     * @see mx.edu.um.mateo.rh.dao.DiaFeriadoDao#esFeriado(java.util.Date)
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public Boolean esFeriado(Date fecha) {
+        Boolean feriado = true;
+        Query query = currentSession().createQuery(
+                "select f from DiaFeriado f where f.fecha = :fecha");
+        query.setDate("fecha", fecha);
+        DiaFeriado dia = (DiaFeriado) query.uniqueResult();
+        if (dia == null) {
+            feriado = false;
+        }
+        return feriado;
     }
 
     /**

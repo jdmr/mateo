@@ -5,6 +5,7 @@
  */
 package mx.edu.um.mateo.rh.service.impl;
 
+import java.util.Date;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.rh.dao.DiaFeriadoDao;
@@ -53,6 +54,10 @@ public class DiaFeriadoManagerImpl implements DiaFeriadoManager {
      */
     public void graba(DiaFeriado diaFeriado, Usuario usuario) {
         dao.graba(diaFeriado, usuario);
+    }
+
+    public Boolean esFeriado(Date fecha) {
+        return dao.esFeriado(fecha);
     }
 
     /**

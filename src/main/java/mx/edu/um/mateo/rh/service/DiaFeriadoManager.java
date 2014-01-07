@@ -5,6 +5,7 @@
  */
 package mx.edu.um.mateo.rh.service;
 
+import java.util.Date;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.rh.model.DiaFeriado;
@@ -38,6 +39,8 @@ public interface DiaFeriadoManager {
      * @param usuario
      */
     public void graba(DiaFeriado diaFeriado, Usuario usuario);
+
+    public Boolean esFeriado(Date fecha);
 
     /**
      * Cambia el status de la diaFeriado a I

@@ -13,7 +13,7 @@
         <br/>
         <br/>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="vacaciones" />
+            <jsp:param name="menu" value="solicitudVacacionesEmpleado" />
         </jsp:include>
 
         <div id="nuevo-nacionalidad" class="content scaffold-list" role="main">

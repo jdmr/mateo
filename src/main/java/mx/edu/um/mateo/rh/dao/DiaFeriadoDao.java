@@ -5,6 +5,7 @@
  */
 package mx.edu.um.mateo.rh.dao;
 
+import java.util.Date;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.rh.model.DiaFeriado;
@@ -37,6 +38,14 @@ public interface DiaFeriadoDao {
      * @param diaFeriado the object to be saved
      */
     public void graba(DiaFeriado diaFeriado, Usuario usuario);
+
+    /**
+     * Verifica si una fecha dada esta en el catalogo de días feriados
+     *
+     * @param fecha
+     * @return Si esta en el catalogo regresa true, si no false;
+     */
+    public Boolean esFeriado(Date fecha);
 
     /**
      * Elimina el dia feriado

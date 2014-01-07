@@ -8,25 +8,21 @@
         <title><s:message code="vacacionesEmpleado.lista.label" /></title>
     </head>
     <body>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="solicitudVacacionesEmpleado" />
+            <jsp:param name="menu" value="vacacionesEmpleado" />
         </jsp:include>
 
         <h1><s:message code="vacacionesEmpleado.lista.label" /></h1>
         <hr/>
 
-        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/rh/solicitudVacacionesEmpleado' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/rh/vacacionesEmpleado' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/rh/solicitudVacacionesEmpleado/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='vacacionesEmpleado.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/rh/vacacionesEmpleado/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='vacacionesEmpleado.nuevo.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
@@ -36,7 +32,7 @@
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
-            <c:if test="${solicitudEmpleadoVacacion != null}">
+            <c:if test="${vacacionEmpleado != null}">
                 <s:bind path="vacacionEmpleado.*">
                     <c:if test="${not empty status.errorMessages}">
                         <div class="alert alert-block alert-error fade in" role="status">
@@ -53,31 +49,22 @@
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="fechaInicio" />
+                            <jsp:param name="columna" value="descripcion" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="fechaFinal" />
+                            <jsp:param name="columna" value="dias" />
                         </jsp:include>
 
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="observaciones" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="primaVacacional" />
-                        </jsp:include>
 
 
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${solicitudEmpleadoVacaciones}" var="solicitudEmpleadoVacacion" varStatus="status">
+                    <c:forEach items="${empleadoVacaciones}" var="vacacionEmpleado" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/rh/solicitudVacacionesEmpleado/ver/${solicitudEmpleadoVacacion.id}' />">${solicitudEmpleadoVacacion.fechaInicio}</a></td>
-                            <td>${solicitudEmpleadoVacacion.fechaFinal}</td>
-                            <td>${solicitudEmpleadoVacacion.observaciones}</td>
-                            <td><input type="checkbox" value="" disabled="true" <c:if test="${solicitudEmpleadoVacacion.primaVacacional}">checked="checked"</c:if> />
-                                </td>
-                            </tr>
+                            <td><a href="<c:url value='/rh/vacacionesEmpleado/ver/${vacacionEmpleado.id}' />">${vacacionEmpleado.descripcion}</a></td>
+                            <td>${vacacionEmpleado.numDias}</td>
+                        </tr>
                     </c:forEach>
                 </tbody>
             </table>

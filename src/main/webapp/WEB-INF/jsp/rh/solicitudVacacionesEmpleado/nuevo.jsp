@@ -13,7 +13,7 @@
         <br/>
         <br/>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="diaFeriado" />
+            <jsp:param name="menu" value="solicitudVacacionesEmpleado" />
         </jsp:include>
 
         <div id="nuevo-nacionalidad" class="content scaffold-list" role="main">
@@ -21,7 +21,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/rh/vacacionesEmpleado'/>"><i class="icon-list icon-white"></i> <s:message code='vacacionesEmpleado.lista.label' /></a>
             </p>
-            <form:form commandName="vacacionEmpleado" action="graba" method="post">
+            <form:form commandName="solicitudVacacionEmpleado" action="graba" method="post">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -32,7 +32,7 @@
                 </form:errors>
 
                 <fieldset>
-                    <s:bind path="vacacionEmpleado.fechaInicio">
+                    <s:bind path="solicitudVacacionEmpleado.fechaInicio">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="fechaInicio">
                                 <s:message code="fechaInicio.label" />
@@ -42,7 +42,7 @@
                             <form:errors path="fechaInicio" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="vacacionEmpleado.fechaFinal">
+                    <s:bind path="solicitudVacacionEmpleado.fechaFinal">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="fechaFinal">
                                 <s:message code="fechaFinal.label" />
@@ -53,7 +53,7 @@
                         </div>
                     </s:bind>
 
-                    <s:bind path="vacacionEmpleado.contactoTelefono">
+                    <s:bind path="solicitudVacacionEmpleado.contactoTelefono">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="contactoTelefono">
                                 <s:message code="telefonoCelular.label" />
@@ -63,27 +63,27 @@
                             <form:errors path="contactoTelefono" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="vacacionEmpleado.contactoCorreo">
+                    <s:bind path="solicitudVacacionEmpleado.contactoCorreo">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="contactoCorreo">
-                                <s:message code="observaciones.label" />
+                                <s:message code="correo.label" />
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="contactoCorreo" maxlength="128" required="true" cssClass="span3" />
                             <form:errors path="contactoCorreo" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="vacacionEmpleado.observaciones">
+                    <s:bind path="solicitudVacacionEmpleado.observaciones">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="observaciones">
                                 <s:message code="observaciones.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="observaciones" maxlength="128" required="true" cssClass="span3" />
+                            <form:textarea path="observaciones" maxlength="128" required="true" cssClass="span3" />
                             <form:errors path="observaciones" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="vacacionEmpleado.primaVacacional">
+                    <s:bind path="solicitudVacacionEmpleado.primaVacacional">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="primaVacacional">
                                 <s:message code="primaVacacional.label" />
@@ -93,7 +93,7 @@
                             <form:errors path="primaVacacional" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="vacacionEmpleado.nacional">
+                    <s:bind path="solicitudVacacionEmpleado.nacional">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="nacional">
                                 <s:message code="viajeNacional.label" />

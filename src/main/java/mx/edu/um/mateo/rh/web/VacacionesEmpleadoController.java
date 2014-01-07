@@ -9,6 +9,7 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -181,6 +182,10 @@ public class VacacionesEmpleadoController extends BaseController {
         }
 
         try {
+            Enumeration<String> r = request.getSession().getAttributeNames();
+            while (r.hasMoreElements()) {
+                log.debug("nombre{}", r.nextElement());
+            }
             Usuario usuario = ambiente.obtieneUsuario();
             manager.graba(vacacionesEmpleado, usuario);
         } catch (ConstraintViolationException e) {
@@ -199,7 +204,7 @@ public class VacacionesEmpleadoController extends BaseController {
         log.debug("Editar cuenta de nacionalidad {}", id);
         VacacionesEmpleado vacacionesEmpleado = manager.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_VACACIONESEMPLEADO, vacacionesEmpleado);
-        return Constantes.PATH_VACACIONESEMPLEADO_LISTA;
+        return Constantes.PATH_VACACIONESEMPLEADO_EDITA;
     }
 
     @Transactional

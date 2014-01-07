@@ -189,7 +189,7 @@ public class SolicitudVacacionesEmpleadoController extends BaseController {
         }
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "vacaciones.graba.message");
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{vacaciones.getEmpleado().getNombre()});
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{vacaciones.getObservaciones()});
 
         return "redirect:" + Constantes.PATH_SOLICITUDVACACIONESEMPLEADO_LISTA + "/";
     }
