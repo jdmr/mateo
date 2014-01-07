@@ -2370,6 +2370,7 @@ public class Constantes {
     public static final String CONTAINSKEY_DIASFERIADOS = "diasFeriados";
     public static final String CONTAINSKEY_SOLICITUDVACACIONESEMPLEADO = "solicitudEmpleadoVacaciones";
     public static final String CONTAINSKEY_VACACIONESEMPLEADO = "empleadoVacaciones";
+    public static final String CONTAINSKEY_JEFES = "jefes";
     /**
      * Valores para el los addAttribute para las clases
      */
