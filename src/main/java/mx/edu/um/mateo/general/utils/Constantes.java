@@ -2387,6 +2387,7 @@ public class Constantes {
     public static final String ADDATTRIBUTE_DIAFERIADO = "diaFeriado";
     public static final String ADDATTRIBUTE_SOLICITUDVACACIONESEMPLEADO = "solicitudVacacionEmpleado";
     public static final String ADDATTRIBUTE_VACACIONESEMPLEADO = "vacacionEmpleado";
+    public static final String ADDATTRIBUTE_JEFE = "jefe";
     /*
      * Valores para el los path's para las clases
      */
@@ -3074,4 +3075,17 @@ public class Constantes {
     public static final String PATH_VACACIONESEMPLEADO_CREA = "/rh/vacacionesEmpleado/crea";
     public static final String PATH_VACACIONESEMPLEADO_ACTUALIZA = "/rh/vacacionesEmpleado/actualiza";
     public static final String PATH_VACACIONESEMPLEADO_ELIMINA = "/rh/vacacionesEmpleado/elimina";
+    /**
+     * @see mx.edu.um.mateo.rh.web.JefeController;Valores para vacaiones de
+     * empleado
+     *
+     */
+    public static final String PATH_JEFE = "/rh/jefe";
+    public static final String PATH_JEFE_LISTA = "/rh/jefe/lista";
+    public static final String PATH_JEFE_VER = "/rh/jefe/ver";
+    public static final String PATH_JEFE_NUEVO = "/rh/jefe/nuevo";
+    public static final String PATH_JEFE_EDITA = "/rh/jefe/edita";
+    public static final String PATH_JEFE_CREA = "/rh/jefe/crea";
+    public static final String PATH_JEFE_ACTUALIZA = "/rh/jefe/actualiza";
+    public static final String PATH_JEFE_ELIMINA = "/rh/jefe/elimina";
 }
