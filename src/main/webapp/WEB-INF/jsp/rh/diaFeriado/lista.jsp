@@ -5,24 +5,24 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="jefe.lista.label" /></title>
+        <title><s:message code="diaFeriado.lista.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="jefe" />
+            <jsp:param name="menu" value="diaFeriado" />
         </jsp:include>
 
-        <h1><s:message code="jefe.lista.label" /></h1>
+        <h1><s:message code="diaFeriado.lista.label" /></h1>
         <hr/>
 
-        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/rh/jefe' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/rh/diaFeriado' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/rh/jefe/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='diaFeriado.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/rh/diaFeriado/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='diaFeriado.nuevo.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
@@ -32,8 +32,8 @@
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
-            <c:if test="${jefe != null}">
-                <s:bind path="jefe.*">
+            <c:if test="${diaFeriado != null}">
+                <s:bind path="diaFeriado.*">
                     <c:if test="${not empty status.errorMessages}">
                         <div class="alert alert-block alert-error fade in" role="status">
                             <a class="close" data-dismiss="alert">×</a>
@@ -49,26 +49,30 @@
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="centroCosto" />
+                            <jsp:param name="columna" value="nombre" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="jefe" />
+                            <jsp:param name="columna" value="fecha" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="subjefe" />
+                            <jsp:param name="columna" value="descripcion" />
                         </jsp:include>
-
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="dado" />
+                        </jsp:include>
 
 
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${jefes}" var="jefe" varStatus="status">
+                    <c:forEach items="${diasFeriados}" var="diaFeriado" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/rh/jefe/ver/${jefe.id}' />">${jefe.centroCosto}</a></td>
-                            <td>${jefe.jefe}</td>
-                            <td>${jefe.subjefe}</td>
-                        </tr>
+                            <td><a href="<c:url value='/rh/diaFeriado/ver/${diaFeriado.id}' />">${diaFeriado.nombre}</a></td>
+                            <td>${diaFeriado.fecha}</td>
+                            <td>${diaFeriado.descripcion}</td>
+                            <td><input type="checkbox" value="" disabled="true" <c:if test="${diaFeriado.dado}">checked="checked"</c:if> />
+                                </td>
+                            </tr>
                     </c:forEach>
                 </tbody>
             </table>

@@ -20,6 +20,7 @@
         <li<c:if test="${param.menu eq 'claveEmpleado'}"> class="active"</c:if>><a href="<s:url value='/rh/claveEmpleado'/>" ><s:message code="claveEmpleado.label" /></a></li>
         <li<c:if test="${param.menu eq 'vacacionesEmpleado'}"> class="active"</c:if>><a href="<s:url value='/rh/vacacionesEmpleado'/>" ><s:message code="vacaciones.label" /></a></li>
         <li<c:if test="${param.menu eq 'solicitudVacacionesEmpleado'}"> class="active"</c:if>><a href="<s:url value='/rh/solicitudVacacionesEmpleado'/>" ><s:message code="solicitudVacaciones.label" /></a></li>
+        <li<c:if test="${param.menu eq 'jefe'}"> class="active"</c:if>><a href="<s:url value='/rh/jefe'/>" ><s:message code="jefe.label" /></a></li>
     </ul>
 </nav>
 

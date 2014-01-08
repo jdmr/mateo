@@ -18,10 +18,14 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import mx.edu.um.mateo.contabilidad.dao.CentroCostoDao;
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.web.BaseController;
+import mx.edu.um.mateo.rh.model.Empleado;
 import mx.edu.um.mateo.rh.model.Jefe;
+import mx.edu.um.mateo.rh.service.EmpleadoManager;
 import mx.edu.um.mateo.rh.service.JefeManager;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
@@ -59,10 +63,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping(Constantes.PATH_JEFE)
-public class JefeController extends BaseController {
+public class JefeRHController extends BaseController {
 
     @Autowired
     private JefeManager manager;
+    @Autowired
+    private EmpleadoManager empleadoManager;
+    @Autowired
+    private CentroCostoDao cCostoDao;
 
     @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -98,7 +106,7 @@ public class JefeController extends BaseController {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
             params = manager.lista(params);
             try {
-                generaReporte(tipo, (List<Jefe>) params.get(Constantes.CONTAINSKEY_DIASFERIADOS), response);
+                generaReporte(tipo, (List<Jefe>) params.get(Constantes.CONTAINSKEY_JEFES), response);
                 return null;
             } catch (JRException | IOException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -113,7 +121,7 @@ public class JefeController extends BaseController {
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<Jefe>) params.get(Constantes.CONTAINSKEY_DIASFERIADOS), request);
+                enviaCorreo(correo, (List<Jefe>) params.get(Constantes.CONTAINSKEY_JEFES), request);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("jefe.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (JRException | MessagingException e) {
@@ -121,8 +129,8 @@ public class JefeController extends BaseController {
             }
         }
         params = manager.lista(params);
-        log.debug("params{}", params.get(Constantes.CONTAINSKEY_DIASFERIADOS));
-        modelo.addAttribute(Constantes.CONTAINSKEY_DIASFERIADOS, params.get(Constantes.CONTAINSKEY_DIASFERIADOS));
+        log.debug("params{}", params.get(Constantes.CONTAINSKEY_JEFES));
+        modelo.addAttribute(Constantes.CONTAINSKEY_JEFES, params.get(Constantes.CONTAINSKEY_JEFES));
 
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
@@ -133,7 +141,7 @@ public class JefeController extends BaseController {
         do {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
-        List<Jefe> jefes = (List<Jefe>) params.get(Constantes.CONTAINSKEY_DIASFERIADOS);
+        List<Jefe> jefes = (List<Jefe>) params.get(Constantes.CONTAINSKEY_JEFES);
         Long primero = ((pagina - 1) * max) + 1;
         log.debug("primero {}", primero);
         log.debug("clave empleado size {}", jefes.size());
@@ -179,9 +187,13 @@ public class JefeController extends BaseController {
             log.debug("Hubo algun error en la forma, regresando");
             return Constantes.PATH_JEFE_NUEVO;
         }
-
+        Usuario usuario = ambiente.obtieneUsuario();
+        CentroCosto cc = cCostoDao.obtiene(request.getParameter("centroCosto.nombre"), usuario);
+        Empleado empleado = empleadoManager.getEmpleado(jefe.getJefe());
+        jefe.setCentroCosto(cc);
+        jefe.setJefe(empleado);
+        jefe.setSubjefe(empleado);
         try {
-            Usuario usuario = ambiente.obtieneUsuario();
             manager.graba(jefe, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear dia feriado", e);
