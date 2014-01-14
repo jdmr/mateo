@@ -71,4 +71,16 @@ public class ClaveEmpleadoManagerImpl implements ClaveEmpleadoManager {
     public String elimina(final Long id) {
         return dao.elimina(id);
     }
+
+    /**
+     * Obtiene la claveActiva de un empleado a travez del id del empleado y el
+     * estatus de la clave
+     *
+     * @param idEmpleado
+     * @return
+     */
+    @Override
+    public ClaveEmpleado obtieneClaveActiva(Long idEmpleado) {
+        return dao.obtieneClaveActiva(idEmpleado);
+    }
 }

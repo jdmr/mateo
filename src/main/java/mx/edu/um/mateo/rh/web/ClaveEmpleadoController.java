@@ -9,6 +9,7 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.rh.model.ClaveEmpleado;
+import mx.edu.um.mateo.rh.model.Empleado;
 import mx.edu.um.mateo.rh.model.Nacionalidad;
 import mx.edu.um.mateo.rh.service.ClaveEmpleadoManager;
 import net.sf.jasperreports.engine.JRException;
@@ -180,9 +182,12 @@ public class ClaveEmpleadoController extends BaseController {
             log.debug("Hubo algun error en la forma, regresando");
             return Constantes.PATH_CLAVEEMPLEADO_NUEVO;
         }
-
+        Usuario usuario = ambiente.obtieneUsuario();
+        Empleado empleado = (Empleado) request.getSession().getAttribute(Constantes.EMPLEADO_KEY);
+        claveEmpleado.setEmpleado(empleado);
+        claveEmpleado.setFechaAlta(new Date());
+        claveEmpleado.setUsuarioAlta(usuario);
         try {
-            Usuario usuario = ambiente.obtieneUsuario();
             manager.graba(claveEmpleado, usuario);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear nacionalidad", e);

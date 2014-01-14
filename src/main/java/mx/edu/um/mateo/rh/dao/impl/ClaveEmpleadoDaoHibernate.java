@@ -13,6 +13,7 @@ import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.rh.dao.ClaveEmpleadoDao;
 import mx.edu.um.mateo.rh.model.ClaveEmpleado;
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
@@ -101,6 +102,21 @@ public class ClaveEmpleadoDaoHibernate extends BaseDao implements ClaveEmpleadoD
 
         }
         return claveEmpleado;
+    }
+
+    /**
+     * @see
+     * mx.edu.um.mateo.rh.dao.ClaveEmpleadoDao#obtieneClaveActiva(java.lang.Long)
+     */
+    @Override
+    public ClaveEmpleado obtieneClaveActiva(Long id) {
+        log.debug("Buscando clave activa de usuario por id{}", id);
+        Query query = currentSession().createQuery(
+                "select c from ClaveEmpleado c where c.empleado.id = :id AND c.status=:status");
+        query.setLong("id", id);
+        query.setString("status", "A");
+        ClaveEmpleado clave = (ClaveEmpleado) query.uniqueResult();
+        return clave;
     }
 
     /**

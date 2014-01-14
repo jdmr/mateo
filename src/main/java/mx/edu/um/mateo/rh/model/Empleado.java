@@ -120,6 +120,7 @@ public class Empleado extends Usuario {
     private List<ClaveEmpleado> claves;
     @OneToMany
     private List<SolicitudVacacionesEmpleado> solicitudVacaciones;
+    private String claveActual;
 
     public Empleado() {
     }
@@ -439,6 +440,8 @@ public class Empleado extends Usuario {
         this.solicitudVacaciones = solicitudVacaciones;
     }
 
+  
+
     @Override
     public String toString() {
         return "Empleado{" + "clave=" + clave + ", genero=" + genero + ", direccion=" + direccion + ", status=" + status
@@ -450,6 +453,22 @@ public class Empleado extends Usuario {
                 + ", finadoPadre=" + finadoPadre + ", finadoMadre=" + finadoMadre + ", iglesia=" + iglesia
                 + ", responsabilidad=" + responsabilidad + ", tipoEmpleado=" + tipoEmpleado + ", claves=" + claves
                 + ", solicitudVacaciones=" + solicitudVacaciones + '}';
+    }
+
+    public List<SolicitudVacacionesEmpleado> getSolicitudVacaciones() {
+        return solicitudVacaciones;
+    }
+
+    public void setSolicitudVacaciones(List<SolicitudVacacionesEmpleado> solicitudVacaciones) {
+        this.solicitudVacaciones = solicitudVacaciones;
+    }
+
+    public String getClaveActual() {
+        return claveActual;
+    }
+
+    public void setClaveActual(String claveActual) {
+        this.claveActual = claveActual;
     }
 
 }

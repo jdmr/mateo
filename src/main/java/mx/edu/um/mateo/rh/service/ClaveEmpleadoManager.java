@@ -44,4 +44,13 @@ public interface ClaveEmpleadoManager {
      * @param id el id de claveEmpleado
      */
     public String elimina(final Long id);
+
+    /**
+     * Obtiene la claveActiva de un empleado a travez del id del empleado y el
+     * estatus de la clave
+     *
+     * @param idEmpleado
+     * @return
+     */
+    public ClaveEmpleado obtieneClaveActiva(Long idEmpleado);
 }

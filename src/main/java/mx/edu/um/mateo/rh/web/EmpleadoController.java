@@ -34,8 +34,10 @@ import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
+import mx.edu.um.mateo.rh.model.ClaveEmpleado;
 import mx.edu.um.mateo.rh.model.Empleado;
 import mx.edu.um.mateo.rh.model.NivelEstudios;
+import mx.edu.um.mateo.rh.service.ClaveEmpleadoManager;
 import mx.edu.um.mateo.rh.service.EmpleadoManager;
 import mx.edu.um.mateo.rh.service.VacacionesEmpleadoManager;
 import org.apache.commons.lang.StringUtils;
@@ -65,6 +67,8 @@ public class EmpleadoController extends BaseController {
     private EmpleadoManager empleadoManager;
     @Autowired
     private VacacionesEmpleadoManager vacacionesManager;
+    @Autowired
+    private ClaveEmpleadoManager claveManager;
 
     public EmpleadoController() {
         log.info("Se ha creado una nueva instancia de EmpleadoController");
@@ -131,6 +135,8 @@ public class EmpleadoController extends BaseController {
         log.debug("Mostrando empleado {}", id);
         int diasLibres = vacacionesManager.totalDias();
         Empleado empleado = empleadoManager.obtiene(id);
+        ClaveEmpleado clave = claveManager.obtieneClaveActiva(id);
+        empleado.setClaveActual(clave.getClave());
 
         modelo.addAttribute("diasLibres", diasLibres);
         modelo.addAttribute(Constantes.EMPLEADO_KEY, empleado);

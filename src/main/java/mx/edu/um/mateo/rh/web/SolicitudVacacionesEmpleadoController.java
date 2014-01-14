@@ -9,6 +9,7 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.web.BaseController;
+import mx.edu.um.mateo.rh.model.Empleado;
 import mx.edu.um.mateo.rh.model.SolicitudVacacionesEmpleado;
 import mx.edu.um.mateo.rh.service.SolicitudVacacionesEmpleadoManager;
 import net.sf.jasperreports.engine.JRException;
@@ -179,10 +181,18 @@ public class SolicitudVacacionesEmpleadoController extends BaseController {
             log.debug("Hubo algun error en la forma, regresando");
             return Constantes.PATH_SOLICITUDVACACIONESEMPLEADO_NUEVO;
         }
-
+        Usuario usuario = ambiente.obtieneUsuario();
+        log.debug("obtuvo usuario");
+        Empleado empleado = (Empleado) request.getSession().getAttribute(Constantes.EMPLEADO_KEY);
+        log.debug("obtuvo empleado");
+        vacaciones.setEmpleado(empleado);
+        vacaciones.setFechaAlta(new Date());
+        vacaciones.setUsuarioAlta(usuario);
+        log.debug("paso llenar datos");
         try {
-            Usuario usuario = ambiente.obtieneUsuario();
+            log.debug("paso try");
             manager.graba(vacaciones, usuario);
+            log.debug("paso grabar");
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear dia feriado", e);
             return Constantes.PATH_SOLICITUDVACACIONESEMPLEADO_NUEVO;
