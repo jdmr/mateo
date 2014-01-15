@@ -45,7 +45,7 @@
                                 <span class="required-indicator">*</span>
                             </label>
                             <form:input path="correo" maxlength="100" required="true" />
-                            <form:errors path="correoa" cssClass="alert alert-error" />
+                            <form:errors path="correo" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                     <s:bind path="empleado.nombre">
@@ -78,14 +78,14 @@
                             <form:errors path="apMaterno" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="empleado.clave">
+                    <s:bind path="empleado.tipoEmpleado">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="clave">
-                                <s:message code="clave.label" />
+                                <label for="tipoEmpleado">
+                                <s:message code="nombre.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="clave" maxlength="7" required="true" />
-                            <form:errors path="clave" cssClass="alert alert-error" />
+                            <form:select id="tipoEmpleadoId" path="tipoEmpleado.id" items="${tipoEmpleadoList}" itemLabel="prefijo" itemValue="id" />
+                            <form:errors path="tipoEmpleado" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                     <s:bind path="empleado.genero">
@@ -330,11 +330,11 @@
         <script>
             $(document).ready(function() {
                 $('input#nombre').focus();
-                 $("input#fechaNac").datepicker($.datepicker.regional['es']);
+                $("input#fechaNac").datepicker($.datepicker.regional['es']);
                 $("input#fechaNac").datepicker("option", "firstDay", 0);
-                 $("input#fechaAlta").datepicker($.datepicker.regional['es']);
+                $("input#fechaAlta").datepicker($.datepicker.regional['es']);
                 $("input#fechaAlta").datepicker("option", "firstDay", 0);
-                 $("input#fechaMatrimonio").datepicker($.datepicker.regional['es']);
+                $("input#fechaMatrimonio").datepicker($.datepicker.regional['es']);
                 $("input#fechaMatrimonio").datepicker("option", "firstDay", 0);
             });
         </script>                    

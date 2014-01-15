@@ -37,12 +37,15 @@ import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.rh.model.ClaveEmpleado;
 import mx.edu.um.mateo.rh.model.Empleado;
 import mx.edu.um.mateo.rh.model.NivelEstudios;
+import mx.edu.um.mateo.rh.model.TipoEmpleado;
 import mx.edu.um.mateo.rh.service.ClaveEmpleadoManager;
 import mx.edu.um.mateo.rh.service.EmpleadoManager;
+import mx.edu.um.mateo.rh.service.TipoEmpleadoManager;
 import mx.edu.um.mateo.rh.service.VacacionesEmpleadoManager;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.keygen.KeyGenerators;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -69,6 +72,8 @@ public class EmpleadoController extends BaseController {
     private VacacionesEmpleadoManager vacacionesManager;
     @Autowired
     private ClaveEmpleadoManager claveManager;
+    @Autowired
+    private TipoEmpleadoManager tipoEmpleadoManager;
 
     public EmpleadoController() {
         log.info("Se ha creado una nueva instancia de EmpleadoController");
@@ -149,6 +154,9 @@ public class EmpleadoController extends BaseController {
     @RequestMapping("/nuevo")
     public String nuevo(Model modelo) {
         log.debug("Nuevo empleado");
+        Map<String, Object> params = new HashMap<>();
+        params = tipoEmpleadoManager.lista(params);
+        modelo.addAttribute(Constantes.TIPOEMPLEADO_LIST, (List) params.get(Constantes.TIPOEMPLEADO_LIST));
         Empleado empleado = new Empleado();
 
         modelo.addAttribute(Constantes.EMPLEADO_KEY, empleado);
@@ -169,9 +177,15 @@ public class EmpleadoController extends BaseController {
             }
             return Constantes.PATH_EMPLEADO_NUEVO;
         }
-
+        String t = request.getParameter("tipoEmpleado.id");
+        TipoEmpleado tipoEmpleado = tipoEmpleadoManager.obtiene(Long.valueOf(t));
+        empleado.setTipoEmpleado(tipoEmpleado);
+        Usuario usuario = ambiente.obtieneUsuario();
+        String password = null;
+        password = KeyGenerators.string().generateKey();
+        empleado.setPassword(password);
+        empleado.setAlmacen(usuario.getAlmacen());
         try {
-            Usuario usuario = ambiente.obtieneUsuario();
             empleadoManager.saveEmpleado(empleado, usuario);
 
             ambiente.actualizaSesion(request.getSession(), usuario);

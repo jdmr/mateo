@@ -33,7 +33,9 @@ import java.util.Locale;
 import java.util.Map;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.dao.BaseDao;
+import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.rh.dao.EmpleadoDao;
 import mx.edu.um.mateo.rh.model.Empleado;
 import org.hibernate.Criteria;
@@ -50,17 +52,15 @@ import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-
 /**
  *
  * @author Omar Soto <osoto@um.edu.mx>
  */
-
 @Repository
 @Transactional
 public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
-    
-     @Autowired
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     /**
@@ -130,7 +130,7 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
 
         countCriteria.setProjection(Projections.rowCount());
         params.put("cantidad", (Long) countCriteria.list().get(0));
-        
+
         log.debug("Elementos en lista de empleados {}", params.get(Constantes.EMPLEADO_LIST));
 
         return params;
@@ -148,9 +148,13 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
     @Override
     public Empleado graba(Empleado empleado, Usuario usuario) {
         Session session = currentSession();
+
         if (usuario != null) {
             empleado.setEmpresa(usuario.getEmpresa());
+            empleado.setAlmacen(usuario.getAlmacen());
         }
+        usuario.setPassword(passwordEncoder.encodePassword(
+                usuario.getPassword(), usuario.getUsername()));
         session.saveOrUpdate(empleado);
 //        session.merge(empleado);
         session.flush();
@@ -264,8 +268,11 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
     public void saveEmpleado(final Empleado empleado) {
         this.saveEmpleado(empleado, null);
     }
+
     /**
-     * @see mx.edu.um.mateo.rh.dao.EmpleadoDao#saveEmpleado(mx.edu.um.mateo.rh.model.Empleado, mx.edu.um.mateo.general.model.Usuario) 
+     * @see
+     * mx.edu.um.mateo.rh.dao.EmpleadoDao#saveEmpleado(mx.edu.um.mateo.rh.model.Empleado,
+     * mx.edu.um.mateo.general.model.Usuario)
      */
     @Override
     public void saveEmpleado(final Empleado empleado, Usuario usuario) {
@@ -383,9 +390,9 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
                 && empleado
                 .getClave()
                 .substring(0,
-                (empleado.getClave().length() > 2) ? 2 : 1)
+                        (empleado.getClave().length() > 2) ? 2 : 1)
                 .equals("98".substring(0,
-                (empleado.getClave().length() > 2) ? 2 : 1))) {
+                                (empleado.getClave().length() > 2) ? 2 : 1))) {
             empleado.setApPaterno("");
         } else if (empleado.getApPaterno() != null
                 && !"".equals(empleado.getApPaterno())) {
@@ -397,7 +404,8 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
     }
 
     /**
-     * @see mx.edu.um.mateo.rh.dao.EmpleadoDao#getEmpleadoClave(mx.edu.um.mateo.rh.model.Empleado)
+     * @see
+     * mx.edu.um.mateo.rh.dao.EmpleadoDao#getEmpleadoClave(mx.edu.um.mateo.rh.model.Empleado)
      */
     @Override
     @Transactional(readOnly = true)
@@ -405,7 +413,7 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
         Empleado emp = (Empleado) getSession()
                 .createCriteria(Empleado.class)
                 .add(org.hibernate.criterion.Restrictions.eq("clave",
-                empleado.getClave())).uniqueResult();
+                                empleado.getClave())).uniqueResult();
 
         if (emp == null) {
             log.warn("uh oh, empleado with clave '" + empleado.getClave()

@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import mx.edu.um.mateo.general.model.Usuario;
 import org.hibernate.validator.constraints.Length;
@@ -33,7 +34,6 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 public class Empleado extends Usuario {
 
     private static final long serialVersionUID = 6001011125338853446L;
-    @NotBlank
     @Size(min = 7, max = 7, message = "La clave del empleado debe contener una longitud de 7 caracteres")
     @Column(length = 7)
     private String clave;
@@ -439,8 +439,6 @@ public class Empleado extends Usuario {
     public void setVacaciones(List<SolicitudVacacionesEmpleado> solicitudVacaciones) {
         this.solicitudVacaciones = solicitudVacaciones;
     }
-
-  
 
     @Override
     public String toString() {
