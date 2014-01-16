@@ -3088,4 +3088,5 @@ public class Constantes {
     public static final String PATH_JEFE_CREA = "/rh/catalogo/jefe/crea";
     public static final String PATH_JEFE_ACTUALIZA = "/rh/catalogo/jefe/actualiza";
     public static final String PATH_JEFE_ELIMINA = "/rh/catalogo/jefe/elimina";
+
 }
