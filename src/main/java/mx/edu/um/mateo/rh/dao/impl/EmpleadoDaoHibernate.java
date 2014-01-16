@@ -36,7 +36,9 @@ import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import mx.edu.um.mateo.rh.dao.ClaveEmpleadoDao;
 import mx.edu.um.mateo.rh.dao.EmpleadoDao;
+import mx.edu.um.mateo.rh.model.ClaveEmpleado;
 import mx.edu.um.mateo.rh.model.Empleado;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -62,7 +64,8 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
+    @Autowired
+    private ClaveEmpleadoDao claveDao;
     /**
      * @see mx.edu.um.mateo.rh.dao.EmpleadoDao#lista(java.util.Map)
      */
@@ -146,7 +149,7 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
     }
 
     @Override
-    public Empleado graba(Empleado empleado, Usuario usuario) {
+    public Empleado graba(Empleado empleado, Usuario usuario, ClaveEmpleado clave) {
         Session session = currentSession();
 
         if (usuario != null) {
@@ -163,7 +166,7 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
 
     @Override
     public Empleado graba(Empleado empleado) {
-        return this.graba(empleado, null);
+        return this.graba(empleado, null, null);
     }
 
     /**
@@ -266,7 +269,7 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
      */
     @Override
     public void saveEmpleado(final Empleado empleado) {
-        this.saveEmpleado(empleado, null);
+        this.saveEmpleado(empleado, null, null);
     }
 
     /**
@@ -275,13 +278,16 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
      * mx.edu.um.mateo.general.model.Usuario)
      */
     @Override
-    public void saveEmpleado(final Empleado empleado, Usuario usuario) {
+    @Transactional
+    public void saveEmpleado(final Empleado empleado, Usuario usuario, ClaveEmpleado ce) {
         if (usuario != null) {
             empleado.setEmpresa(usuario.getEmpresa());
         }
-        usuario.setPassword(passwordEncoder.encodePassword(
+        empleado.setPassword(passwordEncoder.encodePassword(
                 usuario.getPassword(), usuario.getUsername()));
         currentSession().saveOrUpdate(empleado);
+        ce.setEmpleado(empleado);
+        claveDao.graba(ce, usuario);
     }
 
     /**

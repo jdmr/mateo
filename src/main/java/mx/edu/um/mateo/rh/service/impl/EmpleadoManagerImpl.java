@@ -13,6 +13,7 @@ import mx.edu.um.mateo.general.service.BaseManager;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.rh.dao.EmpleadoDao;
+import mx.edu.um.mateo.rh.model.ClaveEmpleado;
 import mx.edu.um.mateo.rh.model.Empleado;
 import mx.edu.um.mateo.rh.service.EmpleadoManager;
 import mx.edu.um.mateo.rh.service.TipoEmpleadoManager;
@@ -21,36 +22,37 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-
 /**
  *
  * @author AMDA
  */
-
 @Component
 @Transactional
 public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager {
-    
+
     @Autowired
     private EmpleadoDao dao;
     @Autowired
     private TipoEmpleadoManager teMgr;
-    
+
     /**
-     * @see mx.edu.um.mateo.mateo.rh.service.EmpleadoManager#lista(java.util.Map) 
+     * @see
+     * mx.edu.um.mateo.mateo.rh.service.EmpleadoManager#lista(java.util.Map)
      */
-    public Map<String, Object> lista(Map<String, Object> params){
+    public Map<String, Object> lista(Map<String, Object> params) {
         return dao.lista(params);
     }
+
     /**
      * @see mx.edu.um.mateo.mateo.rh.service.EmpleadoManager#
      */
-    public Empleado obtiene(Long id) throws ObjectRetrievalFailureException{
+    public Empleado obtiene(Long id) throws ObjectRetrievalFailureException {
         return dao.obtiene(id);
     }
-    
+
     /**
-     * @see mx.edu.um.mateo.rh.service.EmpleadoManager#getEmpleados(mx.edu.um.rh.model.Empleado)
+     * @see
+     * mx.edu.um.mateo.rh.service.EmpleadoManager#getEmpleados(mx.edu.um.rh.model.Empleado)
      */
     public List getEmpleados(final Empleado empleado) {
         return dao.searchEmpleado(empleado);
@@ -64,85 +66,93 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
     }
 
     /**
-     * @see mx.edu.um.mateo.rh.service.EmpleadoManager#saveEmpleado(mx.edu.um.mateo.rh.model.Empleado, mx.edu.um.mateo.general.model.Usuario) 
+     * @see
+     * mx.edu.um.mateo.rh.service.EmpleadoManager#saveEmpleado(mx.edu.um.mateo.rh.model.Empleado,
+     * mx.edu.um.mateo.general.model.Usuario)
      */
-    public void saveEmpleado(Empleado empleado, Usuario usuario) {
+    public void saveEmpleado(Empleado empleado, Usuario usuario, ClaveEmpleado clave) {
         log.debug("saveEmpleado ");
-    	if(empleado.getId() == null){
-    		Empleado emp = new Empleado();
-                emp.setClave(teMgr.obtiene(empleado.getTipoEmpleado().getId()).getPrefijo());
-    		empleado.setClave(this.getNuevaClave(emp));
-                empleado.setStatus(Constantes.STATUS_ACTIVO);
-    	}
-    	//log.debug(empleado);
-    	dao.saveEmpleado(empleado, usuario);
+//        if (empleado.getId() == null) {
+//            Empleado emp = new Empleado();
+//            emp.setClave(teMgr.obtiene(empleado.getTipoEmpleado().getId()).getPrefijo());
+//            empleado.setClave(this.getNuevaClave(emp));
+//            empleado.setStatus(Constantes.STATUS_ACTIVO);
+//        }
+        //log.debug(empleado);
+        dao.saveEmpleado(empleado, usuario, clave);
     }
 
     /**
-     * @see mx.edu.um.mateo.rh.service.EmpleadoManager#removeEmpleado(mx.edu.um.mateo.rh.model.Empleado) 
+     * @see
+     * mx.edu.um.mateo.rh.service.EmpleadoManager#removeEmpleado(mx.edu.um.mateo.rh.model.Empleado)
      */
     public void removeEmpleado(final Empleado empleado) {
         //dao.removeEmpleado(empleado);
-        
-    }
-    /**
-     * @see mx.edu.um.mateo.rh.service.EmpleadoManager#elimina(java.lang.Long) 
-     */
-    public String elimina(Long id){
-        return "";
-    }
-    
-    public String getNuevaClave(final Empleado empleado){
-        log.debug("getNuevaClave");
-    	if(empleado.getClave()==null || empleado.getClave().length() == 3){
-    		Integer clave = new Integer(0);
-    		Integer tmp = new Integer(0);
-    		
-    		List claves = dao.searchEmpleado(empleado);
-                
-                if(claves.isEmpty()){
-                    empleado.setClave("980");
-                }
-                
-                if(empleado.getClave() != null){
-                    log.debug("Clave del empleado {}", empleado.getClave());
-                }
-    		
-    		Iterator i = claves.iterator();    		
-    		while(i.hasNext()){
-    			
-    			clave = new Integer(((Empleado)i.next()).getClave().substring(3));                        
-    			    		
-                        log.debug("Clave {} - tmp{} = {}", new Object[]{clave, tmp, clave-tmp});
-    			if(clave - tmp == 1){
-    				tmp = clave;
-    			}
-    			else{
-    				log.debug("Nueva clave {}", empleado.getClave()+"0000000".substring(empleado.getClave().length()+String.valueOf(tmp+1).length())+String.valueOf(tmp+1));
-    				return empleado.getClave()+"0000000".substring(empleado.getClave().length()+String.valueOf(tmp+1).length())+String.valueOf(tmp+1);
-    			}
-    		}
-            log.debug("Nueva clave {} ",empleado.getClave()+"0000000".substring(empleado.getClave().length()+String.valueOf(tmp+1).length())+String.valueOf(tmp+1));
-            return empleado.getClave()+"0000000".substring(empleado.getClave().length()+String.valueOf(tmp+1).length())+String.valueOf(tmp+1);
-    	}
-    	return null;
+
     }
 
-	public List searchEmpleado(Empleado empleado) {
-		return dao.searchEmpleado(empleado);
-	}
-        public List searchEmpleadoByClaveOrApPaterno(Empleado empleado) {
-                return dao.searchEmpleadoByClaveOrApPaterno (empleado);
-        }
-	public Object getEmpleadosBday(Empleado empleado){
-		return dao.getEmpleadosBday(empleado);
-	}
-        
-    public Empleado getEmpleadoByClave(final Empleado empleado){
-    	return dao.getEmpleadoClave(empleado);
+    /**
+     * @see mx.edu.um.mateo.rh.service.EmpleadoManager#elimina(java.lang.Long)
+     */
+    public String elimina(Long id) {
+        return "";
     }
-         /**
-      * @see mx.edu.um.mateo.rh.service.SolicitudSalidaManager#getDiasVacacionesActuales(SolicitudSalida solicitudSalida)throwsException
+
+    public String getNuevaClave(final Empleado empleado) {
+        log.debug("getNuevaClave");
+        if (empleado.getClave() == null || empleado.getClave().length() == 3) {
+            Integer clave = new Integer(0);
+            Integer tmp = new Integer(0);
+
+            List claves = dao.searchEmpleado(empleado);
+
+            if (claves.isEmpty()) {
+                empleado.setClave("980");
+            }
+
+            if (empleado.getClave() != null) {
+                log.debug("Clave del empleado {}", empleado.getClave());
+            }
+
+            Iterator i = claves.iterator();
+            while (i.hasNext()) {
+
+                clave = new Integer(((Empleado) i.next()).getClave().substring(3));
+
+                log.debug("Clave {} - tmp{} = {}", new Object[]{clave, tmp, clave - tmp});
+                if (clave - tmp == 1) {
+                    tmp = clave;
+                } else {
+                    log.debug("Nueva clave {}", empleado.getClave() + "0000000".substring(empleado.getClave().length() + String.valueOf(tmp + 1).length()) + String.valueOf(tmp + 1));
+                    return empleado.getClave() + "0000000".substring(empleado.getClave().length() + String.valueOf(tmp + 1).length()) + String.valueOf(tmp + 1);
+                }
+            }
+            log.debug("Nueva clave {} ", empleado.getClave() + "0000000".substring(empleado.getClave().length() + String.valueOf(tmp + 1).length()) + String.valueOf(tmp + 1));
+            return empleado.getClave() + "0000000".substring(empleado.getClave().length() + String.valueOf(tmp + 1).length()) + String.valueOf(tmp + 1);
+        }
+        return null;
+    }
+
+    public List searchEmpleado(Empleado empleado) {
+        return dao.searchEmpleado(empleado);
+    }
+
+    public List searchEmpleadoByClaveOrApPaterno(Empleado empleado) {
+        return dao.searchEmpleadoByClaveOrApPaterno(empleado);
+    }
+
+    public Object getEmpleadosBday(Empleado empleado) {
+        return dao.getEmpleadosBday(empleado);
+    }
+
+    public Empleado getEmpleadoByClave(final Empleado empleado) {
+        return dao.getEmpleadoClave(empleado);
+    }
+
+    /**
+     * @see
+     * mx.edu.um.mateo.rh.service.SolicitudSalidaManager#getDiasVacacionesActuales(SolicitudSalida
+     * solicitudSalida)throwsException
      */
     public void saveDiasVacacionesActuales(Empleado empleado, User user) throws Exception {
 
@@ -195,9 +205,9 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
 //        }
     }
 
-
-   /**
-      * @see mx.edu.um.mateo.rh.service.EmpleadoManager#getDiasVacacionesNuevoEmpleado(mx.edu.um.rh.model.Empleado)
+    /**
+     * @see
+     * mx.edu.um.mateo.rh.service.EmpleadoManager#getDiasVacacionesNuevoEmpleado(mx.edu.um.rh.model.Empleado)
      */
 //public Integer getDiasVacacionesNuevoEmpleado(Empleado empleado) throws Exception {
 //
@@ -239,12 +249,9 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
 //
 //     return Integer.parseInt(d)*dias/365;
 //}
-
-
-
-
     /**
-     * @see mx.edu.um.mateo.rh.service.EmpleadoManager#getEmpleadosActivosByContabilidad(mx.edu.um.rh.model.EmpleadoPuesto)
+     * @see
+     * mx.edu.um.mateo.rh.service.EmpleadoManager#getEmpleadosActivosByContabilidad(mx.edu.um.rh.model.EmpleadoPuesto)
      * @param puesto
      * @return
      * @throws java.lang.Exception
@@ -260,7 +267,6 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
 //        }
 //        return lista;
 //    }
-
 //     public List getEmpleadosActivosByContabilidadModalidadTipoEmpleado(EmpleadoPuesto puesto,Empleado empleado,String sChecked []) throws Exception {
 //        List lista = new ArrayList();
 //        List<Empleado> empleados = dao.searchEmpleadoByCCostoModalidadTipoEmpleado(puesto, empleado,sChecked);
@@ -272,8 +278,6 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
 //        }
 //        return lista;
 //    }
-
-
 //    public Map <String, Empleado> getEmpleadosActivosInMap(Ejercicio ejercicio, String... contabilidades) throws Exception {
 //        //log.debug("Inmap >>>>>:"+contabilidades.length+":: "+contabilidades[0]);
 //        Map <String,Empleado>empleados = new TreeMap();
@@ -312,5 +316,4 @@ public class EmpleadoManagerImpl extends BaseManager implements EmpleadoManager 
 //    public Set getEmpleadoPerDeds(Empleado empleado){
 //        return dao.getEmpleadoPerDeds(empleado);
 //    }
-    
 }

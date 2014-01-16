@@ -1,9 +1,9 @@
-
 package mx.edu.um.mateo.rh.dao;
 
 import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.rh.model.ClaveEmpleado;
 import mx.edu.um.mateo.rh.model.Empleado;
 
 /**
@@ -14,29 +14,37 @@ public interface EmpleadoDao {
 
     /**
      * Regresa una lista de todos los empleados
+     *
      * @param params
-     * @return 
+     * @return
      */
     public Map<String, Object> lista(Map<String, Object> params);
+
     /**
      * Regresa al empleado correspondiente al id
+     *
      * @param id
-     * @return 
+     * @return
      */
     public Empleado obtiene(Long id);
+
     /**
      * Graba un empleado con su empresa, la cual obtiene del usuario
+     *
      * @param empleado
      * @param usuario
-     * @return 
+     * @return
      */
-    public Empleado graba(Empleado empleado, Usuario usuario);
+    public Empleado graba(Empleado empleado, Usuario usuario, ClaveEmpleado clave);
+
     /**
      * Graba un empleado, SIN empresa. Este metodo se utiliza para pruebas DAO
+     *
      * @param empleado
-     * @return 
+     * @return
      */
     public Empleado graba(Empleado empleado);
+
     /**
      * Gets empleado's information based on parameter values
      *
@@ -53,14 +61,14 @@ public interface EmpleadoDao {
      * @param empleado the object to be saved
      */
     public void saveEmpleado(Empleado empleado);
-    
+
     /**
      * Saves a empleado's information
      *
      * @param empleado the object to be saved
      * @param usuario the object that contains Empresa
      */
-    public void saveEmpleado(Empleado empleado, Usuario usuario);
+    public void saveEmpleado(Empleado empleado, Usuario usuario, ClaveEmpleado ce);
 
     /**
      * An employee cannot be deleted Removes a empleado from the database by id

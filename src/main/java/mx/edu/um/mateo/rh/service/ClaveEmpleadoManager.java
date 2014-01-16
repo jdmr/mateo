@@ -53,4 +53,6 @@ public interface ClaveEmpleadoManager {
      * @return
      */
     public ClaveEmpleado obtieneClaveActiva(Long idEmpleado);
+
+    public ClaveEmpleado nuevaClave(Usuario usuario, String filtro);
 }

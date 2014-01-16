@@ -6,14 +6,19 @@
 package mx.edu.um.mateo.rh.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.rh.dao.ClaveEmpleadoDao;
 import mx.edu.um.mateo.rh.model.ClaveEmpleado;
 import mx.edu.um.mateo.rh.service.ClaveEmpleadoManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sun.org.mozilla.javascript.ScriptRuntime;
 
 /**
  *
@@ -82,5 +87,58 @@ public class ClaveEmpleadoManagerImpl implements ClaveEmpleadoManager {
     @Override
     public ClaveEmpleado obtieneClaveActiva(Long idEmpleado) {
         return dao.obtieneClaveActiva(idEmpleado);
+    }
+
+    @Override
+    public ClaveEmpleado nuevaClave(Usuario usuario, String filtro) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("filtro", filtro);
+        params = dao.lista(params);
+        List<ClaveEmpleado> claves = (List) params.get(Constantes.CONTAINSKEY_CLAVEEMPLEADO);
+        ClaveEmpleado claveAnterior = null;
+        ClaveEmpleado nueva = new ClaveEmpleado();
+        int anterior = 0, actual;
+        String hueco = null;
+        if (claves.isEmpty()) {
+            String c = filtro + "0001";
+            nueva.setClave(c);
+            nueva.setStatus(Constantes.STATUS_ACTIVO);
+            nueva.setFecha(new Date());
+            nueva.setFechaAlta(new Date());
+            nueva.setUsuarioAlta(usuario);
+            return nueva;
+        }
+        for (ClaveEmpleado claveActual : claves) {
+            actual = Integer.parseInt(claveActual.getClave());
+            if (claveAnterior != null) {
+                anterior = Integer.parseInt(claveAnterior.getClave());
+            }
+            if (actual - anterior != 1) {
+                hueco = String.valueOf(anterior + 1);
+                if (dao.noExisteClave(hueco)) {
+                    nueva.setClave(hueco);
+                    nueva.setStatus(Constantes.STATUS_ACTIVO);
+                    nueva.setFecha(new Date());
+                    nueva.setFechaAlta(new Date());
+                    nueva.setUsuarioAlta(usuario);
+                    break;
+                }
+
+            }
+            claveAnterior = claveActual;
+        }
+        if (hueco.isEmpty() || hueco == null) {
+            int c = Integer.parseInt(claveAnterior.getClave());
+            String cs = String.valueOf(c);
+
+            if (dao.noExisteClave(cs)) {
+                nueva.setClave(cs);
+                nueva.setStatus(Constantes.STATUS_ACTIVO);
+                nueva.setFecha(new Date());
+                nueva.setFechaAlta(new Date());
+                nueva.setUsuarioAlta(usuario);
+            }
+        }
+        return nueva;
     }
 }

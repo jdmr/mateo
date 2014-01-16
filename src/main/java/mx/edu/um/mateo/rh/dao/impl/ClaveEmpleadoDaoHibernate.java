@@ -121,6 +121,23 @@ public class ClaveEmpleadoDaoHibernate extends BaseDao implements ClaveEmpleadoD
 
     /**
      * @see
+     * mx.edu.um.mateo.rh.dao.ClaveEmpleadoDao#noExisteClave(java.lang.String)
+     */
+    @Override
+    public Boolean noExisteClave(String clave) {
+        log.debug("Buscando clave de usuario por  atributo clave{}", clave);
+        Query query = currentSession().createQuery(
+                "select c from ClaveEmpleado c where c.clave = :clave");
+        query.setString("clave", clave);
+        if (query == null) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param usuario
+     * @see
      * mx.edu.um.mateo.rh.dao.ClaveEmpleadoDao#graba(mx.edu.um.mateo.rh.model.ClaveEmpleado,
      * mx.edu.um.mateo.general.model.Usuario)
      */
@@ -137,6 +154,7 @@ public class ClaveEmpleadoDaoHibernate extends BaseDao implements ClaveEmpleadoD
     }
 
     /**
+     * @return 
      * @see mx.edu.um.mateo.rh.dao.ClaveEmpleadoDao#elimina(java.lang.Long)
      */
     @Override

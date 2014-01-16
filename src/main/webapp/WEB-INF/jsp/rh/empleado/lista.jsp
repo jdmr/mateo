@@ -31,18 +31,7 @@
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
-            <c:if test="${empleado != null}">
-                <s:bind path="empleado.*">
-                    <c:if test="${not empty status.errorMessages}">
-                        <div class="alert alert-block alert-error fade in" role="status">
-                            <a class="close" data-dismiss="alert">×</a>
-                            <c:forEach var="error" items="${status.errorMessages}">
-                                <c:out value="${error}" escapeXml="false"/><br />
-                            </c:forEach>
-                        </div>
-                    </c:if>
-                </s:bind>
-            </c:if>
+          
 
             <table id="lista" class="table table-striped table-hover">
                 <thead>

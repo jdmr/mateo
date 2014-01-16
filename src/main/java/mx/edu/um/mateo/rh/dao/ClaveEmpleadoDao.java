@@ -53,4 +53,12 @@ public interface ClaveEmpleadoDao {
      * @return
      */
     public ClaveEmpleado obtieneClaveActiva(Long idEmpleado);
+
+    /**
+     * Veridica que exista claveActiva de un empleado atravez del atributo clave
+     *
+     * @param clave
+     * @return true o false si la clave existe o no
+     */
+    public Boolean noExisteClave(String clave);
 }

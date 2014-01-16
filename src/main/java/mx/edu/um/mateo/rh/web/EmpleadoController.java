@@ -185,8 +185,10 @@ public class EmpleadoController extends BaseController {
         password = KeyGenerators.string().generateKey();
         empleado.setPassword(password);
         empleado.setAlmacen(usuario.getAlmacen());
+        String filtro = tipoEmpleado.getPrefijo();
+        ClaveEmpleado clave = claveManager.nuevaClave(usuario, filtro);
         try {
-            empleadoManager.saveEmpleado(empleado, usuario);
+            empleadoManager.saveEmpleado(empleado, usuario, clave);
 
             ambiente.actualizaSesion(request.getSession(), usuario);
         } catch (ConstraintViolationException e) {
