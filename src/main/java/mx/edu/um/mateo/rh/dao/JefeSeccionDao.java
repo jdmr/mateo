@@ -45,20 +45,4 @@ public interface JefeSeccionDao {
      */
     public String elimina(final Long id);
 
-    /**
-     * Obtiene la claveActiva de un empleado a travez del id del empleado y el
-     * estatus de la clave
-     *
-     * @param idEmpleado
-     * @return
-     */
-    public JefeSeccion obtieneClaveActiva(Long idEmpleado);
-
-    /**
-     * Veridica que exista claveActiva de un empleado atravez del atributo clave
-     *
-     * @param clave
-     * @return true o false si la clave existe o no
-     */
-    public Boolean noExisteClave(String clave);
 }

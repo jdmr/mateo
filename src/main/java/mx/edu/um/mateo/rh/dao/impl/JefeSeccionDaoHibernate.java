@@ -105,37 +105,6 @@ public class JefeSeccionDaoHibernate extends BaseDao implements JefeSeccionDao {
     }
 
     /**
-     * @see
-     * mx.edu.um.mateo.rh.dao.JefeSeccionDao#obtieneClaveActiva(java.lang.Long)
-     */
-    @Override
-    public JefeSeccion obtieneClaveActiva(Long id) {
-        log.debug("Buscando clave activa de usuario por id{}", id);
-        Query query = currentSession().createQuery(
-                "select c from JefeSeccion c where c.empleado.id = :id AND c.status=:status");
-        query.setLong("id", id);
-        query.setString("status", "A");
-        JefeSeccion clave = (JefeSeccion) query.uniqueResult();
-        return clave;
-    }
-
-    /**
-     * @see
-     * mx.edu.um.mateo.rh.dao.JefeSeccionDao#noExisteClave(java.lang.String)
-     */
-    @Override
-    public Boolean noExisteClave(String clave) {
-        log.debug("Buscando clave de usuario por  atributo clave{}", clave);
-        Query query = currentSession().createQuery(
-                "select c from JefeSeccion c where c.clave = :clave");
-        query.setString("clave", clave);
-        if (query == null) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * @param usuario
      * @see
      * mx.edu.um.mateo.rh.dao.JefeSeccionDao#graba(mx.edu.um.mateo.rh.model.JefeSeccion,
