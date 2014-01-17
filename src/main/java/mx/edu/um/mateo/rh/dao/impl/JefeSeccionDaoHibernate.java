@@ -81,7 +81,7 @@ public class JefeSeccionDaoHibernate extends BaseDao implements JefeSeccionDao {
             criteria.setFirstResult((Integer) params.get(Constantes.CONTAINSKEY_OFFSET));
             criteria.setMaxResults((Integer) params.get(Constantes.CONTAINSKEY_MAX));
         }
-        params.put(Constantes.CONTAINSKEY_CLAVEEMPLEADO, criteria.list());
+        params.put(Constantes.CONTAINSKEY_JEFESSECCION, criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
         params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));

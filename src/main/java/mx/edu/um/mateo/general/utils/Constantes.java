@@ -2371,6 +2371,7 @@ public class Constantes {
     public static final String CONTAINSKEY_SOLICITUDVACACIONESEMPLEADO = "solicitudEmpleadoVacaciones";
     public static final String CONTAINSKEY_VACACIONESEMPLEADO = "empleadoVacaciones";
     public static final String CONTAINSKEY_JEFES = "jefes";
+    public static final String CONTAINSKEY_JEFESSECCION = "jefesSeccion";
     /**
      * Valores para el los addAttribute para las clases
      */
@@ -2388,6 +2389,7 @@ public class Constantes {
     public static final String ADDATTRIBUTE_SOLICITUDVACACIONESEMPLEADO = "solicitudVacacionEmpleado";
     public static final String ADDATTRIBUTE_VACACIONESEMPLEADO = "vacacionEmpleado";
     public static final String ADDATTRIBUTE_JEFE = "jefe";
+    public static final String ADDATTRIBUTE_JEFESECCION = "jefeSeccion";
     /*
      * Valores para el los path's para las clases
      */
@@ -3088,5 +3090,18 @@ public class Constantes {
     public static final String PATH_JEFE_CREA = "/rh/catalogo/jefe/crea";
     public static final String PATH_JEFE_ACTUALIZA = "/rh/catalogo/jefe/actualiza";
     public static final String PATH_JEFE_ELIMINA = "/rh/catalogo/jefe/elimina";
+    /**
+     * @see mx.edu.um.mateo.rh.web.JefeController;Valores para vacaiones de
+     * empleado
+     *
+     */
+    public static final String PATH_JEFESECCION = "/rh/catalogo/jefeSecion";
+    public static final String PATH_JEFESECCION_LISTA = "/rh/catalogo/jefeSecion/lista";
+    public static final String PATH_JEFESECCION_VER = "/rh/catalogo/jefeSecion/ver";
+    public static final String PATH_JEFESECCION_NUEVO = "/rh/catalogo/jefeSecion/nuevo";
+    public static final String PATH_JEFESECCION_EDITA = "/rh/catalogo/jefeSecion/edita";
+    public static final String PATH_JEFESECCION_CREA = "/rh/catalogo/jefeSecion/crea";
+    public static final String PATH_JEFESECCION_ACTUALIZA = "/rh/catalogo/jefeSecion/actualiza";
+    public static final String PATH_JEFESECCION_ELIMINA = "/rh/catalogo/jefeSecion/elimina";
 
 }
