@@ -5,6 +5,7 @@
  */
 package mx.edu.um.mateo.rh.service.impl;
 
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.rh.dao.JefeDao;
@@ -34,6 +35,11 @@ public class JefeManagerImpl implements JefeManager {
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
         return dao.lista(params);
+    }
+
+    @Override
+    public List<Jefe> listaJefes() {
+        return dao.listaJefes();
     }
 
     /**

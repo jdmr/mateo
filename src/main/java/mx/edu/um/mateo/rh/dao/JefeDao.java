@@ -5,7 +5,7 @@
  */
 package mx.edu.um.mateo.rh.dao;
 
-import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.rh.model.Jefe;
@@ -23,6 +23,8 @@ public interface JefeDao {
      * @return
      */
     public Map<String, Object> lista(Map<String, Object> params);
+
+    public List<Jefe> listaJefes();
 
     /**
      * Obtiene una jefe

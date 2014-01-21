@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,8 @@ import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.rh.model.JefeSeccion;
 import mx.edu.um.mateo.rh.model.Empleado;
+import mx.edu.um.mateo.rh.model.Jefe;
+import mx.edu.um.mateo.rh.service.JefeManager;
 import mx.edu.um.mateo.rh.service.JefeSeccionManager;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
@@ -65,6 +68,8 @@ public class JefeSeccionController extends BaseController {
 
     @Autowired
     private JefeSeccionManager manager;
+    @Autowired
+    private JefeManager jefeManager;
 
     @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -166,6 +171,9 @@ public class JefeSeccionController extends BaseController {
     public String nueva(Model modelo) {
         log.debug("Nuevo claveempleado");
         JefeSeccion jefeSeccion = new JefeSeccion();
+        Map<String, Object> params = new HashMap<>();
+        List<Jefe> jefes = jefeManager.listaJefes();
+        modelo.addAttribute(Constantes.CONTAINSKEY_JEFES, jefes);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_JEFESECCION, jefeSeccion);
         return Constantes.PATH_JEFESECCION_NUEVO;
     }
@@ -181,12 +189,24 @@ public class JefeSeccionController extends BaseController {
             log.debug("Hubo algun error en la forma, regresando");
             return Constantes.PATH_JEFESECCION_NUEVO;
         }
+        log.debug("jefesecicion.jefeseccion{}", jefeSeccion.getJefeSeccion().getNombre());
         Usuario usuario = ambiente.obtieneUsuario();
         Empleado empleado = (Empleado) request.getSession().getAttribute(Constantes.EMPLEADO_KEY);
         jefeSeccion.setFechaAlta(new Date());
         jefeSeccion.setUsuarioAlta(usuario);
+        ArrayList ids = new ArrayList();
+        Enumeration<String> parameterNames = request.getParameterNames();
+        while (parameterNames.hasMoreElements()) {
+            String nombre = parameterNames.nextElement();
+
+            if (nombre.startsWith("checkJefe")) {
+                String[] id = nombre.split("-");
+                log.debug("id ={}", id[1]);
+                ids.add(id[1]);
+            }
+        }
         try {
-            manager.graba(jefeSeccion, usuario);
+            manager.graba(jefeSeccion, usuario, ids);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear nacionalidad", e);
             return Constantes.PATH_JEFESECCION_NUEVO;

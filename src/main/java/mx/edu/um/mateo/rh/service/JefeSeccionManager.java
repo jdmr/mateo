@@ -5,6 +5,7 @@
  */
 package mx.edu.um.mateo.rh.service;
 
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.rh.model.JefeSeccion;
@@ -18,7 +19,7 @@ public interface JefeSeccionManager {
     /**
      * Regresa una lista de jefeSecciones.
      *
-     * @param jefeSeccion
+     * @param params
      * @return
      */
     public Map<String, Object> lista(Map<String, Object> params);
@@ -35,13 +36,16 @@ public interface JefeSeccionManager {
      * graba informacion sobre una jefeSeccion
      *
      * @param jefeSeccion the object to be saved
+     * @param usuario
+     * @param ids
      */
-    public void graba(JefeSeccion jefeSeccion, Usuario usuario);
+    public void graba(JefeSeccion jefeSeccion, Usuario usuario, List ids);
 
     /**
      * Cambia el status de la jefeSeccion a I
      *
      * @param id el id de jefeSeccion
+     * @return
      */
     public String elimina(final Long id);
 

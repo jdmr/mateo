@@ -3095,13 +3095,13 @@ public class Constantes {
      * empleado
      *
      */
-    public static final String PATH_JEFESECCION = "/rh/catalogo/jefeSecion";
-    public static final String PATH_JEFESECCION_LISTA = "/rh/catalogo/jefeSecion/lista";
-    public static final String PATH_JEFESECCION_VER = "/rh/catalogo/jefeSecion/ver";
-    public static final String PATH_JEFESECCION_NUEVO = "/rh/catalogo/jefeSecion/nuevo";
-    public static final String PATH_JEFESECCION_EDITA = "/rh/catalogo/jefeSecion/edita";
-    public static final String PATH_JEFESECCION_CREA = "/rh/catalogo/jefeSecion/crea";
-    public static final String PATH_JEFESECCION_ACTUALIZA = "/rh/catalogo/jefeSecion/actualiza";
-    public static final String PATH_JEFESECCION_ELIMINA = "/rh/catalogo/jefeSecion/elimina";
+    public static final String PATH_JEFESECCION = "/rh/catalogo/jefeSeccion";
+    public static final String PATH_JEFESECCION_LISTA = "/rh/catalogo/jefeSeccion/lista";
+    public static final String PATH_JEFESECCION_VER = "/rh/catalogo/jefeSeccion/ver";
+    public static final String PATH_JEFESECCION_NUEVO = "/rh/catalogo/jefeSeccion/nuevo";
+    public static final String PATH_JEFESECCION_EDITA = "/rh/catalogo/jefeSeccion/edita";
+    public static final String PATH_JEFESECCION_CREA = "/rh/catalogo/jefeSeccion/crea";
+    public static final String PATH_JEFESECCION_ACTUALIZA = "/rh/catalogo/jefeSeccion/actualiza";
+    public static final String PATH_JEFESECCION_ELIMINA = "/rh/catalogo/jefeSeccion/elimina";
 
 }

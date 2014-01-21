@@ -36,7 +36,7 @@ public class JefeSeccion {
     private String status;
     @ManyToOne
     private Empleado jefeSeccion;
-    @OneToMany
+    @ManyToOne
     private Jefe jefe;
     @ManyToOne
     private Empresa empresa;

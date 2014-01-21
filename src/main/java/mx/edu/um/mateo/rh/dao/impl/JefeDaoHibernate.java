@@ -5,8 +5,8 @@
  */
 package mx.edu.um.mateo.rh.dao.impl;
 
-import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -21,7 +21,6 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,7 +60,6 @@ public class JefeDaoHibernate extends BaseDao implements JefeDao {
         }
         Criteria criteria = currentSession().createCriteria(Jefe.class);
         Criteria countCriteria = currentSession().createCriteria(Jefe.class);
-
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
             String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);
             Disjunction propiedades = Restrictions.disjunction();
@@ -89,6 +87,24 @@ public class JefeDaoHibernate extends BaseDao implements JefeDao {
         params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));
 
         return params;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Override
+    public List<Jefe> listaJefes() {
+//        Criteria criteria = currentSession().createCriteria(Jefe.class);
+//        criteria.createAlias("jefe", "e");
+//
+//        DetachedCriteria dc = DetachedCriteria.forClass(JefeSeccion.class);
+//        dc.createAlias("jefe", "emp");
+//        dc.setProjection(Projections.property("emp.id"));
+//        criteria.add(Subqueries.notIn("e.id", dc));
+        Query query = currentSession().createQuery("select j from Jefe j where j.id  NOT IN (select jefe from JefeSeccion)");
+        List<Jefe> jefes = query.list();
+        return jefes;
     }
 
     /**
