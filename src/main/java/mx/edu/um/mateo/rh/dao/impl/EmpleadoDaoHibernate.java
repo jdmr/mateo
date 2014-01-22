@@ -66,6 +66,7 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private ClaveEmpleadoDao claveDao;
+
     /**
      * @see mx.edu.um.mateo.rh.dao.EmpleadoDao#lista(java.util.Map)
      */
@@ -290,15 +291,7 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
         claveDao.graba(ce, usuario);
     }
 
-    /**
-     * An employee cannot be deleted
-     *
-     * @see mx.edu.um.mateo.rh.dao.EmpleadoDao#removeEmpleado(Empleado empleado)
-     */
-//    public void removeEmpleado (final Empleado empleado)
-//    {
-//        getHibernateTemplate ().delete (getEmpleado (empleado));
-//    }
+
     /**
      * @see
      * mx.edu.um.mateo.rh.dao.EmpleadoDao#searchEmpleado(mx.edu.um.mateo.rh.model.Empleado)
@@ -325,57 +318,6 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
         if (empleado.getNombre() != null && !"".equals(empleado.getNombre())) {
             criteria.add(Restrictions.ilike("nombre", empleado.getNombre() + "%"));
         }
-//        if(empleado.getRegsPatronales ().size () > 0)
-//        {
-//            criteria = null;
-//            Integer cont = new Integer (1);
-//            Boolean flag = new Boolean (false);
-//            String query = "select e " +
-//                    "from mx.edu.um.rh.model.Empleado e join e.puestos p ";
-//            
-//            Iterator i = empleado.getRegsPatronales ().iterator ();
-//            while(i.hasNext ())
-//            {
-//                if(!flag){
-//                query += "where ";
-//                flag = !flag;
-//                }
-//                else{
-//                    query += "and ";
-//                }
-//                
-//                query += " p.centroCosto.key.idCCosto like :conta"+cont.toString ();
-//                i.next ();
-//                cont ++;
-//            }
-//            
-//            if(empleado.getId () != null){
-//                query += " and e.id = :empId ";
-//            }
-//            
-//            query += " and e.status = :empStatus ";
-//            query+= " order by e.clave ";
-//            
-//            Query sql = getSession ().createQuery (query);
-//                        
-//            String conta = "";
-//            cont = new Integer(1);
-//            RegistroPatronal reg = null;
-//            
-//            i = empleado.getRegsPatronales ().iterator ();
-//            while(i.hasNext ())
-//            {
-//                conta = "conta"+cont.toString ();
-//                reg = (RegistroPatronal)i.next ();                
-//                sql.setString (conta, reg.getContabilidad().getIdCCosto()+"%");
-//                cont++;
-//            }
-//            if(empleado.getId () != null){
-//                sql.setLong ("empId", empleado.getId ());
-//            }
-//            sql.setString ("empStatus", Constants.STATUS_ACTIVO);
-//            return sql.list ();
-//        }
 
         criteria.addOrder(Order.asc("clave"));
         empleados = criteria.list();
@@ -448,124 +390,10 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
 
         return emp;
     }
-//    public List searchEmpleadoByCCosto(EmpleadoPuesto puesto) {
-//        List lista = new ArrayList();
-//        
-//        if(puesto != null){
-//            if(puesto.getCentroCosto() != null){
-//                Query sql = getSession().createQuery("select e from mx.edu.um.rh.model.Empleado e inner join e.puestos p where p.centroCosto.key.ejercicio.idEjercicio = ? and p.centroCosto.key.idCCosto like ?");
-//                sql.setString(0, puesto.getCentroCosto().getEjercicio().getIdEjercicio());
-//                sql.setString(1, puesto.getCentroCosto().getIdCCosto()+"%");
-//                lista = sql.list();
-//            }
-//        }
-//
-//        return lista;
-//    }
-//       public List searchEmpleadoByCCostoModalidadTipoEmpleado(EmpleadoPuesto puesto, Empleado emp,String sChecked []) {
-//        //log.debug("searchEmpleadoByCCostoModalidadTipoEmpleado");
-//        
-//        List lista = new ArrayList();
-//
-//        String sQuey = "select e from mx.edu.um.rh.model.Empleado e ";
-//        Boolean bPuesto = false, bModalidad = false;
-//
-//        if ((puesto != null && puesto.getCentroCosto() != null && puesto.getCentroCosto().getIdCCosto() != null)
-//                && !puesto.getCentroCosto().getIdCCosto().isEmpty()) {
-//            //log.debug("entro puesto o empleado");
-//
-//            //log.debug("entro cc " + puesto.getCentroCosto().getIdCCosto());
-//            bPuesto = true;
-//            sQuey += "inner join e.puestos p where p.centroCosto.key.ejercicio.idEjercicio = :idEjercicio and ";
-//
-//            if (puesto.getCentroCosto().getIdCCosto().equals("0")) {
-//                sQuey = sQuey + " p.centroCosto.key.idCCosto like :todos ";
-//            } else {
-//                sQuey = sQuey + " p.centroCosto.key.idCCosto like :idCCosto";
-//            }
-//
-//
-//        }
-//
-//
-//
-//            //log.debug("hasta aqui llego0");
-//            if (emp != null
-//                && (emp.getModalidad() != null && !emp.getModalidad().trim().equals("0")
-//                    && !emp.getModalidad().isEmpty())) {
-//                //log.debug("Entro modalidad " + emp.getEmpleadoLaborales().getModalidad());
-//            if (!bPuesto) {
-//                sQuey += " where ";
-//                bPuesto = true;
-//            } else {
-//                sQuey += " and ";
-//            }
-//                sQuey = sQuey + " e.modalidad= :modalidad";
-//            }
-//
-//
-//            List  tipoEmpList=new ArrayList();
-//            if (sChecked != null &&   sChecked.length>0) {
-//                //log.debug("Entro tipo empleado " + sChecked[0] );
-//            if (!bPuesto) {
-//                sQuey += " where ";
-//            } else {
-//                sQuey += " and ";
-//            }
-//
-//              
-//                for(int i=0;i<sChecked.length;i++)
-//                    tipoEmpList.add( Long.parseLong(sChecked[i]));
-//
-//                //log.debug(tipoEmpList);
-//                
-//                sQuey = sQuey + " e.tipoEmpleado.id in (:tipoEmpleadoIds)";
-//
-//            }
-//            
-//        //log.debug(sQuey);
-//
-//        Query sql = getSession().createQuery(sQuey);
-//
-//
-//        if ((puesto != null && puesto.getCentroCosto() != null && puesto.getCentroCosto().getIdCCosto() != null)
-//                && !puesto.getCentroCosto().getIdCCosto().isEmpty()) {
-//            sql.setString("idEjercicio", puesto.getCentroCosto().getEjercicio().getIdEjercicio());
-//
-//            if (puesto.getCentroCosto().getIdCCosto().equals("0")) {
-//                sql.setString("todos", "%");
-//            } else {
-//                sql.setString("idCCosto", puesto.getCentroCosto().getIdCCosto() + "%");
-//            }
-//
-//              //log.debug("puesto");
-//        }
-//
-//        if (emp != null
-//                && (emp.getModalidad() != null && !emp.getModalidad().trim().equals("0")
-//                    && !emp.getModalidad().isEmpty())) {
-//                sql.setString("modalidad", emp.getModalidad());
-//            //log.debug("modalidad");
-//            }
-//
-//            if (sChecked != null && sChecked.length>0) {
-//                sql.setParameterList("tipoEmpleadoIds",tipoEmpList);
-//               //log.debug("tipoEmpleadoIds");
-//            }
-//        
-//
-//
-//        lista = sql.list();
-//        //log.debug("*>"+lista.size());
-//        return lista;
-//    }
-//
-//    public Set getEmpleadoPerDeds(Empleado empleado) {
-//        //log.debug("getEmpleadoPerDeds");
-//        Query sql = getSession().createQuery("select new mx.edu.um.rh.model.EmpleadoPerDed(pd.perDed, pd.importe, pd.tipoImporte, pd.atributos, pd.otorgado) from mx.edu.um.rh.model.Empleado e join e.perDeds pd where e.id = :id order by pd.perDed.nombre");
-//        sql.setLong("id", empleado.getId());
-//        Set rSet = new HashSet();
-//        rSet.addAll((Collection)sql.list());
-//        return rSet;
-//    }
+
+    @Override
+    public void actualiza(Empleado empleado) {
+        currentSession().update(empleado);
+        currentSession().flush();
+    }
 }

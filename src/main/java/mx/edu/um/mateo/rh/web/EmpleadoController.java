@@ -29,11 +29,15 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import mx.edu.um.mateo.general.dao.EmpresaDao;
+import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
+import mx.edu.um.mateo.inventario.dao.AlmacenDao;
+import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.rh.model.ClaveEmpleado;
 import mx.edu.um.mateo.rh.model.Empleado;
 import mx.edu.um.mateo.rh.model.NivelEstudios;
@@ -74,6 +78,10 @@ public class EmpleadoController extends BaseController {
     private ClaveEmpleadoManager claveManager;
     @Autowired
     private TipoEmpleadoManager tipoEmpleadoManager;
+    @Autowired
+    private AlmacenDao almacenDao;
+    @Autowired
+    private EmpresaDao empresaDao;
 
     public EmpleadoController() {
         log.info("Se ha creado una nueva instancia de EmpleadoController");
@@ -204,7 +212,8 @@ public class EmpleadoController extends BaseController {
     }
 
     @RequestMapping("/edita/{id}")
-    public String edita(@PathVariable Long id, HttpServletRequest request, @Valid Empleado empleado, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
+    public String edita(@PathVariable Long id, HttpServletRequest request, @Valid Empleado empleado, BindingResult bindingResult,
+            Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
         log.debug("Edita empleado {}", id);
         try {
             empleado = empleadoManager.obtiene(id);
@@ -215,6 +224,60 @@ public class EmpleadoController extends BaseController {
         }
         modelo.addAttribute(Constantes.EMPLEADO_KEY, empleado);
         return Constantes.PATH_EMPLEADO_EDITA;
+    }
+
+    @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
+    public String actualiza(HttpServletRequest request, @Valid Empleado empleado,
+            BindingResult bindingResult, Errors errors, Model modelo,
+            RedirectAttributes redirectAttributes,
+            @RequestParam(required = false) String[] centrosDeCostoIds) throws ObjectRetrievalFailureException {
+
+        if (bindingResult.hasErrors()) {
+            log.error("Hubo algun error en la forma, regresando");
+            return Constantes.PATH_EMPLEADO_EDITA;
+        }
+        Empleado empleadoTmp = empleadoManager.getEmpleado(empleado);
+        empleadoTmp.setAdventista(empleado.getAdventista());
+        empleadoTmp.setApMaterno(empleado.getApMaterno());
+        empleadoTmp.setApPaterno(empleado.getApPaterno());
+        empleadoTmp.setConyuge(empleado.getConyuge());
+        empleadoTmp.setCuenta(empleado.getCuenta());
+        empleadoTmp.setCurp(empleado.getCurp());
+        empleadoTmp.setDireccion(empleado.getDireccion());
+        empleadoTmp.setEscalafon(empleado.getEscalafon());
+        empleadoTmp.setEstadoCivil(empleado.getEstadoCivil());
+        empleadoTmp.setExperienciaFueraUm(empleado.getExperienciaFueraUm());
+        empleadoTmp.setFechaNacimiento(empleado.getFechaNacimiento());
+        empleadoTmp.setFechaMatrimonio(empleado.getFechaMatrimonio());
+        empleadoTmp.setFinadoMadre(empleado.getFinadoMadre());
+        empleadoTmp.setFinadoPadre(empleado.getFinadoPadre());
+        empleadoTmp.setGenero(empleado.getGenero());
+        empleadoTmp.setIfe(empleado.getIfe());
+        empleadoTmp.setIglesia(empleado.getIglesia());
+        empleadoTmp.setImms(empleado.getImms());
+        empleadoTmp.setMadre(empleado.getMadre());
+        empleadoTmp.setModalidad(empleado.getModalidad());
+        empleadoTmp.setPadre(empleado.getPadre());
+        empleadoTmp.setRango(empleado.getRango());
+        empleadoTmp.setResponsabilidad(empleado.getResponsabilidad());
+        empleadoTmp.setRfc(empleado.getRfc());
+        empleadoTmp.setStatus(empleado.getStatus());
+        empleadoTmp.setTurno(empleado.getTurno());
+        empleadoTmp.setNombre(empleado.getNombre());
+        try {
+            empleadoManager.actualizaEmpleado(empleadoTmp);
+        } catch (ConstraintViolationException e) {
+            log.error("No se pudo crear al empleado", e);
+            errors.rejectValue("nombre", "empleado.errors.creado", e.toString());
+            return Constantes.PATH_EMPLEADO_EDITA;
+        }
+
+        redirectAttributes.addFlashAttribute("message",
+                "usuario.actualizado.message");
+        redirectAttributes.addFlashAttribute("messageAttrs",
+                new String[]{empleado.getUsername()});
+
+        return "redirect:" + Constantes.PATH_EMPLEADO;
     }
 
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)

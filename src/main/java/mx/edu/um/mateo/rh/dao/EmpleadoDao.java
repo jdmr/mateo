@@ -95,6 +95,7 @@ public interface EmpleadoDao {
     public Empleado getEmpleadoClave(Empleado empleado);
 
     public List<Empleado> searchEmpleadoByClaveOrApPaterno(Empleado empleado);
+
     /**
      * Filtra empleados por contabilidad o centro de costo
      *
@@ -117,4 +118,5 @@ public interface EmpleadoDao {
      * @return
      */
     //public Set getEmpleadoPerDeds(Empleado empleado);
+    public void actualiza(Empleado empleado);
 }

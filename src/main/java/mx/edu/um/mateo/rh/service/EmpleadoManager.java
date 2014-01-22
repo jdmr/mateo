@@ -146,4 +146,5 @@ public interface EmpleadoManager {
      * @return
      */
     //public Set getEmpleadoPerDeds(Empleado empleado);
+    public void actualizaEmpleado(Empleado empleado);
 }

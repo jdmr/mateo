@@ -48,6 +48,17 @@
                         <br/>
 
                         <h2>Datos Personales de ${empleado.nombreCompleto}</h2>
+                        <div class="btn-group">
+                            <button  class="btn btn-info "><i class="icon-white icon-tasks"></i>Info</button>
+                            <button class="btn btn-info dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="<s:url value='/rh/empleado/edita/${empleado.id}'/>"><i class=" icon-edit"></i>Editar Datos</a></li>
+                                <li><a href="#">Another action</a></li>
+                                <li><a href="#">Something else here</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Separated link</a></li>
+                            </ul>
+                        </div>
                         <div class="row-fluid" style="padding-bottom: 10px;">
                             <div class="span3" style="padding-bottom: 10px;">
                                 <h4> <s:message code="nombre.label" /></h4>

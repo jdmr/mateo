@@ -31,14 +31,12 @@
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
-          
+
 
             <table id="lista" class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="nivelEstudios" />
-                        </jsp:include>
+
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="nombre" />
                         </jsp:include>
@@ -47,9 +45,6 @@
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="apMaterno" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="clave" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="genero" />
@@ -128,7 +123,6 @@
                             <td><a href="<c:url value='/rh/empleado/ver/${empleado.id}' />">${empleado.nombre}</a></td>
                             <td>${empleado.apPaterno}</td>
                             <td>${empleado.apMaterno}</td>
-                            <td>${empleado.clave}</td>
                             <td>${empleado.genero}</td>
                             <td>${empleado.direccion}</td>
                             <td>${empleado.status}</td>
