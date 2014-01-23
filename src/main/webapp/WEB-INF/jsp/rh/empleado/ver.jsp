@@ -49,11 +49,11 @@
 
                         <h2>Datos Personales de ${empleado.nombreCompleto}</h2>
                         <div class="btn-group">
-                            <button  class="btn btn-info "><i class="icon-white icon-tasks"></i>Info</button>
+                            <button  class="btn btn-info "><i class="icon-white icon-folder-close"></i>Info</button>
                             <button class="btn btn-info dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                             <ul class="dropdown-menu">
                                 <li><a href="<s:url value='/rh/empleado/edita/${empleado.id}'/>"><i class=" icon-edit"></i>Editar Datos</a></li>
-                                <li><a href="#">Another action</a></li>
+                                <li><a href="<s:url value='/rh/empleado/claveEmpleado/nuevo'/>"><i class="icon-certificate"></i> Cambiar Clave</a></li>
                                 <li><a href="#">Something else here</a></li>
                                 <li class="divider"></li>
                                 <li><a href="#">Separated link</a></li>

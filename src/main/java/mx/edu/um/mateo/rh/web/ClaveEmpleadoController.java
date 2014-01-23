@@ -24,8 +24,9 @@ import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.rh.model.ClaveEmpleado;
 import mx.edu.um.mateo.rh.model.Empleado;
-import mx.edu.um.mateo.rh.model.Nacionalidad;
+import mx.edu.um.mateo.rh.model.TipoEmpleado;
 import mx.edu.um.mateo.rh.service.ClaveEmpleadoManager;
+import mx.edu.um.mateo.rh.service.TipoEmpleadoManager;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -66,6 +67,8 @@ public class ClaveEmpleadoController extends BaseController {
 
     @Autowired
     private ClaveEmpleadoManager manager;
+    @Autowired
+    private TipoEmpleadoManager tipoEmpleadoManager;
 
     @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -166,6 +169,9 @@ public class ClaveEmpleadoController extends BaseController {
     @RequestMapping("/nuevo")
     public String nueva(Model modelo) {
         log.debug("Nuevo claveempleado");
+        Map<String, Object> params = new HashMap<>();
+        params = tipoEmpleadoManager.lista(params);
+        modelo.addAttribute(Constantes.TIPOEMPLEADO_LIST, (List) params.get(Constantes.TIPOEMPLEADO_LIST));
         ClaveEmpleado claveEmpleado = new ClaveEmpleado();
         modelo.addAttribute(Constantes.ADDATTRIBUTE_CLAVEEMPLEADO, claveEmpleado);
         return Constantes.PATH_CLAVEEMPLEADO_NUEVO;
@@ -206,6 +212,27 @@ public class ClaveEmpleadoController extends BaseController {
         ClaveEmpleado claveEmpleado = manager.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_CLAVEEMPLEADO, claveEmpleado);
         return Constantes.PATH_CLAVEEMPLEADO_LISTA;
+    }
+
+    @RequestMapping("/cambiarClave")
+    public String cambiarClave(HttpServletRequest request, @Valid ClaveEmpleado claveEmpleado, Model modelo) {
+        log.debug("Cambiar clave de empleado");
+        Empleado empleado = (Empleado) request.getSession().getAttribute(Constantes.EMPLEADO_KEY);
+        ClaveEmpleado claveantigua = manager.obtieneClaveActiva(empleado.getId());
+        claveantigua.setStatus(Constantes.STATUS_INACTIVO);
+        String t = request.getParameter("tipoEmpleado.id");
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
+        }
+        TipoEmpleado tipoEmpleado = tipoEmpleadoManager.obtiene(Long.valueOf(t));
+        Usuario usuario = ambiente.obtieneUsuario();
+        String prefijo = tipoEmpleado.getPrefijo();
+        ClaveEmpleado clavenueva = manager.nuevaClave(usuario, prefijo);
+        clavenueva.setEmpleado(empleado);
+        clavenueva.setObservaciones(claveEmpleado.getObservaciones());
+        clavenueva.setFecha(claveEmpleado.getFecha());
+        manager.graba(clavenueva, usuario);
+        return "redirect:" + Constantes.PATH_EMPLEADO;
     }
 
     @Transactional

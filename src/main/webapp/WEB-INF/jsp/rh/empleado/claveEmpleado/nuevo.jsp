@@ -15,9 +15,9 @@
         <div id="nuevo-nacionalidad" class="content scaffold-list" role="main">
             <h1><s:message code="claveEmpleado.nuevo.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/rh/claveEmpleado'/>"><i class="icon-list icon-white"></i> <s:message code='claveEmpleado.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/rh/empleado/claveEmpleado/cambiarClave'/>"><i class="icon-list icon-white"></i> <s:message code='claveEmpleado.lista.label' /></a>
             </p>
-            <form:form commandName="claveEmpleado" action="graba" method="post">
+            <form:form commandName="claveEmpleado" action="cambiarClave" method="post">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -28,16 +28,17 @@
                 </form:errors>
 
                 <fieldset>
-                    <s:bind path="claveEmpleado.clave">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="clave">
-                                <s:message code="clave.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="clave" maxlength="128" required="true" cssClass="span3" />
-                            <form:errors path="clave" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+
+                    <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="tipoEmpleado.id">
+                            <s:message code="status.label" />
+                            <span class="required-indicator">*</span></label>
+                        <select name="tipoEmpleado.id" >  
+                            <c:forEach  var="tipo" items="${tipoEmpleadoList}">
+                                <option  value="${tipo.id}">${tipo.descripcion}</option>
+                            </c:forEach>
+                        </select> 
+                    </div>
                     <s:bind path="claveEmpleado.fecha">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="fecha">
@@ -48,18 +49,7 @@
                             <form:errors path="fecha" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="claveEmpleado.status">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="status">
-                                <s:message code="status.label" />
-                                <span class="required-indicator">*</span></label>
-                            <select name="status">  
-                                <option value="A" selected>Activo</option>  
-                                <option value="I">Inactivo</option>  
-                                <option value="J">Jubilado</option>  
-                            </select> 
-                        </div>
-                    </s:bind>
+
                     <s:bind path="claveEmpleado.observaciones">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="observaciones">

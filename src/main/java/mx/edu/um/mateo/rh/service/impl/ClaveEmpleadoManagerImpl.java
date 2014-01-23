@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.service.BaseManager;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.rh.dao.ClaveEmpleadoDao;
 import mx.edu.um.mateo.rh.model.ClaveEmpleado;
@@ -26,7 +27,7 @@ import sun.org.mozilla.javascript.ScriptRuntime;
  */
 @Transactional
 @Service
-public class ClaveEmpleadoManagerImpl implements ClaveEmpleadoManager {
+public class ClaveEmpleadoManagerImpl extends BaseManager implements ClaveEmpleadoManager {
 
     @Autowired
     private ClaveEmpleadoDao dao;
@@ -91,6 +92,7 @@ public class ClaveEmpleadoManagerImpl implements ClaveEmpleadoManager {
 
     @Override
     public ClaveEmpleado nuevaClave(Usuario usuario, String filtro) {
+        log.debug("entrando a nueva clave");
         Map<String, Object> params = new HashMap<>();
         params.put("filtro", filtro);
         params = dao.lista(params);
@@ -99,7 +101,9 @@ public class ClaveEmpleadoManagerImpl implements ClaveEmpleadoManager {
         ClaveEmpleado nueva = new ClaveEmpleado();
         int anterior = 0, actual;
         String hueco = null;
+        Boolean huboHueco = false;
         if (claves.isEmpty()) {
+            log.debug("no habia claves");
             String c = filtro + "0001";
             nueva.setClave(c);
             nueva.setStatus(Constantes.STATUS_ACTIVO);
@@ -110,27 +114,35 @@ public class ClaveEmpleadoManagerImpl implements ClaveEmpleadoManager {
         }
         for (ClaveEmpleado claveActual : claves) {
             actual = Integer.parseInt(claveActual.getClave());
+            log.debug("claveactual{}", actual);
             if (claveAnterior != null) {
                 anterior = Integer.parseInt(claveAnterior.getClave());
+                log.debug("anterior{}", anterior);
             }
-            if (actual - anterior != 1) {
+            if (claveAnterior != null && actual - anterior > 1) {
+                log.debug("suma....{}", actual - anterior);
+                log.debug("habia hueco");
                 hueco = String.valueOf(anterior + 1);
+                log.debug("hueco{}", hueco);
                 if (dao.noExisteClave(hueco)) {
                     nueva.setClave(hueco);
                     nueva.setStatus(Constantes.STATUS_ACTIVO);
                     nueva.setFecha(new Date());
                     nueva.setFechaAlta(new Date());
                     nueva.setUsuarioAlta(usuario);
+                    huboHueco = true;
                     break;
                 }
 
             }
             claveAnterior = claveActual;
         }
-        if (hueco.isEmpty() || hueco == null) {
-            int c = Integer.parseInt(claveAnterior.getClave());
-            String cs = String.valueOf(c);
 
+        if (!huboHueco) {
+            log.debug("creando nueva clave");
+            int c = Integer.parseInt(claveAnterior.getClave());
+            String cs = String.valueOf(c + 1);
+            log.debug("cs-_{}", cs);
             if (dao.noExisteClave(cs)) {
                 nueva.setClave(cs);
                 nueva.setStatus(Constantes.STATUS_ACTIVO);

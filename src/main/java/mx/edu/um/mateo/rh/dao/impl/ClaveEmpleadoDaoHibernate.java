@@ -129,7 +129,7 @@ public class ClaveEmpleadoDaoHibernate extends BaseDao implements ClaveEmpleadoD
         Query query = currentSession().createQuery(
                 "select c from ClaveEmpleado c where c.clave = :clave");
         query.setString("clave", clave);
-        if (query == null) {
+        if (query.uniqueResult() == null) {
             return true;
         }
         return false;
@@ -154,8 +154,8 @@ public class ClaveEmpleadoDaoHibernate extends BaseDao implements ClaveEmpleadoD
     }
 
     /**
-     * @return 
-     * @see mx.edu.um.mateo.rh.dao.ClaveEmpleadoDao#elimina(java.lang.Long)
+     * @return @see
+     * mx.edu.um.mateo.rh.dao.ClaveEmpleadoDao#elimina(java.lang.Long)
      */
     @Override
     public String elimina(Long id) {
