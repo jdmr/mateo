@@ -276,7 +276,7 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
     /**
      * @see
      * mx.edu.um.mateo.rh.dao.EmpleadoDao#saveEmpleado(mx.edu.um.mateo.rh.model.Empleado,
-     * mx.edu.um.mateo.general.model.Usuario)
+     * mx.edu.um.mateo.general.model.Usuario) 
      */
     @Override
     @Transactional
