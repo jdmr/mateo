@@ -3103,5 +3103,6 @@ public class Constantes {
     public static final String PATH_JEFESECCION_CREA = "/rh/catalogo/jefeSeccion/crea";
     public static final String PATH_JEFESECCION_ACTUALIZA = "/rh/catalogo/jefeSeccion/actualiza";
     public static final String PATH_JEFESECCION_ELIMINA = "/rh/catalogo/jefeSeccion/elimina";
+    public static final String PATH_TRASPASDODATOSEMPLEADO = "/rh/empleado/traspasoDatosEmpleado";
 
 }
