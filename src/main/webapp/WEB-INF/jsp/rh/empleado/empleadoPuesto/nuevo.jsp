@@ -17,7 +17,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/rh/empleadoPuesto/'/>"><i class="icon-list icon-white"></i> <s:message code='empleadoPuesto.lista.label' /></a>
             </p>
-            <form:form commandName="empleadoPuesto" action="graba" method="post">
+            <form:form commandName="empleadoPuestoForm" action="graba" method="post">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -27,7 +27,7 @@
                     </div>
                 </form:errors>
                 <fieldset>
-                    <s:bind path="empleadoPuesto.puesto">
+                    <s:bind path="empleadoPuestoForm.puesto">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="puesto">
                                 <s:message code="empleadoPuesto.puesto.label" />
@@ -37,7 +37,7 @@
                             <form:errors path="puesto" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="empleadoPuesto.turno">
+                    <s:bind path="empleadoPuestoForm.turno">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="turno">
                                 <s:message code="empleadoPuesto.turno.label" />
@@ -46,7 +46,7 @@
                             <form:input path="turno" maxlength="100" required="true" cssClass="span4" />
                         </div>
                     </s:bind>
-                    <s:bind path="empleadoPuesto.status">
+                    <s:bind path="empleadoPuestoForm.status">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="status">
                                 <s:message code="empleadoPuesto.status.label" />

@@ -1901,7 +1901,7 @@ public class Constantes {
      */
     public static final String GASOLINERA_LIST = "gasolineraList";
     // Gasolinera-END
-    
+
     // SolicitudPermiso-START
     /**
      * The request scope attribute that holds the solicitudPermiso form.
@@ -2366,6 +2366,12 @@ public class Constantes {
     public static final String CONTAINSKEY_DESCUENTOS = "descuentos";
     public static final String CONTAINSKEY_TIPODESCUENTOS = "tipoDescuentos";
     public static final String CONTAINSKEY_ALUMNODESCUENTOS = "alumnoDescuentos";
+    public static final String CONTAINSKEY_CLAVEEMPLEADO = "clavesEmpleado";
+    public static final String CONTAINSKEY_DIASFERIADOS = "diasFeriados";
+    public static final String CONTAINSKEY_SOLICITUDVACACIONESEMPLEADO = "solicitudEmpleadoVacaciones";
+    public static final String CONTAINSKEY_VACACIONESEMPLEADO = "empleadoVacaciones";
+    public static final String CONTAINSKEY_JEFES = "jefes";
+    public static final String CONTAINSKEY_JEFESSECCION = "jefesSeccion";
     /**
      * Valores para el los addAttribute para las clases
      */
@@ -2378,75 +2384,81 @@ public class Constantes {
     public static final String ADDATTRIBUTE_CATEGORIA = "categoria";
     public static final String ADDATTRIBUTE_NACIONALIDAD = "nacionalidad";
     public static final String ADDATTRIBUTE_PERDED = "perded";
+    public static final String ADDATTRIBUTE_CLAVEEMPLEADO = "claveEmpleado";
+    public static final String ADDATTRIBUTE_DIAFERIADO = "diaFeriado";
+    public static final String ADDATTRIBUTE_SOLICITUDVACACIONESEMPLEADO = "solicitudVacacionEmpleado";
+    public static final String ADDATTRIBUTE_VACACIONESEMPLEADO = "vacacionEmpleado";
+    public static final String ADDATTRIBUTE_JEFE = "jefe";
+    public static final String ADDATTRIBUTE_JEFESECCION = "jefeSeccion";
     /*
      * Valores para el los path's para las clases
      */
-    public static final String PATH_DEPENDIENTE = "/rh/dependiente";
-    public static final String PATH_DEPENDIENTE_LISTA = "/rh/dependiente/lista";
-    public static final String PATH_DEPENDIENTE_VER = "/rh/dependiente/ver";
-    public static final String PATH_DEPENDIENTE_NUEVO = "/rh/dependiente/nuevo";
-    public static final String PATH_DEPENDIENTE_EDITA = "/rh/dependiente/edita";
-    public static final String PATH_DEPENDIENTE_CREA = "/rh/dependiente/crea";
-    public static final String PATH_DEPENDIENTE_ACTUALIZA = "/rh/dependiente/actualiza";
-    public static final String PATH_DEPENDIENTE_ELIMINA = "/rh/dependiente/elimina";
-    public static final String PATH_ESTUDIOSEMPLEADO = "/rh/estudiosEmpleado";
-    public static final String PATH_ESTUDIOSEMPLEADO_LISTA = "/rh/estudiosEmpleado/lista";
-    public static final String PATH_ESTUDIOSEMPLEADO_VER = "/rh/estudiosEmpleado/ver";
-    public static final String PATH_ESTUDIOSEMPLEADO_NUEVO = "/rh/estudiosEmpleado/nuevo";
-    public static final String PATH_ESTUDIOSEMPLEADO_EDITA = "/rh/estudiosEmpleado/edita";
-    public static final String PATH_ESTUDIOSEMPLEADO_CREA = "/rh/estudiosEmpleado/crea";
-    public static final String PATH_ESTUDIOSEMPLEADO_ACTUALIZA = "/rh/estudiosEmpleado/actualiza";
-    public static final String PATH_ESTUDIOSEMPLEADO_ELIMINA = "/rh/estudiosEmpleado/elimina";
-    public static final String PATH_SECCION = "/rh/seccion";
-    public static final String PATH_SECCION_LISTA = "/rh/seccion/lista";
-    public static final String PATH_SECCION_VER = "/rh/seccion/ver";
-    public static final String PATH_SECCION_NUEVO = "/rh/seccion/nueva";
-    public static final String PATH_SECCION_EDITA = "/rh/seccion/edita";
-    public static final String PATH_SECCION_CREA = "/rh/seccion/crea";
-    public static final String PATH_SECCION_ACTUALIZA = "/rh/seccion/actualiza";
-    public static final String PATH_SECCION_ELIMINA = "/rh/colegio/elimina";
-    public static final String PATH_CATEGORIA = "/rh/categoria";
-    public static final String PATH_CATEGORIA_LISTA = "/rh/categoria/lista";
-    public static final String PATH_CATEGORIA_VER = "rh/categoria/ver";
-    public static final String PATH_CATEGORIA_NUEVO = "/rh/categoria/nuevo";
-    public static final String PATH_CATEGORIA_EDITA = "/rh/categoria/edita";
-    public static final String PATH_CATEGORIA_GRABA = "/rh/categoria/graba";
-    public static final String PATH_CATEGORIA_ACTUALIZA = "/rh/categoria/actualiza";
-    public static final String PATH_CATEGORIA_ELIMINA = "/rh/categoria/elimina";
+    public static final String PATH_DEPENDIENTE = "/rh/empleado/dependiente";
+    public static final String PATH_DEPENDIENTE_LISTA = "/rh/empleado/dependiente/lista";
+    public static final String PATH_DEPENDIENTE_VER = "/rh/empleado/dependiente/ver";
+    public static final String PATH_DEPENDIENTE_NUEVO = "/rh/empleado/dependiente/nuevo";
+    public static final String PATH_DEPENDIENTE_EDITA = "/rh/empleado/dependiente/edita";
+    public static final String PATH_DEPENDIENTE_CREA = "/rh/empleado/dependiente/crea";
+    public static final String PATH_DEPENDIENTE_ACTUALIZA = "/rh/empleado/dependiente/actualiza";
+    public static final String PATH_DEPENDIENTE_ELIMINA = "/rh/empleado/dependiente/elimina";
+    public static final String PATH_ESTUDIOSEMPLEADO = "/rh/catalogo/estudiosEmpleado";
+    public static final String PATH_ESTUDIOSEMPLEADO_LISTA = "/rh/catalogo/estudiosEmpleado/lista";
+    public static final String PATH_ESTUDIOSEMPLEADO_VER = "/rh/catalogo/estudiosEmpleado/ver";
+    public static final String PATH_ESTUDIOSEMPLEADO_NUEVO = "/rh/catalogo/estudiosEmpleado/nuevo";
+    public static final String PATH_ESTUDIOSEMPLEADO_EDITA = "/rh/catalogo/estudiosEmpleado/edita";
+    public static final String PATH_ESTUDIOSEMPLEADO_CREA = "/rh/catalogo/estudiosEmpleado/crea";
+    public static final String PATH_ESTUDIOSEMPLEADO_ACTUALIZA = "/rh/catalogo/estudiosEmpleado/actualiza";
+    public static final String PATH_ESTUDIOSEMPLEADO_ELIMINA = "/rh/catalogo/estudiosEmpleado/elimina";
+    public static final String PATH_SECCION = "/rh/catalogo/seccion";
+    public static final String PATH_SECCION_LISTA = "/rh/catalogo/seccion/lista";
+    public static final String PATH_SECCION_VER = "/rh/catalogo/seccion/ver";
+    public static final String PATH_SECCION_NUEVO = "/rh/catalogo/seccion/nueva";
+    public static final String PATH_SECCION_EDITA = "/rh/catalogo/seccion/edita";
+    public static final String PATH_SECCION_CREA = "/rh/catalogo/seccion/crea";
+    public static final String PATH_SECCION_ACTUALIZA = "/rh/catalogo/seccion/actualiza";
+    public static final String PATH_SECCION_ELIMINA = "/rh/catalogo/colegio/elimina";
+    public static final String PATH_CATEGORIA = "/rh/catalogo/categoria";
+    public static final String PATH_CATEGORIA_LISTA = "/rh/catalogo/categoria/lista";
+    public static final String PATH_CATEGORIA_VER = "rh/catalogo/categoria/ver";
+    public static final String PATH_CATEGORIA_NUEVO = "/rh/catalogo/categoria/nuevo";
+    public static final String PATH_CATEGORIA_EDITA = "/rh/catalogo/categoria/edita";
+    public static final String PATH_CATEGORIA_GRABA = "/rh/catalogo/categoria/graba";
+    public static final String PATH_CATEGORIA_ACTUALIZA = "/rh/catalogo/categoria/actualiza";
+    public static final String PATH_CATEGORIA_ELIMINA = "/rh/catalogo/categoria/elimina";
     public static final String CATEGORIA_FORM = "categoriaForm";
     public static final String NACIONALIDAD_LIST = "nacionalidadList";
-    public static final String PATH_NACIONALIDAD = "/rh/nacionalidad";
-    public static final String PATH_NACIONALIDAD_LISTA = "/rh/nacionalidad/lista";
-    public static final String PATH_NACIONALIDAD_VER = "/rh/nacionalidad/ver";
-    public static final String PATH_NACIONALIDAD_NUEVO = "/rh/nacionalidad/nuevo";
-    public static final String PATH_NACIONALIDAD_EDITA = "/rh/nacionalidad/edita";
-    public static final String PATH_NACIONALIDAD_CREA = "/rh/nacionalidad/crea";
-    public static final String PATH_NACIONALIDAD_ACTUALIZA = "/rh/nacionalidad/actualiza";
-    public static final String PATH_NACIONALIDAD_ELIMINA = "/rh/nacionalidad/elimina";
+    public static final String PATH_NACIONALIDAD = "/rh/catalogo/nacionalidad";
+    public static final String PATH_NACIONALIDAD_LISTA = "/rh/catalogo/nacionalidad/lista";
+    public static final String PATH_NACIONALIDAD_VER = "/rh/catalogo/nacionalidad/ver";
+    public static final String PATH_NACIONALIDAD_NUEVO = "/rh/catalogo/nacionalidad/nuevo";
+    public static final String PATH_NACIONALIDAD_EDITA = "/rh/catalogo/nacionalidad/edita";
+    public static final String PATH_NACIONALIDAD_CREA = "/rh/catalogo/nacionalidad/crea";
+    public static final String PATH_NACIONALIDAD_ACTUALIZA = "/rh/catalogo/nacionalidad/actualiza";
+    public static final String PATH_NACIONALIDAD_ELIMINA = "/rh/catalogo/nacionalidad/elimina";
     public static final String NACIONALIDAD_FORM = "nacionalidadForm";
     /**
      * Valores para los conceptos
      */
     public static final String CONCEPTO_KEY = "concepto";
-    public static final String PATH_CONCEPTO = "/rh/concepto";
-    public static final String PATH_CONCEPTO_LISTA = "rh/concepto/lista";
-    public static final String PATH_CONCEPTO_VER = "/rh/concepto/ver";
-    public static final String PATH_CONCEPTO_NUEVO = "/rh/concepto/nuevo";
-    public static final String PATH_CONCEPTO_EDITA = "/rh/concepto/edita";
-    public static final String PATH_CONCEPTO_CREA = "/rh/concepto/crea";
-    public static final String PATH_CONCEPTO_ACTUALIZA = "/rh/concepto/actualiza";
-    public static final String PATH_CONCEPTO_ELIMINA = "/rh/concepto/elimina";
-    public static final String PATH_PERDED = "/rh/perded";
-    public static final String PATH_PERDED_LISTA = "/rh/perded/lista";
-    public static final String PATH_PERDED_VER = "/rh/perded/ver";
-    public static final String PATH_PERDED_NUEVO = "/rh/perded/nuevo";
-    public static final String PATH_PERDED_EDITA = "/rh/perded/edita";
-    public static final String PATH_PERDED_GRABA = "/rh/perded/graba";
-    public static final String PATH_EMPLEADOPUESTO = "/rh/empleadoPuesto";
-    public static final String PATH_EMPLEADOPUESTO_LISTA = "/rh/empleadoPuesto/lista";
-    public static final String PATH_EMPLEADOPUESTO_VER = "/rh/empleadoPuesto/ver";
-    public static final String PATH_EMPLEADOPUESTO_NUEVO = "/rh/empleadoPuesto/nuevo";
-    public static final String PATH_EMPLEADOPUESTO_EDITA = "/rh/empleadoPuesto/edita";
+    public static final String PATH_CONCEPTO = "/rh/catalogo/concepto";
+    public static final String PATH_CONCEPTO_LISTA = "rh/catalogo/concepto/lista";
+    public static final String PATH_CONCEPTO_VER = "/rh/catalogo/concepto/ver";
+    public static final String PATH_CONCEPTO_NUEVO = "/rh/catalogo/concepto/nuevo";
+    public static final String PATH_CONCEPTO_EDITA = "/rh/catalogo/concepto/edita";
+    public static final String PATH_CONCEPTO_CREA = "/rh/catalogo/concepto/crea";
+    public static final String PATH_CONCEPTO_ACTUALIZA = "/rh/catalogo/concepto/actualiza";
+    public static final String PATH_CONCEPTO_ELIMINA = "/rh/catalogo/concepto/elimina";
+    public static final String PATH_PERDED = "/rh/empleado/perded";
+    public static final String PATH_PERDED_LISTA = "/rh/empleado/perded/lista";
+    public static final String PATH_PERDED_VER = "/rh/empleado/perded/ver";
+    public static final String PATH_PERDED_NUEVO = "/rh/empleado/perded/nuevo";
+    public static final String PATH_PERDED_EDITA = "/rh/empleado/perded/edita";
+    public static final String PATH_PERDED_GRABA = "/rh/empleado/perded/graba";
+    public static final String PATH_EMPLEADOPUESTO = "/rh/empleado/empleadoPuesto";
+    public static final String PATH_EMPLEADOPUESTO_LISTA = "/rh/empleado/empleadoPuesto/lista";
+    public static final String PATH_EMPLEADOPUESTO_VER = "/rh/empleado/empleadoPuesto/ver";
+    public static final String PATH_EMPLEADOPUESTO_NUEVO = "/rh/empleado/empleadoPuesto/nuevo";
+    public static final String PATH_EMPLEADOPUESTO_EDITA = "/rh/empleado/empleadoPuesto/edita";
     public static final String CONTAINSKEY_PERIODOS = "periodos";
     public static final String PATH_PERIODOS = "/inscripciones/periodos";
     public static final String PATH_PERIODOS_LISTA = "inscripciones/periodos/lista";
@@ -2467,13 +2479,13 @@ public class Constantes {
     public static final String PATH_INSTITUCION_CREA = "/inscripciones/instituciones/crea";
     public static final String PATH_INSTITUCION_ELIMINA = "/inscripciones/instituciones/elimina";
     public static final String PATH_TIPOEMPLEADO = "/rh/tipoEmpleado";
-    public static final String PATH_TIPOEMPLEADO_LISTA = "/rh/tipoEmpleado/lista";
-    public static final String PATH_TIPOEMPLEADO_VER = "/rh/tipoEmpleado/ver";
-    public static final String PATH_TIPOEMPLEADO_NUEVO = "/rh/tipoEmpleado/nuevo";
-    public static final String PATH_TIPOEMPLEADO_EDITA = "/rh/tipoEmpleado/edita";
-    public static final String PATH_TIPOEMPLEADO_CREA = "/rh/tipoEmpleado/crea";
-    public static final String PATH_TIPOEMPLEADO_ACTUALIZA = "/rh/tipoEmpleado/actualiza";
-    public static final String PATH_TIPOEMPLEADO_ELIMINA = "/rh/tipoEmpleado/elimina";
+    public static final String PATH_TIPOEMPLEADO_LISTA = "/rh/catalogo/tipoEmpleado/lista";
+    public static final String PATH_TIPOEMPLEADO_VER = "/rh/catalogo/tipoEmpleado/ver";
+    public static final String PATH_TIPOEMPLEADO_NUEVO = "/rh/catalogo/tipoEmpleado/nuevo";
+    public static final String PATH_TIPOEMPLEADO_EDITA = "/rh/catalogo/tipoEmpleado/edita";
+    public static final String PATH_TIPOEMPLEADO_CREA = "/rh/catalogo/tipoEmpleado/crea";
+    public static final String PATH_TIPOEMPLEADO_ACTUALIZA = "/rh/catalogo/tipoEmpleado/actualiza";
+    public static final String PATH_TIPOEMPLEADO_ELIMINA = "/rh/catalogo/tipoEmpleado/elimina";
     public static final String ADDATTRIBUTE_INSTITUCION = "institucion";
     /**
      * Valores para los Asociacion Colportor
@@ -2953,6 +2965,22 @@ public class Constantes {
     public static final String CONTAINSKEY_CONCENTRADOGRALPORTEMPORADAS = "concentradoGralPorTemporadas";
     public static final String PATH_RPT_CLP_CONCENTRADOVENTAS = "/colportaje/reportes/concentradoVentas";
     public static final String CONTAINSKEY_CONCENTRADOVENTAS = "concentradoVentas";
+    /**
+     * @see
+     * mx.edu.um.mateo.rh.web.ClaveEMpleadoController;ValoresparaclavesdeempleadoRH
+     *
+     */
+    public static final String CLAVEEMPLEADO_LIST = "claveEmpleadoList";
+    public static final String PATH_CLAVEEMPLEADO = "/rh/empleado/claveEmpleado";
+    public static final String PATH_CLAVEEMPLEADO_LISTA = "/rh/empleado/claveEmpleado/lista";
+    public static final String PATH_CLAVEEMPLEADO_VER = "/rh/empleado/claveEmpleado/ver";
+    public static final String PATH_CLAVEEMPLEADO_NUEVO = "/rh/empleado/claveEmpleado/nuevo";
+    public static final String PATH_CLAVEEMPLEADO_EDITA = "/rh/empleado/claveEmpleado/edita";
+    public static final String PATH_CLAVEEMPLEADO_CREA = "/rh/empleado/claveEmpleado/crea";
+    public static final String PATH_CLAVEEMPLEADO_ACTUALIZA = "/rh/empleado/claveEmpleado/actualiza";
+    public static final String PATH_CLAVEEMPLEADO_ELIMINA = "/rh/empleado/claveEmpleado/elimina";
+    public static final String CLAVEEMPLEADO_FORM = "claveEmpleadoForm";
+
     public static final String PATH_RPT_CLP_PLANMENSUALORACION = "/colportaje/reportes/planMensualOracion";
     public static final String CONTAINSKEY_PLANMENSUALORACION = "planMensualOracion";
     public static final String PATH_RPT_CLP_PLANDIARIOORACION = "/colportaje/reportes/planDiarioOracion";
@@ -3009,4 +3037,72 @@ public class Constantes {
     public static final String RECIBO_COLPORTOR_PATH_ELIMINA = "/colportaje/ventas/recibos/elimina";
     public static final String RECIBO_COLPORTOR = "reciboColportor";
     public static final String RECIBO_COLPORTOR_LIST = "recibosColportor";
+    /**
+     * @see
+     * mx.edu.um.mateo.rh.web.DiaFeriadoController;Valoresparaclavesdecalendario
+     *
+     *
+     */
+    public static final String PATH_DIAFERIADO = "/rh/catalogo/diaFeriado";
+    public static final String PATH_DIAFERIADO_LISTA = "/rh/catalogo/diaFeriado/lista";
+    public static final String PATH_DIAFERIADO_VER = "/rh/catalogo/diaFeriado/ver";
+    public static final String PATH_DIAFERIADO_NUEVO = "/rh/catalogo/diaFeriado/nuevo";
+    public static final String PATH_DIAFERIADO_EDITA = "/rh/catalogo/diaFeriado/edita";
+    public static final String PATH_DIAFERIADO_CREA = "/rh/catalogo/diaFeriado/crea";
+    public static final String PATH_DIAFERIADO_ACTUALIZA = "/rh/catalogo/diaFeriado/actualiza";
+    public static final String PATH_DIAFERIADO_ELIMINA = "/rh/catalogo/diaFeriado/elimina";
+    /**
+     * @see
+     * mx.edu.um.mateo.rh.web.VacacionesEmpleadoController;Valoresparavacaionesdeempleado
+     *
+     */
+    public static final String PATH_SOLICITUDVACACIONESEMPLEADO = "/rh/empleado/solicitudVacacionesEmpleado";
+    public static final String PATH_SOLICITUDVACACIONESEMPLEADO_LISTA = "/rh/empleado/solicitudVacacionesEmpleado/lista";
+    public static final String PATH_SOLICITUDVACACIONESEMPLEADO_VER = "/rh/empleado/solicitudVacacionesEmpleado/ver";
+    public static final String PATH_SOLICITUDVACACIONESEMPLEADO_NUEVO = "/rh/empleado/solicitudVacacionesEmpleado/nuevo";
+    public static final String PATH_SOLICITUDVACACIONESEMPLEADO_EDITA = "/rh/empleado/solicitudVacacionesEmpleado/edita";
+    public static final String PATH_SOLICITUDVACACIONESEMPLEADO_CREA = "/rh/empleado/solicitudVacacionesEmpleado/crea";
+    public static final String PATH_SOLICITUDVACACIONESEMPLEADO_ACTUALIZA = "/rh/empleado/solicitudVacacionesEmpleado/actualiza";
+    public static final String PATH_SOLICITUDVACACIONESEMPLEADO_ELIMINA = "/rh/empleado/solicitudVacacionesEmpleado/elimina";
+    /**
+     * @see mx.edu.um.mateo.rh.web.VacacionesEmpleadoController;Valores para
+     * vacaiones de empleado
+     *
+     */
+    public static final String PATH_VACACIONESEMPLEADO = "/rh/empleado/vacacionesEmpleado";
+    public static final String PATH_VACACIONESEMPLEADO_LISTA = "/rh/empleado/vacacionesEmpleado/lista";
+    public static final String PATH_VACACIONESEMPLEADO_VER = "/rh/empleado/vacacionesEmpleado/ver";
+    public static final String PATH_VACACIONESEMPLEADO_NUEVO = "/rh/empleado/vacacionesEmpleado/nuevo";
+    public static final String PATH_VACACIONESEMPLEADO_EDITA = "/rh/empleado/vacacionesEmpleado/edita";
+    public static final String PATH_VACACIONESEMPLEADO_CREA = "/rh/empleado/vacacionesEmpleado/crea";
+    public static final String PATH_VACACIONESEMPLEADO_ACTUALIZA = "/rh/empleado/vacacionesEmpleado/actualiza";
+    public static final String PATH_VACACIONESEMPLEADO_ELIMINA = "/rh/empleado/vacacionesEmpleado/elimina";
+    /**
+     * @see mx.edu.um.mateo.rh.web.JefeController;Valores para vacaiones de
+     * empleado
+     *
+     */
+    public static final String PATH_JEFE = "/rh/catalogo/jefe";
+    public static final String PATH_JEFE_LISTA = "/rh/catalogo/jefe/lista";
+    public static final String PATH_JEFE_VER = "/rh/catalogo/jefe/ver";
+    public static final String PATH_JEFE_NUEVO = "/rh/catalogo/jefe/nuevo";
+    public static final String PATH_JEFE_EDITA = "/rh/catalogo/jefe/edita";
+    public static final String PATH_JEFE_CREA = "/rh/catalogo/jefe/crea";
+    public static final String PATH_JEFE_ACTUALIZA = "/rh/catalogo/jefe/actualiza";
+    public static final String PATH_JEFE_ELIMINA = "/rh/catalogo/jefe/elimina";
+    /**
+     * @see mx.edu.um.mateo.rh.web.JefeController;Valores para vacaiones de
+     * empleado
+     *
+     */
+    public static final String PATH_JEFESECCION = "/rh/catalogo/jefeSeccion";
+    public static final String PATH_JEFESECCION_LISTA = "/rh/catalogo/jefeSeccion/lista";
+    public static final String PATH_JEFESECCION_VER = "/rh/catalogo/jefeSeccion/ver";
+    public static final String PATH_JEFESECCION_NUEVO = "/rh/catalogo/jefeSeccion/nuevo";
+    public static final String PATH_JEFESECCION_EDITA = "/rh/catalogo/jefeSeccion/edita";
+    public static final String PATH_JEFESECCION_CREA = "/rh/catalogo/jefeSeccion/crea";
+    public static final String PATH_JEFESECCION_ACTUALIZA = "/rh/catalogo/jefeSeccion/actualiza";
+    public static final String PATH_JEFESECCION_ELIMINA = "/rh/catalogo/jefeSeccion/elimina";
+    public static final String PATH_TRASPASDODATOSEMPLEADO = "/rh/empleado/traspasoDatosEmpleado";
+
 }

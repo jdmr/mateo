@@ -50,6 +50,8 @@ import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.inventario.dao.AlmacenDao;
 import mx.edu.um.mateo.inventario.model.Almacen;
 import mx.edu.um.mateo.inventario.model.Estatus;
+import mx.edu.um.mateo.rh.dao.ClaveEmpleadoDao;
+import mx.edu.um.mateo.rh.model.ClaveEmpleado;
 import mx.edu.um.mateo.rh.model.Empleado;
 import mx.edu.um.mateo.rh.model.TipoEmpleado;
 import mx.edu.um.mateo.rh.service.EmpleadoManager;
@@ -85,6 +87,8 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
     private ColportorDao colportorDao;
     @Autowired
     private ProveedorDao proveedorDao;
+    @Autowired
+    private ClaveEmpleadoDao claveDao;
 
     @Override
     public void inicializa(String username, String password) {
@@ -119,7 +123,6 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
 
         Almacen almacen = almacenDao.obtiene(almacenId);
 
-
         for (Ejercicio ejercicio : ejercicioDao.lista(organizacion.getId())) {
             usuario.setEjercicio(ejercicio);
             break;
@@ -151,7 +154,8 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
             usuario.setEjercicio(ejercicio);
             break;
         }
-        empleadoManager.saveEmpleado((Empleado) usuario, usuario);
+        ClaveEmpleado claveEmpleado = new ClaveEmpleado("9800001", "A", "PruebaInicializa", new Date());
+        empleadoManager.saveEmpleado((Empleado) usuario, usuario, claveEmpleado);
 
         Estatus estatus = new Estatus(Constantes.ABIERTA, 100);
         currentSession().save(estatus);
@@ -194,7 +198,6 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
         rolesClp.add(rolDao.obtiene("ROLE_CLP"));
         usuario.setRoles(rolesClp);
         colportorDao.crea((Colportor) usuario, usuario);
-
 
         usuario = new ProveedorFacturas("testA", password, "nombre", "appaterno", "apmaterno", username + "@prv.edu.mx",
                 "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01", "TEST-01",
