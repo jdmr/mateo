@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PedidoColportor" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="89802176-8716-41c0-b1ed-4424810de3b9">
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.1" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.keep.first.band.1" value="columnHeader"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.1" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.csv.exclude.origin.band.2" value="pageFooter"/>
+	<property name="ireport.zoom" value="1.7715610000000082"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="numPedido" class="java.lang.String"/>
+	<field name="fechaPedido" class="java.lang.String"/>
+	<field name="cliente.nombreCompleto" class="java.lang.String"/>
+	<field name="observaciones" class="java.lang.String"/>
+	<field name="formaPago" class="java.lang.String"/>
+	<field name="pedido.item" class="java.lang.String"/>
+	<field name="pedido.cantidad" class="java.lang.String"/>
+	<field name="pedido.precioUnitario" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="34" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="34ee46f7-1f1d-47be-9fdb-2c2cf748e2f7" x="0" y="0" width="572" height="31"/>
+				<textElement textAlignment="Left">
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Resumen de Pedido]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="65" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="8d521c13-c413-47fa-841d-5e38c5bb3d2c" x="0" y="0" width="96" height="15"/>
+				<textElement/>
+				<text><![CDATA[Núm. Pedido:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2aee3ad4-b178-4e4c-a7c7-5e016446b59e" x="0" y="15" width="96" height="15"/>
+				<textElement/>
+				<text><![CDATA[Cliente:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="ecbbfbfd-2dee-43ca-a73f-7239b511803a" x="96" y="2" width="185" height="13"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{numPedido}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b23945dc-fee6-4f77-9a62-686c997ebfde" x="96" y="15" width="476" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{cliente.nombreCompleto}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="647e49d6-275a-4f71-a0cd-ebe76ec9d89e" x="0" y="30" width="96" height="15"/>
+				<textElement/>
+				<text><![CDATA[Fecha de Pedido:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c1c40e1d-cb7e-43f4-ae98-726c12d7169c" x="281" y="31" width="96" height="15"/>
+				<textElement/>
+				<text><![CDATA[Forma de Pago:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="16bbb4f5-40c0-4d1f-8d37-e873413fa326" x="0" y="46" width="96" height="15"/>
+				<textElement/>
+				<text><![CDATA[Observaciones:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="6523216d-1ba1-4942-a204-47781126ea4c" x="96" y="46" width="476" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{observaciones}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2d34d13a-05c6-4d17-b787-17a1fea52cbc" x="377" y="31" width="195" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{formaPago}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3d3aaaf3-5828-4ede-875d-c378916b494b" x="96" y="31" width="185" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{fechaPedido}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="9a5c7d56-1776-4156-8f86-877ae547a8ec" x="0" y="64" width="572" height="1"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="6a065cd1-2039-4bd3-bd3c-eb3510dc6460" x="0" y="0" width="284" height="15"/>
+				<textElement/>
+				<text><![CDATA[Artículo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="38f68cb4-a915-4803-9b0f-d6de9c61c266" x="284" y="0" width="96" height="15"/>
+				<textElement/>
+				<text><![CDATA[Cantidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="98673990-2fc2-47a3-9471-0d1902f503c9" x="380" y="0" width="96" height="15"/>
+				<textElement/>
+				<text><![CDATA[Precio Unitario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3acb50ae-c15d-4c5a-8f03-2ecb51c9f35a" x="476" y="0" width="96" height="15"/>
+				<textElement/>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="61d3326e-d120-4a2e-b5fb-41f93b86ecaa" x="0" y="15" width="284" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{pedido.item}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="5f86dd09-c37a-4810-9efd-7e655bfeebe7" x="380" y="15" width="96" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{pedido.precioUnitario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="54f9da5f-4f2c-47e6-9f3f-a3aaec28e93a" x="476" y="15" width="96" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[Double.valueOf($F{pedido.cantidad})*Double.valueOf($F{pedido.precioUnitario})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="52db7508-175d-46d6-be52-1ba92a96196e" x="284" y="15" width="96" height="15"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{pedido.cantidad}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

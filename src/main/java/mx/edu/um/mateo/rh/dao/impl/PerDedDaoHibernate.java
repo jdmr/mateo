@@ -64,6 +64,7 @@ public class PerDedDaoHibernate extends BaseDao implements PerDedDao {
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
+            propiedades.add(Restrictions.ilike("clave", filtro, MatchMode.ANYWHERE));
             propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
             propiedades.add(Restrictions.ilike("status", filtro, MatchMode.ANYWHERE));
             criteria.add(propiedades);

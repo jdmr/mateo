@@ -60,7 +60,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${perdeds}" var="perded" varStatus="status">
+                    <c:forEach items="${perDedList}" var="perded" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/rh/perded/ver/${perded.id}' />">${perded.nombre}</a></td>
                             
