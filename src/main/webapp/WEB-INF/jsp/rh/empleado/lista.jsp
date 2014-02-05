@@ -27,29 +27,16 @@
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block <c:choose><c:when test='${not empty messageStyle}'>${messageStyle}</c:when><c:otherwise>alert-success</c:otherwise></c:choose> fade in" role="status">
-                    <a class="close" data-dismiss="alert">×</a>
+                            <a class="close" data-dismiss="alert">×</a>
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
-            <c:if test="${empleado != null}">
-                <s:bind path="empleado.*">
-                    <c:if test="${not empty status.errorMessages}">
-                        <div class="alert alert-block alert-error fade in" role="status">
-                            <a class="close" data-dismiss="alert">×</a>
-                            <c:forEach var="error" items="${status.errorMessages}">
-                                <c:out value="${error}" escapeXml="false"/><br />
-                            </c:forEach>
-                        </div>
-                    </c:if>
-                </s:bind>
-            </c:if>
+
 
             <table id="lista" class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="nivelEstudios" />
-                        </jsp:include>
+
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="nombre" />
                         </jsp:include>
@@ -58,9 +45,6 @@
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="apMaterno" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="clave" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="genero" />
@@ -136,11 +120,9 @@
                 <tbody>
                     <c:forEach items="${empleadoList}" var="empleado" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td>${empleado.nivelEstudios}</td>
                             <td><a href="<c:url value='/rh/empleado/ver/${empleado.id}' />">${empleado.nombre}</a></td>
                             <td>${empleado.apPaterno}</td>
                             <td>${empleado.apMaterno}</td>
-                            <td>${empleado.clave}</td>
                             <td>${empleado.genero}</td>
                             <td>${empleado.direccion}</td>
                             <td>${empleado.status}</td>

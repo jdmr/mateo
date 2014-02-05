@@ -12,12 +12,12 @@
             <jsp:param name="menu" value="empleado" />
         </jsp:include>
 
-       <div id="edita-empleado" class="content scaffold-list" role="main">
+        <div id="edita-empleado" class="content scaffold-list" role="main">
             <h1><s:message code="empleado.edita.label" /></h1>
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/rh/empleado'/>"><i class="icon-list icon-white"></i> <s:message code='empleado.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="/rh/empleado/graba" />
+            <c:url var="actualizaUrl" value="/rh/empleado/actualiza" />
             <form:form commandName="empleado" method="post" action="${actualizaUrl}">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
@@ -29,24 +29,14 @@
                 </form:errors>
                 <form:hidden path="id" />
                 <form:hidden path="version" />
-                <form:hidden path="status" />
+                <form:hidden path="username" />
+                <form:hidden path="correo" />
 
-                <fieldset>
-                    <s:bind path="empleado.nivelEstudios">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="nombre">
-                                <s:message code="nivelEstudios.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:select id="nivelEstudios" path="nivelEstudios" required="true" cssClass="span3" >
-                                <form:options items="${nivelEstudiosList}" />
-                            </form:select>
-                            <form:errors path="nivelEstudios" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+
+                <fieldset>                    
                     <s:bind path="empleado.nombre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="nombre">
+                                <label for="nombre">
                                 <s:message code="nombre.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -56,7 +46,7 @@
                     </s:bind>
                     <s:bind path="empleado.apPaterno">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="apPaterno">
+                                <label for="apPaterno">
                                 <s:message code="apPaterno.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -66,7 +56,7 @@
                     </s:bind>
                     <s:bind path="empleado.apMaterno">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="apMaterno">
+                                <label for="apMaterno">
                                 <s:message code="apMaterno.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -74,19 +64,9 @@
                             <form:errors path="apMaterno" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="empleado.clave">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="clave">
-                                <s:message code="clave.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="clave" maxlength="7" required="true" />
-                            <form:errors path="clave" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
                     <s:bind path="empleado.genero">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="genero">
+                                <label for="genero">
                                 <s:message code="genero.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -96,7 +76,7 @@
                     </s:bind>
                     <s:bind path="empleado.direccion">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="direccion">
+                                <label for="direccion">
                                 <s:message code="direccion.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -106,7 +86,7 @@
                     </s:bind>
                     <s:bind path="empleado.fechaNacimiento">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="fechaNacimiento">
+                                <label for="fechaNacimiento">
                                 <s:message code="fechaNacimiento.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -116,7 +96,7 @@
                     </s:bind>
                     <s:bind path="empleado.curp">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="curp">
+                                <label for="curp">
                                 <s:message code="curp.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -126,7 +106,7 @@
                     </s:bind>
                     <s:bind path="empleado.rfc">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="rfc">
+                                <label for="rfc">
                                 <s:message code="rfc.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -136,7 +116,7 @@
                     </s:bind>
                     <s:bind path="empleado.cuenta">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="cuenta">
+                                <label for="cuenta">
                                 <s:message code="cuenta.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -146,7 +126,7 @@
                     </s:bind>
                     <s:bind path="empleado.imms">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="imms">
+                                <label for="imms">
                                 <s:message code="imms.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -156,7 +136,7 @@
                     </s:bind>
                     <s:bind path="empleado.escalafon">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="escalafon">
+                                <label for="escalafon">
                                 <s:message code="escalafon.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -186,17 +166,17 @@
                     </s:bind>
                     <s:bind path="empleado.modalidad">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="modalidad">
+                                <label for="modalidad">
                                 <s:message code="modalidad.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="modalidad" maxlength="3" required="true" />
+                            <form:input path="modalidad" maxlength="2" required="true" />
                             <form:errors path="modalidad" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                     <s:bind path="empleado.ife">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="ife">
+                                <label for="ife">
                                 <s:message code="ife.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -206,7 +186,7 @@
                     </s:bind>
                     <s:bind path="empleado.rango">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="rango">
+                                <label for="rango">
                                 <s:message code="rango.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -220,10 +200,10 @@
                                 <s:message code="adventista.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="adventista" maxlength="128" required="true" />
+                            <form:checkbox path="adventista" cssClass="span3" />
                             <form:errors path="adventista" cssClass="alert alert-error" />
                         </div>
-                    </s:bind>
+                    </s:bind> 
                     <s:bind path="empleado.padre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="padre">
@@ -266,7 +246,7 @@
                     </s:bind>                    
                     <s:bind path="empleado.fechaMatrimonio">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="resposabilidad">
+                                <label for="resposabilidad">
                                 <s:message code="fechaMatrimonio.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -276,7 +256,7 @@
                     </s:bind>
                     <s:bind path="empleado.finadoPadre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="finadoPadre">
+                                <label for="finadoPadre">
                                 <s:message code="finadoPadre.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -286,7 +266,7 @@
                     </s:bind>  
                     <s:bind path="empleado.finadoMadre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="finadoMadre">
+                                <label for="finadoMadre">
                                 <s:message code="finadoMadre.label" />
                                 <span class="required-indicator">*</span>
                             </label>
@@ -322,12 +302,12 @@
                 </p>
             </form:form>
         </div>
-        <content>
-            <script>
-                $(document).ready(function() {
-                    $('input#nombre').focus();
-                });
-            </script>                    
-        </content>
-    </body>
+    <content>
+        <script>
+            $(document).ready(function() {
+                $('input#nombre').focus();
+            });
+        </script>                    
+    </content>
+</body>
 </html>
