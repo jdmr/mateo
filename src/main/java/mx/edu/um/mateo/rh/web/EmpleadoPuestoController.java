@@ -35,18 +35,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author semdariobarbaamaya
  */
 @Controller
-@RequestMapping("/rh/empleadoPuesto")
-public class EmpleadoPuestoController extends BaseController{
-    
+@RequestMapping("/rh/empleado/empleadoPuesto")
+public class EmpleadoPuestoController extends BaseController {
+
     @Autowired
     private EmpleadoPuestoManager empleadoPuestoManager;
     @Autowired
     private PuestoManager puestoManager;
-    
-    public EmpleadoPuestoController(){
-         log.info("Se ha creado una nueva instancia de EmpleadoPuestoController");
+
+    public EmpleadoPuestoController() {
+        log.info("Se ha creado una nueva instancia de EmpleadoPuestoController");
     }
-    
+
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -108,9 +108,9 @@ public class EmpleadoPuestoController extends BaseController{
         log.debug("Mostrando empleadoPuesto {}", id);
         EmpleadoPuesto empleadoPuesto = empleadoPuestoManager.obtiene(id);
         modelo.addAttribute(Constantes.EMPLEADOPUESTO_KEY, empleadoPuesto);
-         
+
         request.getSession().setAttribute(Constantes.EMPLEADOPUESTO_KEY, empleadoPuesto);
-        
+
         return Constantes.PATH_EMPLEADOPUESTO_VER;
     }
 
@@ -119,9 +119,9 @@ public class EmpleadoPuestoController extends BaseController{
         log.debug("Nuevo empleadoPuesto");
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", request.getSession().getAttribute("empresaId"));
-        modelo.addAttribute( Constantes.PUESTO_LIST, puestoManager.lista(params).get(Constantes.PUESTO_LIST));
+        modelo.addAttribute(Constantes.PUESTO_LIST, puestoManager.lista(params).get(Constantes.PUESTO_LIST));
         EmpleadoPuesto empleadoPuesto = new EmpleadoPuesto();
-        modelo.addAttribute( Constantes.EMPLEADOPUESTO_KEY, empleadoPuesto);
+        modelo.addAttribute(Constantes.EMPLEADOPUESTO_KEY, empleadoPuesto);
         return Constantes.PATH_EMPLEADOPUESTO_NUEVO;
     }
 
@@ -168,7 +168,7 @@ public class EmpleadoPuestoController extends BaseController{
         }
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", request.getSession().getAttribute("empresaId"));
-        modelo.addAttribute( Constantes.PUESTO_LIST, puestoManager.lista(params).get(Constantes.PUESTO_LIST));
+        modelo.addAttribute(Constantes.PUESTO_LIST, puestoManager.lista(params).get(Constantes.PUESTO_LIST));
         modelo.addAttribute(Constantes.EMPLEADOPUESTO_KEY, empleadoPuesto);
         return Constantes.PATH_EMPLEADOPUESTO_EDITA;
     }
@@ -184,13 +184,12 @@ public class EmpleadoPuestoController extends BaseController{
 
             redirectAttributes.addFlashAttribute("message", "empleadoPuesto.eliminado.message");
             redirectAttributes.addFlashAttribute("messageAttrs", new String[]{descripcion});
-        }
-         catch (Exception e) {
+        } catch (Exception e) {
             log.error("No se pudo eliminar el empleadoPuesto " + id, e);
             bindingResult.addError(new ObjectError("empleadoPuesto", new String[]{"empleadoPuesto.no.eliminado.message"}, null, null));
             return Constantes.PATH_EMPLEADOPUESTO_VER;
         }
         return "redirect:" + Constantes.PATH_EMPLEADOPUESTO;
     }
-    
+
 }

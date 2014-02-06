@@ -15,7 +15,7 @@
         <div id="nuevo-perded" class="content scaffold-list" role="main">
             <h1><s:message code="empleadoPuesto.nuevo.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/rh/empleadoPuesto/'/>"><i class="icon-list icon-white"></i> <s:message code='empleadoPuesto.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/rh/empleado/empleadoPuesto/'/>"><i class="icon-list icon-white"></i> <s:message code='empleadoPuesto.lista.label' /></a>
             </p>
             <form:form commandName="empleadoPuestoForm" action="graba" method="post">
                 <form:errors path="*">
