@@ -276,13 +276,14 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
     /**
      * @see
      * mx.edu.um.mateo.rh.dao.EmpleadoDao#saveEmpleado(mx.edu.um.mateo.rh.model.Empleado,
-     * mx.edu.um.mateo.general.model.Usuario) 
+     * mx.edu.um.mateo.general.model.Usuario)
      */
     @Override
     @Transactional
     public void saveEmpleado(final Empleado empleado, Usuario usuario, ClaveEmpleado ce) {
         if (usuario != null) {
             empleado.setEmpresa(usuario.getEmpresa());
+            empleado.setAlmacen(usuario.getAlmacen());
         }
         empleado.setPassword(passwordEncoder.encodePassword(
                 usuario.getPassword(), usuario.getUsername()));
@@ -290,7 +291,6 @@ public class EmpleadoDaoHibernate extends BaseDao implements EmpleadoDao {
         ce.setEmpleado(empleado);
         claveDao.graba(ce, usuario);
     }
-
 
     /**
      * @see
