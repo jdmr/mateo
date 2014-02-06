@@ -9,7 +9,7 @@
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="perded" />
+            <jsp:param name="menu" value="perDed" />
         </jsp:include>
 
         <h1><s:message code="perded.lista.label" /></h1>

@@ -10,7 +10,7 @@
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="perded" />
+            <jsp:param name="menu" value="perDed" />
         </jsp:include>
 
         <div id="ver-perded" class="content scaffold-list" role="main">
