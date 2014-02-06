@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.model;
+package mx.edu.um.mateo.nomina.model;
 
 import java.io.Serializable;
 import java.util.Objects;

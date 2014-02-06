@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.web;
+package mx.edu.um.mateo.nomina.web;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,8 +22,8 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.rh.model.Categoria;
-import mx.edu.um.mateo.rh.model.PerDed;
-import mx.edu.um.mateo.rh.service.PerDedManager;
+import mx.edu.um.mateo.nomina.model.PerDed;
+import mx.edu.um.mateo.nomina.service.PerDedManager;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -66,7 +66,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping(Constantes.PATH_PERDED)
 public class PerDedController extends BaseController {
 
-    private static final Logger log = LoggerFactory.getLogger(mx.edu.um.mateo.rh.web.PerDedController.class);
+    private static final Logger log = LoggerFactory.getLogger(mx.edu.um.mateo.nomina.web.PerDedController.class);
     @Autowired
     private PerDedManager perdedManager;
     @Autowired
