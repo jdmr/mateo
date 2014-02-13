@@ -6,6 +6,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import mx.edu.um.mateo.contabilidad.dao.CentroCostoDao;
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
@@ -42,6 +44,8 @@ public class EmpleadoPuestoController extends BaseController {
     private EmpleadoPuestoManager empleadoPuestoManager;
     @Autowired
     private PuestoManager puestoManager;
+    @Autowired
+    private CentroCostoDao ccDao;
 
     public EmpleadoPuestoController() {
         log.info("Se ha creado una nueva instancia de EmpleadoPuestoController");
@@ -135,12 +139,20 @@ public class EmpleadoPuestoController extends BaseController {
             for (ObjectError error : bindingResult.getAllErrors()) {
                 log.debug("Error: {}", error);
             }
+            modelo.addAttribute(Constantes.EMPLEADOPERDED_KEY, empleadoPuesto);
             return Constantes.PATH_EMPLEADOPUESTO_NUEVO;
         }
+        Usuario usuario = ambiente.obtieneUsuario();
+        Empleado empleado = (Empleado) request.getSession().getAttribute(Constantes.EMPLEADO_KEY);
+        empleadoPuesto.setEmpleado(empleado);
+        String id = request.getParameter("CCId");
+        log.debug("id centro costos{}", id);
+        CentroCosto cc = ccDao.obtiene(id, usuario);
+        empleadoPuesto.setCentroCosto(cc);
+        empleadoPuesto.setStatus(Constantes.STATUS_ACTIVO);
 
         try {
             empleadoPuesto.setPuesto(puestoManager.obtiene(empleadoPuesto.getPuesto().getId()));
-            Usuario usuario = ambiente.obtieneUsuario();
             empleadoPuestoManager.graba(empleadoPuesto, usuario);
 
             ambiente.actualizaSesion(request.getSession(), usuario);

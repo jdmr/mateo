@@ -80,7 +80,7 @@ public class PuestoDaoTest {
         usuario.setEmpresa(empresa);
         currentSession().save(usuario);
         for (Integer i = 0; i < 20; i++) {
-            Puesto puesto = new Puesto("descripcion" + i, seccion2, empresa);
+            Puesto puesto = new Puesto("descripcion" + i, empresa);
             puesto.setCategoria(i);
             puesto.setMaximo(i);
             puesto.setMinimo(i);
@@ -105,10 +105,10 @@ public class PuestoDaoTest {
         log.debug("Debiera obtener puesto");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        
+
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
-        
+
         Seccion seccion = new Seccion();
         seccion.setId(new Long(1));
         seccion.setCategoriaId("x");
@@ -121,15 +121,15 @@ public class PuestoDaoTest {
 
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
-        
-        Puesto puesto = new Puesto("tst-01", seccion, empresa);
+
+        Puesto puesto = new Puesto("tst-01", empresa);
         int i = 8;
         puesto.setCategoria(i);
         puesto.setMaximo(i);
         puesto.setMinimo(i);
         puesto.setRangoAcademico(Double.NaN);
         puesto.setStatus("a");
-        
+
         Usuario usuario = new Usuario("usaername", "password", "nombre");
         usuario.setCorreo("algo@um.edu.mx");
         usuario.setUsername("test");
@@ -159,7 +159,7 @@ public class PuestoDaoTest {
         roles.add(rol);
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
-        
+
         Usuario usuario = new Usuario("username", "password", "nombre");
         usuario.setCorreo("algo@um.edu.mx");
         usuario.setUsername("test");
@@ -179,13 +179,13 @@ public class PuestoDaoTest {
         currentSession().save(seccion);
         assertNotNull(id);
 
-        Puesto puesto = new Puesto("tst-01", seccion, empresa);
-        int i=4;
+        Puesto puesto = new Puesto("tst-01", empresa);
+        int i = 4;
         puesto.setCategoria(i);
-            puesto.setMaximo(i);
-            puesto.setMinimo(i);
-            puesto.setRangoAcademico(Double.NaN);
-            puesto.setStatus("a");
+        puesto.setMaximo(i);
+        puesto.setMinimo(i);
+        puesto.setRangoAcademico(Double.NaN);
+        puesto.setStatus("a");
         puesto = instance.graba(puesto, usuario);
         assertNotNull(puesto);
         assertNotNull(puesto.getId());
@@ -200,14 +200,14 @@ public class PuestoDaoTest {
         log.debug("Debiera actualizar puesto");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        
+
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         Rol rol = new Rol("ROLE_TEST");
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        
+
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
         Usuario usuario = new Usuario("username", "password", "nombre");
@@ -218,7 +218,7 @@ public class PuestoDaoTest {
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
         currentSession().save(usuario);
-        
+
         Seccion seccion = new Seccion();
         seccion.setId(new Long(1));
         seccion.setCategoriaId("x");
@@ -230,13 +230,13 @@ public class PuestoDaoTest {
         Long id = usuario.getId();
         assertNotNull(id);
 
-        Puesto puesto = new Puesto("tst-01", seccion, empresa);
-        int i=4;
+        Puesto puesto = new Puesto("tst-01", empresa);
+        int i = 4;
         puesto.setCategoria(i);
-            puesto.setMaximo(i);
-            puesto.setMinimo(i);
-            puesto.setRangoAcademico(Double.NaN);
-            puesto.setStatus("a");
+        puesto.setMaximo(i);
+        puesto.setMinimo(i);
+        puesto.setRangoAcademico(Double.NaN);
+        puesto.setStatus("a");
         puesto = instance.graba(puesto, usuario);
         assertNotNull(puesto);
         assertNotNull(puesto.getId());
@@ -258,18 +258,18 @@ public class PuestoDaoTest {
         log.debug("Debiera actualizar puesto");
         Organizacion organizacion = new Organizacion("tst-01", "test-01", "test-01");
         currentSession().save(organizacion);
-        
+
         Empresa empresa = new Empresa("tst-01", "test-01", "test-01", "000000000001", organizacion);
         currentSession().save(empresa);
         Rol rol = new Rol("ROLE_TEST");
         currentSession().save(rol);
         Set<Rol> roles = new HashSet<>();
         roles.add(rol);
-        
+
         Almacen almacen = new Almacen("TST", "TEST", empresa);
         currentSession().save(almacen);
-        
-        Usuario usuario = new Usuario("username", "password","name");
+
+        Usuario usuario = new Usuario("username", "password", "name");
         usuario.setCorreo("algo@um.edu.mx");
         usuario.setUsername("test");
         usuario.setPassword("test");
@@ -277,7 +277,7 @@ public class PuestoDaoTest {
         usuario.setAlmacen(almacen);
         usuario.setRoles(roles);
         currentSession().save(usuario);
-        
+
         Seccion seccion = new Seccion();
         seccion.setId(new Long(1));
         seccion.setCategoriaId("x");
@@ -289,7 +289,7 @@ public class PuestoDaoTest {
         Long id = usuario.getId();
         assertNotNull(id);
 
-        Puesto puesto = new Puesto("tst-01", seccion, empresa);
+        Puesto puesto = new Puesto("tst-01", empresa);
         int i = 8;
         puesto.setCategoria(i);
         puesto.setMaximo(i);

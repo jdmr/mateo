@@ -185,7 +185,6 @@ public class PuestoController extends BaseController {
             List<Seccion> listaSeccion = (List) params.get(Constantes.CONTAINSKEY_SECCIONES);
             log.debug("Secciones***" + listaSeccion.size());
             modelo.addAttribute(Constantes.CONTAINSKEY_SECCIONES, listaSeccion);
-            puesto.setSeccion(SeccionManager.Obtiene(puesto.getSeccion().getId()));
             Usuario usuario = ambiente.obtieneUsuario();
             mgr.graba(puesto, usuario);
 
