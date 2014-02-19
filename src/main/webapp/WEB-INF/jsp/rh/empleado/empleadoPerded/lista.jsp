@@ -5,14 +5,15 @@
 <!DOCTYPE html>
 <html>
      <head>
-        <title><s:message code="empleadoPerded.lista.label" /></title>
+        <title><s:message code="empleadoPerDed.lista.label" /></title>
+        
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
             <jsp:param name="menu" value="empleado" />
         </jsp:include>
 
-        <h1><s:message code="empleadoPerded.lista.label" /></h1>
+        <h1><s:message code="empleadoPerDed.lista.label" /></h1>
         <hr/>
 
         <form name="filtraLista" class="form-search" method="post" action="<c:url value='/rh/empleado/empleadoPerded' />">
@@ -22,7 +23,7 @@
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/rh/empleado/empleadoPerded/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='empleadoPerded.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/rh/empleado/empleadoPerded/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='empleadoPerDed.nuevo.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>

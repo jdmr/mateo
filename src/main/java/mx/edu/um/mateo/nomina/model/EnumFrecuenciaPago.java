@@ -12,9 +12,9 @@ package mx.edu.um.mateo.nomina.model;
  */
 public enum EnumFrecuenciaPago {
     SEMANAL(1, "Semanal"),
-    QUINCENA_1(2, "Semanal"),
-    QUINCENA_2(3, "Semanal"),
-    MENSUAL(4, "Semanal");
+    QUINCENA_1(2, "Quincena 1"),
+    QUINCENA_2(3, "Quincena 2"),
+    MENSUAL(4, "Mensual");
     
     private Integer id;
     private String nombre;

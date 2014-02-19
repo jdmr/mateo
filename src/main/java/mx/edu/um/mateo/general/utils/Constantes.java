@@ -1374,7 +1374,7 @@ public class Constantes {
      * Tipo importe - Cantidad en efectivo.
      */
     public static final String TIPOIMPORTE_IMP = "$";
-    public static final String EMPLEADOPERDED_KEY = "empleadoPerDedForm";
+    public static final String EMPLEADOPERDED_KEY = "empleadoPerDed";
     public static final String EMPLEADOPERDED_LIST = "empleadoPerDedList";
     // EmpleadoPerDed-END
     // CalculoNomina-START
@@ -3114,5 +3114,7 @@ public class Constantes {
     public static final String PATH_EMPLEADOPERDED_NUEVO = "/rh/empleado/empleadoPerded/nuevo";
     public static final String PATH_EMPLEADOPERDED_EDITA = "/rh/empleado/empleadoPerded/edita";
     public static final String PATH_EMPLEADOPERDED_GRABA = "/rh/empleado/empleadoPerded/graba";
+    
+    public static final String FRECUENCIAPAGO_LIST = "frecuenciaPagoList";
 
 }

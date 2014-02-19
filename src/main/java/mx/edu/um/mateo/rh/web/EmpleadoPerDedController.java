@@ -15,6 +15,7 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
+import mx.edu.um.mateo.nomina.model.EnumFrecuenciaPago;
 import mx.edu.um.mateo.nomina.model.PerDed;
 import mx.edu.um.mateo.rh.model.Empleado;
 import mx.edu.um.mateo.rh.model.EmpleadoPerDed;
@@ -140,6 +141,7 @@ public class EmpleadoPerDedController extends BaseController {
         log.debug("Nuevo perded");
         EmpleadoPerDed perded = new EmpleadoPerDed();
         modelo.addAttribute(Constantes.EMPLEADOPERDED_KEY, perded);
+        modelo.addAttribute(Constantes.FRECUENCIAPAGO_LIST, EnumFrecuenciaPago.values());
         return Constantes.PATH_EMPLEADOPERDED_NUEVO;
     }
 

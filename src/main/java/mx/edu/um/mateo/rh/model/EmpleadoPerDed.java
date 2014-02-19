@@ -104,6 +104,10 @@ public class EmpleadoPerDed {
         this.importe = importe;
     }
 
+    public Boolean getPorcentaje() {
+        return porcentaje;
+    }
+    
     public Boolean isPorcentaje() {
         return porcentaje;
     }
