@@ -150,6 +150,7 @@ public class DocumentoController extends BaseController {
                 }
                 
                 log.debug("Temporada Colportor {} ", temporadaColportor);
+                request.getSession().setAttribute(Constantes.TEMPORADACOLPORTOR, temporadaColportor);
                 modelo.addAttribute(Constantes.TEMPORADACOLPORTOR, temporadaColportor);
                 params.put("temporadaColportor", temporadaColportor.getId());
             } else {
@@ -383,8 +384,8 @@ public class DocumentoController extends BaseController {
             }
             else{
                 //Se requiere una clave de colportor
-                Colportor clp = colportorDao.obtiene(documento.getTemporadaColportor().getColportor().getClave());
-                Temporada tmp = temporadaDao.obtiene(documento.getTemporadaColportor().getTemporada().getId());
+                Colportor clp = colportorDao.obtiene(((TemporadaColportor)request.getSession().getAttribute(Constantes.TEMPORADACOLPORTOR)).getColportor().getClave());
+                Temporada tmp = temporadaDao.obtiene(((TemporadaColportor)request.getSession().getAttribute(Constantes.TEMPORADACOLPORTOR)).getTemporada().getId());
                 temporadaColportorTmp = temporadaColportorDao.obtiene(clp, tmp);
             }
             documento.setTemporadaColportor(temporadaColportorTmp);
@@ -445,7 +446,17 @@ public class DocumentoController extends BaseController {
         }
 
         try {
-            documentos.setTemporadaColportor(temporadaColportorDao.obtiene((Colportor) ambiente.obtieneUsuario()));
+            TemporadaColportor temporadaColportorTmp = null;
+            if(ambiente.esColportor()){
+                temporadaColportorTmp = temporadaColportorDao.obtiene((Colportor) ambiente.obtieneUsuario());
+            }
+            else{
+                //Se requiere una clave de colportor
+                Colportor clp = colportorDao.obtiene(((TemporadaColportor)request.getSession().getAttribute(Constantes.TEMPORADACOLPORTOR)).getColportor().getClave());
+                Temporada tmp = temporadaDao.obtiene(((TemporadaColportor)request.getSession().getAttribute(Constantes.TEMPORADACOLPORTOR)).getTemporada().getId());
+                temporadaColportorTmp = temporadaColportorDao.obtiene(clp, tmp);
+            }
+            documentos.setTemporadaColportor(temporadaColportorTmp);
             log.debug("Documento Fecha" + documentos.getFecha());
             documentos = DocumentoDao.actualiza(documentos);
         } catch (ConstraintViolationException e) {
