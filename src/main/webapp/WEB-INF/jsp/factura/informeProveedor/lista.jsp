@@ -63,7 +63,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${informes}" var="informeProveedor" varStatus="status">
+                    <c:forEach items="${informesProveedor}" var="informeProveedor" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/factura/informeProveedor/ver/${informeProveedor.id}' />">${informeProveedor.nombreProveedor}</a></td>                            
                             <td>${informeProveedor.statusTexto}</td>
