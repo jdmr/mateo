@@ -31,7 +31,6 @@
                 </form:errors>
                 <form:hidden path="id" />
                 <form:hidden path="version" />
-                <form:hidden path="status" />
                 <form:hidden path="fecha" />
 
                 <fieldset>
@@ -69,6 +68,16 @@
                                 <span class="required-indicator">*</span>
                                 <form:input path="objetivo" maxlength="50" required="true"  />
                                 <form:errors path="objetivo" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="temporadaColportor.status">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="status">
+                                <s:message code="status.label" />
+                                <span class="required-indicator">*</span>
+                                <form:radiobutton path="status"  value="A" cssClass="span3" id="status"/><s:message code="activo.label"/>
+                                <form:radiobutton path="status"  value="I"  cssClass="span3" id="status"/><s:message code="inactivo.label"/>
+                                <form:errors path="status" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
 

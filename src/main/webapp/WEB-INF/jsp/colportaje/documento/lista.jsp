@@ -31,7 +31,9 @@
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
 
             <p class="well">
+                <c:if test="${temporadaColportor != null}">
                 <a class="btn btn-primary" href="<s:url value='/colportaje/documento/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='documento.nuevo.label' /></a>
+                </c:if>
                 <input id="clave" name="clave" class="input-medium search-query" value="${colportor.clave}">
                 
                 <label for="temporada">

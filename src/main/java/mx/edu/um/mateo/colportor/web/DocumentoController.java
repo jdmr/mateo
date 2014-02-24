@@ -130,6 +130,12 @@ public class DocumentoController extends BaseController {
         if (ambiente.esAsociado()) {
             log.debug("Entrando a Documentos como Asociado");
             log.debug("clave" + clave);
+            
+            if(clave == null || clave.isEmpty()){
+                if(request.getSession().getAttribute(Constantes.TEMPORADACOLPORTOR) != null) {
+                    clave = ((TemporadaColportor)request.getSession().getAttribute(Constantes.TEMPORADACOLPORTOR)).getColportor().getClave();
+                }
+            }
 
             if (clave != null && !clave.isEmpty()) {
                 Colportor colportor = colportorDao.obtiene(clave);
