@@ -2,15 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.dao.impl;
+package mx.edu.um.mateo.nomina.dao.impl;
 
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.rh.dao.PerDedDao;
-import mx.edu.um.mateo.rh.model.PerDed;
+import mx.edu.um.mateo.nomina.dao.PerDedDao;
+import mx.edu.um.mateo.nomina.model.PerDed;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Disjunction;
@@ -64,6 +64,7 @@ public class PerDedDaoHibernate extends BaseDao implements PerDedDao {
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");
             Disjunction propiedades = Restrictions.disjunction();
+            propiedades.add(Restrictions.ilike("clave", filtro, MatchMode.ANYWHERE));
             propiedades.add(Restrictions.ilike("nombre", filtro, MatchMode.ANYWHERE));
             propiedades.add(Restrictions.ilike("status", filtro, MatchMode.ANYWHERE));
             criteria.add(propiedades);

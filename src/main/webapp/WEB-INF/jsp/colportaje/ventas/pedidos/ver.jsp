@@ -21,12 +21,14 @@
 
         <div id="ver-pedidoColportor" class="content scaffold-list" role="main">
             <h1><s:message code="pedidoColportor.ver.label" /></h1>
-
+            
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/colportaje/ventas/pedidos'/>">
                     <i class="icon-list icon-white"></i> <s:message code='pedidoColportor.lista.label' /></a>
                 <a class="btn btn-primary" href="<s:url value='/colportaje/ventas/pedidos/nuevo'/>">
                     <i class="icon-file icon-white"></i> <s:message code='pedidoColportor.nuevo.label' /></a>
+                    <a class="btn btn-primary" href="<s:url value='/colportaje/ventas/pedidos/finalizar/${pedidoColportor.id}'/>">
+                    <i class="icon-file icon-white"></i> <s:message code='pedidoColportor.finalizar.label' /></a>
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">

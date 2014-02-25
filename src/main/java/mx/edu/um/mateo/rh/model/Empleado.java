@@ -16,7 +16,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import mx.edu.um.mateo.general.model.Usuario;
 import org.hibernate.validator.constraints.Length;

@@ -2,11 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.dao;
+package mx.edu.um.mateo.nomina.dao;
 
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.rh.model.PerDed;
+import mx.edu.um.mateo.nomina.model.PerDed;
 
 /**
  *

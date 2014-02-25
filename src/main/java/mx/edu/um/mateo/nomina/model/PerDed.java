@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.model;
+package mx.edu.um.mateo.nomina.model;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -41,9 +41,10 @@ public class PerDed implements Serializable{
      * Este atributo sera configurado por RH
      */
     //private Role roleEdit;
-    /**
-     * Este atributo indica la frecuencia de pago.  Es decir, en que quincena se
+    /**p
+     * Este atributo indica la frecuencia de pago.  Es decir, en que quincena, semana, mes se
      *    ha de calcular su valor y verse reflejado en la nomina del empleado.
+     * Se esperan los valores 1Q,2Q,S,M
      */
     @Column
     private String frecuenciaPago;

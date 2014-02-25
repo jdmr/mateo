@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.web;
+package mx.edu.um.mateo.nomina.web;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -20,10 +20,10 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.utils.LabelValueBean;
 import mx.edu.um.mateo.general.web.BaseController;
-import mx.edu.um.mateo.rh.model.Categoria;
-import mx.edu.um.mateo.rh.model.PerDed;
-import mx.edu.um.mateo.rh.service.PerDedManager;
+import mx.edu.um.mateo.nomina.model.PerDed;
+import mx.edu.um.mateo.nomina.service.PerDedManager;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -56,6 +56,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -66,7 +67,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping(Constantes.PATH_PERDED)
 public class PerDedController extends BaseController {
 
-    private static final Logger log = LoggerFactory.getLogger(mx.edu.um.mateo.rh.web.PerDedController.class);
+    private static final Logger log = LoggerFactory.getLogger(mx.edu.um.mateo.nomina.web.PerDedController.class);
     @Autowired
     private PerDedManager perdedManager;
     @Autowired
@@ -88,9 +89,11 @@ public class PerDedController extends BaseController {
             Errors errors,
             Model modelo) {
         log.debug("Mostrando lista de perded");
+        
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
+        
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }
@@ -136,30 +139,44 @@ public class PerDedController extends BaseController {
         log.debug("params{}", params.get(Constantes.PERDED_LIST));
         modelo.addAttribute(Constantes.PERDED_LIST, params.get(Constantes.PERDED_LIST));
 
-        // inicia paginado
-        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
-        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<PerDed> perded = (List<PerDed>) params.get(Constantes.PERDED_LIST);
-        Long primero = ((pagina - 1) * max) + 1;
-        log.debug("primero {}", primero);
-        log.debug("PerDedsize {}", perded.size());
-        Long ultimo = primero + (perded.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
-        log.debug("Paginacion{}", paginacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
-        log.debug("paginas{}", paginas);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
-        log.debug("Pagina{}", pagina);
-        // termina paginado
+        this.pagina(params, modelo, Constantes.PERDED_LIST, pagina);
 
         return Constantes.PATH_PERDED_LISTA;
+    }
+    
+    @RequestMapping(value="/get_perDed_list", method = RequestMethod.GET, headers="Accept=*/*", produces = "application/json")    
+    public @ResponseBody 
+    List <LabelValueBean> getTemporadaColportorList(@RequestParam("term") String filtro, 
+            HttpServletRequest request, HttpServletResponse response){
+        log.debug("Buscando perDeds por {}", filtro);
+        
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre,
+                    request.getParameterMap().get(nombre));
+        }
+        
+        Map<String, Object> params = new HashMap<>();
+        Long empresaId = (Long) request.getSession().getAttribute("empresaId");
+        params.put("empresa", empresaId);        
+        params.put("reporte", "");        
+        params = perdedManager.lista(params);
+        
+        List <LabelValueBean> rValues = new ArrayList<>();
+        List <PerDed> clps = (List <PerDed>) params.get(Constantes.PERDED_LIST);
+        for(PerDed pd : clps){
+            log.debug("PerDed {} - {}", pd.getClave());
+            StringBuilder sb = new StringBuilder();
+            sb.append(pd.getClave()); 
+            sb.append(" || "); 
+            sb.append(pd.getNombre()); 
+            //Por alguna razon, el jQuery toma el valor del attr value por default.
+            //Asi que en el constructor invertimos los valores: como value va el string, y como nombre la clave
+            rValues.add(new LabelValueBean(pd.getId(), sb.toString()));
+        }        
+        
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_OK);
+        return rValues;        
     }
 
     @RequestMapping("/ver/{id}")

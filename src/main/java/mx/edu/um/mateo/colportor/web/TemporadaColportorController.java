@@ -187,6 +187,7 @@ public class TemporadaColportorController extends BaseController{
         modelo.addAttribute(Constantes.TEMPORADACOLPORTOR, new TemporadaColportor());
 
         params.put("organizacion", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
+        params.put("reporte", "");
         params = temporadaDao.lista(params);        
         modelo.addAttribute(Constantes.TEMPORADA_LIST, (List) params.get(Constantes.TEMPORADA_LIST));
       
@@ -199,10 +200,6 @@ public class TemporadaColportorController extends BaseController{
         
         params = asociadoDao.lista(params);
         modelo.addAttribute(Constantes.ASOCIADO_LIST, (List) params.get(Constantes.ASOCIADO_LIST));
-        
-        Map<String, Object> temporadas = temporadaDao.lista(null);
-        params = temporadaDao.lista(params);
-        modelo.addAttribute(Constantes.TEMPORADA_LIST, (List)params.get(Constantes.TEMPORADA_LIST));
         
         return Constantes.TEMPORADACOLPORTOR_PATH_NUEVA;
     }

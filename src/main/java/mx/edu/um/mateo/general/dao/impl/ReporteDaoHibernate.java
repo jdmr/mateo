@@ -221,6 +221,7 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
         nombres.add("tiposDeActivo");
         //Colportores
         nombres.add("censoColportores");
+        nombres.add("pedidoColportor");
 
         empresa.getReportes().clear();
         empresa.getReportes().addAll(inicializaReportes(nombres));

@@ -37,7 +37,8 @@
                         <li><a href="#section2"><i class="icon-list-alt "></i> Datos Laborales</a></li>
                         <li><a href="<s:url value='/rh/empleado/claveEmpleado/nuevo'/>"><i class="icon-pencil"></i> Clave Empleado</a></li>
                         <li><a href="<s:url value='/rh/empleado/solicitudVacacionesEmpleado/nuevo'/>"><i class="icon-road "></i> Solicitud Vacaciones</a></li>
-                        <li><a href="#section5">Section Five</a></li>
+                        <li><a href="<s:url value='/rh/empleado/empleadoPerded'/>"><i class="icon-pencil"></i> Datos Per/Ded</a></li>
+                        <li><a href="#section5"><i class="icon-list-alt "></i> </a></a></li>
                     </ul>
                 </div>
                 <div  class="span9">

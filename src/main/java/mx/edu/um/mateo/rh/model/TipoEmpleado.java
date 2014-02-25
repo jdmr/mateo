@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.rh.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +26,7 @@ import org.hibernate.validator.constraints.NotBlank;
 @Entity
 //@Table(name="tipo_empleado", uniqueConstraints = {
 //    @UniqueConstraint(columnNames = {"prefijo"})}))
-public class TipoEmpleado {
+public class TipoEmpleado implements Serializable{
     private static final long serialVersionUID = 6001011125338853446L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -8,7 +8,6 @@ package mx.edu.um.mateo.rh.service.impl;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.service.BaseManager;
@@ -19,7 +18,6 @@ import mx.edu.um.mateo.rh.service.ClaveEmpleadoManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.org.mozilla.javascript.ScriptRuntime;
 
 /**
  *

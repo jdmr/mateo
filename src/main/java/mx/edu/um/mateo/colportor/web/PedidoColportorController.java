@@ -5,6 +5,8 @@
  */
 package mx.edu.um.mateo.colportor.web;
 
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,8 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.colportor.dao.ClienteColportorDao;
 import mx.edu.um.mateo.colportor.dao.PedidoColportorDao;
+import mx.edu.um.mateo.colportor.dao.PedidoColportorItemDao;
 import mx.edu.um.mateo.colportor.model.FormaPago;
 import mx.edu.um.mateo.colportor.model.PedidoColportor;
+import mx.edu.um.mateo.colportor.model.PedidoColportorItem;
+import mx.edu.um.mateo.colportor.model.PedidoColportorVO;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -49,6 +54,8 @@ public class PedidoColportorController extends BaseController{
     private UsuarioDao colportorDao;
     @Autowired
     private ClienteColportorDao clienteColportorDao;
+    @Autowired
+    private PedidoColportorItemDao pedidoColportorItemDao;
 
     @SuppressWarnings("unchecked")
     @RequestMapping
@@ -273,6 +280,49 @@ public class PedidoColportorController extends BaseController{
                     new String[]{"pedidoColportor.no.eliminado.message"},
                     null, null));
             return Constantes.PEDIDO_COLPORTOR_PATH_VER;
+        }
+
+        return "redirect:" + Constantes.PEDIDO_COLPORTOR_PATH;
+    }
+    
+    @RequestMapping("/finalizar/{id}")
+    public String finalizar(HttpServletRequest request, @PathVariable Long id, Model modelo) {
+        log.debug("Finalizando pedidoColportor {}", id);
+        PedidoColportor pedidoColportor = pedidoColportorDao.obtiene(id);
+        
+        Map<String, Object> params = new HashMap<>();
+        params.put("pedido", id);        
+        params = pedidoColportorItemDao.lista(params);
+        
+        //Guardar los VO en params
+        List <PedidoColportorVO> voList = new ArrayList<>();
+        PedidoColportorVO vo = null;
+        for(PedidoColportorItem pci : (List<PedidoColportorItem>)params.get(Constantes.PEDIDO_COLPORTOR_ITEM_LIST)){
+            vo = new PedidoColportorVO();
+            vo.setNumPedido(pedidoColportor.getNumPedido());
+            vo.setFormaPago(pedidoColportor.getFormaPago());
+            vo.setFechaPedido(pedidoColportor.getFechaPedido());
+            vo.setFechaEntrega(pedidoColportor.getFechaEntrega());
+            vo.setColportor(pedidoColportor.getColportor());
+            vo.setItem(pci);
+            voList.add(vo);
+        }
+        
+        Usuario usuario = ambiente.obtieneUsuario();
+
+        try {
+            log.debug("enviaCorreo");
+            enviaCorreo("PDF", voList,
+                    request, "pedidoColportor", Constantes.EMP, usuario.getEmpresa().getId());
+            modelo.addAttribute("message", "lista.enviado.message");
+            modelo.addAttribute(
+                    "messageAttrs",
+                    new String[]{
+                        messageSource.getMessage("pedidoColportor.lista.label",
+                                null, request.getLocale()),
+                        ambiente.obtieneUsuario().getUsername()});
+        } catch (ReporteException e) {
+            log.error("No se pudo enviar el reporte por correo", e);
         }
 
         return "redirect:" + Constantes.PEDIDO_COLPORTOR_PATH;

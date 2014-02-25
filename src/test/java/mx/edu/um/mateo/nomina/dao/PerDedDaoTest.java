@@ -2,13 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mx.edu.um.mateo.rh.dao;
+package mx.edu.um.mateo.nomina.dao;
 
+import mx.edu.um.mateo.nomina.dao.PerDedDao;
 import java.util.HashMap;
 import java.util.Map;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Organizacion;
-import mx.edu.um.mateo.rh.model.PerDed;
+import mx.edu.um.mateo.nomina.model.PerDed;
+import mx.edu.um.mateo.rh.dao.CategoriaDaoTest;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import static org.junit.Assert.*;

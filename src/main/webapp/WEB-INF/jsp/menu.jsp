@@ -6,15 +6,17 @@
     <ul class="nav">
         <li<c:if test="${param.menu eq 'principal'}"> class="active"</c:if>><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
             <sec:authorize access="!hasRole('ROLE_PRV')">
+            <li><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>  
             <li><a href="<c:url value='/inventario' />"><s:message code="inventario.label" /></a></li>
             <li><a href="<c:url value='/activoFijo' />"><s:message code="activoFijo.label" /></a></li>
             <li><a href="<c:url value='/rh' />"><s:message code="rh.label" /></a></li>
             <li><a href="<c:url value='/contabilidad' />"><s:message code="contabilidad.label" /></a></li>
-            <li><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>  
             <li><a href="<c:url value='/inscripciones' />"><s:message code="inscripciones.label" /></a></li>
             <li><a href="<c:url value='/colportaje' />"><s:message code="colportaje.label" /></a></li>              
-            <li><a href="<c:url value='/admin' />"><s:message code="admin.label" /></a></li>     
+            <li><a href="<c:url value='/nomina' />"><s:message code="nomina.label" /></a></li>              
             </sec:authorize>
-        <li><a href="<c:url value='/factura' />"><s:message code="factura.label" /></a></li>              
+            <sec:authorize access="hasAnyRole('ROLE_PRV','ROLE_ADMIN')">
+            <li><a href="<c:url value='/factura' />"><s:message code="factura.label" /></a></li>              
+            </sec:authorize>
     </ul>
 </nav>

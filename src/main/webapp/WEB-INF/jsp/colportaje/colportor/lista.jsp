@@ -22,7 +22,7 @@
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/colportaje/colportor/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='colportor.nuevo.label' /></a>
-                <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
+                <input name="filtro" id="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
             <c:if test="${not empty message}">
@@ -92,6 +92,18 @@
         </form>        
         <content>
             <script src="<c:url value='/js/lista.js' />"></script>
+            <script>
+            $(function() {
+            
+            $( "#filtro" ).autocomplete({
+                source: '${pageContext. request. contextPath}/colportaje/colportor/get_colportor_list',
+                select: function(event, ui) {
+                        $("input#filtro").val(ui.item.nombre);
+                        
+                        return false;
+                    }
+            })
+            });
         </content>
     </body>
 </html>

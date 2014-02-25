@@ -4,24 +4,20 @@
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
-    <head>
-        <title><s:message code="perded.edita.label" /></title>
+   <head>
+        <title><s:message code="perded.nuevo.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="perded" />
+            <jsp:param name="menu" value="perDed" />
         </jsp:include>
 
         <div id="nuevo-perded" class="content scaffold-list" role="main">
-            <h1><s:message code="perded.edita.label" /></h1>
+            <h1><s:message code="perded.nuevo.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/rh/perded'/>"><i class="icon-list icon-white"></i> <s:message code='perded.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/rh/perded/'/>"><i class="icon-list icon-white"></i> <s:message code='perded.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="/rh/perded/graba" />
-            <form:form commandName="perded" action="${actualizaUrl}" method="post">
-                <form:hidden path="id" />
-                <form:hidden path="status" />
-                <form:hidden path="version" />
+            <form:form commandName="perded" action="graba" method="post">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -62,12 +58,11 @@
                             <form:errors path="nombre" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                   
+                    
                 </fieldset>
-
                 <p class="well" style="margin-top: 10px;">
-                    <button type="submit" name="actualizarBtn" class="btn btn-primary btn-large" id="actualizar" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='actualizar.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/rh/perded/ver/${perded.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
+                    <a class="btn btn-large" href="<s:url value='/rh/perded'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>

@@ -1374,7 +1374,7 @@ public class Constantes {
      * Tipo importe - Cantidad en efectivo.
      */
     public static final String TIPOIMPORTE_IMP = "$";
-    public static final String EMPLEADOPERDED_KEY = "empleadoPerDedForm";
+    public static final String EMPLEADOPERDED_KEY = "empleadoPerDed";
     public static final String EMPLEADOPERDED_LIST = "empleadoPerDedList";
     // EmpleadoPerDed-END
     // CalculoNomina-START
@@ -2448,12 +2448,12 @@ public class Constantes {
     public static final String PATH_CONCEPTO_CREA = "/rh/catalogo/concepto/crea";
     public static final String PATH_CONCEPTO_ACTUALIZA = "/rh/catalogo/concepto/actualiza";
     public static final String PATH_CONCEPTO_ELIMINA = "/rh/catalogo/concepto/elimina";
-    public static final String PATH_PERDED = "/rh/empleado/perded";
-    public static final String PATH_PERDED_LISTA = "/rh/empleado/perded/lista";
-    public static final String PATH_PERDED_VER = "/rh/empleado/perded/ver";
-    public static final String PATH_PERDED_NUEVO = "/rh/empleado/perded/nuevo";
-    public static final String PATH_PERDED_EDITA = "/rh/empleado/perded/edita";
-    public static final String PATH_PERDED_GRABA = "/rh/empleado/perded/graba";
+    public static final String PATH_PERDED = "/nomina/catalogos/perded";
+    public static final String PATH_PERDED_LISTA = "/nomina/catalogos/perded/lista";
+    public static final String PATH_PERDED_VER = "/nomina/catalogos/perded/ver";
+    public static final String PATH_PERDED_NUEVO = "/nomina/catalogos/perded/nuevo";
+    public static final String PATH_PERDED_EDITA = "/nomina/catalogos/perded/edita";
+    public static final String PATH_PERDED_GRABA = "/nomina/catalogos/perded/graba";
     public static final String PATH_EMPLEADOPUESTO = "/rh/empleado/empleadoPuesto";
     public static final String PATH_EMPLEADOPUESTO_LISTA = "/rh/empleado/empleadoPuesto/lista";
     public static final String PATH_EMPLEADOPUESTO_VER = "/rh/empleado/empleadoPuesto/ver";
@@ -3104,5 +3104,17 @@ public class Constantes {
     public static final String PATH_JEFESECCION_ACTUALIZA = "/rh/catalogo/jefeSeccion/actualiza";
     public static final String PATH_JEFESECCION_ELIMINA = "/rh/catalogo/jefeSeccion/elimina";
     public static final String PATH_TRASPASDODATOSEMPLEADO = "/rh/empleado/traspasoDatosEmpleado";
+    /**
+     * @see mx.edu.um.mateo.rh.web.EmpleadoPerDed
+     * Valores para el controller de empleadoPerDed
+     */
+    public static final String PATH_EMPLEADOPERDED = "/rh/empleado/empleadoPerded";
+    public static final String PATH_EMPLEADOPERDED_LISTA = "/rh/empleado/empleadoPerded/lista";
+    public static final String PATH_EMPLEADOPERDED_VER = "/rh/empleado/empleadoPerded/ver";
+    public static final String PATH_EMPLEADOPERDED_NUEVO = "/rh/empleado/empleadoPerded/nuevo";
+    public static final String PATH_EMPLEADOPERDED_EDITA = "/rh/empleado/empleadoPerded/edita";
+    public static final String PATH_EMPLEADOPERDED_GRABA = "/rh/empleado/empleadoPerded/graba";
+    
+    public static final String FRECUENCIAPAGO_LIST = "frecuenciaPagoList";
 
 }
