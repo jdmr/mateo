@@ -80,8 +80,8 @@ public class EmpleadoPerDedDaoHibernate extends BaseDao implements EmpleadoPerDe
 
 
         if (params.containsKey("empresa")) {
-            criteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
-            countCriteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
+            criteria.createCriteria("empleado").createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
+            countCriteria.createCriteria("empleado").createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
         }
         if (params.containsKey("empleado")) {
             criteria.createCriteria("empleado").add(Restrictions.idEq(params.get("empleadoId")));
@@ -142,8 +142,6 @@ public class EmpleadoPerDedDaoHibernate extends BaseDao implements EmpleadoPerDe
      */
     @Override
     public EmpleadoPerDed graba(EmpleadoPerDed empleadoPD) {
-        Session session = currentSession();
-        
         currentSession().saveOrUpdate(empleadoPD);
         currentSession().merge(empleadoPD);
         currentSession().flush();

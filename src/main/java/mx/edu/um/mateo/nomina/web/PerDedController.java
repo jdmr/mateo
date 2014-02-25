@@ -146,7 +146,7 @@ public class PerDedController extends BaseController {
     
     @RequestMapping(value="/get_perDed_list", method = RequestMethod.GET, headers="Accept=*/*", produces = "application/json")    
     public @ResponseBody 
-    List <LabelValueBean> getTemporadaColportorList(@RequestParam("term") String filtro, 
+    List <LabelValueBean> getPerDedList (@RequestParam("term") String filtro, 
             HttpServletRequest request, HttpServletResponse response){
         log.debug("Buscando perDeds por {}", filtro);
         
@@ -159,20 +159,9 @@ public class PerDedController extends BaseController {
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);        
         params.put("reporte", "");        
-        params = perdedManager.lista(params);
         
-        List <LabelValueBean> rValues = new ArrayList<>();
-        List <PerDed> clps = (List <PerDed>) params.get(Constantes.PERDED_LIST);
-        for(PerDed pd : clps){
-            log.debug("PerDed {} - {}", pd.getClave());
-            StringBuilder sb = new StringBuilder();
-            sb.append(pd.getClave()); 
-            sb.append(" || "); 
-            sb.append(pd.getNombre()); 
-            //Por alguna razon, el jQuery toma el valor del attr value por default.
-            //Asi que en el constructor invertimos los valores: como value va el string, y como nombre la clave
-            rValues.add(new LabelValueBean(pd.getId(), sb.toString()));
-        }        
+        params = perdedManager.getPerDedList(params);
+        List <LabelValueBean> rValues = (List<LabelValueBean>)params.get(Constantes.PERDED_LIST);
         
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);

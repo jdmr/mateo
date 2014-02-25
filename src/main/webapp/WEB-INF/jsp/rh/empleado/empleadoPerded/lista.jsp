@@ -14,6 +14,7 @@
         </jsp:include>
 
         <h1><s:message code="empleadoPerDed.lista.label" /></h1>
+        <h3><c:out value="${empleado.clave}" />&nbsp;<c:out value="${empleado.nombreCompleto}" /></h3>
         <hr/>
 
         <form name="filtraLista" class="form-search" method="post" action="<c:url value='/rh/empleado/empleadoPerded' />">
@@ -50,10 +51,16 @@
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="empleado" />
+                            <jsp:param name="columna" value="clave" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="perDed" />
+                            <jsp:param name="columna" value="nombre" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="importe" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="atributos" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="status" />
@@ -63,10 +70,11 @@
                 <tbody>
                     <c:forEach items="${empleadoPerDedList}" var="perded" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/rh/empleado/empleadoPerded/ver/${perded.id}' />">${perded.nombre}</a></td>
+                            <td><a href="<c:url value='/rh/empleado/empleadoPerded/ver/${perded.id}' />">${perded.perDed.clave}</a></td>
                             
-                            <td>${perded.empleado.nombreCompleto}</td>
                             <td>${perded.perDed.nombre}</td>
+                            <td><c:if test="${not perded.porcentaje}">$</c:if>${perded.importe}<c:if test="${perded.porcentaje}">%</c:if></td>
+                            <td>${perded.atributos}</td>
                             <td>${perded.status}</td>
                         </tr>
                     </c:forEach>
