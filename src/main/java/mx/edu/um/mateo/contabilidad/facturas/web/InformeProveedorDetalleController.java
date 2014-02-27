@@ -113,7 +113,7 @@ public class InformeProveedorDetalleController extends BaseController {
         InformeProveedor informeId = (InformeProveedor) request.getSession().getAttribute("informeId");
         params.put("informeProveedor", informeId.getId());
         params.put("statusInforme", informeId.getStatus());
-        
+
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }
@@ -325,7 +325,6 @@ public class InformeProveedorDetalleController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
-
 
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
@@ -626,7 +625,6 @@ public class InformeProveedorDetalleController extends BaseController {
         request.getSession().setAttribute("proveedorLogeado", proveedorFacturas);
         Map<String, Object> params = new HashMap<>();
 
-
         InformeProveedorDetalle detalle = new InformeProveedorDetalle();
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
         params.put("empresa", request.getSession()
@@ -643,7 +641,6 @@ public class InformeProveedorDetalleController extends BaseController {
         modelo.addAttribute("proveedorFacturas", proveedorFacturas);
         Map<String, Object> params = new HashMap<>();
 
-
         InformeProveedorDetalle detalle = new InformeProveedorDetalle();
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
         params.put("empresa", request.getSession()
@@ -657,7 +654,7 @@ public class InformeProveedorDetalleController extends BaseController {
     @RequestMapping(value = "/graba", method = RequestMethod.POST)
     public String graba(HttpServletRequest request, HttpServletResponse response, @Valid InformeProveedorDetalle detalle,
             BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes,
-            @ModelAttribute("uploadForm") FileUploadForm uploadForm) throws Exception {
+            @ModelAttribute("uploadFileForm") FileUploadForm uploadForm) throws Exception {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
@@ -672,21 +669,23 @@ public class InformeProveedorDetalleController extends BaseController {
             return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
         }
 
-
         Map<String, Object> params = new HashMap<>();
         //Subir archivos
         try {
-            List<MultipartFile> files = uploadForm.getFiles();
+            List<MultipartFile> files = new ArrayList<>();
+            files.add(detalle.getFile());
+            files.add(detalle.getFile2());
 
             List<String> fileNames = new ArrayList<String>();
             Calendar calendar = GregorianCalendar.getInstance();
             int año = calendar.get(Calendar.YEAR);
             int mes = calendar.get(Calendar.MONTH);
             int dia = calendar.get(Calendar.DATE);
-
+            log.debug("sizefiles{}", files.size());
             if (null != files && files.size() > 0) {
                 for (MultipartFile multipartFile : files) {
                     String fileName = multipartFile.getOriginalFilename();
+                    log.debug("filename{}", fileName);
                     fileNames.add(fileName);
                     String uploadDir = "/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename();
                     File dirPath = new File(uploadDir);
@@ -695,11 +694,11 @@ public class InformeProveedorDetalleController extends BaseController {
                     }
                     multipartFile.transferTo(new File("/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename()));
                     if (multipartFile.getOriginalFilename().contains(".pdf")) {
-                        detalle.setPathPDF("/home/facturas/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
+                        detalle.setPathPDF("/home/facturas/" + año + "/" + mes + "/" + dia + "/" + "/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
                         detalle.setNombrePDF(multipartFile.getOriginalFilename());
                     }
                     if (multipartFile.getOriginalFilename().contains(".xml")) {
-                        detalle.setPathXMl("/home/facturas/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
+                        detalle.setPathXMl("/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + multipartFile.getOriginalFilename());
                         detalle.setNombreXMl(multipartFile.getOriginalFilename());
                     }
                 }
@@ -975,7 +974,6 @@ public class InformeProveedorDetalleController extends BaseController {
     @RequestMapping("/fecha")
     public String asignarFecha(HttpServletRequest request, Model modelo) {
         log.debug("Nuevo paquete");
-
 
         return "/factura/informeProveedorDetalle/fecha";
     }

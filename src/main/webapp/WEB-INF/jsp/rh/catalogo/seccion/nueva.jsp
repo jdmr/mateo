@@ -15,7 +15,7 @@
         <div id="nuevo-seccion" class="content scaffold-list" role="main">
             <h1><s:message code="seccion.nuevo.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/rh/seccion'/>"><i class="icon-list icon-white"></i> <s:message code='seccion.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/rh/catalogo/seccion'/>"><i class="icon-list icon-white"></i> <s:message code='seccion.lista.label' /></a>
             </p>
             <form:form commandName="seccion" action="graba" method="post">
                 <form:errors path="*">

@@ -151,7 +151,7 @@ public class SolicitudVacacionesEmpleadoController extends BaseController {
 
         return Constantes.PATH_SOLICITUDVACACIONESEMPLEADO_LISTA;
     }
-
+ 
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando dia feriado {}", id);

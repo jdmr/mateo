@@ -15,7 +15,7 @@
         <div id="nuevo-categoria" class="content scaffold-list" role="main">
             <h1><s:message code="categoria.nuevo.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/rh/categoria/'/>"><i class="icon-list icon-white"></i> <s:message code='categoria.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/rh/catalogo/categoria/'/>"><i class="icon-list icon-white"></i> <s:message code='categoria.lista.label' /></a>
             </p>
             <form:form commandName="categoria" action="graba" method="post">
                 <form:errors path="*">

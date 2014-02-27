@@ -14,14 +14,14 @@
         <h1><s:message code="seccion.lista.label" /></h1>
         <hr/>
 
-        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/rh/seccion' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/rh/catalogo/seccion' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/rh/seccion/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='seccion.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/rh/catalogo/seccion/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='seccion.nuevo.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
