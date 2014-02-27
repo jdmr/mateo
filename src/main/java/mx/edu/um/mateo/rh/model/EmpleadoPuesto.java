@@ -15,9 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import org.hibernate.validator.constraints.NotBlank;
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
+import mx.edu.um.mateo.general.model.Empresa;
 
 /**
  *
@@ -25,30 +24,32 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Entity
 @Table(name = "empleado_puesto")
-public class EmpleadoPuesto implements Serializable{
-    //private CentroCosto centroCosto;
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
-        @Version
-        private Integer version;
-        @ManyToOne(optional=false)
-	private Puesto puesto;
-//        @NotBlank
-//        @Min(message="El valor minimo del turno es el 5%",value=5)
-//        @Max(value=100,message="El valor maximo del turno es el 100%")
-        @Column(nullable = false, scale=2, precision=6)
-	private BigDecimal turno;
-        @Column(nullable = false, length = 2)
-        private String status;
+public class EmpleadoPuesto implements Serializable {
 
-        
-    public EmpleadoPuesto(){
-            puesto = new Puesto();
-            turno = new BigDecimal("0");
-            status = new String();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Version
+    private Integer version;
+    @ManyToOne(optional = false)
+    private Puesto puesto;
+    @Column(nullable = false, scale = 2, precision = 6)
+    private BigDecimal turno;
+    @Column(nullable = false, length = 2)
+    private String status;
+    @ManyToOne
+    private CentroCosto centroCosto;
+    @ManyToOne
+    private Empresa empresa;
+    @ManyToOne
+    private Empleado empleado;
+
+    public EmpleadoPuesto() {
+        puesto = new Puesto();
+        turno = new BigDecimal("0");
+        status = new String();
     }
-        
+
     public Long getId() {
         return id;
     }
@@ -115,12 +116,34 @@ public class EmpleadoPuesto implements Serializable{
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "EmpleadoPuesto{" + "id=" + id + ", version=" + version + ", puesto=" + puesto.getId() + ", turno=" + turno + ", status=" + status + '}';
+    public CentroCosto getCentroCosto() {
+        return centroCosto;
     }
 
-   
+    public void setCentroCosto(CentroCosto centroCosto) {
+        this.centroCosto = centroCosto;
+    }
 
-        
+    public Empresa getEmpresa() {
+        return empresa;
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        this.empresa = empresa;
+    }
+
+    public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
+    }
+
+    @Override
+    public String toString() {
+        return "EmpleadoPuesto{" + "id=" + id + ", version=" + version + ", puesto=" + puesto + ", turno=" + turno
+                + ", status=" + status + ", centroCosto=" + centroCosto + '}';
+    }
+
 }

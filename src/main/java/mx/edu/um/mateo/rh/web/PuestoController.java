@@ -37,7 +37,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author osoto
  */
 @Controller
-@RequestMapping("/rh/puestos")
+@RequestMapping("/rh/catalogo/puestos")
 public class PuestoController extends BaseController {
 
     @Autowired
@@ -75,10 +75,9 @@ public class PuestoController extends BaseController {
             params.put(Constantes.CONTAINSKEY_ORDER, order);
             params.put(Constantes.CONTAINSKEY_SORT, sort);
         }
-         if (pagina != null) {
+        if (pagina != null) {
             params.put("pagina", pagina);
         }
-
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
@@ -114,7 +113,7 @@ public class PuestoController extends BaseController {
                         Constantes.CONTAINSKEY_MESSAGE_ATTRS,
                         new String[]{
                             messageSource.getMessage("puesto.lista.label",
-                            null, request.getLocale()),
+                                    null, request.getLocale()),
                             ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
                 log.error("No se pudo enviar el reporte por correo", e);
@@ -128,7 +127,7 @@ public class PuestoController extends BaseController {
         this.pagina(params, modelo, Constantes.PUESTO_LIST, pagina);
 
         log.debug("params {}", params.toString());
-        return "/rh/puestos/lista";
+        return "/rh/catalogo/puestos/lista";
     }
 
     @RequestMapping("/ver/{id}")
@@ -139,7 +138,7 @@ public class PuestoController extends BaseController {
 
         modelo.addAttribute(Constantes.PUESTO_KEY, puesto);
 
-        return "/rh/puestos/ver";
+        return "/rh/catalogo/puestos/ver";
     }
 
     @RequestMapping("/nuevo")
@@ -153,7 +152,7 @@ public class PuestoController extends BaseController {
         List<Seccion> listaSeccion = (List) params.get(Constantes.CONTAINSKEY_SECCIONES);
         log.debug("Secciones***" + listaSeccion.size());
         modelo.addAttribute(Constantes.CONTAINSKEY_SECCIONES, listaSeccion);
-        return "/rh/puestos/nuevo";
+        return "/rh/catalogo/puestos/nuevo";
 
     }
 
@@ -173,10 +172,10 @@ public class PuestoController extends BaseController {
             params = SeccionManager.Lista(params);
             //modelo.addAttribute(Constantes.SECCION_LIST, params.get(Constantes.SECCION_LIST));
             List<Seccion> listaSeccion = (List) params.get(Constantes.CONTAINSKEY_SECCIONES);
-            log.debug("Secciones***" + listaSeccion.size());           
+            log.debug("Secciones***" + listaSeccion.size());
             modelo.addAttribute(Constantes.CONTAINSKEY_SECCIONES, listaSeccion);
 
-            return "/rh/puestos/nuevo";
+            return "/rh/catalogos/puestos/nuevo";
         }
 
         try {
@@ -186,13 +185,12 @@ public class PuestoController extends BaseController {
             List<Seccion> listaSeccion = (List) params.get(Constantes.CONTAINSKEY_SECCIONES);
             log.debug("Secciones***" + listaSeccion.size());
             modelo.addAttribute(Constantes.CONTAINSKEY_SECCIONES, listaSeccion);
-            puesto.setSeccion(SeccionManager.Obtiene(puesto.getSeccion().getId()));
             Usuario usuario = ambiente.obtieneUsuario();
             mgr.graba(puesto, usuario);
 
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el puesto", e);
-            return "/rh/puestos/nuevo";
+            return "/rh/catalogo/puestos/nuevo";
         }
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE,
@@ -201,9 +199,8 @@ public class PuestoController extends BaseController {
                 Constantes.CONTAINSKEY_MESSAGE_ATTRS,
                 new String[]{puesto.getDescripcion()});
 
-        return "redirect:" + "/rh/puestos" ;
+        return "redirect:" + "/rh/catalogo/puestos";
     }
-
 
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
@@ -218,7 +215,7 @@ public class PuestoController extends BaseController {
 
         modelo.addAttribute(Constantes.PUESTO_KEY, puesto);
 
-        return "/rh/puestos/edita";
+        return "/rh/catalogo/puestos/edita";
     }
 
     @Transactional
@@ -243,6 +240,6 @@ public class PuestoController extends BaseController {
             return "/rh/puestos/ver";
         }
 
-        return "redirect:" + "/rh/puestos";
+        return "redirect:" + "/rh/catalogo/puestos";
     }
 }

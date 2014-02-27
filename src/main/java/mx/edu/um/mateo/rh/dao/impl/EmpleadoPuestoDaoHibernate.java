@@ -110,9 +110,9 @@ public class EmpleadoPuestoDaoHibernate extends BaseDao implements EmpleadoPuest
     @Override
     public void graba(final EmpleadoPuesto empleadoPuesto, Usuario usuario) {
         Session session = currentSession();
-//        if (usuario != null) {
-//            empleadoPuesto.setEmpresa(usuario.getEmpresa());
-//        }
+        if (usuario != null) {
+            empleadoPuesto.setEmpresa(usuario.getEmpresa());
+        }
         currentSession().saveOrUpdate(empleadoPuesto);
         currentSession().merge(empleadoPuesto);
         currentSession().flush();

@@ -34,7 +34,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author IrasemaBalderas
  */
     @Controller
-@RequestMapping("/rh/seccion")
+@RequestMapping("/rh/catalogo/seccion")
 public class SeccionController extends BaseController {
 
     @Autowired
