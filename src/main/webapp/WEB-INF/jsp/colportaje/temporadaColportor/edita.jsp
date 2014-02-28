@@ -39,17 +39,8 @@
                             <label for="temporada">
                                 <s:message code="temporada.label" />
                                 <span class="required-indicator">*</span>
-                                <form:select id="temporadaId" path="temporada.id" items="${temporadas}" itemLabel="nombre" itemValue="id" />
+                                <form:select id="temporada.id" path="temporada.id" items="${temporadas}" itemLabel="nombre" itemValue="id" />
                                 <form:errors path="temporada" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>                    
-                    <s:bind path="temporadaColportor.colportor">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="colportor">
-                                <s:message code="colportor.label" />
-                                <span class="required-indicator">*</span>
-                                <form:select id="colportorId" path="colportor.id" items="${colportores}" itemLabel="calle" itemValue="id" />
-                                <form:errors path="colportor" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                    <s:bind path="temporadaColportor.colegio">
@@ -57,7 +48,7 @@
                                 <label for="colegio">
                                 <s:message code="colegio.label" />
                                 <span class="required-indicator">*</span>
-                                <form:select id="colegioId" path="colegio.id" items="${colegios}" itemLabel="nombre" itemValue="id" />
+                                <form:select id="colegio.id" path="colegio.id" items="${colegios}" itemLabel="nombre" itemValue="id" />
                                 <form:errors path="colegio" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -75,8 +66,8 @@
                             <label for="status">
                                 <s:message code="status.label" />
                                 <span class="required-indicator">*</span>
-                                <form:radiobutton path="status"  value="A" cssClass="span3" id="status"/><s:message code="activo.label"/>
-                                <form:radiobutton path="status"  value="I"  cssClass="span3" id="status"/><s:message code="inactivo.label"/>
+                                <form:radiobutton path="status"  value="A" cssClass="span3" id="activo"/><s:message code="activo.label"/>
+                                <form:radiobutton path="status"  value="I"  cssClass="span3" id="inactivo"/><s:message code="inactivo.label"/>
                                 <form:errors path="status" cssClass="alert alert-error" />
                         </div>
                     </s:bind>

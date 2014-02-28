@@ -251,31 +251,25 @@ public class TemporadaColportorController extends BaseController{
     }
 
     @RequestMapping("/edita/{id}")
-    public String edita(@PathVariable Long id, Model modelo) {
+    public String edita(HttpServletRequest request, @PathVariable Long id, Model modelo) {
         log.debug("Edita Temporada {}", id);
         
         TemporadaColportor temporadaColportor = temporadaColportorDao.obtiene(id);
         modelo.addAttribute(Constantes.TEMPORADACOLPORTOR, temporadaColportor);
         
+        request.getSession().setAttribute(Constantes.COLPORTOR, temporadaColportor.getColportor());
+        request.getSession().setAttribute(Constantes.ASOCIADO_COLPORTOR, temporadaColportor.getAsociado());
+        
         Map<String, Object> params = new HashMap<>();
         params.put("organizacion", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
+        params.put("reporte","");
         params = temporadaDao.lista(params);        
         modelo.addAttribute(Constantes.TEMPORADA_LIST, (List) params.get(Constantes.TEMPORADA_LIST));
-      
+        
+        params = new HashMap<>();
+        params.put("reporte","");
         params = colegioDao.lista(params);
         modelo.addAttribute(Constantes.CONTAINSKEY_COLEGIOS, (List) params.get(Constantes.CONTAINSKEY_COLEGIOS));
-        
-        params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
-        params = colportorDao.lista(params);
-        modelo.addAttribute(Constantes.COLPORTOR_LIST, (List) params.get(Constantes.COLPORTOR_LIST));
-        
-        params = asociadoDao.lista(params);
-        modelo.addAttribute(Constantes.ASOCIADO_LIST, (List) params.get(Constantes.ASOCIADO_LIST));
-        
-        Map<String, Object> temporadas = temporadaDao.lista(null);
-        params = temporadaDao.lista(params);
-        modelo.addAttribute(Constantes.TEMPORADA_LIST, (List)params.get(Constantes.TEMPORADA_LIST));
-
         
         return Constantes.TEMPORADACOLPORTOR_PATH_EDITA;
     }
@@ -284,6 +278,7 @@ public class TemporadaColportorController extends BaseController{
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid TemporadaColportor temporadaColportor, 
         BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
+        
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
             despliegaBindingResultErrors(bindingResult);
@@ -300,16 +295,20 @@ public class TemporadaColportorController extends BaseController{
         try {
             Usuario usuario = ambiente.obtieneUsuario();
             
+            request.getSession().setAttribute(Constantes.COLPORTOR, temporadaColportor.getColportor());
+            request.getSession().setAttribute(Constantes.ASOCIADO_COLPORTOR, temporadaColportor.getAsociado());
+            
             Temporada temporada = temporadaDao.obtiene(temporadaColportor.getTemporada().getId());
             temporadaColportor.setTemporada(temporada);
-            Asociado asociado = asociadoDao.obtiene(ambiente.obtieneUsuario().getId());
-            temporadaColportor.setAsociado(asociado);
-            Colportor colportor = colportorDao.obtiene(temporadaColportor.getColportor().getId());
-            temporadaColportor.setColportor(colportor);
+            //Asociado asociado = asociadoDao.obtiene(temporadaColportor.getAsociado().getId());
+            temporadaColportor.setAsociado((Asociado)request.getSession().getAttribute(Constantes.ASOCIADO_COLPORTOR));
+            //Colportor colportor = colportorDao.obtiene(temporadaColportor.getColportor().getId());
+            temporadaColportor.setColportor((Colportor)request.getSession().getAttribute(Constantes.COLPORTOR));
 
             Colegio colegio = colegioDao.obtiene(temporadaColportor.getColegio().getId());
             temporadaColportor.setColegio(colegio);
             temporadaColportor = temporadaColportorDao.actualiza(temporadaColportor);
+            
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al Asociacion", e);
             return Constantes.TEMPORADACOLPORTOR_PATH_NUEVA;
