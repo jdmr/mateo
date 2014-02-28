@@ -137,6 +137,7 @@ public class TemporadaColportorController extends BaseController{
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
+        
         params = temporadaColportorDao.lista(params);
         modelo.addAttribute(Constantes.TEMPORADACOLPORTOR_LIST, params.get(Constantes.TEMPORADACOLPORTOR_LIST));
 
@@ -173,16 +174,19 @@ public class TemporadaColportorController extends BaseController{
     }
 
     @RequestMapping("/ver/{id}")
-    public String ver(@PathVariable Long id, Model modelo) {
+    public String ver(HttpServletRequest request, @PathVariable Long id, Model modelo) {
         log.debug("Mostrando Temporada Colportor {}", id);
         TemporadaColportor temporadaColportor = temporadaColportorDao.obtiene(id);
         modelo.addAttribute(Constantes.TEMPORADACOLPORTOR, temporadaColportor);
+        request.getSession().setAttribute(Constantes.COLPORTOR, temporadaColportor.getColportor());
+        request.getSession().setAttribute(Constantes.ASOCIADO_COLPORTOR, temporadaColportor.getAsociado());
         return Constantes.TEMPORADACOLPORTOR_PATH_VER;
     }
 
     @RequestMapping("/nueva")
     public String nueva(Model modelo, HttpServletRequest request) {
         Map<String, Object> params = new HashMap<>();
+        
         log.debug("Nueva Temporada Colportor");
         modelo.addAttribute(Constantes.TEMPORADACOLPORTOR, new TemporadaColportor());
 
@@ -193,13 +197,6 @@ public class TemporadaColportorController extends BaseController{
       
         params = colegioDao.lista(params);
         modelo.addAttribute(Constantes.CONTAINSKEY_COLEGIOS, (List) params.get(Constantes.CONTAINSKEY_COLEGIOS));
-        
-        params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
-        params = colportorDao.lista(params);
-        modelo.addAttribute(Constantes.COLPORTOR_LIST, (List) params.get(Constantes.COLPORTOR_LIST));
-        
-        params = asociadoDao.lista(params);
-        modelo.addAttribute(Constantes.ASOCIADO_LIST, (List) params.get(Constantes.ASOCIADO_LIST));
         
         return Constantes.TEMPORADACOLPORTOR_PATH_NUEVA;
     }
@@ -221,21 +218,25 @@ public class TemporadaColportorController extends BaseController{
         
         try {
             Usuario usuario = ambiente.obtieneUsuario();
-            Asociado asociado = asociadoDao.obtiene(usuario.getId());
-            temporadaColportor.setAsociado(asociado);
-            log.debug("Asociado asignado a la TmpClp {}", asociado);
             
             Temporada temporada = temporadaDao.obtiene(temporadaColportor.getTemporada().getId());
             temporadaColportor.setTemporada(temporada);
-            Colportor colportor = colportorDao.obtiene(temporadaColportor.getColportor().getId());
-            temporadaColportor.setColportor(colportor);
+            
+            temporadaColportor.setAsociado((Asociado)request.getSession().getAttribute(Constantes.ASOCIADO_COLPORTOR));
+            temporadaColportor.setColportor((Colportor)request.getSession().getAttribute(Constantes.COLPORTOR));
+            
             Colegio colegio = colegioDao.obtiene(temporadaColportor.getColegio().getId());
             temporadaColportor.setColegio(colegio);
             
             if(temporadaColportor.getId() == null){
-                temporadaColportor.setAsociado(asociado);
+                temporadaColportor.setAsociado((Asociado)request.getSession().getAttribute(Constantes.ASOCIADO_COLPORTOR));
                 temporadaColportor.setStatus(Constantes.STATUS_ACTIVO);
                 temporadaColportor.setFecha(new Date());
+                
+                //Desactivar las temporadas activas de este colportor
+                TemporadaColportor tmp = temporadaColportorDao.obtiene((Colportor)request.getSession().getAttribute(Constantes.COLPORTOR));
+                tmp.setStatus(Constantes.STATUS_INACTIVO);
+                temporadaColportorDao.actualiza(tmp);
             }
             
             temporadaColportor = temporadaColportorDao.crea(temporadaColportor);
@@ -295,18 +296,21 @@ public class TemporadaColportorController extends BaseController{
         try {
             Usuario usuario = ambiente.obtieneUsuario();
             
-            request.getSession().setAttribute(Constantes.COLPORTOR, temporadaColportor.getColportor());
-            request.getSession().setAttribute(Constantes.ASOCIADO_COLPORTOR, temporadaColportor.getAsociado());
-            
             Temporada temporada = temporadaDao.obtiene(temporadaColportor.getTemporada().getId());
             temporadaColportor.setTemporada(temporada);
-            //Asociado asociado = asociadoDao.obtiene(temporadaColportor.getAsociado().getId());
             temporadaColportor.setAsociado((Asociado)request.getSession().getAttribute(Constantes.ASOCIADO_COLPORTOR));
-            //Colportor colportor = colportorDao.obtiene(temporadaColportor.getColportor().getId());
             temporadaColportor.setColportor((Colportor)request.getSession().getAttribute(Constantes.COLPORTOR));
 
             Colegio colegio = colegioDao.obtiene(temporadaColportor.getColegio().getId());
             temporadaColportor.setColegio(colegio);
+            
+            //Desactivar las temporadas activas de este colportor
+            TemporadaColportor tmp = temporadaColportorDao.obtiene((Colportor)request.getSession().getAttribute(Constantes.COLPORTOR));
+            if(tmp != null && tmp.getId().compareTo(temporadaColportor.getId()) != 0){
+                tmp.setStatus(Constantes.STATUS_INACTIVO);
+                temporadaColportorDao.actualiza(tmp);
+            }
+            
             temporadaColportor = temporadaColportorDao.actualiza(temporadaColportor);
             
         } catch (ConstraintViolationException e) {

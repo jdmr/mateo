@@ -16,10 +16,11 @@
 
         <div id="edita-temporadaColportor" class="content scaffold-list" role="main">
             <h1><s:message code="temporadaColportor.edita.label" /></h1>
+            <h4><c:out value="${colportor.nombreCompleto}"/></h4>
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='../'/>"><i class="icon-list icon-white"></i> <s:message code='temporadaColportor.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="../actualiza" />
+            <c:url var="actualizaUrl" value="/colportaje/temporadaColportor/actualiza" />
             <form:form commandName="temporadaColportor" method="post" action="${actualizaUrl}">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
@@ -76,7 +77,7 @@
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="observaciones">
                                 <s:message code="observaciones.label" />
-                                <form:textarea path="observaciones" maxlength="4000" required="true"  />
+                                <form:textarea path="observaciones" maxlength="4000"  />
                                 <form:errors path="observaciones" cssClass="alert alert-error" type="texttarea"/>
                         </div>
                     </s:bind>

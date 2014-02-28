@@ -45,6 +45,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
@@ -64,7 +65,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @DiscriminatorColumn(name = "entity_type", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("user")
 @Entity 
-@Table(name = "usuarios")
+@Table(name = "usuarios", uniqueConstraints = {@UniqueConstraint(columnNames = {"empresa_id","clave"})})
 public class Usuario  implements Serializable, UserDetails, TipoUsuario {
     protected final transient Logger log = LoggerFactory.getLogger(getClass());
 

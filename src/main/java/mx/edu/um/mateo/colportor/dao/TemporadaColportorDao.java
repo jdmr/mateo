@@ -52,10 +52,8 @@ public class TemporadaColportorDao extends BaseDao {
             params.put(Constantes.CONTAINSKEY_OFFSET, 0);
         }
         
-        Criteria criteria = currentSession().createCriteria(TemporadaColportor.class)
-                .add(Restrictions.eq("status", Constantes.STATUS_ACTIVO));
-        Criteria countCriteria = currentSession().createCriteria(TemporadaColportor.class)
-                .add(Restrictions.eq("status", Constantes.STATUS_ACTIVO));
+        Criteria criteria = currentSession().createCriteria(TemporadaColportor.class);
+        Criteria countCriteria = currentSession().createCriteria(TemporadaColportor.class);
         
         if(params.get("empresa") != null){
             criteria.createCriteria("asociado").add(Restrictions.eq("empresa.id", (Long)params.get("empresa")));

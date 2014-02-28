@@ -15,6 +15,7 @@
 
         <div id="ver-temporadaColportor" class="content scaffold-list" role="main">
             <h1><s:message code="temporadaColportor.ver.label" /></h1>
+            <h4><c:out value="${colportor.nombreCompleto}"/></h4>
 
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='../'/>"><i class="icon-list icon-white"></i> <s:message code='temporadaColportor.lista.label' /></a>

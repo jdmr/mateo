@@ -29,7 +29,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import mx.edu.um.mateo.general.model.TipoUsuario;
 import mx.edu.um.mateo.general.model.Usuario;
-import mx.edu.um.mateo.general.utils.Constantes;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
