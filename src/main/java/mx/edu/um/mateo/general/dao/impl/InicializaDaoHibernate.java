@@ -184,7 +184,7 @@ public class InicializaDaoHibernate extends BaseDao implements InicializaDao {
         usuario.setRoles(rolesClp);
         asociadoDao.crea((Asociado) usuario, null);
 
-        usuario = new Colportor(username + "@clp.um.edu.mx", password, username + "@clp.edu.mx", "test", "apPaterno", "apMaterno", "12345", "A", "8262630900", "Direccion", "Colonia", "Municipio", "tipoClp", "0890626", new Date());
+        usuario = new Colportor(username + "@clp.um.edu.mx", password, username + "@clp.edu.mx", "test", "apPaterno", "apMaterno", "54321", "A", "8262630900", "Direccion", "Colonia", "Municipio", "tipoClp", "0890626", new Date());
 
         usuario.setAlmacen(almacen);
         usuario.setEmpresa(almacen.getEmpresa());
