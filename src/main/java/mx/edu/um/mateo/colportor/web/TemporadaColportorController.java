@@ -98,6 +98,9 @@ public class TemporadaColportorController extends BaseController{
         Map<String, Object> params = new HashMap<>();
         params.put("asociado", ambiente.obtieneUsuario().getId());
         
+        if(request.getSession().getAttribute(Constantes.COLPORTOR) != null)
+            params.put("colportor", ((Colportor)request.getSession().getAttribute(Constantes.COLPORTOR)).getId());
+        
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }

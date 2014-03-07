@@ -60,13 +60,23 @@ public class TemporadaColportorDao extends BaseDao {
             countCriteria.createCriteria("asociado").add(Restrictions.eq("id", (Long)params.get("asociado")));
         }
         
+        if(params.get("colportor") != null || params.containsKey(Constantes.CONTAINSKEY_FILTRO)){
+            criteria.createAlias("colportor", "clp");
+            countCriteria.createAlias("colportor", "clp");
+        }
+        
+        if(params.get("colportor") != null){
+            criteria.add(Restrictions.eq("clp.id", (Long)params.get("colportor")));
+            countCriteria.add(Restrictions.eq("clp.id", (Long)params.get("colportor")));
+        }
+        
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
             
             String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);
             filtro = "%" + filtro + "%";
             
             criteria.createAlias("temporada", "temp");
-            criteria.createAlias("colportor", "clp");
+            
             criteria.add(Restrictions.or(Restrictions.ilike("temp.nombre", filtro), 
                     Restrictions.ilike("clp.clave", filtro), 
                     Restrictions.ilike("clp.nombre", filtro), 
@@ -74,7 +84,7 @@ public class TemporadaColportorDao extends BaseDao {
                     Restrictions.ilike("clp.apPaterno", filtro)));
             
             countCriteria.createAlias("temporada", "temp");
-            countCriteria.createAlias("colportor", "clp");
+            
             countCriteria.add(Restrictions.or(Restrictions.ilike("temp.nombre", filtro), 
                     Restrictions.ilike("clp.clave", filtro), 
                     Restrictions.ilike("clp.nombre", filtro), 
