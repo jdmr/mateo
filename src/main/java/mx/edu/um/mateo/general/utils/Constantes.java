@@ -2965,6 +2965,8 @@ public class Constantes {
     public static final String CONTAINSKEY_CONCENTRADOGRALPORTEMPORADAS = "concentradoGralPorTemporadas";
     public static final String PATH_RPT_CLP_CONCENTRADOVENTAS = "/colportaje/reportes/concentradoVentas";
     public static final String CONTAINSKEY_CONCENTRADOVENTAS = "concentradoVentas";
+    public static final String CONTAINSKEY_CONCENTRADOVENTAS_DIEZMO = "totalesDiezmo";
+    public static final String CONTAINSKEY_CONCENTRADOVENTAS_BOLETIN = "totalesBoletin";
     /**
      * @see
      * mx.edu.um.mateo.rh.web.ClaveEMpleadoController;ValoresparaclavesdeempleadoRH

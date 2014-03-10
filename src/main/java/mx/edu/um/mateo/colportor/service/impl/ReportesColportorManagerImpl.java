@@ -148,6 +148,9 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         ReporteColportorVO vo = null;
         Colportor clp = null;
         
+        BigDecimal totalBoletin = BigDecimal.ZERO;
+        BigDecimal totalDiezmo = BigDecimal.ZERO;        
+        
         params = docDao.concentradoGralVentasPorColportor(params);
         List <Object[]> objs = (List<Object[]>) params.get(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS);
         for(Object[] obj : objs){
@@ -172,11 +175,13 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
                 case "Boletin":
                 {
                     vo.setAcumuladoBoletin((BigDecimal)obj[0]);
+                    totalBoletin = totalBoletin.add((BigDecimal)obj[0]);
                     break;
                 }
                 case "Diezmo":
                 {
                     vo.setAcumuladoDiezmo((BigDecimal)obj[0]);
+                    totalDiezmo = totalDiezmo.add((BigDecimal)obj[0]);
                     break;
                 }
             }
@@ -185,6 +190,8 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         }
         params.remove(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS);
         params.put(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS, mVOS.values());
+        params.put(Constantes.CONTAINSKEY_CONCENTRADOVENTAS_DIEZMO, totalDiezmo);
+        params.put(Constantes.CONTAINSKEY_CONCENTRADOVENTAS_BOLETIN, totalBoletin);
         
         log.debug("{}",mVOS.values());
         return params;
@@ -199,6 +206,9 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         TemporadaColportor tmpClp = null;
         Colportor clp = null;
         ReporteColportorVO vo = null;
+        
+        BigDecimal totalBoletin = BigDecimal.ZERO;
+        BigDecimal totalDiezmo = BigDecimal.ZERO;
         
         params = docDao.concentradoVentas(params);
         List <Object[]> objs = (List<Object[]>) params.get(Constantes.CONTAINSKEY_CONCENTRADOVENTAS);
@@ -225,11 +235,13 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
                 case "Boletin":
                 {
                     vo.setAcumuladoBoletin((BigDecimal)obj[0]);
+                    totalBoletin = totalBoletin.add((BigDecimal)obj[0]);
                     break;
                 }
                 case "Diezmo":
                 {
                     vo.setAcumuladoDiezmo((BigDecimal)obj[0]);
+                    totalDiezmo = totalDiezmo.add((BigDecimal)obj[0]);
                     break;
                 }
             }
@@ -237,6 +249,8 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
             mVOS.put(clp.getApPaterno()+clp.getApMaterno()+vo.getTemporadaColportor().getTemporada().getFechaInicio().getTime(),vo);
         }
         params.put(Constantes.CONTAINSKEY_CONCENTRADOVENTAS, mVOS.values());
+        params.put(Constantes.CONTAINSKEY_CONCENTRADOVENTAS_DIEZMO, totalDiezmo);
+        params.put(Constantes.CONTAINSKEY_CONCENTRADOVENTAS_BOLETIN, totalBoletin);
         
         log.debug("{}",mVOS.values());
         return params;

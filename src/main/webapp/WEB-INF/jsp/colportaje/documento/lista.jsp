@@ -84,12 +84,52 @@
             <table id="totales" class="table">
                 <tbody>
                     <tr> 
-                        <td><b><s:message code="compras.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${Total_Boletin}"/></td>
-                        <td><b><s:message code="objetivo.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${temporadaColportor.objetivo}"/></td>
-                        <td><b><s:message code="pctAlcanzado.label" /> </b><fmt:formatNumber type="percent" currencySymbol="%" value="${Alcanzado*10}"/></td>
-                        <td><b><s:message code="diezmo" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${Total_Diezmos}"/></td>
-                        <td><b><s:message code="fidelidad" /> </b><fmt:formatNumber type="percent" currencySymbol="%" value="${Fidelidad*10}"/></td>
-                        <td><b><s:message code="depositos" /></b><fmt:formatNumber type="currency" currencySymbol="$" value="${Total_Depositos}"/></td>
+                        <td>
+                            <span class="label label-success">
+                            <b><s:message code="compras.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${Total_Boletin}"/>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="label label-success">
+                            <b><s:message code="objetivo.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${temporadaColportor.objetivo}"/>
+                            </span>
+                        </td>
+                        <td>
+                            <c:if test="${Alcanzado < 0.8}">
+                                <span class="label label-important">
+                            </c:if>
+                            <c:if test="${Alcanzado >= 1}">
+                                <span class="label label-success">
+                            </c:if>
+                            <c:if test="${Alcanzado >= 0.8 and Alcanzado < 1}">
+                                <span class="label label-warning">
+                            </c:if>
+                            <b><s:message code="pctAlcanzado.label" /> </b><fmt:formatNumber type="percent" currencySymbol="%" value="${Alcanzado}"/>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="label label-success">
+                            <b><s:message code="diezmo" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${Total_Diezmos}"/>
+                            </span>
+                        </td>
+                        <td>
+                            <c:if test="${Fidelidad < 0.8}">
+                                <span class="label label-important">
+                            </c:if>
+                            <c:if test="${Fidelidad >= 1}">
+                                <span class="label label-success">
+                            </c:if>
+                            <c:if test="${Fidelidad >= 0.8 and Fidelidad < 1}">
+                                <span class="label label-warning">
+                            </c:if>
+                            <b><s:message code="fidelidad" /> </b><fmt:formatNumber type="percent" currencySymbol="%" value="${Fidelidad}"/>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="label label-success">
+                            <b><s:message code="depositos" /></b><fmt:formatNumber type="currency" currencySymbol="$" value="${Total_Depositos}"/>
+                            </span>
+                        </td>
                     </tr>
                 </tbody>
             </table>
