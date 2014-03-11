@@ -86,7 +86,9 @@ public class InformeMensualController {
         Map<String, Object> params = new HashMap<>();
         
         params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
-        params.put("clave", clave);
+        
+        if(clave != null && !clave.isEmpty())
+            params.put("clave", clave);
         
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
