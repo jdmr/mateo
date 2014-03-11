@@ -1,22 +1,24 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="informeMensualDetalle.lista.label" /></title>
+        <title><s:message code="informeMensualDetalle.lista.label" /> de <fmt:formatDate pattern="MMMM/yyyy" value="${informeMensual.fecha}" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
             <jsp:param name="menu" value="informeMensualDetalle" />
         </jsp:include>
 
-        <h1><s:message code="informeMensualDetalle.lista.label" /></h1>
+        <h1><s:message code="informeMensualDetalle.lista.label" /> de <fmt:formatDate pattern="MMMM/yyyy" value="${informeMensual.fecha}" /></h1>
         <hr/>
         
         <h4>
             <c:out value="${colportor.clave}"/>
             <c:out value="${colportor.nombreCompleto}"/>
+            
         </h4>
 
         <form name="filtraLista" class="form-search" method="post" action="<c:url value='/colportaje/informeMensualDetalle' />">
@@ -87,7 +89,11 @@
                 <tbody>
                     <c:forEach items="${informeMensualDetalles}" var="detalle" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/colportaje/informeMensualDetalle/ver/${detalle.id}' />">${detalle.fecha}</a></td>
+                            <td>
+                                <a href="<c:url value='/colportaje/informeMensualDetalle/ver/${detalle.id}' />">
+                                    <fmt:formatDate pattern="dd/MMM" value="${detalle.fecha}" />
+                                </a>
+                            </td>
                             <td>${detalle.hrsTrabajadas}</a></td>
                             <td>${detalle.literaturaVendida}</a></td>
                             <td>${detalle.totalPedidos}</a></td>

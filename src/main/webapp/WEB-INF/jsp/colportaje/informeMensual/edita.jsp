@@ -58,5 +58,12 @@
                 </p>
             </form:form>
         </div>
+        <content>
+            <script src="<c:url value='/js/chosen.jquery.min.js' />"></script>
+            <script>
+                $("input#fecha").datepicker($.datepicker.regional['es']);
+                $("input#fecha").datepicker("option","firstDay",0);
+            </script>
+        </content> 
     </body>
 </html>

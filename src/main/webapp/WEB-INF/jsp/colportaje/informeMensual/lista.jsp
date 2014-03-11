@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -62,9 +63,8 @@
                 <tbody>
                     <c:forEach items="${informesMensuales}" var="informeMensual" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/colportaje/informeMensualDetalle/lista?id=${informeMensual.id}' />">${informeMensual.fecha}</a></td>
-                            <td>${informeMensual.fecha}</a></td>
-                            <td><a href="<c:url value='/colportaje/informeMensual/ver/${informeMensual.id}' />">editar</a></td>
+                            <td><a href="<c:url value='/colportaje/informeMensual/ver/${informeMensual.id}' />">
+                                    <fmt:formatDate pattern="MMMM" value="${informeMensual.fecha}" /></a></td>
                         </tr>
                     </c:forEach>
                 </tbody>
@@ -73,6 +73,20 @@
         </form>        
         <content>
             <script src="<c:url value='/js/lista.js' />"></script>
+            
+            <script>
+            $(function() {
+            
+            $( "#clave" ).autocomplete({
+                source: '${pageContext. request. contextPath}/colportaje/colportor/get_colportor_list',
+                select: function(event, ui) {
+                        $("input#clave").val(ui.item.nombre);
+                        
+                        return false;
+                    }
+            })
+            });
+          </script>
         </content>
     </body>
 </html>

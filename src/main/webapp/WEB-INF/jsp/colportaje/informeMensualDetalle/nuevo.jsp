@@ -8,10 +8,11 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="informeMensualDetalle.nuevo.label" /></title>
+        <title><s:message code="informeMensualDetalle.nuevo.label" /> de <fmt:formatDate pattern="MMMM/yyyy" value="${informeMensual.fecha}" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -19,7 +20,7 @@
         </jsp:include>
 
         <div id="nuevo-informeMensualDetalle" class="content scaffold-list" role="main">
-            <h1><s:message code="informeMensualDetalle.nuevo.label" /></h1>
+            <h1><s:message code="informeMensualDetalle.nuevo.label" /> de <fmt:formatDate pattern="MMMM/yyyy" value="${informeMensual.fecha}" /></h1>
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/colportor/informeMensualDetalle'/>"><i class="icon-list icon-white"></i> <s:message code='informeMensualDetalle.lista.label' /></a>
             </p>
@@ -142,5 +143,12 @@
                 </p>
             </form:form>
         </div>
+        <content>
+            <script src="<c:url value='/js/chosen.jquery.min.js' />"></script>
+            <script>
+                $("input#fecha").datepicker($.datepicker.regional['es']);
+                $("input#fecha").datepicker("option","firstDay",0);
+            </script>
+        </content>    
     </body>
 </html>

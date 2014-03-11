@@ -8,10 +8,11 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="informeMensualDetalle.ver.label" /></title>
+        <title><s:message code="informeMensualDetalle.ver.label" /> de <fmt:formatDate pattern="MMMM/yyyy" value="${informeMensual.fecha}" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -19,7 +20,7 @@
         </jsp:include>
 
         <div id="ver-informeMensualDetalle" class="content scaffold-list" role="main">
-            <h1><s:message code="informeMensualDetalle.ver.label" /></h1>
+            <h1><s:message code="informeMensualDetalle.ver.label" /> de <fmt:formatDate pattern="MMMM/yyyy" value="${informeMensual.fecha}" /></h1>
 
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/colportaje/informeMensualDetalle'/>"><i class="icon-list icon-white"></i> <s:message code='informeMensualDetalle.lista.label' /></a>
@@ -38,7 +39,7 @@
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span4">
                         <h4><s:message code="fecha.label" /></h4>
-                        <h3>${informeMensualDetalle.fecha}</h3>
+                        <h3><fmt:formatDate pattern="dd/MMM" value="${informeMensualDetalle.fecha}"/></h3>
                     </div>
                     <div class="span4">
                         <h4><s:message code="hrsTrabajadas.label" /></h4>

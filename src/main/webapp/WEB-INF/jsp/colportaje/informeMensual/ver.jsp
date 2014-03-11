@@ -8,6 +8,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -38,11 +39,11 @@
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span4">
                         <h4><s:message code="colportor.label" /></h4>
-                        <h3>${informeMensual.colportor.nombre}</h3>
+                        <h3>${informeMensual.colportor.nombreCompleto}</h3>
                     </div>
                     <div class="span4">
                         <h4><s:message code="fecha.label" /></h4>
-                        <h3>${informeMensual.fecha}</h3>
+                        <h3><fmt:formatDate pattern="MMMM" value="${informeMensual.fecha}" /></h3>
                     </div>
                 </div>
 
