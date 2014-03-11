@@ -52,14 +52,19 @@ public class InformeMensualDaoHibernate extends BaseDao implements InformeMensua
         
         log.debug("empresa {}", params.get("empresa"));
         if(params.get("empresa")!=null){
-            criteria.createCriteria("colportor")
-                    .createCriteria("empresa")
+            criteria.createAlias("colportor","clp");
+            criteria.createCriteria("clp.empresa")
                     .add(Restrictions.idEq(params.get("empresa")));
             
-            countCriteria.createCriteria("colportor")
-                    .createCriteria("empresa")
+            countCriteria.createAlias("colportor","clp");
+            countCriteria.createCriteria("clp.empresa")
                     .add(Restrictions.idEq(params.get("empresa")));
         
+        }
+        
+        if(params.get("clave")!=null){
+            criteria.add(Restrictions.eq("clp.clave", (String)params.get("clave")));
+            countCriteria.add(Restrictions.eq("clp.clave", (String)params.get("clave")));
         }
 
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
@@ -97,6 +102,7 @@ public class InformeMensualDaoHibernate extends BaseDao implements InformeMensua
             params.put(Constantes.CONTAINSKEY_CANTIDAD, 0L);
          }
        
+         log.debug("Lista de informes {}", params.get(Constantes.INFORMEMENSUAL_LIST));
 
         return params;
     }

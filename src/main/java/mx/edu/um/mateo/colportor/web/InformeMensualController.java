@@ -23,6 +23,7 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.colportor.dao.ColportorDao;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.colportor.dao.InformeMensualDao;
+import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.colportor.model.InformeMensual;
 import mx.edu.um.mateo.general.utils.Ambiente;
@@ -77,13 +78,15 @@ public class InformeMensualController {
             @RequestParam(required = false) Long pagina,
             @RequestParam(required = false) String tipo,
             @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String clave,
             @RequestParam(required = false) String order,
             @RequestParam(required = false) String sort,
-            Model modelo) {
+            Model modelo{
         log.debug("Mostrando lista de InformeMensual");
         Map<String, Object> params = new HashMap<>();
         
         params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
+        params.put("clave", clave);
         
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
@@ -125,6 +128,17 @@ public class InformeMensualController {
         }
         params = informeMensualDao.lista(params);
         modelo.addAttribute(Constantes.INFORMEMENSUAL_LIST, params.get(Constantes.INFORMEMENSUAL_LIST));
+        
+        if (clave != null && !clave.isEmpty()) {
+            Colportor colportor = colportorDao.obtiene(clave);
+            if(colportor == null){
+                //errors.reject("colportor.clave.missing");
+                return Constantes.INFORMEMENSUAL_LIST;
+            }
+            log.debug("Colportor {} ", colportor);
+            request.getSession().setAttribute(Constantes.COLPORTOR, colportor);
+        }
+        
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
         Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
@@ -135,6 +149,7 @@ public class InformeMensualController {
             paginas.add(i);
         } while (i++ < cantidadDePaginas);
         List<InformeMensual> informeMensual = (List<InformeMensual>) params.get(Constantes.INFORMEMENSUAL_LIST);
+        
         Long primero = ((pagina - 1) * max) + 1;
         Long ultimo = primero + (informeMensual.size() - 1);
         String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
@@ -171,7 +186,7 @@ public class InformeMensualController {
             return Constantes.INFORMEMENSUAL_PATH_NUEVO;
         }
         try {
-            informeMensual.setColportor(colportorDao.obtiene(ambiente.obtieneUsuario().getId()));
+            informeMensual.setColportor(colportorDao.obtiene(((Colportor)request.getSession().getAttribute(Constantes.COLPORTOR)).getId()));
             informeMensual.setCapturo(ambiente.obtieneUsuario());
             informeMensual.setCuando(new Date());
             informeMensual = informeMensualDao.crea(informeMensual);

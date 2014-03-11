@@ -13,6 +13,11 @@
 
         <h1><s:message code="informeMensualDetalle.lista.label" /></h1>
         <hr/>
+        
+        <h4>
+            <c:out value="${colportor.clave}"/>
+            <c:out value="${colportor.nombreCompleto}"/>
+        </h4>
 
         <form name="filtraLista" class="form-search" method="post" action="<c:url value='/colportaje/informeMensualDetalle' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />

@@ -13,6 +13,11 @@
 
         <h1><s:message code="informeMensual.lista.label" /></h1>
         <hr/>
+        
+        <h4>
+            <c:out value="${colportor.clave}"/>
+            <c:out value="${colportor.nombreCompleto}"/>
+        </h4>
 
         <form name="filtraLista" class="form-search" method="post" action="<c:url value='/colportaje/informeMensual' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
@@ -21,8 +26,10 @@
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
+                <c:if test="${colportor != null}">
                 <a class="btn btn-primary" href="<s:url value='/colportaje/informeMensual/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='informeMensual.nuevo.label' /></a>
-                <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
+                </c:if>
+                <input id="clave" name="clave" class="input-medium search-query" value="${colportor.clave}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
             <c:if test="${not empty message}">
@@ -48,9 +55,6 @@
                 <thead>
                     <tr>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="colportor" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="fecha" />
                         </jsp:include>
                     </tr>
@@ -59,7 +63,6 @@
                     <c:forEach items="${informesMensuales}" var="informeMensual" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/colportaje/informeMensualDetalle/lista?id=${informeMensual.id}' />">${informeMensual.fecha}</a></td>
-                            <td>${informeMensual.colportor.nombre}</a></td>
                             <td>${informeMensual.fecha}</a></td>
                             <td><a href="<c:url value='/colportaje/informeMensual/ver/${informeMensual.id}' />">editar</a></td>
                         </tr>
