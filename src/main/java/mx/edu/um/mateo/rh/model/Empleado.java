@@ -441,15 +441,14 @@ public class Empleado extends Usuario {
 
     @Override
     public String toString() {
-        return "Empleado{" + "clave=" + clave + ", genero=" + genero + ", direccion=" + direccion + ", status=" + status
+        return "Empleado{" + ", genero=" + genero + ", direccion=" + direccion + ", status=" + status
                 + ", fechaNacimiento=" + fechaNacimiento + ", curp=" + curp + ", rfc=" + rfc + ", cuenta=" + cuenta
                 + ", imms=" + imms + ", escalafon=" + escalafon + ", turno=" + turno + ", fechaAlta=" + fechaAlta
                 + ", fechaBaja=" + fechaBaja + ", experienciaFueraUm=" + experienciaFueraUm + ", modalidad=" + modalidad
                 + ", ife=" + ife + ", rango=" + rango + ", adventista=" + adventista + ", padre=" + padre + ", madre=" + madre
                 + ", estadoCivil=" + estadoCivil + ", conyuge=" + conyuge + ", fechaMatrimonio=" + fechaMatrimonio
                 + ", finadoPadre=" + finadoPadre + ", finadoMadre=" + finadoMadre + ", iglesia=" + iglesia
-                + ", responsabilidad=" + responsabilidad + ", tipoEmpleado=" + tipoEmpleado + ", claves=" + claves
-                + ", solicitudVacaciones=" + solicitudVacaciones + '}';
+                + ", responsabilidad=" + responsabilidad + ", claves=" + claves + '}';
     }
 
     public List<SolicitudVacacionesEmpleado> getSolicitudVacaciones() {

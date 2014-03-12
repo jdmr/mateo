@@ -55,6 +55,7 @@ public class InformeProveedor implements Serializable {
     private String contabilidad;
     private String ccp;
     private String banco;
+    private String tipoDocumento;
 
     public InformeProveedor() {
     }
@@ -200,13 +201,22 @@ public class InformeProveedor implements Serializable {
         this.empleado = empleado;
     }
 
+    public String getTipoDocumento() {
+        return tipoDocumento;
+    }
+
+    public void setTipoDocumento(String tipoDocumento) {
+        this.tipoDocumento = tipoDocumento;
+    }
+
     @Override
     public String toString() {
-        return "InformeProveedor{" + "id=" + id + ", version=" + version + ", status=" + status + ", cuentaCheque=" + cuentaCheque
-                + ", clabe=" + clabe + ", formaPago=" + formaPago + ", nombreProveedor=" + nombreProveedor
-                + ", fechaInforme=" + fechaInforme + ", empresa=" + empresa + ", proveedorFacturas=" + proveedorFacturas
-                + ", usuario=" + empleado + ", fechaPago=" + fechaPago + ", contraRecibo=" + contraRecibo + ", moneda=" + moneda
-                + ", contabilidad=" + contabilidad + ", ccp=" + ccp + ", banco=" + banco + '}';
+        return "InformeProveedor{" + "id=" + id + ", version=" + version + ", status=" + status
+                + ", cuentaCheque=" + cuentaCheque + ", clabe=" + clabe + ", formaPago=" + formaPago
+                + ", nombreProveedor=" + nombreProveedor + ", fechaInforme=" + fechaInforme + ", empresa=" + empresa
+                + ", proveedorFacturas=" + proveedorFacturas + ", empleado=" + empleado + ", fechaPago=" + fechaPago
+                + ", contraRecibo=" + contraRecibo + ", moneda=" + moneda + ", contabilidad=" + contabilidad
+                + ", ccp=" + ccp + ", banco=" + banco + ", tipoDocumento=" + tipoDocumento + '}';
     }
 
 }

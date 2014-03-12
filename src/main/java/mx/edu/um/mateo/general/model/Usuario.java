@@ -46,9 +46,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
 import mx.edu.um.mateo.contabilidad.model.CentroCosto;
 import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.inventario.model.Almacen;
+import mx.edu.um.mateo.rh.model.Empleado;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.slf4j.Logger;
@@ -63,9 +65,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "entity_type", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("user")
-@Entity 
+@Entity
 @Table(name = "usuarios")
-public class Usuario  implements Serializable, UserDetails, TipoUsuario {
+public class Usuario implements Serializable, UserDetails, TipoUsuario {
+
     protected final transient Logger log = LoggerFactory.getLogger(getClass());
 
     /**
@@ -101,15 +104,15 @@ public class Usuario  implements Serializable, UserDetails, TipoUsuario {
     @NotEmpty
     @Column(nullable = false)
     protected String apMaterno;
-    
+
     @Email
     @NotEmpty
     @Column(nullable = false, name = "correo")
-    protected String correo; 
-   @ManyToMany(fetch = FetchType.EAGER)
+    protected String correo;
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usuarios_roles", joinColumns = {
-        @JoinColumn(name = "usuario_id")}, inverseJoinColumns =
-    @JoinColumn(name = "rol_id"))
+        @JoinColumn(name = "usuario_id")}, inverseJoinColumns
+            = @JoinColumn(name = "rol_id"))
     private Set<Rol> roles = new HashSet<>();
     @ManyToOne(optional = false)
     private Empresa empresa;
@@ -123,12 +126,13 @@ public class Usuario  implements Serializable, UserDetails, TipoUsuario {
     public Usuario() {
         this.setRoles(new HashSet());
     }
-      public Usuario( String nombre, String apPaterno, String apMaterno) {
-          this();
+
+    public Usuario(String nombre, String apPaterno, String apMaterno) {
+        this();
         this.nombre = nombre;
         this.apPaterno = apPaterno;
         this.apMaterno = apMaterno;
-        
+
     }
 
     public Usuario(String username, String password, String nombre,
@@ -143,14 +147,14 @@ public class Usuario  implements Serializable, UserDetails, TipoUsuario {
     }
 
     public Usuario(String username, String password, String nombre,
-            String apPaterno,String apMaterno, String correo) {
+            String apPaterno, String apMaterno, String correo) {
         this();
         this.username = username;
         this.password = password;
         this.nombre = nombre;
         this.apPaterno = apPaterno;
         this.apMaterno = apMaterno;
-        
+
         this.correo = correo;
     }
 
@@ -254,9 +258,6 @@ public class Usuario  implements Serializable, UserDetails, TipoUsuario {
         this.nombre = nombre;
     }
 
-    
-  
-    
     /**
      * @return the correo
      */
@@ -348,31 +349,35 @@ public class Usuario  implements Serializable, UserDetails, TipoUsuario {
     public boolean isEnabled() {
         return enabled;
     }
+
     /**
      * @param apPaterno the apPaterno to get
      */
-       public String getApPaterno() {
+    public String getApPaterno() {
         return apPaterno;
     }
-       /**
+
+    /**
      * @param apPaterno the ejercicio to set
      */
     public void setApPaterno(String apPaterno) {
         this.apPaterno = apPaterno;
     }
+
     /**
      * @param apMaterno the ejercicio to get
      */
     public String getApMaterno() {
         return apMaterno;
     }
+
     /**
      * @param apMaterno the apMaterno to set
      */
     public void setApMaterno(String apMaterno) {
         this.apMaterno = apMaterno;
     }
-    
+
     /**
      * @return the ejercicio
      */
@@ -400,11 +405,10 @@ public class Usuario  implements Serializable, UserDetails, TipoUsuario {
     public void setCentrosDeCosto(Set<CentroCosto> centrosDeCosto) {
         this.centrosDeCosto = centrosDeCosto;
     }
-    
+
     public String getNombreCompleto() {
-        return nombre+" "+ apPaterno+" "+apMaterno;
+        return nombre + " " + apPaterno + " " + apMaterno;
     }
-    
 
     @Override
     public boolean equals(Object obj) {
@@ -430,8 +434,6 @@ public class Usuario  implements Serializable, UserDetails, TipoUsuario {
         return hash;
     }
 
- 
-
     @Override
     public String toString() {
         return "Usuario{" + "username=" + username + ", nombre=" + nombre
@@ -452,6 +454,19 @@ public class Usuario  implements Serializable, UserDetails, TipoUsuario {
     public Boolean isTipoColportor() {
         return false;
     }
-    
-    
+
+    public Boolean isProveedor() {
+        Boolean proveedor = this instanceof ProveedorFacturas;
+        log.debug("isproveedor{}", proveedor);
+        log.debug("isproveedor{}", this);
+        return this instanceof ProveedorFacturas;
+    }
+
+    public Boolean isEmpleado() {
+        Boolean emplead = this instanceof Empleado;
+        log.debug("isempleado{}", emplead);
+        log.debug("isempleado{}", this);
+        return this instanceof Empleado;
+    }
+
 }

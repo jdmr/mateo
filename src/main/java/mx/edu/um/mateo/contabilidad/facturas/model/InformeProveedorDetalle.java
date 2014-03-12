@@ -21,6 +21,7 @@ import javax.persistence.Version;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UtilStatus;
+import mx.edu.um.mateo.rh.model.Empleado;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -63,6 +64,8 @@ public class InformeProveedorDetalle implements Serializable {
     private Usuario usuarioAlta;
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     private ProveedorFacturas proveedorFacturas;
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    private Empleado empleado;
     @ManyToOne(fetch = FetchType.LAZY)
     private Usuario usuarioMOdificacion;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -305,17 +308,26 @@ public class InformeProveedorDetalle implements Serializable {
         this.proveedorFacturas = proveedorFacturas;
     }
 
+    public Empleado getEmpleado() {
+        return empleado;
+    }
+
+    public void setEmpleado(Empleado empleado) {
+        this.empleado = empleado;
+    }
+
     @Override
     public String toString() {
         return "InformeProveedorDetalle{" + "id=" + id + ", version=" + version + ", RFCProveedor=" + RFCProveedor
                 + ", folioFactura=" + folioFactura + ", nombreProveedor=" + nombreProveedor + ", subtotal=" + subtotal
-                + ", IVA=" + IVA + ", total=" + total + ", status=" + status + ", fechaFactura=" + fechaFactura + ", pathPDF=" + pathPDF
-                + ", pathXMl=" + pathXMl + ", nombrePDF=" + nombrePDF + ", nombreXMl=" + nombreXMl + ", contrarecibo=" + contrarecibo
-                + ", informeProveedor=" + informeProveedor + ", empresa=" + empresa + ", usuarioAlta=" + usuarioAlta
-                + ", proveedorFacturas=" + proveedorFacturas + ", usuarioMOdificacion=" + usuarioMOdificacion
-                + ", usuarioAutRech=" + usuarioAutRech + ", fechaCaptura=" + fechaCaptura + ", fechaAutRech=" + fechaAutRech
-                + ", fechaModificacion=" + fechaModificacion + ", dctoProntoPago=" + dctoProntoPago + ", file=" + file
-                + ", file2=" + file2 + '}';
+                + ", IVA=" + IVA + ", total=" + total + ", status=" + status + ", fechaFactura=" + fechaFactura
+                + ", pathPDF=" + pathPDF + ", pathXMl=" + pathXMl + ", nombrePDF=" + nombrePDF
+                + ", nombreXMl=" + nombreXMl + ", contrarecibo=" + contrarecibo + ", informeProveedor=" + informeProveedor
+                + ", empresa=" + empresa + ", usuarioAlta=" + usuarioAlta + ", proveedorFacturas=" + proveedorFacturas
+                + ", empleado=" + empleado + ", usuarioMOdificacion=" + usuarioMOdificacion
+                + ", usuarioAutRech=" + usuarioAutRech + ", fechaCaptura=" + fechaCaptura
+                + ", fechaAutRech=" + fechaAutRech + ", fechaModificacion=" + fechaModificacion
+                + ", dctoProntoPago=" + dctoProntoPago + ", file=" + file + ", file2=" + file2 + '}';
     }
 
 }

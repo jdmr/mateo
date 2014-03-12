@@ -42,6 +42,10 @@ public class InformeProveedorManagerImpl extends BaseManager implements InformeP
     public Map<String, Object> lista(Map<String, Object> params) {
         return dao.lista(params);
     }
+    @Override
+    public Map<String, Object> listaEmpleado(Map<String, Object> params) {
+        return dao.listaEmpleado(params);
+    }
 
     @Override
     public Map<String, Object> revisar(Map<String, Object> params) {

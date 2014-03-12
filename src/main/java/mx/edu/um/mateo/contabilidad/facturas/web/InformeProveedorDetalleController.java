@@ -4,8 +4,6 @@
  */
 package mx.edu.um.mateo.contabilidad.facturas.web;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -18,13 +16,9 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.contabilidad.facturas.model.Contrarecibo;
 import mx.edu.um.mateo.contabilidad.facturas.model.ContrareciboVO;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
@@ -44,25 +38,11 @@ import mx.edu.um.mateo.general.utils.ProveedorNoCoincideException;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.inscripciones.model.FileUploadForm;
-import mx.edu.um.mateo.inscripciones.model.ccobro.utils.Constants;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporterParameter;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.export.JRCsvExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporter;
-import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import mx.edu.um.mateo.rh.model.Empleado;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -183,8 +163,11 @@ public class InformeProveedorDetalleController extends BaseController {
         modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
         log.debug("Pagina{}", pagina);
         // termina paginado
-
+        if (usuario.isEmpleado()) {
+            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTAEMP;
+        }
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
+
     }
 
     /**
@@ -620,9 +603,12 @@ public class InformeProveedorDetalleController extends BaseController {
     @RequestMapping("/nuevo")
     public String nueva(HttpServletRequest request, Model modelo) {
         log.debug("Nuevo paquete");
-        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
-        modelo.addAttribute("proveedorFacturas", proveedorFacturas);
-        request.getSession().setAttribute("proveedorLogeado", proveedorFacturas);
+        Usuario usuario = ambiente.obtieneUsuario();
+        if (usuario.isProveedor()) {
+            ProveedorFacturas proveedorFacturas = (ProveedorFacturas) usuario;
+            modelo.addAttribute("proveedorFacturas", proveedorFacturas);
+            request.getSession().setAttribute("proveedorLogeado", proveedorFacturas);
+        }
         Map<String, Object> params = new HashMap<>();
 
         InformeProveedorDetalle detalle = new InformeProveedorDetalle();
@@ -632,22 +618,6 @@ public class InformeProveedorDetalleController extends BaseController {
         params.put("reporte", true);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
-    }
-
-    @RequestMapping("/nueva")
-    public String nuevo(HttpServletRequest request, Model modelo) {
-        log.debug("Nuevo paquete");
-        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) request.getSession().getAttribute("proveedorFacturas");
-        modelo.addAttribute("proveedorFacturas", proveedorFacturas);
-        Map<String, Object> params = new HashMap<>();
-
-        InformeProveedorDetalle detalle = new InformeProveedorDetalle();
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
-        params.put("empresa", request.getSession()
-                .getAttribute("empresaId"));
-        params.put("reporte", true);
-        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
-        return "/factura/informeProveedorDetalle/nueva";
     }
 
     @Transactional
@@ -715,10 +685,18 @@ public class InformeProveedorDetalleController extends BaseController {
         detalle.setFechaCaptura(new Date());
         detalle.setUsuarioAlta(usuario);
         detalle.setStatus(Constantes.STATUS_ACTIVO);
+        if (usuario.isEmpleado()) {
+            Empleado empleado = (Empleado) usuario;
+            detalle.setNombreProveedor(empleado.getNombre());
+            detalle.setEmpleado(empleado);
 
-        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
-        detalle.setNombreProveedor(proveedorFacturas.getNombre());
-        detalle.setRFCProveedor(proveedorFacturas.getRfc());
+        }
+        if (usuario.isProveedor()) {
+            ProveedorFacturas proveedorFacturas = (ProveedorFacturas) usuario;
+            detalle.setProveedorFacturas(proveedorFacturas);
+            detalle.setNombreProveedor(proveedorFacturas.getNombre());
+            detalle.setRFCProveedor(proveedorFacturas.getRfc());
+        }
         try {
             manager.graba(detalle, usuario);
             request.getSession().setAttribute("detalleId", detalle.getId());

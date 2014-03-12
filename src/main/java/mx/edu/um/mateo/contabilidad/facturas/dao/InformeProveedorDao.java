@@ -15,7 +15,23 @@ import mx.edu.um.mateo.general.model.Usuario;
  */
 public interface InformeProveedorDao {
 
+    /**
+     * Lista los informes por proveedor en session, la lista de informe se
+     * filtra por el id de el proveedor en este caso.
+     *
+     * @param params
+     * @return
+     */
     public Map<String, Object> lista(Map<String, Object> params);
+
+    /**
+     * Lista los informes del empleado en session, la lista de informes se
+     * filtra por el id del empleado en este caso.
+     *
+     * @param params
+     * @return
+     */
+    public Map<String, Object> listaEmpleado(Map<String, Object> params);
 
     public Map<String, Object> revisar(Map<String, Object> params);
 

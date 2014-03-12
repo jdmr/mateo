@@ -25,6 +25,14 @@ public interface InformeProveedorManager {
      */
     public Map<String, Object> lista(Map<String, Object> params);
 
+    /**
+     * Lista de informes flistrados por id de empleado en session.
+     *
+     * @param params
+     * @return
+     */
+    public Map<String, Object> listaEmpleado(Map<String, Object> params);
+
     public Map<String, Object> revisar(Map<String, Object> params);
 
     /**

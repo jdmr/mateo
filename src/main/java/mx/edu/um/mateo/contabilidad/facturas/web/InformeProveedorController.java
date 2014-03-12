@@ -8,7 +8,6 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,17 +17,15 @@ import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import mx.edu.um.mateo.contabilidad.facturas.dao.ProveedorFacturasDao;
-import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.ProveedorFacturasManager;
-import mx.edu.um.mateo.general.model.Proveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.web.BaseController;
+import mx.edu.um.mateo.rh.model.Empleado;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -87,8 +84,20 @@ public class InformeProveedorController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
-        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
-        params.put("proveedorFacturas", proveedorFacturas.getId());
+        Usuario prueba = ambiente.obtieneUsuario();
+        log.debug("usuarioPrueba{}", prueba);
+        log.debug("usuario{}", usuario);
+        if (prueba.isProveedor()) {
+            ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
+            params.put("proveedorFacturas", proveedorFacturas.getId());
+            log.debug("entrado como proveedor");
+        }
+        if (prueba.isEmpleado()) {
+            Empleado empleado = (Empleado) ambiente.obtieneUsuario();
+            params.put("empleado", empleado.getId());
+            log.debug("entrado como empleado");
+        }
+
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }
@@ -106,7 +115,14 @@ public class InformeProveedorController extends BaseController {
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = manager.lista(params);
+            if (prueba.isProveedor()) {
+                params = manager.lista(params);
+                log.debug("entrado como proveedor");
+            }
+            if (prueba.isEmpleado()) {
+                params = manager.listaEmpleado(params);
+                log.debug("entrado como empleado");
+            }
             try {
                 generaReporte(tipo, (List<InformeProveedor>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR), response);
                 return null;
@@ -119,7 +135,13 @@ public class InformeProveedorController extends BaseController {
 
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = manager.lista(params);
+            if (prueba.isEmpleado()) {
+                params = manager.listaEmpleado(params);
+            }
+            if (prueba.isProveedor()) {
+                params = manager.lista(params);
+                log.debug("entrado como proveedor");
+            }
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
@@ -130,7 +152,15 @@ public class InformeProveedorController extends BaseController {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-        params = manager.lista(params);
+        if (prueba.isProveedor()) {
+            params = manager.lista(params);
+            log.debug("entrado como proveedor");
+        }
+        if (prueba.isEmpleado()) {
+            params = manager.listaEmpleado(params);
+            log.debug("entrado como emepleado");
+        }
+
         log.debug("params{}", params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR));
         modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESPROVEEDOR, params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR));
 
@@ -248,13 +278,14 @@ public class InformeProveedorController extends BaseController {
     @RequestMapping("/ver/{id}")
     public String ver(HttpServletRequest request, @PathVariable Long id, Model modelo) {
         log.debug("Mostrando informe {}", id);
-
+        Usuario usuario = ambiente.obtieneUsuario();
         InformeProveedor informeProveedor = manager.obtiene(id);
         request.getSession().setAttribute("informeId", informeProveedor);
 
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informeProveedor);
         if ("a".equals(informeProveedor.getStatus().trim()) || "A".equals(informeProveedor.getStatus().trim())) {
             return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
+
         }
         return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBO;
     }
@@ -272,11 +303,9 @@ public class InformeProveedorController extends BaseController {
     @RequestMapping("/nuevo")
     public String nueva(HttpServletRequest request, Model modelo) {
         log.debug("Nuevo informe");
-        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
+        Usuario usuario = ambiente.obtieneUsuario();
         InformeProveedor informe = new InformeProveedor();
-        informe.setClabe(proveedorFacturas.getClabe());
-        informe.setCuentaCheque(proveedorFacturas.getCuentaCheque());
-        informe.setBanco(proveedorFacturas.getBanco());
+
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe);
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", request.getSession()
@@ -284,7 +313,18 @@ public class InformeProveedorController extends BaseController {
         params.put("reporte", true);
 
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe);
+        if (usuario.isProveedor()) {
+            ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
+            informe.setClabe(proveedorFacturas.getClabe());
+            informe.setCuentaCheque(proveedorFacturas.getCuentaCheque());
+            informe.setBanco(proveedorFacturas.getBanco());
+            return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
+        }
+        if (usuario.isEmpleado()) {
+            return Constantes.PATH_INFORMEPROVEEDOR_NUEVOEMP;
+        }
         return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
+
     }
 
     @Transactional
@@ -305,40 +345,47 @@ public class InformeProveedorController extends BaseController {
             return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
         }
         Map<String, Object> params = new HashMap<>();
-        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
-        String formaPago = informe.getFormaPago();
-        ProveedorFacturas proveedorFacturas1 = pFacturasManager.obtiene(proveedorFacturas.getId());
-        if (informe.getBanco() != null && informe.getBanco() != proveedorFacturas.getBanco() && !informe.getBanco().isEmpty()) {
-            proveedorFacturas1.setBanco(informe.getBanco());
-            pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
-        } else if (informe.getBanco() == null || informe.getBanco().isEmpty()) {
-
-            return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
-        }
-        switch (formaPago) {
-            case "T":
-                if (informe.getClabe() != null && informe.getClabe() != proveedorFacturas.getClabe() && !informe.getClabe().isEmpty()) {
-                    proveedorFacturas1.setClabe(informe.getClabe());
-                    pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
-                } else if (informe.getClabe() == null || informe.getClabe().isEmpty()) {
-                    log.debug("clabe null");
-                    return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
-                }
-                break;
-            case "C":
-                if (informe.getCuentaCheque() != null && informe.getCuentaCheque() != proveedorFacturas.getCuentaCheque() && !informe.getCuentaCheque().isEmpty()) {
-                    proveedorFacturas1.setCuentaCheque(informe.getCuentaCheque());
-                    pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
-                } else if (informe.getCuentaCheque() == null || informe.getCuentaCheque().isEmpty()) {
-                    log.debug("cuentanull");
-                    return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
-                }
-                break;
-        }
-
         Usuario usuario = ambiente.obtieneUsuario();
-        informe.setNombreProveedor(usuario.getNombre());
-        informe.setProveedorFacturas(proveedorFacturas);
+        if (usuario.isProveedor()) {
+            ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
+            informe.setNombreProveedor(usuario.getNombre());
+            informe.setProveedorFacturas(proveedorFacturas);
+
+            String formaPago = informe.getFormaPago();
+            ProveedorFacturas proveedorFacturas1 = pFacturasManager.obtiene(proveedorFacturas.getId());
+            if (informe.getBanco() != null && informe.getBanco() != proveedorFacturas.getBanco() && !informe.getBanco().isEmpty()) {
+                proveedorFacturas1.setBanco(informe.getBanco());
+                pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
+            } else if (informe.getBanco() == null || informe.getBanco().isEmpty()) {
+
+                return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
+            }
+            switch (formaPago) {
+                case "T":
+                    if (informe.getClabe() != null && informe.getClabe() != proveedorFacturas.getClabe() && !informe.getClabe().isEmpty()) {
+                        proveedorFacturas1.setClabe(informe.getClabe());
+                        pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
+                    } else if (informe.getClabe() == null || informe.getClabe().isEmpty()) {
+                        log.debug("clabe null");
+                        return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
+                    }
+                    break;
+                case "C":
+                    if (informe.getCuentaCheque() != null && informe.getCuentaCheque() != proveedorFacturas.getCuentaCheque() && !informe.getCuentaCheque().isEmpty()) {
+                        proveedorFacturas1.setCuentaCheque(informe.getCuentaCheque());
+                        pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
+                    } else if (informe.getCuentaCheque() == null || informe.getCuentaCheque().isEmpty()) {
+                        log.debug("cuentanull");
+                        return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
+                    }
+                    break;
+            }
+        }
+        if (usuario.isEmpleado()) {
+            Empleado empleado = (Empleado) usuario;
+            informe.setNombreProveedor(usuario.getNombre());
+            informe.setEmpleado(empleado);
+        }
         informe.setStatus(Constantes.STATUS_ACTIVO);
 
         try {

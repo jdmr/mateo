@@ -15,7 +15,7 @@
             <li><a href="<c:url value='/colportaje' />"><s:message code="colportaje.label" /></a></li>              
             <li><a href="<c:url value='/nomina' />"><s:message code="nomina.label" /></a></li>              
             </sec:authorize>
-            <sec:authorize access="hasAnyRole('ROLE_PRV','ROLE_ADMIN')">
+            <sec:authorize access="hasAnyRole('ROLE_PRV','ROLE_ADMIN','ROLE_EMP')">
             <li><a href="<c:url value='/factura' />"><s:message code="factura.label" /></a></li>              
             </sec:authorize>
     </ul>

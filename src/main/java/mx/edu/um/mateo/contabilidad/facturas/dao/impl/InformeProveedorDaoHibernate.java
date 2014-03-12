@@ -114,6 +114,84 @@ public class InformeProveedorDaoHibernate extends BaseDao implements InformeProv
     }
 
     @Override
+    public Map<String, Object> listaEmpleado(Map<String, Object> params) {
+        log.debug("Buscando lista de Informes del proveedor con params {}", params);
+        if (params == null) {
+            params = new HashMap<>();
+        }
+
+        if (!params.containsKey("max")) {
+            params.put("max", 10);
+        } else {
+            params.put("max", Math.min((Integer) params.get("max"), 100));
+        }
+
+        if (params.containsKey("pagina")) {
+            Long pagina = (Long) params.get("pagina");
+            Long offset = (pagina - 1) * (Integer) params.get("max");
+            params.put("offset", offset.intValue());
+        }
+
+        if (!params.containsKey("offset")) {
+            params.put("offset", 0);
+        }
+        Criteria criteria = currentSession().createCriteria(InformeProveedor.class);
+        Criteria countCriteria = currentSession().createCriteria(InformeProveedor.class);
+
+        if (params.containsKey("empresa")) {
+            criteria.createCriteria("empresa").add(
+                    Restrictions.idEq(params.get("empresa")));
+            countCriteria.createCriteria("empresa").add(
+                    Restrictions.idEq(params.get("empresa")));
+        }
+        if (params.containsKey("empleado")) {
+            criteria.createCriteria("empleado").add(
+                    Restrictions.idEq(params.get("empleado")));
+            countCriteria.createCriteria("empleado").add(
+                    Restrictions.idEq(params.get("empleado")));
+        }
+
+        if (params.containsKey("filtro")) {
+            String filtro = (String) params.get("filtro");
+            Disjunction propiedades = Restrictions.disjunction();
+            propiedades.add(Restrictions.ilike("nombreProveedor", filtro,
+                    MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("fechaInforme", filtro,
+                    MatchMode.ANYWHERE));
+            criteria.add(propiedades);
+            countCriteria.add(propiedades);
+        }
+
+        if (params.containsKey("order")) {
+            String campo = (String) params.get("order");
+            if (params.get("sort").equals("desc")) {
+                criteria.addOrder(Order.desc(campo));
+            } else {
+                criteria.addOrder(Order.asc(campo));
+            }
+        } else {
+            criteria.addOrder(Order.asc("fechaInforme"));
+        }
+
+        if (!params.containsKey("reporte")) {
+            criteria.setFirstResult((Integer) params.get("offset"));
+            criteria.setMaxResults((Integer) params.get("max"));
+        }
+        if (!params.containsKey("empleado")) {
+            List<InformeEmpleado> encabezados = new ArrayList<>();
+            params.put(Constantes.CONTAINSKEY_INFORMESPROVEEDOR, encabezados);
+            params.put("cantidad", new Long("0"));
+            return params;
+        }
+        params.put(Constantes.CONTAINSKEY_INFORMESPROVEEDOR, criteria.list());
+
+        countCriteria.setProjection(Projections.rowCount());
+        params.put("cantidad", (Long) countCriteria.list().get(0));
+
+        return params;
+    }
+
+    @Override
     public Map<String, Object> revisar(Map<String, Object> params) {
         log.debug("Buscando lista de Informes del proveedor con params {}", params);
         if (params == null) {
@@ -144,7 +222,6 @@ public class InformeProveedorDaoHibernate extends BaseDao implements InformeProv
             countCriteria.createCriteria("empresa").add(
                     Restrictions.idEq(params.get("empresa")));
         }
-
 
         if (params.containsKey("filtro")) {
             String filtro = (String) params.get("filtro");

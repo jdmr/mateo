@@ -11,27 +11,24 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
-import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleadoDetalle;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
-import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorDetalleManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.ProveedorFacturasManager;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
 import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
+import mx.edu.um.mateo.general.utils.ObjectRetrievalFailureException;
+import mx.edu.um.mateo.rh.model.Empleado;
+import mx.edu.um.mateo.rh.service.EmpleadoManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.webflow.action.MultiAction;
-import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -50,7 +47,7 @@ public class InformeProveedorAction extends MultiAction {
     @Autowired
     private InformeProveedorDetalleManager detalleManager;
     @Autowired
-    private ProveedorFacturasManager proveedorFacturasManagerfacturasManager;
+    private EmpleadoManager empleadoManager;
 
     public Event creaInforme(RequestContext context) {
 
@@ -63,19 +60,19 @@ public class InformeProveedorAction extends MultiAction {
         return success();
     }
 
-    public Event crearDetalle(RequestContext context) throws AutorizacionCCPlInvalidoException, IOException {
+    public Event crearDetalle(RequestContext context) throws AutorizacionCCPlInvalidoException, IOException, ObjectRetrievalFailureException {
 //        String name = file.getName();
 //        log.debug("nombre archivo{}", name);
         List<MultipartFile> files = new ArrayList<>();
         List<String> fileNames = new ArrayList<String>();
         Usuario usuario = ambiente.obtieneUsuario();
+        Empleado empleado = (Empleado) ambiente.obtieneUsuario();
         InformeProveedorDetalle informeProveedorDetalle = (InformeProveedorDetalle) context.getFlowScope().get("informeProveedorDetalle");
         informeProveedorDetalle.setUsuarioAlta(usuario);
         String frc = informeProveedorDetalle.getRFCProveedor();
-        ProveedorFacturas proveedorFacturas = proveedorFacturasManagerfacturasManager.obtiene(frc);
-        log.debug("proveedor{}", proveedorFacturas.toString());
-        informeProveedorDetalle.setProveedorFacturas(proveedorFacturas);
-        informeProveedorDetalle.setNombreProveedor(proveedorFacturas.getNombre());
+        informeProveedorDetalle.setEmpleado(empleado);
+
+        informeProveedorDetalle.setNombreProveedor(empleado.getNombre());
         informeProveedorDetalle.setFechaCaptura(new Date());
         informeProveedorDetalle.setStatus("A");
         files.add(informeProveedorDetalle.getFile());

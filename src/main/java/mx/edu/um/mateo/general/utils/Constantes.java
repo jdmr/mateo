@@ -2918,6 +2918,7 @@ public class Constantes {
     public static final String PATH_INFORMEPROVEEDOR_LISTA = "/factura/informeProveedor/lista";
     public static final String PATH_INFORMEPROVEEDOR_VER = "/factura/informeProveedor/ver";
     public static final String PATH_INFORMEPROVEEDOR_NUEVO = "/factura/informeProveedor/nuevo";
+    public static final String PATH_INFORMEPROVEEDOR_NUEVOEMP = "/factura/informeProveedor/nuevoEmp";
     public static final String PATH_INFORMEPROVEEDOR_EDITA = "/factura/informeProveedor/edita";
     public static final String PATH_INFORMEPROVEEDOR_GRABA = "/factura/informeProveedor/graba";
     public static final String PATH_INFORMEPROVEEDOR_ACTUALIZA = "/factura/informeProveedor/actualiza";
@@ -2931,6 +2932,7 @@ public class Constantes {
     public static final String CONTAINSKEY_INFORMESPROVEEDOR_DETALLE = "informesProveedorDetalle";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE = "/factura/informeProveedorDetalle";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_LISTA = "/factura/informeProveedorDetalle/lista";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_LISTAEMP = "/factura/informeProveedorDetalle/listaEmp";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_LISTACONTRARECIBOS = "/factura/informeProveedorDetalle/listaContrarecibo";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS = "/factura/informeProveedorDetalle/contrarecibos";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_VER = "/factura/informeProveedorDetalle/ver";
