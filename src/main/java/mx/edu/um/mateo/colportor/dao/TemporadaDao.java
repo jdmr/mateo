@@ -93,6 +93,7 @@ public class TemporadaDao extends BaseDao {
             criteria.addOrder(Order.asc("nombre"));
         }
 
+        log.debug("{}",params.containsKey(Constantes.CONTAINSKEY_REPORTE));
         if (!params.containsKey(Constantes.CONTAINSKEY_REPORTE)) {
             criteria.setFirstResult((Integer) params.get(Constantes.CONTAINSKEY_OFFSET));
             criteria.setMaxResults((Integer) params.get(Constantes.CONTAINSKEY_MAX));

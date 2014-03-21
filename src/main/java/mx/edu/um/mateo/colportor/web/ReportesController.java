@@ -319,6 +319,7 @@ public class ReportesController extends BaseController {
             params.put("temporada", tmp.getId());
         }
         else{
+            params.put(Constantes.CONTAINSKEY_REPORTE, "reporte");
             modelo.addAttribute(Constantes.TEMPORADA_LIST, tmpDao.lista(params).get(Constantes.TEMPORADA_LIST));
             return Constantes.PATH_RPT_CLP_CONCENTRADOVENTAS;
         }            
@@ -378,9 +379,11 @@ public class ReportesController extends BaseController {
         }
 
         modelo.addAttribute(Constantes.CONTAINSKEY_CONCENTRADOVENTAS, params.get(Constantes.CONTAINSKEY_CONCENTRADOVENTAS));
-        modelo.addAttribute(Constantes.TEMPORADA_LIST, tmpDao.lista(params).get(Constantes.TEMPORADA_LIST));
-        modelo.addAttribute(Constantes.TEMPORADA, tmp);
         
+        params.put(Constantes.CONTAINSKEY_REPORTE, "reporte");
+        modelo.addAttribute(Constantes.TEMPORADA_LIST, tmpDao.lista(params).get(Constantes.TEMPORADA_LIST));
+        
+        modelo.addAttribute(Constantes.TEMPORADA, tmp);        
         modelo.addAttribute(Constantes.CONTAINSKEY_CONCENTRADOVENTAS_BOLETIN, params.get(Constantes.CONTAINSKEY_CONCENTRADOVENTAS_BOLETIN));
         modelo.addAttribute(Constantes.CONTAINSKEY_CONCENTRADOVENTAS_DIEZMO, params.get(Constantes.CONTAINSKEY_CONCENTRADOVENTAS_DIEZMO));
                 

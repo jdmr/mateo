@@ -81,7 +81,7 @@ public class InformeMensualController {
             @RequestParam(required = false) String clave,
             @RequestParam(required = false) String order,
             @RequestParam(required = false) String sort,
-            Model modelo{
+            Model modelo){
         log.debug("Mostrando lista de InformeMensual");
         Map<String, Object> params = new HashMap<>();
         

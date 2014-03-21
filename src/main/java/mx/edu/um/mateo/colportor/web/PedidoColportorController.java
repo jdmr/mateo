@@ -238,7 +238,7 @@ public class PedidoColportorController extends BaseController{
         }
 
         try {
-            pedidoColportor.setColportor(colportorDao.obtiene(pedidoColportor.getId()));
+            pedidoColportor.setColportor(colportorDao.obtiene(ambiente.obtieneUsuario().getId()));
             pedidoColportor.setCliente(clienteColportorDao.obtiene(pedidoColportor.getCliente().getId()));
             pedidoColportor = pedidoColportorDao.actualiza(pedidoColportor);
         } catch (ConstraintViolationException e) {

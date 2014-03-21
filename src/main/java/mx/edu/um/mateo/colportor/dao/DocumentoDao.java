@@ -326,6 +326,13 @@ public class DocumentoDao {
                 .add(Projections.groupProperty("tipoDeDocumento"));
         sql.setProjection(projs.add(projsGr));
         
+        if (params.containsKey(Constantes.CONTAINSKEY_ORDER)) {
+            String campo = (String) params.get(Constantes.CONTAINSKEY_ORDER);
+            if (params.get(Constantes.CONTAINSKEY_SORT).equals(Constantes.CONTAINSKEY_DESC)) {
+                sql.addOrder(Order.desc("clp.clave"));
+            }
+        }
+        
         params.put(Constantes.CONTAINSKEY_CONCENTRADOVENTAS, sql.list());
         
         return params;

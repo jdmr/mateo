@@ -64,7 +64,7 @@
                             <jsp:param name="columna" value="fechaEntrega" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="razonSocial" />
+                            <jsp:param name="columna" value="nombre" />
                         </jsp:include>
                     </tr>
                 </thead>
@@ -75,7 +75,7 @@
                             <td>${pd.lugar}</a></td>
                             <td><fmt:formatDate pattern="dd/MMM/yyyy" value="${pd.fechaPedido}" /></td>
                             <td><fmt:formatDate pattern="dd/MMM/yyyy" value="${pd.fechaEntrega}" /></td>
-                            <td>${pd.razonSocial}</a></td>
+                            <td>${pd.cliente.nombreCompleto}</a></td>
                         </tr>
                     </c:forEach>
                 </tbody>

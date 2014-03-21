@@ -65,6 +65,7 @@ public class ReciboColportorController extends BaseController{
         
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
+        params.put("reporte", "");
         params.put("empresa", empresaId);
         params.put("pedido", ((PedidoColportor)request.getSession().getAttribute(Constantes.PEDIDO_COLPORTOR)).getId());
 
