@@ -365,4 +365,179 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
         }
         
     }
+    
+    public void importaInformes(File file, Usuario user) throws NullPointerException, IOException, Exception{
+        log.debug("importarInformes");
+        try{
+            XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream(file));
+            XSSFSheet sheet = wb.getSheetAt(0); 
+            XSSFRow row;
+            XSSFCell cell;
+
+            int rows; // No of rows
+            rows = sheet.getPhysicalNumberOfRows();
+            //log.debug("Rows "+rows);
+
+            int cols = 0; // No of columns
+            int tmp = 0;
+
+            //This trick ensures that we get the data properly even if it doesn't start from first few rows
+            for (int i = 0; i < 10 || i < rows; i++) {
+                row = sheet.getRow(i);
+                if (row != null) {
+                    tmp = sheet.getRow(i).getPhysicalNumberOfCells();
+                    if (tmp > cols) {
+                        cols = tmp;
+                    }
+                }
+            }
+            //log.debug("Cols "+cols);
+            String clave = null;
+            String year = null;
+            String mes = null;
+            String dia = null;
+            String numLibros = null;
+            BigDecimal compras = null;
+            BigDecimal boletin = null;
+            BigDecimal ventas = null;
+            Integer gratis = null;
+            
+            Colportor clp = null;
+            Boolean sw = false;
+            
+            sdf = new SimpleDateFormat("dd-MMM-yy");
+            
+            Map <String, Object> params = new HashMap<>();
+            params.put("empresa", user.getEmpresa().getId());
+            NavigableMap <String, Colportor> mapa = clpDao.obtieneMapColportores(params);
+            NavigableMap <String, Colportor> smapa = null;
+            
+            rowLoop:
+            for (int r = 2; r < rows; r++) {
+                row = sheet.getRow(r);
+                if (row != null) {
+                    sw =false; //Si no se leyo colportor alguno, entonces no se leen las demas celdas
+
+                    for (int c = 0; c < cols; c++) {
+                        cell = row.getCell(c);
+
+                        if (cell != null) {
+                            switch(c){
+                                case 0:{
+                                    try{
+                                        clave = cell.getStringCellValue();
+                                        
+                                    }catch(IllegalStateException e){
+                                        clave = String.valueOf(cell.getNumericCellValue()).split("\\.")[0];
+                                    }
+                                    log.debug("clave clp {}",clave);
+                                    clp = clpDao.obtiene(clave);
+                                    if(clp != null){
+                                        sw = true;
+                                    }
+                                    break;
+                                }
+                                case 3:{
+                                    try{
+                                        log.debug("Year {}",cell.getStringCellValue());
+                                        year = cell.getStringCellValue();
+                                    }catch(Exception e){
+                                        log.debug("Leyendo year {}", String.valueOf(cell.getNumericCellValue()));
+                                        year = String.valueOf(cell.getNumericCellValue());
+                                    }
+                                    break;
+                                }
+                                case 4:{
+                                    try{
+                                        log.debug("Mes {}",cell.getStringCellValue());
+                                        mes = cell.getStringCellValue();
+                                    }catch(Exception e){
+                                        log.debug("Leyendo mes {}", String.valueOf(cell.getNumericCellValue()));
+                                        mes = String.valueOf(cell.getNumericCellValue());
+                                    }
+                                    break;
+                                }
+                                case 5:{
+                                    try{
+                                        log.debug("Dia {}",cell.getStringCellValue());
+                                        dia = cell.getStringCellValue();
+                                    }catch(Exception e){
+                                        log.debug("Leyendo dia {}", String.valueOf(cell.getNumericCellValue()));
+                                        dia = String.valueOf(cell.getNumericCellValue());
+                                    }
+                                    break;
+                                }
+                                case 6:{
+                                    try{
+                                        log.debug("Libros {}",cell.getStringCellValue());
+                                        numLibros = cell.getStringCellValue();
+                                    }catch(Exception e){
+                                        log.debug("Leyendo libros {}", String.valueOf(cell.getNumericCellValue()));
+                                        numLibros = String.valueOf(cell.getNumericCellValue());
+                                    }
+                                    break;
+                                }
+                                case 7:{
+                                    try{
+                                        log.debug("compras {}",cell.getStringCellValue());
+                                        compras = new BigDecimal(cell.getStringCellValue());
+                                    }catch(Exception e){
+                                        log.debug("Leyendo compras {}", String.valueOf(cell.getNumericCellValue()));
+                                        compras = new BigDecimal(String.valueOf(cell.getNumericCellValue()));
+                                    }
+                                    break;
+                                }
+                                case 8:{
+                                    try{
+                                        log.debug("boletin {}",cell.getStringCellValue());
+                                        boletin = new BigDecimal(cell.getStringCellValue());
+                                    }catch(Exception e){
+                                        log.debug("Leyendo boletin {}", String.valueOf(cell.getNumericCellValue()));
+                                        boletin = new BigDecimal(String.valueOf(cell.getNumericCellValue()));
+                                    }
+                                    break;
+                                }
+                                case 9:{
+                                    try{
+                                        log.debug("ventas {}",cell.getStringCellValue());
+                                        ventas = new BigDecimal(cell.getStringCellValue());
+                                    }catch(Exception e){
+                                        log.debug("Leyendo ventas {}", String.valueOf(cell.getNumericCellValue()));
+                                        ventas = new BigDecimal(String.valueOf(cell.getNumericCellValue()));
+                                    }
+                                    break;
+                                }
+                                case 10:{
+                                    try{
+                                        log.debug("gratis {}",cell.getStringCellValue());
+                                        gratis = new Integer(cell.getStringCellValue());
+                                    }catch(Exception e){
+                                        log.debug("Leyendo gratis {}", String.valueOf(cell.getNumericCellValue()));
+                                        try {
+                                            gratis = new Integer(String.valueOf(cell.getNumericCellValue()));
+                                        } catch (NumberFormatException numberFormatException) {
+                                            ;
+                                        }
+                                    }
+                                    break;
+                                }
+                            } //switch end
+                            
+                            
+                        }
+                    } //Finalizo de leer todas las celdas de una fila
+                    
+                    //Insertar boletin
+                    
+                }
+            }
+        } catch (IOException ioe) {
+            log.error("Error al intentar abrir el archivo");
+            throw ioe;
+        } catch (Exception e){
+            e.printStackTrace();
+            log.error("Error al intentar generar los registros de colportores");
+            throw e;
+        }
+    }
 }

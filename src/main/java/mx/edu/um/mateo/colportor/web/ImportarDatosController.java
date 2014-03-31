@@ -85,6 +85,8 @@ public class ImportarDatosController extends BaseController {
                 mgr.importaInformeDeGema(file, ambiente.obtieneUsuario());
             else if(tipoArchivo.equals("ID"))
                 mgr.importaDiezmos(file, ambiente.obtieneUsuario());
+            else if(tipoArchivo.equals("INF"))
+                mgr.importaInformes(file, ambiente.obtieneUsuario());
             
             return "redirect:"+"/colportaje/importarDatos/listadoArchivos";
     }

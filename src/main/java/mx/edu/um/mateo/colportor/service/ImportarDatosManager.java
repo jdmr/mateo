@@ -15,4 +15,5 @@ import mx.edu.um.mateo.general.model.Usuario;
 public interface ImportarDatosManager {
     public void importaInformeDeGema(File file, Usuario user)  throws NullPointerException, IOException, Exception;
     public void importaDiezmos(File file, Usuario user) throws NullPointerException, IOException, Exception;
+    public void importaInformes(File file, Usuario user) throws NullPointerException, IOException, Exception;
 }
