@@ -8,20 +8,25 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NavigableMap;
 import mx.edu.um.mateo.colportor.dao.ColportorDao;
 import mx.edu.um.mateo.colportor.dao.DocumentoDao;
+import mx.edu.um.mateo.colportor.dao.InformeMensualDao;
+import mx.edu.um.mateo.colportor.dao.InformeMensualDetalleDao;
 import mx.edu.um.mateo.colportor.dao.TemporadaColportorDao;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.colportor.model.Documento;
+import mx.edu.um.mateo.colportor.model.InformeMensual;
+import mx.edu.um.mateo.colportor.model.InformeMensualDetalle;
 import mx.edu.um.mateo.colportor.service.ImportarDatosManager;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.service.BaseManager;
+import mx.edu.um.mateo.general.utils.Constantes;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -41,6 +46,10 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
     private ColportorDao clpDao;
     @Autowired
     private DocumentoDao docDao;
+    @Autowired
+    private InformeMensualDao infDao;
+    @Autowired
+    private InformeMensualDetalleDao infDetDao;
     
     public void importaInformeDeGema(File file, Usuario user) throws NullPointerException, IOException, Exception{
         log.debug("importaInformeDeGema");
@@ -404,6 +413,12 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
             
             Colportor clp = null;
             Boolean sw = false;
+            Boolean nuevo = false;
+            String tmpClave = "-";
+            String tmpMes = "-";
+            
+            InformeMensual informe = null;
+            InformeMensualDetalle detalle = null;
             
             sdf = new SimpleDateFormat("dd-MMM-yy");
             
@@ -417,6 +432,7 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                 row = sheet.getRow(r);
                 if (row != null) {
                     sw =false; //Si no se leyo colportor alguno, entonces no se leen las demas celdas
+                    nuevo = false; //Para saber cuando crear un nuevo encabezado de informe
 
                     for (int c = 0; c < cols; c++) {
                         cell = row.getCell(c);
@@ -435,6 +451,10 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                     if(clp != null){
                                         sw = true;
                                     }
+                                    if(!tmpClave.equals(clave)){
+                                        nuevo = true;
+                                        tmpClave = clave;
+                                    }
                                     break;
                                 }
                                 case 3:{
@@ -444,6 +464,7 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                     }catch(Exception e){
                                         log.debug("Leyendo year {}", String.valueOf(cell.getNumericCellValue()));
                                         year = String.valueOf(cell.getNumericCellValue());
+                                        year = year.split("\\.")[0]; //Quitamos el .0
                                     }
                                     break;
                                 }
@@ -454,6 +475,11 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                     }catch(Exception e){
                                         log.debug("Leyendo mes {}", String.valueOf(cell.getNumericCellValue()));
                                         mes = String.valueOf(cell.getNumericCellValue());
+                                        mes = mes.split("\\.")[0]; //Quitamos el .0
+                                    }
+                                    if(!tmpMes.equals(mes)){
+                                        nuevo = true;
+                                        tmpMes = mes;
                                     }
                                     break;
                                 }
@@ -464,6 +490,7 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                     }catch(Exception e){
                                         log.debug("Leyendo dia {}", String.valueOf(cell.getNumericCellValue()));
                                         dia = String.valueOf(cell.getNumericCellValue());
+                                        dia = dia.split("\\.")[0]; //Quitamos el .0
                                     }
                                     break;
                                 }
@@ -474,6 +501,7 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                     }catch(Exception e){
                                         log.debug("Leyendo libros {}", String.valueOf(cell.getNumericCellValue()));
                                         numLibros = String.valueOf(cell.getNumericCellValue());
+                                        numLibros = numLibros.split("\\.")[0]; //Quitamos el .0
                                     }
                                     break;
                                 }
@@ -516,7 +544,7 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                         try {
                                             gratis = new Integer(String.valueOf(cell.getNumericCellValue()));
                                         } catch (NumberFormatException numberFormatException) {
-                                            ;
+                                            gratis = 0;
                                         }
                                     }
                                     break;
@@ -528,7 +556,29 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                     } //Finalizo de leer todas las celdas de una fila
                     
                     //Insertar boletin
-                    
+                    if(sw){
+                        if(nuevo){
+                            informe = new InformeMensual();
+                            informe.setColportor(clp);
+                            informe.setFecha(null);
+                            informe.setCapturo(user);
+                            informe.setFechaCaptura(new Date());
+                            gcFecha.set(Integer.parseInt(year), Integer.parseInt(mes), Integer.parseInt(dia));
+                            informe.setFecha(gcFecha.getTime());
+                            informe.setStatus(Constantes.STATUS_ACTIVO);
+                            infDao.crea(informe);
+                        }
+                        detalle = new InformeMensualDetalle();
+                        detalle.setInformeMensual(informe);
+                        detalle.setFecha(gcFecha.getTime());
+                        detalle.setLiteraturaVendida(Integer.parseInt(numLibros));
+                        detalle.setTotalPedidos(compras);
+                        detalle.setTotalVentas(ventas);
+                        detalle.setLiteraturaGratis(gratis);
+                        detalle.setCapturo(user);
+                        detalle.setFechaCaptura(new Date());
+                        infDetDao.crea(detalle);
+                    }
                 }
             }
         } catch (IOException ioe) {

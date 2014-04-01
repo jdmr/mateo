@@ -62,9 +62,17 @@ public class InformeMensualDaoHibernate extends BaseDao implements InformeMensua
         
         }
         
+        log.debug("Clave {}", params.get("clave"));
         if(params.get("clave")!=null){
             criteria.add(Restrictions.eq("clp.clave", (String)params.get("clave")));
             countCriteria.add(Restrictions.eq("clp.clave", (String)params.get("clave")));
+        }
+        else{
+            //No hay clave del colportor
+            log.debug("No se proporciono clave de colportor");
+            params.put(Constantes.INFORMEMENSUAL_LIST, new ArrayList());
+            params.put(Constantes.CONTAINSKEY_CANTIDAD, 0L);
+            return params;
         }
 
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {

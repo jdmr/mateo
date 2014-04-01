@@ -49,17 +49,17 @@ public class InformeMensual implements Serializable{
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern=Constantes.DATE_SHORT_HUMAN_PATTERN)
     @Column(name = "fecha_captura")
-    private Date cuando; //fecha captura
+    private Date fechaCaptura; //fecha captura
 
     public InformeMensual() {
     }
     
-    public InformeMensual(Colportor colportor, Date fecha, String status, Usuario capturo, Date cuando) {
+    public InformeMensual(Colportor colportor, Date fecha, String status, Usuario capturo, Date fechaCaptura) {
         this.colportor = colportor;
         this.fecha = fecha;
         this.status = status;
         this.capturo = capturo;
-        this.cuando = cuando;
+        this.fechaCaptura = fechaCaptura;
     }
     
     
@@ -149,17 +149,17 @@ public class InformeMensual implements Serializable{
     }
 
     /**
-     * @return the cuando
+     * @return the fechaCaptura
      */
-    public Date getCuando() {
-        return cuando;
+    public Date getFechaCaptura() {
+        return fechaCaptura;
     }
 
     /**
-     * @param cuando the cuando to set
+     * @param fechaCaptura the fechaCaptura to set
      */
-    public void setCuando(Date cuando) {
-        this.cuando = cuando;
+    public void setFechaCaptura(Date cuando) {
+        this.fechaCaptura = cuando;
     }
 
     @Override
@@ -198,7 +198,7 @@ public class InformeMensual implements Serializable{
 
     @Override
     public String toString() {
-        return "InformeMensual{" + "id=" + id + ", version=" + version + ", colportor=" + colportor.getId() + ", fecha=" + fecha + ", status=" + status + ", capturo=" + capturo.getId() + ", cuando=" + cuando + '}';
+        return "InformeMensual{" + "id=" + id + ", version=" + version + ", colportor=" + colportor.getId() + ", fecha=" + fecha + ", status=" + status + ", capturo=" + capturo.getId() + ", cuando=" + fechaCaptura + '}';
     }
 
     

@@ -190,7 +190,7 @@ public class InformeMensualController {
         try {
             informeMensual.setColportor(colportorDao.obtiene(((Colportor)request.getSession().getAttribute(Constantes.COLPORTOR)).getId()));
             informeMensual.setCapturo(ambiente.obtieneUsuario());
-            informeMensual.setCuando(new Date());
+            informeMensual.setFechaCaptura(new Date());
             informeMensual = informeMensualDao.crea(informeMensual);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el InformeMensual", e);
@@ -219,7 +219,7 @@ public class InformeMensualController {
         try {
             
             informeMensual.setCapturo(ambiente.obtieneUsuario());
-            informeMensual.setCuando(new Date());
+            informeMensual.setFechaCaptura(new Date());
             informeMensual = informeMensualDao.crea(informeMensual);
         } catch (org.hibernate.exception.ConstraintViolationException e) {
             log.error("No se pudo crear el InformeMensual", e);
