@@ -64,7 +64,7 @@
                     <c:forEach items="${informesMensuales}" var="informeMensual" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/colportaje/informeMensual/ver/${informeMensual.id}' />">
-                                    <fmt:formatDate pattern="MMMM" value="${informeMensual.fecha}" /></a></td>
+                                    <fmt:formatDate pattern="MMMM, yyyy" value="${informeMensual.fecha}" /></a></td>
                         </tr>
                     </c:forEach>
                 </tbody>

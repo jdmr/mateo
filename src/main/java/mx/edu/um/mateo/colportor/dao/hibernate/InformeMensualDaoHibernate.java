@@ -6,6 +6,7 @@ package mx.edu.um.mateo.colportor.dao.hibernate;
 import java.text.SimpleDateFormat;
 import mx.edu.um.mateo.colportor.dao.*;
 import java.util.*;
+import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.colportor.model.InformeMensual;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -25,6 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class InformeMensualDaoHibernate extends BaseDao implements InformeMensualDao {
     
+    /**
+     * @see mx.edu.um.mateo.colportor.dao.InformeMensualDao#lista(java.util.Map) 
+    */
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de informeMensual con params {}", params);
         if (params == null) {
@@ -114,13 +118,45 @@ public class InformeMensualDaoHibernate extends BaseDao implements InformeMensua
 
         return params;
     }
-
+    /**
+     * @see mx.edu.um.mateo.colportor.dao.InformeMensualDao#obtiene(java.lang.Long) 
+     */
     public InformeMensual obtiene(Long id) {
         log.debug("Obtiene informeMensual con id = {}", id);
         InformeMensual informeMensual = (InformeMensual) currentSession().get(InformeMensual.class, id);
         return informeMensual;
     }
-
+    /**
+     * @see mx.edu.um.mateo.colportor.dao.InformeMensualDao#obtiene(mx.edu.um.mateo.colportor.model.Colportor, java.util.Date) 
+     */
+    public InformeMensual obtiene(Colportor clp, Date fecha) {
+        log.debug("Obtiene informeMensual con date = {}", fecha);
+        
+        Calendar cal = new GregorianCalendar(Locale.forLanguageTag("es"));
+        cal.setTime(fecha);
+        
+        Calendar calTmp1 = Calendar.getInstance();
+        calTmp1.set(Calendar.YEAR, cal.get(Calendar.YEAR));
+        calTmp1.set(Calendar.MONTH, cal.get(Calendar.MONTH));
+        calTmp1.set(Calendar.DATE, cal.getActualMinimum(Calendar.DATE));
+        
+        Calendar calTmp2 = Calendar.getInstance();
+        calTmp2.set(Calendar.YEAR, cal.get(Calendar.YEAR));
+        calTmp2.set(Calendar.MONTH, cal.get(Calendar.MONTH));
+        calTmp2.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
+        
+        log.debug("cal1 {}, cal2 {}", calTmp1.getTime(), calTmp2.getTime());
+        
+        Criteria sql = getSession().createCriteria(InformeMensual.class);
+        sql.createCriteria("colportor")
+                .add(Restrictions.eq("id", clp.getId()));
+        sql.add(Restrictions.between("fecha", calTmp1.getTime(), calTmp2.getTime()));
+        
+        return (InformeMensual)sql.uniqueResult(); 
+    }
+    /**
+     * @see mx.edu.um.mateo.colportor.dao.InformeMensualDao#crea(mx.edu.um.mateo.colportor.model.InformeMensual) 
+     */
     public InformeMensual crea(InformeMensual informeMensual) {
         log.debug("Creando informeMensual : {}", informeMensual);
         try{
@@ -135,7 +171,9 @@ public class InformeMensualDaoHibernate extends BaseDao implements InformeMensua
         log.debug("informeMensual creado : {}", informeMensual);
         return informeMensual;
     }
-    
+    /**
+     * @see mx.edu.um.mateo.colportor.dao.InformeMensualDao#elimina(java.lang.Long) 
+     */
     public String elimina(Long id){
         log.debug("Eliminando informeMensual con id {}", id);
         InformeMensual informeMensual = obtiene(id);

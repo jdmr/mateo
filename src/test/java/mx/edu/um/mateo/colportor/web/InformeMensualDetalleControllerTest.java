@@ -62,7 +62,7 @@ public class InformeMensualDetalleControllerTest extends BaseControllerTest{
         for (int i = 0; i < 20; i++) {
             //InformeMensual informe, Date fecha, Double hrsTrabajadas, Integer librosRegalados, BigDecimal totalPedidos, BigDecimal totalVentas, Integer literaturaGratis, Integer oracionesOfrecidas, Integer casasVisitadas, Integer contactosEstudiosBiblicos, Integer bautizados, Usuario capturo, Date cuando
 
-            detalle = new InformeMensualDetalle(informe, new Date(), 2.5, 2, new BigDecimal("254"), new BigDecimal("521"), 2, 3, 1, 2, 3, colportor, new Date());
+            detalle = new InformeMensualDetalle(informe, new Date(), 2.5, 2, new BigDecimal("254"), new BigDecimal("521"), 2, 3, 1, 2, 3, BigDecimal.ZERO, colportor, new Date());
             currentSession().save(detalle);
             assertNotNull(detalle.getId());
 
@@ -113,7 +113,7 @@ public class InformeMensualDetalleControllerTest extends BaseControllerTest{
         currentSession().save(informe);
         assertNotNull(informe.getId());
         
-        InformeMensualDetalle detalle = new InformeMensualDetalle(informe, new Date(), 2.5, 2, new BigDecimal("254"), new BigDecimal("521"), 2, 3, 1, 2, 3, colportor, new Date());
+        InformeMensualDetalle detalle = new InformeMensualDetalle(informe, new Date(), 2.5, 2, new BigDecimal("254"), new BigDecimal("521"), 2, 3, 1, 2, 3, BigDecimal.ZERO, colportor, new Date());
         currentSession().save(detalle);
         assertNotNull(detalle.getId());
         
@@ -139,7 +139,7 @@ public class InformeMensualDetalleControllerTest extends BaseControllerTest{
         currentSession().save(informe);
         assertNotNull(informe.getId());
         
-        InformeMensualDetalle detalle = new InformeMensualDetalle(informe, new Date(), 2.5, 2, new BigDecimal("254"), new BigDecimal("521"), 2, 3, 1, 2, 3, colportor, new Date());
+        InformeMensualDetalle detalle = new InformeMensualDetalle(informe, new Date(), 2.5, 2, new BigDecimal("254"), new BigDecimal("521"), 2, 3, 1, 2, 3, BigDecimal.ZERO, colportor, new Date());
         currentSession().save(detalle);
         assertNotNull(detalle.getId());
         
@@ -164,7 +164,7 @@ public class InformeMensualDetalleControllerTest extends BaseControllerTest{
         currentSession().save(informe);
         assertNotNull(informe.getId());
         
-        InformeMensualDetalle detalle = new InformeMensualDetalle(informe, new Date(), 2.5, 2, new BigDecimal("254"), new BigDecimal("521"), 2, 3, 1, 2, 3, colportor, new Date());
+        InformeMensualDetalle detalle = new InformeMensualDetalle(informe, new Date(), 2.5, 2, new BigDecimal("254"), new BigDecimal("521"), 2, 3, 1, 2, 3, BigDecimal.ZERO, colportor, new Date());
         currentSession().save(detalle);
         assertNotNull(detalle.getId());
         
@@ -201,7 +201,7 @@ public class InformeMensualDetalleControllerTest extends BaseControllerTest{
         currentSession().save(informe);
         assertNotNull(informe.getId());
         
-        InformeMensualDetalle detalle = new InformeMensualDetalle(informe, new Date(), 2.5, 2, new BigDecimal("254"), new BigDecimal("521"), 2, 3, 1, 2, 3, colportor, new Date());
+        InformeMensualDetalle detalle = new InformeMensualDetalle(informe, new Date(), 2.5, 2, new BigDecimal("254"), new BigDecimal("521"), 2, 3, 1, 2, 3, BigDecimal.ZERO, colportor, new Date());
         currentSession().save(detalle);
         assertNotNull(detalle.getId());
         
@@ -246,7 +246,7 @@ public class InformeMensualDetalleControllerTest extends BaseControllerTest{
         currentSession().save(informe);
         assertNotNull(informe.getId());
         
-        InformeMensualDetalle detalle = new InformeMensualDetalle(informe, new Date(), 2.5, 2, new BigDecimal("254"), new BigDecimal("521"), 2, 3, 1, 2, 3, colportor, new Date());
+        InformeMensualDetalle detalle = new InformeMensualDetalle(informe, new Date(), 2.5, 2, new BigDecimal("254"), new BigDecimal("521"), 2, 3, 1, 2, 3, BigDecimal.ZERO, colportor, new Date());
         currentSession().save(detalle);
         assertNotNull(detalle.getId());
         

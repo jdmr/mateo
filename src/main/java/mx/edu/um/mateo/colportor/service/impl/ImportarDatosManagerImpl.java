@@ -379,7 +379,7 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
         log.debug("importarInformes");
         try{
             XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream(file));
-            XSSFSheet sheet = wb.getSheetAt(0); 
+            XSSFSheet sheet = wb.getSheetAt(2); 
             XSSFRow row;
             XSSFCell cell;
 
@@ -452,7 +452,6 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                         sw = true;
                                     }
                                     if(!tmpClave.equals(clave)){
-                                        nuevo = true;
                                         tmpClave = clave;
                                     }
                                     break;
@@ -477,10 +476,7 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                         mes = String.valueOf(cell.getNumericCellValue());
                                         mes = mes.split("\\.")[0]; //Quitamos el .0
                                     }
-                                    if(!tmpMes.equals(mes)){
-                                        nuevo = true;
-                                        tmpMes = mes;
-                                    }
+                                    
                                     break;
                                 }
                                 case 5:{
@@ -557,27 +553,43 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                     
                     //Insertar boletin
                     if(sw){
-                        if(nuevo){
+                        gcFecha.set(Integer.parseInt(year), Integer.parseInt(mes)-1, Integer.parseInt(dia));
+                        
+                        //Obtener el informe
+                        informe = infDao.obtiene(clp,gcFecha.getTime());
+                        if(informe != null){
+                            detalle = new InformeMensualDetalle();
+                            detalle.setInformeMensual(informe);
+                            detalle.setFecha(gcFecha.getTime());
+                            detalle.setLiteraturaVendida(Integer.parseInt(numLibros));
+                            detalle.setTotalPedidos(BigDecimal.ZERO);
+                            detalle.setTotalVentas(ventas);
+                            detalle.setLiteraturaGratis((gratis != null)?gratis:0);
+                            detalle.setCapturo(user);
+                            detalle.setFechaCaptura(new Date());
+                            infDetDao.crea(detalle);
+                        }
+                        else {
                             informe = new InformeMensual();
                             informe.setColportor(clp);
                             informe.setFecha(null);
                             informe.setCapturo(user);
                             informe.setFechaCaptura(new Date());
-                            gcFecha.set(Integer.parseInt(year), Integer.parseInt(mes), Integer.parseInt(dia));
                             informe.setFecha(gcFecha.getTime());
                             informe.setStatus(Constantes.STATUS_ACTIVO);
                             infDao.crea(informe);
+                            
+                            detalle = new InformeMensualDetalle();
+                            detalle.setInformeMensual(informe);
+                            detalle.setFecha(gcFecha.getTime());
+                            detalle.setLiteraturaVendida(Integer.parseInt(numLibros));
+                            detalle.setTotalPedidos(BigDecimal.ZERO);
+                            detalle.setTotalVentas(ventas);
+                            detalle.setLiteraturaGratis((gratis != null)?gratis:0);
+                            detalle.setCapturo(user);
+                            detalle.setFechaCaptura(new Date());
+                            infDetDao.crea(detalle);
                         }
-                        detalle = new InformeMensualDetalle();
-                        detalle.setInformeMensual(informe);
-                        detalle.setFecha(gcFecha.getTime());
-                        detalle.setLiteraturaVendida(Integer.parseInt(numLibros));
-                        detalle.setTotalPedidos(compras);
-                        detalle.setTotalVentas(ventas);
-                        detalle.setLiteraturaGratis(gratis);
-                        detalle.setCapturo(user);
-                        detalle.setFechaCaptura(new Date());
-                        infDetDao.crea(detalle);
                     }
                 }
             }

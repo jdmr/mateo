@@ -70,6 +70,9 @@
                             <jsp:param name="columna" value="totalVentas" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="diezmo" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="literaturaGratis" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
@@ -91,13 +94,14 @@
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td>
                                 <a href="<c:url value='/colportaje/informeMensualDetalle/ver/${detalle.id}' />">
-                                    <fmt:formatDate pattern="dd/MMM" value="${detalle.fecha}" />
+                                    <fmt:formatDate pattern="EEEE dd/MMM" value="${detalle.fecha}" />
                                 </a>
                             </td>
                             <td>${detalle.hrsTrabajadas}</a></td>
                             <td>${detalle.literaturaVendida}</a></td>
                             <td>${detalle.totalPedidos}</a></td>
                             <td>${detalle.totalVentas}</a></td>
+                            <td>${detalle.diezmo}</a></td>
                             <td>${detalle.literaturaGratis}</a></td>
                             <td>${detalle.oracionesOfrecidas}</a></td>
                             <td>${detalle.casasVisitadas}</a></td>

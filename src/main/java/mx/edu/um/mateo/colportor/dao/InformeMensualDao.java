@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.colportor.dao;
 import java.util.*;
+import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.colportor.model.InformeMensual;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
 
@@ -24,6 +25,13 @@ public interface InformeMensualDao {
      * @return 
      */
     public InformeMensual obtiene(Long id);
+    /**
+     * Regresa un informe mensual en base a la fecha
+     * @param colportor
+     * @param fecha
+     * @return 
+     */
+    public InformeMensual obtiene(Colportor clp, Date fecha);
     /**
      * Registra un informe mensual en la base de datos
      * @param informeMensual

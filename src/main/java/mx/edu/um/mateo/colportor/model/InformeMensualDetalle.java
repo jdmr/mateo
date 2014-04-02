@@ -71,6 +71,8 @@ public class InformeMensualDetalle implements Serializable{
     @Min(0)
     @Column(name = "bautizados",nullable = false)
     private Integer bautizados;
+    @Column(name = "diezmo",nullable = false)
+    private BigDecimal diezmo;
     
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Usuario capturo; //quien capturo
@@ -89,10 +91,11 @@ public class InformeMensualDetalle implements Serializable{
         this.casasVisitadas = 0;
         this.contactosEstudiosBiblicos = 0;
         this.bautizados = 0;
+        this.diezmo = BigDecimal.ZERO;
         this.fechaCaptura = new Date();
     }
     
-    public InformeMensualDetalle(InformeMensual informe, Date fecha, Double hrsTrabajadas, Integer librosRegalados, BigDecimal totalPedidos, BigDecimal totalVentas, Integer literaturaGratis, Integer oracionesOfrecidas, Integer casasVisitadas, Integer contactosEstudiosBiblicos, Integer bautizados, Usuario capturo, Date cuando) {
+    public InformeMensualDetalle(InformeMensual informe, Date fecha, Double hrsTrabajadas, Integer librosRegalados, BigDecimal totalPedidos, BigDecimal totalVentas, Integer literaturaGratis, Integer oracionesOfrecidas, Integer casasVisitadas, Integer contactosEstudiosBiblicos, Integer bautizados, BigDecimal diezmo, Usuario capturo, Date cuando) {
         this.informeMensual = informe;
         this.fecha = fecha;
         this.hrsTrabajadas = hrsTrabajadas;
@@ -104,6 +107,7 @@ public class InformeMensualDetalle implements Serializable{
         this.casasVisitadas = casasVisitadas;
         this.contactosEstudiosBiblicos = contactosEstudiosBiblicos;
         this.bautizados = bautizados;
+        this.diezmo = diezmo;
         this.capturo = capturo;
         this.fechaCaptura = cuando;
     }
@@ -292,6 +296,16 @@ public class InformeMensualDetalle implements Serializable{
         this.bautizados = bautizados;
     }
 
+    public BigDecimal getDiezmo() {
+        return diezmo;
+    }
+
+    public void setDiezmo(BigDecimal diezmo) {
+        this.diezmo = diezmo;
+    }
+    
+    
+
     /**
      * @return the capturo
      */
@@ -356,9 +370,8 @@ public class InformeMensualDetalle implements Serializable{
 
     @Override
     public String toString() {
-        return "InformeMensual{" + "id=" + id + ", version=" + version + ", informeMensual=" + informeMensual.getId() + ", fecha=" + fecha + ", hrsTrabajadas=" + hrsTrabajadas + ", literaturaVendida=" + literaturaVendida + ", totalPedidos=" + totalPedidos + ", totalVentas=" + totalVentas + ", literaturaGratis=" + literaturaGratis + ", oracionesOfrecidas=" + oracionesOfrecidas + ", casasVisitadas=" + casasVisitadas + ", contactosEstudiosBiblicos=" + contactosEstudiosBiblicos + ", bautizados=" + bautizados + ", capturo=" + capturo.getId() + ", cuando=" + fechaCaptura + '}';
+        return "InformeMensualDetalle{" + "id=" + id + ", version=" + version + ", informeMensual=" + informeMensual + ", fecha=" + fecha + ", hrsTrabajadas=" + hrsTrabajadas + ", literaturaVendida=" + literaturaVendida + ", totalPedidos=" + totalPedidos + ", totalVentas=" + totalVentas + ", literaturaGratis=" + literaturaGratis + ", oracionesOfrecidas=" + oracionesOfrecidas + ", casasVisitadas=" + casasVisitadas + ", contactosEstudiosBiblicos=" + contactosEstudiosBiblicos + ", bautizados=" + bautizados + ", diezmo=" + diezmo + ", capturo=" + capturo + ", fechaCaptura=" + fechaCaptura + '}';
     }
-    
 
     
     
