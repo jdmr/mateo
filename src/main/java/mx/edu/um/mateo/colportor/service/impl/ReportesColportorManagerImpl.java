@@ -14,9 +14,11 @@ import java.util.Map;
 import java.util.TreeMap;
 import mx.edu.um.mateo.colportor.dao.ColportorDao;
 import mx.edu.um.mateo.colportor.dao.DocumentoDao;
+import mx.edu.um.mateo.colportor.dao.InformeMensualDetalleDao;
 import mx.edu.um.mateo.colportor.dao.TemporadaColportorDao;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.colportor.model.Documento;
+import mx.edu.um.mateo.colportor.model.InformeMensualDetalle;
 import mx.edu.um.mateo.colportor.model.ReporteColportorVO;
 import mx.edu.um.mateo.colportor.model.TemporadaColportor;
 import mx.edu.um.mateo.colportor.service.ReportesColportorManager;
@@ -37,9 +39,10 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
     private ColportorDao clpDao;
     @Autowired
     private DocumentoDao docDao;
+    @Autowired
+    private InformeMensualDetalleDao infMensualDetalleDao;
 
     @Override
-    
     /**
      * @see mx.edu.um.mateo.colportor.service.ReportesColportorManagerImpl#censoColportores(java.util.Map <String,Object> params)  throws Exception
      */
@@ -331,6 +334,48 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         }
         
         params.put(Constantes.CONTAINSKEY_PLANDIARIOORACION, mVOS);        
+        return params;
+    }
+    
+    @Override
+    /**
+     * @see mx.edu.um.mateo.colportor.service.ReportesColportorManagerImpl#informeMensualAsociado(java.util.Map <String,Object> params)  throws Exception
+     */
+    public Map<String, Object> informeMensualAsociado(Map<String, Object> params) throws Exception {
+        Map <String, Colportor> mVOS = new TreeMap<>();
+        
+        Calendar cal = Calendar.getInstance(local);
+        cal.set(Calendar.MONTH, ((Integer)params.get("mes"))-1);
+        cal.set(Calendar.YEAR, (Integer)params.get("year"));
+        
+        params.put("fecha",cal.getTime());
+        
+        params = infMensualDetalleDao.listaInformes(params);
+        List <InformeMensualDetalle> detalles = (List <InformeMensualDetalle>)params.get(Constantes.INFORMEMENSUAL_DETALLE_LIST);
+        
+        InformeMensualDetalle tmpDetalle = null;
+        Map <String, InformeMensualDetalle> mDetalles = new TreeMap<>();
+        
+        for(InformeMensualDetalle det : detalles){
+            if(!mDetalles.containsKey(det.getInformeMensual().getColportor().getClave())){
+                tmpDetalle = new InformeMensualDetalle();
+            }
+            else{
+                tmpDetalle = mDetalles.get(det.getInformeMensual().getColportor().getClave());
+                tmpDetalle.setBautizados(tmpDetalle.getBautizados()+det.getBautizados());
+                tmpDetalle.setCasasVisitadas(tmpDetalle.getCasasVisitadas()+det.getBautizados());
+                tmpDetalle.setContactosEstudiosBiblicos(tmpDetalle.getContactosEstudiosBiblicos()+det.getContactosEstudiosBiblicos());
+                tmpDetalle.setDiezmo(tmpDetalle.getDiezmo().add(det.getDiezmo()));
+                tmpDetalle.setHrsTrabajadas(tmpDetalle.getHrsTrabajadas()+det.getHrsTrabajadas());
+                tmpDetalle.setLiteraturaGratis(tmpDetalle.getLiteraturaGratis()+det.getLiteraturaGratis());
+                tmpDetalle.setLiteraturaVendida(tmpDetalle.getLiteraturaVendida()+det.getLiteraturaVendida());
+                tmpDetalle.setOracionesOfrecidas(tmpDetalle.getOracionesOfrecidas()+det.getOracionesOfrecidas());
+                tmpDetalle.setTotalPedidos(tmpDetalle.getTotalPedidos().add(det.getTotalPedidos()));
+                tmpDetalle.setTotalVentas(tmpDetalle.getTotalVentas().add(det.getTotalVentas()));
+            }
+        }
+        
+        params.put(Constantes.CONTAINSKEY_INFORMEMENSUALASOCIADO, new ArrayList(mDetalles.values()));        
         return params;
     }
 }

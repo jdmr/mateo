@@ -21,7 +21,9 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -454,5 +456,57 @@ public class ReportesController extends BaseController {
         modelo.addAttribute(Constantes.CONTAINSKEY_PLANDIARIOORACION, ((Map<String, Colportor>)params.get(Constantes.CONTAINSKEY_PLANDIARIOORACION)).values());
                 
         return Constantes.PATH_RPT_CLP_PLANDIARIOORACION;
+    }
+    
+    @RequestMapping("informeMensualAsociado")
+    public String informeMensualAsociado(HttpServletRequest request, HttpServletResponse response,
+            @RequestParam(required = false) String filtro,
+            @RequestParam(required = false) Long pagina,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) Integer mes, //Mes a consultar
+            @RequestParam(required = false) Integer year, //Year a consultar
+            Usuario usuario,
+            Errors errors,
+            Model modelo,  
+            BindingResult bindingResult, 
+            RedirectAttributes redirectAttributes) {
+        log.debug("Mostrando Informe Mensual del Asociado");
+        
+        Map<String, Object> params = new HashMap<>();
+        
+        log.debug("****");
+        log.debug("asociado.class {}", ambiente.obtieneUsuario().getId().getClass());
+        log.debug("empresa.class {}", ambiente.obtieneUsuario().getEmpresa().getId().getClass());
+        log.debug("organizacion.class {}", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId().getClass());
+        
+        params.put("asociado", ambiente.obtieneUsuario().getId());
+        params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
+        params.put("organizacion", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
+        
+        if(mes.compareTo(1) < 0 || mes.compareTo(12) > 0){
+            log.error("Error al intentar obtener el informe mensual del asociado: mes {} invalido ", mes);
+            errors.rejectValue("codigo", "informeMensualAsociado.error.mesInvalido",
+                    new String[]{"mes"}, null);
+            return "redirect:/colportaje/reportes";
+        }
+        
+        params.put("mes", mes);
+        params.put("year", year);
+        
+        try {
+            params = rclpMgr.informeMensualAsociado(params);
+        } catch (Exception ex) {
+            log.error("Error al intentar obtener el informe mensual del asociado {}", ex);
+            ex.printStackTrace();
+            redirectAttributes.addFlashAttribute("message", "error.generar.reporte");
+            return "redirect:/colportaje/reportes";
+        }
+
+        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMEMENSUALASOCIADO, params.get(Constantes.CONTAINSKEY_INFORMEMENSUALASOCIADO));
+                
+        return Constantes.PATH_RPT_CLP_INFORMEMENSUALASOCIADO;
     }
 }

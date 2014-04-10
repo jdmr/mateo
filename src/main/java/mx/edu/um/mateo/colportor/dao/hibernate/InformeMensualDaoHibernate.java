@@ -8,13 +8,16 @@ import mx.edu.um.mateo.colportor.dao.*;
 import java.util.*;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.colportor.model.InformeMensual;
+import mx.edu.um.mateo.colportor.model.TemporadaColportor;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -183,6 +186,5 @@ public class InformeMensualDaoHibernate extends BaseDao implements InformeMensua
         SimpleDateFormat sdf = new SimpleDateFormat ("MMM", local);
         return "Informe del mes "+sdf.format(fecha);
     }
-    
     
 }

@@ -38,6 +38,10 @@ public interface InformeMensualDetalleDao {
      * @throws UltimoException 
      */
     public String elimina(Long id);
-    
-    
+    /**
+     * Regresa la lista de informes de todos los colportores del asociado y del mes indicados
+     * @param params
+     * @return 
+     */
+    public Map<String, Object> listaInformes(Map<String, Object> params);
 }

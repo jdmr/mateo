@@ -53,4 +53,11 @@ public interface ReportesColportorManager {
      * @throws Exception 
      */
     public Map<String, Object> planDiarioOracion(Map<String, Object> params) throws Exception;
+    /**
+     * Regresa el informe mensual del Asociado
+     * @param params
+     * @return
+     * @throws Exception 
+     */
+    public Map<String, Object> informeMensualAsociado(Map<String, Object> params) throws Exception;
 }

@@ -9,13 +9,17 @@ import mx.edu.um.mateo.colportor.dao.*;
 import java.util.*;
 import mx.edu.um.mateo.colportor.model.InformeMensual;
 import mx.edu.um.mateo.colportor.model.InformeMensualDetalle;
+import mx.edu.um.mateo.colportor.model.TemporadaColportor;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -182,5 +186,26 @@ public class InformeMensualDetalleDaoHibernate extends BaseDao implements Inform
         return "Detalle del mes "+sdf.format(fecha);
     }
     
-    
+    /**
+     * @see mx.edu.um.mateo.colportor.dao.InformeMensualDetalleDao#listaInformes(java.lang.Long) 
+     */
+    public Map<String, Object> listaInformes(Map<String, Object> params){
+        Criteria criteria = currentSession().createCriteria(InformeMensualDetalle.class);
+        criteria.createAlias("informeMensual", "infMens");
+        criteria.createAlias("infMens.colportor", "clp");
+        criteria.createAlias("clp.empresa", "emp");
+        
+        criteria.add(Restrictions.eq("emp.id", params.get("empresa")));
+        
+        DetachedCriteria sql = DetachedCriteria.forClass(TemporadaColportor.class);
+        sql.createCriteria("asociado")
+            .add(Restrictions.eq("id", params.get("asociado")));
+        sql.createAlias("colportor", "clp");
+        sql.setProjection(Projections.property("clp.id"));
+        criteria.add(Subqueries.in("clp.id", sql));
+        
+        params.put(Constantes.INFORMEMENSUAL_DETALLE_LIST, criteria.list());
+        
+        return params;
+    }
 }
