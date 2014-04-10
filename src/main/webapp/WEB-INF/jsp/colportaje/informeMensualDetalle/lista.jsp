@@ -93,20 +93,22 @@
                     <c:forEach items="${informeMensualDetalles}" var="detalle" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td>
+                                <c:if test="${detalle.informeMensual.status ne '@'}">
                                 <a href="<c:url value='/colportaje/informeMensualDetalle/ver/${detalle.id}' />">
                                     <fmt:formatDate pattern="EEEE dd/MMM" value="${detalle.fecha}" />
                                 </a>
+                                </c:if>
                             </td>
-                            <td>${detalle.hrsTrabajadas}</a></td>
-                            <td>${detalle.literaturaVendida}</a></td>
-                            <td>${detalle.totalPedidos}</a></td>
-                            <td>${detalle.totalVentas}</a></td>
-                            <td>${detalle.diezmo}</a></td>
-                            <td>${detalle.literaturaGratis}</a></td>
-                            <td>${detalle.oracionesOfrecidas}</a></td>
-                            <td>${detalle.casasVisitadas}</a></td>
-                            <td>${detalle.contactosEstudiosBiblicos}</a></td>
-                            <td>${detalle.bautizados}</a></td>
+                            <td>${detalle.hrsTrabajadas}</td>
+                            <td>${detalle.literaturaVendida}</td>
+                            <td>${detalle.totalPedidos}</td>
+                            <td>${detalle.totalVentas}</td>
+                            <td>${detalle.diezmo}</td>
+                            <td>${detalle.literaturaGratis}</td>
+                            <td>${detalle.oracionesOfrecidas}</td>
+                            <td>${detalle.casasVisitadas}</td>
+                            <td>${detalle.contactosEstudiosBiblicos}</td>
+                            <td>${detalle.bautizados}</td>
                         </tr>
                     </c:forEach>
                 </tbody>

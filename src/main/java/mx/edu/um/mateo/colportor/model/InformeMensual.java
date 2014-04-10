@@ -53,7 +53,11 @@ public class InformeMensual implements Serializable{
 
     public InformeMensual() {
     }
-    
+
+    public InformeMensual(String status) {
+        this.status = status;
+    }
+            
     public InformeMensual(Colportor colportor, Date fecha, String status, Usuario capturo, Date fechaCaptura) {
         this.colportor = colportor;
         this.fecha = fecha;
