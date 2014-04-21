@@ -37,12 +37,32 @@
                 <thead>
                     <tr>
                         <th><s:message code="nombre.label" /></th>
+                        <th><s:message code="hrsTrabajadas.label" /></th>
+                        <th><s:message code="literaturaVendida.label" /></th>
+                        <th><s:message code="totalPedidos.label" /></th>
+                        <th><s:message code="totalVentas.label" /></th>
+                        <th><s:message code="literaturaGratis.label" /></th>
+                        <th><s:message code="oracionesOfrecidas.label" /></th>
+                        <th><s:message code="casasVisitadas.label" /></th>
+                        <th><s:message code="contactosEstudiosBiblicos.label" /></th>
+                        <th><s:message code="bautizados.label" /></th>
+                        <th><s:message code="diezmo.label" /></th>
                     </tr>
                 </thead>
                 <tbody>
                     <c:forEach items="${informeMensualAsociado}" var="clp" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td>${clp.informeMensual.colportor.nombreCompleto}</td>
+                            <td>${clp.hrsTrabajadas}</td>
+                            <td>${clp.literaturaVendida}</td>
+                            <td><fmt:formatNumber type="currency" currencySymbol="$" value="${clp.totalPedidos}"/></td>
+                            <td><fmt:formatNumber type="currency" currencySymbol="$" value="${clp.totalVentas}"/></td>
+                            <td>${clp.literaturaGratis}</td>
+                            <td>${clp.oracionesOfrecidas}</td>
+                            <td>${clp.casasVisitadas}</td>
+                            <td>${clp.contactosEstudiosBiblicos}</td>
+                            <td>${clp.bautizados}</td>
+                            <td><fmt:formatNumber type="currency" currencySymbol="$" value="${clp.diezmo}"/></td>
                             
                         </tr>
                     </c:forEach>

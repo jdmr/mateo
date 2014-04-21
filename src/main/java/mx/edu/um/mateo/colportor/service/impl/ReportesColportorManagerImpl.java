@@ -348,8 +348,14 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         cal.set(Calendar.MONTH, ((Integer)params.get("mes"))-1);
         cal.set(Calendar.YEAR, (Integer)params.get("year"));
         
-        params.put("fecha",cal.getTime());
+        cal.set(Calendar.DATE, cal.getActualMinimum(Calendar.DATE));
+        System.out.println("Fecha Inicio "+cal.getTime());
+        params.put("fechaInicio",cal.getTime());
         
+        cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
+        System.out.println("Fecha Final "+cal.getTime());
+        params.put("fechaFinal",cal.getTime());
+                
         params = infMensualDetalleDao.listaInformes(params);
         List <InformeMensualDetalle> detalles = (List <InformeMensualDetalle>)params.get(Constantes.INFORMEMENSUAL_DETALLE_LIST);
         
@@ -357,8 +363,21 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         Map <String, InformeMensualDetalle> mDetalles = new TreeMap<>();
         
         for(InformeMensualDetalle det : detalles){
+            det.getInformeMensual().setColportor(clpDao.obtiene(det.getInformeMensual().getColportor().getId()));
             if(!mDetalles.containsKey(det.getInformeMensual().getColportor().getClave())){
                 tmpDetalle = new InformeMensualDetalle();
+                tmpDetalle.setInformeMensual(det.getInformeMensual());
+                tmpDetalle.setBautizados(det.getBautizados());
+                tmpDetalle.setCasasVisitadas(det.getBautizados());
+                tmpDetalle.setContactosEstudiosBiblicos(det.getContactosEstudiosBiblicos());
+                tmpDetalle.setDiezmo(det.getDiezmo());
+                tmpDetalle.setHrsTrabajadas(det.getHrsTrabajadas());
+                tmpDetalle.setLiteraturaGratis(det.getLiteraturaGratis());
+                tmpDetalle.setLiteraturaVendida(det.getLiteraturaVendida());
+                tmpDetalle.setOracionesOfrecidas(det.getOracionesOfrecidas());
+                tmpDetalle.setTotalPedidos(det.getTotalPedidos());
+                tmpDetalle.setTotalVentas(det.getTotalVentas());
+                mDetalles.put(det.getInformeMensual().getColportor().getClave(), tmpDetalle);
             }
             else{
                 tmpDetalle = mDetalles.get(det.getInformeMensual().getColportor().getClave());

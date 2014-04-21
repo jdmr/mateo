@@ -52,6 +52,7 @@ public class InformeMensual implements Serializable{
     private Date fechaCaptura; //fecha captura
 
     public InformeMensual() {
+        this.colportor = new Colportor();
     }
 
     public InformeMensual(String status) {

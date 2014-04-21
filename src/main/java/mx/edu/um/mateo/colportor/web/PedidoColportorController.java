@@ -147,6 +147,7 @@ public class PedidoColportorController extends BaseController{
         //Obtener la lista de clientes
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", request.getSession().getAttribute("empresaId"));
+        params.put("reporte", "reporte");
         modelo.addAttribute(Constantes.CLIENTE_COLPORTOR_LIST, clienteColportorDao.lista(params).get(Constantes.CLIENTE_COLPORTOR_LIST));
         
         modelo.addAttribute("formasPago", FormaPago.values());

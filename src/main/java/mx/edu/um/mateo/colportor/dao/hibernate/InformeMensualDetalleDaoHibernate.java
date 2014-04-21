@@ -9,17 +9,14 @@ import mx.edu.um.mateo.colportor.dao.*;
 import java.util.*;
 import mx.edu.um.mateo.colportor.model.InformeMensual;
 import mx.edu.um.mateo.colportor.model.InformeMensualDetalle;
-import mx.edu.um.mateo.colportor.model.TemporadaColportor;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
-import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.Subqueries;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -190,21 +187,115 @@ public class InformeMensualDetalleDaoHibernate extends BaseDao implements Inform
      * @see mx.edu.um.mateo.colportor.dao.InformeMensualDetalleDao#listaInformes(java.lang.Long) 
      */
     public Map<String, Object> listaInformes(Map<String, Object> params){
-        Criteria criteria = currentSession().createCriteria(InformeMensualDetalle.class);
-        criteria.createAlias("informeMensual", "infMens");
-        criteria.createAlias("infMens.colportor", "clp");
-        criteria.createAlias("clp.empresa", "emp");
+        StringBuilder query = new StringBuilder();
+        query.append("select im.colportor_id, sum(horas_trabajadas) as horasTrabajadas, sum(total_pedidos) as pedidos, sum(libros_ventas) as ventas,  ");
+        query.append("sum(literatura_gratis) as literaturaGratis, sum(oraciones_ofrecidas) as oraciones, sum(casas_visitadas) as casasVisitadas, ");
+        query.append("sum(estudios_biblicos) as estudiosBiblicos, sum(bautizados) as bautizados, sum(diezmo) as diezmos ");
+        query.append("from ");
+        query.append("( ");
+        query.append("select * ");
+        query.append("from informe_mensual_detalle ");
+        query.append(") imd, ");
+        query.append("( ");
+        query.append("select * ");
+        query.append("from informe_mensual ");
+        query.append("where mes_informe between :fechaInicio and :fechaFinal ");
+        query.append(") im ");
+        query.append("where imd.informemensual_id = im.id ");
+        query.append("and im.colportor_id in ");
+        query.append("( ");
+        query.append("select colportor_id ");
+        query.append("from temporada_colportor ");
+        query.append("where asociado_id = :asociadoId ");
+        query.append(") ");
+        query.append("group by im.colportor_id ");
         
-        criteria.add(Restrictions.eq("emp.id", params.get("empresa")));
+        SQLQuery sql = getSession().createSQLQuery(query.toString());
+        sql.setDate("fechaInicio", (Date)params.get("fechaInicio"));
+        sql.setDate("fechaFinal", (Date)params.get("fechaFinal"));
+        sql.setLong("asociadoId", (Long)params.get("asociado"));
         
-        DetachedCriteria sql = DetachedCriteria.forClass(TemporadaColportor.class);
-        sql.createCriteria("asociado")
-            .add(Restrictions.eq("id", params.get("asociado")));
-        sql.createAlias("colportor", "clp");
-        sql.setProjection(Projections.property("clp.id"));
-        criteria.add(Subqueries.in("clp.id", sql));
+        sql.addScalar("colportor_id", StandardBasicTypes.LONG);
+        sql.addScalar("horasTrabajadas", StandardBasicTypes.DOUBLE);
+        sql.addScalar("pedidos", StandardBasicTypes.BIG_DECIMAL);
+        sql.addScalar("ventas", StandardBasicTypes.BIG_DECIMAL);
+        sql.addScalar("literaturaGratis", StandardBasicTypes.INTEGER);
+        sql.addScalar("oraciones", StandardBasicTypes.INTEGER);
+        sql.addScalar("casasVisitadas", StandardBasicTypes.INTEGER);
+        sql.addScalar("estudiosBiblicos", StandardBasicTypes.INTEGER);
+        sql.addScalar("bautizados", StandardBasicTypes.INTEGER);
+        sql.addScalar("diezmos", StandardBasicTypes.BIG_DECIMAL);
         
-        params.put(Constantes.INFORMEMENSUAL_DETALLE_LIST, criteria.list());
+        Object [] objs = null;
+        List <Object[]>lista = sql.list();
+        InformeMensualDetalle detalle = null;
+        List <InformeMensualDetalle> detalles = new ArrayList <> ();
+        
+        Iterator <Object[]> it = lista.iterator();
+        while(it.hasNext()){
+            objs = it.next();
+            detalle = new InformeMensualDetalle();
+            detalle.setInformeMensual(new InformeMensual());
+            
+            System.out.println(objs[0]);
+            detalle.getInformeMensual().getColportor().setId((Long)objs[0]);
+            System.out.println(objs[1]);
+            try{
+                detalle.setHrsTrabajadas((Double)objs[1]);
+            }catch(NullPointerException e){
+                detalle.setHrsTrabajadas(0.0);
+            }
+            System.out.println(objs[2]);
+            try{
+                detalle.setTotalPedidos((BigDecimal)objs[2]);
+            }catch(NullPointerException e){
+                detalle.setTotalPedidos(BigDecimal.ZERO);
+            }
+            System.out.println(objs[3]);
+            try{
+                detalle.setTotalVentas((BigDecimal)objs[3]);
+            }catch(NullPointerException e){
+                detalle.setTotalVentas(BigDecimal.ZERO);
+            }
+            System.out.println(objs[4]);
+            try{
+                detalle.setLiteraturaGratis((Integer)objs[4]);
+            }catch(NullPointerException e){
+                detalle.setLiteraturaGratis(0);
+            }
+            System.out.println(objs[5]);
+            try{
+                detalle.setOracionesOfrecidas((Integer)objs[5]);
+            }catch(NullPointerException e){
+                detalle.setOracionesOfrecidas(0);
+            }
+            System.out.println(objs[6]);
+            try{
+                detalle.setCasasVisitadas((Integer)objs[6]);
+            }catch(NullPointerException e){
+                detalle.setCasasVisitadas(0);
+            }
+            System.out.println(objs[7]);
+            try{
+                detalle.setContactosEstudiosBiblicos((Integer)objs[7]);
+            }catch(NullPointerException e){
+                detalle.setContactosEstudiosBiblicos(0);
+            }
+            System.out.println(objs[8]);
+            try{
+                detalle.setBautizados((Integer)objs[8]);
+            }catch(NullPointerException e){
+                detalle.setBautizados((Integer)objs[8]);
+            }
+            System.out.println(objs[9]);
+            try{
+                detalle.setDiezmo((BigDecimal)objs[9]);
+            }catch(NullPointerException e){
+                detalle.setDiezmo(BigDecimal.ZERO);
+            }
+            detalles.add(detalle);
+        }
+        params.put(Constantes.INFORMEMENSUAL_DETALLE_LIST, detalles);
         
         return params;
     }
