@@ -21,9 +21,9 @@
         <div id="edita-informeMensualDetalle" class="content scaffold-list" role="main">
             <h1><s:message code="informeMensualDetalle.edita.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/colportaje/informeMensualDetalle'/>"><i class="icon-list icon-white"></i> <s:message code='informeMensualDetalle.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/colportaje/informes/informeMensualDetalle'/>"><i class="icon-list icon-white"></i> <s:message code='informeMensualDetalle.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="/colportaje/informeMensualDetalle/actualiza" />
+            <c:url var="actualizaUrl" value="/colportaje/informes/informeMensualDetalle/actualiza" />
             <form:form commandName="informeMensualDetalle" method="post" action="${actualizaUrl}">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
@@ -142,7 +142,7 @@
 
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="actualizarBtn" class="btn btn-primary btn-large" id="actualizar" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='actualizar.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/colportaje/informeMensualDetalle/ver/${informeMensualDetalle.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <a class="btn btn-large" href="<s:url value='/colportaje/informes/informeMensualDetalle/ver/${informeMensualDetalle.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>

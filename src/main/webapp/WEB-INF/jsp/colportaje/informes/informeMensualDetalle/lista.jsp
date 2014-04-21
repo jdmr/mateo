@@ -21,14 +21,14 @@
             
         </h4>
 
-        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/colportaje/informeMensualDetalle' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/colportaje/informes/informeMensualDetalle' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/colportaje/informeMensualDetalle/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='informeMensualDetalle.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/colportaje/informes/informeMensualDetalle/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='informeMensualDetalle.nuevo.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
@@ -94,7 +94,7 @@
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td>
                                 <c:if test="${detalle.informeMensual.status ne '@'}">
-                                <a href="<c:url value='/colportaje/informeMensualDetalle/ver/${detalle.id}' />">
+                                <a href="<c:url value='/colportaje/informes/informeMensualDetalle/ver/${detalle.id}' />">
                                     <fmt:formatDate pattern="EEEE dd/MMM" value="${detalle.fecha}" />
                                 </a>
                                 </c:if>

@@ -362,8 +362,32 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         InformeMensualDetalle tmpDetalle = null;
         Map <String, InformeMensualDetalle> mDetalles = new TreeMap<>();
         
+        InformeMensualDetalle totalDetalle = new InformeMensualDetalle();
+        totalDetalle.setBautizados(0);
+        totalDetalle.setCasasVisitadas(0);
+        totalDetalle.setContactosEstudiosBiblicos(0);
+        totalDetalle.setDiezmo(BigDecimal.ZERO);
+        totalDetalle.setHrsTrabajadas(0.0);
+        totalDetalle.setLiteraturaGratis(0);
+        totalDetalle.setLiteraturaVendida(0);
+        totalDetalle.setOracionesOfrecidas(0);
+        totalDetalle.setTotalPedidos(BigDecimal.ZERO);
+        totalDetalle.setTotalVentas(BigDecimal.ZERO);
+        
         for(InformeMensualDetalle det : detalles){
             det.getInformeMensual().setColportor(clpDao.obtiene(det.getInformeMensual().getColportor().getId()));
+            
+            totalDetalle.setBautizados(totalDetalle.getBautizados()+det.getBautizados());
+            totalDetalle.setCasasVisitadas(totalDetalle.getCasasVisitadas()+det.getBautizados());
+            totalDetalle.setContactosEstudiosBiblicos(totalDetalle.getContactosEstudiosBiblicos()+det.getContactosEstudiosBiblicos());
+            totalDetalle.setDiezmo(totalDetalle.getDiezmo().add(det.getDiezmo()));
+            totalDetalle.setHrsTrabajadas(totalDetalle.getHrsTrabajadas()+det.getHrsTrabajadas());
+            totalDetalle.setLiteraturaGratis(totalDetalle.getLiteraturaGratis()+det.getLiteraturaGratis());
+            totalDetalle.setLiteraturaVendida(totalDetalle.getLiteraturaVendida()+det.getLiteraturaVendida());
+            totalDetalle.setOracionesOfrecidas(totalDetalle.getOracionesOfrecidas()+det.getOracionesOfrecidas());
+            totalDetalle.setTotalPedidos(totalDetalle.getTotalPedidos().add(det.getTotalPedidos()));
+            totalDetalle.setTotalVentas(totalDetalle.getTotalVentas().add(det.getTotalVentas()));
+            
             if(!mDetalles.containsKey(det.getInformeMensual().getColportor().getClave())){
                 tmpDetalle = new InformeMensualDetalle();
                 tmpDetalle.setInformeMensual(det.getInformeMensual());
@@ -395,6 +419,7 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         }
         
         params.put(Constantes.CONTAINSKEY_INFORMEMENSUALASOCIADO, new ArrayList(mDetalles.values()));        
+        params.put(Constantes.CONTAINSKEY_INFORMEMENSUALASOCIADO_TOTALES, totalDetalle);        
         return params;
     }
 }

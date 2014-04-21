@@ -2891,25 +2891,25 @@ public class Constantes {
     public static final String DOCUMENTOCOLPORTOR = "documento";
     public static final String DOCUMENTOCOLPORTOR_LIST = "documentos";
     //Informe Mensual Colportor        
-    public static final String INFORMEMENSUAL_PATH = "/colportaje/informeMensual";
-    public static final String INFORMEMENSUAL_PATH_LISTA = "/colportaje/informeMensual/lista";
-    public static final String INFORMEMENSUAL_PATH_VER = "/colportaje/informeMensual/ver";
-    public static final String INFORMEMENSUAL_PATH_NUEVO = "/colportaje/informeMensual/nuevo";
-    public static final String INFORMEMENSUAL_PATH_EDITA = "/colportaje/informeMensual/edita";
-    public static final String INFORMEMENSUAL_PATH_CREA = "/colportaje/informeMensual/crea";
-    public static final String INFORMEMENSUAL_PATH_ACTUALIZA = "/colportaje/informeMensual/actualiza";
-    public static final String INFORMEMENSUAL_PATH_ELIMINA = "/colportaje/informeMensual/elimina";
+    public static final String INFORMEMENSUAL_PATH = "/colportaje/informes/informeMensual";
+    public static final String INFORMEMENSUAL_PATH_LISTA = "/colportaje/informes/informeMensual/lista";
+    public static final String INFORMEMENSUAL_PATH_VER = "/colportaje/informes/informeMensual/ver";
+    public static final String INFORMEMENSUAL_PATH_NUEVO = "/colportaje/informes/informeMensual/nuevo";
+    public static final String INFORMEMENSUAL_PATH_EDITA = "/colportaje/informes/informeMensual/edita";
+    public static final String INFORMEMENSUAL_PATH_CREA = "/colportaje/informes/informeMensual/crea";
+    public static final String INFORMEMENSUAL_PATH_ACTUALIZA = "/colportaje/informes/informeMensual/actualiza";
+    public static final String INFORMEMENSUAL_PATH_ELIMINA = "/colportaje/informes/informeMensual/elimina";
     public static final String INFORMEMENSUAL = "informeMensual";
     public static final String INFORMEMENSUAL_LIST = "informesMensuales";
     //Informe Mensual Detalle Colportor        
-    public static final String INFORMEMENSUAL_DETALLE_PATH = "/colportaje/informeMensualDetalle";
-    public static final String INFORMEMENSUAL_DETALLE_PATH_LISTA = "/colportaje/informeMensualDetalle/lista";
-    public static final String INFORMEMENSUAL_DETALLE_PATH_VER = "/colportaje/informeMensualDetalle/ver";
-    public static final String INFORMEMENSUAL_DETALLE_PATH_NUEVO = "/colportaje/informeMensualDetalle/nuevo";
-    public static final String INFORMEMENSUAL_DETALLE_PATH_EDITA = "/colportaje/informeMensualDetalle/edita";
-    public static final String INFORMEMENSUAL_DETALLE_PATH_CREA = "/colportaje/informeMensualDetalle/crea";
-    public static final String INFORMEMENSUAL_DETALLE_PATH_ACTUALIZA = "/colportaje/informeMensualDetalle/actualiza";
-    public static final String INFORMEMENSUAL_DETALLE_PATH_ELIMINA = "/colportaje/informeMensualDetalle/elimina";
+    public static final String INFORMEMENSUAL_DETALLE_PATH = "/colportaje/informes/informeMensualDetalle";
+    public static final String INFORMEMENSUAL_DETALLE_PATH_LISTA = "/colportaje/informes/informeMensualDetalle/lista";
+    public static final String INFORMEMENSUAL_DETALLE_PATH_VER = "/colportaje/informes/informeMensualDetalle/ver";
+    public static final String INFORMEMENSUAL_DETALLE_PATH_NUEVO = "/colportaje/informes/informeMensualDetalle/nuevo";
+    public static final String INFORMEMENSUAL_DETALLE_PATH_EDITA = "/colportaje/informes/informeMensualDetalle/edita";
+    public static final String INFORMEMENSUAL_DETALLE_PATH_CREA = "/colportaje/informes/informeMensualDetalle/crea";
+    public static final String INFORMEMENSUAL_DETALLE_PATH_ACTUALIZA = "/colportaje/informes/informeMensualDetalle/actualiza";
+    public static final String INFORMEMENSUAL_DETALLE_PATH_ELIMINA = "/colportaje/informes/informeMensualDetalle/elimina";
     public static final String INFORMEMENSUAL_DETALLE = "informeMensualDetalle";
     public static final String INFORMEMENSUAL_DETALLE_LIST = "informeMensualDetalles";
     //Valores de InformeEmpleado
@@ -2981,14 +2981,15 @@ public class Constantes {
     public static final String PATH_CLAVEEMPLEADO_CREA = "/rh/empleado/claveEmpleado/crea";
     public static final String PATH_CLAVEEMPLEADO_ACTUALIZA = "/rh/empleado/claveEmpleado/actualiza";
     public static final String PATH_CLAVEEMPLEADO_ELIMINA = "/rh/empleado/claveEmpleado/elimina";
-    public static final String CLAVEEMPLEADO_FORM = "claveEmpleadoForm";
+    public static final String CLAVEEMPLEADO_FORM = "claveEmpleadoForm"; 
 
     public static final String PATH_RPT_CLP_PLANMENSUALORACION = "/colportaje/reportes/planMensualOracion";
     public static final String CONTAINSKEY_PLANMENSUALORACION = "planMensualOracion";
     public static final String PATH_RPT_CLP_PLANDIARIOORACION = "/colportaje/reportes/planDiarioOracion";
     public static final String CONTAINSKEY_PLANDIARIOORACION = "planDiarioOracion";
-    public static final String PATH_RPT_CLP_INFORMEMENSUALASOCIADO = "/colportaje/reportes/informeMensualAsociado";
+    public static final String PATH_RPT_CLP_INFORMEMENSUALASOCIADO = "/colportaje/informes/informeMensualAsociado/informeMensualAsociado";
     public static final String CONTAINSKEY_INFORMEMENSUALASOCIADO = "informeMensualAsociado";
+    public static final String CONTAINSKEY_INFORMEMENSUALASOCIADO_TOTALES = "informeMensualAsociadoTotales";
     /**
      * Valores para los Clientes de Colportor
      */

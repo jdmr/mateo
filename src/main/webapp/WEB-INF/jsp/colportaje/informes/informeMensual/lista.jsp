@@ -20,7 +20,7 @@
             <c:out value="${colportor.nombreCompleto}"/>
         </h4>
 
-        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/colportaje/informeMensual' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/colportaje/informes/informeMensual' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
@@ -28,7 +28,7 @@
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
                 <c:if test="${colportor != null}">
-                <a class="btn btn-primary" href="<s:url value='/colportaje/informeMensual/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='informeMensual.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/colportaje/informes/informeMensual/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='informeMensual.nuevo.label' /></a>
                 </c:if>
                 <input id="clave" name="clave" class="input-medium search-query" value="${colportor.clave}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
@@ -63,7 +63,7 @@
                 <tbody>
                     <c:forEach items="${informesMensuales}" var="informeMensual" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/colportaje/informeMensual/ver/${informeMensual.id}' />">
+                            <td><a href="<c:url value='/colportaje/informes/informeMensual/ver/${informeMensual.id}' />">
                                     <fmt:formatDate pattern="MMMM, yyyy" value="${informeMensual.fecha}" /></a></td>
                         </tr>
                     </c:forEach>

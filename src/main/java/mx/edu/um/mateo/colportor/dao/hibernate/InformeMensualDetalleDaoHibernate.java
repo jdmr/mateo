@@ -188,9 +188,9 @@ public class InformeMensualDetalleDaoHibernate extends BaseDao implements Inform
      */
     public Map<String, Object> listaInformes(Map<String, Object> params){
         StringBuilder query = new StringBuilder();
-        query.append("select im.colportor_id, sum(horas_trabajadas) as horasTrabajadas, sum(total_pedidos) as pedidos, sum(libros_ventas) as ventas,  ");
-        query.append("sum(literatura_gratis) as literaturaGratis, sum(oraciones_ofrecidas) as oraciones, sum(casas_visitadas) as casasVisitadas, ");
-        query.append("sum(estudios_biblicos) as estudiosBiblicos, sum(bautizados) as bautizados, sum(diezmo) as diezmos ");
+        query.append("select im.colportor_id, coalesce(sum(horas_trabajadas),0) as horasTrabajadas, coalesce(sum(total_pedidos),0.0) as pedidos, coalesce(sum(libros_ventas),0.0) as ventas,  ");
+        query.append("coalesce(sum(literatura_gratis),0) as literaturaGratis, coalesce(sum(oraciones_ofrecidas),0) as oraciones, coalesce(sum(casas_visitadas),0) as casasVisitadas, ");
+        query.append("coalesce(sum(estudios_biblicos),0) as estudiosBiblicos, coalesce(sum(bautizados),0) as bautizados, coalesce(sum(diezmo),0.0) as diezmos ");
         query.append("from ");
         query.append("( ");
         query.append("select * ");

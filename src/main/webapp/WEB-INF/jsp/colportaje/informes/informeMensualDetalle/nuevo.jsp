@@ -22,7 +22,7 @@
         <div id="nuevo-informeMensualDetalle" class="content scaffold-list" role="main">
             <h1><s:message code="informeMensualDetalle.nuevo.label" /> de <fmt:formatDate pattern="MMMM/yyyy" value="${informeMensual.fecha}" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/colportor/informeMensualDetalle'/>"><i class="icon-list icon-white"></i> <s:message code='informeMensualDetalle.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/colportaje/informes/informeMensualDetalle'/>"><i class="icon-list icon-white"></i> <s:message code='informeMensualDetalle.lista.label' /></a>
             </p>
             <form:form commandName="informeMensualDetalle" action="crea" method="post">
                 <form:errors path="*">

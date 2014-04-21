@@ -54,7 +54,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author gibrandemetrioo
  */
 @Controller
-@RequestMapping("/colportaje/informeMensualDetalle")
+@RequestMapping("/colportaje/informes/informeMensualDetalle")
 public class InformeMensualDetalleController {
 
     private static final Logger log = (Logger) LoggerFactory.getLogger(InformeMensualDetalleController.class);
