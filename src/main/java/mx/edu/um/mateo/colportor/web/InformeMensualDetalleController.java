@@ -142,6 +142,8 @@ public class InformeMensualDetalleController {
         params = informeMensualDetalleMgr.lista(params);
                 
         modelo.addAttribute(Constantes.INFORMEMENSUAL_DETALLE_LIST, params.get(Constantes.INFORMEMENSUAL_DETALLE_LIST));
+        modelo.addAttribute("totales", params.get("totales"));
+        
         // inicia paginado
         Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
         Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);

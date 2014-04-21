@@ -63,6 +63,8 @@ public class InformeMensualDetalleManagerImpl extends BaseManager implements Inf
             mInformes.put(imd.getFecha(), imd);
         }
         
+        InformeMensualDetalle totales = new InformeMensualDetalle();
+        
         for(InformeMensualDetalle imd : infs){
             gcFecha.setTime(imd.getFecha());
 
@@ -110,6 +112,17 @@ public class InformeMensualDetalleManagerImpl extends BaseManager implements Inf
             totalEstudiosBiblicos += imd.getContactosEstudiosBiblicos();
             totalBautizados += imd.getBautizados();
             
+            totales.setHrsTrabajadas(totales.getHrsTrabajadas()+imd.getHrsTrabajadas());
+            totales.setLiteraturaVendida(totales.getLiteraturaVendida()+imd.getLiteraturaVendida());
+            totales.setTotalPedidos(totales.getTotalPedidos().add(imd.getTotalPedidos()));
+            totales.setTotalVentas(totales.getTotalVentas().add(imd.getTotalVentas()));
+            totales.setDiezmo(totales.getDiezmo().add(imd.getDiezmo()));
+            totales.setLiteraturaGratis(totales.getLiteraturaGratis()+imd.getLiteraturaGratis());
+            totales.setOracionesOfrecidas(totales.getOracionesOfrecidas()+imd.getOracionesOfrecidas());
+            totales.setCasasVisitadas(totales.getCasasVisitadas()+imd.getCasasVisitadas());
+            totales.setContactosEstudiosBiblicos(totales.getContactosEstudiosBiblicos()+imd.getContactosEstudiosBiblicos());
+            totales.setBautizados(totales.getBautizados()+imd.getBautizados());
+            
 
         }
         
@@ -130,6 +143,7 @@ public class InformeMensualDetalleManagerImpl extends BaseManager implements Inf
         mInformes.put(gcFecha.getTime(), tmp);    
         
         params.put(Constantes.INFORMEMENSUAL_DETALLE_LIST, new ArrayList(mInformes.values()));
+        params.put("totales", totales);
         return params;
     }
     

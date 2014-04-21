@@ -20,6 +20,63 @@
             <c:out value="${colportor.nombreCompleto}"/>
             
         </h4>
+            
+        <table id="totales" class="table">
+            <tbody>
+                <tr> 
+                    <td>
+                        <span class="label label-success">
+                        <b><s:message code="hrsTrabajadas.label" /> </b><fmt:formatNumber type="number" value="${totales.hrsTrabajadas}"/>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="label label-success">
+                        <b><s:message code="literaturaVendida.label" /> </b><fmt:formatNumber type="number" currencySymbol="$" value="${totales.literaturaVendida}"/>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="label label-success">
+                        <b><s:message code="totalPedidos.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${totales.totalPedidos}"/>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="label label-success">
+                        <b><s:message code="totalVentas.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${totales.totalVentas}"/>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="label label-success">
+                        <b><s:message code="literaturaGratis.label" /> </b><fmt:formatNumber type="number" value="${totales.literaturaGratis}"/>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="label label-success">
+                        <b><s:message code="oracionesOfrecidas.label" /></b><fmt:formatNumber type="number" value="${totales.oracionesOfrecidas}"/>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="label label-success">
+                        <b><s:message code="casasVisitadas.label" /></b><fmt:formatNumber type="number" value="${totales.casasVisitadas}"/>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="label label-success">
+                        <b><s:message code="contactosEstudiosBiblicos.label" /></b><fmt:formatNumber type="number" value="${totales.contactosEstudiosBiblicos}"/>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="label label-success">
+                        <b><s:message code="bautizados.label" /></b><fmt:formatNumber type="number" value="${totales.bautizados}"/>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="label label-success">
+                        <b><s:message code="diezmo.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${totales.diezmo}"/>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
         <form name="filtraLista" class="form-search" method="post" action="<c:url value='/colportaje/informes/informeMensualDetalle' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
@@ -70,9 +127,6 @@
                             <jsp:param name="columna" value="totalVentas" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="diezmo" />
-                        </jsp:include>
-                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="literaturaGratis" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
@@ -87,6 +141,9 @@
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
                             <jsp:param name="columna" value="bautizados" />
                         </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="diezmo" />
+                        </jsp:include>
                     </tr>
                 </thead>
                 <tbody>
@@ -99,16 +156,16 @@
                                 </a>
                                 </c:if>
                             </td>
-                            <td>${detalle.hrsTrabajadas}</td>
-                            <td>${detalle.literaturaVendida}</td>
-                            <td>${detalle.totalPedidos}</td>
-                            <td>${detalle.totalVentas}</td>
-                            <td>${detalle.diezmo}</td>
-                            <td>${detalle.literaturaGratis}</td>
-                            <td>${detalle.oracionesOfrecidas}</td>
-                            <td>${detalle.casasVisitadas}</td>
-                            <td>${detalle.contactosEstudiosBiblicos}</td>
-                            <td>${detalle.bautizados}</td>
+                            <td><fmt:formatNumber type="number" value="${detalle.hrsTrabajadas}"/></td>
+                            <td><fmt:formatNumber type="number" value="${detalle.literaturaVendida}"/></td>
+                            <td><fmt:formatNumber type="currency" currencySymbol="$" value="${detalle.totalPedidos}"/></td>
+                            <td><fmt:formatNumber type="currency" currencySymbol="$" value="${detalle.totalVentas}"/></td>
+                            <td><fmt:formatNumber type="number" value="${detalle.literaturaGratis}"/></td>
+                            <td><fmt:formatNumber type="number" value="${detalle.oracionesOfrecidas}"/></td>
+                            <td><fmt:formatNumber type="number" value="${detalle.casasVisitadas}"/></td>
+                            <td><fmt:formatNumber type="number" value="${detalle.contactosEstudiosBiblicos}"/></td>
+                            <td><fmt:formatNumber type="number" value="${detalle.bautizados}"/></td>
+                            <td><fmt:formatNumber type="currency" currencySymbol="$" value="${detalle.diezmo}"/></td>
                         </tr>
                     </c:forEach>
                 </tbody>
