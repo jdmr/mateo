@@ -171,10 +171,22 @@ public class InformeMensualDetalleController {
     }
 
     @RequestMapping("/nuevo")
-    public String nuevo(Model modelo) {
+    public String nuevo(@RequestParam(required = false) Date fecha,Model modelo) {
         log.debug("Nueva InformeMensualDetalle");
+        log.debug("Fecha {}", fecha);
         InformeMensualDetalle informeMensualDetalle = new InformeMensualDetalle();
 
+        modelo.addAttribute(Constantes.INFORMEMENSUAL_DETALLE, informeMensualDetalle);
+        return Constantes.INFORMEMENSUAL_DETALLE_PATH_NUEVO;
+    }
+    
+    @RequestMapping("/nuevoReg/{fecha}")
+    public String nuevoReg(@PathVariable Date fecha, Model modelo) {
+        log.debug("Nueva InformeMensualDetalle");
+        log.debug("Fecha {}", fecha);
+        InformeMensualDetalle informeMensualDetalle = new InformeMensualDetalle();
+
+        informeMensualDetalle.setFecha(fecha);
         modelo.addAttribute(Constantes.INFORMEMENSUAL_DETALLE, informeMensualDetalle);
         return Constantes.INFORMEMENSUAL_DETALLE_PATH_NUEVO;
     }

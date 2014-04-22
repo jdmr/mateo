@@ -151,21 +151,108 @@
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td>
                                 <c:if test="${detalle.informeMensual.status ne '@'}">
-                                <a href="<c:url value='/colportaje/informes/informeMensualDetalle/ver/${detalle.id}' />">
-                                    <fmt:formatDate pattern="EEEE dd/MMM" value="${detalle.fecha}" />
-                                </a>
+                                    <c:if test="${empty detalle.id}">
+                                        <a href="<c:url value='/colportaje/informes/informeMensualDetalle/nuevoReg/${detalle.fecha}' />">
+                                    </c:if>
+                                    <c:if test="${not empty detalle.id}">
+                                        <a href="<c:url value='/colportaje/informes/informeMensualDetalle/ver/${detalle.id}' />">
+                                    </c:if>
+                                        <fmt:formatDate pattern="EEEE dd/MMM" value="${detalle.fecha}" />
+                                    </a>
+                                </c:if>                                
+                                
+                            </td>
+                            
+                            <td>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    <b>
+                                </c:if>
+                                <fmt:formatNumber type="number" value="${detalle.hrsTrabajadas}"/>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    </b>
                                 </c:if>
                             </td>
-                            <td><fmt:formatNumber type="number" value="${detalle.hrsTrabajadas}"/></td>
-                            <td><fmt:formatNumber type="number" value="${detalle.literaturaVendida}"/></td>
-                            <td><fmt:formatNumber type="currency" currencySymbol="$" value="${detalle.totalPedidos}"/></td>
-                            <td><fmt:formatNumber type="currency" currencySymbol="$" value="${detalle.totalVentas}"/></td>
-                            <td><fmt:formatNumber type="number" value="${detalle.literaturaGratis}"/></td>
-                            <td><fmt:formatNumber type="number" value="${detalle.oracionesOfrecidas}"/></td>
-                            <td><fmt:formatNumber type="number" value="${detalle.casasVisitadas}"/></td>
-                            <td><fmt:formatNumber type="number" value="${detalle.contactosEstudiosBiblicos}"/></td>
-                            <td><fmt:formatNumber type="number" value="${detalle.bautizados}"/></td>
-                            <td><fmt:formatNumber type="currency" currencySymbol="$" value="${detalle.diezmo}"/></td>
+                            <td>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    <b>
+                                </c:if>
+                                <fmt:formatNumber type="number" value="${detalle.literaturaVendida}"/></td>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    </b>
+                                </c:if>
+                            <td>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    <b>
+                                </c:if>
+                                <fmt:formatNumber type="currency" currencySymbol="$" value="${detalle.totalPedidos}"/>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    </b>
+                                </c:if>
+                            </td>
+                            <td>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    <b>
+                                </c:if>
+                                <fmt:formatNumber type="currency" currencySymbol="$" value="${detalle.totalVentas}"/>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    </b>
+                                </c:if>
+                            </td>
+                            <td>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    <b>
+                                </c:if>
+                                <fmt:formatNumber type="number" value="${detalle.literaturaGratis}"/>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    </b>
+                                </c:if>
+                            </td>
+                            <td>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    <b>
+                                </c:if>
+                                <fmt:formatNumber type="number" value="${detalle.oracionesOfrecidas}"/>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    </b>
+                                </c:if>
+                            </td>
+                            <td>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    <b>
+                                </c:if>
+                                <fmt:formatNumber type="number" value="${detalle.casasVisitadas}"/>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    </b>
+                                </c:if>
+                            </td>
+                            <td>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    <b>
+                                </c:if>
+                                <fmt:formatNumber type="number" value="${detalle.contactosEstudiosBiblicos}"/>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    </b>
+                                </c:if>
+                            </td>
+                            <td>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    <b>
+                                </c:if>
+                                <fmt:formatNumber type="number" value="${detalle.bautizados}"/>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    </b>
+                                </c:if>
+                            </td>
+                            <td>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    <b>
+                                </c:if>
+                                <fmt:formatNumber type="currency" currencySymbol="$" value="${detalle.diezmo}"/>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    </b>
+                                </c:if>
+                            </td>
+                            
                         </tr>
                     </c:forEach>
                 </tbody>

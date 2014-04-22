@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -58,9 +59,18 @@ public class InformeMensualDetalleManagerImpl extends BaseManager implements Inf
         List<InformeMensualDetalle> infs = (List<InformeMensualDetalle>)params.get(Constantes.INFORMEMENSUAL_DETALLE_LIST);
         log.debug("Infs.size {}", infs.size());
         
+        InformeMensualDetalle det = null;
+        Iterator <InformeMensualDetalle> it = infs.iterator();
+        while(it.hasNext()){
+            det = it.next();
+            if(det.getInformeMensual().getStatus().equals("@@@")){
+                it.remove();
+            }
+        }
+        
         Map <Date, InformeMensualDetalle> mInformes = new TreeMap<>();
         for(InformeMensualDetalle imd : infs){
-            mInformes.put(imd.getFecha(), imd);
+                mInformes.put(imd.getFecha(), imd);
         }
         
         InformeMensualDetalle totales = new InformeMensualDetalle();
@@ -151,7 +161,7 @@ public class InformeMensualDetalleManagerImpl extends BaseManager implements Inf
         return dao.obtiene(id);
     }
     public InformeMensualDetalle crea(InformeMensualDetalle detalle){
-        return crea(detalle);
+        return dao.crea(detalle);
     }
     
     public String elimina(Long id){

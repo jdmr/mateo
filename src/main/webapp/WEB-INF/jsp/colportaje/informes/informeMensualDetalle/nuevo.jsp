@@ -24,7 +24,8 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/colportaje/informes/informeMensualDetalle'/>"><i class="icon-list icon-white"></i> <s:message code='informeMensualDetalle.lista.label' /></a>
             </p>
-            <form:form commandName="informeMensualDetalle" action="crea" method="post">
+            <s:url var="linky" value="/colportaje/informes/informeMensualDetalle/crea"/>
+            <form:form commandName="informeMensualDetalle" action="${linky}" method="post">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -33,7 +34,6 @@
                         </c:forEach>
                     </div>
                 </form:errors>
-
                 <fieldset>
                     <s:bind path="informeMensualDetalle.fecha">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
@@ -139,7 +139,7 @@
 
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/colportor/informeMensualDetalle'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <a class="btn btn-large" href="<s:url value='/colportaje/informes/informeMensualDetalle'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>
@@ -148,6 +148,10 @@
             <script>
                 $("input#fecha").datepicker($.datepicker.regional['es']);
                 $("input#fecha").datepicker("option","firstDay",0);
+            </script>
+            <fmt:formatDate pattern="dd/MM/yyyy" value="${fecha}" var="fechaReg"/>
+            <script>
+                $("input#fecha").val('${fechaReg}');
             </script>
         </content>    
     </body>

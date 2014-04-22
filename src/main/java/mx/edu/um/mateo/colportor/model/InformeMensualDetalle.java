@@ -82,6 +82,7 @@ public class InformeMensualDetalle implements Serializable{
     private Date fechaCaptura; //fecha captura
 
     public InformeMensualDetalle() {
+        this.informeMensual = new InformeMensual("A");
         this.hrsTrabajadas = 0.0;
         this.literaturaVendida = 0;
         this.totalPedidos = BigDecimal.ZERO;

@@ -107,6 +107,11 @@ public class InformeMensualDetalleDaoHibernate extends BaseDao implements Inform
                         tmpCalendar.add(Calendar.DAY_OF_WEEK, j *-1);
                         log.debug("Fecha previa {}", tmpCalendar.getTime());
                         tmp = new InformeMensualDetalle();
+                        
+                        if(tmpCalendar.get(Calendar.MONTH) != gcFecha.get(Calendar.MONTH)){
+                            tmp.setInformeMensual(new InformeMensual("@@@"));//para identificar este tipo de registros
+                        }
+                        
                         tmp.setFecha(tmpCalendar.getTime());                    
                         informes.put(tmp.getFecha(), tmp);
                         tmpCalendar.setTime(gcFecha.getTime()); //Asignar la fecha original
