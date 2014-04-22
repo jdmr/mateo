@@ -337,6 +337,18 @@ public class DocumentoDao {
         
         return params;
     }
-    
-    
+    /**
+     * Regresa todos los diezmos
+     * @param params
+     * @return 
+     */
+    public Map<String, Object> obtieneTodosDiezmos(Map<String,Object> params){
+        Criteria sql = currentSession().createCriteria(Documento.class);
+        sql.add(Restrictions.eq("tipoDeDocumento", "Diezmo"));
+        sql.createCriteria("temporadaColportor").createCriteria("colportor").add(Restrictions.eq("id", (Long)params.get("colportor")));
+        sql.addOrder(Order.asc("fecha"));
+        
+        params.put(Constantes.DOCUMENTOCOLPORTOR_LIST, sql.list());
+        return params;
+    }
 }

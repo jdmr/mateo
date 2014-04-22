@@ -100,6 +100,7 @@ public class InformeMensualDetalleController {
         
         params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
         params.put("informe", informe.getId());
+        params.put("colportor", informe.getColportor().getId());
         
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
@@ -139,6 +140,7 @@ public class InformeMensualDetalleController {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
+        
         params = informeMensualDetalleMgr.lista(params);
                 
         modelo.addAttribute(Constantes.INFORMEMENSUAL_DETALLE_LIST, params.get(Constantes.INFORMEMENSUAL_DETALLE_LIST));

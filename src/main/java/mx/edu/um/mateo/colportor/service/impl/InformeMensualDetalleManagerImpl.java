@@ -17,7 +17,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.TreeMap;
+import mx.edu.um.mateo.colportor.dao.DocumentoDao;
 import mx.edu.um.mateo.colportor.dao.InformeMensualDetalleDao;
+import mx.edu.um.mateo.colportor.model.Documento;
 import mx.edu.um.mateo.colportor.model.InformeMensual;
 import mx.edu.um.mateo.colportor.model.InformeMensualDetalle;
 import mx.edu.um.mateo.colportor.service.InformeMensualDetalleManager;
@@ -34,6 +36,8 @@ import org.springframework.stereotype.Service;
 public class InformeMensualDetalleManagerImpl extends BaseManager implements InformeMensualDetalleManager {
     @Autowired
     private InformeMensualDetalleDao dao;
+    @Autowired
+    private DocumentoDao docDao;
     
     /**
      * @see mx.edu.um.mateo.colportor.service.InformeMensualDetalleManager#lista(java.util.Map) 
@@ -41,6 +45,18 @@ public class InformeMensualDetalleManagerImpl extends BaseManager implements Inf
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
         params = dao.lista(params);
+        
+        Map <Date, Documento> mDiezmos = new TreeMap<>();
+        params = docDao.obtieneTodosDiezmos(params);
+        for(Documento doc : (List<Documento>)params.get(Constantes.DOCUMENTOCOLPORTOR_LIST)){
+            if(mDiezmos.containsKey(doc.getFecha())){
+                //acumulando
+                mDiezmos.get(doc.getFecha()).setImporte(mDiezmos.get(doc.getFecha()).getImporte().add(doc.getImporte()));
+            }
+            else{
+                mDiezmos.put(doc.getFecha(), doc);
+            }
+        }
         
         //Varaibles para acumular totales
         Double totalHrsTrabajadas = 0.0;
@@ -77,6 +93,10 @@ public class InformeMensualDetalleManagerImpl extends BaseManager implements Inf
         
         for(InformeMensualDetalle imd : infs){
             gcFecha.setTime(imd.getFecha());
+            
+            if(mDiezmos.containsKey(gcFecha.getTime())){
+                imd.setDiezmo(mDiezmos.get(gcFecha.getTime()).getImporte());
+            }
 
             log.debug("Dia {}", gcFecha.get(Calendar.DAY_OF_WEEK));
             
@@ -90,12 +110,13 @@ public class InformeMensualDetalleManagerImpl extends BaseManager implements Inf
                 tmp.setLiteraturaVendida(totalLibrosVendidos);
                 tmp.setTotalPedidos(totalPedidos);
                 tmp.setTotalVentas(totalVentas);
-                tmp.setDiezmo(totalDiezmos);
                 tmp.setLiteraturaGratis(totalLiteraturaGratis);
                 tmp.setOracionesOfrecidas(totalOraciones);
                 tmp.setCasasVisitadas(totalCasasVisitadas);
                 tmp.setContactosEstudiosBiblicos(totalEstudiosBiblicos);
                 tmp.setBautizados(totalBautizados);
+                tmp.setDiezmo(totalDiezmos);
+                
                 mInformes.put(tmp.getFecha(), tmp);
 
                 totalHrsTrabajadas = 0.0;
@@ -115,12 +136,12 @@ public class InformeMensualDetalleManagerImpl extends BaseManager implements Inf
             totalLibrosVendidos += imd.getLiteraturaVendida();
             totalPedidos = totalPedidos.add(imd.getTotalPedidos());
             totalVentas = totalVentas.add(imd.getTotalVentas());
-            totalDiezmos = totalDiezmos.add(imd.getDiezmo());
             totalLiteraturaGratis += imd.getLiteraturaGratis();
             totalOraciones += imd.getOracionesOfrecidas();
             totalCasasVisitadas += imd.getCasasVisitadas();
             totalEstudiosBiblicos += imd.getContactosEstudiosBiblicos();
             totalBautizados += imd.getBautizados();
+            totalDiezmos = totalDiezmos.add(imd.getDiezmo());
             
             totales.setHrsTrabajadas(totales.getHrsTrabajadas()+imd.getHrsTrabajadas());
             totales.setLiteraturaVendida(totales.getLiteraturaVendida()+imd.getLiteraturaVendida());
@@ -139,6 +160,7 @@ public class InformeMensualDetalleManagerImpl extends BaseManager implements Inf
         tmp = new InformeMensualDetalle();
         tmp.setInformeMensual(new InformeMensual("@"));//para identificar este tipo de registros
         gcFecha.add(Calendar.HOUR, -12);
+        log.debug("informes {}", gcFecha.getTime());
         tmp.setFecha(gcFecha.getTime());
         tmp.setHrsTrabajadas(totalHrsTrabajadas);
         tmp.setLiteraturaVendida(totalLibrosVendidos);
@@ -150,7 +172,9 @@ public class InformeMensualDetalleManagerImpl extends BaseManager implements Inf
         tmp.setCasasVisitadas(totalCasasVisitadas);
         tmp.setContactosEstudiosBiblicos(totalEstudiosBiblicos);
         tmp.setBautizados(totalBautizados);
-        mInformes.put(gcFecha.getTime(), tmp);    
+        mInformes.put(gcFecha.getTime(), tmp);
+        
+        
         
         params.put(Constantes.INFORMEMENSUAL_DETALLE_LIST, new ArrayList(mInformes.values()));
         params.put("totales", totales);

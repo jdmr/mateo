@@ -46,6 +46,11 @@
                     </td>
                     <td>
                         <span class="label label-success">
+                        <b><s:message code="diezmo.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${totales.diezmo}"/>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="label label-success">
                         <b><s:message code="literaturaGratis.label" /> </b><fmt:formatNumber type="number" value="${totales.literaturaGratis}"/>
                         </span>
                     </td>
@@ -67,11 +72,6 @@
                     <td>
                         <span class="label label-success">
                         <b><s:message code="bautizados.label" /></b><fmt:formatNumber type="number" value="${totales.bautizados}"/>
-                        </span>
-                    </td>
-                    <td>
-                        <span class="label label-success">
-                        <b><s:message code="diezmo.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${totales.diezmo}"/>
                         </span>
                     </td>
                 </tr>
