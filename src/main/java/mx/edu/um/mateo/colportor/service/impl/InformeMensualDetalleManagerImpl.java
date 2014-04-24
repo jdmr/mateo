@@ -99,6 +99,7 @@ public class InformeMensualDetalleManagerImpl extends BaseManager implements Inf
             }
 
             log.debug("Dia {}", gcFecha.get(Calendar.DAY_OF_WEEK));
+            log.debug("Fecha {}", gcFecha.getTime());
             
             if(gcFecha.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
                 log.debug("Domingo ");
@@ -153,14 +154,11 @@ public class InformeMensualDetalleManagerImpl extends BaseManager implements Inf
             totales.setCasasVisitadas(totales.getCasasVisitadas()+imd.getCasasVisitadas());
             totales.setContactosEstudiosBiblicos(totales.getContactosEstudiosBiblicos()+imd.getContactosEstudiosBiblicos());
             totales.setBautizados(totales.getBautizados()+imd.getBautizados());
-            
-
         }
-        
         tmp = new InformeMensualDetalle();
         tmp.setInformeMensual(new InformeMensual("@"));//para identificar este tipo de registros
-        gcFecha.add(Calendar.HOUR, -12);
-        log.debug("informes {}", gcFecha.getTime());
+        gcFecha.add(Calendar.HOUR, +12);
+        log.debug("informes - final {}", gcFecha.getTime());
         tmp.setFecha(gcFecha.getTime());
         tmp.setHrsTrabajadas(totalHrsTrabajadas);
         tmp.setLiteraturaVendida(totalLibrosVendidos);
@@ -172,9 +170,7 @@ public class InformeMensualDetalleManagerImpl extends BaseManager implements Inf
         tmp.setCasasVisitadas(totalCasasVisitadas);
         tmp.setContactosEstudiosBiblicos(totalEstudiosBiblicos);
         tmp.setBautizados(totalBautizados);
-        mInformes.put(gcFecha.getTime(), tmp);
-        
-        
+        mInformes.put(tmp.getFecha(), tmp);
         
         params.put(Constantes.INFORMEMENSUAL_DETALLE_LIST, new ArrayList(mInformes.values()));
         params.put("totales", totales);

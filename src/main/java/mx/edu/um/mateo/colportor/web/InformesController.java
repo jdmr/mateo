@@ -67,19 +67,14 @@ public class InformesController extends BaseController  {
         
         Map<String, Object> params = new HashMap<>();
         
-        log.debug("****");
-        log.debug("asociado.class {}", ambiente.obtieneUsuario().getId().getClass());
-        log.debug("empresa.class {}", ambiente.obtieneUsuario().getEmpresa().getId().getClass());
-        log.debug("organizacion.class {}", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId().getClass());
-        
         params.put("asociado", ambiente.obtieneUsuario().getId());
         params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
         params.put("organizacion", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
         
-        if(mes.compareTo(1) < 0 || mes.compareTo(12) > 0){
+        if(mes.compareTo(0) < 0 || mes.compareTo(11) > 0){
             log.error("Error al intentar obtener el informe mensual del asociado: mes {} invalido ", mes);
-            errors.rejectValue("codigo", "informeMensualAsociado.error.mesInvalido",
-                    new String[]{"mes"}, null);
+//            errors.rejectValue("mes", "informeMensualAsociado.error.mesInvalido",
+//                    new String[]{"mes"}, null);
             return "redirect:/colportaje/reportes";
         }
         
@@ -100,7 +95,7 @@ public class InformesController extends BaseController  {
         
         InformeMensualDetalle detalle = (InformeMensualDetalle)params.get(Constantes.CONTAINSKEY_INFORMEMENSUALASOCIADO_TOTALES);
         Calendar gcFecha = Calendar.getInstance(TimeZone.getTimeZone("America/Monterrey"));
-        gcFecha.set(year, mes -1, 01);
+        gcFecha.set(year, mes, 01);
         detalle.setFecha(gcFecha.getTime());
         modelo.addAttribute(Constantes.CONTAINSKEY_INFORMEMENSUALASOCIADO_TOTALES, detalle);
         

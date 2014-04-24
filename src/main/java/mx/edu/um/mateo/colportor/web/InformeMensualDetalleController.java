@@ -8,7 +8,6 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +25,7 @@ import mx.edu.um.mateo.colportor.model.InformeMensual;
 import mx.edu.um.mateo.colportor.model.InformeMensualDetalle;
 import mx.edu.um.mateo.colportor.service.InformeMensualDetalleManager;
 import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.web.BaseController;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -34,8 +34,6 @@ import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -55,9 +53,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping("/colportaje/informes/informeMensualDetalle")
-public class InformeMensualDetalleController {
+public class InformeMensualDetalleController extends BaseController {
 
-    private static final Logger log = (Logger) LoggerFactory.getLogger(InformeMensualDetalleController.class);
     @Autowired
     private InformeMensualDao informeMensualDao;
     @Autowired
@@ -146,21 +143,8 @@ public class InformeMensualDetalleController {
         modelo.addAttribute(Constantes.INFORMEMENSUAL_DETALLE_LIST, params.get(Constantes.INFORMEMENSUAL_DETALLE_LIST));
         modelo.addAttribute("totales", params.get("totales"));
         
-        // inicia paginado
-        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
-        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<InformeMensualDetalle> informeMensualDetalle = (List<InformeMensualDetalle>) params.get(Constantes.INFORMEMENSUAL_DETALLE_LIST);
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (informeMensualDetalle.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
+        pagina(params, modelo, Constantes.INFORMEMENSUAL_DETALLE_LIST, pagina);
+        
         return Constantes.INFORMEMENSUAL_DETALLE_PATH_LISTA;
     }
 

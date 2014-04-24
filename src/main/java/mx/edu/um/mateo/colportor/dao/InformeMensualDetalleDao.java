@@ -6,6 +6,7 @@ package mx.edu.um.mateo.colportor.dao;
 import java.util.*;
 import mx.edu.um.mateo.colportor.model.InformeMensualDetalle;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
+import org.hibernate.exception.ConstraintViolationException;
 
 /**
  *
@@ -30,6 +31,7 @@ public interface InformeMensualDetalleDao {
      * @return 
      */
     public InformeMensualDetalle crea(InformeMensualDetalle detalle);
+    public InformeMensualDetalle crear(InformeMensualDetalle detalle) throws ConstraintViolationException;
     
     /**
      * Elimina un detalle de un informe mensual

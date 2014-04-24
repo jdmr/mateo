@@ -16,6 +16,7 @@ import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -134,7 +135,11 @@ public class InformeMensualDetalleDaoHibernate extends BaseDao implements Inform
                 tmp.setBautizados(tmp.getBautizados() + imd.getBautizados());
                 tmp.setCasasVisitadas(tmp.getCasasVisitadas() + imd.getCasasVisitadas());
                 tmp.setContactosEstudiosBiblicos(tmp.getContactosEstudiosBiblicos() + imd.getContactosEstudiosBiblicos());
-                tmp.setDiezmo(tmp.getDiezmo().add(imd.getDiezmo()));
+                try {
+                    tmp.setDiezmo(tmp.getDiezmo().add(imd.getDiezmo()));
+                } catch (NullPointerException e) {
+                    ;
+                }
                 tmp.setHrsTrabajadas(tmp.getHrsTrabajadas()+imd.getHrsTrabajadas());
                 tmp.setLiteraturaGratis(tmp.getLiteraturaGratis() + imd.getLiteraturaGratis());
                 tmp.setLiteraturaVendida(tmp.getLiteraturaVendida() + imd.getLiteraturaVendida());
@@ -175,6 +180,12 @@ public class InformeMensualDetalleDaoHibernate extends BaseDao implements Inform
             
         }
         log.debug("Creando informeMensualDetalle : {}", detalle);
+        return detalle;
+    }
+    
+    public InformeMensualDetalle crear(InformeMensualDetalle detalle) throws ConstraintViolationException {
+        log.debug("Creando informeMensualDetalle : {}", detalle);
+        currentSession().save(detalle);
         return detalle;
     }
     

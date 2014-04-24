@@ -377,9 +377,9 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
     
     public void importaInformes(File file, Usuario user) throws NullPointerException, IOException, Exception{
         log.debug("importarInformes");
-        try{
+//        try{
             XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream(file));
-            XSSFSheet sheet = wb.getSheetAt(2); 
+            XSSFSheet sheet = wb.getSheetAt(0); 
             XSSFRow row;
             XSSFCell cell;
 
@@ -400,11 +400,10 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                     }
                 }
             }
-            //log.debug("Cols "+cols);
+            log.debug("Cols {}"+cols);
+            log.debug("Rows {}"+rows);
             String clave = null;
-            String year = null;
-            String mes = null;
-            String dia = null;
+            String fecha = null;
             String numLibros = null;
             BigDecimal compras = null;
             BigDecimal boletin = null;
@@ -428,11 +427,12 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
             NavigableMap <String, Colportor> smapa = null;
             
             rowLoop:
-            for (int r = 2; r < rows; r++) {
+            for (int r = 3; r < rows; r++) {
                 row = sheet.getRow(r);
                 if (row != null) {
                     sw =false; //Si no se leyo colportor alguno, entonces no se leen las demas celdas
                     nuevo = false; //Para saber cuando crear un nuevo encabezado de informe
+                    gratis = 0;
 
                     for (int c = 0; c < cols; c++) {
                         cell = row.getCell(c);
@@ -456,41 +456,26 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                     }
                                     break;
                                 }
-                                case 3:{
-                                    try{
-                                        log.debug("Year {}",cell.getStringCellValue());
-                                        year = cell.getStringCellValue();
-                                    }catch(Exception e){
-                                        log.debug("Leyendo year {}", String.valueOf(cell.getNumericCellValue()));
-                                        year = String.valueOf(cell.getNumericCellValue());
-                                        year = year.split("\\.")[0]; //Quitamos el .0
-                                    }
-                                    break;
-                                }
                                 case 4:{
                                     try{
-                                        log.debug("Mes {}",cell.getStringCellValue());
-                                        mes = cell.getStringCellValue();
+                                        gcFecha.setTime(cell.getDateCellValue());
+                                        log.debug("Se asigno la fecha {}", gcFecha.getTime());
                                     }catch(Exception e){
-                                        log.debug("Leyendo mes {}", String.valueOf(cell.getNumericCellValue()));
-                                        mes = String.valueOf(cell.getNumericCellValue());
-                                        mes = mes.split("\\.")[0]; //Quitamos el .0
-                                    }
-                                    
-                                    break;
-                                }
-                                case 5:{
-                                    try{
-                                        log.debug("Dia {}",cell.getStringCellValue());
-                                        dia = cell.getStringCellValue();
-                                    }catch(Exception e){
-                                        log.debug("Leyendo dia {}", String.valueOf(cell.getNumericCellValue()));
-                                        dia = String.valueOf(cell.getNumericCellValue());
-                                        dia = dia.split("\\.")[0]; //Quitamos el .0
+                                        log.debug("Leyendo Fecha {}", String.valueOf(cell.getNumericCellValue()));
+                                        try{
+                                            fecha = String.valueOf(cell.getNumericCellValue());
+                                            fecha = fecha.split("\\.")[0]; //Quitamos el .0
+                                            gcFecha.setTime(sdf.parse(fecha));
+                                        }catch(Exception ex){
+                                            log.debug("Fecha {}",cell.getStringCellValue());
+                                            fecha = cell.getStringCellValue();
+                                            gcFecha.setTime(sdf.parse(fecha));
+                                        }
+                                        
                                     }
                                     break;
                                 }
-                                case 6:{
+                                case 8:{
                                     try{
                                         log.debug("Libros {}",cell.getStringCellValue());
                                         numLibros = cell.getStringCellValue();
@@ -499,9 +484,12 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                         numLibros = String.valueOf(cell.getNumericCellValue());
                                         numLibros = numLibros.split("\\.")[0]; //Quitamos el .0
                                     }
+                                    if(Integer.parseInt(numLibros) < 0){
+                                        numLibros = String.valueOf(Integer.parseInt(numLibros) * -1);
+                                    }
                                     break;
                                 }
-                                case 7:{
+                                case 9:{
                                     try{
                                         log.debug("compras {}",cell.getStringCellValue());
                                         compras = new BigDecimal(cell.getStringCellValue());
@@ -509,9 +497,14 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                         log.debug("Leyendo compras {}", String.valueOf(cell.getNumericCellValue()));
                                         compras = new BigDecimal(String.valueOf(cell.getNumericCellValue()));
                                     }
+                                    if(compras.compareTo(BigDecimal.ZERO) == 0){
+                                        gratis ++;
+                                    }
+                                    compras = compras.abs();
+                                        
                                     break;
                                 }
-                                case 8:{
+                                case 11:{
                                     try{
                                         log.debug("boletin {}",cell.getStringCellValue());
                                         boletin = new BigDecimal(cell.getStringCellValue());
@@ -519,41 +512,21 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                         log.debug("Leyendo boletin {}", String.valueOf(cell.getNumericCellValue()));
                                         boletin = new BigDecimal(String.valueOf(cell.getNumericCellValue()));
                                     }
+                                    ventas = boletin.plus();
+                                    ventas = ventas.abs();
                                     break;
                                 }
-                                case 9:{
-                                    try{
-                                        log.debug("ventas {}",cell.getStringCellValue());
-                                        ventas = new BigDecimal(cell.getStringCellValue());
-                                    }catch(Exception e){
-                                        log.debug("Leyendo ventas {}", String.valueOf(cell.getNumericCellValue()));
-                                        ventas = new BigDecimal(String.valueOf(cell.getNumericCellValue()));
-                                    }
-                                    break;
-                                }
-                                case 10:{
-                                    try{
-                                        log.debug("gratis {}",cell.getStringCellValue());
-                                        gratis = new Integer(cell.getStringCellValue());
-                                    }catch(Exception e){
-                                        log.debug("Leyendo gratis {}", String.valueOf(cell.getNumericCellValue()));
-                                        try {
-                                            gratis = new Integer(String.valueOf(cell.getNumericCellValue()));
-                                        } catch (NumberFormatException numberFormatException) {
-                                            gratis = 0;
-                                        }
-                                    }
-                                    break;
-                                }
+                                
                             } //switch end
-                            
-                            
                         }
                     } //Finalizo de leer todas las celdas de una fila
                     
                     //Insertar boletin
                     if(sw){
-                        gcFecha.set(Integer.parseInt(year), Integer.parseInt(mes)-1, Integer.parseInt(dia));
+                        
+                        if(boletin.compareTo(BigDecimal.ZERO) == 0){
+                            continue; //No hacemos nada
+                        }
                         
                         //Obtener el informe
                         informe = infDao.obtiene(clp,gcFecha.getTime());
@@ -567,7 +540,7 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                             detalle.setLiteraturaGratis((gratis != null)?gratis:0);
                             detalle.setCapturo(user);
                             detalle.setFechaCaptura(new Date());
-                            infDetDao.crea(detalle);
+                            infDetDao.crear(detalle);
                         }
                         else {
                             informe = new InformeMensual();
@@ -588,18 +561,18 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                             detalle.setLiteraturaGratis((gratis != null)?gratis:0);
                             detalle.setCapturo(user);
                             detalle.setFechaCaptura(new Date());
-                            infDetDao.crea(detalle);
+                            infDetDao.crear(detalle);
                         }
                     }
                 }
             }
-        } catch (IOException ioe) {
-            log.error("Error al intentar abrir el archivo");
-            throw ioe;
-        } catch (Exception e){
-            e.printStackTrace();
-            log.error("Error al intentar generar los registros de colportores");
-            throw e;
-        }
+//        } catch (IOException ioe) {
+//            log.error("Error al intentar abrir el archivo");
+//            throw ioe;
+//        } catch (Exception e){
+//            e.printStackTrace();
+//            log.error("Error al intentar generar los registros de colportores");
+//            throw e;
+//        }
     }
 }

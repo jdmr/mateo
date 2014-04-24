@@ -345,7 +345,7 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         Map <String, Colportor> mVOS = new TreeMap<>();
         
         Calendar cal = Calendar.getInstance(local);
-        cal.set(Calendar.MONTH, ((Integer)params.get("mes"))-1);
+        cal.set(Calendar.MONTH, ((Integer)params.get("mes")));
         cal.set(Calendar.YEAR, (Integer)params.get("year"));
         
         cal.set(Calendar.DATE, cal.getActualMinimum(Calendar.DATE));
