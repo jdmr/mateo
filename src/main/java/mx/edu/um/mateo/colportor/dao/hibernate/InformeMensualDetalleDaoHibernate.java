@@ -324,4 +324,131 @@ public class InformeMensualDetalleDaoHibernate extends BaseDao implements Inform
         
         return params;
     }
+    
+    /**
+     * @see mx.edu.um.mateo.colportor.dao.InformeMensualDetalleDao#listaInformesConcentradoAsociadosAsociacion(java.lang.Long) 
+     */
+    public Map<String, Object> listaInformesConcentradoAsociadosAsociacion(Map<String, Object> params){
+        StringBuilder query = new StringBuilder();
+        query.append("select tc.asociado_id, coalesce(sum(horas_trabajadas),0) as horasTrabajadas, coalesce(sum(total_pedidos),0.0) as pedidos, coalesce(sum(libros_ventas),0.0) as ventas,  ");
+        query.append("coalesce(sum(literatura_gratis),0) as literaturaGratis, coalesce(sum(oraciones_ofrecidas),0) as oraciones, coalesce(sum(casas_visitadas),0) as casasVisitadas, ");
+        query.append("coalesce(sum(estudios_biblicos),0) as estudiosBiblicos, coalesce(sum(bautizados),0) as bautizados, coalesce(sum(diezmo),0.0) as diezmos, ");
+        query.append("coalesce(sum(libros_vendidos),0) as librosVendidos ");
+        query.append("from ");
+        query.append("( ");
+        query.append("select * ");
+        query.append("from informe_mensual_detalle ");
+        query.append(") imd, ");
+        query.append("( ");
+        query.append("select * ");
+        query.append("from informe_mensual ");
+        query.append("where mes_informe between :fechaInicio and :fechaFinal ");
+        query.append(") im, ");
+        query.append("( ");
+        query.append("select asociado_id, colportor_id ");
+        query.append("from temporada_colportor ");
+        query.append("where asociado_id in ");
+        query.append("(select id from usuarios where empresa_id = :empresaId) ");
+        query.append(")tc ");
+        query.append("where imd.informemensual_id = im.id ");
+        query.append("and tc.colportor_id = im.colportor_id ");
+        query.append("group by tc.asociado_id ");
+        
+        SQLQuery sql = getSession().createSQLQuery(query.toString());
+        sql.setDate("fechaInicio", (Date)params.get("fechaInicio"));
+        sql.setDate("fechaFinal", (Date)params.get("fechaFinal"));
+        sql.setLong("empresaId", (Long)params.get("empresa"));
+        
+        sql.addScalar("colportor_id", StandardBasicTypes.LONG);
+        sql.addScalar("horasTrabajadas", StandardBasicTypes.DOUBLE);
+        sql.addScalar("pedidos", StandardBasicTypes.BIG_DECIMAL);
+        sql.addScalar("ventas", StandardBasicTypes.BIG_DECIMAL);
+        sql.addScalar("literaturaGratis", StandardBasicTypes.INTEGER);
+        sql.addScalar("oraciones", StandardBasicTypes.INTEGER);
+        sql.addScalar("casasVisitadas", StandardBasicTypes.INTEGER);
+        sql.addScalar("estudiosBiblicos", StandardBasicTypes.INTEGER);
+        sql.addScalar("bautizados", StandardBasicTypes.INTEGER);
+        sql.addScalar("diezmos", StandardBasicTypes.BIG_DECIMAL);
+        sql.addScalar("librosVendidos", StandardBasicTypes.INTEGER);
+        
+        Object [] objs = null;
+        List <Object[]>lista = sql.list();
+        InformeMensualDetalle detalle = null;
+        List <InformeMensualDetalle> detalles = new ArrayList <> ();
+        
+        Iterator <Object[]> it = lista.iterator();
+        while(it.hasNext()){
+            objs = it.next();
+            detalle = new InformeMensualDetalle();
+            detalle.setInformeMensual(new InformeMensual());
+            
+            System.out.println(objs[0]);
+            detalle.getInformeMensual().getColportor().setId((Long)objs[0]);
+            System.out.println(objs[1]);
+            try{
+                detalle.setHrsTrabajadas((Double)objs[1]);
+            }catch(NullPointerException e){
+                detalle.setHrsTrabajadas(0.0);
+            }
+            System.out.println(objs[2]);
+            try{
+                detalle.setTotalPedidos((BigDecimal)objs[2]);
+            }catch(NullPointerException e){
+                detalle.setTotalPedidos(BigDecimal.ZERO);
+            }
+            System.out.println(objs[3]);
+            try{
+                detalle.setTotalVentas((BigDecimal)objs[3]);
+            }catch(NullPointerException e){
+                detalle.setTotalVentas(BigDecimal.ZERO);
+            }
+            System.out.println(objs[4]);
+            try{
+                detalle.setLiteraturaGratis((Integer)objs[4]);
+            }catch(NullPointerException e){
+                detalle.setLiteraturaGratis(0);
+            }
+            System.out.println(objs[5]);
+            try{
+                detalle.setOracionesOfrecidas((Integer)objs[5]);
+            }catch(NullPointerException e){
+                detalle.setOracionesOfrecidas(0);
+            }
+            System.out.println(objs[6]);
+            try{
+                detalle.setCasasVisitadas((Integer)objs[6]);
+            }catch(NullPointerException e){
+                detalle.setCasasVisitadas(0);
+            }
+            System.out.println(objs[7]);
+            try{
+                detalle.setContactosEstudiosBiblicos((Integer)objs[7]);
+            }catch(NullPointerException e){
+                detalle.setContactosEstudiosBiblicos(0);
+            }
+            System.out.println(objs[8]);
+            try{
+                detalle.setBautizados((Integer)objs[8]);
+            }catch(NullPointerException e){
+                detalle.setBautizados((Integer)objs[8]);
+            }
+            System.out.println(objs[9]);
+            try{
+                detalle.setDiezmo((BigDecimal)objs[9]);
+            }catch(NullPointerException e){
+                detalle.setDiezmo(BigDecimal.ZERO);
+            }
+            System.out.println(objs[10]);
+            try{
+                detalle.setLiteraturaVendida((Integer)objs[10]);
+            }catch(NullPointerException e){
+                detalle.setLiteraturaVendida(0);
+            }
+            
+            detalles.add(detalle);
+        }
+        params.put(Constantes.INFORMEMENSUAL_DETALLE_LIST, detalles);
+        
+        return params;
+    }
 }

@@ -467,4 +467,129 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         params.put(Constantes.CONTAINSKEY_INFORMEMENSUALASOCIADO_TOTALES, totalDetalle);        
         return params;
     }
+    
+    @Override
+    /**
+     * @see mx.edu.um.mateo.colportor.service.ReportesColportorManagerImpl#informeConcentradoAsociadosAsociacion(java.util.Map <String,Object> params)  throws Exception
+     */
+    public Map<String, Object> informeConcentradoAsociadosAsociacion(Map<String, Object> params) throws Exception {
+        Map <String, Colportor> mVOS = new TreeMap<>();
+        
+        Calendar cal = Calendar.getInstance(local);
+        cal.set(Calendar.MONTH, ((Integer)params.get("mes")));
+        cal.set(Calendar.YEAR, (Integer)params.get("year"));
+        
+        cal.set(Calendar.DATE, cal.getActualMinimum(Calendar.DATE));
+        System.out.println("Fecha Inicio "+cal.getTime());
+        params.put("fechaInicio",cal.getTime());
+        
+        cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
+        System.out.println("Fecha Final "+cal.getTime());
+        params.put("fechaFinal",cal.getTime());
+                
+        params = infMensualDetalleDao.listaInformesConcentradoAsociadosAsociacion(params);
+        List <InformeMensualDetalle> detalles = (List <InformeMensualDetalle>)params.get(Constantes.INFORMEMENSUAL_DETALLE_LIST);
+        
+        Map <String, Documento> mDiezmos = new TreeMap<>();
+        params = docDao.obtieneTodosDiezmosAcumulados(params);
+        
+        for(Object [] doc : (List<Object[]>)params.get(Constantes.DOCUMENTOCOLPORTOR_LIST)){
+            if(mDiezmos.containsKey(doc[0])){
+                //acumulando
+                mDiezmos.get(doc[0]).setImporte(mDiezmos.get(doc[0]).getImporte().add((BigDecimal)doc[2]));
+            }
+            else{                
+                mDiezmos.put((String)doc[0], new Documento((BigDecimal)doc[2]));
+            }
+        }
+        
+        InformeMensualDetalle tmpDetalle = null;
+        Map <String, InformeMensualDetalle> mDetalles = new TreeMap<>();
+        
+        InformeMensualDetalle totalDetalle = new InformeMensualDetalle();
+        totalDetalle.setBautizados(0);
+        totalDetalle.setCasasVisitadas(0);
+        totalDetalle.setContactosEstudiosBiblicos(0);
+        totalDetalle.setDiezmo(BigDecimal.ZERO);
+        totalDetalle.setHrsTrabajadas(0.0);
+        totalDetalle.setLiteraturaGratis(0);
+        totalDetalle.setLiteraturaVendida(0);
+        totalDetalle.setOracionesOfrecidas(0);
+        totalDetalle.setTotalPedidos(BigDecimal.ZERO);
+        totalDetalle.setTotalVentas(BigDecimal.ZERO);
+        
+        for(InformeMensualDetalle det : detalles){
+            det.getInformeMensual().setColportor(clpDao.obtiene(det.getInformeMensual().getColportor().getId()));
+            
+            if(mDiezmos.containsKey(det.getInformeMensual().getColportor().getClave())){
+                det.setDiezmo(mDiezmos.get(det.getInformeMensual().getColportor().getClave()).getImporte());
+            }
+            
+            //Realizar aproximaciones de los valores de horas trabajadas
+            BigDecimal rango = BigDecimal.ZERO;
+            //este valor temporalmente es fijo, posteriormente debe cambiarse por la lectura de los rangos
+            switch(gcFecha.get(Calendar.YEAR)){
+                case 2014: {rango = new BigDecimal("5625.00"); break;}
+                default: {break;}
+            }
+            
+            if(det.getTotalVentas().compareTo(rango) > 0){
+                det.setHrsTrabajadas(40.0*13.0/3.0);
+            }
+            else{
+                //regla de tres para obtener hrs proporcionales
+                BigDecimal tmp = new BigDecimal(40.0*13.0/3.0);
+                MathContext mc = new MathContext(4, RoundingMode.HALF_EVEN);
+                det.setHrsTrabajadas(((det.getTotalVentas().multiply(tmp, mc)).divide(rango, mc)).doubleValue());
+            }
+            
+            det.setCasasVisitadas(new Double(det.getHrsTrabajadas()*2.0).intValue());
+            det.setOracionesOfrecidas(new Double(det.getCasasVisitadas() * 0.1).intValue());
+            det.setContactosEstudiosBiblicos(new Double(det.getOracionesOfrecidas() * 0.1).intValue());
+            
+            totalDetalle.setBautizados(totalDetalle.getBautizados()+det.getBautizados());
+            totalDetalle.setCasasVisitadas(totalDetalle.getCasasVisitadas()+det.getCasasVisitadas());
+            totalDetalle.setContactosEstudiosBiblicos(totalDetalle.getContactosEstudiosBiblicos()+det.getContactosEstudiosBiblicos());
+            totalDetalle.setDiezmo(totalDetalle.getDiezmo().add(det.getDiezmo()));
+            totalDetalle.setHrsTrabajadas(totalDetalle.getHrsTrabajadas()+det.getHrsTrabajadas());
+            totalDetalle.setLiteraturaGratis(totalDetalle.getLiteraturaGratis()+det.getLiteraturaGratis());
+            totalDetalle.setLiteraturaVendida(totalDetalle.getLiteraturaVendida()+det.getLiteraturaVendida());
+            totalDetalle.setOracionesOfrecidas(totalDetalle.getOracionesOfrecidas()+det.getOracionesOfrecidas());
+            totalDetalle.setTotalPedidos(totalDetalle.getTotalPedidos().add(det.getTotalPedidos()));
+            totalDetalle.setTotalVentas(totalDetalle.getTotalVentas().add(det.getTotalVentas()));
+            
+            if(!mDetalles.containsKey(det.getInformeMensual().getColportor().getClave())){
+                tmpDetalle = new InformeMensualDetalle();
+                tmpDetalle.setInformeMensual(det.getInformeMensual());
+                tmpDetalle.setBautizados(det.getBautizados());
+                tmpDetalle.setCasasVisitadas(det.getCasasVisitadas());
+                tmpDetalle.setContactosEstudiosBiblicos(det.getContactosEstudiosBiblicos());
+                tmpDetalle.setDiezmo(det.getDiezmo());
+                tmpDetalle.setHrsTrabajadas(det.getHrsTrabajadas());
+                tmpDetalle.setLiteraturaGratis(det.getLiteraturaGratis());
+                tmpDetalle.setLiteraturaVendida(det.getLiteraturaVendida());
+                tmpDetalle.setOracionesOfrecidas(det.getOracionesOfrecidas());
+                tmpDetalle.setTotalPedidos(det.getTotalPedidos());
+                tmpDetalle.setTotalVentas(det.getTotalVentas());
+                mDetalles.put(det.getInformeMensual().getColportor().getClave(), tmpDetalle);
+            }
+            else{
+                tmpDetalle = mDetalles.get(det.getInformeMensual().getColportor().getClave());
+                tmpDetalle.setBautizados(tmpDetalle.getBautizados()+det.getBautizados());
+                tmpDetalle.setCasasVisitadas(tmpDetalle.getCasasVisitadas()+det.getCasasVisitadas());
+                tmpDetalle.setContactosEstudiosBiblicos(tmpDetalle.getContactosEstudiosBiblicos()+det.getContactosEstudiosBiblicos());
+                tmpDetalle.setDiezmo(tmpDetalle.getDiezmo().add(det.getDiezmo()));
+                tmpDetalle.setHrsTrabajadas(tmpDetalle.getHrsTrabajadas()+det.getHrsTrabajadas());
+                tmpDetalle.setLiteraturaGratis(tmpDetalle.getLiteraturaGratis()+det.getLiteraturaGratis());
+                tmpDetalle.setLiteraturaVendida(tmpDetalle.getLiteraturaVendida()+det.getLiteraturaVendida());
+                tmpDetalle.setOracionesOfrecidas(tmpDetalle.getOracionesOfrecidas()+det.getOracionesOfrecidas());
+                tmpDetalle.setTotalPedidos(tmpDetalle.getTotalPedidos().add(det.getTotalPedidos()));
+                tmpDetalle.setTotalVentas(tmpDetalle.getTotalVentas().add(det.getTotalVentas()));
+            }
+        }
+        
+        params.put(Constantes.CONTAINSKEY_INFORMEMENSUALASOCIADO, new ArrayList(mDetalles.values()));        
+        params.put(Constantes.CONTAINSKEY_INFORMEMENSUALASOCIADO_TOTALES, totalDetalle);        
+        return params;
+    }
 }

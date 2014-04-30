@@ -105,6 +105,71 @@ public class InformesController extends BaseController  {
         return Constantes.PATH_RPT_CLP_INFORMEMENSUALASOCIADO;
     }
     
+    @RequestMapping({"informeConcentradoAsociado"})
+    public String informeConcentradoAsociado(HttpServletRequest request, HttpServletResponse response,
+            @RequestParam(required = false) String filtro,
+            @RequestParam(required = false) Long pagina,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) Integer mes, //Mes a consultar
+            @RequestParam(required = false) Integer year, //Year a consultar
+            Usuario usuario,
+            Errors errors,
+            Model modelo,  
+            BindingResult bindingResult, 
+            RedirectAttributes redirectAttributes) {
+        log.debug("Mostrando Informe Concentrado del Asociado");
+        log.debug("mes {}",mes);
+        log.debug("year {}",year);
+        
+        if(mes == null || year == null){
+            this.getMeses(modelo);
+            modelo.addAttribute("mesElegido", 0);
+            return Constantes.PATH_RPT_CLP_INFORMECONCENTRADOASOCIADO;
+        }
+        
+        Map<String, Object> params = new HashMap<>();
+        
+        params.put("asociado", ambiente.obtieneUsuario().getId());
+        params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
+        params.put("organizacion", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
+        
+        if(mes.compareTo(0) < 0 || mes.compareTo(11) > 0){
+            log.error("Error al intentar obtener el informe mensual del asociado: mes {} invalido ", mes);
+//            errors.rejectValue("mes", "informeMensualAsociado.error.mesInvalido",
+//                    new String[]{"mes"}, null);
+            return "redirect:/colportaje/reportes";
+        }
+        
+        params.put("mes", mes);
+        params.put("year", year);
+        
+        try {
+            params = rclpMgr.informeMensualAsociado(params);
+        } catch (Exception ex) {
+            log.error("Error al intentar obtener el informe mensual del asociado {}", ex);
+            ex.printStackTrace();
+            redirectAttributes.addFlashAttribute("message", "error.generar.reporte");
+            return "redirect:/colportaje/reportes";
+        }
+
+        modelo.addAttribute(Constantes.ASOCIADO_COLPORTOR, ambiente.obtieneUsuario());
+        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMECONCENTRADOASOCIADO, params.get(Constantes.CONTAINSKEY_INFORMECONCENTRADOASOCIADO));
+        
+        InformeMensualDetalle detalle = (InformeMensualDetalle)params.get(Constantes.CONTAINSKEY_INFORMECONCENTRADOASOCIADO_TOTALES);
+        Calendar gcFecha = Calendar.getInstance(TimeZone.getTimeZone("America/Monterrey"));
+        gcFecha.set(year, mes, 01);
+        detalle.setFecha(gcFecha.getTime());
+        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMECONCENTRADOASOCIADO_TOTALES, detalle);
+        
+        this.getMeses(modelo);
+        modelo.addAttribute("mesElegido", mes);
+                
+        return Constantes.PATH_RPT_CLP_INFORMECONCENTRADOASOCIADO;
+    }
+    
     private void getMeses(Model modelo){
         Map <Integer, String> mMeses = new TreeMap<>();
         mMeses.put(0,"Enero");

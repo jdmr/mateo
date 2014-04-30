@@ -60,4 +60,11 @@ public interface ReportesColportorManager {
      * @throws Exception 
      */
     public Map<String, Object> informeMensualAsociado(Map<String, Object> params) throws Exception;
+    /**
+     * Regresa el concentrado de los informes por asociados de una asociacion
+     * @param params
+     * @return
+     * @throws Exception 
+     */
+    public Map<String, Object> informeConcentradoAsociadosAsociacion(Map<String, Object> params) throws Exception;
 }

@@ -46,4 +46,10 @@ public interface InformeMensualDetalleDao {
      * @return 
      */
     public Map<String, Object> listaInformes(Map<String, Object> params);
+    /**
+     * Regrea la lista de los totales concentrados por asociado de la asociacion actual y del mes indicado
+     * @param params
+     * @return 
+     */
+    public Map<String, Object> listaInformesConcentradoAsociadosAsociacion(Map<String, Object> params);
 }
