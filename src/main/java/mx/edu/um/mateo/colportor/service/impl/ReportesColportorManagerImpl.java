@@ -14,10 +14,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import mx.edu.um.mateo.colportor.dao.AsociadoDao;
 import mx.edu.um.mateo.colportor.dao.ColportorDao;
 import mx.edu.um.mateo.colportor.dao.DocumentoDao;
 import mx.edu.um.mateo.colportor.dao.InformeMensualDetalleDao;
 import mx.edu.um.mateo.colportor.dao.TemporadaColportorDao;
+import mx.edu.um.mateo.colportor.model.Asociado;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.colportor.model.Documento;
 import mx.edu.um.mateo.colportor.model.InformeMensualDetalle;
@@ -43,6 +45,8 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
     private DocumentoDao docDao;
     @Autowired
     private InformeMensualDetalleDao infMensualDetalleDao;
+    @Autowired
+    private AsociadoDao ascDao;
 
     @Override
     /**
@@ -503,6 +507,7 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
             }
         }
         
+        Asociado asociado = null;
         InformeMensualDetalle tmpDetalle = null;
         Map <String, InformeMensualDetalle> mDetalles = new TreeMap<>();
         
@@ -519,10 +524,10 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         totalDetalle.setTotalVentas(BigDecimal.ZERO);
         
         for(InformeMensualDetalle det : detalles){
-            det.getInformeMensual().setColportor(clpDao.obtiene(det.getInformeMensual().getColportor().getId()));
+            asociado = ascDao.obtiene(det.getInformeMensual().getColportor().getId());
             
-            if(mDiezmos.containsKey(det.getInformeMensual().getColportor().getClave())){
-                det.setDiezmo(mDiezmos.get(det.getInformeMensual().getColportor().getClave()).getImporte());
+            if(mDiezmos.containsKey(asociado.getClave())){
+                det.setDiezmo(mDiezmos.get(asociado.getClave()).getImporte());
             }
             
             //Realizar aproximaciones de los valores de horas trabajadas
@@ -558,7 +563,7 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
             totalDetalle.setTotalPedidos(totalDetalle.getTotalPedidos().add(det.getTotalPedidos()));
             totalDetalle.setTotalVentas(totalDetalle.getTotalVentas().add(det.getTotalVentas()));
             
-            if(!mDetalles.containsKey(det.getInformeMensual().getColportor().getClave())){
+            if(!mDetalles.containsKey(asociado.getClave())){
                 tmpDetalle = new InformeMensualDetalle();
                 tmpDetalle.setInformeMensual(det.getInformeMensual());
                 tmpDetalle.setBautizados(det.getBautizados());
@@ -571,10 +576,10 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
                 tmpDetalle.setOracionesOfrecidas(det.getOracionesOfrecidas());
                 tmpDetalle.setTotalPedidos(det.getTotalPedidos());
                 tmpDetalle.setTotalVentas(det.getTotalVentas());
-                mDetalles.put(det.getInformeMensual().getColportor().getClave(), tmpDetalle);
+                mDetalles.put(asociado.getClave(), tmpDetalle);
             }
             else{
-                tmpDetalle = mDetalles.get(det.getInformeMensual().getColportor().getClave());
+                tmpDetalle = mDetalles.get(asociado.getClave());
                 tmpDetalle.setBautizados(tmpDetalle.getBautizados()+det.getBautizados());
                 tmpDetalle.setCasasVisitadas(tmpDetalle.getCasasVisitadas()+det.getCasasVisitadas());
                 tmpDetalle.setContactosEstudiosBiblicos(tmpDetalle.getContactosEstudiosBiblicos()+det.getContactosEstudiosBiblicos());

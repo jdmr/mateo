@@ -105,8 +105,8 @@ public class InformesController extends BaseController  {
         return Constantes.PATH_RPT_CLP_INFORMEMENSUALASOCIADO;
     }
     
-    @RequestMapping({"informeConcentradoAsociado"})
-    public String informeConcentradoAsociado(HttpServletRequest request, HttpServletResponse response,
+    @RequestMapping({"informeConcentradoMensualAsociados"})
+    public String informeConcentradoMensualAsociados(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
             @RequestParam(required = false) Long pagina,
             @RequestParam(required = false) String tipo,
@@ -120,7 +120,7 @@ public class InformesController extends BaseController  {
             Model modelo,  
             BindingResult bindingResult, 
             RedirectAttributes redirectAttributes) {
-        log.debug("Mostrando Informe Concentrado del Asociado");
+        log.debug("Mostrando Informe Concentrado de Asociados");
         log.debug("mes {}",mes);
         log.debug("year {}",year);
         
@@ -137,7 +137,7 @@ public class InformesController extends BaseController  {
         params.put("organizacion", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
         
         if(mes.compareTo(0) < 0 || mes.compareTo(11) > 0){
-            log.error("Error al intentar obtener el informe mensual del asociado: mes {} invalido ", mes);
+            log.error("Error al intentar obtener el informe concentrado de asociados: mes {} invalido ", mes);
 //            errors.rejectValue("mes", "informeMensualAsociado.error.mesInvalido",
 //                    new String[]{"mes"}, null);
             return "redirect:/colportaje/reportes";
@@ -147,18 +147,18 @@ public class InformesController extends BaseController  {
         params.put("year", year);
         
         try {
-            params = rclpMgr.informeMensualAsociado(params);
+            params = rclpMgr.informeConcentradoAsociadosAsociacion(params);
         } catch (Exception ex) {
-            log.error("Error al intentar obtener el informe mensual del asociado {}", ex);
+            log.error("Error al intentar obtener el informe concentrado de asociados {}", ex);
             ex.printStackTrace();
             redirectAttributes.addFlashAttribute("message", "error.generar.reporte");
             return "redirect:/colportaje/reportes";
         }
 
         modelo.addAttribute(Constantes.ASOCIADO_COLPORTOR, ambiente.obtieneUsuario());
-        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMECONCENTRADOASOCIADO, params.get(Constantes.CONTAINSKEY_INFORMECONCENTRADOASOCIADO));
+        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMEMENSUALASOCIADO, params.get(Constantes.CONTAINSKEY_INFORMEMENSUALASOCIADO));
         
-        InformeMensualDetalle detalle = (InformeMensualDetalle)params.get(Constantes.CONTAINSKEY_INFORMECONCENTRADOASOCIADO_TOTALES);
+        InformeMensualDetalle detalle = (InformeMensualDetalle)params.get(Constantes.CONTAINSKEY_INFORMEMENSUALASOCIADO_TOTALES);
         Calendar gcFecha = Calendar.getInstance(TimeZone.getTimeZone("America/Monterrey"));
         gcFecha.set(year, mes, 01);
         detalle.setFecha(gcFecha.getTime());

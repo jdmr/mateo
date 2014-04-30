@@ -359,7 +359,7 @@ public class InformeMensualDetalleDaoHibernate extends BaseDao implements Inform
         sql.setDate("fechaFinal", (Date)params.get("fechaFinal"));
         sql.setLong("empresaId", (Long)params.get("empresa"));
         
-        sql.addScalar("colportor_id", StandardBasicTypes.LONG);
+        sql.addScalar("asociado_id", StandardBasicTypes.LONG);
         sql.addScalar("horasTrabajadas", StandardBasicTypes.DOUBLE);
         sql.addScalar("pedidos", StandardBasicTypes.BIG_DECIMAL);
         sql.addScalar("ventas", StandardBasicTypes.BIG_DECIMAL);
