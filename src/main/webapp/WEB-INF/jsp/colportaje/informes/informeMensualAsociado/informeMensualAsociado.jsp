@@ -2,6 +2,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -51,7 +52,7 @@
                     <tr> 
                         <td>
                             <span class="label label-success">
-                            <b><s:message code="hrsTrabajadas.label" /> </b><fmt:formatNumber type="number" value="${informeMensualAsociadoTotales.hrsTrabajadas}"/>
+                                <b><s:message code="hrsTrabajadas.label" /> </b><fmt:formatNumber  maxFractionDigits="0" type="number"  value="${informeMensualAsociadoTotales.hrsTrabajadas}" />
                             </span>
                         </td>
                         <td>

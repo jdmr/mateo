@@ -405,9 +405,11 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
             String clave = null;
             String fecha = null;
             String numLibros = null;
+            String descripcion = null;
             BigDecimal compras = null;
             BigDecimal boletin = null;
             BigDecimal ventas = null;
+            BigDecimal pedidos = null;
             Integer gratis = null;
             
             Colportor clp = null;
@@ -433,6 +435,7 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                     sw =false; //Si no se leyo colportor alguno, entonces no se leen las demas celdas
                     nuevo = false; //Para saber cuando crear un nuevo encabezado de informe
                     gratis = 0;
+                    pedidos = BigDecimal.ZERO;
 
                     for (int c = 0; c < cols; c++) {
                         cell = row.getCell(c);
@@ -475,6 +478,12 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                     }
                                     break;
                                 }
+                                case 6:{
+                                    log.debug("Descripcion {}",cell.getStringCellValue());
+                                    descripcion = cell.getStringCellValue();
+                                    
+                                    break;
+                                }
                                 case 8:{
                                     try{
                                         log.debug("Libros {}",cell.getStringCellValue());
@@ -505,6 +514,7 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                     break;
                                 }
                                 case 11:{
+                                    
                                     try{
                                         log.debug("boletin {}",cell.getStringCellValue());
                                         boletin = new BigDecimal(cell.getStringCellValue());
@@ -512,8 +522,14 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                         log.debug("Leyendo boletin {}", String.valueOf(cell.getNumericCellValue()));
                                         boletin = new BigDecimal(String.valueOf(cell.getNumericCellValue()));
                                     }
-                                    ventas = boletin.plus();
+                                    ventas = boletin.multiply(BigDecimal.valueOf(2.0)); //Las ventas son el doble del boletin
                                     ventas = ventas.abs();
+                                    
+                                    //Si es una revista y tiene un costo, 
+                                    if(descripcion.startsWith("REVISTA") && ventas.compareTo(BigDecimal.ZERO) > 0){
+                                        //entonces se acumula en pedidos
+                                        pedidos = pedidos.add(ventas);
+                                    }
                                     break;
                                 }
                                 
@@ -524,9 +540,9 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                     //Insertar boletin
                     if(sw){
                         
-                        if(boletin.compareTo(BigDecimal.ZERO) == 0){
-                            continue; //No hacemos nada
-                        }
+//                        if(boletin.compareTo(BigDecimal.ZERO) == 0){
+//                            continue; //No hacemos nada
+//                        }
                         
                         //Obtener el informe
                         informe = infDao.obtiene(clp,gcFecha.getTime());
@@ -535,7 +551,7 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                             detalle.setInformeMensual(informe);
                             detalle.setFecha(gcFecha.getTime());
                             detalle.setLiteraturaVendida(Integer.parseInt(numLibros));
-                            detalle.setTotalPedidos(BigDecimal.ZERO);
+                            detalle.setTotalPedidos(pedidos);
                             detalle.setTotalVentas(ventas);
                             detalle.setLiteraturaGratis((gratis != null)?gratis:0);
                             detalle.setCapturo(user);
@@ -556,7 +572,7 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                             detalle.setInformeMensual(informe);
                             detalle.setFecha(gcFecha.getTime());
                             detalle.setLiteraturaVendida(Integer.parseInt(numLibros));
-                            detalle.setTotalPedidos(BigDecimal.ZERO);
+                            detalle.setTotalPedidos(pedidos);
                             detalle.setTotalVentas(ventas);
                             detalle.setLiteraturaGratis((gratis != null)?gratis:0);
                             detalle.setCapturo(user);

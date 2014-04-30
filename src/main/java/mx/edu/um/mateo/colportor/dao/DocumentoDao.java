@@ -351,4 +351,26 @@ public class DocumentoDao {
         params.put(Constantes.DOCUMENTOCOLPORTOR_LIST, sql.list());
         return params;
     }
+    /**
+     * Regresa todos los diezmos acumulados por colportor y por mes
+     * @param params
+     * @return 
+     */
+    public Map<String, Object> obtieneTodosDiezmosAcumulados(Map<String,Object> params){
+        log.debug("obtieneTodosDiezmosAcumulados");
+        Criteria sql = currentSession().createCriteria(Documento.class);
+        sql.add(Restrictions.eq("tipoDeDocumento", "Diezmo"));
+        sql.createAlias("temporadaColportor", "tClp");
+        sql.createAlias("tClp.colportor", "clp");
+        
+        
+        sql.setProjection(Projections.projectionList()
+            .add(Projections.groupProperty("clp.clave"))
+            .add(Projections.groupProperty("fecha"))
+            .add(Projections.sum("importe")));
+        sql.addOrder(Order.asc("fecha"));
+        
+        params.put(Constantes.DOCUMENTOCOLPORTOR_LIST, sql.list());
+        return params;
+    }
 }

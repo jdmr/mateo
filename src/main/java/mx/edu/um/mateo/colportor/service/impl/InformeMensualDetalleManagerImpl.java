@@ -154,6 +154,7 @@ public class InformeMensualDetalleManagerImpl extends BaseManager implements Inf
             totales.setCasasVisitadas(totales.getCasasVisitadas()+imd.getCasasVisitadas());
             totales.setContactosEstudiosBiblicos(totales.getContactosEstudiosBiblicos()+imd.getContactosEstudiosBiblicos());
             totales.setBautizados(totales.getBautizados()+imd.getBautizados());
+            totales.setDiezmo(totales.getDiezmo().add(totalDiezmos));
         }
         tmp = new InformeMensualDetalle();
         tmp.setInformeMensual(new InformeMensual("@"));//para identificar este tipo de registros

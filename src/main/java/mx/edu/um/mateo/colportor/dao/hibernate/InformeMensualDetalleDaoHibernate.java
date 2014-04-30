@@ -206,7 +206,8 @@ public class InformeMensualDetalleDaoHibernate extends BaseDao implements Inform
         StringBuilder query = new StringBuilder();
         query.append("select im.colportor_id, coalesce(sum(horas_trabajadas),0) as horasTrabajadas, coalesce(sum(total_pedidos),0.0) as pedidos, coalesce(sum(libros_ventas),0.0) as ventas,  ");
         query.append("coalesce(sum(literatura_gratis),0) as literaturaGratis, coalesce(sum(oraciones_ofrecidas),0) as oraciones, coalesce(sum(casas_visitadas),0) as casasVisitadas, ");
-        query.append("coalesce(sum(estudios_biblicos),0) as estudiosBiblicos, coalesce(sum(bautizados),0) as bautizados, coalesce(sum(diezmo),0.0) as diezmos ");
+        query.append("coalesce(sum(estudios_biblicos),0) as estudiosBiblicos, coalesce(sum(bautizados),0) as bautizados, coalesce(sum(diezmo),0.0) as diezmos, ");
+        query.append("coalesce(sum(libros_vendidos),0) as librosVendidos ");
         query.append("from ");
         query.append("( ");
         query.append("select * ");
@@ -241,6 +242,7 @@ public class InformeMensualDetalleDaoHibernate extends BaseDao implements Inform
         sql.addScalar("estudiosBiblicos", StandardBasicTypes.INTEGER);
         sql.addScalar("bautizados", StandardBasicTypes.INTEGER);
         sql.addScalar("diezmos", StandardBasicTypes.BIG_DECIMAL);
+        sql.addScalar("librosVendidos", StandardBasicTypes.INTEGER);
         
         Object [] objs = null;
         List <Object[]>lista = sql.list();
@@ -309,6 +311,13 @@ public class InformeMensualDetalleDaoHibernate extends BaseDao implements Inform
             }catch(NullPointerException e){
                 detalle.setDiezmo(BigDecimal.ZERO);
             }
+            System.out.println(objs[10]);
+            try{
+                detalle.setLiteraturaVendida((Integer)objs[10]);
+            }catch(NullPointerException e){
+                detalle.setLiteraturaVendida(0);
+            }
+            
             detalles.add(detalle);
         }
         params.put(Constantes.INFORMEMENSUAL_DETALLE_LIST, detalles);

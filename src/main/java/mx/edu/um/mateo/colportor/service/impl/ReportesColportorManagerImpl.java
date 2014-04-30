@@ -5,6 +5,8 @@
 package mx.edu.um.mateo.colportor.service.impl;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -359,6 +361,23 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         params = infMensualDetalleDao.listaInformes(params);
         List <InformeMensualDetalle> detalles = (List <InformeMensualDetalle>)params.get(Constantes.INFORMEMENSUAL_DETALLE_LIST);
         
+        Map <String, Documento> mDiezmos = new TreeMap<>();
+        params = docDao.obtieneTodosDiezmosAcumulados(params);
+        
+        log.debug("Primer diezmo {}", ((List<Documento>)params.get(Constantes.DOCUMENTOCOLPORTOR_LIST)).get(0));
+        
+        for(Object [] doc : (List<Object[]>)params.get(Constantes.DOCUMENTOCOLPORTOR_LIST)){
+            log.debug("doc {}",doc);
+            
+            if(mDiezmos.containsKey(doc[0])){
+                //acumulando
+                mDiezmos.get(doc[0]).setImporte(mDiezmos.get(doc[0]).getImporte().add((BigDecimal)doc[2]));
+            }
+            else{                
+                mDiezmos.put((String)doc[0], new Documento((BigDecimal)doc[2]));
+            }
+        }
+        
         InformeMensualDetalle tmpDetalle = null;
         Map <String, InformeMensualDetalle> mDetalles = new TreeMap<>();
         
@@ -377,8 +396,34 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         for(InformeMensualDetalle det : detalles){
             det.getInformeMensual().setColportor(clpDao.obtiene(det.getInformeMensual().getColportor().getId()));
             
+            if(mDiezmos.containsKey(det.getInformeMensual().getColportor().getClave())){
+                det.setDiezmo(mDiezmos.get(det.getInformeMensual().getColportor().getClave()).getImporte());
+            }
+            
+            //Realizar aproximaciones de los valores de horas trabajadas
+            BigDecimal rango = BigDecimal.ZERO;
+            //este valor temporalmente es fijo, posteriormente debe cambiarse por la lectura de los rangos
+            switch(gcFecha.get(Calendar.YEAR)){
+                case 2014: {rango = new BigDecimal("5625.00"); break;}
+                default: {break;}
+            }
+            
+            if(det.getTotalVentas().compareTo(rango) > 0){
+                det.setHrsTrabajadas(40.0*13.0/3.0);
+            }
+            else{
+                //regla de tres para obtener hrs proporcionales
+                BigDecimal tmp = new BigDecimal(40.0*13.0/3.0);
+                MathContext mc = new MathContext(4, RoundingMode.HALF_EVEN);
+                det.setHrsTrabajadas(((det.getTotalVentas().multiply(tmp, mc)).divide(rango, mc)).doubleValue());
+            }
+            
+            det.setCasasVisitadas(new Double(det.getHrsTrabajadas()*2.0).intValue());
+            det.setOracionesOfrecidas(new Double(det.getCasasVisitadas() * 0.1).intValue());
+            det.setContactosEstudiosBiblicos(new Double(det.getOracionesOfrecidas() * 0.1).intValue());
+            
             totalDetalle.setBautizados(totalDetalle.getBautizados()+det.getBautizados());
-            totalDetalle.setCasasVisitadas(totalDetalle.getCasasVisitadas()+det.getBautizados());
+            totalDetalle.setCasasVisitadas(totalDetalle.getCasasVisitadas()+det.getCasasVisitadas());
             totalDetalle.setContactosEstudiosBiblicos(totalDetalle.getContactosEstudiosBiblicos()+det.getContactosEstudiosBiblicos());
             totalDetalle.setDiezmo(totalDetalle.getDiezmo().add(det.getDiezmo()));
             totalDetalle.setHrsTrabajadas(totalDetalle.getHrsTrabajadas()+det.getHrsTrabajadas());
@@ -392,7 +437,7 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
                 tmpDetalle = new InformeMensualDetalle();
                 tmpDetalle.setInformeMensual(det.getInformeMensual());
                 tmpDetalle.setBautizados(det.getBautizados());
-                tmpDetalle.setCasasVisitadas(det.getBautizados());
+                tmpDetalle.setCasasVisitadas(det.getCasasVisitadas());
                 tmpDetalle.setContactosEstudiosBiblicos(det.getContactosEstudiosBiblicos());
                 tmpDetalle.setDiezmo(det.getDiezmo());
                 tmpDetalle.setHrsTrabajadas(det.getHrsTrabajadas());
@@ -406,7 +451,7 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
             else{
                 tmpDetalle = mDetalles.get(det.getInformeMensual().getColportor().getClave());
                 tmpDetalle.setBautizados(tmpDetalle.getBautizados()+det.getBautizados());
-                tmpDetalle.setCasasVisitadas(tmpDetalle.getCasasVisitadas()+det.getBautizados());
+                tmpDetalle.setCasasVisitadas(tmpDetalle.getCasasVisitadas()+det.getCasasVisitadas());
                 tmpDetalle.setContactosEstudiosBiblicos(tmpDetalle.getContactosEstudiosBiblicos()+det.getContactosEstudiosBiblicos());
                 tmpDetalle.setDiezmo(tmpDetalle.getDiezmo().add(det.getDiezmo()));
                 tmpDetalle.setHrsTrabajadas(tmpDetalle.getHrsTrabajadas()+det.getHrsTrabajadas());
