@@ -523,6 +523,8 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         totalDetalle.setTotalPedidos(BigDecimal.ZERO);
         totalDetalle.setTotalVentas(BigDecimal.ZERO);
         
+        MathContext mc = new MathContext(4, RoundingMode.HALF_EVEN);
+        
         for(InformeMensualDetalle det : detalles){
             asociado = ascDao.obtiene(det.getInformeMensual().getColportor().getId());
             
@@ -538,13 +540,13 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
                 default: {break;}
             }
             
-            if(det.getTotalVentas().compareTo(rango) > 0){
+            //Las ventas se dividen por 2, para evitar que las horas se dupliquen
+            if(det.getTotalVentas().divide(new BigDecimal("2"),mc).compareTo(rango) > 0){
                 det.setHrsTrabajadas(40.0*13.0/3.0);
             }
             else{
                 //regla de tres para obtener hrs proporcionales
                 BigDecimal tmp = new BigDecimal(40.0*13.0/3.0);
-                MathContext mc = new MathContext(4, RoundingMode.HALF_EVEN);
                 det.setHrsTrabajadas(((det.getTotalVentas().multiply(tmp, mc)).divide(rango, mc)).doubleValue());
             }
             

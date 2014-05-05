@@ -507,7 +507,7 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                         compras = new BigDecimal(String.valueOf(cell.getNumericCellValue()));
                                     }
                                     if(compras.compareTo(BigDecimal.ZERO) == 0){
-                                        gratis ++;
+                                        gratis += Integer.parseInt(numLibros);
                                     }
                                     compras = compras.abs();
                                         
@@ -530,6 +530,8 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                         //entonces se acumula en pedidos
                                         pedidos = pedidos.add(ventas);
                                     }
+                                    
+                                    
                                     break;
                                 }
                                 
@@ -539,10 +541,10 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                     
                     //Insertar boletin
                     if(sw){
-                        
-//                        if(boletin.compareTo(BigDecimal.ZERO) == 0){
-//                            continue; //No hacemos nada
-//                        }
+                        //Si boletin vale 0, y precio es mayor que 0, no tomamos en cuenta este libro
+                        if(boletin.compareTo(BigDecimal.ZERO) == 0 && compras.compareTo(BigDecimal.ZERO) > 0){
+                            continue; //No hacemos nada
+                        }
                         
                         //Obtener el informe
                         informe = infDao.obtiene(clp,gcFecha.getTime());
@@ -550,7 +552,7 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                             detalle = new InformeMensualDetalle();
                             detalle.setInformeMensual(informe);
                             detalle.setFecha(gcFecha.getTime());
-                            detalle.setLiteraturaVendida(Integer.parseInt(numLibros));
+                            detalle.setLiteraturaVendida(Integer.parseInt(numLibros)-gratis);
                             detalle.setTotalPedidos(pedidos);
                             detalle.setTotalVentas(ventas);
                             detalle.setLiteraturaGratis((gratis != null)?gratis:0);
@@ -571,7 +573,7 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                             detalle = new InformeMensualDetalle();
                             detalle.setInformeMensual(informe);
                             detalle.setFecha(gcFecha.getTime());
-                            detalle.setLiteraturaVendida(Integer.parseInt(numLibros));
+                            detalle.setLiteraturaVendida(Integer.parseInt(numLibros)-gratis);
                             detalle.setTotalPedidos(pedidos);
                             detalle.setTotalVentas(ventas);
                             detalle.setLiteraturaGratis((gratis != null)?gratis:0);
