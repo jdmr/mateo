@@ -1,7 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@include file="../../../idioma.jsp"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -167,7 +167,7 @@
                                 <c:if test="${detalle.informeMensual.status eq '@'}">
                                     <b>
                                 </c:if>
-                                <fmt:formatNumber type="number" value="${detalle.hrsTrabajadas}"/>
+                                <fmt:formatNumber type="number" pattern="###,###" value="${detalle.hrsTrabajadas}"/>
                                 <c:if test="${detalle.informeMensual.status eq '@'}">
                                     </b>
                                 </c:if>
@@ -176,7 +176,7 @@
                                 <c:if test="${detalle.informeMensual.status eq '@'}">
                                     <b>
                                 </c:if>
-                                <fmt:formatNumber type="number" value="${detalle.literaturaVendida}"/></td>
+                                ${detalle.literaturaVendida}</td>
                                 <c:if test="${detalle.informeMensual.status eq '@'}">
                                     </b>
                                 </c:if>
@@ -184,16 +184,7 @@
                                 <c:if test="${detalle.informeMensual.status eq '@'}">
                                     <b>
                                 </c:if>
-                                <fmt:formatNumber type="currency" currencySymbol="$" value="${detalle.totalPedidos}"/>
-                                <c:if test="${detalle.informeMensual.status eq '@'}">
-                                    </b>
-                                </c:if>
-                            </td>
-                            <td>
-                                <c:if test="${detalle.informeMensual.status eq '@'}">
-                                    <b>
-                                </c:if>
-                                <fmt:formatNumber type="currency" currencySymbol="$" value="${detalle.totalVentas}"/>
+                                <fmt:formatNumber type="decimal" pattern="###,##0.00" value="${detalle.totalPedidos}"/>
                                 <c:if test="${detalle.informeMensual.status eq '@'}">
                                     </b>
                                 </c:if>
@@ -202,7 +193,7 @@
                                 <c:if test="${detalle.informeMensual.status eq '@'}">
                                     <b>
                                 </c:if>
-                                <fmt:formatNumber type="number" value="${detalle.literaturaGratis}"/>
+                                <fmt:formatNumber type="decimal" pattern="###,##0.00" value="${detalle.totalVentas}"/>
                                 <c:if test="${detalle.informeMensual.status eq '@'}">
                                     </b>
                                 </c:if>
@@ -211,7 +202,7 @@
                                 <c:if test="${detalle.informeMensual.status eq '@'}">
                                     <b>
                                 </c:if>
-                                <fmt:formatNumber type="number" value="${detalle.oracionesOfrecidas}"/>
+                                ${detalle.literaturaGratis}
                                 <c:if test="${detalle.informeMensual.status eq '@'}">
                                     </b>
                                 </c:if>
@@ -220,7 +211,7 @@
                                 <c:if test="${detalle.informeMensual.status eq '@'}">
                                     <b>
                                 </c:if>
-                                <fmt:formatNumber type="number" value="${detalle.casasVisitadas}"/>
+                                ${detalle.oracionesOfrecidas}
                                 <c:if test="${detalle.informeMensual.status eq '@'}">
                                     </b>
                                 </c:if>
@@ -229,7 +220,7 @@
                                 <c:if test="${detalle.informeMensual.status eq '@'}">
                                     <b>
                                 </c:if>
-                                <fmt:formatNumber type="number" value="${detalle.contactosEstudiosBiblicos}"/>
+                                ${detalle.casasVisitadas}
                                 <c:if test="${detalle.informeMensual.status eq '@'}">
                                     </b>
                                 </c:if>
@@ -238,7 +229,7 @@
                                 <c:if test="${detalle.informeMensual.status eq '@'}">
                                     <b>
                                 </c:if>
-                                <fmt:formatNumber type="number" value="${detalle.bautizados}"/>
+                                ${detalle.contactosEstudiosBiblicos}
                                 <c:if test="${detalle.informeMensual.status eq '@'}">
                                     </b>
                                 </c:if>
@@ -247,7 +238,16 @@
                                 <c:if test="${detalle.informeMensual.status eq '@'}">
                                     <b>
                                 </c:if>
-                                <fmt:formatNumber type="currency" currencySymbol="$" value="${detalle.diezmo}"/>
+                                ${detalle.bautizados}
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    </b>
+                                </c:if>
+                            </td>
+                            <td>
+                                <c:if test="${detalle.informeMensual.status eq '@'}">
+                                    <b>
+                                </c:if>
+                                <fmt:formatNumber type="decimal" pattern="###,##0.00" value="${detalle.diezmo}"/>
                                 <c:if test="${detalle.informeMensual.status eq '@'}">
                                     </b>
                                 </c:if>

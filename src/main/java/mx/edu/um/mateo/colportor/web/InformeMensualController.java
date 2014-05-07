@@ -27,6 +27,7 @@ import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.colportor.model.InformeMensual;
 import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.web.BaseController;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -56,7 +57,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping("/colportaje/informes/informeMensual")
-public class InformeMensualController {
+public class InformeMensualController extends BaseController {
 
     private static final Logger log = (Logger) LoggerFactory.getLogger(InformeMensualController.class);
     @Autowired
@@ -141,22 +142,8 @@ public class InformeMensualController {
             request.getSession().setAttribute(Constantes.COLPORTOR, colportor);
         }
         
-        // inicia paginado
-        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
-        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<InformeMensual> informeMensual = (List<InformeMensual>) params.get(Constantes.INFORMEMENSUAL_LIST);
+        pagina(params, modelo, Constantes.INFORMEMENSUAL_LIST, pagina);
         
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (informeMensual.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
         return Constantes.INFORMEMENSUAL_PATH_LISTA;
     }
 

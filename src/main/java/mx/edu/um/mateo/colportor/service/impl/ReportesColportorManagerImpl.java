@@ -355,11 +355,9 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         cal.set(Calendar.YEAR, (Integer)params.get("year"));
         
         cal.set(Calendar.DATE, cal.getActualMinimum(Calendar.DATE));
-        System.out.println("Fecha Inicio "+cal.getTime());
         params.put("fechaInicio",cal.getTime());
         
         cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
-        System.out.println("Fecha Final "+cal.getTime());
         params.put("fechaFinal",cal.getTime());
                 
         params = infMensualDetalleDao.listaInformes(params);
@@ -368,11 +366,7 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         Map <String, Documento> mDiezmos = new TreeMap<>();
         params = docDao.obtieneTodosDiezmosAcumulados(params);
         
-        log.debug("Primer diezmo {}", ((List<Documento>)params.get(Constantes.DOCUMENTOCOLPORTOR_LIST)).get(0));
-        
         for(Object [] doc : (List<Object[]>)params.get(Constantes.DOCUMENTOCOLPORTOR_LIST)){
-            log.debug("doc {}",doc);
-            
             if(mDiezmos.containsKey(doc[0])){
                 //acumulando
                 mDiezmos.get(doc[0]).setImporte(mDiezmos.get(doc[0]).getImporte().add((BigDecimal)doc[2]));
@@ -384,6 +378,7 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         
         InformeMensualDetalle tmpDetalle = null;
         Map <String, InformeMensualDetalle> mDetalles = new TreeMap<>();
+        MathContext mc = new MathContext(4, RoundingMode.HALF_EVEN);
         
         InformeMensualDetalle totalDetalle = new InformeMensualDetalle();
         totalDetalle.setBautizados(0);
@@ -412,14 +407,14 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
                 default: {break;}
             }
             
-            if(det.getTotalVentas().compareTo(rango) > 0){
+            //Las ventas se dividen por 2, para evitar que las horas se dupliquen
+            if((det.getTotalVentas().divide(new BigDecimal("2"),mc)).compareTo(rango) > 0){
                 det.setHrsTrabajadas(40.0*13.0/3.0);
             }
             else{
                 //regla de tres para obtener hrs proporcionales
                 BigDecimal tmp = new BigDecimal(40.0*13.0/3.0);
-                MathContext mc = new MathContext(4, RoundingMode.HALF_EVEN);
-                det.setHrsTrabajadas(((det.getTotalVentas().multiply(tmp, mc)).divide(rango, mc)).doubleValue());
+                det.setHrsTrabajadas((((det.getTotalVentas().divide(new BigDecimal("2"),mc)).multiply(tmp, mc)).divide(rango, mc)).doubleValue());
             }
             
             det.setCasasVisitadas(new Double(det.getHrsTrabajadas()*2.0).intValue());
@@ -539,15 +534,14 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
                 case 2014: {rango = new BigDecimal("5625.00"); break;}
                 default: {break;}
             }
-            
             //Las ventas se dividen por 2, para evitar que las horas se dupliquen
-            if(det.getTotalVentas().divide(new BigDecimal("2"),mc).compareTo(rango) > 0){
+            if((det.getTotalVentas().divide(new BigDecimal("2"),mc)).compareTo(rango) > 0){
                 det.setHrsTrabajadas(40.0*13.0/3.0);
             }
             else{
                 //regla de tres para obtener hrs proporcionales
                 BigDecimal tmp = new BigDecimal(40.0*13.0/3.0);
-                det.setHrsTrabajadas(((det.getTotalVentas().multiply(tmp, mc)).divide(rango, mc)).doubleValue());
+                det.setHrsTrabajadas((((det.getTotalVentas().divide(new BigDecimal("2"),mc)).multiply(tmp, mc)).divide(rango, mc)).doubleValue());
             }
             
             det.setCasasVisitadas(new Double(det.getHrsTrabajadas()*2.0).intValue());

@@ -1,7 +1,7 @@
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@include file="../../../idioma.jsp"%>
 
 <!DOCTYPE html>
 <html>
@@ -126,16 +126,16 @@
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td>${clp.informeMensual.colportor.clave}</td>
                             <td>${clp.informeMensual.colportor.nombreCompleto}</td>
-                            <td>${clp.hrsTrabajadas}</td>
+                            <td><fmt:formatNumber type="number" pattern="###,###" value="${clp.hrsTrabajadas}"/></td>
                             <td>${clp.literaturaVendida}</td>
-                            <td><fmt:formatNumber type="currency" currencySymbol="$" value="${clp.totalPedidos}"/></td>
-                            <td><fmt:formatNumber type="currency" currencySymbol="$" value="${clp.totalVentas}"/></td>
+                            <td><fmt:formatNumber type="decimal" pattern="###,###.00" value="${clp.totalPedidos}"/></td>
+                            <td><fmt:formatNumber type="decimal" pattern="###,###.00" value="${clp.totalVentas}"/></td>
                             <td>${clp.literaturaGratis}</td>
                             <td>${clp.oracionesOfrecidas}</td>
                             <td>${clp.casasVisitadas}</td>
                             <td>${clp.contactosEstudiosBiblicos}</td>
                             <td>${clp.bautizados}</td>
-                            <td><fmt:formatNumber type="currency" currencySymbol="$" value="${clp.diezmo}"/></td>
+                            <td><fmt:formatNumber type="decimal" pattern="###,###.00" value="${clp.diezmo}"/></td>
                             
                         </tr>
                     </c:forEach>
