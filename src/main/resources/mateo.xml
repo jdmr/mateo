@@ -17,7 +17,7 @@
        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd  
        ">
            
-    <context:property-placeholder location="classpath*:ambiente/mateo.properties,file:${user.home}/mateo*.properties"/>
+    <context:property-placeholder location="classpath*:ambiente/mateo.properties,file:${user.home}/colportaje*.properties"/>
     
     <context:component-scan base-package="mx.edu.um.mateo" >
         <context:exclude-filter type="annotation"
