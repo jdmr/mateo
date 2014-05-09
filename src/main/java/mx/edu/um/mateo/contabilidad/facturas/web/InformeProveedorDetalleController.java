@@ -28,6 +28,7 @@ import mx.edu.um.mateo.contabilidad.facturas.service.ContrareciboManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorDetalleManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
 import mx.edu.um.mateo.general.dao.ProveedorDao;
+import mx.edu.um.mateo.general.model.UploadFileForm;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.BancoNoCoincideException;
 import mx.edu.um.mateo.general.utils.ClabeNoCoincideException;
@@ -46,6 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
@@ -601,7 +603,7 @@ public class InformeProveedorDetalleController extends BaseController {
     }
 
     @RequestMapping("/nuevo")
-    public String nueva(HttpServletRequest request, Model modelo) {
+    public String nuevo(HttpServletRequest request, Model modelo) {
         log.debug("Nuevo paquete");
         Usuario usuario = ambiente.obtieneUsuario();
         if (usuario.isProveedor()) {
@@ -618,6 +620,26 @@ public class InformeProveedorDetalleController extends BaseController {
         params.put("reporte", true);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
+    }
+
+    @RequestMapping("/nueva")
+    public String nueva(HttpServletRequest request, Model modelo) {
+        log.debug("Nuevo paquete");
+        Usuario usuario = ambiente.obtieneUsuario();
+        if (usuario.isProveedor()) {
+            ProveedorFacturas proveedorFacturas = (ProveedorFacturas) usuario;
+            modelo.addAttribute("proveedorFacturas", proveedorFacturas);
+            request.getSession().setAttribute("proveedorLogeado", proveedorFacturas);
+        }
+        Map<String, Object> params = new HashMap<>();
+
+        InformeProveedorDetalle detalle = new InformeProveedorDetalle();
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
+        params.put("empresa", request.getSession()
+                .getAttribute("empresaId"));
+        params.put("reporte", true);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
+        return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVA;
     }
 
     @Transactional
@@ -708,6 +730,114 @@ public class InformeProveedorDetalleController extends BaseController {
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "detalle.graba.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{detalle.getNombreProveedor()});
+
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
+    }
+
+    @Transactional
+    @RequestMapping(value = "/crea", method = RequestMethod.POST)
+    public String crea(HttpServletRequest request, HttpServletResponse response, @Valid InformeProveedorDetalle detalle,
+            BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws Exception {
+        for (String nombre : request.getParameterMap().keySet()) {
+            log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
+        }
+        if (bindingResult.hasErrors()) {
+            log.debug("Hubo algun error en la forma, regresando");
+            Map<String, Object> params = new HashMap<>();
+            params.put("empresa", request.getSession()
+                    .getAttribute("empresaId"));
+
+            this.despliegaBindingResultErrors(bindingResult);
+
+            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
+        }
+
+        Map<String, Object> params = new HashMap<>();
+
+        InformeProveedor informe = (InformeProveedor) request.getSession().getAttribute("informeId");
+        detalle.setInformeProveedor(informe);
+        Usuario usuario = ambiente.obtieneUsuario();
+        detalle.setFechaCaptura(new Date());
+        detalle.setUsuarioAlta(usuario);
+        detalle.setStatus(Constantes.STATUS_ACTIVO);
+        if (usuario.isEmpleado()) {
+            Empleado empleado = (Empleado) usuario;
+            detalle.setNombreProveedor(empleado.getNombre());
+            detalle.setEmpleado(empleado);
+
+        }
+        if (usuario.isProveedor()) {
+            ProveedorFacturas proveedorFacturas = (ProveedorFacturas) usuario;
+            detalle.setProveedorFacturas(proveedorFacturas);
+            detalle.setNombreProveedor(proveedorFacturas.getNombre());
+            detalle.setRFCProveedor(proveedorFacturas.getRfc());
+        }
+        try {
+            manager.graba(detalle, usuario);
+            request.getSession().setAttribute("detalleId", detalle.getId());
+
+        } catch (ConstraintViolationException e) {
+            log.error("No se pudo crear el detalle", e);
+            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
+        }
+
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "detalle.graba.message");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{detalle.getNombreProveedor()});
+        Boolean xml = true;
+        request.getSession().setAttribute("esXml", xml);
+        return "redirect:" + "/factura/informeProveedorDetalle/upload";
+    }
+
+    @Transactional
+    @RequestMapping(value = {"/upload"}, method = RequestMethod.GET)
+    public String fileToUpload(ModelMap model) throws Exception {
+        UploadFileForm form = new UploadFileForm();
+        model.addAttribute("uploadFileForm", form);
+        return "/factura/informeProveedorDetalle/uploadFile";
+    }
+
+    @Transactional
+    @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    public String uploadFile(HttpServletRequest request, @ModelAttribute("uploadFileForm") UploadFileForm uploadFileForm,
+            BindingResult bindingResult, Errors errors) throws Exception {
+
+        despliegaBindingResultErrors(bindingResult);
+        Long id = (Long) request.getSession().getAttribute("detalleId");
+        InformeProveedorDetalle detalle = manager.obtiene(id);
+        log.debug("detalle {}", detalle.getId());
+        Boolean sw = false;
+        Boolean xml = false;
+        Usuario usuario = ambiente.obtieneUsuario();
+        Calendar calendar = GregorianCalendar.getInstance();
+        int año = calendar.get(Calendar.YEAR);
+        int mes = calendar.get(Calendar.MONTH);
+        int dia = calendar.get(Calendar.DATE);
+        String fileName = uploadFileForm.getFile().getOriginalFilename();
+        //Subir archivo
+        log.debug("file {}", uploadFileForm.getFile().getOriginalFilename());
+        String uploadDir = "/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + uploadFileForm.getFile().getOriginalFilename();
+        log.debug("upload dir {} ", uploadDir);
+        File dirPath = new File(uploadDir);
+        if (!dirPath.exists()) {
+            dirPath.mkdirs();
+        }
+        uploadFileForm.getFile().transferTo(new File(uploadDir));
+        sw = true;
+        log.debug("Archivo {} subido... ", uploadFileForm.getFile().getOriginalFilename());
+        if (fileName.contains(".xml")) {
+            detalle.setPathXMl("/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + uploadFileForm.getFile().getOriginalFilename());
+            detalle.setNombreXMl(uploadFileForm.getFile().getOriginalFilename());
+            manager.actualiza(detalle, usuario);
+            xml = true;
+            request.getSession().setAttribute("esPdf", xml);
+            request.getSession().setAttribute("esXml", false);
+            return "redirect:" + "/factura/informeProveedorDetalle/upload";
+        }
+        if (fileName.contains(".pdf")) {
+            detalle.setPathPDF("/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + uploadFileForm.getFile().getOriginalFilename());
+            detalle.setNombrePDF(uploadFileForm.getFile().getOriginalFilename());
+            manager.actualiza(detalle, usuario);
+        }
 
         return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
     }

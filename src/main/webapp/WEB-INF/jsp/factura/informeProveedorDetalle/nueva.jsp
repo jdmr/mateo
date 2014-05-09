@@ -17,7 +17,7 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/factura/informeProveedorDetalle'/>"><i class="icon-list icon-white"></i> <s:message code='informeProveedorDetalle.lista.label' /></a>
             </p>
-            <form:form commandName="informeProveedorDetalle" action="autorizar" method="get" >
+            <form:form commandName="informeProveedorDetalle" action="crea" method="post" >
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -28,79 +28,80 @@
                 </form:errors>
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="proveedor.label" /></div>
-                    <div class="span11">${proveedorFacturas.nombre}</div>
+                    <div class="span11">${proveedorLogeado.nombre}</div>
                 </div>
                 <div class="row-fluid" style="padding-bottom: 10px;">
                     <div class="span1"><s:message code="rfc.label" /></div>
-                    <div class="span11">${proveedorFacturas.rfc}</div>
+                    <div class="span11">${proveedorLogeado.rfc}</div>
                 </div>
                 <fieldset>
+                    <s:bind path="informeProveedorDetalle.folioFactura">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="folioFactura">
+                                <s:message code="folio.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="folioFactura" maxlength="150" required="true" />
+                            <form:errors path="folioFactura" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+
+
+
+                    <s:bind path="informeProveedorDetalle.IVA" >
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="IVA" >
+                                <s:message code="iva.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="IVA"   maxlength="150" required="true"  />
+                            <form:errors path="IVA" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="informeProveedorDetalle.subtotal">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="subtotal">
+                                <s:message code="subtotal.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="subtotal"  maxlength="150" required="true"  />
+                            <form:errors path="subtotal" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="informeProveedorDetalle.total">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="total">
+                                <s:message code="total.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="total"    maxlength="150" required="true"   />
+                            <form:errors path="total" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="informeProveedorDetalle.dctoProntoPago">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="dctoProntoPago">
+                                <s:message code="dctoProntoPago.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="dctoProntoPago"    maxlength="150" required="true"   />
+                            <form:errors path="dctoProntoPago" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="informeProveedorDetalle.fechaFactura">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="fechaFactura">
+                                <s:message code="fechaFactura.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="fechaFactura" maxlength="12" required="true" />
+                            <form:errors path="fechaFactura" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+
 
 
                 </fieldset>
-                <table id="lista" class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                                <jsp:param name="columna" value="autorizar" />
-                            </jsp:include>
-                            <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                                <jsp:param name="columna" value="folio" />
-                            </jsp:include>
-                            <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                                <jsp:param name="columna" value="proveedor" />
-                            </jsp:include>
-                            <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                                <jsp:param name="columna" value="rfc" />
-                            </jsp:include>
-                            <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                                <jsp:param name="columna" value="iva" />
-                            </jsp:include>
-                            <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                                <jsp:param name="columna" value="subtotal" />
-                            </jsp:include>
-                            <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                                <jsp:param name="columna" value="total" />
-                            </jsp:include>
-                            <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                                <jsp:param name="columna" value="dctoProntoPago" />
-                            </jsp:include>
-                            <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                                <jsp:param name="columna" value="status" />
-                            </jsp:include>
-                            <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                                <jsp:param name="columna" value="fechaFactura" />
-                            </jsp:include>
-                            <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                                <jsp:param name="columna" value="informeProveedor" />
-                            </jsp:include>
-                            <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                                <jsp:param name="columna" value="xml" />
-                            </jsp:include>
-                            <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                                <jsp:param name="columna" value="pdf" />
-                            </jsp:include>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach items="${informesProveedorDetalle}" var="informeProveedorDetalle" varStatus="status">
-                            <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                                <td ><input type="checkbox" value="<c:out value="${informeProveedorDetalle.id}"/>" id="checkFacturasid" /></td>
-                                <td><a href="<c:url value='/factura/informeProveedorDetalle/ver/${informeProveedorDetalle.id}' />">${informeProveedorDetalle.folioFactura}</a></td>                            
-                                <td>${informeProveedorDetalle.nombreProveedor}</td>
-                                <td>${informeProveedorDetalle.RFCProveedor}</td>
-                                <td>${informeProveedorDetalle.IVA}</td>
-                                <td>${informeProveedorDetalle.subtotal}</td>
-                                <td>${informeProveedorDetalle.total}</td>
-                                <td>${informeProveedorDetalle.status}</td>
-                                <td>${informeProveedorDetalle.fechaFactura}</td>
-                                <td>${informeProveedorDetalle.informeProveedor.id}</td>
-                                <td ><input type="checkbox" disabled="true"  <c:if test="${informeProveedorDetalle.pathXMl!= null && !informeProveedorDetalle.pathXMl.isEmpty()}">checked="checked"</c:if> /></td>
-                                <td ><input type="checkbox" disabled="true"  <c:if test="${informeProveedorDetalle.pathPDF!= null && !informeProveedorDetalle.pathPDF.isEmpty()}">checked="checked"</c:if> /></td>
-                                </tr>
-                        </c:forEach> 
-                    </tbody>
-                </table>
 
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
@@ -119,17 +120,7 @@ src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> 
                 $("input#fechaFactura").datepicker("option", "firstDay", 0);
             });
 
-            $(document).ready(function() {
-                //add more file components if Add is clicked
-                $('#addFile').click(function() {
-                    var fileIndex = $('#fileTable tr').children().length - 1;
-                    $('#fileTable').append(
-                            '<tr><td>' +
-                            '   <input type="file" name="files[' + fileIndex + ']" />' +
-                            '</td></tr>');
-                });
 
-            });
         </script>
 
     </content>

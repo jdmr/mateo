@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:Contribuyente xmlns:ns2="http:/www.sat.gob.mx/cfd/LCO" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" rfc="TOGO820901JP4" xsi:schemaLocation="http:/www.sat.gob.mx/cfd/LCO http:/www.sat.gob.mx/cfd/LCO LCO.xsd">
+    <certificado validezObligaciones="1" estatusCertificado="A" noCertificado="2013-05-03T15:33:41" fechaFinal="2017-05-03T15:34:21" fechaInicio="2013-05-03T15:33:41"/>
+</ns2:Contribuyente>

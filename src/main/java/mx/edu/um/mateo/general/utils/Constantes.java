@@ -2937,6 +2937,7 @@ public class Constantes {
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS = "/factura/informeProveedorDetalle/contrarecibos";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_VER = "/factura/informeProveedorDetalle/ver";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_NUEVO = "/factura/informeProveedorDetalle/nuevo";
+    public static final String PATH_INFORMEPROVEEDOR_DETALLE_NUEVA = "/factura/informeProveedorDetalle/nueva";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_EDITA = "/factura/informeProveedorDetalle/edita";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_GRABA = "/factura/informeProveedorDetalle/graba";
     public static final String PATH_INFORMEPROVEEDOR_DETALLE_ACTUALIZA = "/factura/informeProveedorDetalle/actualiza";
@@ -3107,8 +3108,8 @@ public class Constantes {
     public static final String PATH_JEFESECCION_ELIMINA = "/rh/catalogo/jefeSeccion/elimina";
     public static final String PATH_TRASPASDODATOSEMPLEADO = "/rh/empleado/traspasoDatosEmpleado";
     /**
-     * @see mx.edu.um.mateo.rh.web.EmpleadoPerDed
-     * Valores para el controller de empleadoPerDed
+     * @see mx.edu.um.mateo.rh.web.EmpleadoPerDed Valores para el controller de
+     * empleadoPerDed
      */
     public static final String PATH_EMPLEADOPERDED = "/rh/empleado/empleadoPerded";
     public static final String PATH_EMPLEADOPERDED_LISTA = "/rh/empleado/empleadoPerded/lista";
@@ -3116,7 +3117,7 @@ public class Constantes {
     public static final String PATH_EMPLEADOPERDED_NUEVO = "/rh/empleado/empleadoPerded/nuevo";
     public static final String PATH_EMPLEADOPERDED_EDITA = "/rh/empleado/empleadoPerded/edita";
     public static final String PATH_EMPLEADOPERDED_GRABA = "/rh/empleado/empleadoPerded/graba";
-    
+
     public static final String FRECUENCIAPAGO_LIST = "frecuenciaPagoList";
 
 }
