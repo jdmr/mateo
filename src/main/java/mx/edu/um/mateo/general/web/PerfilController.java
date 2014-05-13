@@ -36,6 +36,7 @@ import mx.edu.um.mateo.inventario.model.Almacen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -71,9 +72,10 @@ public class PerfilController {
 		modelo.addAttribute("ejercicios", ejercicios);
 		return "perfil/edita";
 	}
+	
 
 	@Transactional
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(value = "/guarda", method = RequestMethod.POST)
 	public String guarda(HttpSession session,
 			RedirectAttributes redirectAttributes,
 			@RequestParam("almacen.id") Long almacenId,
@@ -81,6 +83,44 @@ public class PerfilController {
 			@RequestParam("ejercicio.id.idEjercicio") String ejercicioId) {
 		log.debug("Guardando perfil");
 		Usuario usuario = ambiente.obtieneUsuario();
+		usuario.setPassword(password);
+		usuarioDao.asignaAlmacen(usuario, almacenId, ejercicioId);
+		ambiente.actualizaSesion(session);
+
+		redirectAttributes.addFlashAttribute("message",
+				"perfil.actualizado.message");
+		redirectAttributes.addFlashAttribute("messageAttrs",
+				new String[] { usuario.getUsername() });
+
+		return "redirect:/";
+	}
+        
+        @PreAuthorize("hasRole('ROLE_ADMIN')")
+        @RequestMapping("editaPasswd")
+	public String editaPasswd(Model modelo) {
+		log.debug("Mostrando perfil");
+		Usuario usuario = ambiente.obtieneUsuario();
+		List<Almacen> almacenes = usuarioDao.obtieneAlmacenes();
+		List<Ejercicio> ejercicios = usuarioDao.obtieneEjercicios(usuario
+				.getEmpresa().getOrganizacion().getId());
+		modelo.addAttribute("usuario", usuario);
+		modelo.addAttribute("almacenes", almacenes);
+		modelo.addAttribute("ejercicios", ejercicios);
+		return "perfil/editaPasswd";
+	}
+        
+        @Transactional
+        @PreAuthorize("hasRole('ROLE_ADMIN')")
+	@RequestMapping(value="/guardaPasswd", method = RequestMethod.POST)
+	public String guardaPasswd(HttpSession session,
+			RedirectAttributes redirectAttributes,
+			@RequestParam("username") String username,
+			@RequestParam("almacen.id") Long almacenId,
+			@RequestParam String password,
+			@RequestParam("ejercicio.id.idEjercicio") String ejercicioId) {
+		log.debug("Modificando password de '{}'", username);
+		Usuario usuario = usuarioDao.obtiene(username);
+                log.debug("Se obtuvo el usuario {}", usuario);
 		usuario.setPassword(password);
 		usuarioDao.asignaAlmacen(usuario, almacenId, ejercicioId);
 		ambiente.actualizaSesion(session);

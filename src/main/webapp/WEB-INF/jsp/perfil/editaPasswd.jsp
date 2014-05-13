@@ -26,7 +26,7 @@
 
         <div id="edita-usuario" class="content scaffold-list" role="main">
             <h1><s:message code="perfil.edita.label" /></h1>
-            <c:url var="actualizaUrl" value="/perfil/guarda" />
+            <c:url var="actualizaUrl" value="/perfil/guardaPasswd" />
             <form:form commandName="usuario" method="post" action="${actualizaUrl}">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
@@ -56,6 +56,16 @@
                             </label>
                             <form:select path="ejercicio.id.idEjercicio" id="ejercicioId" items="${ejercicios}" itemLabel="nombreCompleto" itemValue="id.idEjercicio"/>
                             <form:errors path="ejercicio" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="usuario.username">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="username">
+                                <s:message code="username.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="username" required="true" />
+                            <form:errors path="username" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                     <s:bind path="usuario.password">

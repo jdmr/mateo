@@ -21,7 +21,7 @@
         <intercept-url pattern="/prueba/**" access="permitAll" />
         <intercept-url pattern="/admin/organizacion/**" access="hasAnyRole('ROLE_ADMIN')" />
         <intercept-url pattern="/admin/empresa/**" access="hasAnyRole('ROLE_ORG')" />
-        <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_EMP')" />
+        <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_ADMIN')" />
         <intercept-url pattern="/inventario/entrada/**" access="hasAnyRole('ROLE_EMP')" />
         <intercept-url pattern="/colportaje/traspaso/**" access="hasAnyRole('ROLE_ADMIN')" />
         <intercept-url pattern="/**" access="isAuthenticated()" />

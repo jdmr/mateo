@@ -109,7 +109,9 @@ public class UsuarioDaoHibernate extends BaseDao implements UsuarioDao {
                     MatchMode.ANYWHERE));
             propiedades.add(Restrictions.ilike("nombre", filtro,
                     MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("apellido", filtro,
+            propiedades.add(Restrictions.ilike("apPaterno", filtro,
+                    MatchMode.ANYWHERE));
+            propiedades.add(Restrictions.ilike("apMaterno", filtro,
                     MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);
