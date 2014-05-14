@@ -19,6 +19,7 @@ import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.web.BaseController;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -43,6 +44,7 @@ public class ReportesController extends BaseController {
         return "colportaje/reportes/index";
     }    
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping("censoColportores")
     public String censoColportores(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -120,6 +122,7 @@ public class ReportesController extends BaseController {
 
         return Constantes.PATH_RPT_CLP_CENSOCOLPORTORES;
     }
+    
     
     @RequestMapping("concentradoPorTemporadas")
     public String concentradoPorTemporadas(HttpServletRequest request, HttpServletResponse response,
@@ -293,6 +296,7 @@ public class ReportesController extends BaseController {
         return Constantes.PATH_RPT_CLP_CONCENTRADOGRALPORTEMPORADAS;
     }
     
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping("concentradoVentas")
     public String concentradoVentas(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,

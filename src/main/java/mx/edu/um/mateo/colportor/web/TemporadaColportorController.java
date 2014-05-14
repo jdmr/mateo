@@ -48,6 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -82,6 +83,7 @@ public class TemporadaColportorController extends BaseController{
     @Autowired
     private Ambiente ambiente;
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -150,6 +152,7 @@ public class TemporadaColportorController extends BaseController{
         return Constantes.TEMPORADACOLPORTOR_PATH_LISTA;
     }
     
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping(value="/get_temporada_clp_list", method = RequestMethod.GET, headers="Accept=*/*", produces = "application/json")    
     public @ResponseBody 
     List <LabelValueBean> getTemporadaColportorList(@RequestParam("clave") String filtro, HttpServletResponse response){
@@ -176,6 +179,7 @@ public class TemporadaColportorController extends BaseController{
         return rValues;        
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping("/ver/{id}")
     public String ver(HttpServletRequest request, @PathVariable Long id, Model modelo) {
         log.debug("Mostrando Temporada Colportor {}", id);
@@ -186,6 +190,7 @@ public class TemporadaColportorController extends BaseController{
         return Constantes.TEMPORADACOLPORTOR_PATH_VER;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping("/nueva")
     public String nueva(Model modelo, HttpServletRequest request) {
         Map<String, Object> params = new HashMap<>();
@@ -204,6 +209,7 @@ public class TemporadaColportorController extends BaseController{
         return Constantes.TEMPORADACOLPORTOR_PATH_NUEVA;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request, HttpServletResponse response, @Valid TemporadaColportor temporadaColportor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
@@ -254,6 +260,7 @@ public class TemporadaColportorController extends BaseController{
         return "redirect:" + Constantes.TEMPORADACOLPORTOR_PATH_VER + "/" + temporadaColportor.getId();
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping("/edita/{id}")
     public String edita(HttpServletRequest request, @PathVariable Long id, Model modelo) {
         log.debug("Edita Temporada {}", id);
@@ -278,6 +285,7 @@ public class TemporadaColportorController extends BaseController{
         return Constantes.TEMPORADACOLPORTOR_PATH_EDITA;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid TemporadaColportor temporadaColportor, 
@@ -327,6 +335,7 @@ public class TemporadaColportorController extends BaseController{
         return "redirect:" + Constantes.TEMPORADACOLPORTOR_PATH_VER + "/" + temporadaColportor.getId();
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute TemporadaColportor temporadaColportor, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
@@ -345,6 +354,7 @@ public class TemporadaColportorController extends BaseController{
         return "redirect:" + Constantes.TEMPORADACOLPORTOR_PATH;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     private void generaReporte(String tipo, List<TemporadaColportor> temporadaColportor, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
@@ -373,6 +383,7 @@ public class TemporadaColportorController extends BaseController{
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     private void enviaCorreo(String tipo, List<TemporadaColportor> temporadaColportor, HttpServletRequest request) throws JRException, MessagingException {
         log.debug("Enviando correo {}", tipo);
         byte[] archivo = null;
@@ -401,6 +412,7 @@ public class TemporadaColportorController extends BaseController{
         mailSender.send(message);
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     private byte[] generaPdf(List temporadaColportor) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/temporadacolportor.jrxml"));
@@ -411,6 +423,7 @@ public class TemporadaColportorController extends BaseController{
         return archivo;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     private byte[] generaCsv(List temporadaColportor) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRCsvExporter exporter = new JRCsvExporter();
@@ -426,6 +439,7 @@ public class TemporadaColportorController extends BaseController{
         return archivo;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     private byte[] generaXls(List temporadaColportor) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRXlsExporter exporter = new JRXlsExporter();

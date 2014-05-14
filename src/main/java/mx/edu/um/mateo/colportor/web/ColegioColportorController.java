@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -65,6 +66,7 @@ public class ColegioColportorController extends BaseController{
     @Autowired
     private Ambiente ambiente;
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -127,6 +129,7 @@ public class ColegioColportorController extends BaseController{
         return Constantes.PATH_COLEGIO_COLPORTOR_LISTA;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando colegio {}", id);
@@ -137,6 +140,7 @@ public class ColegioColportorController extends BaseController{
         return Constantes.PATH_COLEGIO_COLPORTOR_VER;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping("/nuevo")
     public String nuevo(Model modelo) {
         log.debug("Nuevo colegio");
@@ -145,6 +149,7 @@ public class ColegioColportorController extends BaseController{
         return Constantes.PATH_COLEGIO_COLPORTOR_NUEVO;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request, HttpServletResponse response, @Valid ColegioColportor colegios, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
@@ -168,6 +173,7 @@ public class ColegioColportorController extends BaseController{
         return "redirect:" + Constantes.PATH_COLEGIO_COLPORTOR_VER + "/" + colegios.getId();
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Editar colegio {}", id);
@@ -176,6 +182,7 @@ public class ColegioColportorController extends BaseController{
         return Constantes.PATH_COLEGIO_COLPORTOR_EDITA;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid ColegioColportor colegios, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) {
@@ -195,6 +202,7 @@ public class ColegioColportorController extends BaseController{
         return "redirect:" + Constantes.PATH_COLEGIO_COLPORTOR_VER + "/" + colegios.getId();
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute ColegioColportor colegios, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
@@ -213,6 +221,7 @@ public class ColegioColportorController extends BaseController{
         return "redirect:" + Constantes.PATH_COLEGIO_COLPORTOR;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     private void generaReporte(String tipo, List<ColegioColportor> colegios, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
@@ -242,6 +251,7 @@ public class ColegioColportorController extends BaseController{
 
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     private void enviaCorreo(String tipo, List<ColegioColportor> colegios, HttpServletRequest request) throws JRException, MessagingException {
         log.debug("Enviando correo {}", tipo);
         byte[] archivo = null;
@@ -270,6 +280,7 @@ public class ColegioColportorController extends BaseController{
         mailSender.send(message);
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     private byte[] generaPdf(List colegios) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/colegios.jrxml"));
@@ -295,6 +306,7 @@ public class ColegioColportorController extends BaseController{
         return archivo;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     private byte[] generaXls(List colegios) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRXlsExporter exporter = new JRXlsExporter();

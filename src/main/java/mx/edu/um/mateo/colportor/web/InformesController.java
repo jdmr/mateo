@@ -17,6 +17,7 @@ import mx.edu.um.mateo.colportor.service.ReportesColportorManager;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.web.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,6 +41,7 @@ public class InformesController extends BaseController  {
         return "colportaje/informes/index";
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping({"informeMensualAsociado"})
     public String informeMensualAsociado(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -105,6 +107,7 @@ public class InformesController extends BaseController  {
         return Constantes.PATH_RPT_CLP_INFORMEMENSUALASOCIADO;
     }
     
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping({"informeConcentradoMensualAsociados"})
     public String informeConcentradoMensualAsociados(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,

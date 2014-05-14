@@ -8,7 +8,6 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +37,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.crypto.keygen.KeyGenerators;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -68,6 +67,7 @@ public class ColportorController extends BaseController {
      * EnumEditor(TipoColportor.class)); }
      */
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -123,6 +123,7 @@ public class ColportorController extends BaseController {
         return Constantes.PATH_COLPORTOR_LISTA;
     }
     
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping(value="/get_colportor_list", method = RequestMethod.GET, headers="Accept=*/*", produces = "application/json")    
     public @ResponseBody 
     List <LabelValueBean> getColportorList(@RequestParam("term") String filtro, HttpServletResponse response){
@@ -150,6 +151,7 @@ public class ColportorController extends BaseController {
         return rValues;        
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando colportor {}", id);
@@ -160,6 +162,7 @@ public class ColportorController extends BaseController {
         return Constantes.PATH_COLPORTOR_VER;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping("/nuevo")
     public String nuevo(Model modelo) {
         log.debug("Nuevo colportor");
@@ -181,6 +184,7 @@ public class ColportorController extends BaseController {
      * @return
      * @throws ParseException
      */
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request, HttpServletResponse response, @Valid Colportor colportor, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
@@ -210,6 +214,7 @@ public class ColportorController extends BaseController {
 
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping("/edita/{id}")
     public String edita(HttpServletRequest request, @PathVariable Long id, Model modelo) {
         log.debug("Editar colportor {}", id);
@@ -220,6 +225,7 @@ public class ColportorController extends BaseController {
         return Constantes.PATH_COLPORTOR_EDITA;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid Colportor colportor, BindingResult bindingResult, 
@@ -253,6 +259,7 @@ public class ColportorController extends BaseController {
         return "redirect:" + Constantes.PATH_COLPORTOR_VER + "/" + colportor.getId();
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Colportor colportores, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
@@ -271,6 +278,7 @@ public class ColportorController extends BaseController {
         return "redirect:" + Constantes.PATH_COLPORTOR;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     private void generaReporte(String tipo, List<Colportor> colportores, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
@@ -300,6 +308,7 @@ public class ColportorController extends BaseController {
 
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     private void enviaCorreo(String tipo, List<Colportor> colportores, HttpServletRequest request) throws JRException, MessagingException {
         log.debug("Enviando correo {}", tipo);
         byte[] archivo = null;
@@ -328,6 +337,7 @@ public class ColportorController extends BaseController {
         mailSender.send(message);
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     private byte[] generaPdf(List colportores) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/colportores.jrxml"));
@@ -338,6 +348,7 @@ public class ColportorController extends BaseController {
         return archivo;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     private byte[] generaCsv(List colportores) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRCsvExporter exporter = new JRCsvExporter();
@@ -353,6 +364,7 @@ public class ColportorController extends BaseController {
         return archivo;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     private byte[] generaXls(List colportores) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRXlsExporter exporter = new JRXlsExporter();

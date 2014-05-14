@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -77,6 +78,7 @@ public class TemporadaController extends BaseController {
      * @param modelo
      * @return 
      */
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -144,6 +146,7 @@ public class TemporadaController extends BaseController {
         return Constantes.PATH_TEMPORADA_LISTA;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando Temporada {}", id);
@@ -152,7 +155,7 @@ public class TemporadaController extends BaseController {
         return Constantes.PATH_TEMPORADA_VER;
     }
     
-
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping("/nueva")
     public String nueva(Model modelo) {
         log.debug("Nueva Temporada");
@@ -162,6 +165,7 @@ public class TemporadaController extends BaseController {
         return Constantes.PATH_TEMPORADA_NUEVA;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @Transactional
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     
@@ -210,6 +214,7 @@ public class TemporadaController extends BaseController {
         return "redirect:" + Constantes.PATH_TEMPORADA_VER + "/" + temporada.getId();
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Edita Temporada {}", id);
@@ -218,6 +223,7 @@ public class TemporadaController extends BaseController {
         return Constantes.PATH_TEMPORADA_EDITA;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid Temporada temporada, BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws ParseException {
@@ -261,6 +267,7 @@ public class TemporadaController extends BaseController {
         return "redirect:" + Constantes.PATH_TEMPORADA_VER + "/" + temporada.getId();
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @Transactional
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute Temporada temporadas, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
@@ -279,6 +286,7 @@ public class TemporadaController extends BaseController {
         return "redirect:" + Constantes.PATH_TEMPORADA;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     private void generaReporte(String tipo, List<Temporada> temporadas, HttpServletResponse response) throws JRException, IOException {
         log.debug("Generando reporte {}", tipo);
         byte[] archivo = null;
@@ -308,6 +316,7 @@ public class TemporadaController extends BaseController {
 
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     private void enviaCorreo(String tipo, List<Temporada> temporadas, HttpServletRequest request) throws JRException, MessagingException {
         log.debug("Enviando correo {}", tipo);
         byte[] archivo = null;
@@ -336,6 +345,7 @@ public class TemporadaController extends BaseController {
         mailSender.send(message);
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     private byte[] generaPdf(List temporadas) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JasperDesign jd = JRXmlLoader.load(this.getClass().getResourceAsStream("/mx/edu/um/mateo/general/reportes/temporadas.jrxml"));
@@ -346,6 +356,7 @@ public class TemporadaController extends BaseController {
         return archivo;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     private byte[] generaCsv(List temporadas) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRCsvExporter exporter = new JRCsvExporter();
@@ -361,6 +372,7 @@ public class TemporadaController extends BaseController {
         return archivo;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     private byte[] generaXls(List temporadas) throws JRException {
         Map<String, Object> params = new HashMap<>();
         JRXlsExporter exporter = new JRXlsExporter();

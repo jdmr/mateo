@@ -6,7 +6,6 @@ package mx.edu.um.mateo.colportor.web;
 
 import mx.edu.um.mateo.general.web.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -16,9 +15,9 @@ import mx.edu.um.mateo.general.model.UploadFileForm;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -31,6 +30,7 @@ public class ImportarDatosController extends BaseController {
     @Autowired
     private ImportarDatosManager mgr;
     
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping(value = {"","/listadoArchivos"})
     public String verArchivos(HttpServletRequest request, ModelMap model) throws Exception {
         
@@ -58,6 +58,8 @@ public class ImportarDatosController extends BaseController {
         
         return "/colportaje/importarDatos/listadoArchivos";
     }
+    
+    @PreAuthorize("hasRole('ROLE_ASOC')")
     @RequestMapping(value = "/cargandoArchivo")
     public String cargarArchivo(HttpServletRequest request, ModelMap model) throws Exception{
         UploadFileForm archivo = null;
