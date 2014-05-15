@@ -148,6 +148,20 @@ public class ReportesController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
         params.put("colportor", colportorId);
+        
+        if(colportorId != null){
+            colportorId = clpDao.obtiene(colportorId).getId();
+            params.put("colportor", colportorId); 
+        }
+        else{
+            if(ambiente.esColportor()){
+                Colportor colportor = clpDao.obtiene(ambiente.obtieneUsuario().getId());
+                colportorId = colportor.getId();
+                params.put("colportor", colportor.getId());
+            }else {
+                return Constantes.PATH_RPT_CLP_CONCENTRADOGRALPORTEMPORADAS;
+            }
+        }
 
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
@@ -227,11 +241,18 @@ public class ReportesController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
         
+        Colportor colportor = null;
         if(clave != null && !clave.isEmpty()){
-            params.put("colportor", clpDao.obtiene(clave).getId());            
+            colportor = clpDao.obtiene(clave);
+            params.put("colportor", colportor.getId());            
         }
         else{
-            return Constantes.PATH_RPT_CLP_CONCENTRADOGRALPORTEMPORADAS;
+            if(ambiente.esColportor()){
+                colportor = clpDao.obtiene(ambiente.obtieneUsuario().getId());
+                params.put("colportor", colportor.getId());
+            }else {
+                return Constantes.PATH_RPT_CLP_CONCENTRADOGRALPORTEMPORADAS;
+            }
         }
         
 
@@ -270,7 +291,6 @@ public class ReportesController extends BaseController {
                 log.error("Error al intentar obtener el concentrado por temporadas");
             }
 
-            params.remove("reporte");
             try {
                 enviaCorreo(correo, (List<Colportor>) params.get(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS), request,
                         Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS, Constantes.EMP, ambiente.obtieneUsuario().getEmpresa().getId());
@@ -293,7 +313,14 @@ public class ReportesController extends BaseController {
         modelo.addAttribute(Constantes.CONTAINSKEY_CONCENTRADOVENTAS_BOLETIN, params.get(Constantes.CONTAINSKEY_CONCENTRADOVENTAS_BOLETIN));
         modelo.addAttribute(Constantes.CONTAINSKEY_CONCENTRADOVENTAS_DIEZMO, params.get(Constantes.CONTAINSKEY_CONCENTRADOVENTAS_DIEZMO));
                 
-        return Constantes.PATH_RPT_CLP_CONCENTRADOGRALPORTEMPORADAS;
+        if(ambiente.esColportor()){
+            modelo.addAttribute(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS, params.get(Constantes.CONTAINSKEY_CONCENTRADOPORTEMPORADAS));
+            modelo.addAttribute(Constantes.COLPORTOR, colportor);
+            return Constantes.PATH_RPT_CLP_CONCENTRADOPORTEMPORADAS;
+        }
+        else{
+            return Constantes.PATH_RPT_CLP_CONCENTRADOGRALPORTEMPORADAS;
+        }
     }
     
     @PreAuthorize("hasRole('ROLE_ASOC')")

@@ -20,7 +20,7 @@
         </triggeringPolicy>
     </appender>
     
-    <logger name="mx.edu.um.mateo" level="DEBUG"/>
+    <logger name="mx.edu.um.mateo" level="ERROR"/>
     
     <logger name="org.springframework" level="ERROR"/>
     <logger name="org.springframework.security" level="ERROR"/>

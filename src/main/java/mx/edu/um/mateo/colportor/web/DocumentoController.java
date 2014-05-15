@@ -103,7 +103,7 @@ public class DocumentoController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         params.put("organizacion", ambiente.obtieneUsuario().getEmpresa().getOrganizacion().getId());
         params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
-        params.put("asociado", ambiente.obtieneUsuario().getId());
+        params.put("reporte","reporte");
         
         Integer max = 100;
         if (StringUtils.isNotBlank(filtro)) {
@@ -124,12 +124,9 @@ public class DocumentoController extends BaseController {
             params.put(Constantes.CONTAINSKEY_SORT, sort);
         }
         
-        log.debug("esAsociado {}, esColportor {}, colportorTmp {}", new Object [] {ambiente.esAsociado(), ambiente.esColportor(), request.getSession().getAttribute("colportorTmp")});
         TemporadaColportor temporadaColportor = null;        
         
         if (ambiente.esAsociado()) {
-            log.debug("Entrando a Documentos como Asociado");
-            log.debug("clave" + clave);
             
             if(clave == null || clave.isEmpty()){
                 if(request.getSession().getAttribute(Constantes.TEMPORADACOLPORTOR) != null) {
@@ -143,21 +140,17 @@ public class DocumentoController extends BaseController {
                     errors.reject("colportor.clave.missing");
                     return Constantes.DOCUMENTOCOLPORTOR_PATH_LISTA;
                 }
-                log.debug("Colportor {} ", colportor);
-                modelo.addAttribute(Constantes.COLPORTOR, colportor);
                 
                 if(temporadaId != null && !temporadaId.isEmpty()){
-                    log.debug("temporadaId {}", temporadaId);
-                    log.debug("temporada {}", temporadaDao.obtiene(Long.valueOf(temporadaId)));
                     temporadaColportor = temporadaColportorDao.obtiene(colportor, temporadaDao.obtiene(Long.valueOf(temporadaId)));
                 }
                 else{
                     temporadaColportor = temporadaColportorDao.obtiene(colportor);                    
                 }
                 
-                log.debug("Temporada Colportor {} ", temporadaColportor);
+                modelo.addAttribute(Constantes.COLPORTOR, colportor);
+                params.put("asociado", colportor.getId());
                 request.getSession().setAttribute(Constantes.TEMPORADACOLPORTOR, temporadaColportor);
-                modelo.addAttribute(Constantes.TEMPORADACOLPORTOR, temporadaColportor);
                 params.put("temporadaColportor", temporadaColportor.getId());
             } else {
                 errors.reject("colportor.clave.missing");
@@ -166,32 +159,19 @@ public class DocumentoController extends BaseController {
         }        
 
         if (ambiente.esColportor()) {
-            log.debug("Entrando a Documentos como Colportor");
 
             Colportor colportor = colportorDao.obtiene(ambiente.obtieneUsuario().getId());
-            log.debug("Usuario {}",ambiente.obtieneUsuario());
-            log.debug("Colportor {}",colportor);
-            log.debug("temporada.id {}",request.getParameter("temporada.id"));
             
-            if (request.getParameter("temporada.id") == null) {
-                log.debug("Entrando a Documentos como Colportor {} con Temporada Activa", colportor);
-
+            if (request.getParameter("temporadaId") == null) {
                 temporadaColportor = temporadaColportorDao.obtiene(colportor);
                 params.put("temporadaColportor", temporadaColportor.getId());
             } else {
-                log.debug("Entrando a Documentos como Colportor con Temporada Inactiva");
-                Temporada temporada = temporadaDao.obtiene(Long.parseLong(request.getParameter("temporada.id")));
-                log.debug("temporada" + temporada.getId());
-                temporadaColportor = temporadaColportorDao.obtiene(colportor, temporada);
+                temporadaColportor = temporadaColportorDao.obtiene(colportor, temporadaDao.obtiene(Long.valueOf(temporadaId)));
                 params.put("temporadaColportor", temporadaColportor.getId());
             }
-//          Codigo para validar prueba
-
-            log.debug("temporadaColportorTmp" + temporadaColportor.getId());
-            request.setAttribute("temporadaColportorTmp", temporadaColportor);
-            modelo.addAttribute("temporadaColportorTmp", temporadaColportor);
-            log.debug("temporadaColportorTmpId" + temporadaColportor.getId());
-            modelo.addAttribute("temporadaColportorPrueba", temporadaColportor.getId().toString());
+            params.put("asociado", temporadaColportor.getAsociado().getId());
+            params.put("temporadaColportor", temporadaColportor.getId());
+            request.getSession().setAttribute(Constantes.TEMPORADACOLPORTOR, temporadaColportor);
             modelo.addAttribute(Constantes.COLPORTOR, colportor);
         }
 

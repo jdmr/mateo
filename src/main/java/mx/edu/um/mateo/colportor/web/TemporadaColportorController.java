@@ -152,14 +152,24 @@ public class TemporadaColportorController extends BaseController{
         return Constantes.TEMPORADACOLPORTOR_PATH_LISTA;
     }
     
-    @PreAuthorize("hasRole('ROLE_ASOC')")
+    @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
     @RequestMapping(value="/get_temporada_clp_list", method = RequestMethod.GET, headers="Accept=*/*", produces = "application/json")    
     public @ResponseBody 
     List <LabelValueBean> getTemporadaColportorList(@RequestParam("clave") String filtro, HttpServletResponse response){
         log.debug("Buscando temporadas del colportor por {}", filtro);
         Map<String, Object> params = new HashMap<>();
+        
+        Long asociadoId = 0L;
+        if(ambiente.obtieneUsuario().isTipoColportor()){
+            TemporadaColportor temporadaColportor = temporadaColportorDao.obtiene(colportorDao.obtiene(filtro));
+            asociadoId = temporadaColportor.getAsociado().getId();
+        }
+        else if(ambiente.obtieneUsuario().isTipoAsociado()){
+            asociadoId = ambiente.obtieneUsuario().getId();
+        }
+        
         params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
-        params.put("asociado", ambiente.obtieneUsuario().getId());
+        params.put("asociado", asociadoId);
         params.put("filtro", filtro);
         temporadaColportorDao.listadoTemporadasPorColportor(params);
         

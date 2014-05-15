@@ -34,7 +34,12 @@
                 <c:if test="${temporadaColportor != null}">
                 <a class="btn btn-primary" href="<s:url value='/colportaje/documento/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='documento.nuevo.label' /></a>
                 </c:if>
-                <input id="clave" name="clave" class="input-medium search-query" value="${colportor.clave}">
+                <sec:authorize access="hasRole('ROLE_ASOC')">
+                    <input id="clave" name="clave" class="input-medium search-query" value="${colportor.clave}">
+                </sec:authorize>
+                <sec:authorize access="hasRole('ROLE_CLP')">
+                    <input id="clave" name="clave" class="input-medium search-query" value="${colportor.clave}" disabled="true">
+                </sec:authorize>
                 
                 <label for="temporada">
                 <s:message code="temporada.label" />
@@ -187,6 +192,19 @@
                         return false;
                     }
             })
+            });
+          </script>
+        <script>
+            $(document).ready(function() {
+                $("#temporadaId").html('');
+                $.getJSON("${pageContext. request. contextPath}/colportaje/temporadaColportor/get_temporada_clp_list?clave="+$("input#clave").val())
+                .done(function (result) {
+                    $.each(result, function(idx, item){
+                        $("#temporadaId").append($("<option value=\""+item.id+"\">"+item.value+"</option>"));
+                    });
+                });
+                $("select#temporadaId").focus();
+                return false;
             });
           </script>
     </content>

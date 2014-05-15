@@ -9,11 +9,36 @@
     </head>
     <body>
         <jsp:include page="./menu.jsp" >
-            <jsp:param name="menu" value="concentradoGral" />
+            <jsp:param name="menu" value="concentradoPorTemporadas" />
         </jsp:include>
 
         <h1><s:message code="concentradoPorTemporadas.label" /></h1>
         <hr/>
+        
+        <h5>                
+             <table>
+                <tr>
+                    <td>
+                        <span class="label label-success">
+                        <s:message code="totalesBoletin.label"/>:<fmt:formatNumber type="currency" currencySymbol="$" value="${totalesBoletin}" />
+                        </span>
+                    </td>
+                    <td>
+                            <c:if test="${totalesDiezmo < (totalesBoletin * 0.1)*0.8}">
+                                <span class="label label-important">
+                            </c:if>
+                            <c:if test="${totalesDiezmo >= totalesBoletin * 0.1}">
+                                <span class="label label-success">
+                            </c:if>
+                            <c:if test="${totalesDiezmo > (totalesBoletin * 0.1)*0.8 and totalesDiezmo < totalesBoletin * 0.1}">
+                                <span class="label label-warning">
+                            </c:if>
+                        <s:message code="totalesDiezmo.label"/>:<fmt:formatNumber type="currency" currencySymbol="$" value="${totalesDiezmo}" />
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </h5>
        
             <h3>
                 ${colportor.clave}&nbsp;${colportor.nombreCompleto}
