@@ -177,14 +177,27 @@ public class InformeMensualDetalleManagerImpl extends BaseManager implements Inf
         params.put("totales", totales);
         return params;
     }
-    
+    /**
+     * @see mx.edu.um.mateo.colportor.service.InformeMensualDetalleManager#obtiene(java.lang.Long) 
+     */
     public InformeMensualDetalle obtiene(Long id){
         return dao.obtiene(id);
     }
+    /**
+     * @see mx.edu.um.mateo.colportor.service.InformeMensualDetalleManager#obtiene(mx.edu.um.mateo.colportor.model.InformeMensual, java.lang.Long) 
+     */
+    public InformeMensualDetalle obtiene(InformeMensual informe,Long id){
+        return dao.obtiene(id);
+    }
+    /**
+     * @see mx.edu.um.mateo.colportor.service.InformeMensualDetalleManager#crea(mx.edu.um.mateo.colportor.model.InformeMensualDetalle) 
+     */
     public InformeMensualDetalle crea(InformeMensualDetalle detalle){
         return dao.crea(detalle);
     }
-    
+    /**
+     * @see mx.edu.um.mateo.colportor.service.InformeMensualDetalleManager#elimina(java.lang.Long) 
+     */
     public String elimina(Long id){
         return dao.elimina(id);
     }

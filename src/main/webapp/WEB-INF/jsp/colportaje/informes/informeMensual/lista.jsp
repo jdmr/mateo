@@ -2,6 +2,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -26,13 +27,17 @@
             <input type="hidden" name="correo" id="correo" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
+            
             <p class="well">
                 <c:if test="${colportor != null}">
                 <a class="btn btn-primary" href="<s:url value='/colportaje/informes/informeMensual/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='informeMensual.nuevo.label' /></a>
                 </c:if>
+            <sec:authorize access="hasRole('ROLE_ASOC')">
                 <input id="clave" name="clave" class="input-medium search-query" value="${colportor.clave}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
+            </sec:authorize>
             </p>
+            
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
                     <a class="close" data-dismiss="alert">×</a>

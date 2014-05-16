@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import mx.edu.um.mateo.general.model.Empresa;
+import mx.edu.um.mateo.general.model.Usuario;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
@@ -65,6 +66,8 @@ public class ClienteColportor implements Serializable {
     private String status;
     @ManyToOne
     private Empresa empresa;
+    @ManyToOne
+    private Usuario usuario;
     
     @InitBinder
     public void inicializar(WebDataBinder binder) {
@@ -193,6 +196,14 @@ public class ClienteColportor implements Serializable {
 
     public void setEmpresa(Empresa empresa) {
         this.empresa = empresa;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     @Override

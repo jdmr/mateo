@@ -28,7 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class InformeMensualDetalleDaoHibernate extends BaseDao implements InformeMensualDetalleDao {
-    
+    /**
+     * @see mx.edu.um.mateo.colportor.dao.InformeMensualDetalleDao#lista(java.util.Map) 
+     */
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de informeMensualDetalle con params {}", params);
         if (params == null) {
@@ -163,13 +165,27 @@ public class InformeMensualDetalleDaoHibernate extends BaseDao implements Inform
 
         return params;
     }
-
+    /**
+     * @see mx.edu.um.mateo.colportor.dao.InformeMensualDetalleDao#obtiene(java.lang.Long) 
+     */
     public InformeMensualDetalle obtiene(Long id) {
         log.debug("Obtiene informeMensualDetalle con id = {}", id);
         InformeMensualDetalle detalle = (InformeMensualDetalle) currentSession().get(InformeMensualDetalle.class, id);
         return detalle;
     }
-
+    /**
+     * @see mx.edu.um.mateo.colportor.dao.InformeMensualDetalleDao#obtiene(mx.edu.um.mateo.colportor.model.InformeMensual, java.lang.Long) 
+     */
+    public InformeMensualDetalle obtiene(InformeMensual informe, Long id) {
+        log.debug("Obtiene informeMensualDetalle con id = {}", id);
+        Criteria sql = getSession().createCriteria(InformeMensualDetalle.class);
+        sql.add(Restrictions.idEq(id));
+        sql.createCriteria("informe").add(Restrictions.idEq(informe.getId()));
+        return (InformeMensualDetalle)sql.uniqueResult();
+    }
+    /**
+     * @see mx.edu.um.mateo.colportor.dao.InformeMensualDetalleDao#crea(mx.edu.um.mateo.colportor.model.InformeMensualDetalle) 
+     */
     public InformeMensualDetalle crea(InformeMensualDetalle detalle) {
         log.debug("Creando informeMensualDetalle : {}", detalle);
         try{
@@ -182,13 +198,17 @@ public class InformeMensualDetalleDaoHibernate extends BaseDao implements Inform
         log.debug("Creando informeMensualDetalle : {}", detalle);
         return detalle;
     }
-    
+    /**
+     * @see mx.edu.um.mateo.colportor.dao.InformeMensualDetalleDao#crear(mx.edu.um.mateo.colportor.model.InformeMensualDetalle) 
+     */
     public InformeMensualDetalle crear(InformeMensualDetalle detalle) throws ConstraintViolationException {
         log.debug("Creando informeMensualDetalle : {}", detalle);
         currentSession().save(detalle);
         return detalle;
     }
-    
+    /**
+     * @see mx.edu.um.mateo.colportor.dao.InformeMensualDetalleDao#elimina(java.lang.Long) 
+     */
     public String elimina(Long id){
         log.debug("Eliminando informeMensualDetalle con id {}", id);
         InformeMensualDetalle detalle = obtiene(id);

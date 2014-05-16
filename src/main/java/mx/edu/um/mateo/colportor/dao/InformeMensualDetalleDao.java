@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.colportor.dao;
 import java.util.*;
+import mx.edu.um.mateo.colportor.model.InformeMensual;
 import mx.edu.um.mateo.colportor.model.InformeMensualDetalle;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
 import org.hibernate.exception.ConstraintViolationException;
@@ -25,6 +26,13 @@ public interface InformeMensualDetalleDao {
      * @return 
      */
     public InformeMensualDetalle obtiene(Long id);
+    /**
+     * Regresa un detalle de un informe mensual en base al id
+     * @param informe
+     * @param id
+     * @return 
+     */
+    public InformeMensualDetalle obtiene(InformeMensual informe, Long id);
     /**
      * Registra un detalle de un informe mensual en la base de datos
      * @param informeMensualDetalle

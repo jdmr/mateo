@@ -8,7 +8,6 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +22,7 @@ import javax.validation.Valid;
 import mx.edu.um.mateo.colportor.dao.ColportorDao;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.colportor.dao.InformeMensualDao;
+import mx.edu.um.mateo.colportor.model.Asociado;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.colportor.model.InformeMensual;
@@ -88,8 +88,16 @@ public class InformeMensualController extends BaseController {
         
         params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
         
-        if(clave != null && !clave.isEmpty())
+        if(clave != null && !clave.isEmpty()){
             params.put("clave", clave);
+            request.getSession().setAttribute("colportor", colportorDao.obtiene(clave));
+        }
+        else{
+            if(ambiente.esColportor()){
+                params.put("clave", ((Colportor)ambiente.obtieneUsuario()).getClave());
+                clave = ((Colportor)ambiente.obtieneUsuario()).getClave();
+            }
+        }
         
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
@@ -148,9 +156,9 @@ public class InformeMensualController extends BaseController {
     }
 
     @RequestMapping("/ver/{id}")
-    public String ver(@PathVariable Long id, Model modelo) {
+    public String ver(HttpServletRequest request, @PathVariable Long id, Model modelo) {
         log.debug("Mostrando InformeMensual {}", id);
-        InformeMensual informeMensual = informeMensualDao.obtiene(id);
+        InformeMensual informeMensual = informeMensualDao.obtiene((Colportor)request.getSession().getAttribute("colportor"),id);
         modelo.addAttribute(Constantes.INFORMEMENSUAL, informeMensual);
         return Constantes.INFORMEMENSUAL_PATH_VER;
     }
@@ -189,9 +197,9 @@ public class InformeMensualController extends BaseController {
     }
 
     @RequestMapping("/edita/{id}")
-    public String edita(@PathVariable Long id, Model modelo) {
+    public String edita(HttpServletRequest request, @PathVariable Long id, Model modelo) {
         log.debug("Edita InformeMensual {}", id);
-        InformeMensual informeMensual = informeMensualDao.obtiene(id);
+        InformeMensual informeMensual = informeMensualDao.obtiene((Colportor)request.getSession().getAttribute("colportor"),id);
         modelo.addAttribute(Constantes.INFORMEMENSUAL, informeMensual);
         return Constantes.INFORMEMENSUAL_PATH_EDITA;
     }
@@ -205,6 +213,7 @@ public class InformeMensualController extends BaseController {
         }
         try {
             
+            informeMensual.setColportor(colportorDao.obtiene(((Colportor)request.getSession().getAttribute(Constantes.COLPORTOR)).getId()));
             informeMensual.setCapturo(ambiente.obtieneUsuario());
             informeMensual.setFechaCaptura(new Date());
             informeMensual = informeMensualDao.crea(informeMensual);
@@ -222,7 +231,7 @@ public class InformeMensualController extends BaseController {
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute InformeMensual informeMensual, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina Pais");
         try {
-            String nombre = informeMensualDao.elimina(id);
+            String nombre = informeMensualDao.elimina((Colportor)request.getSession().getAttribute(Constantes.COLPORTOR),id);
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeMensual.eliminado.message");
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
         } catch (Exception e) {

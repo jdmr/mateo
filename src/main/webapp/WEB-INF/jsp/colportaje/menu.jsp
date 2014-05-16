@@ -16,10 +16,8 @@
         </sec:authorize>
         <li<c:if test="${param.menu eq 'documento'}"> class="active"</c:if>><a href="<s:url value='/colportaje/documento'/>" ><s:message code="documento.label" /></a></li>
         <li<c:if test="${param.menu eq 'reportes'}"> class="active"</c:if>><a href="<s:url value='/colportaje/reportes'/>" ><s:message code="reportes.label" /></a></li>
-        <sec:authorize access="hasRole('ROLE_ASOC')">
         <li<c:if test="${param.menu eq 'ventas'}"> class="active"</c:if>><a href="<s:url value='/colportaje/ventas'/>" ><s:message code="colportaje.ventas.label" /></a></li>
         <li<c:if test="${param.menu eq 'informes'}"> class="active"</c:if>><a href="<s:url value='/colportaje/informes'/>" ><s:message code="informeMensual.label" /></a></li>
-        </sec:authorize>
     </ul>
 </nav>
     

@@ -130,6 +130,17 @@ public class InformeMensualDaoHibernate extends BaseDao implements InformeMensua
         return informeMensual;
     }
     /**
+     * @see mx.edu.um.mateo.colportor.dao.InformeMensualDao#obtiene(mx.edu.um.mateo.colportor.model.Colportor, java.lang.Long) 
+     */
+    public InformeMensual obtiene(Colportor clp,Long id) {
+        log.debug("Obtiene informeMensual con id = {}", id);
+        Criteria sql = getSession().createCriteria(InformeMensual.class);
+        sql.createCriteria("colportor")
+                .add(Restrictions.eq("id", clp.getId()));
+        sql.add(Restrictions.idEq(id));
+        return (InformeMensual)sql.uniqueResult();
+    }
+    /**
      * @see mx.edu.um.mateo.colportor.dao.InformeMensualDao#obtiene(mx.edu.um.mateo.colportor.model.Colportor, java.util.Date) 
      */
     public InformeMensual obtiene(Colportor clp, Date fecha) {
@@ -175,11 +186,11 @@ public class InformeMensualDaoHibernate extends BaseDao implements InformeMensua
         return informeMensual;
     }
     /**
-     * @see mx.edu.um.mateo.colportor.dao.InformeMensualDao#elimina(java.lang.Long) 
+     * @see mx.edu.um.mateo.colportor.dao.InformeMensualDao#elimina(mx.edu.um.mateo.colportor.model.Colportor, java.lang.Long) 
      */
-    public String elimina(Long id){
+    public String elimina(Colportor clp, Long id){
         log.debug("Eliminando informeMensual con id {}", id);
-        InformeMensual informeMensual = obtiene(id);
+        InformeMensual informeMensual = obtiene(clp, id);
         Date fecha = informeMensual.getFecha();
         currentSession().delete(informeMensual);
         currentSession().flush();

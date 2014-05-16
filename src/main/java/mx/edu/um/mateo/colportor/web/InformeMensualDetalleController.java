@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import mx.edu.um.mateo.colportor.dao.InformeMensualDao;
+import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.colportor.model.InformeMensual;
 import mx.edu.um.mateo.colportor.model.InformeMensualDetalle;
@@ -83,7 +84,8 @@ public class InformeMensualDetalleController extends BaseController {
             informe = (InformeMensual)request.getSession().getAttribute(Constantes.INFORMEMENSUAL);
         }
         else{
-            informe = informeMensualDao.obtiene(Long.parseLong(request.getParameter("id")));
+            //El colportor DEBE estar en session
+            informe = informeMensualDao.obtiene((Colportor)request.getSession().getAttribute("colportor"), Long.parseLong(request.getParameter("id")));
             request.getSession().setAttribute(Constantes.INFORMEMENSUAL, informe);
             
         }
@@ -149,9 +151,9 @@ public class InformeMensualDetalleController extends BaseController {
     }
 
     @RequestMapping("/ver/{id}")
-    public String ver(@PathVariable Long id, Model modelo) {
+    public String ver(HttpServletRequest request, @PathVariable Long id, Model modelo) {
         log.debug("Mostrando InformeMensualDetalle {}", id);
-        InformeMensualDetalle informeMensualDetalle = informeMensualDetalleMgr.obtiene(id);
+        InformeMensualDetalle informeMensualDetalle = informeMensualDetalleMgr.obtiene((InformeMensual)request.getSession().getAttribute(Constantes.INFORMEMENSUAL),id);
         modelo.addAttribute(Constantes.INFORMEMENSUAL_DETALLE, informeMensualDetalle);
         return Constantes.INFORMEMENSUAL_DETALLE_PATH_VER;
     }

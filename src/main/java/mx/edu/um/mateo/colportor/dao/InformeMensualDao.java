@@ -26,6 +26,13 @@ public interface InformeMensualDao {
      */
     public InformeMensual obtiene(Long id);
     /**
+     * Regresa el informe mensual en base al id y colportor
+     * @param clp
+     * @param id
+     * @return 
+     */
+    public InformeMensual obtiene(Colportor clp, Long id);
+    /**
      * Regresa un informe mensual en base a la fecha
      * @param colportor
      * @param fecha
@@ -41,11 +48,12 @@ public interface InformeMensualDao {
     
     /**
      * Elimina una informe mensual
+     * @param colportor
      * @param id
      * @return
      * @throws UltimoException 
      */
-    public String elimina(Long id);
+    public String elimina(Colportor clp, Long id);
     
     
 }

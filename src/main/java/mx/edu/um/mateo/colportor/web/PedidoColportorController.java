@@ -28,6 +28,7 @@ import mx.edu.um.mateo.general.web.BaseController;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -58,6 +59,7 @@ public class PedidoColportorController extends BaseController{
     private PedidoColportorItemDao pedidoColportorItemDao;
 
     @SuppressWarnings("unchecked")
+    @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
     @RequestMapping
     public String lista(HttpServletRequest request,
             HttpServletResponse response,
@@ -128,6 +130,7 @@ public class PedidoColportorController extends BaseController{
         return Constantes.PEDIDO_COLPORTOR_PATH_LISTA;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando pedidoColportor {}", id);
@@ -138,6 +141,7 @@ public class PedidoColportorController extends BaseController{
         return Constantes.PEDIDO_COLPORTOR_PATH_VER;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
     @RequestMapping("/nuevo")
     public String nuevo(HttpServletRequest request, Model modelo) {
         log.debug("Nuevo pedidoColportor");
@@ -155,6 +159,7 @@ public class PedidoColportorController extends BaseController{
         return Constantes.PEDIDO_COLPORTOR_PATH_NUEVO;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request,
             HttpServletResponse response, @Valid PedidoColportor pedidoColportor,
@@ -204,6 +209,7 @@ public class PedidoColportorController extends BaseController{
         return "redirect:" + Constantes.PEDIDO_COLPORTOR_PATH_VER + "/" + pedidoColportor.getId();
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
     @RequestMapping("/edita/{id}")
     public String edita(HttpServletRequest request, @PathVariable Long id,
             Model modelo) {
@@ -221,6 +227,7 @@ public class PedidoColportorController extends BaseController{
         return Constantes.PEDIDO_COLPORTOR_PATH_EDITA;
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, @Valid PedidoColportor pedidoColportor,
             BindingResult bindingResult, Errors errors, Model modelo,
@@ -263,6 +270,7 @@ public class PedidoColportorController extends BaseController{
         return "redirect:" + Constantes.PEDIDO_COLPORTOR_PATH_VER + "/" + pedidoColportor.getId();
     }
 
+    @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
     @RequestMapping(value = "/elimina", method = RequestMethod.POST)
     public String elimina(HttpServletRequest request, @RequestParam Long id,
             Model modelo, @ModelAttribute PedidoColportor pedidoColportor,
@@ -286,6 +294,7 @@ public class PedidoColportorController extends BaseController{
         return "redirect:" + Constantes.PEDIDO_COLPORTOR_PATH;
     }
     
+    @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
     @RequestMapping("/finalizar/{id}")
     public String finalizar(HttpServletRequest request, @PathVariable Long id, Model modelo) {
         log.debug("Finalizando pedidoColportor {}", id);

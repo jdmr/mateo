@@ -22,6 +22,7 @@ import mx.edu.um.mateo.general.web.BaseController;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -47,6 +48,7 @@ public class ClienteColportorController extends BaseController {
     private EmpresaDao empresaDao;
     
     @SuppressWarnings("unchecked")
+    @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
 	@RequestMapping
 	public String lista(HttpServletRequest request,
 			HttpServletResponse response,
@@ -56,10 +58,12 @@ public class ClienteColportorController extends BaseController {
 			@RequestParam(required = false) String correo,
 			@RequestParam(required = false) String order,
 			@RequestParam(required = false) String sort, Model modelo) {
-		log.debug("Mostrando lista de clienteColportores");
+		log.debug("***Mostrando lista de clienteColportores");
 		Map<String, Object> params = new HashMap<>();
 		Long empresaId = (Long) request.getSession().getAttribute("empresaId");
 		params.put("empresa", empresaId);
+                params.put("usuario", ambiente.obtieneUsuario().getId());
+                log.debug("***Usuario {}", params.get("usuario"));
                 
 		if (StringUtils.isNotBlank(filtro)) {
 			params.put("filtro", filtro);
@@ -111,6 +115,7 @@ public class ClienteColportorController extends BaseController {
 		return Constantes.CLIENTE_COLPORTOR_PATH_LISTA;
 	}
 
+        @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
 	@RequestMapping("/ver/{id}")
 	public String ver(@PathVariable Long id, Model modelo) {
 		log.debug("Mostrando clienteColportor {}", id);
@@ -121,6 +126,7 @@ public class ClienteColportorController extends BaseController {
 		return Constantes.CLIENTE_COLPORTOR_PATH_VER;
 	}
 
+        @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
 	@RequestMapping("/nuevo")
 	public String nuevo(HttpServletRequest request, Model modelo) {
 		log.debug("Nuevo clienteColportor");
@@ -130,6 +136,7 @@ public class ClienteColportorController extends BaseController {
 		return Constantes.CLIENTE_COLPORTOR_PATH_NUEVO;
 	}
 
+        @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
 	@RequestMapping(value = "/crea", method = RequestMethod.POST)
 	public String crea(HttpServletRequest request,
 			HttpServletResponse response, @Valid ClienteColportor clienteColportor,
@@ -147,6 +154,7 @@ public class ClienteColportorController extends BaseController {
 		try {
                         //Se supone que el colportor lo registra
 			Usuario usuario = ambiente.obtieneUsuario();
+                        clienteColportor.setUsuario(usuario);
                         clienteColportor.setEmpresa(usuario.getEmpresa());
                         clienteColportor.setStatus(Constantes.STATUS_ACTIVO);
 			clienteColportor = clienteColportorDao.crea(clienteColportor);
@@ -163,6 +171,7 @@ public class ClienteColportorController extends BaseController {
 		return "redirect:" + Constantes.CLIENTE_COLPORTOR_PATH_VER + "/" + clienteColportor.getId();
 	}
 
+        @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
 	@RequestMapping("/edita/{id}")
 	public String edita(HttpServletRequest request, @PathVariable Long id,
 			Model modelo) {
@@ -173,6 +182,7 @@ public class ClienteColportorController extends BaseController {
 		return Constantes.CLIENTE_COLPORTOR_PATH_EDITA;
 	}
 
+        @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
 	@RequestMapping(value = "/actualiza", method = RequestMethod.POST)
 	public String actualiza(HttpServletRequest request, @Valid ClienteColportor clienteColportor,
 			BindingResult bindingResult, Errors errors, Model modelo,
@@ -185,6 +195,7 @@ public class ClienteColportorController extends BaseController {
 
 		try {
 			Usuario usuario = ambiente.obtieneUsuario();
+                        clienteColportor.setUsuario(usuario);
                         clienteColportor.setEmpresa(empresaDao.obtiene(clienteColportor.getEmpresa().getId()));
 			clienteColportor = clienteColportorDao.actualiza(clienteColportor);
 		} catch (ConstraintViolationException e) {
@@ -200,6 +211,7 @@ public class ClienteColportorController extends BaseController {
 		return "redirect:" + Constantes.CLIENTE_COLPORTOR_PATH_VER + "/" + clienteColportor.getId();
 	}
 
+        @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
 	@RequestMapping(value = "/elimina", method = RequestMethod.POST)
 	public String elimina(HttpServletRequest request, @RequestParam Long id,
 			Model modelo, @ModelAttribute ClienteColportor clienteColportor,
