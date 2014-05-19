@@ -4,6 +4,8 @@
  */
 package mx.edu.um.mateo.colportor.web;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -487,5 +489,97 @@ public class ReportesController extends BaseController {
         return Constantes.PATH_RPT_CLP_PLANDIARIOORACION;
     }
     
-    
+    @PreAuthorize("hasRole('ROLE_CLP')")
+    @RequestMapping("concentradoInformesMensuales")
+    public String concentradoInformesMensualesClp(HttpServletRequest request, HttpServletResponse response,
+            @RequestParam(required = false) String filtro,
+            @RequestParam(required = false) Long pagina,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) String year,
+            Usuario usuario,
+            Errors errors,
+            Model modelo) {
+        log.debug("Mostrando concentrado de Informes");
+        log.debug("filtro {}", filtro);
+        log.debug("pagina {}", pagina);
+        log.debug("tipo {}", tipo);
+        log.debug("correo {}", correo);
+        log.debug("order {}", order);
+        log.debug("sort {}", sort);
+        log.debug("year {}", year);
+        
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
+        params.put("reporte", true);
+        
+        if(year == null || year.isEmpty()){
+            modelo.addAttribute("annio", new Date());
+            return Constantes.PATH_RPT_CLP_CONCENTRADOINFORMESCOLPORTOR;
+        }
+        
+        params.put("year", new Integer(year));
+        gcFecha.setTime(new Date());        
+        gcFecha.set(Calendar.YEAR, new Integer(year));
+        modelo.addAttribute("annio", gcFecha.getTime());
+
+        if (StringUtils.isNotBlank(filtro)) {
+            params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
+        }
+        if (StringUtils.isNotBlank(order)) {
+            params.put(Constantes.CONTAINSKEY_ORDER, order);
+            params.put(Constantes.CONTAINSKEY_SORT, sort);
+        }
+        if (StringUtils.isNotBlank(tipo)) {
+            log.debug("Entrando a tipo");
+            params.put("reporte", true);
+            try {
+                params = rclpMgr.concentradoInformesColportor(params);
+            } catch (Exception ex) {
+                log.error("Error al intentar obtener el censo de colportores");
+            }
+            log.debug("Obtuvo listado");
+            try {
+                log.debug("Generando reporte");
+                generaReporte(tipo, (List<Colportor>) params.get("censoColportores"), response,
+                        "censoColportores", Constantes.EMP, ambiente.obtieneUsuario().getEmpresa().getId());
+                log.debug("Genero reporte");
+                return null;
+            } catch (Exception e) {
+                log.error("No se pudo generar el reporte", e);
+            }
+        }
+
+        if (StringUtils.isNotBlank(correo)) {
+            params.put("reporte", true);
+            try {
+                params = rclpMgr.concentradoInformesColportor(params);
+            } catch (Exception ex) {
+                log.error("Error al intentar obtener el censo de colportores");
+            }
+
+            
+            try {
+                enviaCorreo(correo, (List<Colportor>) params.get("censoColportores"), request,
+                        "censoColportores", Constantes.EMP, ambiente.obtieneUsuario().getEmpresa().getId());
+                modelo.addAttribute("message", "lista.enviada.message");
+                modelo.addAttribute("messageAttrs", new String[]{messageSource.getMessage("colportor.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+            } catch (Exception e) {
+                log.error("No se pudo enviar el reporte por correo", e);
+            }
+        }
+        try {
+            params = rclpMgr.concentradoInformesColportor(params);
+        } catch (Exception ex) {
+            log.error("Error al intentar obtener el censo de colportores");
+            ex.printStackTrace();
+        }
+
+        modelo.addAttribute(Constantes.CONTAINSKEY_CONCENTRADOINFORMESCOLPORTOR, params.get(Constantes.CONTAINSKEY_CONCENTRADOINFORMESCOLPORTOR));
+        modelo.addAttribute(Constantes.CONTAINSKEY_CONCENTRADOINFORMESCOLPORTOR_TOTALES, params.get(Constantes.CONTAINSKEY_CONCENTRADOINFORMESCOLPORTOR_TOTALES));
+        
+        return Constantes.PATH_RPT_CLP_CONCENTRADOINFORMESCOLPORTOR;
+    }
 }

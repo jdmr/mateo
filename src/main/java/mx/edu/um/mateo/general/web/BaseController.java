@@ -28,10 +28,16 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -90,6 +96,11 @@ public abstract class BaseController {
     protected ReporteDao reporteDao;
     @Autowired
     protected UtilControllerTests utils;
+
+    protected Locale local = new java.util.Locale (Constantes.LOCALE_LANGUAGE, Constantes.LOCALE_COUNTRY, Constantes.LOCALE_VARIANT);
+    protected SimpleDateFormat sdf = new SimpleDateFormat (Constantes.DATE_SHORT_HUMAN_PATTERN, local);
+    protected DecimalFormat df = (DecimalFormat)NumberFormat.getCurrencyInstance (local);
+    protected Calendar gcFecha = new GregorianCalendar(local);
 
     protected void pagina(Map<String, Object> params, Model modelo,
             String lista, Long pagina) {

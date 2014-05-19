@@ -80,6 +80,9 @@ public class InformeMensualDetalle implements Serializable{
     @DateTimeFormat(pattern=Constantes.DATE_SHORT_HUMAN_PATTERN)
     @Column(name = "fecha_captura")
     private Date fechaCaptura; //fecha captura
+    
+    //Este dato solo se usa para reportes
+    private String mesInforme;
 
     public InformeMensualDetalle() {
         this.informeMensual = new InformeMensual("A");
@@ -334,6 +337,16 @@ public class InformeMensualDetalle implements Serializable{
     public void setFechaCaptura(Date fechaCaptura) {
         this.fechaCaptura = fechaCaptura;
     }
+
+    public String getMesInforme() {
+        return mesInforme;
+    }
+
+    public void setMesInforme(String mesInforme) {
+        this.mesInforme = mesInforme;
+    }
+    
+    
 
     @Override
     public int hashCode() {
