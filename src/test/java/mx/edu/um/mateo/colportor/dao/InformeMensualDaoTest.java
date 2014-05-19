@@ -118,7 +118,7 @@ public class InformeMensualDaoTest extends BaseDaoTest {
         currentSession().save(informe);
         assertNotNull(informe.getId());
         
-        String descripcion = instance.elimina(informe.getId());
+        String descripcion = instance.elimina((Colportor)colportor, informe.getId());
 
         InformeMensual prueba = instance.obtiene(informe.getId());
         if (prueba != null) {

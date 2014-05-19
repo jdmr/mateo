@@ -84,11 +84,7 @@
             <input type="hidden" name="correo" id="correo" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
-            <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/colportaje/informes/informeMensualDetalle/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='informeMensualDetalle.nuevo.label' /></a>
-                <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
-                <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
-            </p>
+            
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
                     <a class="close" data-dismiss="alert">×</a>

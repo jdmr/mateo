@@ -62,7 +62,6 @@ public class InformeMensualDetalleDaoHibernate extends BaseDao implements Inform
             countCriteria.createCriteria("informeMensual")
                     .add(Restrictions.idEq(params.get("informe")));
         }
-        
 
         if (params.containsKey(Constantes.CONTAINSKEY_FILTRO)) {
             String filtro = (String) params.get(Constantes.CONTAINSKEY_FILTRO);
