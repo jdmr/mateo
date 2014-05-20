@@ -498,6 +498,7 @@ public class ReportesController extends BaseController {
             @RequestParam(required = false) String correo,
             @RequestParam(required = false) String order,
             @RequestParam(required = false) String sort,
+            @RequestParam(required = false) String clave,
             @RequestParam(required = false) String year,
             Usuario usuario,
             Errors errors,
@@ -515,9 +516,28 @@ public class ReportesController extends BaseController {
         params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
         params.put("reporte", true);
         
+        Colportor colportor = null;
+        
         if(year == null || year.isEmpty()){
             modelo.addAttribute("annio", new Date());
             return Constantes.PATH_RPT_CLP_CONCENTRADOINFORMESCOLPORTOR;
+        }
+        
+        if(ambiente.esColportor()){
+            colportor = clpDao.obtiene(ambiente.obtieneUsuario().getId());
+            params.put("colportor", colportor.getId());
+            params.put("asociado", null);
+        }
+        else if(clave == null || clave.isEmpty()){
+            modelo.addAttribute("annio", new Date());
+            return Constantes.PATH_RPT_CLP_CONCENTRADOINFORMESCOLPORTOR;
+        }
+        
+        if(ambiente.esAsociado()){
+            params.put("asociado", ambiente.obtieneUsuario().getId());
+            
+            colportor = clpDao.obtiene(clave);
+            params.put("colportor", colportor.getId());
         }
         
         params.put("year", new Integer(year));
@@ -577,6 +597,7 @@ public class ReportesController extends BaseController {
             ex.printStackTrace();
         }
 
+        modelo.addAttribute(Constantes.COLPORTOR, colportor);
         modelo.addAttribute(Constantes.CONTAINSKEY_CONCENTRADOINFORMESCOLPORTOR, params.get(Constantes.CONTAINSKEY_CONCENTRADOINFORMESCOLPORTOR));
         modelo.addAttribute(Constantes.CONTAINSKEY_CONCENTRADOINFORMESCOLPORTOR_TOTALES, params.get(Constantes.CONTAINSKEY_CONCENTRADOINFORMESCOLPORTOR_TOTALES));
         

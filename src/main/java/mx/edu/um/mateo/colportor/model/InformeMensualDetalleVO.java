@@ -30,7 +30,7 @@ import org.springframework.format.annotation.DateTimeFormat;
  */
 @Entity
 @Table(name="informe_mensual_detalle")
-public class InformeMensualDetalle implements Serializable{
+public class InformeMensualDetalleVO implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -80,8 +80,11 @@ public class InformeMensualDetalle implements Serializable{
     @DateTimeFormat(pattern=Constantes.DATE_SHORT_HUMAN_PATTERN)
     @Column(name = "fecha_captura")
     private Date fechaCaptura; //fecha captura
+    
+    //Este dato solo se usa para reportes
+    private String mesInforme;
 
-    public InformeMensualDetalle() {
+    public InformeMensualDetalleVO() {
         this.informeMensual = new InformeMensual("A");
         this.hrsTrabajadas = 0.0;
         this.literaturaVendida = 0;
@@ -96,7 +99,7 @@ public class InformeMensualDetalle implements Serializable{
         this.fechaCaptura = new Date();
     }
     
-    public InformeMensualDetalle(InformeMensual informe, Date fecha, Double hrsTrabajadas, Integer librosRegalados, BigDecimal totalPedidos, BigDecimal totalVentas, Integer literaturaGratis, Integer oracionesOfrecidas, Integer casasVisitadas, Integer contactosEstudiosBiblicos, Integer bautizados, BigDecimal diezmo, Usuario capturo, Date cuando) {
+    public InformeMensualDetalleVO(InformeMensual informe, Date fecha, Double hrsTrabajadas, Integer librosRegalados, BigDecimal totalPedidos, BigDecimal totalVentas, Integer literaturaGratis, Integer oracionesOfrecidas, Integer casasVisitadas, Integer contactosEstudiosBiblicos, Integer bautizados, BigDecimal diezmo, Usuario capturo, Date cuando) {
         this.informeMensual = informe;
         this.fecha = fecha;
         this.hrsTrabajadas = hrsTrabajadas;
@@ -335,6 +338,15 @@ public class InformeMensualDetalle implements Serializable{
         this.fechaCaptura = fechaCaptura;
     }
 
+    public String getMesInforme() {
+        return mesInforme;
+    }
+
+    public void setMesInforme(String mesInforme) {
+        this.mesInforme = mesInforme;
+    }
+    
+    
 
     @Override
     public int hashCode() {
@@ -354,7 +366,7 @@ public class InformeMensualDetalle implements Serializable{
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final InformeMensualDetalle other = (InformeMensualDetalle) obj;
+        final InformeMensualDetalleVO other = (InformeMensualDetalleVO) obj;
         if (!Objects.equals(this.id, other.id)) {
             return false;
         }
@@ -372,7 +384,7 @@ public class InformeMensualDetalle implements Serializable{
 
     @Override
     public String toString() {
-        return "InformeMensualDetalle{" + "id=" + id + ", version=" + version + ", informeMensual=" + informeMensual + ", fecha=" + fecha + ", hrsTrabajadas=" + hrsTrabajadas + ", literaturaVendida=" + literaturaVendida + ", totalPedidos=" + totalPedidos + ", totalVentas=" + totalVentas + ", literaturaGratis=" + literaturaGratis + ", oracionesOfrecidas=" + oracionesOfrecidas + ", casasVisitadas=" + casasVisitadas + ", contactosEstudiosBiblicos=" + contactosEstudiosBiblicos + ", bautizados=" + bautizados + ", diezmo=" + diezmo + ", capturo=" + capturo + ", fechaCaptura=" + fechaCaptura + '}';
+        return "InformeMensualDetalle{" + ", fecha=" + fecha + ", hrsTrabajadas=" + hrsTrabajadas + ", literaturaVendida=" + literaturaVendida + ", totalPedidos=" + totalPedidos + ", totalVentas=" + totalVentas + ", literaturaGratis=" + literaturaGratis + ", oracionesOfrecidas=" + oracionesOfrecidas + ", casasVisitadas=" + casasVisitadas + ", contactosEstudiosBiblicos=" + contactosEstudiosBiblicos + ", bautizados=" + bautizados + ", diezmo=" + diezmo + "}";
     }
 
     

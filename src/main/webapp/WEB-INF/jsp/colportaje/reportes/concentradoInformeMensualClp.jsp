@@ -1,18 +1,19 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
+<%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@include file="../../idioma.jsp"%>
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="informeMensualDetalle.lista.label" /> de <fmt:formatDate pattern="MMMM/yyyy" value="${informeMensual.fecha}" /></title>
+        <title><s:message code="informe.lista.label" /> </title>
     </head>
     <body>
-        <jsp:include page="../menu.jsp" >
-            <jsp:param name="menu" value="informeMensualDetalle" />
+        <jsp:include page="./menu.jsp" >
+            <jsp:param name="menu" value="concentradoInformes" />
         </jsp:include>
 
-        <h1><s:message code="informeMensualDetalle.lista.label" /> de <fmt:formatDate pattern="MMMM/yyyy" value="${informeMensual.fecha}" /></h1>
+        <h1><s:message code="informe.lista.label" /></h1>
         <hr/>
         
         <form name="filtraLista" class="form-search" method="post" action="<c:url value='/colportaje/reportes/concentradoInformesMensuales' />">
@@ -22,6 +23,11 @@
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
+                <sec:authorize access="hasRole('ROLE_ASOC')">
+                    <s:message code="colportor.label" />
+                    <input id="clave" name="clave" class="input-medium search-query" value="${colportor.clave}">
+                </sec:authorize>
+                <s:message code="year.label" />
                 <input id="year" name="year" class="input-medium search-query" value='<fmt:formatDate value="${annio}" pattern="yyyy" />'>
                 <button type="submit" class="btn"><s:message code="buscar.label" /></button>
             </p> 
@@ -34,52 +40,52 @@
                 <tr> 
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="hrsTrabajadas.label" /> </b><fmt:formatNumber type="number" value="${totales.hrsTrabajadas}"/>
+                        <b><s:message code="hrsTrabajadas.label" /> </b><fmt:formatNumber type="number" value="${concentradoInformeMensualClpTotales.hrsTrabajadas}"/>
                         </span>
                     </td>
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="literaturaVendida.label" /> </b><fmt:formatNumber type="number" currencySymbol="$" value="${totales.literaturaVendida}"/>
+                        <b><s:message code="literaturaVendida.label" /> </b><fmt:formatNumber type="number" currencySymbol="$" value="${concentradoInformeMensualClpTotales.literaturaVendida}"/>
                         </span>
                     </td>
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="totalPedidos.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${totales.totalPedidos}"/>
+                        <b><s:message code="totalPedidos.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${concentradoInformeMensualClpTotales.totalPedidos}"/>
                         </span>
                     </td>
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="totalVentas.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${totales.totalVentas}"/>
+                        <b><s:message code="totalVentas.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${concentradoInformeMensualClpTotales.totalVentas}"/>
                         </span>
                     </td>
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="diezmo.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${totales.diezmo}"/>
+                        <b><s:message code="diezmo.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${concentradoInformeMensualClpTotales.diezmo}"/>
                         </span>
                     </td>
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="literaturaGratis.label" /> </b><fmt:formatNumber type="number" value="${totales.literaturaGratis}"/>
+                        <b><s:message code="literaturaGratis.label" /> </b><fmt:formatNumber type="number" value="${concentradoInformeMensualClpTotales.literaturaGratis}"/>
                         </span>
                     </td>
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="oracionesOfrecidas.label" /></b><fmt:formatNumber type="number" value="${totales.oracionesOfrecidas}"/>
+                        <b><s:message code="oracionesOfrecidas.label" /></b><fmt:formatNumber type="number" value="${concentradoInformeMensualClpTotales.oracionesOfrecidas}"/>
                         </span>
                     </td>
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="casasVisitadas.label" /></b><fmt:formatNumber type="number" value="${totales.casasVisitadas}"/>
+                        <b><s:message code="casasVisitadas.label" /></b><fmt:formatNumber type="number" value="${concentradoInformeMensualClpTotales.casasVisitadas}"/>
                         </span>
                     </td>
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="contactosEstudiosBiblicos.label" /></b><fmt:formatNumber type="number" value="${totales.contactosEstudiosBiblicos}"/>
+                        <b><s:message code="contactosEstudiosBiblicos.label" /></b><fmt:formatNumber type="number" value="${concentradoInformeMensualClpTotales.contactosEstudiosBiblicos}"/>
                         </span>
                     </td>
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="bautizados.label" /></b><fmt:formatNumber type="number" value="${totales.bautizados}"/>
+                        <b><s:message code="bautizados.label" /></b><fmt:formatNumber type="number" value="${concentradoInformeMensualClpTotales.bautizados}"/>
                         </span>
                     </td>
                 </tr>
@@ -154,7 +160,7 @@
                     <c:forEach items="${concentradoInformeMensualClp}" var="detalle" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td>
-                                <fmt:formatDate pattern="EEEE dd/MMM" value="${detalle.fecha}" />
+                                ${detalle.mesInforme}
                             </td>
                             
                             <td>
@@ -255,6 +261,19 @@
         </form>        
         <content>
             <script src="<c:url value='/js/lista.js' />"></script>
+            <script>
+            $(function() {
+            
+            $( "#clave" ).autocomplete({
+                source: '${pageContext. request. contextPath}/colportaje/colportor/get_colportor_list',
+                select: function(event, ui) {
+                        $("input#clave").val(ui.item.nombre);
+                        $("select#year").focus();
+                        return false;
+                    }
+            })
+            });
+          </script>
         </content>
     </body>
 </html>

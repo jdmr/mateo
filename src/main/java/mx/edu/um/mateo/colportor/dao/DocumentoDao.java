@@ -3,10 +3,14 @@
  * and open the template in the editor.
  */
 package mx.edu.um.mateo.colportor.dao;
+import java.math.BigDecimal;
 import java.util.*;
 import mx.edu.um.mateo.colportor.model.Documento;
+import mx.edu.um.mateo.colportor.model.InformeMensual;
+import mx.edu.um.mateo.colportor.model.InformeMensualDetalleVO;
 import mx.edu.um.mateo.colportor.model.TemporadaColportor;
 import mx.edu.um.mateo.colportor.utils.UltimoException;
+import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
@@ -20,6 +24,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
 import org.hibernate.type.IntegerType;
+import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.StringType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class DocumentoDao {
+public class DocumentoDao extends BaseDao {
     private static final Logger log = LoggerFactory.getLogger(DocumentoDao.class);
     @Autowired
     private SessionFactory sessionFactory;
@@ -43,9 +48,6 @@ public class DocumentoDao {
         log.info("Nueva instancia de DocumentoDao");
     }
 
-    private Session currentSession() {
-        return sessionFactory.getCurrentSession();
-    }
 
     public Map<String, Object> lista(Map<String, Object> params) {
         log.debug("Buscando lista de documento con params {}", params);
@@ -371,6 +373,51 @@ public class DocumentoDao {
         sql.addOrder(Order.asc("fecha"));
         
         params.put(Constantes.DOCUMENTOCOLPORTOR_LIST, sql.list());
+        return params;
+    }
+    
+    public Map<String, Object> obtieneTodosDiezmosAcumuladosPorColportorFecha(Map<String,Object> params){
+        log.debug("obtieneTodosDiezmosAcumuladosPorColportorFecha");
+        
+        StringBuilder query = new StringBuilder();
+        query.append("select tc.colportor_id, to_char(d.fecha, 'MM/yyyy') as mes, sum(importe) as diezmos ");
+        query.append("from documentos d, temporada_colportor tc ");
+        query.append("where tipodedocumento = 'Diezmo' ");
+        query.append("and tc.id = d.temporadacolportor_id ");
+        query.append("group by tc.colportor_id, to_char(d.fecha, 'MM/yyyy') ");
+        query.append("order by 1,2 ");
+        
+        SQLQuery sql = getSession().createSQLQuery(query.toString());
+        
+        sql.addScalar("colportor_id", StandardBasicTypes.LONG);
+        sql.addScalar("mes", StandardBasicTypes.STRING);
+        sql.addScalar("diezmos", StandardBasicTypes.BIG_DECIMAL);
+        
+        Object [] objs = null;
+        List <Object[]>lista = sql.list();
+        InformeMensualDetalleVO detalle = null;
+        Map <String, InformeMensualDetalleVO> mDetalles = new TreeMap<>();
+        
+        Iterator <Object[]> it = lista.iterator();
+        while(it.hasNext()){
+            objs = it.next();
+            System.out.println(objs[0]);
+            detalle = new InformeMensualDetalleVO();
+            detalle.setInformeMensual(new InformeMensual());
+            detalle.getInformeMensual().getColportor().setId((Long)objs[0]);
+            detalle.setMesInforme((String)objs[1]);
+            
+            System.out.println(objs[2]);
+            try{
+                detalle.setDiezmo((BigDecimal)objs[2]);
+            }catch(NullPointerException e){
+                detalle.setDiezmo(BigDecimal.ZERO);
+            }
+            log.debug("Diezmos key {}",detalle.getInformeMensual().getColportor().getId()+"@"+detalle.getMesInforme());
+            mDetalles.put(detalle.getInformeMensual().getColportor().getId()+"@"+detalle.getMesInforme(), detalle);
+        }
+        params.put(Constantes.DOCUMENTOCOLPORTOR_LIST, mDetalles);
+        
         return params;
     }
 }

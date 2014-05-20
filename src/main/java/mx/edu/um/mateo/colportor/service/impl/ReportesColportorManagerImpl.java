@@ -12,7 +12,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 import mx.edu.um.mateo.colportor.dao.AsociadoDao;
@@ -24,6 +23,7 @@ import mx.edu.um.mateo.colportor.model.Asociado;
 import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.colportor.model.Documento;
 import mx.edu.um.mateo.colportor.model.InformeMensualDetalle;
+import mx.edu.um.mateo.colportor.model.InformeMensualDetalleVO;
 import mx.edu.um.mateo.colportor.model.ReporteColportorVO;
 import mx.edu.um.mateo.colportor.model.TemporadaColportor;
 import mx.edu.um.mateo.colportor.service.ReportesColportorManager;
@@ -418,6 +418,9 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
                 det.setHrsTrabajadas((((det.getTotalVentas().divide(new BigDecimal("2"),mc)).multiply(tmp, mc)).divide(rango, mc)).doubleValue());
             }
             
+            //Calcular pedidos
+            det.setTotalPedidos(det.getTotalVentas().multiply(new BigDecimal("1.25"), mc));
+            
             det.setCasasVisitadas(new Double(det.getHrsTrabajadas()*2.0).intValue());
             det.setOracionesOfrecidas(new Double(det.getCasasVisitadas() * 0.1).intValue());
             det.setContactosEstudiosBiblicos(new Double(det.getOracionesOfrecidas() * 0.1).intValue());
@@ -614,26 +617,13 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         params.put("fechaFinal",cal.getTime());
                 
         params = infMensualDetalleDao.listaInformesConcentradoPorColportor(params);
-        List <InformeMensualDetalle> detalles = (List <InformeMensualDetalle>)params.get(Constantes.INFORMEMENSUAL_DETALLE_LIST);
-        
-        Map <String, Documento> mDiezmos = new TreeMap<>();
-        params = docDao.obtieneTodosDiezmosAcumulados(params);
-        
-        for(Object [] doc : (List<Object[]>)params.get(Constantes.DOCUMENTOCOLPORTOR_LIST)){
-            if(mDiezmos.containsKey(doc[0])){
-                //acumulando
-                mDiezmos.get(doc[0]).setImporte(mDiezmos.get(doc[0]).getImporte().add((BigDecimal)doc[2]));
-            }
-            else{                
-                mDiezmos.put((String)doc[0], new Documento((BigDecimal)doc[2]));
-            }
-        }
-        
+        List <InformeMensualDetalleVO> detalles = (List <InformeMensualDetalleVO>)params.get(Constantes.INFORMEMENSUAL_DETALLE_LIST);
+                
         Asociado asociado = null;
-        InformeMensualDetalle tmpDetalle = null;
-        Map <String, InformeMensualDetalle> mDetalles = new TreeMap<>();
+        InformeMensualDetalleVO tmpDetalle = null;
+        Map <String, InformeMensualDetalleVO> mDetalles = new TreeMap<>();
         
-        InformeMensualDetalle totalDetalle = new InformeMensualDetalle();
+        InformeMensualDetalleVO totalDetalle = new InformeMensualDetalleVO();
         totalDetalle.setBautizados(0);
         totalDetalle.setCasasVisitadas(0);
         totalDetalle.setContactosEstudiosBiblicos(0);
@@ -647,11 +637,17 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         
         MathContext mc = new MathContext(4, RoundingMode.HALF_EVEN);
         
-        for(InformeMensualDetalle det : detalles){
+        params = docDao.obtieneTodosDiezmosAcumuladosPorColportorFecha(params);
+        Map <String, InformeMensualDetalleVO> mDiezmos = (Map <String, InformeMensualDetalleVO>)params.get(Constantes.DOCUMENTOCOLPORTOR_LIST);
+        
+        for(InformeMensualDetalleVO det : detalles){
+            log.debug("Colportor Id {}", det.getInformeMensual().getColportor().getId());
             asociado = ascDao.obtiene(det.getInformeMensual().getColportor().getId());
+            log.debug("Asociado {}", asociado);
             
-            if(mDiezmos.containsKey(asociado.getClave())){
-                det.setDiezmo(mDiezmos.get(asociado.getClave()).getImporte());
+            log.debug("Buscando key {}",mDiezmos.containsKey(det.getInformeMensual().getColportor().getId()+"@"+det.getMesInforme()));
+            if(mDiezmos.containsKey(det.getInformeMensual().getColportor().getId()+"@"+det.getMesInforme())){
+                det.setDiezmo(mDiezmos.get(det.getInformeMensual().getColportor().getId()+"@"+det.getMesInforme()).getDiezmo());
             }
             
             //Realizar aproximaciones de los valores de horas trabajadas
@@ -670,6 +666,8 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
                 BigDecimal tmp = new BigDecimal(40.0*13.0/3.0);
                 det.setHrsTrabajadas((((det.getTotalVentas().divide(new BigDecimal("2"),mc)).multiply(tmp, mc)).divide(rango, mc)).doubleValue());
             }
+            //Calcular pedidos
+            det.setTotalPedidos(det.getTotalVentas().multiply(new BigDecimal("1.25"), mc));
             
             det.setCasasVisitadas(new Double(det.getHrsTrabajadas()*2.0).intValue());
             det.setOracionesOfrecidas(new Double(det.getCasasVisitadas() * 0.1).intValue());
@@ -686,36 +684,9 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
             totalDetalle.setTotalPedidos(totalDetalle.getTotalPedidos().add(det.getTotalPedidos()));
             totalDetalle.setTotalVentas(totalDetalle.getTotalVentas().add(det.getTotalVentas()));
             
-            if(!mDetalles.containsKey(asociado.getClave())){
-                tmpDetalle = new InformeMensualDetalle();
-                tmpDetalle.setInformeMensual(det.getInformeMensual());
-                tmpDetalle.setBautizados(det.getBautizados());
-                tmpDetalle.setCasasVisitadas(det.getCasasVisitadas());
-                tmpDetalle.setContactosEstudiosBiblicos(det.getContactosEstudiosBiblicos());
-                tmpDetalle.setDiezmo(det.getDiezmo());
-                tmpDetalle.setHrsTrabajadas(det.getHrsTrabajadas());
-                tmpDetalle.setLiteraturaGratis(det.getLiteraturaGratis());
-                tmpDetalle.setLiteraturaVendida(det.getLiteraturaVendida());
-                tmpDetalle.setOracionesOfrecidas(det.getOracionesOfrecidas());
-                tmpDetalle.setTotalPedidos(det.getTotalPedidos());
-                tmpDetalle.setTotalVentas(det.getTotalVentas());
-                mDetalles.put(asociado.getClave(), tmpDetalle);
-            }
-            else{
-                tmpDetalle = mDetalles.get(asociado.getClave());
-                tmpDetalle.setBautizados(tmpDetalle.getBautizados()+det.getBautizados());
-                tmpDetalle.setCasasVisitadas(tmpDetalle.getCasasVisitadas()+det.getCasasVisitadas());
-                tmpDetalle.setContactosEstudiosBiblicos(tmpDetalle.getContactosEstudiosBiblicos()+det.getContactosEstudiosBiblicos());
-                tmpDetalle.setDiezmo(tmpDetalle.getDiezmo().add(det.getDiezmo()));
-                tmpDetalle.setHrsTrabajadas(tmpDetalle.getHrsTrabajadas()+det.getHrsTrabajadas());
-                tmpDetalle.setLiteraturaGratis(tmpDetalle.getLiteraturaGratis()+det.getLiteraturaGratis());
-                tmpDetalle.setLiteraturaVendida(tmpDetalle.getLiteraturaVendida()+det.getLiteraturaVendida());
-                tmpDetalle.setOracionesOfrecidas(tmpDetalle.getOracionesOfrecidas()+det.getOracionesOfrecidas());
-                tmpDetalle.setTotalPedidos(tmpDetalle.getTotalPedidos().add(det.getTotalPedidos()));
-                tmpDetalle.setTotalVentas(tmpDetalle.getTotalVentas().add(det.getTotalVentas()));
-            }
+            mDetalles.put(det.getMesInforme(), det);
+  
         }
-        
         params.put(Constantes.CONTAINSKEY_CONCENTRADOINFORMESCOLPORTOR, new ArrayList(mDetalles.values()));        
         params.put(Constantes.CONTAINSKEY_CONCENTRADOINFORMESCOLPORTOR_TOTALES, totalDetalle);        
         return params;

@@ -9,6 +9,7 @@ import mx.edu.um.mateo.colportor.dao.*;
 import java.util.*;
 import mx.edu.um.mateo.colportor.model.InformeMensual;
 import mx.edu.um.mateo.colportor.model.InformeMensualDetalle;
+import mx.edu.um.mateo.colportor.model.InformeMensualDetalleVO;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
@@ -489,21 +490,31 @@ public class InformeMensualDetalleDaoHibernate extends BaseDao implements Inform
         query.append("select * ");
         query.append("from informe_mensual ");
         query.append("where mes_informe between :fechaInicio and :fechaFinal ");
-        query.append(") im, ");
+        query.append("and colportor_id = :colportorId ");
+        query.append(") im ");
         query.append("where imd.informemensual_id = im.id  ");
-        query.append("and im.colportor_id in ");
-        query.append("( ");
-        query.append("select colportor_id  ");
-        query.append("from temporada_colportor ");
-        query.append("where asociado_id = :asociado ");
-        query.append(") ");
+        
+        if(params.containsKey("asociado") && params.get("asociado") != null){
+            query.append("and im.colportor_id in ");
+            query.append("( ");
+            query.append("select colportor_id  ");
+            query.append("from temporada_colportor ");
+            query.append("where asociado_id = :asociadoId ");
+            query.append(") ");
+        }
+        
         query.append("group by im.colportor_id, to_char(im.mes_informe,'MM/yyyy') ");
         query.append("order by 1,2 ");
         
         SQLQuery sql = getSession().createSQLQuery(query.toString());
         sql.setDate("fechaInicio", (Date)params.get("fechaInicio"));
         sql.setDate("fechaFinal", (Date)params.get("fechaFinal"));
-        sql.setLong("asociadoId", (Long)params.get("asociado"));
+        
+        if(params.containsKey("asociado") && params.get("asociado") != null){
+            sql.setLong("asociadoId", (Long)params.get("asociado"));
+        }
+        
+        sql.setLong("colportorId", (Long)params.get("colportor"));
         
         sql.addScalar("colportor_id", StandardBasicTypes.LONG);
         sql.addScalar("mes", StandardBasicTypes.STRING);
@@ -520,13 +531,13 @@ public class InformeMensualDetalleDaoHibernate extends BaseDao implements Inform
         
         Object [] objs = null;
         List <Object[]>lista = sql.list();
-        InformeMensualDetalle detalle = null;
-        List <InformeMensualDetalle> detalles = new ArrayList <> ();
+        InformeMensualDetalleVO detalle = null;
+        List <InformeMensualDetalleVO> detalles = new ArrayList <> ();
         
         Iterator <Object[]> it = lista.iterator();
         while(it.hasNext()){
             objs = it.next();
-            detalle = new InformeMensualDetalle();
+            detalle = new InformeMensualDetalleVO();
             detalle.setInformeMensual(new InformeMensual());
             
             System.out.println(objs[0]);
