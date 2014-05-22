@@ -24,6 +24,7 @@
         <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_ADMIN')" />
         <intercept-url pattern="/inventario/entrada/**" access="hasAnyRole('ROLE_EMP')" />
         <intercept-url pattern="/colportaje/traspaso/**" access="hasAnyRole('ROLE_ADMIN')" />
+        <intercept-url pattern="/colportaje/reportes/concentradoInformesAnuales.*" access="hasAnyRole('ROLE_CLP','ROLE_ASOC')" />
         <intercept-url pattern="/**" access="isAuthenticated()" />
         <form-login login-page="/login.jsp" 
                     login-processing-url="/entrar" 
