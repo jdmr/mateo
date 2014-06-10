@@ -363,11 +363,11 @@ public class DocumentoDao extends BaseDao {
         Criteria sql = currentSession().createCriteria(Documento.class);
         sql.add(Restrictions.eq("tipoDeDocumento", "Diezmo"));
         sql.createAlias("temporadaColportor", "tClp");
-        sql.createAlias("tClp.asociado", "asc");
+        sql.createAlias("tClp.colportor", "clp");
         
         
         sql.setProjection(Projections.projectionList()
-            .add(Projections.groupProperty("asc.clave"))
+            .add(Projections.groupProperty("clp.clave"))
             .add(Projections.groupProperty("fecha"))
             .add(Projections.sum("importe")));
         sql.addOrder(Order.asc("fecha"));
