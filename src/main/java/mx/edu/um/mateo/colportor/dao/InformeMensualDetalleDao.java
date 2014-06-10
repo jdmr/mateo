@@ -72,4 +72,10 @@ public interface InformeMensualDetalleDao {
      * @return 
      */
     public Map<String, Object> listaInformesConcentradoAnualPorColportor(Map<String, Object> params);
+    /**
+     * Regresa el concentrado de todos los informes semanales del colportor de todo un anno
+     * @param params
+     * @return 
+     */
+    public Map<String, Object> listaInformesConcentradoSemanalPorColportor(Map<String, Object> params);
 }

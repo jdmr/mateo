@@ -465,4 +465,49 @@ public class DocumentoDao extends BaseDao {
         
         return params;
     }
+    
+    public Map<String, Object> obtieneTodosDiezmosSemanalesAcumuladosPorColportor(Map<String,Object> params){
+        log.debug("obtieneTodosDiezmosSemanalesAcumuladosPorColportorFecha");
+        
+        StringBuilder query = new StringBuilder();
+        query.append("select tc.colportor_id, date_trunc('week', d.fecha) AS \"Week\", sum(importe) as diezmos ");
+        query.append("from documentos d, temporada_colportor tc ");
+        query.append("where tipodedocumento = 'Diezmo' ");
+        query.append("and tc.id = d.temporadacolportor_id ");
+        query.append("group by tc.colportor_id, \"Week\" ");
+        query.append("order by 1,2 ");
+        
+        SQLQuery sql = getSession().createSQLQuery(query.toString());
+        
+        sql.addScalar("colportor_id", StandardBasicTypes.LONG);
+        sql.addScalar("week", StandardBasicTypes.STRING);
+        sql.addScalar("diezmos", StandardBasicTypes.BIG_DECIMAL);
+        
+        Object [] objs = null;
+        List <Object[]>lista = sql.list();
+        InformeMensualDetalleVO detalle = null;
+        Map <String, InformeMensualDetalleVO> mDetalles = new TreeMap<>();
+        
+        Iterator <Object[]> it = lista.iterator();
+        while(it.hasNext()){
+            objs = it.next();
+            System.out.println(objs[0]);
+            detalle = new InformeMensualDetalleVO();
+            detalle.setInformeMensual(new InformeMensual());
+            detalle.getInformeMensual().getColportor().setId((Long)objs[0]);
+            detalle.setMesInforme((String)objs[1]);
+            
+            System.out.println(objs[2]);
+            try{
+                detalle.setDiezmo((BigDecimal)objs[2]);
+            }catch(NullPointerException e){
+                detalle.setDiezmo(BigDecimal.ZERO);
+            }
+            log.debug("Diezmos key {}",detalle.getInformeMensual().getColportor().getId()+"@"+detalle.getMesInforme());
+            mDetalles.put(detalle.getInformeMensual().getColportor().getId()+"@"+detalle.getMesInforme(), detalle);
+        }
+        params.put(Constantes.DOCUMENTOCOLPORTOR_LIST, mDetalles);
+        
+        return params;
+    }
 }

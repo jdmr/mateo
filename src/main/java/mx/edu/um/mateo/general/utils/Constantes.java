@@ -2999,6 +2999,9 @@ public class Constantes {
     public static final String PATH_RPT_CLP_CONCENTRADOINFORMESANUALES = "/colportaje/reportes/concentradoInformeAnualClp";
     public static final String CONTAINSKEY_CONCENTRADOINFORMESANUALES = "concentradoInformeAnualClp";
     public static final String CONTAINSKEY_CONCENTRADOINFORMESANUALES_TOTALES = "concentradoInformeAnualClpTotales";
+    public static final String PATH_RPT_CLP_CONCENTRADOINFORMESSEMANALES = "/colportaje/reportes/concentradoInformeSemanalClp";
+    public static final String CONTAINSKEY_CONCENTRADOINFORMESSEMANALES = "concentradoInformeSemanalClp";
+    public static final String CONTAINSKEY_CONCENTRADOINFORMESSEMANALES_TOTALES = "concentradoInformeSemanalClpTotales";
     /**
      * Valores para los Clientes de Colportor
      */

@@ -6,17 +6,17 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="informeMensual.label" /> </title>
+        <title><s:message code="informeSemanal.label" /> </title>
     </head>
     <body>
         <jsp:include page="./menu.jsp" >
-            <jsp:param name="menu" value="concentradoInformes" />
+            <jsp:param name="menu" value="concentradoInformesSemanales" />
         </jsp:include>
 
-        <h1><s:message code="informeMensual.label" /></h1>
+        <h1><s:message code="informeSemanal.label" /></h1>
         <hr/>
         
-        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/colportaje/reportes/concentradoInformesMensuales' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/colportaje/reportes/concentradoInformesSemanales' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="observaciones" id="observaciones" value="" />
@@ -26,66 +26,67 @@
                 <sec:authorize access="hasRole('ROLE_ASOC')">
                     <s:message code="colportor.label" />
                     <input id="clave" name="clave" class="input-medium search-query" value="${colportor.clave}">
+                    <s:message code="year.label" />
+                    <input type="text" id="year" name="year" maxlength="10"/>&nbsp;
                     <button type="submit" class="btn"><s:message code="buscar.label" /></button>
                 </sec:authorize>
-                <sec:authorize access="hasRole('ROLE_CLP')">
-                    <h4>
-                    ${colportor.clave} ${colportor.nombreCompleto}   
-                    </h4>
-                </sec:authorize>
+                
             </p> 
         </form>
+        <h4>
+            ${colportor.clave} ${colportor.nombreCompleto}   
+        </h4>
         <table id="totales" class="table">
             <tbody>
                 <tr> 
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="hrsTrabajadas.label" /> </b><fmt:formatNumber type="number" value="${concentradoInformeMensualClpTotales.hrsTrabajadas}"/>
+                        <b><s:message code="hrsTrabajadas.label" /> </b><fmt:formatNumber type="number" value="${concentradoInformeSemanalClpTotales.hrsTrabajadas}"/>
                         </span>
                     </td>
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="literaturaVendida.label" /> </b><fmt:formatNumber type="number" currencySymbol="$" value="${concentradoInformeMensualClpTotales.literaturaVendida}"/>
+                        <b><s:message code="literaturaVendida.label" /> </b><fmt:formatNumber type="number" currencySymbol="$" value="${concentradoInformeSemanalClpTotales.literaturaVendida}"/>
                         </span>
                     </td>
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="totalPedidos.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${concentradoInformeMensualClpTotales.totalPedidos}"/>
+                        <b><s:message code="totalPedidos.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${concentradoInformeSemanalClpTotales.totalPedidos}"/>
                         </span>
                     </td>
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="totalVentas.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${concentradoInformeMensualClpTotales.totalVentas}"/>
+                        <b><s:message code="totalVentas.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${concentradoInformeSemanalClpTotales.totalVentas}"/>
                         </span>
                     </td>
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="diezmo.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${concentradoInformeMensualClpTotales.diezmo}"/>
+                        <b><s:message code="diezmo.label" /> </b><fmt:formatNumber type="currency" currencySymbol="$" value="${concentradoInformeSemanalClpTotales.diezmo}"/>
                         </span>
                     </td>
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="literaturaGratis.label" /> </b><fmt:formatNumber type="number" value="${concentradoInformeMensualClpTotales.literaturaGratis}"/>
+                        <b><s:message code="literaturaGratis.label" /> </b><fmt:formatNumber type="number" value="${concentradoInformeSemanalClpTotales.literaturaGratis}"/>
                         </span>
                     </td>
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="oracionesOfrecidas.label" /></b><fmt:formatNumber type="number" value="${concentradoInformeMensualClpTotales.oracionesOfrecidas}"/>
+                        <b><s:message code="oracionesOfrecidas.label" /></b><fmt:formatNumber type="number" value="${concentradoInformeSemanalClpTotales.oracionesOfrecidas}"/>
                         </span>
                     </td>
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="casasVisitadas.label" /></b><fmt:formatNumber type="number" value="${concentradoInformeMensualClpTotales.casasVisitadas}"/>
+                        <b><s:message code="casasVisitadas.label" /></b><fmt:formatNumber type="number" value="${concentradoInformeSemanalClpTotales.casasVisitadas}"/>
                         </span>
                     </td>
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="contactosEstudiosBiblicos.label" /></b><fmt:formatNumber type="number" value="${concentradoInformeMensualClpTotales.contactosEstudiosBiblicos}"/>
+                        <b><s:message code="contactosEstudiosBiblicos.label" /></b><fmt:formatNumber type="number" value="${concentradoInformeSemanalClpTotales.contactosEstudiosBiblicos}"/>
                         </span>
                     </td>
                     <td>
                         <span class="label label-success">
-                        <b><s:message code="bautizados.label" /></b><fmt:formatNumber type="number" value="${concentradoInformeMensualClpTotales.bautizados}"/>
+                        <b><s:message code="bautizados.label" /></b><fmt:formatNumber type="number" value="${concentradoInformeSemanalClpTotales.bautizados}"/>
                         </span>
                     </td>
                 </tr>
@@ -157,7 +158,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${concentradoInformeMensualClp}" var="detalle" varStatus="status">
+                    <c:forEach items="${concentradoInformeSemanalClp}" var="detalle" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td>
                                 ${detalle.mesInforme}

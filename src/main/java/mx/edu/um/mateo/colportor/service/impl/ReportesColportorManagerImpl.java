@@ -772,4 +772,98 @@ public class ReportesColportorManagerImpl extends BaseManager implements Reporte
         params.put(Constantes.CONTAINSKEY_CONCENTRADOINFORMESANUALES_TOTALES, totalDetalle);        
         return params;
     }
+    /**
+     * @see mx.edu.um.mateo.colportor.service.ReportesColportorManager#concentradoInformesSemanalesColportor(java.util.Map) 
+     */
+    public Map<String, Object> concentradoInformesSemanalesColportor(Map<String, Object> params) throws Exception{
+        Map <String, Colportor> mVOS = new TreeMap<>();
+        
+        Calendar cal = Calendar.getInstance(local);
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        cal.set(Calendar.YEAR, (Integer)params.get("year"));
+        
+        cal.set(Calendar.DATE, cal.getActualMinimum(Calendar.DATE));
+        System.out.println("Fecha Inicio "+cal.getTime());
+        params.put("fechaInicio",cal.getTime());
+        
+        cal.set(Calendar.MONTH, Calendar.DECEMBER);
+        cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
+        System.out.println("Fecha Final "+cal.getTime());
+        params.put("fechaFinal",cal.getTime());
+                
+        params = infMensualDetalleDao.listaInformesConcentradoSemanalPorColportor(params);
+        List <InformeMensualDetalleVO> detalles = (List <InformeMensualDetalleVO>)params.get(Constantes.INFORMEMENSUAL_DETALLE_LIST);
+                
+        Asociado asociado = null;
+        InformeMensualDetalleVO tmpDetalle = null;
+        Map <String, InformeMensualDetalleVO> mDetalles = new TreeMap<>();
+        
+        InformeMensualDetalleVO totalDetalle = new InformeMensualDetalleVO();
+        totalDetalle.setBautizados(0);
+        totalDetalle.setCasasVisitadas(0);
+        totalDetalle.setContactosEstudiosBiblicos(0);
+        totalDetalle.setDiezmo(BigDecimal.ZERO);
+        totalDetalle.setHrsTrabajadas(0.0);
+        totalDetalle.setLiteraturaGratis(0);
+        totalDetalle.setLiteraturaVendida(0);
+        totalDetalle.setOracionesOfrecidas(0);
+        totalDetalle.setTotalPedidos(BigDecimal.ZERO);
+        totalDetalle.setTotalVentas(BigDecimal.ZERO);
+        
+        MathContext mc = new MathContext(4, RoundingMode.HALF_EVEN);
+        
+        params = docDao.obtieneTodosDiezmosSemanalesAcumuladosPorColportor(params);
+        Map <String, InformeMensualDetalleVO> mDiezmos = (Map <String, InformeMensualDetalleVO>)params.get(Constantes.DOCUMENTOCOLPORTOR_LIST);
+        
+        for(InformeMensualDetalleVO det : detalles){
+            log.debug("Colportor Id {}", det.getInformeMensual().getColportor().getId());
+            asociado = ascDao.obtiene(det.getInformeMensual().getColportor().getId());
+            log.debug("Asociado {}", asociado);
+            
+            log.debug("Buscando key {}",mDiezmos.containsKey(det.getInformeMensual().getColportor().getId()+"@"+det.getMesInforme()));
+            if(mDiezmos.containsKey(det.getInformeMensual().getColportor().getId()+"@"+det.getMesInforme())){
+                det.setDiezmo(mDiezmos.get(det.getInformeMensual().getColportor().getId()+"@"+det.getMesInforme()).getDiezmo());
+            }
+            
+            //Realizar aproximaciones de los valores de horas trabajadas
+            BigDecimal rango = BigDecimal.ZERO;
+            //este valor temporalmente es fijo, posteriormente debe cambiarse por la lectura de los rangos
+            switch(gcFecha.get(Calendar.YEAR)){
+                case 2014: {rango = new BigDecimal("67500.00"); break;}
+                default: {break;}
+            }
+            //Las ventas se dividen por 2, para evitar que las horas se dupliquen
+            if((det.getTotalVentas().divide(new BigDecimal("2"),mc)).compareTo(rango) > 0){
+                det.setHrsTrabajadas(2080.00);
+            }
+            else{
+                //regla de tres para obtener hrs proporcionales
+                BigDecimal tmp = new BigDecimal(2080.00);
+                det.setHrsTrabajadas((((det.getTotalVentas().divide(new BigDecimal("2"),mc)).multiply(tmp, mc)).divide(rango, mc)).doubleValue());
+            }
+            //Calcular pedidos
+            det.setTotalPedidos(det.getTotalVentas().multiply(new BigDecimal("1.25"), mc));
+            
+            det.setCasasVisitadas(new Double(det.getHrsTrabajadas()*2.0).intValue());
+            det.setOracionesOfrecidas(new Double(det.getCasasVisitadas() * 0.1).intValue());
+            det.setContactosEstudiosBiblicos(new Double(det.getOracionesOfrecidas() * 0.1).intValue());
+            
+            totalDetalle.setBautizados(totalDetalle.getBautizados()+det.getBautizados());
+            totalDetalle.setCasasVisitadas(totalDetalle.getCasasVisitadas()+det.getCasasVisitadas());
+            totalDetalle.setContactosEstudiosBiblicos(totalDetalle.getContactosEstudiosBiblicos()+det.getContactosEstudiosBiblicos());
+            totalDetalle.setDiezmo(totalDetalle.getDiezmo().add(det.getDiezmo()));
+            totalDetalle.setHrsTrabajadas(totalDetalle.getHrsTrabajadas()+det.getHrsTrabajadas());
+            totalDetalle.setLiteraturaGratis(totalDetalle.getLiteraturaGratis()+det.getLiteraturaGratis());
+            totalDetalle.setLiteraturaVendida(totalDetalle.getLiteraturaVendida()+det.getLiteraturaVendida());
+            totalDetalle.setOracionesOfrecidas(totalDetalle.getOracionesOfrecidas()+det.getOracionesOfrecidas());
+            totalDetalle.setTotalPedidos(totalDetalle.getTotalPedidos().add(det.getTotalPedidos()));
+            totalDetalle.setTotalVentas(totalDetalle.getTotalVentas().add(det.getTotalVentas()));
+            
+            mDetalles.put(det.getMesInforme(), det);
+  
+        }
+        params.put(Constantes.CONTAINSKEY_CONCENTRADOINFORMESSEMANALES, new ArrayList(mDetalles.values()));        
+        params.put(Constantes.CONTAINSKEY_CONCENTRADOINFORMESSEMANALES_TOTALES, totalDetalle);        
+        return params;
+    }
 }
