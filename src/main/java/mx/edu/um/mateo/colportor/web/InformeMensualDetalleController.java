@@ -67,7 +67,7 @@ public class InformeMensualDetalleController extends BaseController {
     @Autowired
     private Ambiente ambiente;
 
-    @RequestMapping({"/lista"})
+    @RequestMapping(value={"/lista","/listaSemanal"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
             @RequestParam(required = false) Long pagina,
@@ -147,7 +147,16 @@ public class InformeMensualDetalleController extends BaseController {
         
         pagina(params, modelo, Constantes.INFORMEMENSUAL_DETALLE_LIST, pagina);
         
-        return Constantes.INFORMEMENSUAL_DETALLE_PATH_LISTA;
+        log.debug("termina con listaSemanal {} ", request.getRequestURL().toString().endsWith("listaSemanal"));
+        log.debug("contien listaSemanal {} ", request.getRequestURL().indexOf("listaSemanal") > -1);
+        
+        if(request.getRequestURL().toString().endsWith("listaSemanal")){
+            return Constantes.INFORMEMENSUAL_DETALLE_PATH_LISTASEMANAL;
+        }
+        else{
+            
+            return Constantes.INFORMEMENSUAL_DETALLE_PATH_LISTA;
+        }
     }
 
     @RequestMapping("/ver/{id}")

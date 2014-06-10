@@ -2904,6 +2904,7 @@ public class Constantes {
     //Informe Mensual Detalle Colportor        
     public static final String INFORMEMENSUAL_DETALLE_PATH = "/colportaje/informes/informeMensualDetalle";
     public static final String INFORMEMENSUAL_DETALLE_PATH_LISTA = "/colportaje/informes/informeMensualDetalle/lista";
+    public static final String INFORMEMENSUAL_DETALLE_PATH_LISTASEMANAL = "/colportaje/informes/informeMensualDetalle/listaSemanal";
     public static final String INFORMEMENSUAL_DETALLE_PATH_VER = "/colportaje/informes/informeMensualDetalle/ver";
     public static final String INFORMEMENSUAL_DETALLE_PATH_NUEVO = "/colportaje/informes/informeMensualDetalle/nuevo";
     public static final String INFORMEMENSUAL_DETALLE_PATH_EDITA = "/colportaje/informes/informeMensualDetalle/edita";
