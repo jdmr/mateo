@@ -365,6 +365,7 @@ public class DocumentoDao extends BaseDao {
         sql.createAlias("temporadaColportor", "tClp");
         sql.createAlias("tClp.colportor", "clp");
         
+        sql.add(Restrictions.between("fecha", (Date)params.get("fechaInicio"), (Date)params.get("fechaFinal")));
         
         sql.setProjection(Projections.projectionList()
             .add(Projections.groupProperty("clp.clave"))
