@@ -22,7 +22,7 @@
                 </sec:authorize>
                 <sec:authorize access="hasRole('ROLE_PRV')">
                     <a class="btn btn-primary" href="<s:url value='/factura/informeProveedorDetalle'/>"><i class="icon-list icon-white"></i> <s:message code='informeProveedorDetalle.lista.label' /></a>
-                    <a class="btn btn-primary" href="<s:url value='/factura/informeProveedorDetalle/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='informeProveedorDetalle.nuevo.label' /></a>
+                    <a class="btn btn-primary" href="<s:url value='/factura/informeProveedorDetalle/nueva'/>"><i class="icon-user icon-white"></i> <s:message code='informeProveedorDetalle.nuevo.label' /></a>
                 </sec:authorize>
             </p>
             <c:if test="${not empty message}">

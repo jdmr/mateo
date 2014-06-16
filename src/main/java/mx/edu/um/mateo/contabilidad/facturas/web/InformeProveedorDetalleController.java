@@ -506,6 +506,7 @@ public class InformeProveedorDetalleController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
+        params.put(Constantes.CONTAINSKEY_REPORTE, Constantes.CONTAINSKEY_REPORTE);
 //        InformeProveedor informeId = (InformeProveedor) request.getSession().getAttribute("informeId");
 //        params.put("informeProveedor", informeId.getId());
         if (StringUtils.isNotBlank(filtro)) {
@@ -524,7 +525,7 @@ public class InformeProveedorDetalleController extends BaseController {
         }
 
         if (StringUtils.isNotBlank(tipo)) {
-            params.put(Constantes.CONTAINSKEY_REPORTE, true);
+            params.put(Constantes.CONTAINSKEY_REPORTE, Constantes.CONTAINSKEY_REPORTE);
             params = manager.revisar(params);
             try {
                 generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE),
@@ -837,6 +838,7 @@ public class InformeProveedorDetalleController extends BaseController {
             detalle.setPathPDF("/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + uploadFileForm.getFile().getOriginalFilename());
             detalle.setNombrePDF(uploadFileForm.getFile().getOriginalFilename());
             manager.actualiza(detalle, usuario);
+            request.getSession().setAttribute("esPdf", false);
         }
 
         return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;

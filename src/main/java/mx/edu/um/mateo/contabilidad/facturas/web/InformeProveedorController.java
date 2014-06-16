@@ -16,6 +16,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
@@ -352,34 +353,45 @@ public class InformeProveedorController extends BaseController {
             informe.setProveedorFacturas(proveedorFacturas);
 
             String formaPago = informe.getFormaPago();
-            ProveedorFacturas proveedorFacturas1 = pFacturasManager.obtiene(proveedorFacturas.getId());
+//            ProveedorFacturas proveedorFacturas1 = pFacturasManager.obtiene(proveedorFacturas.getId());
+            log.debug(formaPago);
+            log.debug(informe.getBanco());
+            log.debug(informe.getClabe());
+            log.debug(informe.getCuentaCheque());
+
             if (informe.getBanco() != null && informe.getBanco() != proveedorFacturas.getBanco() && !informe.getBanco().isEmpty()) {
-                proveedorFacturas1.setBanco(informe.getBanco());
-                pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
+                log.debug("entrando banco");
+                proveedorFacturas.setBanco(informe.getBanco());
+//                pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
             } else if (informe.getBanco() == null || informe.getBanco().isEmpty()) {
 
                 return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
             }
-            switch (formaPago) {
-                case "T":
-                    if (informe.getClabe() != null && informe.getClabe() != proveedorFacturas.getClabe() && !informe.getClabe().isEmpty()) {
-                        proveedorFacturas1.setClabe(informe.getClabe());
-                        pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
-                    } else if (informe.getClabe() == null || informe.getClabe().isEmpty()) {
-                        log.debug("clabe null");
-                        return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
-                    }
-                    break;
-                case "C":
-                    if (informe.getCuentaCheque() != null && informe.getCuentaCheque() != proveedorFacturas.getCuentaCheque() && !informe.getCuentaCheque().isEmpty()) {
-                        proveedorFacturas1.setCuentaCheque(informe.getCuentaCheque());
-                        pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
-                    } else if (informe.getCuentaCheque() == null || informe.getCuentaCheque().isEmpty()) {
-                        log.debug("cuentanull");
-                        return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
-                    }
-                    break;
+//            switch (formaPago) {
+//                case "T":
+            log.debug("entrando clabe");
+            if (informe.getClabe() != null && informe.getClabe() != proveedorFacturas.getClabe() && !informe.getClabe().isEmpty()) {
+                proveedorFacturas.setClabe(informe.getClabe());
+//                        pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
+            } else if (informe.getClabe() == null || informe.getClabe().isEmpty()) {
+                log.debug("clabe null");
+                return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
             }
+//                    break;
+//                case "C":
+            log.debug("entrando cheque");
+            if (informe.getCuentaCheque() != null && informe.getCuentaCheque() != proveedorFacturas.getCuentaCheque() && !informe.getCuentaCheque().isEmpty()) {
+                proveedorFacturas.setCuentaCheque(informe.getCuentaCheque());
+//                        pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
+            } else if (informe.getCuentaCheque() == null || informe.getCuentaCheque().isEmpty()) {
+                log.debug("cuentanull");
+                return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
+            }
+//                    break;
+//            }
+
+            pFacturasManager.actualiza(proveedorFacturas, usuario);
+            ambiente.actualizaSesion(request.getSession(), proveedorFacturas);
         }
         if (usuario.isEmpleado()) {
             Empleado empleado = (Empleado) usuario;

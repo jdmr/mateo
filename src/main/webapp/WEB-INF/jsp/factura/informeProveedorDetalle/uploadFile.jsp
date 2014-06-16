@@ -24,16 +24,16 @@
                         </c:forEach>
                     </div>
                 </form:errors>
-
+                <c:if test="${esPdf}">
+                    <h1><s:message code="subirPDF.label" /></h1>
+                    <img src="/mateo/images/pdf.png" width="120" height="100" />
+                </c:if>
+                <c:if test="${esXml}">
+                    <h1><s:message code="subirXML.label" /></h1>
+                    <img src="/mateo/images/xml.png" width="120" height="100" />
+                </c:if>
                 <fieldset>
-                    <c:if test="${esPdf}">
-                        <h1><s:message code="subirPDF.label" /></h1>
-                        <img src="/mateo/images/pdf.png" width="120" height="100" />
-                    </c:if>
-                    <c:if test="${esXml}">
-                        <h1><s:message code="subirXML.label" /></h1>
-                        <img src="/mateo/images/xml.png" width="120" height="100" />
-                    </c:if>
+
                     <div class="row-fluid">
                         <div class="span4">
                             <div class="control-group">

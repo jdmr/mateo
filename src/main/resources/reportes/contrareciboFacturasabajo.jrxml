@@ -126,11 +126,6 @@
 				<textFieldExpression><![CDATA[$F{informeProveedorDetalle.folioFactura}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="afe2428e-7670-4905-89a5-1228ab6e34b8" x="134" y="0" width="136" height="17"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{informeProveedorDetalle.subtotal}]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement uuid="aff044c7-2e66-422a-bea4-25de315453c8" x="400" y="0" width="100" height="17"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{informeProveedorDetalle.total}]]></textFieldExpression>
@@ -143,6 +138,11 @@
 			<line>
 				<reportElement uuid="707827ce-d350-4e4f-bbcd-556d492a4c0b" x="0" y="14" width="572" height="3"/>
 			</line>
+			<textField>
+				<reportElement uuid="afe2428e-7670-4905-89a5-1228ab6e34b8" x="134" y="0" width="136" height="17"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{informeProveedorDetalle.subtotal}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>
