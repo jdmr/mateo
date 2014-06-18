@@ -35,7 +35,7 @@ public class InformesController extends BaseController  {
     @Autowired
     private ReportesColportorManager rclpMgr;
     
-    @RequestMapping({"/colportaje/informes"})
+    @RequestMapping
     public String index() {
         log.debug("Mostrando menu de colportaje/informes");
         return "colportaje/informes/index";
@@ -94,6 +94,9 @@ public class InformesController extends BaseController  {
 
         modelo.addAttribute(Constantes.ASOCIADO_COLPORTOR, ambiente.obtieneUsuario());
         modelo.addAttribute(Constantes.CONTAINSKEY_INFORMEMENSUALASOCIADO, params.get(Constantes.CONTAINSKEY_INFORMEMENSUALASOCIADO));
+        
+        //Se almacena en session para que al darle 'enviar' sea facil recuperarlo en InformeMensualAsociadoController
+        request.getSession().setAttribute(Constantes.CONTAINSKEY_INFORMEMENSUALASOCIADO, params.get(Constantes.CONTAINSKEY_INFORMEMENSUALASOCIADO));
         
         InformeMensualDetalle detalle = (InformeMensualDetalle)params.get(Constantes.CONTAINSKEY_INFORMEMENSUALASOCIADO_TOTALES);
         Calendar gcFecha = Calendar.getInstance(TimeZone.getTimeZone("America/Monterrey"));

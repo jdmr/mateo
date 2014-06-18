@@ -7,6 +7,8 @@
         <li><a href="<c:url value='/inicio' />"><s:message code="inicio.label" /></a></li>
         <li<c:if test="${param.menu eq 'principal'}"> class="active"</c:if>><a href="<c:url value='/colportaje' />"><s:message code="colportaje.label" /></a></li>
         <sec:authorize access="hasRole('ROLE_ASOC')">
+        <li<c:if test="${param.menu eq 'catalogos'}"> class="active"</c:if>><a href="<s:url value='/colportaje/catalogos'/>" ><s:message code="catalogos.label" /></a></li>
+        <li<c:if test="${param.menu eq 'uploadFile'}"> class="active"</c:if>><a href="<s:url value='/uploadFile'/>" ><s:message code="uploadFile.label" /></a></li>
         <li<c:if test="${param.menu eq 'uploadFile'}"> class="active"</c:if>><a href="<s:url value='/uploadFile'/>" ><s:message code="uploadFile.label" /></a></li>
         <li<c:if test="${param.menu eq 'importarDatos'}"> class="active"</c:if>><a href="<s:url value='/colportaje/importarDatos'/>" ><s:message code="importarDatos.label" /></a></li>
         <li<c:if test="${param.menu eq 'colegio'}"> class="active"</c:if>><a href="<s:url value='/colportaje/colegio'/>" ><s:message code="colegio.label" /></a></li>

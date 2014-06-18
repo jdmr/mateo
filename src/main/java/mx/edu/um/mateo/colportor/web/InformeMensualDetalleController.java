@@ -140,21 +140,23 @@ public class InformeMensualDetalleController extends BaseController {
             }
         }
         
+        if(request.getRequestURL().toString().endsWith("listaSemanal")){
+            params.put("url", "listaSemanal");
+        }
+        
         params = informeMensualDetalleMgr.lista(params);
-                
+        
         modelo.addAttribute(Constantes.INFORMEMENSUAL_DETALLE_LIST, params.get(Constantes.INFORMEMENSUAL_DETALLE_LIST));
         modelo.addAttribute("totales", params.get("totales"));
-        
+
         pagina(params, modelo, Constantes.INFORMEMENSUAL_DETALLE_LIST, pagina);
-        
-        log.debug("termina con listaSemanal {} ", request.getRequestURL().toString().endsWith("listaSemanal"));
-        log.debug("contien listaSemanal {} ", request.getRequestURL().indexOf("listaSemanal") > -1);
-        
+                
         if(request.getRequestURL().toString().endsWith("listaSemanal")){
+        
             return Constantes.INFORMEMENSUAL_DETALLE_PATH_LISTASEMANAL;
         }
         else{
-            
+        
             return Constantes.INFORMEMENSUAL_DETALLE_PATH_LISTA;
         }
     }

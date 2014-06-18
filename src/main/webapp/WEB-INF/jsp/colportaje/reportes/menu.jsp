@@ -12,7 +12,6 @@
         </sec:authorize>
         <li<c:if test="${param.menu eq 'concentradoGral'}"> class="active"</c:if>><a href="<s:url value='/colportaje/reportes/concentradoGeneralPorTemporadas'/>" ><s:message code="concentradoGralPorTemporadas.label" /></a></li>
         <li<c:if test="${param.menu eq 'concentradoInformes'}"> class="active"</c:if>><a href="<s:url value='/colportaje/reportes/concentradoInformesMensuales'/>" ><s:message code="concentradoInformesMensuales.label" /></a></li>
-        <li<c:if test="${param.menu eq 'concentradoInformesSemanales'}"> class="active"</c:if>><a href="<s:url value='/colportaje/reportes/concentradoInformesSemanales'/>" ><s:message code="concentradoInformesSemanales.label" /></a></li>
         <li<c:if test="${param.menu eq 'concentradoInformesAnuales'}"> class="active"</c:if>><a href="<s:url value='/colportaje/reportes/concentradoInformesAnuales'/>" ><s:message code="concentradoInformesAnuales.label" /></a></li>
         <li<c:if test="${param.menu eq 'planMensualOracion'}"> class="active"</c:if>><a href="<s:url value='/colportaje/reportes/planMensualOracion'/>" ><s:message code="planMensualOracion.label" /></a></li>
         <li<c:if test="${param.menu eq 'planDiarioOracion'}"> class="active"</c:if>><a href="<s:url value='/colportaje/reportes/planDiarioOracion'/>" ><s:message code="planDiarioOracion.label" /></a></li>

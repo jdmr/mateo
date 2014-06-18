@@ -173,7 +173,26 @@ public class InformeMensualDetalleManagerImpl extends BaseManager implements Inf
         tmp.setBautizados(totalBautizados);
         mInformes.put(tmp.getFecha(), tmp);
         
-        params.put(Constantes.INFORMEMENSUAL_DETALLE_LIST, new ArrayList(mInformes.values()));
+        List<InformeMensualDetalle> lista = new ArrayList(mInformes.values());
+        
+        if(params.get("url") != null && ((String)params.get("url")).equals("listaSemanal")){
+            it = lista.iterator();
+            Date tmpFecha = null;
+            while(it.hasNext()){
+                det = it.next();
+                //Si no es un total semanal
+                if(!det.getInformeMensual().getStatus().equals("@")){
+                    tmpFecha = det.getFecha();
+                    it.remove();
+                }
+                else{
+                    det.setFecha(tmpFecha);
+                }
+            }
+            
+        }
+        
+        params.put(Constantes.INFORMEMENSUAL_DETALLE_LIST, lista);
         params.put("totales", totales);
         return params;
     }

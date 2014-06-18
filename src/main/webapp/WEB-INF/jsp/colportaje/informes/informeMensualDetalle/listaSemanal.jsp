@@ -145,92 +145,61 @@
                 <tbody>
                     ${informeMensualDetalle}
                     <c:forEach items="${informeMensualDetalles}" var="detalle" varStatus="status">
-                        <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
+                            <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td>
-                                <%/*
-                                <c:if test="${detalle.informeMensual.status ne '@'}">
-                                    <c:if test="${empty detalle.id}">
-                                        <a href="<c:url value='/colportaje/informes/informeMensualDetalle/nuevoReg/${detalle.fecha}' />">
-                                    </c:if>
-                                    <c:if test="${not empty detalle.id}">
-                                        <a href="<c:url value='/colportaje/informes/informeMensualDetalle/ver/${detalle.id}' />">
-                                    </c:if>
+                                    <b>
                                         <fmt:formatDate pattern="EEEE dd/MMM" value="${detalle.fecha}" />
-                                    </a>
-                                </c:if>                                
-                                */%>
+                                    </b>
                             </td>
-                            
                             <td>
-                                <c:if test="${detalle.informeMensual.status eq '@'}">
                                     <b>
                                     <fmt:formatNumber type="number" pattern="###,###" value="${detalle.hrsTrabajadas}"/>
                                     </b>
-                                </c:if>
                             </td>
                             <td>
-                                <c:if test="${detalle.informeMensual.status eq '@'}">
                                     <b>
                                     ${detalle.literaturaVendida}</td>
                                     </b>
-                                </c:if>
                             <td>
-                                <c:if test="${detalle.informeMensual.status eq '@'}">
                                     <b>
                                     <fmt:formatNumber type="decimal" pattern="###,##0.00" value="${detalle.totalPedidos}"/>
                                     </b>
-                                </c:if>
                             </td>
                             <td>
-                                <c:if test="${detalle.informeMensual.status eq '@'}">
                                     <b>
                                     <fmt:formatNumber type="decimal" pattern="###,##0.00" value="${detalle.totalVentas}"/>
                                     </b>
-                                </c:if>
                             </td>
                             <td>
-                                <c:if test="${detalle.informeMensual.status eq '@'}">
                                     <b>
                                     ${detalle.literaturaGratis}
                                     </b>
-                                </c:if>
                             </td>
                             <td>
-                                <c:if test="${detalle.informeMensual.status eq '@'}">
                                     <b>
                                     ${detalle.oracionesOfrecidas}
                                     </b>
-                                </c:if>
                             </td>
                             <td>
-                                <c:if test="${detalle.informeMensual.status eq '@'}">
                                     <b>
                                     ${detalle.casasVisitadas}
                                     </b>
-                                </c:if>
                             </td>
                             <td>
-                                <c:if test="${detalle.informeMensual.status eq '@'}">
                                     <b>
                                     ${detalle.contactosEstudiosBiblicos}
                                     </b>
-                                </c:if>
                             </td>
                             <td>
-                                <c:if test="${detalle.informeMensual.status eq '@'}">
                                     <b>
                                     ${detalle.bautizados}
                                     </b>
-                                </c:if>
                             </td>
                             <td>
-                                <c:if test="${detalle.informeMensual.status eq '@'}">
                                     <b>
                                     <fmt:formatNumber type="decimal" pattern="###,##0.00" value="${detalle.diezmo}"/>
                                     </b>
-                                </c:if>
                             </td>
-                            
                         </tr>
                     </c:forEach>
                 </tbody>

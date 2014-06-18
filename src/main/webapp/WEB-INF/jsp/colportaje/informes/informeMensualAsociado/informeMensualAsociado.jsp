@@ -33,6 +33,7 @@
                 <s:message code="year.label" />
                 <input type="text" id="year" name="year" maxlength="10"/>&nbsp;
                 <button type="submit" class="btn"><s:message code="buscar.label"/></button>
+                <a href="<c:url value='/colportaje/informes/informeMensualDelAsociado/finalizar' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="finalizar.button" /></a>
             </p>
             
             <c:if test="${not empty message}">
