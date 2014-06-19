@@ -6,13 +6,16 @@ package mx.edu.um.mateo.contabilidad.facturas.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Blob;
 import java.util.Date;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -22,6 +25,7 @@ import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UtilStatus;
 import mx.edu.um.mateo.rh.model.Empleado;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -82,6 +86,11 @@ public class InformeProveedorDetalle implements Serializable {
     private BigDecimal dctoProntoPago;
     private transient MultipartFile file;
     private transient MultipartFile file2;
+
+    @Column(name = "filePdf")
+    private byte[] pdfFile;
+    @Column(name = "fileXml")
+    private byte[] xmlFile;
 
     public InformeProveedorDetalle() {
         dctoProntoPago = BigDecimal.ZERO;
@@ -328,6 +337,22 @@ public class InformeProveedorDetalle implements Serializable {
                 + ", usuarioAutRech=" + usuarioAutRech + ", fechaCaptura=" + fechaCaptura
                 + ", fechaAutRech=" + fechaAutRech + ", fechaModificacion=" + fechaModificacion
                 + ", dctoProntoPago=" + dctoProntoPago + ", file=" + file + ", file2=" + file2 + '}';
+    }
+
+    public byte[] getPdfFile() {
+        return pdfFile;
+    }
+
+    public void setPdfFile(byte[] pdfFile) {
+        this.pdfFile = pdfFile;
+    }
+
+    public byte[] getXmlFile() {
+        return xmlFile;
+    }
+
+    public void setXmlFile(byte[] xmlFile) {
+        this.xmlFile = xmlFile;
     }
 
 }

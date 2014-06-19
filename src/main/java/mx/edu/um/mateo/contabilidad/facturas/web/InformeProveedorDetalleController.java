@@ -8,6 +8,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,12 +45,16 @@ import mx.edu.um.mateo.inscripciones.model.FileUploadForm;
 import mx.edu.um.mateo.rh.model.Empleado;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Hibernate;
+import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
@@ -824,10 +831,12 @@ public class InformeProveedorDetalleController extends BaseController {
         }
         uploadFileForm.getFile().transferTo(new File(uploadDir));
         sw = true;
+
         log.debug("Archivo {} subido... ", uploadFileForm.getFile().getOriginalFilename());
         if (fileName.contains(".xml")) {
             detalle.setPathXMl("/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + uploadFileForm.getFile().getOriginalFilename());
             detalle.setNombreXMl(uploadFileForm.getFile().getOriginalFilename());
+            detalle.setXmlFile(uploadFileForm.getFile().getBytes());
             manager.actualiza(detalle, usuario);
             xml = true;
             request.getSession().setAttribute("esPdf", xml);
@@ -837,6 +846,7 @@ public class InformeProveedorDetalleController extends BaseController {
         if (fileName.contains(".pdf")) {
             detalle.setPathPDF("/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + uploadFileForm.getFile().getOriginalFilename());
             detalle.setNombrePDF(uploadFileForm.getFile().getOriginalFilename());
+            detalle.setPdfFile(uploadFileForm.getFile().getBytes());
             manager.actualiza(detalle, usuario);
             request.getSession().setAttribute("esPdf", false);
         }
@@ -964,6 +974,42 @@ public class InformeProveedorDetalleController extends BaseController {
         } catch (IOException ex) {
             throw ex;
         }
+        return null;
+    }
+
+    @RequestMapping("/downloadPdfFile/{id}")
+    public String downloadPdfBD(@PathVariable("id") Long id, HttpServletResponse response) {
+
+        InformeProveedorDetalle doc = manager.obtiene(id);
+        try {
+            OutputStream out = response.getOutputStream();
+            response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "attachment; filename=\""
+                    + doc.getNombrePDF() + "\"");
+            FileCopyUtils.copy(doc.getPdfFile(), out);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @RequestMapping("/downloadXmlFile/{id}")
+    public String downloadXmlBD(@PathVariable("id") Long id, HttpServletResponse response) {
+
+        InformeProveedorDetalle doc = manager.obtiene(id);
+        try {
+            OutputStream out = response.getOutputStream();
+            response.setContentType("application/xml");
+            response.setHeader("Content-Disposition", "attachment; filename=\""
+                    + doc.getNombreXMl() + "\"");
+            FileCopyUtils.copy(doc.getXmlFile(), out);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 
