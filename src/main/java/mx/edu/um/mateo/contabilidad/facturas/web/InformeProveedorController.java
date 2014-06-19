@@ -85,6 +85,7 @@ public class InformeProveedorController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
+        params.put(Constantes.CONTAINSKEY_REPORTE, Constantes.CONTAINSKEY_REPORTE);
         Usuario prueba = ambiente.obtieneUsuario();
         log.debug("usuarioPrueba{}", prueba);
         log.debug("usuario{}", usuario);
@@ -165,28 +166,7 @@ public class InformeProveedorController extends BaseController {
         log.debug("params{}", params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR));
         modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESPROVEEDOR, params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR));
 
-        // inicia paginado
-        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
-        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<InformeProveedor> informes = (List<InformeProveedor>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR);
-        Long primero = ((pagina - 1) * max) + 1;
-        log.debug("primero {}", primero);
-        log.debug("informes {}", informes.size());
-        Long ultimo = primero + (informes.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
-        log.debug("Paginacion{}", paginacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
-        log.debug("paginas{}", paginas);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
-        log.debug("Pagina{}", pagina);
-        // termina paginado
+        pagina(params, modelo, Constantes.CONTAINSKEY_INFORMESPROVEEDOR, pagina);
 
         return Constantes.PATH_INFORMEPROVEEDOR_LISTA;
     }
@@ -206,6 +186,7 @@ public class InformeProveedorController extends BaseController {
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
+        params.put(Constantes.CONTAINSKEY_REPORTE, Constantes.CONTAINSKEY_REPORTE);
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
         }
@@ -251,28 +232,7 @@ public class InformeProveedorController extends BaseController {
         log.debug("params{}", params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR));
         modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESPROVEEDOR, params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR));
 
-        // inicia paginado
-        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
-        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<InformeProveedor> informes = (List<InformeProveedor>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR);
-        Long primero = ((pagina - 1) * max) + 1;
-        log.debug("primero {}", primero);
-        log.debug("informes {}", informes.size());
-        Long ultimo = primero + (informes.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
-        log.debug("Paginacion{}", paginacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
-        log.debug("paginas{}", paginas);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
-        log.debug("Pagina{}", pagina);
-        // termina paginado
+        pagina(params, modelo, Constantes.CONTAINSKEY_INFORMESPROVEEDOR, pagina);
         return "/factura/revisaProveedor/encabezados";
     }
 

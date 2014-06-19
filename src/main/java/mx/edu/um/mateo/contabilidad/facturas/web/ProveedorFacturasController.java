@@ -120,7 +120,7 @@ public class ProveedorFacturasController extends BaseController {
         }
         params = manager.lista(params);
         modelo.addAttribute(Constantes.CONTAINSKEY_PROVEEDORESFACTURAS, params.get(Constantes.CONTAINSKEY_PROVEEDORESFACTURAS));
-        this.pagina(params, modelo, Constantes.CONTAINSKEY_PROVEEDORESFACTURAS, pagina);
+        pagina(params, modelo, Constantes.CONTAINSKEY_PROVEEDORESFACTURAS, pagina);
         log.debug("paramsfin{}", params);
 
         return Constantes.PATH_PROVEEDORFACTURAS_LISTA;
@@ -162,7 +162,6 @@ public class ProveedorFacturasController extends BaseController {
 //        String password = null;
 //        password = KeyGenerators.string().generateKey();
 //        log.debug("passwordColportor" + password);
-
         try {
 //            proveedorFacturas.setPassword(password);
             Usuario usuario = ambiente.obtieneUsuario();
@@ -200,7 +199,6 @@ public class ProveedorFacturasController extends BaseController {
             utils.despliegaBindingResultErrors(bindingResult);
             return Constantes.PATH_PROVEEDORFACTURAS_EDITA;
         }
-
 
         try {
             String[] roles = request.getParameterValues("roles");
