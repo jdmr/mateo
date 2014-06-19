@@ -305,14 +305,14 @@ public class DocumentoController extends BaseController {
         
         if (objetivo.compareTo(new BigDecimal("0")) > 0) {
             log.debug("% alcanzado = [totalBoletin {} / objetivo {}] = {}", new Object []{totalBoletin, objetivo, totalBoletin.divide(objetivo, 6, RoundingMode.HALF_EVEN).multiply(new BigDecimal("100"))});
-            alcanzado = totalBoletin.divide(objetivo, 6, RoundingMode.HALF_EVEN).multiply(new BigDecimal("100"));
+            alcanzado = totalBoletin.divide(objetivo, 6, RoundingMode.HALF_EVEN);//.multiply(new BigDecimal("100"));
         }
         if (totalBoletin.compareTo(new BigDecimal("0")) > 0) {
             log.debug("fidelidad = [totalDiezmos {} / totalBoletin {}] = {}");
-            fidelidad = totalDiezmos.divide(totalBoletin.movePointLeft(1), 6, RoundingMode.HALF_EVEN).multiply(new BigDecimal("100"));
+            fidelidad = totalDiezmos.divide(totalBoletin.movePointLeft(1), 6, RoundingMode.HALF_EVEN);//.multiply(new BigDecimal("100"));
         }
-        modelo.addAttribute(Constantes.ALCANZADO, alcanzado.setScale(2, BigDecimal.ROUND_HALF_EVEN));
-        modelo.addAttribute(Constantes.FIDELIDAD, fidelidad.setScale(2, BigDecimal.ROUND_HALF_EVEN));
+        modelo.addAttribute(Constantes.ALCANZADO, alcanzado.setScale(4, BigDecimal.ROUND_HALF_EVEN));
+        modelo.addAttribute(Constantes.FIDELIDAD, fidelidad.setScale(4, BigDecimal.ROUND_HALF_EVEN));
         
         pagina = (Long) params.get("pagina");
         this.pagina(params, modelo, Constantes.DOCUMENTOCOLPORTOR_LIST, pagina);

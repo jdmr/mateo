@@ -22,6 +22,7 @@ import mx.edu.um.mateo.colportor.dao.ColegioColportorDao;
 import mx.edu.um.mateo.colportor.model.ColegioColportor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.web.BaseController;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -52,7 +53,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping(Constantes.PATH_COLEGIO_COLPORTOR)
-public class ColegioColportorController {
+public class ColegioColportorController extends BaseController{
 
     private static final Logger log = LoggerFactory.getLogger(ColegioColportorController.class);
     @Autowired
@@ -121,22 +122,7 @@ public class ColegioColportorController {
         params = ColegioDao.lista(params);
         modelo.addAttribute(Constantes.CONTAINSKEY_COLEGIOS, params.get(Constantes.CONTAINSKEY_COLEGIOS));
 
-        // inicia paginado
-        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
-        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<ColegioColportor> colegios = (List<ColegioColportor>) params.get(Constantes.CONTAINSKEY_COLEGIOS);
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (colegios.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
-        // termina paginado
+        pagina(params, modelo, Constantes.CONTAINSKEY_COLEGIOS, pagina);
 
         return Constantes.PATH_COLEGIO_COLPORTOR_LISTA;
     }

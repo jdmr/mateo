@@ -42,6 +42,10 @@ public class Documento implements Serializable{
     
     public Documento(){
     }
+    
+    public Documento(BigDecimal importe){
+        this.importe = importe;
+    }
   
     public Documento(String tipoDeDocumento, String folio, Date fecha, BigDecimal importe, String observaciones, TemporadaColportor temporadaColportor) {
         this.tipoDeDocumento = tipoDeDocumento;

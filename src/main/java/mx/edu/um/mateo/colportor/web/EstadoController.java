@@ -27,6 +27,7 @@ import mx.edu.um.mateo.colportor.model.Estado;
 import mx.edu.um.mateo.colportor.model.Pais;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.web.BaseController;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -56,7 +57,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping("/colportaje/estado")
-public class EstadoController {
+public class EstadoController extends BaseController{
 
     private static final Logger log = (Logger) LoggerFactory.getLogger(EstadoController.class);
     @Autowired
@@ -124,21 +125,8 @@ public class EstadoController {
         params = estadoDao.lista(params);
         log.debug("Rows returned {}", ((List) params.get(Constantes.ESTADO_LIST)).size());
         modelo.addAttribute(Constantes.ESTADO_LIST, params.get(Constantes.ESTADO_LIST));
-        // inicia paginado
-        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
-        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<Estado> estado = (List<Estado>) params.get(Constantes.ESTADO_LIST);
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (estado.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
+        
+        pagina(params, modelo, Constantes.ESTADO_LIST, pagina);
         return Constantes.PATH_ESTADO_LISTA;
     }
 

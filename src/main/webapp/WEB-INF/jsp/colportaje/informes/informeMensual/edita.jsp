@@ -21,9 +21,9 @@
         <div id="edita-informeMensual" class="content scaffold-list" role="main">
             <h1><s:message code="informeMensual.edita.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/colportaje/informeMensual'/>"><i class="icon-list icon-white"></i> <s:message code='informeMensual.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/colportaje/informes/informeMensual'/>"><i class="icon-list icon-white"></i> <s:message code='informeMensual.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="/colportaje/informeMensual/actualiza" />
+            <c:url var="actualizaUrl" value="/colportaje/informes/informeMensual/actualiza" />
             <form:form commandName="informeMensual" method="post" action="${actualizaUrl}">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
@@ -54,9 +54,16 @@
 
                 <p class="well" style="margin-top: 10px;">
                     <button type="submit" name="actualizarBtn" class="btn btn-primary btn-large" id="actualizar" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='actualizar.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/colportaje/informeMensual/ver/${informeMensual.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <a class="btn btn-large" href="<s:url value='/colportaje/informes/informeMensual/ver/${informeMensual.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>
+        <content>
+            <script src="<c:url value='/js/chosen.jquery.min.js' />"></script>
+            <script>
+                $("input#fecha").datepicker($.datepicker.regional['es']);
+                $("input#fecha").datepicker("option","firstDay",0);
+            </script>
+        </content> 
     </body>
 </html>

@@ -31,8 +31,8 @@
                     <s:message code="${message}" arguments="${messageAttrs}" />
                 </div>
             </c:if>
-            <c:if test="${colportor != null}">
-                <s:bind path="colportor.*">
+            <c:if test="${colportores != null}">
+                <s:bind path="colportores.*">
                     <c:if test="${not empty status.errorMessages}">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>

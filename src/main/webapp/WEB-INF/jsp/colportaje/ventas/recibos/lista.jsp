@@ -107,7 +107,7 @@
                     </c:forEach>
                 </tbody>
             </table>
-            <jsp:include page="/WEB-INF/jsp/paginacion.jsp" />
+           <jsp:include page="/WEB-INF/jsp/paginacion.jsp" />
                
         <content>
             <script src="<c:url value='/js/lista.js' />"></script>

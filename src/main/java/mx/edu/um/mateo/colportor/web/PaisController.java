@@ -29,6 +29,7 @@ import mx.edu.um.mateo.colportor.dao.PaisDao;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.colportor.model.Pais;
 import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.web.BaseController;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -59,7 +60,7 @@ import org.slf4j.Logger;
  */
 @Controller
 @RequestMapping("/colportaje/pais")
-public class PaisController {
+public class PaisController extends BaseController{
 
     private static final Logger log = (Logger) LoggerFactory.getLogger(PaisController.class);
     @Autowired
@@ -124,21 +125,9 @@ public class PaisController {
         }
         params = paisDao.lista(params);
         modelo.addAttribute(Constantes.PAIS_LIST, params.get(Constantes.PAIS_LIST));
-        // inicia paginado
-        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
-        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<Pais> pais = (List<Pais>) params.get(Constantes.PAIS_LIST);
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (pais.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
+        
+        pagina(params, modelo, Constantes.PAIS_LIST, pagina);
+        
         return "/colportaje/pais/lista";
     }
 

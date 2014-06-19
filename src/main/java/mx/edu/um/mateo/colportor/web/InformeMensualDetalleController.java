@@ -8,7 +8,6 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,10 +21,11 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import mx.edu.um.mateo.colportor.dao.InformeMensualDao;
 import mx.edu.um.mateo.general.utils.Constantes;
-import mx.edu.um.mateo.colportor.dao.InformeMensualDetalleDao;
 import mx.edu.um.mateo.colportor.model.InformeMensual;
 import mx.edu.um.mateo.colportor.model.InformeMensualDetalle;
+import mx.edu.um.mateo.colportor.service.InformeMensualDetalleManager;
 import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.web.BaseController;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -34,8 +34,6 @@ import net.sf.jasperreports.engine.export.JRXlsExporter;
 import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -54,14 +52,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author gibrandemetrioo
  */
 @Controller
-@RequestMapping("/colportaje/informeMensualDetalle")
-public class InformeMensualDetalleController {
+@RequestMapping("/colportaje/informes/informeMensualDetalle")
+public class InformeMensualDetalleController extends BaseController {
 
-    private static final Logger log = (Logger) LoggerFactory.getLogger(InformeMensualDetalleController.class);
     @Autowired
     private InformeMensualDao informeMensualDao;
     @Autowired
-    private InformeMensualDetalleDao informeMensualDetalleDao;
+    private InformeMensualDetalleManager informeMensualDetalleMgr;
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
@@ -100,6 +97,7 @@ public class InformeMensualDetalleController {
         
         params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
         params.put("informe", informe.getId());
+        params.put("colportor", informe.getColportor().getId());
         
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
@@ -118,7 +116,7 @@ public class InformeMensualDetalleController {
 
         if (StringUtils.isNotBlank(tipo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = informeMensualDetalleDao.lista(params);
+            params = informeMensualDetalleMgr.lista(params);
             try {
                 generaReporte(tipo, (List<InformeMensualDetalle>) params.get(Constantes.INFORMEMENSUAL_DETALLE_LIST), response);
                 return null;
@@ -128,7 +126,7 @@ public class InformeMensualDetalleController {
         }
         if (StringUtils.isNotBlank(correo)) {
             params.put(Constantes.CONTAINSKEY_REPORTE, true);
-            params = informeMensualDetalleDao.lista(params);
+            params = informeMensualDetalleMgr.lista(params);
 
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
@@ -139,39 +137,42 @@ public class InformeMensualDetalleController {
                 log.error("No se pudo enviar el reporte por correo", e);
             }
         }
-        params = informeMensualDetalleDao.lista(params);
+        
+        params = informeMensualDetalleMgr.lista(params);
+                
         modelo.addAttribute(Constantes.INFORMEMENSUAL_DETALLE_LIST, params.get(Constantes.INFORMEMENSUAL_DETALLE_LIST));
-        // inicia paginado
-        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
-        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<InformeMensualDetalle> informeMensualDetalle = (List<InformeMensualDetalle>) params.get(Constantes.INFORMEMENSUAL_DETALLE_LIST);
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (informeMensualDetalle.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
+        modelo.addAttribute("totales", params.get("totales"));
+        
+        pagina(params, modelo, Constantes.INFORMEMENSUAL_DETALLE_LIST, pagina);
+        
         return Constantes.INFORMEMENSUAL_DETALLE_PATH_LISTA;
     }
 
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando InformeMensualDetalle {}", id);
-        InformeMensualDetalle informeMensualDetalle = informeMensualDetalleDao.obtiene(id);
+        InformeMensualDetalle informeMensualDetalle = informeMensualDetalleMgr.obtiene(id);
         modelo.addAttribute(Constantes.INFORMEMENSUAL_DETALLE, informeMensualDetalle);
         return Constantes.INFORMEMENSUAL_DETALLE_PATH_VER;
     }
 
     @RequestMapping("/nuevo")
-    public String nuevo(Model modelo) {
+    public String nuevo(@RequestParam(required = false) Date fecha,Model modelo) {
         log.debug("Nueva InformeMensualDetalle");
+        log.debug("Fecha {}", fecha);
         InformeMensualDetalle informeMensualDetalle = new InformeMensualDetalle();
 
+        modelo.addAttribute(Constantes.INFORMEMENSUAL_DETALLE, informeMensualDetalle);
+        return Constantes.INFORMEMENSUAL_DETALLE_PATH_NUEVO;
+    }
+    
+    @RequestMapping("/nuevoReg/{fecha}")
+    public String nuevoReg(@PathVariable Date fecha, Model modelo) {
+        log.debug("Nueva InformeMensualDetalle");
+        log.debug("Fecha {}", fecha);
+        InformeMensualDetalle informeMensualDetalle = new InformeMensualDetalle();
+
+        informeMensualDetalle.setFecha(fecha);
         modelo.addAttribute(Constantes.INFORMEMENSUAL_DETALLE, informeMensualDetalle);
         return Constantes.INFORMEMENSUAL_DETALLE_PATH_NUEVO;
     }
@@ -189,8 +190,8 @@ public class InformeMensualDetalleController {
         try {
             informeMensualDetalle.setInformeMensual(informeMensualDao.obtiene(((InformeMensual)request.getSession().getAttribute(Constantes.INFORMEMENSUAL)).getId()));
             informeMensualDetalle.setCapturo(ambiente.obtieneUsuario());
-            informeMensualDetalle.setCuando(new Date());
-            informeMensualDetalle = informeMensualDetalleDao.crea(informeMensualDetalle);
+            informeMensualDetalle.setFechaCaptura(new Date());
+            informeMensualDetalle = informeMensualDetalleMgr.crea(informeMensualDetalle);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el InformeMensualDetalle", e);
             return Constantes.INFORMEMENSUAL_DETALLE_PATH_NUEVO;
@@ -203,7 +204,7 @@ public class InformeMensualDetalleController {
     @RequestMapping("/edita/{id}")
     public String edita(@PathVariable Long id, Model modelo) {
         log.debug("Edita InformeMensualDetalle {}", id);
-        InformeMensualDetalle informeMensualDetalle = informeMensualDetalleDao.obtiene(id);
+        InformeMensualDetalle informeMensualDetalle = informeMensualDetalleMgr.obtiene(id);
         modelo.addAttribute(Constantes.INFORMEMENSUAL_DETALLE, informeMensualDetalle);
         return Constantes.INFORMEMENSUAL_DETALLE_PATH_EDITA;
     }
@@ -218,8 +219,8 @@ public class InformeMensualDetalleController {
         try {
             informeMensualDetalle.setInformeMensual(informeMensualDao.obtiene(((InformeMensual)request.getSession().getAttribute(Constantes.INFORMEMENSUAL)).getId()));
             informeMensualDetalle.setCapturo(ambiente.obtieneUsuario());
-            informeMensualDetalle.setCuando(new Date());
-            informeMensualDetalle = informeMensualDetalleDao.crea(informeMensualDetalle);
+            informeMensualDetalle.setFechaCaptura(new Date());
+            informeMensualDetalle = informeMensualDetalleMgr.crea(informeMensualDetalle);
         } catch (org.hibernate.exception.ConstraintViolationException e) {
             log.error("No se pudo crear el InformeMensualDetalle", e);
             return Constantes.INFORMEMENSUAL_DETALLE_PATH_EDITA;
@@ -234,7 +235,7 @@ public class InformeMensualDetalleController {
     public String elimina(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute InformeMensualDetalle informeMensualDetalle, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina Pais");
         try {
-            String nombre = informeMensualDetalleDao.elimina(id);
+            String nombre = informeMensualDetalleMgr.elimina(id);
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeMensualDetalle.eliminado.message");
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
         } catch (Exception e) {

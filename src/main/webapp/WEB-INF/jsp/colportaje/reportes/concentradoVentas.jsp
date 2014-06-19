@@ -14,10 +14,30 @@
 
         <h1><s:message code="concentradoVentas.label" /></h1>
         <hr/>
-       
-            <h3>
-                ${colportor.clave}&nbsp;${colportor.nombreCompleto}
-            </h3>
+            <h5>                
+                 <table>
+                    <tr>
+                        <td>
+                            <span class="label label-success">
+                            <s:message code="totalesBoletin.label"/>:<fmt:formatNumber type="currency" currencySymbol="$" value="${totalesBoletin}" />
+                            </span>
+                        </td>
+                        <td>
+                            <c:if test="${totalesDiezmo < (totalesBoletin * 0.1)*0.8}">
+                                <span class="label label-important">
+                            </c:if>
+                            <c:if test="${totalesDiezmo >= totalesBoletin * 0.1}">
+                                <span class="label label-success">
+                            </c:if>
+                            <c:if test="${totalesDiezmo > (totalesBoletin * 0.1)*0.8}">
+                                <span class="label label-warning">
+                            </c:if>
+                            <s:message code="totalesDiezmo.label"/>:<fmt:formatNumber type="currency" currencySymbol="$" value="${totalesDiezmo}" />
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </h5>
             
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
@@ -49,7 +69,8 @@
             <table id="lista" class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th><s:message code="temporadaColportor.ver.label"/></th>
+                        <th><s:message code="colportor.clave.label"/></th>
+                        <th><s:message code="nombre.label"/></th>
                         <th><s:message code="boletin.label"/></th>
                         <th><s:message code="diezmo"/></th>
                     </tr>
@@ -65,7 +86,6 @@
                                 <a alt="Documentos del Colportor" target="_blank"href='<c:out value="${linky}"/>'>${clp.colportor.clave}</a>
                             </td>
                             <td>${clp.colportor.nombreCompleto}</td>
-                            <td>${clp.temporadaColportor.temporada.nombre}</td>
                             <td><fmt:formatNumber type="currency" currencySymbol="$" value="${clp.acumuladoBoletin}" /></td>
                             <td><fmt:formatNumber type="currency" currencySymbol="$" value="${clp.acumuladoDiezmo}" /></td>
                         </tr>

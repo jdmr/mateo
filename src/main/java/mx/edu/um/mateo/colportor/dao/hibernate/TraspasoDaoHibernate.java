@@ -124,15 +124,18 @@ public class TraspasoDaoHibernate extends BaseDao implements TraspasoDao {
         try {
             pstmt = dsPg.getConnection().prepareStatement(COMANDO);
             rset = pstmt.executeQuery();
+            Integer tmpClave = 0;
             while (rset.next()) {
                 
                 telefono = (rset.getString("telefono")== null || rset.getString("telefono").isEmpty()) ? "8262630900" : rset.getString("telefono").trim() ;
                 log.debug("telefono {}", telefono);
                 
+                tmpClave++;
+                
                 if (rset.getString("entity_type").equals("asociado")) {
                     usuario = new Asociado(
                             rset.getString("email"), rset.getString("password"), rset.getString("email"), rset.getString("first_name"), rset.getString("last_name"), ".",
-                            "A", ".", rset.getString("telefono"), rset.getString("address"), rset.getString("postal_code"), rset.getString("city"));
+                            "A", tmpClave.toString(), rset.getString("telefono"), rset.getString("address"), rset.getString("postal_code"), rset.getString("city"));
                 } else if (rset.getString("entity_type").equals("colportor")) {
                     usuario = new Colportor(
                             rset.getString("email"), passwordEncoder.encodePassword(rset.getString("clave"), rset.getString("email")), rset.getString("email"), rset.getString("first_name"), rset.getString("last_name"), ".",
@@ -163,7 +166,7 @@ public class TraspasoDaoHibernate extends BaseDao implements TraspasoDao {
         //Inserta colportores y asociados
         Empresa empresa = empresaDao.obtiene(1L);
         Almacen almacen = almacenDao.obtiene(1L);
-        EjercicioPK key = new EjercicioPK("001-2013", empresa.getOrganizacion());
+        EjercicioPK key = new EjercicioPK("001-2014", empresa.getOrganizacion());
         Ejercicio ejercicio = ejercicioDao.obtiene(key);
         try{
             for (Usuario us : mapa) {

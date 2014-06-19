@@ -6,6 +6,7 @@ package mx.edu.um.mateo.colportor.web;
 
 import mx.edu.um.mateo.general.web.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -13,9 +14,11 @@ import javax.servlet.http.HttpServletRequest;
 import mx.edu.um.mateo.colportor.service.ImportarDatosManager;
 import mx.edu.um.mateo.general.model.UploadFileForm;
 import mx.edu.um.mateo.general.utils.Constantes;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -79,13 +82,22 @@ public class ImportarDatosController extends BaseController {
                 log.error("archivo null");
                 return "redirect:"+"/colportaje/importarDatos/listadoArchivos";
             }
+            
             File file = new File(request.getSession().getServletContext().getRealPath("") + "/resources/" + request.getRemoteUser()+"/"+archivo.getName());
-            
-            if(tipoArchivo.equals("IG"))
-                mgr.importaInformeDeGema(file, ambiente.obtieneUsuario());
-            else if(tipoArchivo.equals("ID"))
-                mgr.importaDiezmos(file, ambiente.obtieneUsuario());
-            
+            try{
+                if(tipoArchivo.equals("IG"))
+                    mgr.importaInformeDeGema(file, ambiente.obtieneUsuario());
+                else if(tipoArchivo.equals("ID"))
+                    mgr.importaDiezmos(file, ambiente.obtieneUsuario());
+                else if(tipoArchivo.equals("INF"))
+                    mgr.importaInformes(file, ambiente.obtieneUsuario());
+            } catch (ConstraintViolationException e) {
+                log.error("Error al intentar importar datos {}", e);
+                e.printStackTrace();
+            } catch(Exception ex){
+                log.error("Error al intentar importar datos {}", ex);
+                ex.printStackTrace();
+            }
             return "redirect:"+"/colportaje/importarDatos/listadoArchivos";
     }
 }

@@ -157,7 +157,10 @@ public class TemporadaColportor implements Serializable{
             return false;
         }
         final TemporadaColportor other = (TemporadaColportor) obj;
-        if (!Objects.equals(this.status, other.status)) {
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.version, other.version)) {
             return false;
         }
         return true;
@@ -166,7 +169,9 @@ public class TemporadaColportor implements Serializable{
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.status);
+        hash = 97 * hash + 
+                Objects.hashCode(this.id) +
+                Objects.hashCode(this.version);
         return hash;
     }
 

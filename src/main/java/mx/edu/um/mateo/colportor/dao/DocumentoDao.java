@@ -326,10 +326,51 @@ public class DocumentoDao {
                 .add(Projections.groupProperty("tipoDeDocumento"));
         sql.setProjection(projs.add(projsGr));
         
+        if (params.containsKey(Constantes.CONTAINSKEY_ORDER)) {
+            String campo = (String) params.get(Constantes.CONTAINSKEY_ORDER);
+            if (params.get(Constantes.CONTAINSKEY_SORT).equals(Constantes.CONTAINSKEY_DESC)) {
+                sql.addOrder(Order.desc("clp.clave"));
+            }
+        }
+        
         params.put(Constantes.CONTAINSKEY_CONCENTRADOVENTAS, sql.list());
         
         return params;
     }
-    
-    
+    /**
+     * Regresa todos los diezmos
+     * @param params
+     * @return 
+     */
+    public Map<String, Object> obtieneTodosDiezmos(Map<String,Object> params){
+        Criteria sql = currentSession().createCriteria(Documento.class);
+        sql.add(Restrictions.eq("tipoDeDocumento", "Diezmo"));
+        sql.createCriteria("temporadaColportor").createCriteria("colportor").add(Restrictions.eq("id", (Long)params.get("colportor")));
+        sql.addOrder(Order.asc("fecha"));
+        
+        params.put(Constantes.DOCUMENTOCOLPORTOR_LIST, sql.list());
+        return params;
+    }
+    /**
+     * Regresa todos los diezmos acumulados por colportor y por mes
+     * @param params
+     * @return 
+     */
+    public Map<String, Object> obtieneTodosDiezmosAcumulados(Map<String,Object> params){
+        log.debug("obtieneTodosDiezmosAcumulados");
+        Criteria sql = currentSession().createCriteria(Documento.class);
+        sql.add(Restrictions.eq("tipoDeDocumento", "Diezmo"));
+        sql.createAlias("temporadaColportor", "tClp");
+        sql.createAlias("tClp.asociado", "asc");
+        
+        
+        sql.setProjection(Projections.projectionList()
+            .add(Projections.groupProperty("asc.clave"))
+            .add(Projections.groupProperty("fecha"))
+            .add(Projections.sum("importe")));
+        sql.addOrder(Order.asc("fecha"));
+        
+        params.put(Constantes.DOCUMENTOCOLPORTOR_LIST, sql.list());
+        return params;
+    }
 }

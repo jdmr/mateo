@@ -36,4 +36,12 @@ public interface PerDedManager {
      * @param id el id de la perded
      */
     public String elimina(final Long id);
+    
+    /**
+     * Regresa un listado de perDeds en una estructura LabelValueBean<br>
+     * Se utiliza para autocomplete
+     * @param params
+     * @return 
+     */
+    public Map<String, Object> getPerDedList (Map<String, Object> params);
 }

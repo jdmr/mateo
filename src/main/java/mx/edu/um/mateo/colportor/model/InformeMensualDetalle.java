@@ -71,18 +71,32 @@ public class InformeMensualDetalle implements Serializable{
     @Min(0)
     @Column(name = "bautizados",nullable = false)
     private Integer bautizados;
+    @Column(name = "diezmo",nullable = false)
+    private BigDecimal diezmo;
     
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Usuario capturo; //quien capturo
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern=Constantes.DATE_SHORT_HUMAN_PATTERN)
     @Column(name = "fecha_captura")
-    private Date cuando; //fecha captura
+    private Date fechaCaptura; //fecha captura
 
     public InformeMensualDetalle() {
+        this.informeMensual = new InformeMensual("A");
+        this.hrsTrabajadas = 0.0;
+        this.literaturaVendida = 0;
+        this.totalPedidos = BigDecimal.ZERO;
+        this.totalVentas = BigDecimal.ZERO;
+        this.literaturaGratis = 0;
+        this.oracionesOfrecidas = 0;
+        this.casasVisitadas = 0;
+        this.contactosEstudiosBiblicos = 0;
+        this.bautizados = 0;
+        this.diezmo = BigDecimal.ZERO;
+        this.fechaCaptura = new Date();
     }
     
-    public InformeMensualDetalle(InformeMensual informe, Date fecha, Double hrsTrabajadas, Integer librosRegalados, BigDecimal totalPedidos, BigDecimal totalVentas, Integer literaturaGratis, Integer oracionesOfrecidas, Integer casasVisitadas, Integer contactosEstudiosBiblicos, Integer bautizados, Usuario capturo, Date cuando) {
+    public InformeMensualDetalle(InformeMensual informe, Date fecha, Double hrsTrabajadas, Integer librosRegalados, BigDecimal totalPedidos, BigDecimal totalVentas, Integer literaturaGratis, Integer oracionesOfrecidas, Integer casasVisitadas, Integer contactosEstudiosBiblicos, Integer bautizados, BigDecimal diezmo, Usuario capturo, Date cuando) {
         this.informeMensual = informe;
         this.fecha = fecha;
         this.hrsTrabajadas = hrsTrabajadas;
@@ -94,8 +108,9 @@ public class InformeMensualDetalle implements Serializable{
         this.casasVisitadas = casasVisitadas;
         this.contactosEstudiosBiblicos = contactosEstudiosBiblicos;
         this.bautizados = bautizados;
+        this.diezmo = diezmo;
         this.capturo = capturo;
-        this.cuando = cuando;
+        this.fechaCaptura = cuando;
     }
     
     
@@ -282,6 +297,16 @@ public class InformeMensualDetalle implements Serializable{
         this.bautizados = bautizados;
     }
 
+    public BigDecimal getDiezmo() {
+        return diezmo;
+    }
+
+    public void setDiezmo(BigDecimal diezmo) {
+        this.diezmo = diezmo;
+    }
+    
+    
+
     /**
      * @return the capturo
      */
@@ -297,17 +322,17 @@ public class InformeMensualDetalle implements Serializable{
     }
 
     /**
-     * @return the cuando
+     * @return the fechaCaptura
      */
-    public Date getCuando() {
-        return cuando;
+    public Date getFechaCaptura() {
+        return fechaCaptura;
     }
 
     /**
-     * @param cuando the cuando to set
+     * @param fechaCaptura the fechaCaptura to set
      */
-    public void setCuando(Date cuando) {
-        this.cuando = cuando;
+    public void setFechaCaptura(Date fechaCaptura) {
+        this.fechaCaptura = fechaCaptura;
     }
 
     @Override
@@ -346,9 +371,8 @@ public class InformeMensualDetalle implements Serializable{
 
     @Override
     public String toString() {
-        return "InformeMensual{" + "id=" + id + ", version=" + version + ", informeMensual=" + informeMensual.getId() + ", fecha=" + fecha + ", hrsTrabajadas=" + hrsTrabajadas + ", literaturaVendida=" + literaturaVendida + ", totalPedidos=" + totalPedidos + ", totalVentas=" + totalVentas + ", literaturaGratis=" + literaturaGratis + ", oracionesOfrecidas=" + oracionesOfrecidas + ", casasVisitadas=" + casasVisitadas + ", contactosEstudiosBiblicos=" + contactosEstudiosBiblicos + ", bautizados=" + bautizados + ", capturo=" + capturo.getId() + ", cuando=" + cuando + '}';
+        return "InformeMensualDetalle{" + "id=" + id + ", version=" + version + ", informeMensual=" + informeMensual + ", fecha=" + fecha + ", hrsTrabajadas=" + hrsTrabajadas + ", literaturaVendida=" + literaturaVendida + ", totalPedidos=" + totalPedidos + ", totalVentas=" + totalVentas + ", literaturaGratis=" + literaturaGratis + ", oracionesOfrecidas=" + oracionesOfrecidas + ", casasVisitadas=" + casasVisitadas + ", contactosEstudiosBiblicos=" + contactosEstudiosBiblicos + ", bautizados=" + bautizados + ", diezmo=" + diezmo + ", capturo=" + capturo + ", fechaCaptura=" + fechaCaptura + '}';
     }
-    
 
     
     

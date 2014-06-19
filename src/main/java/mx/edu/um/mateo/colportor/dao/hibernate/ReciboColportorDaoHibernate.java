@@ -80,15 +80,16 @@ public class ReciboColportorDaoHibernate extends BaseDao implements ReciboColpor
                 criteria.addOrder(Order.asc(campo));
             }
         }
-
-        if (!params.containsKey("reporte")) {
-            criteria.setFirstResult((Integer) params.get("offset"));
-            criteria.setMaxResults((Integer) params.get("max"));
-        }
+        
+//        //Los recibos hacen un redireccionamiento incorrecto en la paginacion
+//        if (!params.containsKey("reporte")) {
+//            criteria.setFirstResult((Integer) params.get("offset"));men
+//            criteria.setMaxResults((Integer) params.get("max"));
+//        }
         params.put(Constantes.RECIBO_COLPORTOR_LIST, criteria.list());
 
         countCriteria.setProjection(Projections.rowCount());
-        params.put("cantidad", (Long) countCriteria.list().get(0));
+        params.put("cantidad", new Long(0));
 
         return params;
     }

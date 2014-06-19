@@ -8,7 +8,6 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +25,7 @@ import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.colportor.model.Ciudad;
 import mx.edu.um.mateo.colportor.model.Estado;
 import mx.edu.um.mateo.general.utils.Ambiente;
+import mx.edu.um.mateo.general.web.BaseController;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
@@ -55,7 +55,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  */
 @Controller
 @RequestMapping("/colportaje/ciudad")
-public class CiudadController {
+public class CiudadController extends BaseController {
 
     private static final Logger log = (Logger) LoggerFactory.getLogger(CiudadController.class);
     @Autowired
@@ -122,21 +122,9 @@ public class CiudadController {
         }
         params = ciudadDao.lista(params);
         modelo.addAttribute(Constantes.CIUDAD_LIST, params.get(Constantes.CIUDAD_LIST));
-        // inicia paginado
-        Long cantidad = (Long) params.get(Constantes.CONTAINSKEY_CANTIDAD);
-        Integer max = (Integer) params.get(Constantes.CONTAINSKEY_MAX);
-        Long cantidadDePaginas = cantidad / max;
-        List<Long> paginas = new ArrayList<>();
-        long i = 1;
-        do {
-            paginas.add(i);
-        } while (i++ < cantidadDePaginas);
-        List<Ciudad> ciudad = (List<Ciudad>) params.get(Constantes.CIUDAD_LIST);
-        Long primero = ((pagina - 1) * max) + 1;
-        Long ultimo = primero + (ciudad.size() - 1);
-        String[] paginacion = new String[]{primero.toString(), ultimo.toString(), cantidad.toString()};
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINACION, paginacion);
-        modelo.addAttribute(Constantes.CONTAINSKEY_PAGINAS, paginas);
+        
+        pagina(params, modelo, Constantes.CIUDAD_LIST, pagina);
+        
         return Constantes.PATH_CIUDAD_LISTA;
     }
 

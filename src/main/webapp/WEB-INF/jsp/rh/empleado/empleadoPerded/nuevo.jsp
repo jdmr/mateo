@@ -47,7 +47,7 @@
                                 <s:message code="empleadoPerDed.importe.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="importe" cssClass="span11" />
+                            <form:input path="importe" cssClass="span08" />
                             <form:errors path="importe" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -57,21 +57,31 @@
                                 <s:message code="empleadoPerDed.porcentaje.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:radiobutton path="porcentaje"  value="S" cssClass="span3" id="pct"/>Porcentaje<br />
-                            <form:radiobutton path="porcentaje"  value="N"  cssClass="span3" id="cash"/>$Importe<br />
+                            <form:radiobutton path="porcentaje"  value="true" cssClass="span3" id="pct"/>Porcentaje<br />
+                            <form:radiobutton path="porcentaje"  value="false"  cssClass="span3" id="cash"/>$Importe<br />
                             <form:errors path="porcentaje" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                     <s:bind path="empleadoPerDed.frecuenciaPago">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="importe">
+                            <label for="frecuenciaPago">
                                 <s:message code="empleadoPerDed.frecuenciaPago.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:select id="frecuenciaPago" path="frecuenciaPago" required="true" cssClass="span11" >
+                            <form:select id="frecuenciaPago" path="frecuenciaPago" required="true" cssClass="span08" >
                                 <form:options items="${frecuenciaPagoList}" itemValue="id" itemLabel="nombre" />
                             </form:select>
                             <form:errors path="frecuenciaPago" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
+                    <s:bind path="empleadoPerDed.atributos">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                            <label for="atributos">
+                                <s:message code="empleadoPerDed.atributos.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="atributos" cssClass="span08" />
+                            <form:errors path="atributos" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                     

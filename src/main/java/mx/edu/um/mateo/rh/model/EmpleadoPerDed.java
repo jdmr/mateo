@@ -9,19 +9,21 @@ package mx.edu.um.mateo.rh.model;
 import mx.edu.um.mateo.nomina.model.PerDed;
 import java.math.BigDecimal;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Version;
-import org.hibernate.validator.constraints.NotBlank;
+import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
- * @Entity
- * @Table(name = "empleado_perded")
  * @author osoto
  */
+@Entity
+@Table(name = "empleado_perded")
 public class EmpleadoPerDed {
     private static final long serialVersionUID = 3866051221691915360L;
     @Id
@@ -36,18 +38,19 @@ public class EmpleadoPerDed {
     @NotEmpty
     @Column(nullable=false)
     private String atributos;
-    @NotEmpty
     @Column(nullable=false)
     private String status;
-    @NotBlank
     @Column(nullable=false)
     private BigDecimal importe;
     @Column(nullable=false)
     private Boolean porcentaje;
-    @NotBlank
     @Column(nullable=false)
     private Integer frecuenciaPago; //Semanal, 1a. Quincena. 2a. Quincena, Mensual - Ver EnumFrecuenciaPago
 
+    public EmpleadoPerDed() {
+        status = Constantes.STATUS_ACTIVO;
+    }
+    
     public Long getId() {
         return id;
     }

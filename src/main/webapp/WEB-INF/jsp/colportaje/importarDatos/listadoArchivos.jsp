@@ -23,27 +23,11 @@
                 </div>
             </c:if>
             
-            <div class="row">
-            <div class="col-lg-6">
-              <div class="input-group">
-                <span class="input-group-addon">
-                  <input type="radio" name="tipoArchivo" value="IG">
-                </span>
-                Boletin
-              </div><!-- /input-group -->
-            </div><!-- /.col-lg-6 -->
-            </div><!-- /.row -->
-            <div class="row">
-            <div class="col-lg-6">
-              <div class="input-group">
-                <span class="input-group-addon">
-                  <input type="radio" name="tipoArchivo" value="ID">
-                </span>
-                Diezmos
-              </div><!-- /input-group -->
-            </div><!-- /.col-lg-6 -->
-          </div><!-- /.row -->
-
+            <p class="well">
+                <input type="radio" name="tipoArchivo" value="IG"> Bolet&iacute;n
+                <input type="radio" name="tipoArchivo" value="ID">Diezmos
+                <input type="radio" name="tipoArchivo" value="INF">INFORMES
+            </p>
 
             <table id="lista" class="table table-striped table-hover">
                 <thead>

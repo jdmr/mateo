@@ -16,10 +16,11 @@
 
         <div id="edita-temporadaColportor" class="content scaffold-list" role="main">
             <h1><s:message code="temporadaColportor.edita.label" /></h1>
+            <h4><c:out value="${colportor.nombreCompleto}"/></h4>
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='../'/>"><i class="icon-list icon-white"></i> <s:message code='temporadaColportor.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="../actualiza" />
+            <c:url var="actualizaUrl" value="/colportaje/temporadaColportor/actualiza" />
             <form:form commandName="temporadaColportor" method="post" action="${actualizaUrl}">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
@@ -39,17 +40,8 @@
                             <label for="temporada">
                                 <s:message code="temporada.label" />
                                 <span class="required-indicator">*</span>
-                                <form:select id="temporadaId" path="temporada.id" items="${temporadas}" itemLabel="nombre" itemValue="id" />
+                                <form:select id="temporada.id" path="temporada.id" items="${temporadas}" itemLabel="nombre" itemValue="id" />
                                 <form:errors path="temporada" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>                    
-                    <s:bind path="temporadaColportor.colportor">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="colportor">
-                                <s:message code="colportor.label" />
-                                <span class="required-indicator">*</span>
-                                <form:select id="colportorId" path="colportor.id" items="${colportores}" itemLabel="calle" itemValue="id" />
-                                <form:errors path="colportor" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
                    <s:bind path="temporadaColportor.colegio">
@@ -57,7 +49,7 @@
                                 <label for="colegio">
                                 <s:message code="colegio.label" />
                                 <span class="required-indicator">*</span>
-                                <form:select id="colegioId" path="colegio.id" items="${colegios}" itemLabel="nombre" itemValue="id" />
+                                <form:select id="colegio.id" path="colegio.id" items="${colegios}" itemLabel="nombre" itemValue="id" />
                                 <form:errors path="colegio" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -75,8 +67,8 @@
                             <label for="status">
                                 <s:message code="status.label" />
                                 <span class="required-indicator">*</span>
-                                <form:radiobutton path="status"  value="A" cssClass="span3" id="status"/><s:message code="activo.label"/>
-                                <form:radiobutton path="status"  value="I"  cssClass="span3" id="status"/><s:message code="inactivo.label"/>
+                                <form:radiobutton path="status"  value="A" cssClass="span3" id="activo"/><s:message code="activo.label"/>
+                                <form:radiobutton path="status"  value="I"  cssClass="span3" id="inactivo"/><s:message code="inactivo.label"/>
                                 <form:errors path="status" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -85,7 +77,7 @@
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="observaciones">
                                 <s:message code="observaciones.label" />
-                                <form:textarea path="observaciones" maxlength="4000" required="true"  />
+                                <form:textarea path="observaciones" maxlength="4000"  />
                                 <form:errors path="observaciones" cssClass="alert alert-error" type="texttarea"/>
                         </div>
                     </s:bind>
