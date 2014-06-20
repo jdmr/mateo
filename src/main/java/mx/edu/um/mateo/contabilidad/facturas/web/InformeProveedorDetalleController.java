@@ -6,11 +6,13 @@ package mx.edu.um.mateo.contabilidad.facturas.web;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.sql.Blob;
-import java.sql.SQLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,11 +47,8 @@ import mx.edu.um.mateo.inscripciones.model.FileUploadForm;
 import mx.edu.um.mateo.rh.model.Empleado;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.Hibernate;
-import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -1120,4 +1119,24 @@ public class InformeProveedorDetalleController extends BaseController {
 
         return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS;
     }
+
+    @RequestMapping("/asignarFacturas")
+    public String asignarArchivos() throws FileNotFoundException, IOException {
+        String path = "/home/facturas/2014/06/19/";
+        File dir = new File(path);
+        String[] ficheros = dir.list();
+        for (String nombreArchivo : ficheros) {
+            InformeProveedorDetalle detalle = manager.obtiene(nombreArchivo);
+            Path hubicacion = Paths.get("path/to/file");
+            byte[] bytes = Files.readAllBytes(hubicacion);
+            if (nombreArchivo.contains(".pdf")) {
+                detalle.setPdfFile(bytes);
+            }
+            if (nombreArchivo.contains(".xml")) {
+                detalle.setXmlFile(bytes);
+            }
+        }
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS;
+    }
+
 }

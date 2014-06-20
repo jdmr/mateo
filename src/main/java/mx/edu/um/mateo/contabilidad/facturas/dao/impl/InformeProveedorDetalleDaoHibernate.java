@@ -33,7 +33,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class InformeProveedorDetalleDaoHibernate extends BaseDao implements InformeProveedorDetallesDao {
 
     /**
-     * @see mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDetallesDao#lista(Map<String, Object> params)
+     * @see
+     * mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDetallesDao#lista(Map<String,
+     * Object> params)
      */
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
@@ -57,20 +59,20 @@ public class InformeProveedorDetalleDaoHibernate extends BaseDao implements Info
         if (!params.containsKey("offset")) {
             params.put("offset", 0);
         }
-        
+
         Criteria criteria = currentSession().createCriteria(InformeProveedorDetalle.class)
                 .createAlias("informeProveedor", "ip");
         Criteria countCriteria = currentSession().createCriteria(InformeProveedorDetalle.class)
                 .createAlias("informeProveedor", "ip");
 
-        if (params.containsKey("empresa")) {            
+        if (params.containsKey("empresa")) {
             criteria.createCriteria("empresa").add(
                     Restrictions.idEq(params.get("empresa")));
             countCriteria.createCriteria("empresa").add(
                     Restrictions.idEq(params.get("empresa")));
         }
         if (params.containsKey("informeProveedor")) {
-            criteria.add(Restrictions.eq("ip.id",params.get("informeProveedor")));
+            criteria.add(Restrictions.eq("ip.id", params.get("informeProveedor")));
             countCriteria.add(Restrictions.eq("ip.id", params.get("informeProveedor")));
         }
         //Estatus del informeProveedor
@@ -131,14 +133,22 @@ public class InformeProveedorDetalleDaoHibernate extends BaseDao implements Info
         return params;
     }
 
-    
-
     @Override
     public InformeProveedorDetalle obtiene(final Long id) {
         InformeProveedorDetalle proveedorDetalle = (InformeProveedorDetalle) currentSession().get(InformeProveedorDetalle.class, id);
         if (proveedorDetalle == null) {
             log.warn("uh oh, Informe Empleado Detalle with id '" + id + "' not found...");
             throw new ObjectRetrievalFailureException(InformeProveedorDetalle.class, id);
+        }
+        return proveedorDetalle;
+    }
+
+    @Override
+    public InformeProveedorDetalle obtiene(final String nombreFactura) {
+        InformeProveedorDetalle proveedorDetalle = (InformeProveedorDetalle) currentSession().get(InformeProveedorDetalle.class, nombreFactura);
+        if (proveedorDetalle == null) {
+            log.warn("uh oh, Informe Empleado Detalle with id '" + nombreFactura + "' not found...");
+            throw new ObjectRetrievalFailureException(InformeProveedorDetalle.class, nombreFactura);
         }
         return proveedorDetalle;
     }

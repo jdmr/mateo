@@ -15,22 +15,22 @@ import mx.edu.um.mateo.general.model.Usuario;
 public interface InformeProveedorDetallesDao {
 
     /**
-     * Regresa listado de detalles por encabezado.
-     * En params espera lo siguiente:<br>
+     * Regresa listado de detalles por encabezado. En params espera lo
+     * siguiente:<br>
      * <ol>
      * <li><b>empresa:</b>&nbsp;Id de la Empresa. [obligatorio]</li>
      * <li><b>informeProveedor:</b>&nbsp;Id del informe</li>
-     * <li><b>statusInforme:</b>&nbsp;Estatus del informe. [Si este est&aacute; presente, 
-     * se espera que 'statusFactura' tambi&eacute;n lo est&eacute;]</li>
+     * <li><b>statusInforme:</b>&nbsp;Estatus del informe. [Si este est&aacute;
+     * presente, se espera que 'statusFactura' tambi&eacute;n lo
+     * est&eacute;]</li>
      * <li><b>statusFactura:</b>&nbsp;Estatus de la factura</li>
      * </ol>
+     *
      * @param params
-     * @return 
+     * @return
      */
     public Map<String, Object> lista(Map<String, Object> params);
 
-    
-    
     /**
      * Gets informe's information based on primary key. An
      * ObjectRetrievalFailureException Runtime Exception is thrown if nothing is
@@ -40,6 +40,16 @@ public interface InformeProveedorDetallesDao {
      * @return informe populated informe object
      */
     public InformeProveedorDetalle obtiene(final Long id);
+
+    /**
+     * Gets informe's information based on the name of the files. An
+     * ObjectRetrievalFailureException Runtime Exception is thrown if nothing is
+     * found.
+     *
+     * @param NombreFactura el nombre del archivo
+     * @return informe populated informe object
+     */
+    public InformeProveedorDetalle obtiene(final String nombreFactura);
 
     /**
      * Saves a informe's information

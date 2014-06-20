@@ -35,18 +35,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Service
 public class InformeProveedorDetalleManagerImpl extends BaseManager implements InformeProveedorDetalleManager {
-    
+
     @Autowired
     private InformeProveedorDetallesDao dao;
     @Autowired
     private ContrareciboManager contrareciboManager;
-    
+
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
         params.put("statusFactura", Constants.STATUS_ACTIVO);
         return dao.lista(params);
     }
-    
+
     @Override
     public Map<String, Object> revisar(Map<String, Object> params) {
         //Agregamos al params el estatus de finalizado
@@ -54,34 +54,39 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
         params.put("statusFactura", Constants.STATUS_ACTIVO);
         return dao.lista(params);
     }
-    
+
     @Override
     public Map<String, Object> contrarecibo(Map<String, Object> params) {
         return dao.lista(params);
     }
-    
+
     @Override
     public InformeProveedorDetalle obtiene(final Long id) {
         return dao.obtiene(new Long(id));
     }
-    
+
+    @Override
+    public InformeProveedorDetalle obtiene(final String nombreFactura) {
+        return dao.obtiene(nombreFactura);
+    }
+
     @Override
     public void graba(InformeProveedorDetalle proveedorDetalle, Usuario usuario) {
         dao.crea(proveedorDetalle, usuario);
     }
-    
+
     @Override
     public void actualiza(InformeProveedorDetalle proveedorDetalle, Usuario usuario) {
         dao.actualiza(proveedorDetalle, usuario);
     }
-    
+
     @Override
     public String elimina(final Long id) {
         InformeProveedorDetalle proveedorDetalle = dao.obtiene(id);
         dao.elimina(new Long(id));
         return proveedorDetalle.getNombreProveedor();
     }
-    
+
     @Override
     public Contrarecibo autorizar(List ids, Usuario usuario) throws Exception {
         String cuentaCheque;
@@ -93,7 +98,7 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
         contrarecibo.setStatus("A");
         contrarecibo.setFechaAlta(new Date());
         contrarecibo.setUsuarioAlta(usuario);
-        
+
         String id = (String) ids.get(ids.size() - 1);
         InformeProveedorDetalle detalle = dao.obtiene(Long.valueOf(id));
         ProveedorFacturas proveedorFacturas = detalle.getInformeProveedor().getProveedorFacturas();
@@ -148,7 +153,7 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
         contrareciboManager.graba(contrarecibo, usuario);
         return contrarecibo;
     }
-    
+
     @Override
     public void rechazar(List ids, Usuario usuario) throws Exception {
         String proveedor;
@@ -168,7 +173,8 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
             detalle2.setStatus(Constantes.STATUS_RECHAZADO);
         }
     }
-      @Override
+
+    @Override
     public void crea(InformeProveedorDetalle detalle, Usuario usuario) throws AutorizacionCCPlInvalidoException {
         graba(detalle, usuario);
     }

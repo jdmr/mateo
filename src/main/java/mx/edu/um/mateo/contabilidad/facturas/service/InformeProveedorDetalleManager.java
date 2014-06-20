@@ -46,6 +46,14 @@ public interface InformeProveedorDetalleManager {
     public InformeProveedorDetalle obtiene(final Long id);
 
     /**
+     * Obtiene una InformeProveedor
+     *
+     * @param id
+     * @return
+     */
+    public InformeProveedorDetalle obtiene(String nombreFactura);
+
+    /**
      * graba informacion sobre un proveedor
      *
      * @param InformeProveedor the object to be saved
