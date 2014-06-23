@@ -723,7 +723,6 @@ public class InformeProveedorDetalleController extends BaseController {
         if (!dirPath.exists()) {
             dirPath.mkdirs();
         }
-        uploadFileForm.getFile().transferTo(new File(uploadDir));
         sw = true;
 
         log.debug("Archivo {} subido... ", uploadFileForm.getFile().getOriginalFilename());
@@ -744,6 +743,7 @@ public class InformeProveedorDetalleController extends BaseController {
             manager.actualiza(detalle, usuario);
             request.getSession().setAttribute("esPdf", false);
         }
+        uploadFileForm.getFile().transferTo(new File(uploadDir));
 
         return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
     }
@@ -1122,6 +1122,7 @@ public class InformeProveedorDetalleController extends BaseController {
 
     @RequestMapping("/asignarFacturas")
     public String asignarArchivos() throws FileNotFoundException, IOException {
+        Usuario usuario = ambiente.obtieneUsuario();
         String path = "/home/facturas/2014/06/19/";
         File dir = new File(path);
         String[] ficheros = dir.list();
@@ -1135,6 +1136,7 @@ public class InformeProveedorDetalleController extends BaseController {
             if (nombreArchivo.contains(".xml")) {
                 detalle.setXmlFile(bytes);
             }
+            manager.actualiza(detalle, usuario);
         }
         return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS;
     }
