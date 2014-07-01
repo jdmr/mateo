@@ -1121,14 +1121,14 @@ public class InformeProveedorDetalleController extends BaseController {
     }
 
     @RequestMapping("/asignarFacturas")
-    public String asignarArchivos() throws FileNotFoundException, IOException {
+    public String asignarArchivos(RedirectAttributes redirectAttributes) throws FileNotFoundException, IOException {
         Usuario usuario = ambiente.obtieneUsuario();
-        String path = "/home/facturas/2014/06/19/";
+        String path = "/home/facturas/2014/06/19/administracion@lacarlota.um.edu.mx";
         File dir = new File(path);
         String[] ficheros = dir.list();
         for (String nombreArchivo : ficheros) {
             InformeProveedorDetalle detalle = manager.obtiene(nombreArchivo);
-            Path hubicacion = Paths.get("path/to/file");
+            Path hubicacion = Paths.get(path + nombreArchivo);
             byte[] bytes = Files.readAllBytes(hubicacion);
             if (nombreArchivo.contains(".pdf")) {
                 detalle.setPdfFile(bytes);
@@ -1138,7 +1138,9 @@ public class InformeProveedorDetalleController extends BaseController {
             }
             manager.actualiza(detalle, usuario);
         }
-        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS;
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "detalle.graba.message");
+//        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBOS;
+        return "factura/index";
     }
 
 }

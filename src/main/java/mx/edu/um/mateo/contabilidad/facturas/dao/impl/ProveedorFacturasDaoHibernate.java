@@ -122,10 +122,17 @@ public class ProveedorFacturasDaoHibernate extends BaseDao implements ProveedorF
     @Override
     @Transactional(readOnly = true)
     public ProveedorFacturas obtiene(String rfc) {
-        Query query = currentSession().createQuery(
-                "select u from Usuario u where u.rfc = :rfc");
-        query.setString("rfc", rfc);
-        return (ProveedorFacturas) query.uniqueResult();
+        log.debug("obteniendo prveedor por rfc");
+        ProveedorFacturas proveedorFacturas = (ProveedorFacturas) getSession()
+                .createCriteria(ProveedorFacturas.class)
+                .add(org.hibernate.criterion.Restrictions.eq("rfc", rfc)).uniqueResult();
+
+        if (proveedorFacturas == null) {
+            log.warn("uh oh, Proveedor with id '" + rfc + "' not found...");
+            throw new ObjectRetrievalFailureException(ProveedorFacturas.class, rfc);
+        }
+
+        return proveedorFacturas;
     }
 
     @Override

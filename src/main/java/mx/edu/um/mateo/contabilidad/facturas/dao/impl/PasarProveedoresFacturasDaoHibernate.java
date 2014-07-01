@@ -18,6 +18,7 @@ import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,8 @@ public class PasarProveedoresFacturasDaoHibernate extends BaseDao implements Pas
     private DataSource dataSource2;
     @Autowired
     private ProveedorFacturasDao dao;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
 //    @Transactional(readOnly = true)
@@ -88,9 +91,6 @@ public class PasarProveedoresFacturasDaoHibernate extends BaseDao implements Pas
                     proveedores.add(facturas);
                 }
 
-
-
-
             }
         } catch (Exception e) {
             log.error("{}", e);
@@ -112,7 +112,23 @@ public class PasarProveedoresFacturasDaoHibernate extends BaseDao implements Pas
         for (ProveedorFacturas proveedorFacturas : proveedores) {
             log.debug("proveedorFacturas{}", proveedorFacturas.toString());
             log.debug("proveedorFacturasCorreo{}", proveedorFacturas.getCorreo().toString());
-            dao.crea(proveedorFacturas, usuario);
+            if (dao.obtiene(proveedorFacturas.getRfc()) == null) {
+                log.debug("****insertando nuevo proveedor*****");
+                dao.crea(proveedorFacturas, usuario);
+            } else {
+                ProveedorFacturas proveedor = dao.obtiene(proveedorFacturas.getRfc());
+                log.debug("Proveedor{}", proveedor);
+                if (proveedor.getCorreo() != proveedorFacturas.getCorreo()) {
+                    log.debug("*****actualizando datos proveedor***");
+                    proveedor.setCorreo(proveedorFacturas.getCorreo());
+                    proveedor.setUsername(proveedorFacturas.getCorreo());
+                    proveedor.setPassword(passwordEncoder.encodePassword(
+                            "prueba", proveedorFacturas.getUsername()));
+                    dao.actualiza(proveedor, usuario);
+
+                }
+
+            }
         }
 
     }
