@@ -37,6 +37,8 @@ public interface InformeProveedorDetalleManager {
      */
     public Map<String, Object> revisar(Map<String, Object> params);
 
+    public Map<String, Object> listaRevisados(Map<String, Object> params);
+
     /**
      * Obtiene una InformeProveedor
      *
@@ -69,7 +71,7 @@ public interface InformeProveedorDetalleManager {
      */
     public String elimina(final Long id);
 
-    public Contrarecibo autorizar(List ids, Usuario usuario) throws Exception;
+    public List<InformeProveedorDetalle> autorizar(List ids, Usuario usuario) throws Exception;
 
     public void rechazar(List ids, Usuario usuario) throws Exception;
 

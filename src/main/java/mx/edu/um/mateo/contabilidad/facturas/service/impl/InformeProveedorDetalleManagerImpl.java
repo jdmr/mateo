@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.contabilidad.facturas.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,14 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
     }
 
     @Override
+    public Map<String, Object> listaRevisados(Map<String, Object> params) {
+        //Agregamos al params el estatus de finalizado
+        params.put("statusInforme", Constants.STATUS_FINALIZADO);
+        params.put("statusFactura", Constantes.STATUS_REVISADO);
+        return dao.lista(params);
+    }
+
+    @Override
     public Map<String, Object> contrarecibo(Map<String, Object> params) {
         return dao.lista(params);
     }
@@ -88,17 +97,14 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
     }
 
     @Override
-    public Contrarecibo autorizar(List ids, Usuario usuario) throws Exception {
+    public List<InformeProveedorDetalle> autorizar(List ids, Usuario usuario) throws Exception {
         String cuentaCheque;
         String clabe;
         String banco;
         String proveedor;
         String formaPago;
-        Contrarecibo contrarecibo = new Contrarecibo();
-        contrarecibo.setStatus("A");
-        contrarecibo.setFechaAlta(new Date());
-        contrarecibo.setUsuarioAlta(usuario);
 
+        List<InformeProveedorDetalle> detalles = new ArrayList<>();
         String id = (String) ids.get(ids.size() - 1);
         InformeProveedorDetalle detalle = dao.obtiene(Long.valueOf(id));
         ProveedorFacturas proveedorFacturas = detalle.getInformeProveedor().getProveedorFacturas();
@@ -106,8 +112,6 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
         clabe = detalle.getInformeProveedor().getClabe();
         banco = detalle.getInformeProveedor().getBanco();
         proveedor = detalle.getInformeProveedor().getNombreProveedor();
-//        detalle.setContrarecibo(contrarecibo);
-//        detalle.setStatus(Constantes.STATUS_AUTORIZADO);
         formaPago = detalle.getInformeProveedor().getFormaPago();
         detalle.setUsuarioAutRech(usuario);
         detalle.setFechaAutRech(new Date());
@@ -146,12 +150,13 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
         }
         for (Object x : ids) {
             InformeProveedorDetalle detalleAut = dao.obtiene(Long.valueOf(id));
-            detalle.setStatus(Constantes.STATUS_AUTORIZADO);
-            detalle.setContrarecibo(contrarecibo);
+            detalle.setStatus(Constantes.STATUS_REVISADO);
+            dao.actualiza(detalle, usuario);
+            detalles.add(detalleAut);
+
         }
-        contrarecibo.setProveedorFacturas(proveedorFacturas);
-        contrareciboManager.graba(contrarecibo, usuario);
-        return contrarecibo;
+
+        return detalles;
     }
 
     @Override

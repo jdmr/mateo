@@ -187,6 +187,7 @@ public class Constantes {
     public static final String STATUS_AUTORIZADO = "At";
     public static final String STATUS_EMAIL_ENVIADO = "EE";
     public static final String STATUS_FINALIZADO = "Z";
+    public static final String STATUS_REVISADO = "R";
     public static final String FILES_LIST = "filesList";
     /**
      * Este status se utiliza para realizar <b>busquedas</b> donde el valor del
@@ -2984,7 +2985,7 @@ public class Constantes {
     public static final String PATH_CLAVEEMPLEADO_CREA = "/rh/empleado/claveEmpleado/crea";
     public static final String PATH_CLAVEEMPLEADO_ACTUALIZA = "/rh/empleado/claveEmpleado/actualiza";
     public static final String PATH_CLAVEEMPLEADO_ELIMINA = "/rh/empleado/claveEmpleado/elimina";
-    public static final String CLAVEEMPLEADO_FORM = "claveEmpleadoForm"; 
+    public static final String CLAVEEMPLEADO_FORM = "claveEmpleadoForm";
 
     public static final String PATH_RPT_CLP_PLANMENSUALORACION = "/colportaje/reportes/planMensualOracion";
     public static final String CONTAINSKEY_PLANMENSUALORACION = "planMensualOracion";
