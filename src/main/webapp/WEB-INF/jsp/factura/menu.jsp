@@ -10,7 +10,7 @@
             <li<c:if test="${param.menu eq 'informe'}"> class="active"</c:if>><a href="<s:url value='/factura/informe'/>" ><s:message code="informe.lista.label" /></a></li>
             <li<c:if test="${param.menu eq 'revisa'}"> class="active"</c:if>><a href="<s:url value='/factura/informe/encabezados'/>" ><s:message code="revisarEmpleado.label" /></a></li>
             <li<c:if test="${param.menu eq 'revisaProveedor'}"> class="active"</c:if>><a href="<s:url value='/factura/informeProveedorDetalle/revisar'/>" ><s:message code="revisarProveedor.label" /></a></li>
-            <li<c:if test="${param.menu eq 'asignarFecha'}"> class="active"</c:if>><a href="<s:url value='/factura/informeProveedorDetalle/listaRevisados'/>" ><s:message code="revisarProveedor.label" /></a></li>
+            <li<c:if test="${param.menu eq 'asignarFecha'}"> class="active"</c:if>><a href="<s:url value='/factura/informeProveedorDetalle/listaRevisados'/>" ><s:message code="fechaCompromiso.label" /></a></li>
             <li<c:if test="${param.menu eq 'proveedorFacturas'}"> class="active"</c:if>><a href="<s:url value='/factura/proveedorFacturas'/>" ><s:message code="proveedor.label" /></a></li>
             <li<c:if test="${param.menu eq 'informeProveedorDetalle'}"> class="active"</c:if>><a href="<s:url value='/factura/informeProveedorDetalle/contrarecibos'/>" ><s:message code="contrarecibo.label" /></a></li>
             </sec:authorize>

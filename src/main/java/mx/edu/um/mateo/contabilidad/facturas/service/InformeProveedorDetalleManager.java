@@ -47,6 +47,8 @@ public interface InformeProveedorDetalleManager {
      */
     public InformeProveedorDetalle obtiene(final Long id);
 
+    public List<InformeProveedorDetalle> obtiene(List<Long> ids);
+
     /**
      * Obtiene una InformeProveedor
      *

@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="autorizarFacturas.label" /></title>
+        <title><s:message code="fechaCompromiso.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -28,7 +28,7 @@
 
                     <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
                 </p> </form>
-                <form:form commandName="informeProveedorDetalle" action="autorizar" method="get" >
+                <form:form commandName="informeProveedorDetalle" action="pagar" method="get" >
                     <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -101,8 +101,8 @@
                     </table>
 
                     <p class="well" style="margin-top: 10px;">
-                        <button type="submit" name="botonAutorizar" class="btn btn-primary btn-large" id="botonAutorizar" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='autorizar.label'/></button>
-                        <button type="submit" name="botonRechazar" class="btn btn-primary btn-large" id="botonRechazar" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='rechazar.label'/></button>
+                        <button type="submit" name="pagarBtn" class="btn btn-primary btn-large" id="pagar" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
+                        <a class="btn btn-large" href="<s:url value='/factura/informeProveedorDetalle/revisar'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                     </p>
                 </form:form>
             </div>

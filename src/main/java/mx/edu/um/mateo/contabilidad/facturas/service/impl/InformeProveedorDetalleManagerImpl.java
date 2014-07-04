@@ -80,6 +80,16 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
     }
 
     @Override
+    public List<InformeProveedorDetalle> obtiene(List<Long> ids) {
+        List<InformeProveedorDetalle> detalles = new ArrayList<>();
+        for (Long x : ids) {
+            InformeProveedorDetalle detalle = dao.obtiene(x);
+            detalles.add(detalle);
+        }
+        return detalles;
+    }
+
+    @Override
     public void graba(InformeProveedorDetalle proveedorDetalle, Usuario usuario) {
         dao.crea(proveedorDetalle, usuario);
     }

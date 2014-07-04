@@ -1085,34 +1085,32 @@ public class InformeProveedorDetalleController extends BaseController {
         log.debug("names {}", request.getParameterNames().toString());
         Map<String, String[]> parameterMap = request.getParameterMap();
         parameterMap.get("key");
-        Boolean autorizar = false;
-        Boolean rechazar = false;
-        ArrayList ids = new ArrayList();
+        List<Long> ids = new ArrayList();
         Enumeration<String> parameterNames = request.getParameterNames();
         while (parameterNames.hasMoreElements()) {
             String nombre = parameterNames.nextElement();
-            if (nombre.startsWith("botonAut")) {
-                autorizar = true;
-            }
-            if (nombre.startsWith("botonRe")) {
-                rechazar = true;
-            }
 
             if (nombre.startsWith("checkFac")) {
                 String[] id = nombre.split("-");
                 log.debug("id ={}", id[1]);
-                ids.add(id[1]);
+                ids.add(Long.parseLong(id[1]));
             }
         }
         Usuario usuario = ambiente.obtieneUsuario();
+        List<InformeProveedorDetalle> detalles = manager.obtiene(ids);
 
-        return "redirect:/factura/informeProveedorDetalle/listaRevisados";
+        request.getSession().setAttribute("facturasPagar", detalles);
+        Contrarecibo contrarecibo = new Contrarecibo();
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_CONTRARECIBO, contrarecibo);
+        return "/factura/informeProveedorDetalle/fecha";
     }
 
     @RequestMapping("/fecha")
     public String asignarFecha(HttpServletRequest request, Model modelo) {
         log.debug("Nuevo paquete");
-
+        Contrarecibo contrarecibo = new Contrarecibo();
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_CONTRARECIBO, contrarecibo);
+        modelo.addAttribute(Constantes.ADDATTRIBUTE_CONTRARECIBO, contrarecibo);
         return "/factura/informeProveedorDetalle/fecha";
     }
 
@@ -1146,10 +1144,20 @@ public class InformeProveedorDetalleController extends BaseController {
         }
 
         try {
-            Contrarecibo c = (Contrarecibo) request.getSession().getAttribute("contrareciboFecha");
+
             Usuario usuario = ambiente.obtieneUsuario();
-            c.setFechaPago(contrarecibo.getFechaPago());
-            contrareciboManager.actualiza(c, usuario);
+            List<InformeProveedorDetalle> detalles = (List<InformeProveedorDetalle>) request.getSession().getAttribute("facturasPagar");
+            contrarecibo.setStatus(Constantes.STATUS_ACTIVO);
+            ProveedorFacturas proveedorFacturas = detalles.get(0).getInformeProveedor().getProveedorFacturas();
+            contrarecibo.setProveedorFacturas(proveedorFacturas);
+            contrarecibo.setUsuarioAlta(usuario);
+            contrareciboManager.graba(contrarecibo, usuario);
+            for (InformeProveedorDetalle x : detalles) {
+
+                x.setContrarecibo(contrarecibo);
+                x.setStatus(Constantes.STATUS_AUTORIZADO);
+                manager.actualiza(x, usuario);
+            }
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el detalle", e);
             return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
