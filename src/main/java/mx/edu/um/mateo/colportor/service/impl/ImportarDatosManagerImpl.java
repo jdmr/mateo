@@ -464,8 +464,8 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                         gcFecha.setTime(cell.getDateCellValue());
                                         log.debug("Se asigno la fecha {}", gcFecha.getTime());
                                     }catch(Exception e){
-                                        log.debug("Leyendo Fecha {}", String.valueOf(cell.getNumericCellValue()));
                                         try{
+                                            log.debug("Leyendo Fecha {}", String.valueOf(cell.getNumericCellValue()));
                                             fecha = String.valueOf(cell.getNumericCellValue());
                                             fecha = fecha.split("\\.")[0]; //Quitamos el .0
                                             gcFecha.setTime(sdf.parse(fecha));
