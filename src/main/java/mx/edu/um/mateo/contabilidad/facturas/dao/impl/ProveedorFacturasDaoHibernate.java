@@ -129,7 +129,7 @@ public class ProveedorFacturasDaoHibernate extends BaseDao implements ProveedorF
 
         if (proveedorFacturas == null) {
             log.warn("uh oh, Proveedor with id '" + rfc + "' not found...");
-            throw new ObjectRetrievalFailureException(ProveedorFacturas.class, rfc);
+            //throw new ObjectRetrievalFailureException(ProveedorFacturas.class, rfc);
         }
 
         return proveedorFacturas;

@@ -22,6 +22,7 @@
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/factura/proveedorFacturas/nuevo'/>"><i class="icon-user icon-white"></i> <s:message code='proveedorFacturas.nuevo.label' /></a>
+                <a class="btn btn-success" href="<s:url value='/factura/pasarProveedor'/>"><i class="icon-refresh icon-white"></i> <s:message code='actualizarproveedores.button' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
