@@ -6,26 +6,23 @@ package mx.edu.um.mateo.contabilidad.facturas.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Blob;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UtilStatus;
 import mx.edu.um.mateo.rh.model.Empleado;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,7 +31,9 @@ import org.springframework.web.multipart.MultipartFile;
  * @author develop
  */
 @Entity(name = "informeProveedorDetalle")
-@Table(name = "informeProveedorDetalle")
+@Table(name = "informeProveedorDetalle", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"foliofactura", "empresa_id"}),
+    @UniqueConstraint(columnNames = {"rfcproveedor", "empresa_id"})})
 public class InformeProveedorDetalle implements Serializable {
 
     @Id

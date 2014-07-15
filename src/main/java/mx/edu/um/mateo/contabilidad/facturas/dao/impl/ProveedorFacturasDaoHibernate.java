@@ -150,7 +150,7 @@ public class ProveedorFacturasDaoHibernate extends BaseDao implements ProveedorF
         proveedorFacturas.setPassword(passwordEncoder.encodePassword(
                 proveedorFacturas.getPassword(), proveedorFacturas.getUsername()));
         log.debug("password" + proveedorFacturas.getPassword());
-        proveedorFacturas.addRol(rolDao.obtiene("ROLE_PRV"));
+        proveedorFacturas.addRol(rolDao.obtiene("ROLE_PRV_USER"));
         log.debug("rol del proveedor{}" + proveedorFacturas.getRoles());
         currentSession().save(proveedorFacturas);
         currentSession().merge(proveedorFacturas);
@@ -167,6 +167,7 @@ public class ProveedorFacturasDaoHibernate extends BaseDao implements ProveedorF
             proveedorFacturas.setAlmacen(usuario.getAlmacen());
         }
         try {
+            proveedorFacturas.addRol(rolDao.obtiene("ROLE_PRV_USER"));
             currentSession().update(proveedorFacturas);
             currentSession().flush();
         } catch (NonUniqueObjectException e) {

@@ -147,11 +147,11 @@ public class Contrarecibo implements Serializable {
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "Contrarecibo{" + "id=" + id + ", version=" + version + ", fechaPago=" + fechaPago + ", empresa=" + empresa
-                + ", usuarioAlta=" + usuarioAlta + ", fechaAlta=" + fechaAlta + ", usuarioModificacion=" + usuarioModificacion
-                + ", proveedorFacturas=" + proveedorFacturas + ", fechaModificacion=" + fechaModificacion + ", detalles=" + detalles
-                + ", status=" + status + '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Contrarecibo{" + "id=" + id + ", version=" + version + ", fechaPago=" + fechaPago + ", empresa=" + empresa
+//                + ", usuarioAlta=" + usuarioAlta + ", fechaAlta=" + fechaAlta + ", usuarioModificacion=" + usuarioModificacion
+//                + ", proveedorFacturas=" + proveedorFacturas + ", fechaModificacion=" + fechaModificacion + ", detalles=" + detalles
+//                + ", status=" + status + '}';
+//    }
 }
