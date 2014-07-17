@@ -95,7 +95,9 @@
                                     <td>${informeProveedorDetalle.informeProveedor.id}</td>
                                     <td ><input type="checkbox" disabled="true"  <c:if test="${informeProveedorDetalle.pathXMl!= null && !informeProveedorDetalle.pathXMl.isEmpty()}">checked="checked"</c:if> /></td>
                                     <td ><input type="checkbox" disabled="true"  <c:if test="${informeProveedorDetalle.pathPDF!= null && !informeProveedorDetalle.pathPDF.isEmpty()}">checked="checked"</c:if> /></td>
-                                    </tr>
+                                    <td><a href="<c:url value='/factura/informeProveedorDetalle/downloadPdfFile/${informeProveedorDetalle.id}' />">PDF</td>                            
+                                    <td><a href="<c:url value='/factura/informeProveedorDetalle/downloadXmlFile/${informeProveedorDetalle.id}' />">XML</a></td>    
+                                </tr>
                             </c:forEach> 
                         </tbody>
                     </table>
