@@ -44,6 +44,7 @@ public class InformeProveedorDetalle implements Serializable {
     //*****En el caso del empleado, estos atributos contienen los datos del proveedor que expidio la factura
     private String RFCProveedor;
     private String folioFactura;
+    private String folioFiscal;
     private String nombreProveedor;
     //**************************
     private BigDecimal subtotal;
