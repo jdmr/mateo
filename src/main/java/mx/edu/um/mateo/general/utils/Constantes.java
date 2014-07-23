@@ -2988,7 +2988,7 @@ public class Constantes {
     public static final String CONTAINSKEY_PLANMENSUALORACION = "planMensualOracion";
     public static final String PATH_RPT_CLP_PLANDIARIOORACION = "/colportaje/reportes/planDiarioOracion";
     public static final String CONTAINSKEY_PLANDIARIOORACION = "planDiarioOracion";
-    public static final String PATH_RPT_CLP_INFORMEMENSUALASOCIADO = "/colportaje/informes/informeMensualAsociado/informeMensualAsociado";
+    public static final String PATH_RPT_CLP_INFORMEMENSUALASOCIADO = "/colportaje/informes/informeMensualAsociado";
     public static final String CONTAINSKEY_INFORMEMENSUALASOCIADO = "informeMensualAsociado";
     public static final String CONTAINSKEY_INFORMEMENSUALASOCIADO_TOTALES = "informeMensualAsociadoTotales";
     public static final String PATH_RPT_CLP_INFORMECONCENTRADOASOCIADO = "/colportaje/informes/informesAsociacion/concentradoMensualAsociados";
@@ -3134,5 +3134,19 @@ public class Constantes {
     public static final String PATH_EMPLEADOPERDED_GRABA = "/rh/empleado/empleadoPerded/graba";
     
     public static final String FRECUENCIAPAGO_LIST = "frecuenciaPagoList";
+    
+    /**
+     * Valores para los Proyecto Colportor
+     */
+    public static final String PROYECTO_COLPORTOR_PATH = "/colportaje/catalogos/proyectoColportor";
+    public static final String PROYECTO_COLPORTOR_PATH_LISTA = "/colportaje/catalogos/proyectoColportor/lista";
+    public static final String PROYECTO_COLPORTOR_PATH_VER = "/colportaje/catalogos/proyectoColportor/ver";
+    public static final String PROYECTO_COLPORTOR_PATH_NUEVO = "/colportaje/catalogos/proyectoColportor/nuevo";
+    public static final String PROYECTO_COLPORTOR_PATH_EDITA = "/colportaje/catalogos/proyectoColportor/edita";
+    public static final String PROYECTO_COLPORTOR_PATH_CREA = "/colportaje/catalogos/proyectoColportor/crea";
+    public static final String PROYECTO_COLPORTOR_PATH_ACTUALIZA = "/colportaje/catalogos/proyectoColportor/actualiza";
+    public static final String PROYECTO_COLPORTOR_PATH_ELIMINA = "/colportaje/catalogos/proyectoColportor/elimina";
+    public static final String PROYECTO_COLPORTOR = "proyectoColportor";
+    public static final String PROYECTO_COLPORTOR_LIST = "proyectoColportorList";
 
 }

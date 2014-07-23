@@ -8,10 +8,13 @@ package mx.edu.um.mateo.colportor.dao.hibernate;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import javax.persistence.Entity;
 import mx.edu.um.mateo.colportor.dao.ProyectoColportorDao;
+import mx.edu.um.mateo.colportor.model.PedidoColportor;
 import mx.edu.um.mateo.colportor.model.ProyectoColportor;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -74,7 +77,7 @@ public class ProyectoColportorDaoHibernate extends BaseDao implements ProyectoCo
         else{
             //No hay id del asociado
             log.debug("No se proporciono id del usuario");
-            params.put(Constantes.PROYECTOCOLPORTOR_LIST, new ArrayList());
+            params.put(Constantes.PROYECTO_COLPORTOR_LIST, new ArrayList());
             params.put(Constantes.CONTAINSKEY_CANTIDAD, 0L);
             return params;
         }
@@ -105,16 +108,16 @@ public class ProyectoColportorDaoHibernate extends BaseDao implements ProyectoCo
         
          if(params.get("empresa") != null){
             log.debug("Se encontro una empresa");
-            params.put(Constantes.PROYECTOCOLPORTOR_LIST, criteria.list());
+            params.put(Constantes.PROYECTO_COLPORTOR_LIST, criteria.list());
             countCriteria.setProjection(Projections.rowCount());
             params.put(Constantes.CONTAINSKEY_CANTIDAD, (Long) countCriteria.list().get(0));
          }else{
              log.debug("No se encontro una empresa");
-            params.put(Constantes.PROYECTOCOLPORTOR_LIST, new ArrayList());
+            params.put(Constantes.PROYECTO_COLPORTOR_LIST, new ArrayList());
             params.put(Constantes.CONTAINSKEY_CANTIDAD, 0L);
          }
        
-         log.debug("Lista de proyectos {}", params.get(Constantes.PROYECTOCOLPORTOR_LIST));
+         log.debug("Lista de proyectos {}", params.get(Constantes.PROYECTO_COLPORTOR_LIST));
 
         return params;
     }
@@ -135,10 +138,61 @@ public class ProyectoColportorDaoHibernate extends BaseDao implements ProyectoCo
         sql.add(Restrictions.idEq(id));
         return (ProyectoColportor)sql.uniqueResult();
     }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public ProyectoColportor obtiene(String codigo) {
+        ProyectoColportor proyecto = (ProyectoColportor) currentSession()
+                .createCriteria(ProyectoColportor.class)
+                .add(Restrictions.eq("codigo", codigo))
+                .uniqueResult();
+        return proyecto;
+    }
 
     @Override
     public ProyectoColportor crea(ProyectoColportor proyectoColportor) {
         log.debug("Creando proyecto : {}", proyectoColportor);
+        
+        //Generar nueva llave
+        try{
+            if(proyectoColportor.getId() == null){
+                log.debug("Intentando generar la llave del proyecto");
+                StringBuilder codigo = new StringBuilder("0");
+                Calendar cal = GregorianCalendar.getInstance(local);
+                sdf = new SimpleDateFormat ("YY", local); //Ultimos digitos del year
+                codigo.append(sdf.format(cal.getTime()));
+                log.debug("Se determino el anno {}", sdf.format(cal.getTime()));
+
+                //Obtener todos los proyectos
+                Map<String, Object> params = new HashMap<>();
+                params.put("empresa", proyectoColportor.getEmpresa().getId());
+                params.put("usuario", proyectoColportor.getUsuario().getId());
+                params.put("reporte", "reporte");
+
+                codigo.append("/");
+                Integer proys = ((List<ProyectoColportor>)this.lista(params).get(Constantes.PROYECTO_COLPORTOR_LIST)).size();
+
+                if(proys == 0){
+                    proys = 1;
+                }
+                log.debug("#proyectos registrados {}", proys);
+
+                StringBuilder str = new StringBuilder();
+                //Se estandariza este numero a 5 posiciones
+                for(int i = 5; i > proys; i--){
+                    str.append("0");
+                }
+                str.append(proys);
+
+                codigo.append(str.toString());
+                log.debug("Se determino el #proyecto {}", str.toString());
+
+                proyectoColportor.setCodigo(codigo.toString());
+            }
+        }catch(Exception e){
+            log.error("Error al intentar generar la llave del proyecto");
+        }
+        
         try{
             currentSession().saveOrUpdate(proyectoColportor);
             currentSession().merge(proyectoColportor);

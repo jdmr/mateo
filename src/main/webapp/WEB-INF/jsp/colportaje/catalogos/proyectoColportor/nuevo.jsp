@@ -88,5 +88,14 @@
                 </p>
             </form:form>
         </div>
+    <content>
+        <script>
+         $(document).ready(function() {
+                $('input#codigo').focus();
+                $("input#fechaInicio").datepicker($.datepicker.regional['es']);
+                $("input#fechaInicio").datepicker("option", "firstDay", 0);
+            });
+        </script>
+    </content>
     </body>
 </html>

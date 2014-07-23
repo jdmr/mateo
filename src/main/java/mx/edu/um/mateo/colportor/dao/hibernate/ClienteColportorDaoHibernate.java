@@ -58,12 +58,10 @@ public class ClienteColportorDaoHibernate extends BaseDao implements ClienteColp
         }
         Criteria criteria = currentSession().createCriteria(ClienteColportor.class);
         Criteria countCriteria = currentSession().createCriteria(ClienteColportor.class);
-        log.debug("***Empresa {}", params.get("empresa"));
         if (params.containsKey("empresa")) {
             criteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
             countCriteria.createCriteria("empresa").add(Restrictions.idEq(params.get("empresa")));
         }
-        log.debug("***Usuario {}", params.get("usuario"));
         if (params.containsKey("usuario")) {
             criteria.createCriteria("usuario").add(Restrictions.idEq(params.get("usuario")));
             countCriteria.createCriteria("usuario").add(Restrictions.idEq(params.get("usuario")));
@@ -74,7 +72,7 @@ public class ClienteColportorDaoHibernate extends BaseDao implements ClienteColp
             Disjunction propiedades = Restrictions.disjunction();
             propiedades.add(Restrictions.ilike("nombre", filtro,
                     MatchMode.ANYWHERE));
-            propiedades.add(Restrictions.ilike("correo", filtro,
+            propiedades.add(Restrictions.ilike("email", filtro,
                     MatchMode.ANYWHERE));
             criteria.add(propiedades);
             countCriteria.add(propiedades);

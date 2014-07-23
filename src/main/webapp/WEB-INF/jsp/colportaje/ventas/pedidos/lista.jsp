@@ -22,6 +22,10 @@
             <input type="hidden" name="correo" id="correo" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
+            <h4>
+            ${colportor.clave}
+            ${colportor.nombreCompleto}
+            </h4>
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/colportaje/ventas/pedidos/nuevo'/>">
                     <i class="icon-file icon-white"></i> <s:message code='pedidoColportor.nuevo.label' /></a>

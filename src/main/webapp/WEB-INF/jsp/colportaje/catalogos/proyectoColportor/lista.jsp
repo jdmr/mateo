@@ -62,7 +62,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach items="${proyectosColportor}" var="proyectoColportor" varStatus="status">
+                    <c:forEach items="${proyectoColportorList}" var="proyectoColportor" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
                             <td><a href="<c:url value='/colportaje/catalogos/proyectoColportor/ver/${proyectoColportor.id}' />">${proyectoColportor.codigo}</a></td>
                             <td>${proyectoColportor.nombre}</a></td>

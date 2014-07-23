@@ -21,6 +21,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -42,17 +43,22 @@ public class ProyectoColportor implements Serializable {
     @Column(name = "codigo",nullable = false)
     private String codigo; //Este codigo sera unico por empresa.
     @Column(name = "nombre",nullable = false)
+    @NotNull
     private String nombre;
     @Column(name = "descripcion",nullable = false)
+    @NotNull
     private String descripcion;
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern=Constantes.DATE_SHORT_HUMAN_PATTERN)
     @Column(name = "fecha_inicio")
+    @NotNull
     private Date fechaInicio;
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Empresa empresa;
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private Usuario usuario;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Asociado asociado;
     @Column(name = "status",nullable = false)
     private String status;
 
@@ -118,6 +124,14 @@ public class ProyectoColportor implements Serializable {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+    
+    public Asociado getAsociado() {
+        return asociado;
+    }
+
+    public void setAsociado(Asociado asociado) {
+        this.asociado = asociado;
     }
 
     public String getStatus() {

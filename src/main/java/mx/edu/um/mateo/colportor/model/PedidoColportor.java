@@ -24,7 +24,6 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
- *
  * @author osoto
  */
 @Entity
@@ -35,9 +34,10 @@ public class PedidoColportor implements Serializable{
     private Long id;
     @Version
     private Integer version;
-    @NotBlank
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 20, unique = true)
     private String numPedido;
+    @ManyToOne
+    private ProyectoColportor proyecto;
     @NotBlank
     @Column(nullable = false, length = 120)
     private String lugar;
@@ -91,6 +91,16 @@ public class PedidoColportor implements Serializable{
     public void setNumPedido(String numPedido) {
         this.numPedido = numPedido;
     }
+
+    public ProyectoColportor getProyecto() {
+        return proyecto;
+    }
+
+    public void setProyecto(ProyectoColportor proyecto) {
+        this.proyecto = proyecto;
+    }
+    
+    
 
     public String getLugar() {
         return lugar;

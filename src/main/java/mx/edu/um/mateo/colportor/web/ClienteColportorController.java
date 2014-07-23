@@ -6,6 +6,7 @@
 
 package mx.edu.um.mateo.colportor.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.colportor.dao.ClienteColportorDao;
 import mx.edu.um.mateo.colportor.model.ClienteColportor;
+import mx.edu.um.mateo.colportor.model.ProyectoColportor;
 import mx.edu.um.mateo.general.dao.EmpresaDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.general.utils.LabelValueBean;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import org.apache.commons.lang.StringUtils;
@@ -33,6 +36,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -63,7 +67,6 @@ public class ClienteColportorController extends BaseController {
 		Long empresaId = (Long) request.getSession().getAttribute("empresaId");
 		params.put("empresa", empresaId);
                 params.put("usuario", ambiente.obtieneUsuario().getId());
-                log.debug("***Usuario {}", params.get("usuario"));
                 
 		if (StringUtils.isNotBlank(filtro)) {
 			params.put("filtro", filtro);
@@ -114,6 +117,37 @@ public class ClienteColportorController extends BaseController {
 
 		return Constantes.CLIENTE_COLPORTOR_PATH_LISTA;
 	}
+        
+        @PreAuthorize("hasRole('ROLE_ASOC', 'ROLE_CLP')")
+    @RequestMapping(value="/get_cliente_list", method = RequestMethod.GET, headers="Accept=*/*", produces = "application/json")    
+    public @ResponseBody 
+    List <LabelValueBean> getClienteList(@RequestParam("term") String filtro, HttpServletResponse response){
+        log.debug("Buscando clientes por {}", filtro);
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
+        params.put("usuario", ambiente.obtieneUsuario().getId());
+        params.put("filtro", filtro);
+        params.put("reportes","reportes");
+        
+        params = clienteColportorDao.lista(params);
+        
+        List <LabelValueBean> rValues = new ArrayList<>();
+        List <ClienteColportor> clientes = (List <ClienteColportor>) params.get(Constantes.CLIENTE_COLPORTOR_LIST);
+        for(ClienteColportor cl : clientes){
+            log.debug("ClienteColportor {}", cl.getNombreCompleto());
+            StringBuilder sb = new StringBuilder();
+            sb.append(cl.getId());
+            sb.append(" | ");
+            sb.append(cl.getNombreCompleto());   
+            //Por alguna razon, el jQuery toma el valor del attr value por default.
+            //Asi que en el constructor invertimos los valores: como value va el string, y como nombre la clave
+            rValues.add(new LabelValueBean(cl.getId(), sb.toString(), cl.getNombreCompleto()));
+        }        
+        
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_OK);
+        return rValues;        
+    }
 
         @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
 	@RequestMapping("/ver/{id}")

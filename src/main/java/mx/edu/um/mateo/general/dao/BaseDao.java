@@ -23,6 +23,7 @@
  */
 package mx.edu.um.mateo.general.dao;
 
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Session;
@@ -41,6 +42,7 @@ public abstract class BaseDao {
 
 	protected final transient Logger log = LoggerFactory.getLogger(getClass());
         protected Locale local = new java.util.Locale (Constantes.LOCALE_LANGUAGE, Constantes.LOCALE_COUNTRY, Constantes.LOCALE_VARIANT);
+        protected SimpleDateFormat sdf = new SimpleDateFormat (Constantes.DATE_SHORT_HUMAN_PATTERN, local);
         
 	@Autowired
 	@Qualifier("sessionFactory")

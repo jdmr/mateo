@@ -6,6 +6,7 @@
 package mx.edu.um.mateo.colportor.dao.hibernate;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.colportor.dao.PedidoColportorDao;
 import mx.edu.um.mateo.colportor.model.PedidoColportor;
@@ -27,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class PedidoColportorDaoHibernate extends BaseDao implements PedidoColportorDao{
-
+    
     public PedidoColportorDaoHibernate() {
         log.info("Se ha creado una nueva instancia de ClienteColportorDao");
     }
@@ -57,10 +58,26 @@ public class PedidoColportorDaoHibernate extends BaseDao implements PedidoColpor
         }
         Criteria criteria = currentSession().createCriteria(PedidoColportor.class);
         Criteria countCriteria = currentSession().createCriteria(PedidoColportor.class);
+        
+        criteria.createAlias("colportor", "clp");
+        criteria.createAlias("clp.empresa", "emp");
+        
+        countCriteria.createAlias("colportor", "clp");
+        countCriteria.createAlias("clp.empresa", "emp");
 
         if (params.containsKey("colportor")) {
-            criteria.createCriteria("colportor").add(Restrictions.idEq(params.get("colportor")));
-            countCriteria.createCriteria("colportor").add(Restrictions.idEq(params.get("colportor")));
+            criteria.add(Restrictions.eq("clp.id", params.get("colportor")));
+            countCriteria.add(Restrictions.eq("clp.id",params.get("colportor")));
+        }
+        
+        if (params.containsKey("empresa")) {
+            criteria.add(Restrictions.eq("emp.id", params.get("empresa")));
+            criteria.add(Restrictions.eq("emp.id", params.get("empresa")));
+        }
+        
+        if(params.containsKey("proyecto")) {
+            criteria.createCriteria("proyecto").add(Restrictions.idEq(params.get("proyecto")));
+            countCriteria.createCriteria("proyecto").add(Restrictions.idEq(params.get("proyecto")));
         }
 
         if (params.containsKey("filtro")) {
@@ -103,10 +120,40 @@ public class PedidoColportorDaoHibernate extends BaseDao implements PedidoColpor
     }
 
     @Override
-    public PedidoColportor crea(PedidoColportor PedidoColportor) {
-        getSession().save(PedidoColportor);
+    public PedidoColportor crea(PedidoColportor pedidoColportor) {
+        //Determinar numero de pedido
+        try{
+            log.debug("Intentando generar el nuevo numero de pedido");
+            
+            //Obtener listado de pedidos del proyecto actual
+            Map<String, Object> params = new HashMap<>();
+            params.put("empresa", pedidoColportor.getColportor().getEmpresa().getId());
+            //params.put("colportor", pedidoColportor.getColportor().getId()); //Solo se evalua la empresa y el proyecto
+            params.put("proyecto", pedidoColportor.getProyecto().getId());
+            
+            params.put("reporte", "reporte");
+            Integer pedidos = ((List<PedidoColportor>)this.lista(params).get(Constantes.PEDIDO_COLPORTOR_LIST)).size();
+            log.debug("#pedidos registrados {}", pedidos);
+            
+            pedidos += 1;
+
+            StringBuilder str = new StringBuilder();
+            //Se estandariza este numero a 5 posiciones
+            for(int i = 5; i > pedidos.toString().length(); i--){
+                str.append("0");
+            }
+            str.append(pedidos);
+            
+            pedidoColportor.setNumPedido(pedidoColportor.getProyecto().getCodigo()+"/"+str.toString());
+            log.debug("NumPedido... {}", pedidoColportor.getNumPedido());
+            
+        }catch(Exception e){
+            log.error("Error al intentar generar el numero de pedido");
+        }
+        
+        getSession().save(pedidoColportor);
         getSession().flush();
-        return PedidoColportor;
+        return pedidoColportor;
     }
 
     @Override

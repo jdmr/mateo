@@ -29,7 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  *
  */
 @Controller
-@RequestMapping(Constantes.INFORMEMENSUALASOCIADO_PATH)
+@RequestMapping(Constantes.PATH_RPT_CLP_INFORMEMENSUALASOCIADO)
 public class InformeMensualAsociadoController extends BaseController {
 
     private static final Logger log = LoggerFactory.getLogger(InformeMensualAsociadoController.class);

@@ -49,5 +49,7 @@ public interface ProyectoColportorDao {
      */
     public String elimina(Usuario user, Long id);
     
+    public ProyectoColportor obtiene(String codigo);
+    
     
 }

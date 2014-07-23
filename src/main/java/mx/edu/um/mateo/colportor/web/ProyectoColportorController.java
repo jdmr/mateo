@@ -4,6 +4,7 @@
  */
 package mx.edu.um.mateo.colportor.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +13,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.colportor.dao.ProyectoColportorDao;
-import mx.edu.um.mateo.general.dao.RolDao;
-import mx.edu.um.mateo.general.dao.UsuarioDao;
+import mx.edu.um.mateo.colportor.dao.TemporadaColportorDao;
+import mx.edu.um.mateo.colportor.model.Asociado;
+import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.colportor.model.ProyectoColportor;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.LabelValueBean;
 import mx.edu.um.mateo.general.utils.ReporteException;
 import mx.edu.um.mateo.general.web.BaseController;
 import org.apache.commons.lang.StringUtils;
@@ -23,6 +26,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -38,16 +42,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  *
  */
 @Controller
-@RequestMapping(Constantes.PROYECTOCOLPORTOR_PATH)
+@RequestMapping(Constantes.PROYECTO_COLPORTOR_PATH)
 public class ProyectoColportorController extends BaseController {
 
     private static final Logger log = LoggerFactory.getLogger(ProyectoColportorController.class);
     @Autowired
     private ProyectoColportorDao proyectoColportorDao;
     @Autowired
-    private RolDao rolDao;
-    @Autowired
-    private UsuarioDao usuarioDao;
+    private TemporadaColportorDao tClpDao;
 
     @RequestMapping
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -78,7 +80,7 @@ public class ProyectoColportorController extends BaseController {
             params = proyectoColportorDao.lista(params);
             
             try {
-                generaReporte(tipo, (List<ProyectoColportor>) params.get(Constantes.PROYECTOCOLPORTOR_LIST), response, Constantes.PROYECTOCOLPORTOR_LIST, Constantes.ASO, null);
+                generaReporte(tipo, (List<ProyectoColportor>) params.get(Constantes.PROYECTO_COLPORTOR_LIST), response, Constantes.PROYECTO_COLPORTOR_LIST, Constantes.ASO, null);
                 return null;
             } catch (ReporteException e) {
                 log.error("No se pudo generar el reporte", e);
@@ -92,7 +94,7 @@ public class ProyectoColportorController extends BaseController {
             
             params.remove(Constantes.CONTAINSKEY_REPORTE);
             try {
-                enviaCorreo(correo, (List<ProyectoColportor>) params.get(Constantes.PROYECTOCOLPORTOR_LIST), request, Constantes.PROYECTOCOLPORTOR_LIST, Constantes.ASO, null);
+                enviaCorreo(correo, (List<ProyectoColportor>) params.get(Constantes.PROYECTO_COLPORTOR_LIST), request, Constantes.PROYECTO_COLPORTOR_LIST, Constantes.ASO, null);
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
                 modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("proyectoColportor.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
             } catch (ReporteException e) {
@@ -101,20 +103,51 @@ public class ProyectoColportorController extends BaseController {
         }
         params = proyectoColportorDao.lista(params);
         
-        log.debug("Proyecto" + ((List) params.get(Constantes.PROYECTOCOLPORTOR_LIST)).size());
-        modelo.addAttribute(Constantes.PROYECTOCOLPORTOR_LIST, params.get(Constantes.PROYECTOCOLPORTOR_LIST));
+        log.debug("Proyecto" + ((List) params.get(Constantes.PROYECTO_COLPORTOR_LIST)).size());
+        modelo.addAttribute(Constantes.PROYECTO_COLPORTOR_LIST, params.get(Constantes.PROYECTO_COLPORTOR_LIST));
 
-        this.pagina(params, modelo, Constantes.PROYECTOCOLPORTOR_LIST, pagina);
+        this.pagina(params, modelo, Constantes.PROYECTO_COLPORTOR_LIST, pagina);
 
-        return Constantes.PROYECTOCOLPORTOR_PATH_LISTA;
+        return Constantes.PROYECTO_COLPORTOR_PATH_LISTA;
+    }
+    
+    @PreAuthorize("hasRole('ROLE_ASOC', 'ROLE_CLP')")
+    @RequestMapping(value="/get_proyecto_list", method = RequestMethod.GET, headers="Accept=*/*", produces = "application/json")    
+    public @ResponseBody 
+    List <LabelValueBean> getProyectoList(@RequestParam("term") String filtro, HttpServletResponse response){
+        log.debug("Buscando proyectos por {}", filtro);
+        Map<String, Object> params = new HashMap<>();
+        params.put("empresa", ambiente.obtieneUsuario().getEmpresa().getId());
+        params.put("usuario", ambiente.obtieneUsuario().getId());
+        params.put("filtro", filtro);
+        params.put("reportes","reportes");
+        
+        params = proyectoColportorDao.lista(params);
+        
+        List <LabelValueBean> rValues = new ArrayList<>();
+        List <ProyectoColportor> proys = (List <ProyectoColportor>) params.get(Constantes.PROYECTO_COLPORTOR_LIST);
+        for(ProyectoColportor pr : proys){
+            log.debug("Proyecto {}", pr.getCodigo());
+            StringBuilder sb = new StringBuilder();
+            sb.append(pr.getCodigo());
+            sb.append(" | ");
+            sb.append(pr.getNombre());   
+            //Por alguna razon, el jQuery toma el valor del attr value por default.
+            //Asi que en el constructor invertimos los valores: como value va el string, y como nombre la clave
+            rValues.add(new LabelValueBean(pr.getId(), sb.toString(), pr.getCodigo()));
+        }        
+        
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_OK);
+        return rValues;        
     }
 
     @RequestMapping("/nuevo")
     public String nuevo(Model modelo) {
         log.debug("Nuevo proyecto");
         ProyectoColportor proyectoColportor = new ProyectoColportor();
-        modelo.addAttribute(Constantes.PROYECTOCOLPORTOR, proyectoColportor);
-        return Constantes.PROYECTOCOLPORTOR_PATH_NUEVO;
+        modelo.addAttribute(Constantes.PROYECTO_COLPORTOR, proyectoColportor);
+        return Constantes.PROYECTO_COLPORTOR_PATH_NUEVO;
     }
 
     @Transactional
@@ -133,17 +166,26 @@ public class ProyectoColportorController extends BaseController {
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
             this.despliegaBindingResultErrors(bindingResult);
-            return Constantes.PROYECTOCOLPORTOR_PATH_NUEVO;
+            return Constantes.PROYECTO_COLPORTOR_PATH_NUEVO;
         }
         
         proyectoColportor.setStatus(Constantes.STATUS_ACTIVO);
         proyectoColportor.setUsuario(ambiente.obtieneUsuario());
         proyectoColportor.setEmpresa(ambiente.obtieneUsuario().getEmpresa());
+        
+        if(ambiente.esAsociado()){
+            proyectoColportor.setAsociado((Asociado)ambiente.obtieneUsuario());
+        }
+        else if(ambiente.esColportor()){
+            proyectoColportor.setAsociado((Asociado)(tClpDao.obtiene((Colportor)ambiente.obtieneUsuario())).getAsociado());
+        }
+        
+        
         proyectoColportor = proyectoColportorDao.crea(proyectoColportor);
        
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "proyectoColportor.creado.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{proyectoColportor.getNombre()});
-        return "redirect:" + Constantes.PROYECTOCOLPORTOR_PATH_VER + "/" + proyectoColportor.getId();
+        return "redirect:" + Constantes.PROYECTO_COLPORTOR_PATH_VER + "/" + proyectoColportor.getId();
     }
 
     @RequestMapping("/ver/{id}")
@@ -152,9 +194,9 @@ public class ProyectoColportorController extends BaseController {
         log.debug("Mostrando proyecto {}", id);
         ProyectoColportor proyectoColportor = proyectoColportorDao.obtiene(id);
 
-        modelo.addAttribute(Constantes.PROYECTOCOLPORTOR, proyectoColportor);
+        modelo.addAttribute(Constantes.PROYECTO_COLPORTOR, proyectoColportor);
 
-        return Constantes.PROYECTOCOLPORTOR_PATH_VER;
+        return Constantes.PROYECTO_COLPORTOR_PATH_VER;
     }
 
     @RequestMapping("/edita/{id}")
@@ -162,8 +204,8 @@ public class ProyectoColportorController extends BaseController {
 
         log.debug("Edita proyecto {}", id);
         ProyectoColportor proyectoColportor = proyectoColportorDao.obtiene(id);
-        modelo.addAttribute(Constantes.PROYECTOCOLPORTOR, proyectoColportor);
-        return Constantes.PROYECTOCOLPORTOR_PATH_EDITA;
+        modelo.addAttribute(Constantes.PROYECTO_COLPORTOR, proyectoColportor);
+        return Constantes.PROYECTO_COLPORTOR_PATH_EDITA;
     }
 
     @Transactional
@@ -177,7 +219,7 @@ public class ProyectoColportorController extends BaseController {
         
         if (bindingResult.hasErrors()) {
             log.error("Hubo algun error en la forma, regresando");
-            return Constantes.PROYECTOCOLPORTOR_PATH_EDITA;
+            return Constantes.PROYECTO_COLPORTOR_PATH_EDITA;
         }
         try {
             proyectoColportor.setUsuario(ambiente.obtieneUsuario());
@@ -185,13 +227,13 @@ public class ProyectoColportorController extends BaseController {
             proyectoColportor = proyectoColportorDao.crea(proyectoColportor);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el proyecto", e);
-            return Constantes.PROYECTOCOLPORTOR_PATH_NUEVO;
+            return Constantes.PROYECTO_COLPORTOR_PATH_NUEVO;
         }
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "proyectoColportor.actualizado.message");
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{proyectoColportor.getNombre()});
 
-        return "redirect:" + Constantes.PROYECTOCOLPORTOR_PATH_VER + "/" + proyectoColportor.getId();
+        return "redirect:" + Constantes.PROYECTO_COLPORTOR_PATH_VER + "/" + proyectoColportor.getId();
     }
 
     @Transactional
@@ -210,10 +252,10 @@ public class ProyectoColportorController extends BaseController {
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
         } catch (Exception e) {
             log.error("No se pudo eliminar el proyecto " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.PROYECTOCOLPORTOR_LIST, new String[]{"proyectoColportor.no.eliminado.message"}, null, null));
-            return Constantes.PROYECTOCOLPORTOR_PATH_VER;
+            bindingResult.addError(new ObjectError(Constantes.PROYECTO_COLPORTOR_LIST, new String[]{"proyectoColportor.no.eliminado.message"}, null, null));
+            return Constantes.PROYECTO_COLPORTOR_PATH_VER;
         }
 
-        return "redirect:" + Constantes.PROYECTOCOLPORTOR_PATH;
+        return "redirect:" + Constantes.PROYECTO_COLPORTOR_PATH;
     }
 }

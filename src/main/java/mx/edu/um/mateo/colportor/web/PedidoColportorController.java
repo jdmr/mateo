@@ -14,12 +14,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import mx.edu.um.mateo.colportor.dao.ClienteColportorDao;
+import mx.edu.um.mateo.colportor.dao.ColportorDao;
 import mx.edu.um.mateo.colportor.dao.PedidoColportorDao;
 import mx.edu.um.mateo.colportor.dao.PedidoColportorItemDao;
+import mx.edu.um.mateo.colportor.dao.ProyectoColportorDao;
+import mx.edu.um.mateo.colportor.model.ClienteColportor;
+import mx.edu.um.mateo.colportor.model.Colportor;
 import mx.edu.um.mateo.colportor.model.FormaPago;
 import mx.edu.um.mateo.colportor.model.PedidoColportor;
 import mx.edu.um.mateo.colportor.model.PedidoColportorItem;
 import mx.edu.um.mateo.colportor.model.PedidoColportorVO;
+import mx.edu.um.mateo.colportor.model.ProyectoColportor;
 import mx.edu.um.mateo.general.dao.UsuarioDao;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -52,12 +57,16 @@ public class PedidoColportorController extends BaseController{
     @Autowired
     private PedidoColportorDao pedidoColportorDao;
     @Autowired
-    private UsuarioDao colportorDao;
+    private ColportorDao colportorDao;
+    @Autowired
+    private UsuarioDao usuarioDao;
     @Autowired
     private ClienteColportorDao clienteColportorDao;
     @Autowired
     private PedidoColportorItemDao pedidoColportorItemDao;
-
+    @Autowired
+    private ProyectoColportorDao proyectoColportorDao;
+    
     @SuppressWarnings("unchecked")
     @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
     @RequestMapping
@@ -77,7 +86,50 @@ public class PedidoColportorController extends BaseController{
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
         params.put("empresa", empresaId);
-        Long colportorId = colportorDao.obtiene(ambiente.obtieneUsuario().getId()).getId();
+        
+        Colportor clp = null;
+        
+        if(ambiente.esAsociado()){
+            log.debug("esAsociado");
+            //Si viene en request un parametro 'clave', leerlo para cargar el colportor
+            //De lo contrario mostrar la pagina sin registro alguno
+            if(request.getParameter("clave") == null || request.getParameter("clave").isEmpty()){
+                log.debug("No hay clave");
+                if(request.getSession().getAttribute(Constantes.COLPORTOR) == null){
+                    log.debug("Ni session");
+                    modelo.addAttribute(Constantes.PEDIDO_COLPORTOR_LIST, new ArrayList());
+                    return Constantes.PEDIDO_COLPORTOR_PATH_LISTA;
+                }
+                else{
+                    log.debug("Si hay session");
+                    clp = (Colportor)request.getSession().getAttribute(Constantes.COLPORTOR);
+                }
+            }
+            else{
+                log.debug("Si hay clave");
+                clp = colportorDao.obtiene(request.getParameter("clave"));
+            }
+            
+            if(clp != null)
+                log.debug("Colportor {}", clp);
+                request.getSession().setAttribute(Constantes.COLPORTOR, clp);
+            
+            
+        }
+        else if(ambiente.esColportor()){
+            log.debug("esColportor");
+            try{
+                clp = colportorDao.obtiene(ambiente.obtieneUsuario().getId());
+                request.getSession().setAttribute(Constantes.COLPORTOR, clp);
+            }catch(Exception e){
+                modelo.addAttribute(Constantes.PEDIDO_COLPORTOR_LIST, new ArrayList());
+                return Constantes.PEDIDO_COLPORTOR_PATH_LISTA;
+            }
+            log.debug("Colportor {}", clp);
+        }
+        
+        //asignar para busqueda
+        Long colportorId = clp.getId();
         params.put("colportor", colportorId);
 
         if (StringUtils.isNotBlank(filtro)) {
@@ -131,6 +183,63 @@ public class PedidoColportorController extends BaseController{
     }
 
     @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
+    @RequestMapping("/obtieneProyecto")
+    public String obtieneProyecto(HttpServletRequest request, Model modelo) {
+        log.debug("Mostrando pedidoColportor {}", request.getParameter("proyectoId"));
+        
+        //Obtiene proyecto
+        ProyectoColportor proyecto = proyectoColportorDao.obtiene(request.getParameter("proyectoId"));
+        request.getSession().setAttribute(Constantes.PROYECTO_COLPORTOR, proyecto);
+        
+        PedidoColportor pedidoColportor = new PedidoColportor();
+        pedidoColportor.setProyecto(proyecto);
+        pedidoColportor.setColportor((Colportor)request.getSession().getAttribute(Constantes.COLPORTOR));
+        modelo.addAttribute(Constantes.PEDIDO_COLPORTOR, pedidoColportor);
+        
+        modelo.addAttribute("formasPago", FormaPago.values());
+
+        return Constantes.PEDIDO_COLPORTOR_PATH_NUEVO;
+    }
+    
+    @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
+    @RequestMapping("/obtieneCliente")
+    public String obtieneCliente(HttpServletRequest request, Model modelo) {
+        log.debug("Mostrando pedidoColportor {}", request.getParameter("clienteId"));
+        
+        //Obtiene proyecto
+        Long clienteId = Long.parseLong(request.getParameter("clienteId"));
+        ClienteColportor cliente = clienteColportorDao.obtiene(clienteId);
+        request.getSession().setAttribute(Constantes.CLIENTE_COLPORTOR, cliente);
+        
+        PedidoColportor pedidoColportor = new PedidoColportor();
+        pedidoColportor.setProyecto((ProyectoColportor)request.getSession().getAttribute(Constantes.PROYECTO_COLPORTOR));
+        pedidoColportor.setCliente(cliente);
+        modelo.addAttribute(Constantes.PEDIDO_COLPORTOR, pedidoColportor);
+        
+        modelo.addAttribute("formasPago", FormaPago.values());
+
+        return Constantes.PEDIDO_COLPORTOR_PATH_NUEVO;
+    }
+    
+    @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
+    @RequestMapping("/obtieneColportor")
+    public String obtieneColportor(HttpServletRequest request, Model modelo) {
+        log.debug("Mostrando pedidoColportor {}", request.getParameter("clave"));
+        
+        //Obtiene colportor
+        Colportor clp = colportorDao.obtiene(request.getParameter("clave"));
+        request.getSession().setAttribute(Constantes.CLIENTE_COLPORTOR, clp);
+        
+        PedidoColportor pedidoColportor = new PedidoColportor();
+        pedidoColportor.setColportor((Colportor)request.getSession().getAttribute(Constantes.COLPORTOR));
+        modelo.addAttribute(Constantes.PEDIDO_COLPORTOR, pedidoColportor);
+        
+        modelo.addAttribute("formasPago", FormaPago.values());
+
+        return Constantes.PEDIDO_COLPORTOR_PATH_NUEVO;
+    }
+    
+    @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
     @RequestMapping("/ver/{id}")
     public String ver(@PathVariable Long id, Model modelo) {
         log.debug("Mostrando pedidoColportor {}", id);
@@ -145,7 +254,10 @@ public class PedidoColportorController extends BaseController{
     @RequestMapping("/nuevo")
     public String nuevo(HttpServletRequest request, Model modelo) {
         log.debug("Nuevo pedidoColportor");
+        
         PedidoColportor pedidoColportor = new PedidoColportor();
+        pedidoColportor.setProyecto((ProyectoColportor)request.getSession().getAttribute(Constantes.PROYECTO_COLPORTOR));
+        pedidoColportor.setCliente((ClienteColportor)request.getSession().getAttribute(Constantes.CLIENTE_COLPORTOR));
         modelo.addAttribute(Constantes.PEDIDO_COLPORTOR, pedidoColportor);
         
         //Obtener la lista de clientes
@@ -162,20 +274,20 @@ public class PedidoColportorController extends BaseController{
     @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
     @RequestMapping(value = "/crea", method = RequestMethod.POST)
     public String crea(HttpServletRequest request,
-            HttpServletResponse response, @Valid PedidoColportor pedidoColportor,
-            BindingResult bindingResult, Errors errors, Model modelo,
+            HttpServletResponse response, 
+            @Valid PedidoColportor pedidoColportor,
+            BindingResult bindingResult, 
+            Errors errors, Model modelo,
             RedirectAttributes redirectAttributes) {
-        for (String nombre : request.getParameterMap().keySet()) {
-            log.debug("Param: {} : {}", nombre,
-                    request.getParameterMap().get(nombre));
-        }
+        
+        despliegaBindingResultErrors(bindingResult);
+        
         if (bindingResult.hasErrors()) {
             log.debug("Hubo algun error en la forma, regresando");
             
             //Obtener la lista de clientes
             Map<String, Object> params = new HashMap<>();
             params.put("empresa", request.getSession().getAttribute("empresaId"));
-            modelo.addAttribute(Constantes.CLIENTE_COLPORTOR_LIST, clienteColportorDao.lista(params).get(Constantes.CLIENTE_COLPORTOR_LIST));
             modelo.addAttribute("formasPago", FormaPago.values());
             
             return Constantes.PEDIDO_COLPORTOR_PATH_NUEVO;
@@ -184,10 +296,14 @@ public class PedidoColportorController extends BaseController{
         try {
             //Se supone que el colportor lo registra
             Usuario usuario = ambiente.obtieneUsuario();
-            pedidoColportor.setColportor(colportorDao.obtiene(ambiente.obtieneUsuario().getId()));
+            pedidoColportor.setColportor((Colportor)request.getSession().getAttribute(Constantes.COLPORTOR));
             pedidoColportor.setCliente(clienteColportorDao.obtiene(pedidoColportor.getCliente().getId()));
+            pedidoColportor.setProyecto(proyectoColportorDao.obtiene(pedidoColportor.getProyecto().getId()));
             pedidoColportor.setStatus(Constantes.STATUS_ACTIVO);
             pedidoColportor = pedidoColportorDao.crea(pedidoColportor);
+            
+            request.getSession().removeAttribute(Constantes.PROYECTO_COLPORTOR);
+            request.getSession().removeAttribute(Constantes.CLIENTE_COLPORTOR);
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear al pedidoColportor", e);
             
@@ -246,7 +362,7 @@ public class PedidoColportorController extends BaseController{
         }
 
         try {
-            pedidoColportor.setColportor(colportorDao.obtiene(ambiente.obtieneUsuario().getId()));
+            pedidoColportor.setColportor((Colportor)request.getSession().getAttribute(Constantes.COLPORTOR));
             pedidoColportor.setCliente(clienteColportorDao.obtiene(pedidoColportor.getCliente().getId()));
             pedidoColportor = pedidoColportorDao.actualiza(pedidoColportor);
         } catch (ConstraintViolationException e) {
