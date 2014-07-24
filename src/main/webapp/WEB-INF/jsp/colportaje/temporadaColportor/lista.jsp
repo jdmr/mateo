@@ -24,6 +24,9 @@
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
+                <c:if test="${temporadaColportores == null or empty temporadaColportores}">
+                    <a class="btn btn-primary" href="<s:url value='../nueva'/>"><i class="icon-user icon-white"></i> <s:message code='temporadaColportor.nueva.label' /></a>
+                </c:if>
                 <input name="filtro" id="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><s:message code="buscar.label" /></button>
             </p>
