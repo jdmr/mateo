@@ -22,7 +22,7 @@
         <![endif]-->        
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="shortcut icon" href="<c:url value='/images/favicon.ico' />" type="image/x-icon" />
+        <link rel="shortcut icon" href="<c:url value='/images/faviconxxx.ico' />" type="image/x-icon" />
         <link rel="apple-touch-icon" href="<c:url value='/images/apple-touch-icon.png' />" />
         <link rel="apple-touch-icon" sizes="114x114" href="<c:url value='/images/apple-touch-icon-retina.png' />" />
         <link rel="stylesheet" href="<c:url value='/css/bootstrap.min.css' />" type="text/css" />
@@ -31,12 +31,15 @@
         <link rel="stylesheet" href="<c:url value='/css/custom-theme/jquery-ui-1.8.23.custom.css' />" type="text/css"/>
         <link rel="stylesheet" href="<c:url value='/css/app.css' />" type="text/css">
         <sitemesh:write property='head'/>
+        
     </head>
     <body>
         <nav class="navbar navbar-fixed-top" role="navigation">
             <div class="navbar-inner">
                 <div class="container-fluid">
-                    <a class="brand" href="<c:url value='/inicio' />"><s:message code="proyecto.nombre.label" /></a>
+                    <a class="brand" href="<c:url value='/inicio' />">
+                        <img src="<c:url value='/images/colporsoft.png'/>" height="116" width="116"/>
+                    </a>
                 </div>
             </div>
         </nav>
