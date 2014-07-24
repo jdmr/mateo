@@ -355,4 +355,12 @@ public class InformeProveedorDetalle implements Serializable {
         this.xmlFile = xmlFile;
     }
 
+    public String getFolioFiscal() {
+        return folioFiscal;
+    }
+
+    public void setFolioFiscal(String folioFiscal) {
+        this.folioFiscal = folioFiscal;
+    }
+
 }

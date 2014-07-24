@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.sql.DataSource;
 import mx.edu.um.mateo.contabilidad.facturas.dao.PasarProveedoresFacturasDao;
@@ -16,6 +17,7 @@ import mx.edu.um.mateo.contabilidad.facturas.dao.ProveedorFacturasDao;
 import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.CorreoMalFormadoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
@@ -37,12 +39,16 @@ public class PasarProveedoresFacturasDaoHibernate extends BaseDao implements Pas
     private ProveedorFacturasDao dao;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    private Integer actualizados;
+    private Integer insertados;
 
     @Override
 //    @Transactional(readOnly = true)
-    public void pasar(Usuario usuario) {
-
+    public void pasar(Usuario usuario) throws CorreoMalFormadoException {
+        actualizados = 0;
+        insertados = 0;
         //Trallendo de la base de datos.
+        HashMap<String, String> params = new HashMap<>();
         log.debug("Entrando a metodo de paso de proveedores");
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -81,8 +87,8 @@ public class PasarProveedoresFacturasDaoHibernate extends BaseDao implements Pas
                     facturas.setTipoTercero(tipo_tercero_id);
                     proveedores.add(facturas);
                 } else {
-                    ProveedorFacturas facturas = new ProveedorFacturas(email, "prueba", razon_social, razon_social, razon_social,
-                            email, razon_social, rfc, id_fiscal, curp, calle, telefono, tipo_tercero_id, clabe, banco,
+                    ProveedorFacturas facturas = new ProveedorFacturas(email.trim(), "prueba", razon_social, razon_social, razon_social,
+                            email.trim(), razon_social, rfc, id_fiscal, curp, calle, telefono, tipo_tercero_id, clabe, banco,
                             status, clabe);
                     facturas.setId(id);
                     facturas.setEjercicio(usuario.getEjercicio());
@@ -108,28 +114,38 @@ public class PasarProveedoresFacturasDaoHibernate extends BaseDao implements Pas
             }
         }
 
-        log.debug("Pasando datos a tabla en postgres");
+        log.debug("***Pasando datos a tabla en postgres***");
         for (ProveedorFacturas proveedorFacturas : proveedores) {
-            log.debug("proveedorFacturas{}", proveedorFacturas.toString());
-            log.debug("proveedorFacturasCorreo{}", proveedorFacturas.getCorreo().toString());
             if (dao.obtiene(proveedorFacturas.getRfc()) == null) {
-                log.debug("****insertando nuevo proveedor*****");
-                dao.crea(proveedorFacturas, usuario);
+                log.debug("****insertando nuevo proveedor:{}", proveedorFacturas.getCorreo());
+                try {
+                    dao.crea(proveedorFacturas, usuario);
+                    insertados++;
+                } catch (Exception e) {
+                    log.error("no se pudo crear el proveedor:{}", proveedorFacturas.getCorreo());
+                    params.put(proveedorFacturas.getRfc(), e.getMessage());
+                }
+
             } else {
+
                 ProveedorFacturas proveedor = dao.obtiene(proveedorFacturas.getRfc());
-                log.debug("Proveedor{}", proveedor);
-                if (proveedor.getCorreo() != proveedorFacturas.getCorreo()) {
-                    log.debug("*****actualizando datos proveedor***");
-                    proveedor.setCorreo(proveedorFacturas.getCorreo());
-                    proveedor.setUsername(proveedorFacturas.getCorreo());
+                if (proveedor.getCorreo() == null ? proveedorFacturas.getCorreo() != null : !proveedor.getCorreo().equals(proveedorFacturas.getCorreo())) {
+                    log.debug("*****actualizando datos proveedor:{}", proveedor.getCorreo());
+                    proveedor.setCorreo(proveedorFacturas.getCorreo().trim());
+                    proveedor.setUsername(proveedorFacturas.getCorreo().trim());
                     proveedor.setPassword(passwordEncoder.encodePassword(
                             "prueba", proveedorFacturas.getUsername()));
-                    dao.actualiza(proveedor, usuario);
-
+                    try {
+                        dao.actualiza(proveedor, usuario);
+                        actualizados++;
+                    } catch (Exception e) {
+                        log.error("no se pudo actualizar el proveedor:{}", proveedor.getCorreo());
+                        throw new CorreoMalFormadoException(proveedor.getRfc());
+                    }
                 }
 
             }
         }
-
+        log.info("Registros insertados:{}, actualizados:{}.", insertados, actualizados);
     }
 }

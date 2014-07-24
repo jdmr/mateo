@@ -122,7 +122,7 @@ public class ProveedorFacturasDaoHibernate extends BaseDao implements ProveedorF
     @Override
     @Transactional(readOnly = true)
     public ProveedorFacturas obtiene(String rfc) {
-        log.debug("obteniendo prveedor por rfc");
+        log.debug("obteniendo prveedor con rfc:{}", rfc);
         ProveedorFacturas proveedorFacturas = (ProveedorFacturas) getSession()
                 .createCriteria(ProveedorFacturas.class)
                 .add(org.hibernate.criterion.Restrictions.eq("rfc", rfc)).uniqueResult();
@@ -139,23 +139,23 @@ public class ProveedorFacturasDaoHibernate extends BaseDao implements ProveedorF
     public void crea(final ProveedorFacturas proveedorFacturas, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {
-            log.debug("usuarioAmbiente++-+{}", usuario.toString());
-            log.debug("empresa--/-{}", usuario.getEmpresa().toString());
+//            log.debug("usuarioAmbiente++-+{}", usuario.toString());
+//            log.debug("empresa--/-{}", usuario.getEmpresa().toString());
             proveedorFacturas.setEmpresa(usuario.getEmpresa());
 
             proveedorFacturas.setAlmacen(usuario.getAlmacen());
         }
-        log.debug("usuario logeado... {}" + usuario.getEjercicio());
-        log.debug("creando proveedor facturas {}" + proveedorFacturas);
+//        log.debug("usuario logeado... {}" + usuario.getEjercicio());
+        log.debug("creando proveedor facturas {}" + proveedorFacturas.getCorreo());
         proveedorFacturas.setPassword(passwordEncoder.encodePassword(
                 proveedorFacturas.getPassword(), proveedorFacturas.getUsername()));
-        log.debug("password" + proveedorFacturas.getPassword());
+//        log.debug("password" + proveedorFacturas.getPassword());
         proveedorFacturas.addRol(rolDao.obtiene("ROLE_PRV_USER"));
         log.debug("rol del proveedor{}" + proveedorFacturas.getRoles());
         currentSession().save(proveedorFacturas);
         currentSession().merge(proveedorFacturas);
         currentSession().flush();
-        log.debug("usuario logeado grabado{}" + usuario.getEjercicio());
+//        log.debug("usuario logeado grabado{}" + usuario.getEjercicio());
 
     }
 
@@ -170,6 +170,7 @@ public class ProveedorFacturasDaoHibernate extends BaseDao implements ProveedorF
             proveedorFacturas.addRol(rolDao.obtiene("ROLE_PRV_USER"));
             currentSession().update(proveedorFacturas);
             currentSession().flush();
+            log.debug("proveedoractualizado{}", proveedorFacturas.getCorreo());
         } catch (NonUniqueObjectException e) {
             try {
                 currentSession().merge(proveedorFacturas);

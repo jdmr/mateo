@@ -5,6 +5,7 @@
 package mx.edu.um.mateo.contabilidad.facturas.dao;
 
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.CorreoMalFormadoException;
 
 /**
  *
@@ -12,5 +13,5 @@ import mx.edu.um.mateo.general.model.Usuario;
  */
 public interface PasarProveedoresFacturasDao {
 
-    public void pasar(Usuario usuario);
+    public void pasar(Usuario usuario)throws CorreoMalFormadoException;
 }
