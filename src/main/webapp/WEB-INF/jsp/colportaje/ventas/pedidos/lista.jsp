@@ -27,9 +27,11 @@
             ${colportor.nombreCompleto}
             </h4>
             <p class="well">
+                <c:if test="${colportor != null}">
                 <a class="btn btn-primary" href="<s:url value='/colportaje/ventas/pedidos/nuevo'/>">
                     <i class="icon-file icon-white"></i> <s:message code='pedidoColportor.nuevo.label' /></a>
-                <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
+                </c:if>
+                <input id="clave" name="clave" class="input-medium search-query" value="${colportor.clave}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
         </form>
@@ -87,6 +89,19 @@
             <jsp:include page="/WEB-INF/jsp/paginacion.jsp" />
                
         <content>
+            <script>
+            $(function() {
+            
+            $( "#clave" ).autocomplete({
+                source: '${pageContext. request. contextPath}/colportaje/colportor/get_colportor_list',
+                select: function(event, ui) {
+                        $("input#clave").val(ui.item.nombre);
+                        
+                        return false;
+                    }
+            })
+            });
+          </script>
             <script src="<c:url value='/js/lista.js' />"></script>
         </content>
     </body>

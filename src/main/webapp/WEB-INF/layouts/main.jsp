@@ -37,6 +37,12 @@
         <link rel="stylesheet" href="<c:url value='/css/bootstrap-responsive.min.css' />" type="text/css" />
         <%--link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/themes/base/jquery-ui.css" type="text/css" media="all" /--%>
         <link rel="stylesheet" href="<c:url value='/css/custom-theme/jquery-ui-1.8.23.custom.css' />" type="text/css"/>
+        
+        <script src="<c:url value='/js/jquery-1.8.1.min.js' />"></script>
+        <script src="<c:url value='/js/jquery-ui-1.8.23.custom.min.js' />"></script>
+        <script src="<c:url value='/js/i18n/jquery.ui.datepicker-es.min.js' />"></script>
+        <script src="<c:url value='/js/bootstrap.min.js' />"></script>
+        <script src="<c:url value='/js/app.js' />"></script>
         <sitemesh:write property='head'/>
         <link rel="stylesheet" href="<c:url value='/css/app.css' />" type="text/css">
     </head>
@@ -84,11 +90,7 @@
 
         <!-- end scripts -->        
         <%--script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script--%>
-        <script src="<c:url value='/js/jquery-1.8.1.min.js' />"></script>
-        <script src="<c:url value='/js/jquery-ui-1.8.23.custom.min.js' />"></script>
-        <script src="<c:url value='/js/i18n/jquery.ui.datepicker-es.min.js' />"></script>
-        <script src="<c:url value='/js/bootstrap.min.js' />"></script>
-        <script src="<c:url value='/js/app.js' />"></script>
+        
         <sitemesh:write property="content"/>
     </body>
 </html>

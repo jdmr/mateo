@@ -21,7 +21,7 @@
         <div id="nuevo-reciboColportor" class="content scaffold-list" role="main">
             <h1><s:message code="reciboColportor.nuevo.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/colportaje/ventas/recibos'/>"><i class="icon-list icon-white"></i>
+                <a class="btn btn-primary" href="<s:url value='/colportaje/ventas/recibos/lista?pedidoId=${pedidoColportor.id}'/>"><i class="icon-list icon-white"></i>
                     <s:message code='reciboColportor.lista.label' /></a>
             </p>
             <form:form commandName="reciboColportor" action="crea" method="post">
@@ -95,9 +95,6 @@ src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> 
                 $("input#fecha").datepicker("option", "firstDay", 0);
             });
 
-            
-
-            });
         </script>
 
     </content>
