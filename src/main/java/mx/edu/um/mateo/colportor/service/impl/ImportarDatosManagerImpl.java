@@ -131,6 +131,7 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                                         //clave invalida
                                         break rowLoop;
                                     }
+                                    sw=true;
                                     break;
                                 }
                                 case 1:{
@@ -223,7 +224,7 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                             
                         }
                     } //Finalizo de leer todas las celdas de una fila
-                    
+                    if(sw){
                     //Insertar boletin
                     doc = new Documento();
                     doc.setFecha(gcFecha.getTime());
@@ -238,6 +239,8 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
                     doc.setTemporadaColportor(tmpClpDao.obtiene(clp));
                     log.debug("Obtuvo temporadaClp {}", doc.getTemporadaColportor());
                     docDao.crea(doc);
+                    }
+                    sw = false;
                 }
             }
         } catch (IOException ioe) {
