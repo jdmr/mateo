@@ -14,14 +14,14 @@
         <h1><s:message code="proyectoColportor.lista.label" /></h1>
         <hr/>
 
-        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/colportaje/catalogos/proyectoColportor' />">
+        <form name="filtraLista" class="form-search" method="post" action="<c:url value='/colportaje/ventas/proyectoColportor' />">
             <input type="hidden" name="pagina" id="pagina" value="${pagina}" />
             <input type="hidden" name="tipo" id="tipo" value="" />
             <input type="hidden" name="correo" id="correo" value="" />
             <input type="hidden" name="order" id="order" value="${param.order}" />
             <input type="hidden" name="sort" id="sort" value="${param.sort}" />
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/colportaje/catalogos/proyectoColportor/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='proyectoColportor.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/colportaje/ventas/proyectoColportor/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='proyectoColportor.nuevo.label' /></a>
                 <input name="filtro" type="text" class="input-medium search-query" value="${param.filtro}">
                 <button type="submit" class="btn"><i class="icon-search"></i> <s:message code="buscar.label" /></button>
             </p>
@@ -64,7 +64,7 @@
                 <tbody>
                     <c:forEach items="${proyectoColportorList}" var="proyectoColportor" varStatus="status">
                         <tr class="${status.index % 2 == 0 ? 'even' : 'odd'}">
-                            <td><a href="<c:url value='/colportaje/catalogos/proyectoColportor/ver/${proyectoColportor.id}' />">${proyectoColportor.codigo}</a></td>
+                            <td><a href="<c:url value='/colportaje/ventas/proyectoColportor/ver/${proyectoColportor.id}' />">${proyectoColportor.codigo}</a></td>
                             <td>${proyectoColportor.nombre}</a></td>
                             <td>${proyectoColportor.descripcion}</a></td>
                             <td>${proyectoColportor.status}</a></td>

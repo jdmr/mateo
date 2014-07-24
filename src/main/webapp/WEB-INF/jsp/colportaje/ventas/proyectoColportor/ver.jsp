@@ -22,8 +22,8 @@
             <h1><s:message code="proyectoColportor.ver.label" /></h1>
 
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/colportaje/catalogos/proyectoColportor'/>"><i class="icon-list icon-white"></i> <s:message code='proyectoColportor.lista.label' /></a>
-                <a class="btn btn-primary" href="<s:url value='/colportaje/catalogos/proyectoColportor/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='proyectoColportor.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/colportaje/ventas/proyectoColportor'/>"><i class="icon-list icon-white"></i> <s:message code='proyectoColportor.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/colportaje/ventas/proyectoColportor/nuevo'/>"><i class="icon-file icon-white"></i> <s:message code='proyectoColportor.nuevo.label' /></a>
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">
@@ -32,7 +32,7 @@
                 </div>
             </c:if>
 
-            <c:url var="eliminaUrl" value="/colportaje/catalogos/proyectoColportor/elimina" />
+            <c:url var="eliminaUrl" value="/colportaje/ventas/proyectoColportor/elimina" />
             <form:form commandName="proyectoColportor" action="${eliminaUrl}" >
                 <form:errors path="*" cssClass="alert alert-error" element="ul" />
                 <div class="row-fluid" style="padding-bottom: 10px;">
@@ -59,7 +59,7 @@
                 </div>
 
                 <p class="well">
-                    <a href="<c:url value='/colportaje/catalogos/proyectoColportor/edita/${proyectoColportor.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
+                    <a href="<c:url value='/colportaje/ventas/proyectoColportor/edita/${proyectoColportor.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
                     <form:hidden path="id" />
                     <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="eliminar"  onclick="return confirm('<s:message code="confirma.elimina.message" />');" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='eliminar.button'/></button>
                 </p>

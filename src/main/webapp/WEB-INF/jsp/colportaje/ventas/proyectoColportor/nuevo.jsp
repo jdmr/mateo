@@ -11,20 +11,19 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title><s:message code="proyectoColportor.edita.label" /></title>
+        <title><s:message code="proyectoColportor.nuevo.label" /></title>
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
             <jsp:param name="menu" value="proyectoColportor" />
         </jsp:include>
 
-        <div id="edita-proyectoColportor" class="content scaffold-list" role="main">
-            <h1><s:message code="proyectoColportor.edita.label" /></h1>
+        <div id="nuevo-proyectoColportor" class="content scaffold-list" role="main">
+            <h1><s:message code="proyectoColportor.nuevo.label" /></h1>
             <p class="well">
-                <a class="btn btn-primary" href="<s:url value='/colportaje/catalogos/proyectoColportor'/>"><i class="icon-list icon-white"></i> <s:message code='proyectoColportor.lista.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/colportaje/ventas/proyectoColportor'/>"><i class="icon-list icon-white"></i> <s:message code='proyectoColportor.lista.label' /></a>
             </p>
-            <c:url var="actualizaUrl" value="/colportaje/catalogos/proyectoColportor/actualiza" />
-            <form:form commandName="proyectoColportor" method="post" action="${actualizaUrl}">
+            <form:form commandName="proyectoColportor" action="crea" method="post">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -33,11 +32,9 @@
                         </c:forEach>
                     </div>
                 </form:errors>
+
                 <form:hidden path="id" />
-                <form:hidden path="empresa.id" />
-                <form:hidden path="usuario.id" />
                 <form:hidden path="version" />
-                <form:hidden path="status" />
 
                 <fieldset>
                     <s:bind path="proyectoColportor.codigo">
@@ -50,7 +47,6 @@
                             <form:errors path="codigo" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    
                     <s:bind path="proyectoColportor.nombre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombre">
@@ -79,7 +75,7 @@
                                 <s:message code="fechaInicio.label" />
                                 <span class="required-indicator">*</span>
                             </label>
-                            <form:input path="fechaInicio" maxlength="2" required="true" />
+                            <form:input path="fechaInicio" maxlength="10" required="true" />
                             <form:errors path="fechaInicio" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
@@ -87,10 +83,19 @@
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
-                    <button type="submit" name="actualizarBtn" class="btn btn-primary btn-large" id="actualizar" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='actualizar.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/colportaje/catalogos/proyectoColportor/ver/${proyectoColportor.id}'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
+                    <a class="btn btn-large" href="<s:url value='/colportaje/ventas/proyectoColportor'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>
+    <content>
+        <script>
+         $(document).ready(function() {
+                $('input#codigo').focus();
+                $("input#fechaInicio").datepicker($.datepicker.regional['es']);
+                $("input#fechaInicio").datepicker("option", "firstDay", 0);
+            });
+        </script>
+    </content>
     </body>
 </html>

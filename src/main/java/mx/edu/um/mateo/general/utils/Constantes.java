@@ -3138,14 +3138,14 @@ public class Constantes {
     /**
      * Valores para los Proyecto Colportor
      */
-    public static final String PROYECTO_COLPORTOR_PATH = "/colportaje/catalogos/proyectoColportor";
-    public static final String PROYECTO_COLPORTOR_PATH_LISTA = "/colportaje/catalogos/proyectoColportor/lista";
-    public static final String PROYECTO_COLPORTOR_PATH_VER = "/colportaje/catalogos/proyectoColportor/ver";
-    public static final String PROYECTO_COLPORTOR_PATH_NUEVO = "/colportaje/catalogos/proyectoColportor/nuevo";
-    public static final String PROYECTO_COLPORTOR_PATH_EDITA = "/colportaje/catalogos/proyectoColportor/edita";
-    public static final String PROYECTO_COLPORTOR_PATH_CREA = "/colportaje/catalogos/proyectoColportor/crea";
-    public static final String PROYECTO_COLPORTOR_PATH_ACTUALIZA = "/colportaje/catalogos/proyectoColportor/actualiza";
-    public static final String PROYECTO_COLPORTOR_PATH_ELIMINA = "/colportaje/catalogos/proyectoColportor/elimina";
+    public static final String PROYECTO_COLPORTOR_PATH = "/colportaje/ventas/proyectoColportor";
+    public static final String PROYECTO_COLPORTOR_PATH_LISTA = "/colportaje/ventas/proyectoColportor/lista";
+    public static final String PROYECTO_COLPORTOR_PATH_VER = "/colportaje/ventas/proyectoColportor/ver";
+    public static final String PROYECTO_COLPORTOR_PATH_NUEVO = "/colportaje/ventas/proyectoColportor/nuevo";
+    public static final String PROYECTO_COLPORTOR_PATH_EDITA = "/colportaje/ventas/proyectoColportor/edita";
+    public static final String PROYECTO_COLPORTOR_PATH_CREA = "/colportaje/ventas/proyectoColportor/crea";
+    public static final String PROYECTO_COLPORTOR_PATH_ACTUALIZA = "/colportaje/ventas/proyectoColportor/actualiza";
+    public static final String PROYECTO_COLPORTOR_PATH_ELIMINA = "/colportaje/ventas/proyectoColportor/elimina";
     public static final String PROYECTO_COLPORTOR = "proyectoColportor";
     public static final String PROYECTO_COLPORTOR_LIST = "proyectoColportorList";
 
