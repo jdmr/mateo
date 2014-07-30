@@ -213,7 +213,7 @@
             $(function() {
             
             $( "#proyectoId" ).autocomplete({
-                source: '${pageContext. request. contextPath}/colportaje/catalogos/proyectoColportor/get_proyecto_list',
+                source: '${pageContext. request. contextPath}/colportaje/ventas/proyectoColportor/get_proyecto_list',
                 select: function(event, ui) {
                         $("input#proyectoId").val(ui.item.nombre);
                         

@@ -172,14 +172,13 @@ public class ProyectoColportorDaoHibernate extends BaseDao implements ProyectoCo
                 codigo.append("/");
                 Integer proys = ((List<ProyectoColportor>)this.lista(params).get(Constantes.PROYECTO_COLPORTOR_LIST)).size();
 
-                if(proys == 0){
-                    proys = 1;
-                }
+                proys++;
+                
                 log.debug("#proyectos registrados {}", proys);
 
                 StringBuilder str = new StringBuilder();
                 //Se estandariza este numero a 5 posiciones
-                for(int i = 5; i > proys; i--){
+                for(int i = 5; i > proys.toString().length(); i--){
                     str.append("0");
                 }
                 str.append(proys);
