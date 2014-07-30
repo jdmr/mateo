@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -291,7 +292,7 @@ public class InformeProveedorController extends BaseController {
     @Transactional
     @RequestMapping(value = "/graba", method = RequestMethod.POST)
     public String graba(HttpServletRequest request, HttpServletResponse response, @Valid InformeProveedor informe,
-            BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes) throws Exception {
+            BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes, Locale locale) throws Exception {
         for (String nombre : request.getParameterMap().keySet()) {
             log.debug("Param: {} : {}", nombre, request.getParameterMap().get(nombre));
         }
@@ -383,9 +384,8 @@ public class InformeProveedorController extends BaseController {
 //            return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
         }
 
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeProveedor.graba.message");
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informe.getNombreProveedor()});
-
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeproveedor.formadepago");
+        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informe.getFormaPagoTexto(), informe.getCuentaCheque(), informe.getBanco(), informe.getMonedaTexto()});
         return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_LISTA;
     }
 

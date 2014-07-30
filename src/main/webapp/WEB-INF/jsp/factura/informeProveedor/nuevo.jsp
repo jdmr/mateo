@@ -60,7 +60,7 @@
                                 <s:message code="formaPago.label" />
 
                             </label>
-                            <form:radiobutton path="formaPago"  value="T" cssClass="span3" id="tranferencia"/>Transferencia<br />
+                            <form:radiobutton path="formaPago"  value="T" cssClass="span3" id="tranferencia" required="true"/>Transferencia<br />
                             <form:radiobutton path="formaPago"  value="C"  cssClass="span3" id="cheque"/>Cheque<br />
                             <form:errors path="formaPago" cssClass="alert alert-error" />
                         </div>
@@ -91,7 +91,7 @@
                                 <s:message code="moneda.label" />
 
                             </label>
-                            <form:radiobutton path="moneda"  value="P" cssClass="span3" id="pesos"/><s:message code="pesos.label"/><br />
+                            <form:radiobutton path="moneda"  value="P" cssClass="span3" id="pesos" required="true"/><s:message code="pesos.label"/><br />
                             <form:radiobutton path="moneda"  value="D"  cssClass="span3" id="dolares"/><s:message code="dolares.label"/><br />
                             <form:errors path="moneda" cssClass="alert alert-error" />
                         </div>

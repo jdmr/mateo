@@ -17,6 +17,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
+import mx.edu.um.mateo.general.utils.UtilFormaPago;
+import mx.edu.um.mateo.general.utils.UtilMoneda;
 import mx.edu.um.mateo.general.utils.UtilStatus;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -133,6 +135,11 @@ public class InformeProveedor implements Serializable {
         return formaPago;
     }
 
+    public String getFormaPagoTexto() {
+
+        return UtilFormaPago.valueForma(this.formaPago);
+    }
+
     public void setFormaPago(String formaPago) {
         this.formaPago = formaPago;
     }
@@ -163,6 +170,11 @@ public class InformeProveedor implements Serializable {
 
     public String getMoneda() {
         return moneda;
+    }
+
+    public String getMonedaTexto() {
+
+        return UtilMoneda.valueMoneda(this.moneda);
     }
 
     public void setMoneda(String moneda) {

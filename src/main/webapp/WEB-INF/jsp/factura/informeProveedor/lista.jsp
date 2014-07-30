@@ -30,9 +30,9 @@
             </p>
 
             <c:if test="${not empty message}">
-                <div class="alert alert-block <c:choose><c:when test='${not empty messageStyle}'>${messageStyle}</c:when><c:otherwise>alert-success</c:otherwise></c:choose> fade in" role="status">
-                            <a class="close" data-dismiss="alert">×</a>
-                    <s:message code="${message}" arguments="${messageAttrs}" />
+                <div class="alert alert-block alert-heading fade in" role="status">
+                    <a class="close" data-dismiss="alert">×</a>
+                    <strong><s:message code="${message}" arguments="${messageAttrs}" /></strong>
                 </div>
             </c:if>
             <c:if test="${informes != null}">
@@ -47,6 +47,7 @@
                     </c:if>
                 </s:bind>
             </c:if>
+
 
             <table id="lista" class="table table-striped table-hover">
                 <thead>
