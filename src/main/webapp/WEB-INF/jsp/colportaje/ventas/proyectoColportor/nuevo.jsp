@@ -37,16 +37,7 @@
                 <form:hidden path="version" />
 
                 <fieldset>
-                    <s:bind path="proyectoColportor.codigo">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="codigo">
-                                <s:message code="codigo.label" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="codigo" maxlength="12" required="true" />
-                            <form:errors path="codigo" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
+                    
                     <s:bind path="proyectoColportor.nombre">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                             <label for="nombre">
