@@ -26,11 +26,11 @@
                 </form:errors>
                 <c:if test="${esPdf}">
                     <h1><s:message code="subirPDF.label" /></h1>
-                    <img src="/mateo/images/pdf.png" width="120" height="100" />
+                    <img src="<c:url value='/images/pdf.png'/>" width="120" height="100" />
                 </c:if>
                 <c:if test="${esXml}">
                     <h1><s:message code="subirXML.label" /></h1>
-                    <img src="/mateo/images/xml.png" width="120" height="100" />
+                    <img src="<c:url value='/images/xml.png'/>" width="120" height="100" />
                 </c:if>
                 <fieldset>
 

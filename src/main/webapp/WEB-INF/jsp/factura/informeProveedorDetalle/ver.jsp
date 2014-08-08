@@ -76,8 +76,8 @@
                     <div class="span11">${informeProveedorDetalle.informeProveedor.id}</div>
                 </div>
                 <p>adsasdasd</p>
-                <a  href="<s:url value='/factura/informeProveedorDetalle/downloadPdfFile/${informeProveedorDetalle.id}'/>"><img src="/mateo/images/pdf.png" width="120" height="100" /></a>
-                <a  href="<s:url value='/factura/informeProveedorDetalle/downloadXmlFile/${informeProveedorDetalle.id}'/>"><img src="/mateo/images/xml.png" width="120" height="100" /></a>
+                <a  href="<s:url value='/factura/informeProveedorDetalle/downloadPdfFile/${informeProveedorDetalle.id}'/>"><img src="<c:url value='/images/pdf.png'/>" width="120" height="100" /></a>
+                <a  href="<s:url value='/factura/informeProveedorDetalle/downloadXmlFile/${informeProveedorDetalle.id}'/>"><img src="<c:url value='/images/xml.png'/>" width="120" height="100" /></a>
                     <c:if test="${informeProveedorDetalle.nombreProveedor=='A'}">
                     <p class="well">
                         <a href="<c:url value='/factura/informeProveedorDetalle/edita/${informeProveedorDetalle.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>

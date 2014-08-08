@@ -772,7 +772,7 @@ public class InformeProveedorDetalleController extends BaseController {
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     public String uploadFile(HttpServletRequest request, @ModelAttribute("uploadFileForm") UploadFileForm uploadFileForm,
             BindingResult bindingResult, Errors errors) throws Exception {
-
+        log.info("entrando a uploadFile");
         despliegaBindingResultErrors(bindingResult);
         Long id = (Long) request.getSession().getAttribute("detalleId");
         InformeProveedorDetalle detalle = manager.obtiene(id);
@@ -787,6 +787,7 @@ public class InformeProveedorDetalleController extends BaseController {
         String fileName = uploadFileForm.getFile().getOriginalFilename();
         //Subir archivo
         log.debug("file {}", uploadFileForm.getFile().getOriginalFilename());
+        log.info("nombre archvo{}", fileName);
         String uploadDir = "/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + uploadFileForm.getFile().getOriginalFilename();
         log.debug("upload dir {} ", uploadDir);
         File dirPath = new File(uploadDir);
@@ -796,7 +797,7 @@ public class InformeProveedorDetalleController extends BaseController {
         sw = true;
 
         log.debug("Archivo {} subido... ", uploadFileForm.getFile().getOriginalFilename());
-        if (fileName.contains(".xml")) {
+        if (fileName.toLowerCase().contains(".xml")) {
             detalle.setPathXMl("/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + uploadFileForm.getFile().getOriginalFilename());
             detalle.setNombreXMl(uploadFileForm.getFile().getOriginalFilename());
             detalle.setXmlFile(uploadFileForm.getFile().getBytes());
@@ -804,14 +805,16 @@ public class InformeProveedorDetalleController extends BaseController {
             xml = true;
             request.getSession().setAttribute("esPdf", xml);
             request.getSession().setAttribute("esXml", false);
+            log.info("termino de subir xml redireccionando nuevamente");
             return "redirect:" + "/factura/informeProveedorDetalle/upload";
         }
-        if (fileName.contains(".pdf")) {
+        if (fileName.toLowerCase().contains(".pdf")) {
             detalle.setPathPDF("/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + uploadFileForm.getFile().getOriginalFilename());
             detalle.setNombrePDF(uploadFileForm.getFile().getOriginalFilename());
             detalle.setPdfFile(uploadFileForm.getFile().getBytes());
             manager.actualiza(detalle, usuario);
             request.getSession().setAttribute("esPdf", false);
+            log.info("guardo archivo pdf saliendo");
         }
         uploadFileForm.getFile().transferTo(new File(uploadDir));
 

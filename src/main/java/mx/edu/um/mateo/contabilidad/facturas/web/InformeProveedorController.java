@@ -334,19 +334,12 @@ public class InformeProveedorController extends BaseController {
             if (informe.getClabe() != null && informe.getClabe() != proveedorFacturas.getClabe() && !informe.getClabe().isEmpty()) {
                 proveedorFacturas.setClabe(informe.getClabe());
 //                        pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
-            } else if (informe.getClabe() == null || informe.getClabe().isEmpty()) {
-                log.debug("clabe null");
-                return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
             }
-//                    break;
 //                case "C":
             log.debug("entrando cheque");
             if (informe.getCuentaCheque() != null && informe.getCuentaCheque() != proveedorFacturas.getCuentaCheque() && !informe.getCuentaCheque().isEmpty()) {
                 proveedorFacturas.setCuentaCheque(informe.getCuentaCheque());
 //                        pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
-            } else if (informe.getCuentaCheque() == null || informe.getCuentaCheque().isEmpty()) {
-                log.debug("cuentanull");
-                return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
             }
 //                    break;
 //            }

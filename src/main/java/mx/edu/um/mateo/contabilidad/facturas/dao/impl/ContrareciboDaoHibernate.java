@@ -109,7 +109,7 @@ public class ContrareciboDaoHibernate extends BaseDao implements ContrareciboDao
         if (usuario != null) {
             contrarecibo.setEmpresa(usuario.getEmpresa());
         }
-        currentSession().save(contrarecibo);
+        currentSession().saveOrUpdate(contrarecibo);
         currentSession().merge(contrarecibo);
         currentSession().flush();
 
