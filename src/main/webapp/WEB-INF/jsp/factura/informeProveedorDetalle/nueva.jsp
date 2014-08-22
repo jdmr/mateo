@@ -45,6 +45,16 @@
                             <form:errors path="folioFactura" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
+                    <s:bind path="informeProveedorDetalle.folioFiscal">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="folioFiscal">
+                                <s:message code="folioFiscal.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="folioFiscal" maxlength="150" required="true" />
+                            <form:errors path="folioFiscal" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
 
 
 

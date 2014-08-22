@@ -13,14 +13,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import mx.edu.um.mateo.contabilidad.facturas.dao.CCPDao;
 import mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDao;
-import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleado;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
-import mx.edu.um.mateo.contabilidad.facturas.service.InformeEmpleadoManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.service.BaseManager;
 import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
 import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.general.utils.FormaPagoNoSeleccionadaException;
+import mx.edu.um.mateo.general.utils.MonedaNoSeleccionadaException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +42,7 @@ public class InformeProveedorManagerImpl extends BaseManager implements InformeP
     public Map<String, Object> lista(Map<String, Object> params) {
         return dao.lista(params);
     }
+
     @Override
     public Map<String, Object> listaEmpleado(Map<String, Object> params) {
         return dao.listaEmpleado(params);
@@ -58,7 +59,16 @@ public class InformeProveedorManagerImpl extends BaseManager implements InformeP
     }
 
     @Override
-    public void graba(InformeProveedor informeProveedor, Usuario usuario) throws AutorizacionCCPlInvalidoException {
+    public void graba(InformeProveedor informeProveedor, Usuario usuario) throws AutorizacionCCPlInvalidoException,
+            MonedaNoSeleccionadaException, FormaPagoNoSeleccionadaException {
+
+        if (informeProveedor.getMoneda() == null || informeProveedor.getMoneda().isEmpty()) {
+            throw new MonedaNoSeleccionadaException("No se selecciono moneda");
+        }
+
+        if (informeProveedor.getFormaPago() == null || informeProveedor.getFormaPago().isEmpty()) {
+            throw new FormaPagoNoSeleccionadaException("Forma de pago no seleccionada");
+        }
         String CCP = informeProveedor.getCcp();
         if (CCP != null && !CCP.isEmpty()) {
             String listaCcps = informeProveedor.getCcp();
@@ -122,6 +132,10 @@ public class InformeProveedorManagerImpl extends BaseManager implements InformeP
             graba(informe, usuario);
         } catch (AutorizacionCCPlInvalidoException ex) {
             log.debug("CPP invalido");
+        } catch (MonedaNoSeleccionadaException ex) {
+            log.debug("Moneda no seleccionada");
+        } catch (FormaPagoNoSeleccionadaException ex) {
+            log.debug("Forma de pago no seleccionada");
         }
     }
 }

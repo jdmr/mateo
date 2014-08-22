@@ -9,6 +9,8 @@ import java.util.Map;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
+import mx.edu.um.mateo.general.utils.FormaPagoNoSeleccionadaException;
+import mx.edu.um.mateo.general.utils.MonedaNoSeleccionadaException;
 
 /**
  *
@@ -48,10 +50,11 @@ public interface InformeProveedorManager {
      *
      * @param informeProveedor
      * @param usuario
-     * @param InformeProveedor the object to be saved
      * @throws mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException
+     * @throws mx.edu.um.mateo.general.utils.MonedaNoSeleccionadaException
+     * @throws mx.edu.um.mateo.general.utils.FormaPagoNoSeleccionadaException
      */
-    public void graba(InformeProveedor informeProveedor, Usuario usuario) throws AutorizacionCCPlInvalidoException;
+    public void graba(InformeProveedor informeProveedor, Usuario usuario) throws AutorizacionCCPlInvalidoException, MonedaNoSeleccionadaException, FormaPagoNoSeleccionadaException;
 
     public void actualiza(InformeProveedor informeProveedor, Usuario usuario);
 

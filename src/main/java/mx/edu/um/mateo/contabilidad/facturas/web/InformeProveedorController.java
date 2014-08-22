@@ -26,6 +26,8 @@ import mx.edu.um.mateo.contabilidad.facturas.service.ProveedorFacturasManager;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
 import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.general.utils.FormaPagoNoSeleccionadaException;
+import mx.edu.um.mateo.general.utils.MonedaNoSeleccionadaException;
 import mx.edu.um.mateo.general.web.BaseController;
 import mx.edu.um.mateo.rh.model.Empleado;
 import net.sf.jasperreports.engine.JRException;
@@ -361,20 +363,21 @@ public class InformeProveedorController extends BaseController {
             log.error("No se pudo crear el detalle", e);
             if (e != null) {
                 log.debug("**Enviando mensajes....CCP no encontrado");
-//                String ccp = e.getMessage();
-//                log.debug("cccp**-**{}", ccp);
-//                redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "ccp.invalido.message");
-//                redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
-//                errors.rejectValue("ccp", "ccp.invalido.message", ccp);
             }
-//            params = manager.lista(params);
-//            List<InformeEmpleado> informes = (List) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR);
-//            modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESEMPLEADO, informes);
-//
-//            params.put("empresa", request.getSession().getAttribute("empresaId"));
-//            modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, informe);
-//
-//            return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
+        } catch (MonedaNoSeleccionadaException ex) {
+            log.debug("Moneda no seleccionada");
+//            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeproveedor.noSeleccionoMoneda");
+//            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{"Monda"});
+            errors.rejectValue("moneda", "informeproveedor.noSeleccionoMoneda",
+                    new String[]{"moneda"}, null);
+            return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
+        } catch (FormaPagoNoSeleccionadaException ex) {
+            log.debug("Forma de pago no seleccionada");
+//            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeproveedor.noSeleccionoFormaPago");
+//            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS);
+            errors.rejectValue("formaPago", "informeproveedor.noSeleccionoFormaPago",
+                    new String[]{"formaPago"}, null);
+            return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
         }
 
         redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeproveedor.formadepago");

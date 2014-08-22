@@ -17,8 +17,14 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/factura/informeProveedor'/>"><i class="icon-list icon-white"></i> <s:message code='informeProveedor.lista.label' /></a>
             </p>
-            <form:form commandName="informeProveedor"  method="post" action="graba">
+            <c:if test="${not empty message}">
+                <div class="alert alert-block alert-heading fade in" role="status">
+                    <a class="close" data-dismiss="alert">×</a>
+                    <strong><s:message code="${message}" arguments="${messageAttrs}" /></strong>
+                </div>
+            </c:if>
 
+            <form:form commandName="informeProveedor"  method="post" action="graba">
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -27,6 +33,8 @@
                         </c:forEach>
                     </div>
                 </form:errors>
+
+
 
                 <fieldset>
 
@@ -58,9 +66,10 @@
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="formaPago">
                                 <s:message code="formaPago.label" />
+                                <span class="required-indicator">*</span>
 
                             </label>
-                            <form:radiobutton path="formaPago"  value="T" cssClass="span3" id="tranferencia" required="true"/>Transferencia<br />
+                            <form:radiobutton path="formaPago"  value="T" cssClass="span3" id="tranferencia" />Transferencia<br />
                             <form:radiobutton path="formaPago"  value="C"  cssClass="span3" id="cheque"/>Cheque<br />
                             <form:errors path="formaPago" cssClass="alert alert-error" />
                         </div>
@@ -89,9 +98,9 @@
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="moneda">
                                 <s:message code="moneda.label" />
-
+                                <span class="required-indicator">*</span>
                             </label>
-                            <form:radiobutton path="moneda"  value="P" cssClass="span3" id="pesos" required="true"/><s:message code="pesos.label"/><br />
+                            <form:radiobutton path="moneda"  value="P" cssClass="span3" id="pesos"/><s:message code="pesos.label"/><br />
                             <form:radiobutton path="moneda"  value="D"  cssClass="span3" id="dolares"/><s:message code="dolares.label"/><br />
                             <form:errors path="moneda" cssClass="alert alert-error" />
                         </div>
