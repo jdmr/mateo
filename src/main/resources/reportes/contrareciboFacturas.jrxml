@@ -7,6 +7,9 @@
 	<parameter name="subreport_datasource1" class="net.sf.jasperreports.engine.JRDataSource" isForPrompting="false"/>
 	<parameter name="subreport_datasource2" class="net.sf.jasperreports.engine.JRDataSource" isForPrompting="false"/>
 	<parameter name="logo" class="java.awt.Image" isForPrompting="false"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/develop/Financiero/mateo/src/main/resources/reportes/"]]></defaultValueExpression>
+	</parameter>
 	<field name="informeProveedorDetalle" class="java.util.List"/>
 	<background>
 		<band height="792" splitType="Stretch">

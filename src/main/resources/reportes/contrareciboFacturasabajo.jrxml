@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contrareciboFacturas" pageWidth="576" pageHeight="360" orientation="Landscape" columnWidth="576" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="06e067f7-05e1-4df0-8577-7c2b23d1895e">
-	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<field name="proveedor.rfc" class="java.lang.String"/>
@@ -13,6 +13,10 @@
 	<field name="informeProveedorDetalle.IVA" class="java.math.BigDecimal"/>
 	<field name="informeProveedorDetalle.total" class="java.math.BigDecimal"/>
 	<field name="contrarecibo.id" class="java.lang.Long"/>
+	<field name="informeProveedor.formaPagoTexto" class="java.lang.String"/>
+	<variable name="sumaTotal" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{informeProveedorDetalle.total}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -46,7 +50,7 @@
 				<text><![CDATA[Fecha pago:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="c94ac03d-7b62-411d-af43-b7d3eac03a88" x="0" y="20" width="100" height="20"/>
+				<reportElement uuid="c94ac03d-7b62-411d-af43-b7d3eac03a88" x="234" y="20" width="54" height="20"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -65,19 +69,19 @@
 				<textFieldExpression><![CDATA[$F{contrarecibo.fechaPago}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="2468f455-c3c5-4f09-9a77-dcd7fac535bd" x="270" y="20" width="69" height="20"/>
+				<reportElement uuid="2468f455-c3c5-4f09-9a77-dcd7fac535bd" x="422" y="20" width="30" height="20"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[RFC:]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="8e0612e8-6f09-4758-b2ed-f51ac99bd2d7" x="339" y="20" width="233" height="20"/>
+				<reportElement uuid="8e0612e8-6f09-4758-b2ed-f51ac99bd2d7" x="452" y="20" width="120" height="20"/>
 				<textElement verticalAlignment="Top"/>
 				<textFieldExpression><![CDATA[$F{proveedor.rfc}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="07df9ed7-a0f8-4a8c-bde3-965837a485c4" x="100" y="20" width="170" height="20"/>
+				<reportElement uuid="07df9ed7-a0f8-4a8c-bde3-965837a485c4" x="288" y="20" width="134" height="20"/>
 				<textElement verticalAlignment="Top"/>
 				<textFieldExpression><![CDATA[$F{informeProveedor.banco}]]></textFieldExpression>
 			</textField>
@@ -85,6 +89,18 @@
 				<reportElement uuid="09e9eec3-25f4-449e-9b2c-07f1a2a1bbf6" x="339" y="0" width="233" height="20"/>
 				<textElement verticalAlignment="Top"/>
 				<textFieldExpression><![CDATA[$F{proveedor.nombre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="02df821e-c24d-4031-a491-b9298fdf1879" x="0" y="21" width="100" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Forma pago:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="9fd87262-d3ef-4ee0-b094-a618607831f1" x="100" y="20" width="134" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{informeProveedor.formaPagoTexto}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -146,7 +162,7 @@
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="14">
+		<band height="13">
 			<textField>
 				<reportElement uuid="5de86033-76d6-498e-8cd2-850cc5e72b61" x="533" y="0" width="39" height="12"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -167,6 +183,11 @@
 					<font size="8" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="021b0a21-4e95-450c-b75b-a58f25db1c94" x="400" y="0" width="100" height="12"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$V{sumaTotal}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

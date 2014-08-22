@@ -88,7 +88,7 @@ public class ContrareciboDaoHibernate extends BaseDao implements ContrareciboDao
                 criteria.addOrder(Order.asc(campo));
             }
         } else {
-            criteria.addOrder(Order.asc("fechaPago"));
+            criteria.addOrder(Order.desc("fechaPago"));
         }
 
         if (!params.containsKey("reporte")) {
