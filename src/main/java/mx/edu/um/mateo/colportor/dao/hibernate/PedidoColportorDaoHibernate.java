@@ -61,9 +61,11 @@ public class PedidoColportorDaoHibernate extends BaseDao implements PedidoColpor
         
         criteria.createAlias("colportor", "clp");
         criteria.createAlias("clp.empresa", "emp");
+        criteria.createAlias("cliente", "cl");
         
         countCriteria.createAlias("colportor", "clp");
         countCriteria.createAlias("clp.empresa", "emp");
+        countCriteria.createAlias("cliente", "cl");
 
         if (params.containsKey("colportor")) {
             criteria.add(Restrictions.eq("clp.id", params.get("colportor")));
@@ -78,6 +80,11 @@ public class PedidoColportorDaoHibernate extends BaseDao implements PedidoColpor
         if(params.containsKey("proyecto")) {
             criteria.createCriteria("proyecto").add(Restrictions.idEq(params.get("proyecto")));
             countCriteria.createCriteria("proyecto").add(Restrictions.idEq(params.get("proyecto")));
+        }
+        
+        if(params.containsKey("cliente")) {
+            criteria.add(Restrictions.idEq(params.get("cliente")));
+            countCriteria.add(Restrictions.idEq(params.get("cliente")));
         }
 
         if (params.containsKey("filtro")) {

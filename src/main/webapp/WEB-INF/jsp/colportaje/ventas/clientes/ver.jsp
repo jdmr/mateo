@@ -26,6 +26,8 @@
                     <i class="icon-list icon-white"></i> <s:message code='clienteColportor.lista.label' /></a>
                 <a class="btn btn-primary" href="<s:url value='/colportaje/ventas/clientes/nuevo'/>">
                     <i class="icon-file icon-white"></i> <s:message code='clienteColportor.nuevo.label' /></a>
+                <a class="btn btn-primary" href="<s:url value='/colportaje/ventas/pedidos/lista/${clienteColportor.id}'/>">
+                    <i class="icon-file icon-white"></i> <s:message code='pedidoColportor.lista.label' /></a>
             </p>
             <c:if test="${not empty message}">
                 <div class="alert alert-block alert-success fade in" role="status">

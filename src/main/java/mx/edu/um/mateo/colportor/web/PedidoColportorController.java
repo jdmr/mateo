@@ -69,7 +69,7 @@ public class PedidoColportorController extends BaseController{
     
     @SuppressWarnings("unchecked")
     @PreAuthorize("hasRole('ROLE_ASOC','ROLE_CLP')")
-    @RequestMapping
+    @RequestMapping({"", "/lista", "/lista/{id}"})
     public String lista(HttpServletRequest request,
             HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -91,6 +91,7 @@ public class PedidoColportorController extends BaseController{
         
         if(ambiente.esAsociado()){
             log.debug("esAsociado");
+            Boolean flag = Boolean.FALSE;
             //Si viene en request un parametro 'clave', leerlo para cargar el colportor
             //De lo contrario mostrar la pagina sin registro alguno
             if(request.getParameter("clave") == null || request.getParameter("clave").isEmpty()){
@@ -103,17 +104,37 @@ public class PedidoColportorController extends BaseController{
                 else{
                     log.debug("Si hay session");
                     clp = (Colportor)request.getSession().getAttribute(Constantes.COLPORTOR);
+                    flag = true;
                 }
             }
             else{
                 log.debug("Si hay clave");
                 clp = colportorDao.obtiene(request.getParameter("clave"));
+                flag = true;
             }
             
-            if(clp != null)
+            if(clp != null){
                 log.debug("Colportor {}", clp);
                 request.getSession().setAttribute(Constantes.COLPORTOR, clp);
-            
+            }
+            else{
+                flag = false;
+            }
+                
+            if(request.getParameter("cliente") != null && !request.getParameter("cliente").isEmpty()){
+                log.debug("Hay un cliente");
+                
+                ClienteColportor cliente = null;
+                try {
+                    cliente = clienteColportorDao.obtiene(Long.parseLong(request.getParameter("cliente")));
+                    log.debug("Cliente {}", cliente);
+                    params.put("cliente", cliente.getId());
+                } catch (Exception e) {
+                    //Cliente invalido
+                    return Constantes.PEDIDO_COLPORTOR_PATH_LISTA;
+                }
+            }
+           
             
         }
         else if(ambiente.esColportor()){
