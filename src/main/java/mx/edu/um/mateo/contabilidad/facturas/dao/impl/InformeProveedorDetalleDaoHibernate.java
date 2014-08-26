@@ -110,7 +110,7 @@ public class InformeProveedorDetalleDaoHibernate extends BaseDao implements Info
                 criteria.addOrder(Order.asc(campo));
             }
         } else {
-            criteria.addOrder(Order.desc("fechaCaptura"));
+            criteria.addOrder(Order.desc("ip.fechaFinaliza"));
         }
 
         if (!params.containsKey("reporte")) {

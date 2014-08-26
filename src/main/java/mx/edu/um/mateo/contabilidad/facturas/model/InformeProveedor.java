@@ -52,6 +52,9 @@ public class InformeProveedor implements Serializable {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Temporal(TemporalType.DATE)
     private Date fechaPago;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @Temporal(TemporalType.DATE)
+    private Date fechaFinaliza;
     private String contraRecibo;
     private String moneda;
     private String contabilidad;
@@ -221,14 +224,22 @@ public class InformeProveedor implements Serializable {
         this.tipoDocumento = tipoDocumento;
     }
 
+    public Date getFechaFinaliza() {
+        return fechaFinaliza;
+    }
+
+    public void setFechaFinaliza(Date fechaFinaliza) {
+        this.fechaFinaliza = fechaFinaliza;
+    }
+
     @Override
     public String toString() {
         return "InformeProveedor{" + "id=" + id + ", version=" + version + ", status=" + status
                 + ", cuentaCheque=" + cuentaCheque + ", clabe=" + clabe + ", formaPago=" + formaPago
-                + ", nombreProveedor=" + nombreProveedor + ", fechaInforme=" + fechaInforme + ", empresa=" + empresa
-                + ", proveedorFacturas=" + proveedorFacturas + ", empleado=" + empleado + ", fechaPago=" + fechaPago
-                + ", contraRecibo=" + contraRecibo + ", moneda=" + moneda + ", contabilidad=" + contabilidad
-                + ", ccp=" + ccp + ", banco=" + banco + ", tipoDocumento=" + tipoDocumento + '}';
+                + ", nombreProveedor=" + nombreProveedor + ", fechaInforme=" + fechaInforme + ", fechaPago=" + fechaPago
+                + ", fechaFinaliza=" + fechaFinaliza + ", contraRecibo=" + contraRecibo + ", moneda=" + moneda
+                + ", contabilidad=" + contabilidad + ", ccp=" + ccp + ", banco=" + banco
+                + ", tipoDocumento=" + tipoDocumento + '}';
     }
 
 }

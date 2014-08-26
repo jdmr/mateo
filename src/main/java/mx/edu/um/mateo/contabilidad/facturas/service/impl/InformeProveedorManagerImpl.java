@@ -100,6 +100,7 @@ public class InformeProveedorManagerImpl extends BaseManager implements InformeP
         informeProveedor.setFechaPago(new Date());
         informeProveedor.setContraRecibo(String.valueOf(new Date().getTime()));
         informeProveedor.setStatus(Constantes.STATUS_FINALIZADO);
+        informeProveedor.setFechaFinaliza(new Date());
         log.debug("informe...**manager2 {}", informeProveedor);
         dao.actualiza(informeProveedor, usuario);
 
