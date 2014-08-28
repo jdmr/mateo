@@ -72,4 +72,26 @@ public interface InformeProveedorDetallesDao {
      * @param id the informe's id
      */
     public String elimina(final Long id);
+
+    /**
+     * Este metodo resuelve false si la factura con @folioFiscal o @rfc no se
+     * encuentra en la base de datos.De manera contraria si ya se encuentra
+     * regresara true
+     *
+     * @param folioFiscal
+     * @param rfc
+     * @return
+     */
+    public Boolean repetidoFFiscal(String folioFiscal, String rfc);
+
+    /**
+     * Este metodo resuelve false si la factura con @folioFactura o @rfc no se
+     * encuentra en la base de datos.De manera contraria si ya se encuentra
+     * regresara true
+     *
+     * @param folioFactura
+     * @param rfc
+     * @return
+     */
+    public Boolean repetidoFFactura(String folioFactura, String rfc);
 }

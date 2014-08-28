@@ -10,9 +10,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,6 +23,7 @@ import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,6 +43,8 @@ import mx.edu.um.mateo.general.utils.BancoNoCoincideException;
 import mx.edu.um.mateo.general.utils.ClabeNoCoincideException;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.CuentaChequeNoCoincideException;
+import mx.edu.um.mateo.general.utils.FacturaRepetidaFFacturaException;
+import mx.edu.um.mateo.general.utils.FacturaRepetidaFFiscalException;
 import mx.edu.um.mateo.general.utils.FormaPagoNoCoincideException;
 import mx.edu.um.mateo.general.utils.ProveedorNoCoincideException;
 import mx.edu.um.mateo.general.utils.ReporteException;
@@ -47,6 +53,7 @@ import mx.edu.um.mateo.inscripciones.model.FileUploadForm;
 import mx.edu.um.mateo.rh.model.Empleado;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.persistence.internal.helper.ClassConstants;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -721,11 +728,40 @@ public class InformeProveedorDetalleController extends BaseController {
 
             this.despliegaBindingResultErrors(bindingResult);
 
-            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
+            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVA;
         }
+        NumberFormat nf_mx = NumberFormat.getNumberInstance(new Locale("es", "mx"));
 
+        log.info("localedefault{}***", Locale.getDefault());
         Map<String, Object> params = new HashMap<>();
-
+        try {
+            BigDecimal dcto = detalle.getDctoProntoPago();
+            BigDecimal dctoPago = new BigDecimal(nf_mx.parse(dcto.toString()).doubleValue());
+            detalle.setDctoProntoPago(dctoPago);
+        } catch (ParseException e) {
+            log.info("No se pudo convertir el formato");
+        }
+        try {
+            BigDecimal iva = detalle.getIVA();
+            BigDecimal IVA = new BigDecimal(nf_mx.parse(iva.toString()).doubleValue());
+            detalle.setIVA(IVA);
+        } catch (ParseException e) {
+            log.info("No se pudo convertir el formato");
+        }
+        try {
+            BigDecimal sub = detalle.getSubtotal();
+            BigDecimal subTotal = new BigDecimal(nf_mx.parse(sub.toString()).doubleValue());
+            detalle.setSubtotal(subTotal);
+        } catch (ParseException e) {
+            log.info("No se pudo convertir el formato");
+        }
+        try {
+            BigDecimal total = detalle.getTotal();
+            BigDecimal Total = new BigDecimal(nf_mx.parse(total.toString()).doubleValue());
+            detalle.setTotal(Total);
+        } catch (ParseException e) {
+            log.info("No se pudo convertir el formato");
+        }
         InformeProveedor informe = (InformeProveedor) request.getSession().getAttribute("informeId");
         detalle.setInformeProveedor(informe);
         Usuario usuario = ambiente.obtieneUsuario();
@@ -750,11 +786,19 @@ public class InformeProveedorDetalleController extends BaseController {
 
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el detalle", e);
-            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;
+            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVA;
+        } catch (FacturaRepetidaFFiscalException e) {
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "facturaRepetidaException.folioFiscal");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVA;
+
+        } catch (FacturaRepetidaFFacturaException e) {
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "facturaRepetidaException.folioFactura");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVA;
+
         }
 
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "detalle.graba.message");
-        redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{detalle.getNombreProveedor()});
         Boolean xml = true;
         request.getSession().setAttribute("esXml", xml);
         return "redirect:" + "/factura/informeProveedorDetalle/upload";
@@ -771,7 +815,7 @@ public class InformeProveedorDetalleController extends BaseController {
     @Transactional
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     public String uploadFile(HttpServletRequest request, @ModelAttribute("uploadFileForm") UploadFileForm uploadFileForm,
-            BindingResult bindingResult, Errors errors) throws Exception {
+            BindingResult bindingResult, Errors errors, RedirectAttributes redirectAttributes) throws Exception {
         log.info("entrando a uploadFile");
         despliegaBindingResultErrors(bindingResult);
         Long id = (Long) request.getSession().getAttribute("detalleId");
@@ -815,6 +859,12 @@ public class InformeProveedorDetalleController extends BaseController {
             manager.actualiza(detalle, usuario);
             request.getSession().setAttribute("esPdf", false);
             log.info("guardo archivo pdf saliendo");
+        } else {
+            errors.reject("archivo.invalido.facturas" + fileName);
+            errors.rejectValue(null, "archivo.invalido.facturas"
+            );
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "archivo.invalido.facturas");
+            return "redirect:" + "/factura/informeProveedorDetalle/upload";
         }
         uploadFileForm.getFile().transferTo(new File(uploadDir));
 

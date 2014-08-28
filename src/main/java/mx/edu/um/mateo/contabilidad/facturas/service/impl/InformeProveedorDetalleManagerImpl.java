@@ -4,13 +4,14 @@
  */
 package mx.edu.um.mateo.contabilidad.facturas.service.impl;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDetallesDao;
-import mx.edu.um.mateo.contabilidad.facturas.model.Contrarecibo;
-import mx.edu.um.mateo.contabilidad.facturas.model.InformeEmpleadoDetalle;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
 import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
 import mx.edu.um.mateo.contabilidad.facturas.service.ContrareciboManager;
@@ -22,6 +23,8 @@ import mx.edu.um.mateo.general.utils.BancoNoCoincideException;
 import mx.edu.um.mateo.general.utils.ClabeNoCoincideException;
 import mx.edu.um.mateo.general.utils.Constantes;
 import mx.edu.um.mateo.general.utils.CuentaChequeNoCoincideException;
+import mx.edu.um.mateo.general.utils.FacturaRepetidaFFacturaException;
+import mx.edu.um.mateo.general.utils.FacturaRepetidaFFiscalException;
 import mx.edu.um.mateo.general.utils.FormaPagoNoCoincideException;
 import mx.edu.um.mateo.general.utils.ProveedorNoCoincideException;
 import mx.edu.um.mateo.inscripciones.model.ccobro.utils.Constants;
@@ -90,7 +93,16 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
     }
 
     @Override
-    public void graba(InformeProveedorDetalle proveedorDetalle, Usuario usuario) {
+    public void graba(InformeProveedorDetalle proveedorDetalle, Usuario usuario) throws Exception {
+        Boolean existeFolioFiscal = dao.repetidoFFiscal(proveedorDetalle.getFolioFiscal(), proveedorDetalle.getRFCProveedor());
+        Boolean existeFolioFactura = dao.repetidoFFactura(proveedorDetalle.getFolioFactura(), proveedorDetalle.getRFCProveedor());
+        if (existeFolioFiscal) {
+            throw new FacturaRepetidaFFiscalException(proveedorDetalle.getFolioFiscal());
+        }
+        if (existeFolioFactura) {
+            throw new FacturaRepetidaFFacturaException(proveedorDetalle.getFolioFactura());
+        }
+
         dao.crea(proveedorDetalle, usuario);
     }
 
@@ -125,6 +137,14 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
         formaPago = detalle.getInformeProveedor().getFormaPago();
         detalle.setUsuarioAutRech(usuario);
         detalle.setFechaAutRech(new Date());
+        byte[] arr = detalle.getPdfFile();
+        ByteArrayInputStream bis = new ByteArrayInputStream(arr);
+        try {
+            int size = bis.available();
+            log.info("bytearraysize:{}***--*", size);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         for (Object id2 : ids) {
             String ide = (String) id2;
             InformeProveedorDetalle detalle2 = dao.obtiene(Long.valueOf(ide));
@@ -135,6 +155,7 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
             String formaPago2 = detalle2.getInformeProveedor().getFormaPago();
             detalle2.setUsuarioAutRech(usuario);
             detalle2.setFechaAutRech(new Date());
+
             if (!cuentaCheque.equals(cuentaCheque2)) {
                 log.debug("las cuentas no coinciden");
                 throw new CuentaChequeNoCoincideException(id.toString());
@@ -191,6 +212,10 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
 
     @Override
     public void crea(InformeProveedorDetalle detalle, Usuario usuario) throws AutorizacionCCPlInvalidoException {
-        graba(detalle, usuario);
+        try {
+            graba(detalle, usuario);
+        } catch (Exception ex) {
+            Logger.getLogger(InformeProveedorDetalleManagerImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

@@ -196,4 +196,30 @@ public class InformeProveedorDetalleDaoHibernate extends BaseDao implements Info
         String proveedor = detalle.getNombreProveedor();
         return proveedor;
     }
+
+    @Override
+    public Boolean repetidoFFiscal(String folioFiscal, String rfc) {
+        Criteria countCriteria = currentSession().createCriteria(InformeProveedorDetalle.class);
+        countCriteria.add(Restrictions.eq("folioFiscal", folioFiscal));
+        countCriteria.add(Restrictions.eq("rfcproveedor", rfc));
+        countCriteria.setProjection(Projections.rowCount());
+        int total = (Integer) countCriteria.list().get(0);
+        if (total > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean repetidoFFactura(String folioFactura, String rfc) {
+        Criteria countCriteria = currentSession().createCriteria(InformeProveedorDetalle.class);
+        countCriteria.add(Restrictions.eq("foliofactura", folioFactura));
+        countCriteria.add(Restrictions.eq("rfcproveedor", rfc));
+        countCriteria.setProjection(Projections.rowCount());
+        int total = (Integer) countCriteria.list().get(0);
+        if (total > 0) {
+            return true;
+        }
+        return false;
+    }
 }

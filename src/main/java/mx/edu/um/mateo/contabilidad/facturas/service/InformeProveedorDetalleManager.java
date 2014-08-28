@@ -62,7 +62,7 @@ public interface InformeProveedorDetalleManager {
      *
      * @param InformeProveedor the object to be saved
      */
-    public void graba(InformeProveedorDetalle proveedorDetalle, Usuario usuario);
+    public void graba(InformeProveedorDetalle proveedorDetalle, Usuario usuario) throws Exception;
 
     public void actualiza(InformeProveedorDetalle proveedorDetalle, Usuario usuario);
 

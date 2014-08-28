@@ -13,6 +13,12 @@
         </jsp:include>
 
         <div id="nuevo-producto" class="content scaffold-list" role="main">
+            <c:if test="${not empty message}">
+                <div class="alert alert-block alert-heading fade in" role="status">
+                    <a class="close" data-dismiss="alert">×</a>
+                    <strong><s:message code="${message}" arguments="${messageAttrs}" /></strong>
+                </div>
+            </c:if>
 
 
             <form:form commandName="informeProveedorDetalle" action="uploadFile" method="post" enctype="multipart/form-data">
