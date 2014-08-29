@@ -730,7 +730,7 @@ public class InformeProveedorDetalleController extends BaseController {
 
             return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVA;
         }
-        NumberFormat nf_mx = NumberFormat.getNumberInstance(new Locale("es", "mx"));
+        NumberFormat nf_mx = NumberFormat.getNumberInstance(Locale.getDefault());
 
         log.info("localedefault{}***", Locale.getDefault());
         Map<String, Object> params = new HashMap<>();
@@ -787,14 +787,9 @@ public class InformeProveedorDetalleController extends BaseController {
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el detalle", e);
             return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVA;
-        } catch (FacturaRepetidaFFiscalException e) {
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "facturaRepetidaException.folioFiscal");
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
-            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVA;
-
         } catch (FacturaRepetidaFFacturaException e) {
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "facturaRepetidaException.folioFactura");
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+            errors.rejectValue("folioFactura", "facturaRepetidaException.folioFactura",
+                    new String[]{e.getMessage()}, null);
             return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVA;
 
         }

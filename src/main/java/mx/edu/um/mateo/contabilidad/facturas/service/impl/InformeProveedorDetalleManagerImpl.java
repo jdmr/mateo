@@ -94,11 +94,7 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
 
     @Override
     public void graba(InformeProveedorDetalle proveedorDetalle, Usuario usuario) throws Exception {
-        Boolean existeFolioFiscal = dao.repetidoFFiscal(proveedorDetalle.getFolioFiscal(), proveedorDetalle.getRFCProveedor());
         Boolean existeFolioFactura = dao.repetidoFFactura(proveedorDetalle.getFolioFactura(), proveedorDetalle.getRFCProveedor());
-        if (existeFolioFiscal) {
-            throw new FacturaRepetidaFFiscalException(proveedorDetalle.getFolioFiscal());
-        }
         if (existeFolioFactura) {
             throw new FacturaRepetidaFFacturaException(proveedorDetalle.getFolioFactura());
         }
