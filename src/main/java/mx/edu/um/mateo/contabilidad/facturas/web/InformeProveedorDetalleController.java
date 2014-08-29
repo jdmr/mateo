@@ -844,7 +844,6 @@ public class InformeProveedorDetalleController extends BaseController {
             xml = true;
             request.getSession().setAttribute("esPdf", xml);
             request.getSession().setAttribute("esXml", false);
-            log.info("termino de subir xml redireccionando nuevamente");
             return "redirect:" + "/factura/informeProveedorDetalle/upload";
         }
         if (fileName.toLowerCase().contains(".pdf")) {
@@ -853,12 +852,10 @@ public class InformeProveedorDetalleController extends BaseController {
             detalle.setPdfFile(uploadFileForm.getFile().getBytes());
             manager.actualiza(detalle, usuario);
             request.getSession().setAttribute("esPdf", false);
-            log.info("guardo archivo pdf saliendo");
         } else {
-            errors.reject("archivo.invalido.facturas" + fileName);
-            errors.rejectValue(null, "archivo.invalido.facturas"
-            );
+            // errors.reject("archivo.invalido.facturas" + fileName);
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "archivo.invalido.facturas");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{fileName});
             return "redirect:" + "/factura/informeProveedorDetalle/upload";
         }
         uploadFileForm.getFile().transferTo(new File(uploadDir));
