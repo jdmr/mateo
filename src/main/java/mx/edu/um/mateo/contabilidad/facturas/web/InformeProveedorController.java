@@ -26,6 +26,8 @@ import mx.edu.um.mateo.contabilidad.facturas.service.ProveedorFacturasManager;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
 import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.general.utils.FaltaArchivoPDFException;
+import mx.edu.um.mateo.general.utils.FaltaArchivoXMLException;
 import mx.edu.um.mateo.general.utils.FormaPagoNoSeleccionadaException;
 import mx.edu.um.mateo.general.utils.MonedaNoSeleccionadaException;
 import mx.edu.um.mateo.general.web.BaseController;
@@ -445,19 +447,27 @@ public class InformeProveedorController extends BaseController {
 
     @Transactional
     @RequestMapping(value = "/finaliza", method = RequestMethod.GET)
-    public String finaliza(HttpServletRequest request, @RequestParam Long id, Model modelo, @ModelAttribute InformeProveedor informeProveedor, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String finaliza(HttpServletRequest request, @RequestParam Long id, Model modelo,
+            @ModelAttribute InformeProveedor informeProveedor, BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) throws FaltaArchivoXMLException, FaltaArchivoXMLException {
         log.debug("Finalizando informe");
         try {
             Usuario usuario = ambiente.obtieneUsuario();
             InformeProveedor informe = manager.obtiene(id);
             log.debug("informe...**controller{}", informe);
             manager.finaliza(informe, usuario);
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeProveedor.finaliza.message");
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{informeProveedor.getNombreProveedor()});
-        } catch (Exception e) {
+        } catch (FaltaArchivoPDFException e) {
             log.error("No se pudo finalizar informe " + id, e);
-            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, new String[]{"informeProveedor.no.finaliza.message"}, null, null));
-            return Constantes.PATH_INFORMEPROVEEDOR_VER;
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "faltaArchivoXML.noFinaliza");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+//            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, new String[]{"informeProveedor.no.finaliza.message"}, null, null));
+            return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_LISTA;
+        } catch (FaltaArchivoXMLException e) {
+            log.error("No se pudo finalizar informe " + id, e);
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "faltaArchivoPDF.noFinaliza");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{e.getMessage()});
+//            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR, new String[]{"informeProveedor.no.finaliza.message"}, null, null));
+            return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_LISTA;
         }
 
         return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_LISTA;

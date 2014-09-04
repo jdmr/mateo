@@ -133,14 +133,6 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
         formaPago = detalle.getInformeProveedor().getFormaPago();
         detalle.setUsuarioAutRech(usuario);
         detalle.setFechaAutRech(new Date());
-        byte[] arr = detalle.getPdfFile();
-        ByteArrayInputStream bis = new ByteArrayInputStream(arr);
-        try {
-            int size = bis.available();
-            log.info("bytearraysize:{}***--*", size);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         for (Object id2 : ids) {
             String ide = (String) id2;
             InformeProveedorDetalle detalle2 = dao.obtiene(Long.valueOf(ide));

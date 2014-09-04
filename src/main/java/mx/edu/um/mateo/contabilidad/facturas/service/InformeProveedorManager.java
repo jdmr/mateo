@@ -9,6 +9,8 @@ import java.util.Map;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
+import mx.edu.um.mateo.general.utils.FaltaArchivoPDFException;
+import mx.edu.um.mateo.general.utils.FaltaArchivoXMLException;
 import mx.edu.um.mateo.general.utils.FormaPagoNoSeleccionadaException;
 import mx.edu.um.mateo.general.utils.MonedaNoSeleccionadaException;
 
@@ -66,7 +68,8 @@ public interface InformeProveedorManager {
      */
     public String elimina(final Long id);
 
-    public void finaliza(InformeProveedor informeProveedor, Usuario usuario);
+    public void finaliza(InformeProveedor informeProveedor, Usuario usuario) throws FaltaArchivoPDFException,
+            FaltaArchivoXMLException;
 
     public void autorizar(InformeProveedor informeProveedor, Usuario usuario);
 

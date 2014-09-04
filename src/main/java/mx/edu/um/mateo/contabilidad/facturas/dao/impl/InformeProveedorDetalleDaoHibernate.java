@@ -5,8 +5,10 @@
 package mx.edu.um.mateo.contabilidad.facturas.dao.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDetallesDao;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
 import mx.edu.um.mateo.general.dao.BaseDao;
 import mx.edu.um.mateo.general.model.Usuario;
@@ -14,7 +16,6 @@ import mx.edu.um.mateo.general.utils.Constantes;
 import org.hibernate.Criteria;
 import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
-import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -216,4 +217,14 @@ public class InformeProveedorDetalleDaoHibernate extends BaseDao implements Info
         Long total = (Long) countCriteria.list().get(0);
         return total > 0;
     }
+
+    @Override
+    public List<InformeProveedorDetalle> obtiene(final InformeProveedor informeProveedor) {
+        Criteria criteria = currentSession().createCriteria(InformeProveedorDetalle.class)
+                .createAlias("informeProveedor", "ip");
+        criteria.add(Restrictions.eq("ip.id", informeProveedor.getId()));
+        List<InformeProveedorDetalle> detalles = criteria.list();
+        return detalles;
+    }
+
 }

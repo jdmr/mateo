@@ -4,7 +4,9 @@
  */
 package mx.edu.um.mateo.contabilidad.facturas.dao;
 
+import java.util.List;
 import java.util.Map;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
 import mx.edu.um.mateo.general.model.Usuario;
 
@@ -94,4 +96,13 @@ public interface InformeProveedorDetallesDao {
      * @return
      */
     public Boolean repetidoFFactura(String folioFactura, String rfc);
+
+    /**
+     * Regresa todos los informeProveedorDetalles filtrados por el
+     * informeProveedor
+     *
+     * @param informeProveedor
+     * @return
+     */
+    public List<InformeProveedorDetalle> obtiene(final InformeProveedor informeProveedor);
 }

@@ -833,8 +833,10 @@ public class InformeProveedorDetalleController extends BaseController {
         if (!dirPath.exists()) {
             dirPath.mkdirs();
         }
+        String ext = fileName.substring(fileName.lastIndexOf("."));
+        log.info("extensión{}" + ext);
         sw = true;
-
+        Boolean esXml = (Boolean) request.getSession().getAttribute("esXml");
         log.debug("Archivo {} subido... ", uploadFileForm.getFile().getOriginalFilename());
         if (fileName.toLowerCase().contains(".xml")) {
             detalle.setPathXMl("/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + uploadFileForm.getFile().getOriginalFilename());
@@ -854,8 +856,12 @@ public class InformeProveedorDetalleController extends BaseController {
             request.getSession().setAttribute("esPdf", false);
         } else {
             // errors.reject("archivo.invalido.facturas" + fileName);
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "archivo.invalido.facturas");
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{fileName});
+            if (esXml) {
+                redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "archivoXML.invalido.facturas");
+            } else {
+                redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "archivoPDF.invalido.facturas");
+            }
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{fileName, ext});
             return "redirect:" + "/factura/informeProveedorDetalle/upload";
         }
         uploadFileForm.getFile().transferTo(new File(uploadDir));

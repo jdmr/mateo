@@ -4,21 +4,24 @@
  */
 package mx.edu.um.mateo.contabilidad.facturas.service.impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import mx.edu.um.mateo.contabilidad.facturas.dao.CCPDao;
 import mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDao;
+import mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDetallesDao;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
+import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedorDetalle;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.service.BaseManager;
 import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
 import mx.edu.um.mateo.general.utils.Constantes;
+import mx.edu.um.mateo.general.utils.FaltaArchivoPDFException;
+import mx.edu.um.mateo.general.utils.FaltaArchivoXMLException;
 import mx.edu.um.mateo.general.utils.FormaPagoNoSeleccionadaException;
 import mx.edu.um.mateo.general.utils.MonedaNoSeleccionadaException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +40,8 @@ public class InformeProveedorManagerImpl extends BaseManager implements InformeP
     private InformeProveedorDao dao;
     @Autowired
     private CCPDao ccpDao;
+    @Autowired
+    private InformeProveedorDetallesDao detalleDao;
 
     @Override
     public Map<String, Object> lista(Map<String, Object> params) {
@@ -95,8 +100,27 @@ public class InformeProveedorManagerImpl extends BaseManager implements InformeP
     }
 
     @Override
-    public void finaliza(InformeProveedor informeProveedor, Usuario usuario) {
+    public void finaliza(InformeProveedor informeProveedor, Usuario usuario) throws FaltaArchivoPDFException,
+            FaltaArchivoXMLException {
         log.debug("informe...**manager {}", informeProveedor);
+        List<InformeProveedorDetalle> detalles = detalleDao.obtiene(informeProveedor);
+        for (InformeProveedorDetalle detalle : detalles) {
+            try {
+                byte[] arr = detalle.getPdfFile();
+                ByteArrayInputStream bis = new ByteArrayInputStream(arr);
+            } catch (Exception e) {
+                log.info("La factura no contiene el archivo pdf");
+                throw new FaltaArchivoPDFException(detalle.getFolioFactura());
+            }
+            try {
+                byte[] arr = detalle.getXmlFile();
+                ByteArrayInputStream bis = new ByteArrayInputStream(arr);
+            } catch (Exception e) {
+                log.info("La factura no contiene el archivo pdf");
+                throw new FaltaArchivoXMLException(detalle.getFolioFactura());
+            }
+
+        }
         informeProveedor.setFechaPago(new Date());
         informeProveedor.setContraRecibo(String.valueOf(new Date().getTime()));
         informeProveedor.setStatus(Constantes.STATUS_FINALIZADO);
