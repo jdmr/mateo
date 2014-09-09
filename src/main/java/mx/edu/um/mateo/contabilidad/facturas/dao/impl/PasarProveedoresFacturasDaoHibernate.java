@@ -131,6 +131,7 @@ public class PasarProveedoresFacturasDaoHibernate extends BaseDao implements Pas
                 ProveedorFacturas proveedor = dao.obtiene(proveedorFacturas.getRfc());
                 if (proveedor.getCorreo() == null ? proveedorFacturas.getCorreo() != null : !proveedor.getCorreo().equals(proveedorFacturas.getCorreo())) {
                     log.debug("*****actualizando datos proveedor:{}", proveedor.getCorreo());
+                    proveedor.setNombre(proveedorFacturas.getNombre());
                     proveedor.setCorreo(proveedorFacturas.getCorreo().trim());
                     proveedor.setUsername(proveedorFacturas.getCorreo().trim());
                     proveedor.setPassword(passwordEncoder.encodePassword(

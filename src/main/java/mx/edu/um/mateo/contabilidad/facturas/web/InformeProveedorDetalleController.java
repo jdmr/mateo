@@ -53,9 +53,11 @@ import mx.edu.um.mateo.inscripciones.model.FileUploadForm;
 import mx.edu.um.mateo.rh.model.Empleado;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.persistence.annotations.ReadOnly;
 import org.eclipse.persistence.internal.helper.ClassConstants;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -488,6 +490,77 @@ public class InformeProveedorDetalleController extends BaseController {
         pagina(params, modelo, Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE, pagina);
 
         return "/factura/informeProveedorDetalle/detalles";
+    }
+
+    @PreAuthorize("hasRole('ROLE_PRV_COMPRAS')")
+    @RequestMapping("/revisarFacturasCompras")
+    public String revisarFacturasCompras(HttpServletRequest request, HttpServletResponse response,
+            @RequestParam(required = false) String filtro,
+            @RequestParam(required = false) Long pagina,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) String correo,
+            @RequestParam(required = false) String order,
+            @RequestParam(required = false) String sort,
+            Usuario usuario,
+            Errors errors,
+            Model modelo) {
+        log.debug("Entrando a revisar..**..");
+        Map<String, Object> params = new HashMap<>();
+        Long empresaId = (Long) request.getSession().getAttribute("empresaId");
+        params.put("empresa", empresaId);
+        params.put(Constantes.CONTAINSKEY_REPORTE, Constantes.CONTAINSKEY_REPORTE);
+//        InformeProveedor informeId = (InformeProveedor) request.getSession().getAttribute("informeId");
+//        params.put("informeProveedor", informeId.getId());
+        if (StringUtils.isNotBlank(filtro)) {
+            params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
+        }
+        if (pagina != null) {
+            params.put(Constantes.CONTAINSKEY_PAGINA, pagina);
+            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        } else {
+            pagina = 1L;
+            modelo.addAttribute(Constantes.CONTAINSKEY_PAGINA, pagina);
+        }
+        if (StringUtils.isNotBlank(order)) {
+            params.put(Constantes.CONTAINSKEY_ORDER, order);
+            params.put(Constantes.CONTAINSKEY_SORT, sort);
+        }
+
+        if (StringUtils.isNotBlank(tipo)) {
+            params.put(Constantes.CONTAINSKEY_REPORTE, Constantes.CONTAINSKEY_REPORTE);
+            params = manager.revisar(params);
+            try {
+                generaReporte(tipo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE),
+                        response, "contrarecibo", Constantes.EMP, empresaId);
+                return null;
+            } catch (ReporteException e) {
+                log.error("No se pudo generar el reporte", e);
+                params.remove(Constantes.CONTAINSKEY_REPORTE);
+                //errors.reject("error.generar.reporte");
+            }
+        }
+
+        if (StringUtils.isNotBlank(correo)) {
+            params.put(Constantes.CONTAINSKEY_REPORTE, true);
+            params = manager.revisar(params);
+
+            params.remove(Constantes.CONTAINSKEY_REPORTE);
+            try {
+                enviaCorreo(correo, (List<InformeProveedorDetalle>) params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE),
+                        request, "contrarecibo", Constantes.EMP, empresaId);
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE, "lista.enviada.message");
+                modelo.addAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{messageSource.getMessage("detalle.lista.label", null, request.getLocale()), ambiente.obtieneUsuario().getUsername()});
+            } catch (ReporteException e) {
+                log.error("No se pudo enviar el reporte por correo", e);
+            }
+        }
+        params = manager.revisar(params);
+        log.debug("params{}", params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE));
+        modelo.addAttribute(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE, params.get(Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE));
+
+        pagina(params, modelo, Constantes.CONTAINSKEY_INFORMESPROVEEDOR_DETALLE, pagina);
+
+        return "/factura/informeProveedorDetalle/revisarFacturasCompras";
     }
 
     @RequestMapping("/listaRevisados")

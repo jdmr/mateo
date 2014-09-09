@@ -27,10 +27,11 @@
         <intercept-url pattern="/factura/proveedorFacturas/**" access="hasAnyRole('ROLE_PRV_VALIDA')" />
         <intercept-url pattern="/factura/informeProveedor/**" access="hasAnyRole('ROLE_PRV_USER')" />
         <intercept-url pattern="/factura/informeProveedorDetalle/revisar" access="hasAnyRole('ROLE_PRV_VALIDA')" />
+        <intercept-url pattern="/factura/informeProveedorDetalle/revisarFacturasCompras" access="hasAnyRole('ROLE_PRV_COMPRAS')" />
         <intercept-url pattern="/factura/informeProveedorDetalle/autorizar" access="hasAnyRole('ROLE_PRV_VALIDA')" />
         <intercept-url pattern="/factura/pasarProveedor" access="hasAnyRole('ROLE_PRV_VALIDA')" />
-        <intercept-url pattern="/factura/informeProveedorDetalle/downloadPdfFile/**" access="hasAnyRole('ROLE_PRV_GENERA','ROLE_PRV_VALIDA','ROLE_PRV_USER')" />
-        <intercept-url pattern="/factura/informeProveedorDetalle/downloadXmlFile/**" access="hasAnyRole('ROLE_PRV_GENERA','ROLE_PRV_VALIDA','ROLE_PRV_USER')" />
+        <intercept-url pattern="/factura/informeProveedorDetalle/downloadPdfFile/**" access="hasAnyRole('ROLE_PRV_GENERA','ROLE_PRV_VALIDA','ROLE_PRV_USER','ROLE_PRV_COMPRAS')" />
+        <intercept-url pattern="/factura/informeProveedorDetalle/downloadXmlFile/**" access="hasAnyRole('ROLE_PRV_GENERA','ROLE_PRV_VALIDA','ROLE_PRV_USER','ROLE_PRV_COMPRAS')" />
         <intercept-url pattern="/factura/informeProveedorDetalle/listaRevisados" access="hasAnyRole('ROLE_PRV_GENERA')" />
         <intercept-url pattern="/factura/informeProveedorDetalle/contrarecibos" access="hasAnyRole('ROLE_PRV_GENERA')" />
         <intercept-url pattern="/factura/informeProveedorDetalle/pagar" access="hasAnyRole('ROLE_PRV_GENERA')" />
@@ -86,6 +87,7 @@
                 ROLE_PRV   > ROLE_PRV_USER
                 ROLE_PRV   > ROLE_PRV_VALIDA
                 ROLE_PRV   > ROLE_PRV_GENERA
+                ROLE_PRV   > ROLE_PRV_COMPRAS
                 ROLE_PRV   > ROLE_USER
                 ROLE_USER  > ROLE_AUTHENTICATED
                 ROLE_AUTHENTICATED > ROLE_UNAUTHENTICATED
