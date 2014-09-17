@@ -92,6 +92,7 @@ public class InformeProveedorDetalleController extends BaseController {
     @Autowired
     private ContrareciboManager contrareciboManager;
 
+//    @PreAuthorize("hasAnyRole('ROLE_PRV_USER')")
     @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -184,6 +185,7 @@ public class InformeProveedorDetalleController extends BaseController {
      * @param modelo
      * @return
      */
+//    @PreAuthorize("hasAnyRole('ROLE_PRV_')")
     @RequestMapping("/listaContrarecibo")
     public String listaContrarecibos(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -422,6 +424,7 @@ public class InformeProveedorDetalleController extends BaseController {
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_CONTRARECIBO;
     }
 
+    @PreAuthorize("hasRole('ROLE_PRV_VALIDA')")
     @RequestMapping("/revisar")
     public String revisar(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -563,6 +566,7 @@ public class InformeProveedorDetalleController extends BaseController {
         return "/factura/informeProveedorDetalle/revisarFacturasCompras";
     }
 
+    @PreAuthorize("hasRole('ROLE_PRV_GENERA')")
     @RequestMapping("/listaRevisados")
     public String revisados(HttpServletRequest request, HttpServletResponse response,
             @RequestParam(required = false) String filtro,
@@ -927,16 +931,17 @@ public class InformeProveedorDetalleController extends BaseController {
             detalle.setPdfFile(uploadFileForm.getFile().getBytes());
             manager.actualiza(detalle, usuario);
             request.getSession().setAttribute("esPdf", false);
-        } else {
-            // errors.reject("archivo.invalido.facturas" + fileName);
-            if (esXml) {
-                redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "archivoXML.invalido.facturas");
-            } else {
-                redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "archivoPDF.invalido.facturas");
-            }
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{fileName, ext});
-            return "redirect:" + "/factura/informeProveedorDetalle/upload";
         }
+//            else {
+//            // errors.reject("archivo.invalido.facturas" + fileName);
+//            if (esXml) {
+//                redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "archivoXML.invalido.facturas");
+//            } else {
+//                redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "archivoPDF.invalido.facturas");
+//            }
+//            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{fileName, ext});
+//            return "redirect:" + "/factura/informeProveedorDetalle/upload";
+//        }
         uploadFileForm.getFile().transferTo(new File(uploadDir));
 
         return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
