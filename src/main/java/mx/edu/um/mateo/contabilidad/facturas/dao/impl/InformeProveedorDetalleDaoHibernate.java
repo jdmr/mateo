@@ -66,12 +66,12 @@ public class InformeProveedorDetalleDaoHibernate extends BaseDao implements Info
         Criteria countCriteria = currentSession().createCriteria(InformeProveedorDetalle.class)
                 .createAlias("informeProveedor", "ip");
 
-        if (params.containsKey("empresa")) {
-            criteria.createCriteria("empresa").add(
-                    Restrictions.idEq(params.get("empresa")));
-            countCriteria.createCriteria("empresa").add(
-                    Restrictions.idEq(params.get("empresa")));
-        }
+//        if (params.containsKey("empresa")) {
+//            criteria.createCriteria("empresa").add(
+//                    Restrictions.idEq(params.get("empresa")));
+//            countCriteria.createCriteria("empresa").add(
+//                    Restrictions.idEq(params.get("empresa")));
+//        }
         if (params.containsKey("informeProveedor")) {
             criteria.add(Restrictions.eq("ip.id", params.get("informeProveedor")));
             countCriteria.add(Restrictions.eq("ip.id", params.get("informeProveedor")));
@@ -157,9 +157,9 @@ public class InformeProveedorDetalleDaoHibernate extends BaseDao implements Info
     @Override
     public void crea(final InformeProveedorDetalle proveedorDetalle, Usuario usuario) {
         Session session = currentSession();
-        if (usuario != null) {
-            proveedorDetalle.setEmpresa(usuario.getEmpresa());
-        }
+//        if (usuario != null) {
+//            proveedorDetalle.setEmpresa(usuario.getEmpresa());
+//        }
         currentSession().save(proveedorDetalle);
         currentSession().merge(proveedorDetalle);
         currentSession().flush();

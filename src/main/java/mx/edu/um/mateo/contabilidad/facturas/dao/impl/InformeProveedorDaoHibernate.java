@@ -60,12 +60,12 @@ public class InformeProveedorDaoHibernate extends BaseDao implements InformeProv
         Criteria criteria = currentSession().createCriteria(InformeProveedor.class);
         Criteria countCriteria = currentSession().createCriteria(InformeProveedor.class);
 
-        if (params.containsKey("empresa")) {
-            criteria.createCriteria("empresa").add(
-                    Restrictions.idEq(params.get("empresa")));
-            countCriteria.createCriteria("empresa").add(
-                    Restrictions.idEq(params.get("empresa")));
-        }
+//        if (params.containsKey("empresa")) {
+//            criteria.createCriteria("empresa").add(
+//                    Restrictions.idEq(params.get("empresa")));
+//            countCriteria.createCriteria("empresa").add(
+//                    Restrictions.idEq(params.get("empresa")));
+//        }
         if (params.containsKey("proveedorFacturas")) {
             criteria.createCriteria("proveedorFacturas").add(
                     Restrictions.idEq(params.get("proveedorFacturas")));
@@ -270,9 +270,9 @@ public class InformeProveedorDaoHibernate extends BaseDao implements InformeProv
     @Override
     public void crea(final InformeProveedor informeProveedor, Usuario usuario) {
         Session session = currentSession();
-        if (usuario != null) {
-            informeProveedor.setEmpresa(usuario.getEmpresa());
-        }
+//        if (usuario != null) {
+//            informeProveedor.setEmpresa(usuario.getEmpresa());
+//        }
         currentSession().save(informeProveedor);
         currentSession().merge(informeProveedor);
         currentSession().flush();

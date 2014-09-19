@@ -845,6 +845,7 @@ public class InformeProveedorDetalleController extends BaseController {
         detalle.setFechaCaptura(new Date());
         detalle.setUsuarioAlta(usuario);
         detalle.setStatus(Constantes.STATUS_ACTIVO);
+        detalle.setEmpresa(informe.getEmpresa());
         if (usuario.isEmpleado()) {
             Empleado empleado = (Empleado) usuario;
             detalle.setNombreProveedor(empleado.getNombre());
