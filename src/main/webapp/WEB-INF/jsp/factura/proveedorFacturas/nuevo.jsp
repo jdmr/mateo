@@ -190,16 +190,6 @@
                             <form:errors path="status" cssClass="alert alert-error" />
                         </div>
                     </s:bind>
-                    <s:bind path="proveedorFacturas.password">
-                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                                <label for="status">
-                                <s:message code="login.password" />
-                                <span class="required-indicator">*</span>
-                            </label>
-                            <form:input path="password" required="true" maxlength="128"  />
-                            <form:errors path="password" cssClass="alert alert-error" />
-                        </div>
-                    </s:bind>
                     <s:bind path="proveedorFacturas.cuentaCheque">
                         <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
                                 <label for="cuentaCheque">

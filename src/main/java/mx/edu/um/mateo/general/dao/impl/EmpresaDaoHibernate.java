@@ -141,6 +141,17 @@ public class EmpresaDaoHibernate extends BaseDao implements EmpresaDao {
     }
 
     @Override
+    public Empresa obtiene(String ccosto, String ejercicio) {
+        log.debug("Obtiene empresa con ccosto = {}", ccosto);
+        Criteria criteria = currentSession().createCriteria(Empresa.class);
+        criteria.createAlias("centroCosto", "ccosto");
+        criteria.add(Restrictions.eq("ccosto.id.ejercicio.id.idEjercicio", ejercicio));
+        criteria.add(Restrictions.eq("ccosto.id.idCosto", ccosto));
+        Empresa empresa = (Empresa) criteria.uniqueResult();
+        return empresa;
+    }
+
+    @Override
     public Empresa crea(Empresa empresa, Usuario usuario) {
         Session session = currentSession();
         if (usuario != null) {

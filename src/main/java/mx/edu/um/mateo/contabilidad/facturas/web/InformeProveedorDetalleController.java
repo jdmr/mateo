@@ -107,7 +107,7 @@ public class InformeProveedorDetalleController extends BaseController {
         log.debug("Mostrando lista de informes");
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
-        params.put("empresa", empresaId);
+//        params.put("empresa", empresaId);
         params.put(Constantes.CONTAINSKEY_REPORTE, Constantes.CONTAINSKEY_REPORTE);
         InformeProveedor informeId = (InformeProveedor) request.getSession().getAttribute("informeId");
         params.put("informeProveedor", informeId.getId());
@@ -200,7 +200,7 @@ public class InformeProveedorDetalleController extends BaseController {
         log.debug("Mostrando lista de informes");
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
-        params.put("empresa", empresaId);
+//        params.put("empresa", empresaId);
         Contrarecibo contrareciboId = (Contrarecibo) request.getSession().getAttribute("contrareciboId");
         params.put("contrarecibo", contrareciboId.getId());
         params.put(Constantes.CONTAINSKEY_REPORTE, Constantes.CONTAINSKEY_REPORTE);
@@ -369,7 +369,7 @@ public class InformeProveedorDetalleController extends BaseController {
         log.debug("Entrando a contrarecibo..**..");
         Map<String, Object> params = new HashMap<>();
         Long empresaId = (Long) request.getSession().getAttribute("empresaId");
-        params.put("empresa", empresaId);
+//        params.put("empresa", empresaId);
         params.put(Constantes.CONTAINSKEY_REPORTE, Constantes.CONTAINSKEY_REPORTE);
         InformeProveedor informeId = (InformeProveedor) request.getSession().getAttribute("informeId");
         params.put("informeProveedor", informeId.getId());
@@ -845,6 +845,7 @@ public class InformeProveedorDetalleController extends BaseController {
         detalle.setFechaCaptura(new Date());
         detalle.setUsuarioAlta(usuario);
         detalle.setStatus(Constantes.STATUS_ACTIVO);
+        log.info("empresa{}", informe.getEmpresa().getNombre());
         detalle.setEmpresa(informe.getEmpresa());
         if (usuario.isEmpleado()) {
             Empleado empleado = (Empleado) usuario;
@@ -1237,7 +1238,7 @@ public class InformeProveedorDetalleController extends BaseController {
 
     @RequestMapping("/fecha")
     public String asignarFecha(HttpServletRequest request, Model modelo) {
-        log.debug("Nuevo paquete");
+        log.info("nuevo contrarecibo");
         Contrarecibo contrarecibo = new Contrarecibo();
         modelo.addAttribute(Constantes.ADDATTRIBUTE_CONTRARECIBO, contrarecibo);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_CONTRARECIBO, contrarecibo);
@@ -1246,7 +1247,7 @@ public class InformeProveedorDetalleController extends BaseController {
 
     @RequestMapping("/cambiarFecha/{id}")
     public String cambiarFecha(@PathVariable Long id, HttpServletRequest request, Model modelo) {
-        log.debug("Nuevo paquete");
+        log.info("cambiando fecha a contrarecivo");
 
         Contrarecibo contrarecibo = contrareciboManager.obtiene(id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_CONTRARECIBO, contrarecibo);
@@ -1276,18 +1277,27 @@ public class InformeProveedorDetalleController extends BaseController {
         try {
 
             Usuario usuario = ambiente.obtieneUsuario();
-            List<InformeProveedorDetalle> detalles = (List<InformeProveedorDetalle>) request.getSession().getAttribute("facturasPagar");
-            contrarecibo.setStatus(Constantes.STATUS_ACTIVO);
-            ProveedorFacturas proveedorFacturas = detalles.get(0).getInformeProveedor().getProveedorFacturas();
-            contrarecibo.setProveedorFacturas(proveedorFacturas);
-            contrarecibo.setUsuarioAlta(usuario);
-            contrareciboManager.graba(contrarecibo, usuario);
-            for (InformeProveedorDetalle x : detalles) {
+            if (contrarecibo.getId() == null) {
+                List<InformeProveedorDetalle> detalles = (List<InformeProveedorDetalle>) request.getSession().getAttribute("facturasPagar");
+                contrarecibo.setStatus(Constantes.STATUS_ACTIVO);
+                ProveedorFacturas proveedorFacturas = detalles.get(0).getInformeProveedor().getProveedorFacturas();
+                contrarecibo.setProveedorFacturas(proveedorFacturas);
+                contrarecibo.setUsuarioAlta(usuario);
+                contrareciboManager.graba(contrarecibo, usuario);
+                for (InformeProveedorDetalle x : detalles) {
 
-                x.setContrarecibo(contrarecibo);
-                x.setStatus(Constantes.STATUS_AUTORIZADO);
-                manager.actualiza(x, usuario);
+                    x.setContrarecibo(contrarecibo);
+                    x.setStatus(Constantes.STATUS_AUTORIZADO);
+                    manager.actualiza(x, usuario);
+                }
+            } else {
+                log.info("actualizando");
+                log.info("contrarecibo a actualizar{}", contrarecibo.toString());
+                Contrarecibo cont = contrareciboManager.obtiene(contrarecibo.getId());
+                cont.setFechaPago(contrarecibo.getFechaPago());
+                contrareciboManager.actualiza(cont, usuario);
             }
+
         } catch (ConstraintViolationException e) {
             log.error("No se pudo crear el detalle", e);
             return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_NUEVO;

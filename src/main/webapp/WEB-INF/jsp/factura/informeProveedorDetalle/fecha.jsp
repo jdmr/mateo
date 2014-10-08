@@ -28,57 +28,56 @@
                     </div>
                 </form:errors>
 
+                <form:hidden path="id" />
+                <form:hidden path="version" />
+
+                <fieldset>
+
+                    <s:bind path="contrarecibo.fechaPago">
+                        <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
+                                <label for="fechaPago">
+                                <s:message code="fechaCompromiso.label" />
+                                <span class="required-indicator">*</span>
+                            </label>
+                            <form:input path="fechaPago" maxlength="12" required="true" />
+                            <form:errors path="fechaPago" cssClass="alert alert-error" />
+                        </div>
+                    </s:bind>
 
 
 
+                </fieldset>
 
-
-
-                <s:bind path="contrarecibo.fechaPago">
-                    <div class="control-group <c:if test='${not empty status.errorMessages}'>error</c:if>">
-                            <label for="fechaPago">
-                            <s:message code="fechaCompromiso.label" />
-                            <span class="required-indicator">*</span>
-                        </label>
-                        <form:input path="fechaPago" maxlength="12" required="true" />
-                        <form:errors path="fechaPago" cssClass="alert alert-error" />
-                    </div>
-                </s:bind>
-
-
-
-            </fieldset>
-
-            <p class="well" style="margin-top: 10px;">
-                <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
-                <a class="btn btn-large" href="<s:url value='/factura/informeProveedorDetalle/revisar'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
-            </p>
-        </form:form>
-    </div>
-<content>
-    <%--
-    <script
-src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> --%>
-    <script>
-        $(document).ready(function() {
-            $('input#nombre').focus();
-            $("input#fechaPago").datepicker($.datepicker.regional['es']);
-            $("input#fechaPago").datepicker("option", "firstDay", 0);
-        });
-
-        $(document).ready(function() {
-            //add more file components if Add is clicked
-            $('#addFile').click(function() {
-                var fileIndex = $('#fileTable tr').children().length - 1;
-                $('#fileTable').append(
-                        '<tr><td>' +
-                        '   <input type="file" name="files[' + fileIndex + ']" />' +
-                        '</td></tr>');
+                <p class="well" style="margin-top: 10px;">
+                    <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
+                    <a class="btn btn-large" href="<s:url value='/factura/informeProveedorDetalle/revisar'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                </p>
+            </form:form>
+        </div>
+    <content>
+        <%--
+        <script
+    src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> --%>
+        <script>
+            $(document).ready(function () {
+                $('input#nombre').focus();
+                $("input#fechaPago").datepicker($.datepicker.regional['es']);
+                $("input#fechaPago").datepicker("option", "firstDay", 0);
             });
 
-        });
-    </script>
+            $(document).ready(function () {
+                //add more file components if Add is clicked
+                $('#addFile').click(function () {
+                    var fileIndex = $('#fileTable tr').children().length - 1;
+                    $('#fileTable').append(
+                            '<tr><td>' +
+                            '   <input type="file" name="files[' + fileIndex + ']" />' +
+                            '</td></tr>');
+                });
 
-</content>
+            });
+        </script>
+
+    </content>
 </body>
 </html>

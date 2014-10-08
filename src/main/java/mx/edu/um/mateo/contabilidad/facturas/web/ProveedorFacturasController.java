@@ -167,6 +167,7 @@ public class ProveedorFacturasController extends BaseController {
             Usuario usuario = ambiente.obtieneUsuario();
             proveedorFacturas.setEjercicio(usuario.getEjercicio());
             log.debug("usuario logeado ...{}" + usuario.getEjercicio());
+            proveedorFacturas.setPassword("prueba");
             manager.graba(proveedorFacturas, usuario);
             log.debug("usuario logeado enviado{}" + usuario.getEjercicio());
 

@@ -7,7 +7,6 @@ package mx.edu.um.mateo.contabilidad.facturas.web;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -17,12 +16,13 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import mx.edu.um.mateo.contabilidad.facturas.model.InformeProveedor;
 import mx.edu.um.mateo.contabilidad.facturas.model.ProveedorFacturas;
 import mx.edu.um.mateo.contabilidad.facturas.service.InformeProveedorManager;
 import mx.edu.um.mateo.contabilidad.facturas.service.ProveedorFacturasManager;
+import mx.edu.um.mateo.general.dao.EmpresaDao;
+import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.AutorizacionCCPlInvalidoException;
 import mx.edu.um.mateo.general.utils.Constantes;
@@ -74,6 +74,8 @@ public class InformeProveedorController extends BaseController {
     private InformeProveedorManager manager;
     @Autowired
     private ProveedorFacturasManager pFacturasManager;
+    @Autowired
+    private EmpresaDao empresaDao;
 
     @RequestMapping({"", "/lista"})
     public String lista(HttpServletRequest request, HttpServletResponse response,
@@ -310,44 +312,32 @@ public class InformeProveedorController extends BaseController {
 
             return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
         }
-        Map<String, Object> params = new HashMap<>();
         Usuario usuario = ambiente.obtieneUsuario();
         if (usuario.isProveedor()) {
             ProveedorFacturas proveedorFacturas = (ProveedorFacturas) ambiente.obtieneUsuario();
             informe.setNombreProveedor(usuario.getNombre());
             informe.setProveedorFacturas(proveedorFacturas);
 
-            String formaPago = informe.getFormaPago();
-//            ProveedorFacturas proveedorFacturas1 = pFacturasManager.obtiene(proveedorFacturas.getId());
-            log.debug(formaPago);
-            log.debug(informe.getBanco());
-            log.debug(informe.getClabe());
-            log.debug(informe.getCuentaCheque());
-
             if (informe.getBanco() != null && informe.getBanco() != proveedorFacturas.getBanco() && !informe.getBanco().isEmpty()) {
                 log.debug("entrando banco");
                 proveedorFacturas.setBanco(informe.getBanco());
-//                pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
             } else if (informe.getBanco() == null || informe.getBanco().isEmpty()) {
 
                 return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
             }
-//            switch (formaPago) {
-//                case "T":
             log.debug("entrando clabe");
             if (informe.getClabe() != null && informe.getClabe() != proveedorFacturas.getClabe() && !informe.getClabe().isEmpty()) {
                 proveedorFacturas.setClabe(informe.getClabe());
-//                        pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
             }
-//                case "C":
             log.debug("entrando cheque");
             if (informe.getCuentaCheque() != null && informe.getCuentaCheque() != proveedorFacturas.getCuentaCheque() && !informe.getCuentaCheque().isEmpty()) {
                 proveedorFacturas.setCuentaCheque(informe.getCuentaCheque());
-//                        pFacturasManager.actualiza(proveedorFacturas1, proveedorFacturas);
             }
-//                    break;
-//            }
+            Empresa empresa = empresaDao.obtiene(informe.getContabilidad(), proveedorFacturas.getEjercicio().getId().getIdEjercicio());
 
+            log.info("Asignando empresa{} al encabezado", empresa.getNombre());
+            log.debug("Asignando empresa{} al encabezado", empresa.getNombre());
+            informe.setEmpresa(empresa);
             pFacturasManager.actualiza(proveedorFacturas, usuario);
             ambiente.actualizaSesion(request.getSession(), proveedorFacturas);
         }
@@ -368,15 +358,11 @@ public class InformeProveedorController extends BaseController {
             }
         } catch (MonedaNoSeleccionadaException ex) {
             log.debug("Moneda no seleccionada");
-//            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeproveedor.noSeleccionoMoneda");
-//            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{"Monda"});
             errors.rejectValue("moneda", "informeproveedor.noSeleccionoMoneda",
                     new String[]{"moneda"}, null);
             return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;
         } catch (FormaPagoNoSeleccionadaException ex) {
             log.debug("Forma de pago no seleccionada");
-//            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "informeproveedor.noSeleccionoFormaPago");
-//            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS);
             errors.rejectValue("formaPago", "informeproveedor.noSeleccionoFormaPago",
                     new String[]{"formaPago"}, null);
             return Constantes.PATH_INFORMEPROVEEDOR_NUEVO;

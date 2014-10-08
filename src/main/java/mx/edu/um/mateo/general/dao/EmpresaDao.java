@@ -24,6 +24,8 @@
 package mx.edu.um.mateo.general.dao;
 
 import java.util.Map;
+import mx.edu.um.mateo.contabilidad.model.CentroCosto;
+import mx.edu.um.mateo.contabilidad.model.Ejercicio;
 import mx.edu.um.mateo.general.model.Empresa;
 import mx.edu.um.mateo.general.model.Usuario;
 import mx.edu.um.mateo.general.utils.UltimoException;
@@ -37,6 +39,8 @@ public interface EmpresaDao {
     public Map<String, Object> lista(Map<String, Object> params);
 
     public Empresa obtiene(Long id);
+
+    public Empresa obtiene(String ccosto, String ejercicio);
 
     public Empresa crea(Empresa empresa, Usuario usuario);
 

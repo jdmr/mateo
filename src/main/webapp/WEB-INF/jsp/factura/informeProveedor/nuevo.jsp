@@ -123,9 +123,12 @@
                                 <s:message code="cliente.label" />
                                 <span class="required-indicator">*</span>
                                 <select name="contabilidad">  
-                                    <option value="1" selected>Universidad de Montemorelos</option>  
-                                    <option value="2">COVOPROM</option>  
-                                    <option value="5">Patronato</option>  
+                                    <option value="1.01" selected>Universidad de Montemorelos</option>  
+                                    <option value="2.01">COVOPROM</option>  
+                                    <option value="5.01">Patronato</option>  
+                                    <option value="3.01">Guarder&iacute;a</option>  
+                                    <option value="4.01">Hospital la Carlota</option>  
+                                  
                                 </select> 
                         </div>
                     </s:bind>
