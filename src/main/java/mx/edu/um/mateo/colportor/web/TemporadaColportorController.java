@@ -98,10 +98,38 @@ public class TemporadaColportorController extends BaseController{
         
         //Por default, utilizamos ahora la busqueda por asociado
         Map<String, Object> params = new HashMap<>();
+        request.getSession().setAttribute(Constantes.ASOCIADO_COLPORTOR, ambiente.obtieneUsuario());
         params.put("asociado", ambiente.obtieneUsuario().getId());
+        log.debug("Asociado: id {}, nombre {}, correo {}", new Object[]{ambiente.obtieneUsuario().getId(), ambiente.obtieneUsuario().getNombreCompleto(), ambiente.obtieneUsuario().getCorreo()});
         
-        if(request.getSession().getAttribute(Constantes.COLPORTOR) != null)
-            params.put("colportor", ((Colportor)request.getSession().getAttribute(Constantes.COLPORTOR)).getId());
+        Colportor clp = null;
+        if(request.getSession().getAttribute(Constantes.COLPORTOR) != null){
+            clp = (Colportor)request.getSession().getAttribute(Constantes.COLPORTOR);
+            params.put("colportor", clp.getId());
+            log.debug("colportor en session {}", clp);
+        }
+        
+        if(filtro != null){
+            log.debug("Valor de filtro {}", filtro.trim());
+            if(clp != null){
+                if (!clp.getClave().equals(filtro.trim())){
+                    //Es otro colportor
+                    clp = colportorDao.obtiene(filtro.trim());
+                    params.put("colportor", clp.getId());
+                    request.getSession().setAttribute(Constantes.COLPORTOR, clp);
+                }
+            }
+            else{
+                //Es otro colportor
+                try{
+                    clp = colportorDao.obtiene(filtro.trim());
+                    params.put("colportor", clp.getId());
+                    request.getSession().setAttribute(Constantes.COLPORTOR, clp);
+                }catch(NullPointerException ex){
+                    ;
+                }
+            }
+        }
         
         if (StringUtils.isNotBlank(filtro)) {
             params.put(Constantes.CONTAINSKEY_FILTRO, filtro);
@@ -253,9 +281,13 @@ public class TemporadaColportorController extends BaseController{
                 temporadaColportor.setFecha(new Date());
                 
                 //Desactivar las temporadas activas de este colportor
-                TemporadaColportor tmp = temporadaColportorDao.obtiene((Colportor)request.getSession().getAttribute(Constantes.COLPORTOR));
-                tmp.setStatus(Constantes.STATUS_INACTIVO);
-                temporadaColportorDao.actualiza(tmp);
+                try {
+                    TemporadaColportor tmp = temporadaColportorDao.obtiene((Colportor) request.getSession().getAttribute(Constantes.COLPORTOR));
+                    tmp.setStatus(Constantes.STATUS_INACTIVO);
+                    temporadaColportorDao.actualiza(tmp);
+                } catch (NullPointerException e) {
+                    ; //Seguramente la temporadaColportor no existe
+                }
             }
             
             temporadaColportor = temporadaColportorDao.crea(temporadaColportor);

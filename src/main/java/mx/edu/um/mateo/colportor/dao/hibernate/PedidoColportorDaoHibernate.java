@@ -118,7 +118,7 @@ public class PedidoColportorDaoHibernate extends BaseDao implements PedidoColpor
 
         return params;
     }
-
+    
     @Override
     @Transactional(readOnly = true)
     public PedidoColportor obtiene(Long id) {

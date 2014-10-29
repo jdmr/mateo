@@ -96,11 +96,12 @@ public class ImportarDatosManagerImpl extends BaseManager implements ImportarDat
             Colportor clp = null;
             Boolean sw = false;
             
-            //Obtener descripcion
+            //Obtener fecha
             row = sheet.getRow(0);
             gcFecha.setTime(sdf.parse(row.getCell(0).getStringCellValue()));
             log.debug("Fecha {}", gcFecha.getTime());
             
+            //Obtener descripcion
             row = sheet.getRow(1);
             String descripcion = row.getCell(0).getStringCellValue();
             log.debug("Descripcion {}", descripcion);

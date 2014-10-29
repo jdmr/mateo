@@ -17,6 +17,8 @@ public interface ClienteColportorDao {
     public Map<String, Object> lista(Map<String, Object> params);
 
     public ClienteColportor obtiene(Long id);
+    
+    public ClienteColportor obtiene(Map<String, Object> params);
 
     public ClienteColportor crea(ClienteColportor clienteColportor);
 

@@ -107,6 +107,32 @@ public class ClienteColportorDaoHibernate extends BaseDao implements ClienteColp
     }
     
     @Override
+    @Transactional(readOnly = true)
+    public ClienteColportor obtiene(Map<String, Object> params) {
+        log.debug("Buscando cliente {}", params.get("cliente"));
+        
+        String arr[] = ((String)params.get("cliente")).split("\\s+");
+        log.debug("En el nombre {} se encontraron {} palabras ", params.get("cliente"), arr.length);
+        
+        String nombre = "";
+        String apPaterno = "";
+        if(arr.length == 1){
+            nombre = arr[0];
+            apPaterno = "%";
+        }
+        else{
+            nombre = arr[0];
+            apPaterno = arr[1];
+        }
+        log.debug("Nombre {}, apPaterno {}", nombre, apPaterno);
+        
+        Criteria sql = getSession().createCriteria(ClienteColportor.class);
+        sql.add(Restrictions.ilike("nombre", "%"+nombre+"%")); 
+        sql.add(Restrictions.ilike("apPaterno", "%"+apPaterno+"%"));
+        return (ClienteColportor)sql.uniqueResult();
+    }
+    
+    @Override
     public ClienteColportor crea(ClienteColportor clienteColportor) {
         getSession().save(clienteColportor);
         getSession().flush();

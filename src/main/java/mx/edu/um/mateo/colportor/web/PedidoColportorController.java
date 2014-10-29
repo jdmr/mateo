@@ -109,8 +109,32 @@ public class PedidoColportorController extends BaseController{
             }
             else{
                 log.debug("Si hay clave");
-                clp = colportorDao.obtiene(request.getParameter("clave"));
-                flag = true;
+                if(request.getParameter("clave").startsWith("cliente")){
+                    log.debug("Hay un cliente");
+
+                    ClienteColportor cliente = null;
+                    try {
+                        params.put("cliente", request.getParameter("clave").trim().split(":")[1].trim());
+                        cliente = clienteColportorDao.obtiene(params);
+                        
+                        log.debug("Cliente {}", cliente);
+                        params.put("cliente", cliente.getId());
+                        
+                        params = pedidoColportorDao.lista(params);
+                        modelo.addAttribute(Constantes.PEDIDO_COLPORTOR_LIST, params.get(Constantes.PEDIDO_COLPORTOR_LIST));
+                        this.pagina(params, modelo, Constantes.PEDIDO_COLPORTOR_LIST, pagina);
+                        return Constantes.PEDIDO_COLPORTOR_PATH_LISTA;
+                        
+                    } catch (Exception e) {
+                        //Cliente invalido
+                        return Constantes.PEDIDO_COLPORTOR_PATH_LISTA;
+                    }
+                    
+                }
+                else{
+                    clp = colportorDao.obtiene(request.getParameter("clave"));
+                    flag = true;
+                }
             }
             
             if(clp != null){
@@ -120,21 +144,6 @@ public class PedidoColportorController extends BaseController{
             else{
                 flag = false;
             }
-                
-            if(request.getParameter("cliente") != null && !request.getParameter("cliente").isEmpty()){
-                log.debug("Hay un cliente");
-                
-                ClienteColportor cliente = null;
-                try {
-                    cliente = clienteColportorDao.obtiene(Long.parseLong(request.getParameter("cliente")));
-                    log.debug("Cliente {}", cliente);
-                    params.put("cliente", cliente.getId());
-                } catch (Exception e) {
-                    //Cliente invalido
-                    return Constantes.PEDIDO_COLPORTOR_PATH_LISTA;
-                }
-            }
-           
             
         }
         else if(ambiente.esColportor()){
