@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contrareciboFacturas" pageWidth="576" pageHeight="360" orientation="Landscape" columnWidth="576" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="06e067f7-05e1-4df0-8577-7c2b23d1895e">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="329"/>
 	<property name="ireport.y" value="0"/>
 	<field name="proveedor.rfc" class="java.lang.String"/>
 	<field name="proveedor.direccion" class="java.lang.String"/>
@@ -26,18 +26,25 @@
 				<reportElement uuid="7e65fed8-fedd-4466-bb44-9cfc4029179d" x="0" y="30" width="572" height="3"/>
 			</line>
 			<componentElement>
-				<reportElement uuid="59a7d941-9c0a-4398-9bfe-46b7ff33647e" x="500" y="2" width="72" height="28"/>
-				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="2of7" drawText="false" checksumRequired="false">
-					<jr:codeExpression><![CDATA["1234"]]></jr:codeExpression>
+				<reportElement uuid="59a7d941-9c0a-4398-9bfe-46b7ff33647e" x="500" y="0" width="72" height="17"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="2of7" drawText="false" checksumRequired="false" barWidth="20" barHeight="500">
+					<jr:codeExpression><![CDATA[$F{contrarecibo.id}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
 			<staticText>
-				<reportElement uuid="5349e148-a109-41cc-b2e4-3d55242c34b0" x="0" y="0" width="576" height="31"/>
+				<reportElement uuid="5349e148-a109-41cc-b2e4-3d55242c34b0" x="0" y="0" width="500" height="31"/>
 				<textElement textAlignment="Left">
 					<font size="24" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Contrarecibo]]></text>
 			</staticText>
+			<textField>
+				<reportElement uuid="5de86033-76d6-498e-8cd2-850cc5e72b61" x="500" y="19" width="45" height="12"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="false" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{contrarecibo.id}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
@@ -162,14 +169,7 @@
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="13">
-			<staticText>
-				<reportElement uuid="7e79f442-6772-4661-819d-eb15887abc71" x="500" y="0" width="33" height="12"/>
-				<textElement>
-					<font size="8" isBold="false" isItalic="true"/>
-				</textElement>
-				<text><![CDATA[Folio]]></text>
-			</staticText>
+		<band height="12">
 			<textField pattern="EEEEE dd MMMMM yyyy">
 				<reportElement uuid="a60cb1d4-3587-4141-a737-b5964df1d860" x="0" y="0" width="188" height="12"/>
 				<textElement>
@@ -181,13 +181,6 @@
 				<reportElement uuid="021b0a21-4e95-450c-b75b-a58f25db1c94" x="400" y="0" width="100" height="12"/>
 				<textElement/>
 				<textFieldExpression><![CDATA[$V{sumaTotal}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement uuid="5de86033-76d6-498e-8cd2-850cc5e72b61" x="533" y="0" width="18" height="12"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="8" isBold="false" isItalic="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{contrarecibo.id}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

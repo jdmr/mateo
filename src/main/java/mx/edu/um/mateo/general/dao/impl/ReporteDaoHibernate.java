@@ -250,7 +250,7 @@ public class ReporteDaoHibernate extends BaseDao implements ReporteDao {
         currentSession().save(almacen);
         currentSession().flush();
     }
-
+    
     private byte[] obtainByteData(InputStream inputStream) throws IOException {
         byte[] byteData;
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {

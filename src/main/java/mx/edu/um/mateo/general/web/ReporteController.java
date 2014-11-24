@@ -138,7 +138,7 @@ public class ReporteController {
 
 		return "redirect:/";
 	}
-
+        
 	@RequestMapping("/salida/{id}")
 	public String salida(HttpServletRequest request,
 			HttpServletResponse response, @PathVariable Long id) {
