@@ -96,6 +96,7 @@ public class InformeProveedorDetalleManagerImpl extends BaseManager implements I
     public void graba(InformeProveedorDetalle proveedorDetalle, Usuario usuario) throws Exception {
         Boolean existeFolioFactura = dao.repetidoFFactura(proveedorDetalle.getFolioFactura(), proveedorDetalle.getRFCProveedor());
         if (existeFolioFactura) {
+            log.debug("factura repetida");
             throw new FacturaRepetidaFFacturaException(proveedorDetalle.getFolioFactura());
         }
 

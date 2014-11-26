@@ -17,7 +17,8 @@
             <p class="well">
                 <a class="btn btn-primary" href="<s:url value='/factura/informeProveedorDetalle'/>"><i class="icon-list icon-white"></i> <s:message code='informeProveedorDetalle.lista.label' /></a>
             </p>
-            <form:form commandName="informeProveedorDetalle" action="graba" method="post" enctype="multipart/form-data">
+            <form:form commandName="informeProveedorDetalle" method="${flowExecutionUrl}" enctype="multipart/form-data">
+               <input type="hidden" name="_flowExecutionKey" value="${flowExecutionKey}"/>
                 <form:errors path="*">
                     <div class="alert alert-block alert-error fade in" role="status">
                         <a class="close" data-dismiss="alert">×</a>
@@ -114,8 +115,8 @@
                 </fieldset>
 
                 <p class="well" style="margin-top: 10px;">
-                    <button type="submit" name="crearBtn" class="btn btn-primary btn-large" id="crear" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
-                    <a class="btn btn-large" href="<s:url value='/factura/informeProveedorDetalle'/>"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
+                    <button type="submit" name="_eventId_grabaEncabezado" class="btn btn-primary btn-large" id="_ventId_grabaEncabezado" ><i class="icon-ok icon-white"></i>&nbsp;<s:message code='crear.button'/></button>
+                    <a class="btn btn-large" href="${flowExecutionUrl}&_eventId=endState"><i class="icon-remove"></i> <s:message code='cancelar.button' /></a>
                 </p>
             </form:form>
         </div>

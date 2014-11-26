@@ -154,6 +154,8 @@ public class InformeProveedorManagerImpl extends BaseManager implements InformeP
     public void crea(InformeProveedor informe, Usuario usuario) {
         log.debug("Entrando a crea{}, usuario{}", informe, usuario);
         try {
+            informe.setFormaPago("C");
+            informe.setEmpresa(usuario.getEmpresa());   
             graba(informe, usuario);
         } catch (AutorizacionCCPlInvalidoException ex) {
             log.debug("CPP invalido");
