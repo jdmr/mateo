@@ -34,8 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class InformeProveedorDetalleDaoHibernate extends BaseDao implements InformeProveedorDetallesDao {
 
     /**
-     * @see
-     * mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDetallesDao#lista(Map<String,
+     * @see      mx.edu.um.mateo.contabilidad.facturas.dao.InformeProveedorDetallesDao#lista(Map<String,
      * Object> params)
      */
     @Override
@@ -190,11 +189,9 @@ public class InformeProveedorDetalleDaoHibernate extends BaseDao implements Info
     public String elimina(Long id) {
         log.debug("Eliminando prorroga con id {}", id);
         InformeProveedorDetalle detalle = obtiene(id);
-        detalle.setStatus("I");
-        currentSession().saveOrUpdate(detalle);
-        currentSession().merge(detalle);
-        currentSession().flush();
         String proveedor = detalle.getNombreProveedor();
+        currentSession().delete(detalle);
+        currentSession().flush();
         return proveedor;
     }
 

@@ -1024,6 +1024,24 @@ public class InformeProveedorDetalleController extends BaseController {
         return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
     }
 
+    @Transactional
+    @RequestMapping(value = "/eliminaValida", method = RequestMethod.POST)
+    public String eliminaValida(HttpServletRequest request, @RequestParam Long id, Model modelo,
+            @ModelAttribute InformeProveedorDetalle detalle, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        log.debug("Elimina cuenta de detalles");
+        try {
+            manager.elimina(id);
+
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "detalle.elimina.message");
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{detalle.getNombreProveedor()});
+        } catch (Exception e) {
+            log.error("No se pudo eliminar el tipo de paquete " + id, e);
+            bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, new String[]{"detalle.no.elimina.message"}, null, null));
+            return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_VER;
+        }
+        return "redirect:/factura/informeProveedorDetalle/revisar";
+    }
+
     @RequestMapping(value = "/descargarPdf/{id}", method = RequestMethod.GET)
     public ModelAndView handleRequestPDF(@PathVariable Long id, Model modelo, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
