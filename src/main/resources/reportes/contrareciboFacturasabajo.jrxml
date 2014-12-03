@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contrareciboFacturas" pageWidth="576" pageHeight="360" orientation="Landscape" columnWidth="576" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="06e067f7-05e1-4df0-8577-7c2b23d1895e">
-<<<<<<< HEAD
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-=======
-	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="329"/>
->>>>>>> 8709ecd24d0a89a18ebc421f2b74d2655b13be78
 	<property name="ireport.y" value="0"/>
 	<field name="proveedor.rfc" class="java.lang.String"/>
 	<field name="proveedor.direccion" class="java.lang.String"/>
@@ -33,7 +28,6 @@
 				<reportElement x="0" y="30" width="572" height="3" uuid="7e65fed8-fedd-4466-bb44-9cfc4029179d"/>
 			</line>
 			<componentElement>
-
 				<reportElement x="500" y="2" width="72" height="28" uuid="59a7d941-9c0a-4398-9bfe-46b7ff33647e"/>
 				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="2of7" drawText="false" checksumRequired="false">
 					<jr:codeExpression><![CDATA["1234"]]></jr:codeExpression>
@@ -47,7 +41,7 @@
 				<text><![CDATA[Contrarecibo]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="5de86033-76d6-498e-8cd2-850cc5e72b61" x="500" y="19" width="45" height="12"/>
+				<reportElement x="500" y="19" width="45" height="12" uuid="5de86033-76d6-498e-8cd2-850cc5e72b61"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8" isBold="false" isItalic="true"/>
 				</textElement>
@@ -206,7 +200,6 @@
 		</band>
 	</detail>
 	<pageFooter>
-
 		<band height="13">
 			<staticText>
 				<reportElement x="500" y="0" width="33" height="12" uuid="7e79f442-6772-4661-819d-eb15887abc71"/>
@@ -215,7 +208,6 @@
 				</textElement>
 				<text><![CDATA[Folio]]></text>
 			</staticText>
-
 			<textField pattern="EEEEE dd MMMMM yyyy">
 				<reportElement x="0" y="0" width="188" height="12" uuid="a60cb1d4-3587-4141-a737-b5964df1d860"/>
 				<textElement>
@@ -234,7 +226,6 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{contrarecibo.id}]]></textFieldExpression>
 			</textField>
-
 		</band>
 	</pageFooter>
 </jasperReport>
