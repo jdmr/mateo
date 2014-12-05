@@ -16,9 +16,12 @@
 	<field name="informeProveedor.formaPagoTexto" class="java.lang.String"/>
 	<field name="informeProveedor.clabe" class="java.lang.String"/>
 	<field name="proveedor.correo" class="java.lang.String"/>
+	<field name="informeProveedor.cuentaCheque" class="java.lang.String"/>
 	<variable name="sumaTotal" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{informeProveedorDetalle.total}]]></variableExpression>
 	</variable>
+	<variable name="cuenta" class="java.lang.String"/>
+	<variable name="cuentaLabel" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -28,13 +31,13 @@
 				<reportElement x="0" y="30" width="572" height="3" uuid="7e65fed8-fedd-4466-bb44-9cfc4029179d"/>
 			</line>
 			<componentElement>
-				<reportElement x="500" y="2" width="72" height="28" uuid="59a7d941-9c0a-4398-9bfe-46b7ff33647e"/>
+				<reportElement x="500" y="2" width="72" height="17" uuid="59a7d941-9c0a-4398-9bfe-46b7ff33647e"/>
 				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="2of7" drawText="false" checksumRequired="false">
 					<jr:codeExpression><![CDATA["1234"]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
 			<staticText>
-				<reportElement x="0" y="0" width="576" height="31" uuid="5349e148-a109-41cc-b2e4-3d55242c34b0"/>
+				<reportElement x="0" y="0" width="500" height="31" uuid="5349e148-a109-41cc-b2e4-3d55242c34b0"/>
 				<textElement textAlignment="Left">
 					<font size="24" isBold="true"/>
 				</textElement>
@@ -111,34 +114,27 @@
 				<textFieldExpression><![CDATA[$F{informeProveedor.formaPagoTexto}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="41" width="100" height="20" uuid="ce03546a-b90e-45f7-977b-e8e2782e1504">
-					<printWhenExpression><![CDATA[$F{informeProveedor.formaPagoTexto}.startsWith( "T" )]]></printWhenExpression>
-				</reportElement>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Clabe:]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="100" y="40" width="134" height="20" uuid="46521b49-8c43-44e7-89bf-c2f6abae03b3">
-					<printWhenExpression><![CDATA[$F{informeProveedor.formaPagoTexto}.startsWith( "T" )]]></printWhenExpression>
-				</reportElement>
-				<textFieldExpression><![CDATA[$F{informeProveedor.clabe}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="270" y="40" width="100" height="20" uuid="23758a38-c327-4152-bbe9-4753df70a812">
-					<printWhenExpression><![CDATA[$F{informeProveedor.formaPagoTexto}.startsWith( "T" )]]></printWhenExpression>
-				</reportElement>
+				<reportElement x="270" y="40" width="100" height="20" uuid="23758a38-c327-4152-bbe9-4753df70a812"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Correo]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="370" y="41" width="202" height="20" uuid="b699faca-9384-41bd-802e-87e0dc7ccce2">
-					<printWhenExpression><![CDATA[$F{informeProveedor.formaPagoTexto}.startsWith( "T" )]]></printWhenExpression>
-				</reportElement>
+				<reportElement x="370" y="41" width="202" height="20" uuid="b699faca-9384-41bd-802e-87e0dc7ccce2"/>
 				<textFieldExpression><![CDATA[$F{proveedor.correo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="40" width="170" height="20" uuid="b83c0802-c3a5-4646-ae7e-098a65f71e92"/>
+				<textFieldExpression><![CDATA[$F{informeProveedor.formaPagoTexto}.startsWith( "T" )
+? $F{informeProveedor.clabe}
+: $F{informeProveedor.cuentaCheque}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="40" width="100" height="20" uuid="003cd0a1-9dda-41be-9b79-d81f64766b26"/>
+				<textFieldExpression><![CDATA[$F{informeProveedor.formaPagoTexto}.startsWith( "T" )
+? "Clabe:"
+: "Cuenta:"]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -200,14 +196,7 @@
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="13">
-			<staticText>
-				<reportElement x="500" y="0" width="33" height="12" uuid="7e79f442-6772-4661-819d-eb15887abc71"/>
-				<textElement>
-					<font size="8" isBold="false" isItalic="true"/>
-				</textElement>
-				<text><![CDATA[Folio]]></text>
-			</staticText>
+		<band height="12">
 			<textField pattern="EEEEE dd MMMMM yyyy">
 				<reportElement x="0" y="0" width="188" height="12" uuid="a60cb1d4-3587-4141-a737-b5964df1d860"/>
 				<textElement>
@@ -218,13 +207,6 @@
 			<textField>
 				<reportElement x="400" y="0" width="100" height="12" uuid="021b0a21-4e95-450c-b75b-a58f25db1c94"/>
 				<textFieldExpression><![CDATA[$V{sumaTotal}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="533" y="0" width="18" height="12" uuid="5de86033-76d6-498e-8cd2-850cc5e72b61"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="8" isBold="false" isItalic="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{contrarecibo.id}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>

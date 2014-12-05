@@ -74,14 +74,41 @@
                 <div class="span1"><s:message code="informeEmpleado.label" /></div>
                 <div class="span11">${informeProveedorDetalle.informeProveedor.id}</div>
             </div>
-            <p>adsasdasd</p>
-            <a  href="<s:url value='/factura/informeProveedorDetalle/downloadPdfFile/${informeProveedorDetalle.id}'/>"><img src="<c:url value='/images/pdf.png'/>" width="120" height="100" /></a>
-            <a  href="<s:url value='/factura/informeProveedorDetalle/downloadXmlFile/${informeProveedorDetalle.id}'/>"><img src="<c:url value='/images/xml.png'/>" width="120" height="100" /></a>
-                <c:url var="eliminaUrl" value="/factura/informeProveedorDetalle/elimina" />
-                <form:form commandName="informeProveedorDetalle" action="${eliminaUrl}" >    
-                    <c:if test="${informeProveedorDetalle.informeProveedor.status=='A'}">
+
+            <ul class="thumbnails">
+                <li class="span2">
+                    <div class="thumbnail" >
+                        <c:if test="${informeProveedorDetalle.pathXMl!= null && !informeProveedorDetalle.pathXMl.isEmpty()}">
+                            <a  href="<s:url value='/factura/informeProveedorDetalle/downloadXmlFile/${informeProveedorDetalle.id}'/>"><img src="<c:url value='/images/xml.png'/>" width="120" height="100" /></a>
+                            </c:if>
+                            <c:if test="${informeProveedorDetalle.pathXMl== null || informeProveedorDetalle.pathXMl.isEmpty()}"><img src="<c:url value='/images/vista/Error.png'/>" width="120" height="100" /></c:if>
+                            <div class="caption">
+                                <p><a class="btn btn-primary" href="<s:url value='/factura/informeProveedorDetalle/updateXMLFile'/>"><i class="fa fa-refresh"></i> <s:message code='cambiarArchivoXML.edita' /></a></p>
+                        </div>
+                    </div>
+                </li>
+                <li class="span2">
+
+                    <div class="thumbnail">
+
+                        <c:if test="${informeProveedorDetalle.pathPDF!= null && !informeProveedorDetalle.pathPDF.isEmpty()}">
+                            <a  href="<s:url value='/factura/informeProveedorDetalle/downloadPdfFile/${informeProveedorDetalle.id}'/>"><img src="<c:url value='/images/pdf.png'/>" width="120" height="100" /></a>
+                            </c:if>
+                            <c:if test="${informeProveedorDetalle.pathPDF== null || informeProveedorDetalle.pathPDF.isEmpty()}"><img src="<c:url value='/images/vista/Error.png'/>" width="120" height="100" /></c:if>
+
+                            <div class="caption">
+                                <p> <a class="btn btn-primary" href="<s:url value='/factura/informeProveedorDetalle/updatePDFFile'/>"><i class="fa fa-refresh"></i> <s:message code='cambiarArchivoPDF.edita' /></a></p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+
+
+            <c:url var="eliminaUrl" value="/factura/informeProveedorDetalle/elimina" />
+            <form:form commandName="informeProveedorDetalle" action="${eliminaUrl}" >    
+                <c:if test="${informeProveedorDetalle.informeProveedor.status=='A'}">
                     <p class="well">
-                        <a href="<c:url value='/factura/informeProveedorDetalle/edita/${informeProveedorDetalle.id}' />" class="btn btn-primary btn-large"><i class="icon-edit icon-white"></i> <s:message code="editar.button" /></a>
                         <form:hidden path="id" />
                         <button type="submit" name="eliminaBtn" class="btn btn-danger btn-large" id="eliminar"  onclick="return confirm('<s:message code="confirma.elimina.message" />');" ><i class="icon-trash icon-white"></i>&nbsp;<s:message code='eliminar.button'/></button>
                     </p>

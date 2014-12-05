@@ -6,6 +6,7 @@
 <html>
     <head>
         <title><s:message code="informeProveedorDetalle.lista.label" /></title>
+        
     </head>
     <body>
         <jsp:include page="../menu.jsp" >
@@ -86,7 +87,10 @@
                             <jsp:param name="columna" value="fechaFactura" />
                         </jsp:include>
                         <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
-                            <jsp:param name="columna" value="informeProveedor" />
+                            <jsp:param name="columna" value="xml" />
+                        </jsp:include>
+                        <jsp:include page="/WEB-INF/jsp/columnaOrdenada.jsp" >
+                            <jsp:param name="columna" value="pdf" />
                         </jsp:include>
                     </tr>
                 </thead>
@@ -102,8 +106,15 @@
                             <td>${informeProveedorDetalle.dctoProntoPago}</td>
                             <td>${informeProveedorDetalle.statusTexto}</td>
                             <td>${informeProveedorDetalle.fechaFactura}</td>
-                            <td>${informeProveedorDetalle.informeProveedor.id}</td>
-                        </tr>
+                            <td >
+                                <c:if test="${informeProveedorDetalle.pathXMl!= null && !informeProveedorDetalle.pathXMl.isEmpty()}"><i class="fa fa-check-circle-o fa-2x"></i></c:if>
+                                <c:if test="${informeProveedorDetalle.pathXMl== null || informeProveedorDetalle.pathXMl.isEmpty()}"><i class="fa fa-times-cricle-o fa-2x"></i></c:if>
+                                </td>
+                                <td>
+                                <c:if test="${informeProveedorDetalle.pathPDF!= null && !informeProveedorDetalle.pathPDF.isEmpty()}"><i class="fa fa-check-circle-o fa-2x"></i></c:if>
+                                <c:if test="${informeProveedorDetalle.pathPDF== null || informeProveedorDetalle.pathPDF.isEmpty()}"><i class="fa fa-times-circle-o fa-2x"></i></c:if>
+                                </td>
+                            </tr>
                     </c:forEach>
                 </tbody>
             </table>

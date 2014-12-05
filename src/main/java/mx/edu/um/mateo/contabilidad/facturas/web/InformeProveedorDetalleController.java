@@ -638,10 +638,10 @@ public class InformeProveedorDetalleController extends BaseController {
     }
 
     @RequestMapping("/ver/{id}")
-    public String ver(@PathVariable Long id, Model modelo) {
+    public String ver(HttpServletRequest request, @PathVariable Long id, Model modelo) {
         log.debug("Mostrando paquete {}", id);
         InformeProveedorDetalle detalle = manager.obtiene(id);
-
+        request.getSession().setAttribute("detalleUpdateFileId", id);
         modelo.addAttribute(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, detalle);
 
         return Constantes.PATH_INFORMEPROVEEDOR_DETALLE_VER;
@@ -950,6 +950,70 @@ public class InformeProveedorDetalleController extends BaseController {
     }
 
     @Transactional
+    @RequestMapping(value = {"/updateXMLFile"}, method = RequestMethod.GET)
+    public String updateXMLFile(HttpServletRequest request, ModelMap model) throws Exception {
+        UploadFileForm form = new UploadFileForm();
+        model.addAttribute("uploadFileForm", form);
+        request.getSession().setAttribute("esPdf", false);
+        request.getSession().setAttribute("esXml", true);
+        return "/factura/informeProveedorDetalle/updateUploadedFile";
+    }
+
+    @Transactional
+    @RequestMapping(value = {"/updatePDFFile"}, method = RequestMethod.GET)
+    public String updatePDFFile(HttpServletRequest request, ModelMap model) throws Exception {
+        UploadFileForm form = new UploadFileForm();
+        
+        model.addAttribute("uploadFileForm", form);
+        request.getSession().setAttribute("esPdf", true);
+        request.getSession().setAttribute("esXml", false);
+        return "/factura/informeProveedorDetalle/updateUploadedFile";
+    }
+
+    @Transactional
+    @RequestMapping(value = "/updateUploadedFile", method = RequestMethod.POST)
+    public String updateUploadedFile(HttpServletRequest request, @ModelAttribute("uploadFileForm") UploadFileForm uploadFileForm,
+            BindingResult bindingResult, Errors errors, RedirectAttributes redirectAttributes) throws Exception {
+        log.info("entrando a uploadFile");
+        despliegaBindingResultErrors(bindingResult);
+        Long id = (Long) request.getSession().getAttribute("detalleUpdateFileId");
+        InformeProveedorDetalle detalle = manager.obtiene(id);
+        log.debug("detalle {}", detalle.getId());
+        Usuario usuario = ambiente.obtieneUsuario();
+        Calendar calendar = GregorianCalendar.getInstance();
+        int año = calendar.get(Calendar.YEAR);
+        int mes = calendar.get(Calendar.MONTH);
+        int dia = calendar.get(Calendar.DATE);
+        String fileName = uploadFileForm.getFile().getOriginalFilename();
+        log.info("nombre archvo{}", fileName);
+        String uploadDir = "/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + uploadFileForm.getFile().getOriginalFilename();
+        log.debug("upload dir {} ", uploadDir);
+        File dirPath = new File(uploadDir);
+        if (!dirPath.exists()) {
+            dirPath.mkdirs();
+        }
+        if (fileName.toLowerCase().contains(".xml")) {
+            detalle.setPathXMl("/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + uploadFileForm.getFile().getOriginalFilename());
+            detalle.setNombreXMl(uploadFileForm.getFile().getOriginalFilename());
+            detalle.setXmlFile(uploadFileForm.getFile().getBytes());
+            manager.actualiza(detalle, usuario);
+            request.getSession().setAttribute("esPdf", false);
+            request.getSession().setAttribute("esXml", false);
+        }
+        if (fileName.toLowerCase().contains(".pdf")) {
+            detalle.setPathPDF("/home/facturas/" + año + "/" + mes + "/" + dia + "/" + request.getRemoteUser() + "/" + uploadFileForm.getFile().getOriginalFilename());
+            detalle.setNombrePDF(uploadFileForm.getFile().getOriginalFilename());
+            detalle.setPdfFile(uploadFileForm.getFile().getBytes());
+            manager.actualiza(detalle, usuario);
+            request.getSession().setAttribute("esPdf", false);
+            request.getSession().setAttribute("esXml", false);
+        }
+        uploadFileForm.getFile().transferTo(new File(uploadDir));
+
+        return "redirect:" + Constantes.PATH_INFORMEPROVEEDOR_DETALLE_LISTA;
+    }
+
+    @Transactional
     @RequestMapping(value = "/actualiza", method = RequestMethod.POST)
     public String actualiza(HttpServletRequest request, HttpServletResponse response, @Valid InformeProveedorDetalle detalle,
             BindingResult bindingResult, Errors errors, Model modelo, RedirectAttributes redirectAttributes,
@@ -1011,10 +1075,10 @@ public class InformeProveedorDetalleController extends BaseController {
             @ModelAttribute InformeProveedorDetalle detalle, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.debug("Elimina cuenta de detalles");
         try {
-            manager.elimina(id);
+            String nombre = manager.elimina(id);
 
             redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE, "detalle.elimina.message");
-            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{detalle.getNombreProveedor()});
+            redirectAttributes.addFlashAttribute(Constantes.CONTAINSKEY_MESSAGE_ATTRS, new String[]{nombre});
         } catch (Exception e) {
             log.error("No se pudo eliminar el tipo de paquete " + id, e);
             bindingResult.addError(new ObjectError(Constantes.ADDATTRIBUTE_INFORMEPROVEEDOR_DETALLE, new String[]{"detalle.no.elimina.message"}, null, null));
